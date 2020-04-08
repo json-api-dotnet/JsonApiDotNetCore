@@ -63,7 +63,7 @@ namespace UnitTests
         public void Resources_Without_Names_Specified_Will_Use_Configured_Formatter()
         {
             // Arrange
-            var builder = new ResourceGraphBuilder(new CamelCaseNameFormatter());
+            var builder = new ResourceGraphBuilder(new CamelCaseFormatter());
             builder.AddResource<TestResource>();
 
             // Act
@@ -93,7 +93,7 @@ namespace UnitTests
         public void Attrs_Without_Names_Specified_Will_Use_Configured_Formatter()
         {
             // Arrange
-            var builder = new ResourceGraphBuilder(new CamelCaseNameFormatter());
+            var builder = new ResourceGraphBuilder(new CamelCaseFormatter());
             builder.AddResource<TestResource>();
 
             // Act
@@ -128,16 +128,5 @@ namespace UnitTests
         }
 
         public class RelatedResource : Identifiable { }
-
-        public sealed class CamelCaseNameFormatter : IResourceNameFormatter
-        {
-            public string ApplyCasingConvention(string properName) => ToCamelCase(properName);
-
-            public string FormatPropertyName(PropertyInfo property) => ToCamelCase(property.Name);
-
-            public string FormatResourceName(Type resourceType) => ToCamelCase(resourceType.Name.Pluralize());
-
-            private string ToCamelCase(string str) => Char.ToLowerInvariant(str[0]) + str.Substring(1);
-        }
     }
 }

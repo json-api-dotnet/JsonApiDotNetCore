@@ -84,7 +84,7 @@ namespace JsonApiDotNetCore.Middleware
         private string[] SplitCurrentPath()
         {
             var path = _httpContext.Request.Path.Value;
-            var ns = $"/{GetNameSpace()}";
+            var ns = $"/{_options.Namespace}";
             var nonNameSpaced = path.Replace(ns, "");
             nonNameSpaced = nonNameSpaced.Trim('/');
             var individualComponents = nonNameSpaced.Split('/');
@@ -96,11 +96,11 @@ namespace JsonApiDotNetCore.Middleware
             var r = _httpContext.Request;
             if (_options.RelativeLinks)
             {
-                return GetNameSpace();
+                return _options.Namespace;
             }
-            var ns = GetNameSpace();
+
             var customRoute = GetCustomRoute(r.Path.Value, resourceName);
-            var toReturn = $"{r.Scheme}://{r.Host}/{ns}";
+            var toReturn = $"{r.Scheme}://{r.Host}/{_options.Namespace}";
             if (customRoute != null)
             {
                 toReturn += $"/{customRoute}";
@@ -110,12 +110,11 @@ namespace JsonApiDotNetCore.Middleware
 
         private object GetCustomRoute(string path, string resourceName)
         {
-            var ns = GetNameSpace();
             var trimmedComponents = path.Trim('/').Split('/').ToList();
             var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
             var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
             var customRoute = string.Join('/', newComponents);
-            if (customRoute == ns)
+            if (customRoute == _options.Namespace)
             {
                 return null;
             }
@@ -125,15 +124,10 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-        private string GetNameSpace()
-        {
-            return _options.Namespace;
-        }
-
         private bool PathIsRelationship()
         {
             var actionName = (string)_routeValues["action"];
-            return actionName.ToLower().Contains("relationships");
+            return actionName.ToLowerInvariant().Contains("relationships");
         }
 
         private async Task<bool> IsValidAsync()
