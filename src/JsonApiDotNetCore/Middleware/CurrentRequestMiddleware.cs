@@ -149,7 +149,7 @@ namespace JsonApiDotNetCore.Middleware
                 await FlushResponseAsync(context, new Error(HttpStatusCode.UnsupportedMediaType)
                 {
                     Title = "The specified Content-Type header value is not supported.",
-                    Detail = $"Please specify '{Constants.ContentType}' for the Content-Type header value."
+                    Detail = $"Please specify '{HeaderConstants.ContentType}' for the Content-Type header value."
                 });
 
                 return false;
@@ -159,7 +159,7 @@ namespace JsonApiDotNetCore.Middleware
 
         private static async Task<bool> IsValidAcceptHeaderAsync(HttpContext context)
         {
-            if (context.Request.Headers.TryGetValue(Constants.AcceptHeader, out StringValues acceptHeaders) == false)
+            if (context.Request.Headers.TryGetValue(HeaderConstants.AcceptHeader, out StringValues acceptHeaders) == false)
                 return true;
 
             foreach (var acceptHeader in acceptHeaders)
@@ -172,7 +172,7 @@ namespace JsonApiDotNetCore.Middleware
                 await FlushResponseAsync(context, new Error(HttpStatusCode.NotAcceptable)
                 {
                     Title = "The specified Accept header value is not supported.",
-                    Detail = $"Please specify '{Constants.ContentType}' for the Accept header value."
+                    Detail = $"Please specify '{HeaderConstants.ContentType}' for the Accept header value."
                 });
                 return false;
             }
@@ -184,19 +184,19 @@ namespace JsonApiDotNetCore.Middleware
             var incomingMediaTypeSpan = mediaType.AsSpan();
 
             // if the content type is not application/vnd.api+json then continue on
-            if (incomingMediaTypeSpan.Length < Constants.ContentType.Length)
+            if (incomingMediaTypeSpan.Length < HeaderConstants.ContentType.Length)
             {
                 return false;
             }
 
-            var incomingContentType = incomingMediaTypeSpan.Slice(0, Constants.ContentType.Length);
-            if (incomingContentType.SequenceEqual(Constants.ContentType.AsSpan()) == false)
+            var incomingContentType = incomingMediaTypeSpan.Slice(0, HeaderConstants.ContentType.Length);
+            if (incomingContentType.SequenceEqual(HeaderConstants.ContentType.AsSpan()) == false)
                 return false;
 
             // anything appended to "application/vnd.api+json;" will be considered a media type param
             return (
-                incomingMediaTypeSpan.Length >= Constants.ContentType.Length + 2
-                && incomingMediaTypeSpan[Constants.ContentType.Length] == ';'
+                incomingMediaTypeSpan.Length >= HeaderConstants.ContentType.Length + 2
+                && incomingMediaTypeSpan[HeaderConstants.ContentType.Length] == ';'
             );
         }
 

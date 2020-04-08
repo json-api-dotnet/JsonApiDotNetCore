@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// <summary>
         /// Get the resource metadata by the DbSet property name
         /// </summary>
-        ResourceContext GetResourceContext(string exposedResourceName);
+        ResourceContext GetResourceContext(string resourceName);
 
         /// <summary>
         /// Get the resource metadata by the resource type

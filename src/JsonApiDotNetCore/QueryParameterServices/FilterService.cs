@@ -83,8 +83,7 @@ namespace JsonApiDotNetCore.Query
             var queries = new List<FilterQuery>();
             // InArray case
             string op = GetFilterOperation(parameterValue);
-            if (string.Equals(op, FilterOperation.@in.ToString(), StringComparison.OrdinalIgnoreCase)
-                || string.Equals(op, FilterOperation.nin.ToString(), StringComparison.OrdinalIgnoreCase))
+            if (op == FilterOperation.@in.ToString() || op == FilterOperation.nin.ToString())
             {
                 var (_, filterValue) = ParseFilterOperation(parameterValue);
                 queries.Add(new FilterQuery(propertyName, filterValue, op));

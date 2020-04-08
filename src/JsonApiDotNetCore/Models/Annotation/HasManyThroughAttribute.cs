@@ -77,8 +77,8 @@ namespace JsonApiDotNetCore.Models
         public override object GetValue(object entity)
         {
             var throughNavigationProperty = entity.GetType()
-                                        .GetProperties()
-                                        .SingleOrDefault(p => string.Equals(p.Name, InternalThroughName, StringComparison.OrdinalIgnoreCase));
+                .GetProperties()
+                .SingleOrDefault(p => p.Name == InternalThroughName);
 
             var throughEntities = throughNavigationProperty.GetValue(entity);
 

@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Formatters
             }
             else
             {
-                response.ContentType = Constants.ContentType;
+                response.ContentType = HeaderConstants.ContentType;
                 try
                 {
                     responseContent = SerializeResponse(context.Object, (HttpStatusCode)response.StatusCode);

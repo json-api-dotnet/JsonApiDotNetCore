@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Middleware
 
         private bool IsJsonApiRequest(HttpRequest request)
         {
-            return (request.ContentType?.Equals(Constants.ContentType, StringComparison.OrdinalIgnoreCase) == true);
+            return request.ContentType == HeaderConstants.ContentType;
         }
 
         public void OnActionExecuted(ActionExecutedContext context) { /* noop */ }

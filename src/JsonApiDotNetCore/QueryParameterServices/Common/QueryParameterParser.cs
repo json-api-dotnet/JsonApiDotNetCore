@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Services
 
             foreach (var pair in _queryStringAccessor.Query)
             {
-                if (string.IsNullOrWhiteSpace(pair.Value))
+                if (string.IsNullOrEmpty(pair.Value))
                 {
                     throw new InvalidQueryStringParameterException(pair.Key, "Missing query string parameter value.",
                         $"Missing value for '{pair.Key}' query string parameter.");

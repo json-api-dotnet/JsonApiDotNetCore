@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Formatters
 
             var contentTypeString = context.HttpContext.Request.ContentType;
 
-            return contentTypeString == Constants.ContentType;
+            return contentTypeString == HeaderConstants.ContentType;
         }
 
         public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
