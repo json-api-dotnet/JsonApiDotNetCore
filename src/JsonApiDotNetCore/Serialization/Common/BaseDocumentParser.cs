@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -133,14 +134,13 @@ namespace JsonApiDotNetCore.Serialization
             var resourceContext = _provider.GetResourceContext(data.Type);
             if (resourceContext == null)
             {
-                throw new JsonApiException(400,
-                     message: $"This API does not contain a json:api resource named '{data.Type}'.",
-                     detail: "This resource is not registered on the ResourceGraph. "
-                             + "If you are using Entity Framework, make sure the DbSet matches the expected resource name. "
-                             + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.");
+                throw new InvalidRequestBodyException("Payload includes unknown resource type.",
+                    $"The resource '{data.Type}' is not registered on the resource graph. " +
+                    "If you are using Entity Framework, make sure the DbSet matches the expected resource name. " +
+                    "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.", null);
             }
 
-            var entity = (IIdentifiable)Activator.CreateInstance(resourceContext.ResourceType);
+            var entity = resourceContext.ResourceType.New<IIdentifiable>();
 
             entity = SetAttributes(entity, data.Attributes, resourceContext.Attributes);
             entity = SetRelationships(entity, data.Relationships, resourceContext.Relationships);
@@ -234,7 +234,7 @@ namespace JsonApiDotNetCore.Serialization
                     relatedInstance.StringId = rio.Id;
                     return relatedInstance;
                 });
-                var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.RightType);
+                var convertedCollection = relatedResources.Cast(attr.RightType);
                 attr.SetValue(entity, convertedCollection);
             }
 

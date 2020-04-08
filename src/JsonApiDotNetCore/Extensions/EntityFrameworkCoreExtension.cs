@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Extensions.EntityFrameworkCore
             foreach (var property in contextProperties)
             {
                 var dbSetType = property.PropertyType;
-                if (dbSetType.GetTypeInfo().IsGenericType
+                if (dbSetType.IsGenericType
                     && dbSetType.GetGenericTypeDefinition() == typeof(DbSet<>))
                 {
                     var resourceType = dbSetType.GetGenericArguments()[0];

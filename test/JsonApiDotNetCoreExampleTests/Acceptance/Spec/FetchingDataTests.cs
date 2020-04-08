@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -103,6 +104,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
+            context.TodoItems.RemoveRange(context.TodoItems);
+            await context.SaveChangesAsync();
+
             var todoItems = _todoItemFaker.Generate(20).ToList();
             context.TodoItems.AddRange(todoItems);
             await context.SaveChangesAsync();
@@ -121,11 +125,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var result = _fixture.GetDeserializer().DeserializeList<TodoItem>(body);
 
             // Assert
-            Assert.True(result.Data.Count >= 20);
+            Assert.True(result.Data.Count == 20);
         }
 
         [Fact]
-        public async Task GetSingleResource_ResourceDoesNotExist_ReturnsNotFoundWithNullData()
+        public async Task GetSingleResource_ResourceDoesNotExist_ReturnsNotFound()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
@@ -142,12 +146,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             var response = await client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(body);
 
             // Assert
+            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-            Assert.Null(document.Data);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("Resource of type 'todoItems' with id '123' does not exist.", errorDocument.Errors[0].Detail);
         }
     }
 }

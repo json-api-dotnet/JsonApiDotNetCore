@@ -26,6 +26,7 @@ namespace JsonApiDotNetCore.Models
     /// public List&lt;ArticleTag&gt; ArticleTags { get; set; }
     /// </code>
     /// </example>
+    [AttributeUsage(AttributeTargets.Property)]
     public sealed class HasManyThroughAttribute : HasManyAttribute
     {
         /// <summary>
@@ -76,8 +77,8 @@ namespace JsonApiDotNetCore.Models
         public override object GetValue(object entity)
         {
             var throughNavigationProperty = entity.GetType()
-                                        .GetProperties()
-                                        .SingleOrDefault(p => string.Equals(p.Name, InternalThroughName, StringComparison.OrdinalIgnoreCase));
+                .GetProperties()
+                .SingleOrDefault(p => p.Name == InternalThroughName);
 
             var throughEntities = throughNavigationProperty.GetValue(entity);
 
@@ -112,12 +113,12 @@ namespace JsonApiDotNetCore.Models
             }
             else
             {
-                var throughRelationshipCollection = (IList)Activator.CreateInstance(ThroughProperty.PropertyType);
+                var throughRelationshipCollection = ThroughProperty.PropertyType.New<IList>();
                 ThroughProperty.SetValue(entity, throughRelationshipCollection);
 
                 foreach (IIdentifiable pointer in (IList)newValue)
                 {
-                    var throughInstance = Activator.CreateInstance(ThroughType);
+                    var throughInstance = ThroughType.New();
                     LeftProperty.SetValue(throughInstance, entity);
                     RightProperty.SetValue(throughInstance, pointer);
                     throughRelationshipCollection.Add(throughInstance);

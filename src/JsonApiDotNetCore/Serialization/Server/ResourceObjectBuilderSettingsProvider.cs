@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <inheritdoc/>
         public ResourceObjectBuilderSettings Get()
         {
-            return new ResourceObjectBuilderSettings(_nullAttributeValues.Config, _defaultAttributeValues.Config);
+            return new ResourceObjectBuilderSettings(_nullAttributeValues.OmitAttributeIfValueIsNull, _defaultAttributeValues.OmitAttributeIfValueIsDefault);
         }
     }
 }

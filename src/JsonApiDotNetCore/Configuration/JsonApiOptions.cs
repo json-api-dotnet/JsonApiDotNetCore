@@ -9,7 +9,6 @@ namespace JsonApiDotNetCore.Configuration
     /// </summary>
     public class JsonApiOptions : IJsonApiOptions
     {
-
         /// <inheritdoc/>
         public bool RelativeLinks { get; set; } = false;
 
@@ -27,15 +26,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public static IRelatedIdMapper RelatedIdMapper { get; set; } = new DefaultRelatedIdMapper();
 
-        /// <summary>
-        /// Whether or not stack traces should be serialized in Error objects
-        /// </summary>
-        public static bool DisableErrorStackTraces { get; set; } = true;
-
-        /// <summary>
-        /// Whether or not source URLs should be serialized in Error objects
-        /// </summary>
-        public static bool DisableErrorSource { get; set; } = true;
+        /// <inheritdoc/>
+        public bool IncludeExceptionStackTraceInErrors { get; set; } = false;
 
         /// <summary>
         /// Whether or not ResourceHooks are enabled. 
@@ -61,12 +53,12 @@ namespace JsonApiDotNetCore.Configuration
         public string Namespace { get; set; }
 
         /// <summary>
-        /// The default page size for all resources
+        /// The default page size for all resources. The value zero means: no paging.
         /// </summary>
         /// <example>
         /// <code>options.DefaultPageSize = 10;</code>
         /// </example>
-        public int DefaultPageSize { get; set; }
+        public int DefaultPageSize { get; set; } = 10;
 
         /// <summary>
         /// Optional. When set, limits the maximum page size for all resources.
@@ -106,26 +98,23 @@ namespace JsonApiDotNetCore.Configuration
         public bool AllowClientGeneratedIds { get; set; }
 
         /// <summary>
-        /// Whether or not to allow all custom query parameters.
+        /// Whether or not to allow all custom query string parameters.
         /// </summary>
         /// <example>
         /// <code>
-        /// options.AllowCustomQueryParameters = true;
+        /// options.AllowCustomQueryStringParameters = true;
         /// </code>
         /// </example>
-        public bool AllowCustomQueryParameters { get; set; }
+        public bool AllowCustomQueryStringParameters { get; set; }
 
         /// <summary>
-        /// The default behavior for serializing null attributes.
+        /// The default behavior for serializing attributes that contain null.
         /// </summary>
-        /// <example>
-        /// <code>
-        /// options.NullAttributeResponseBehavior = new NullAttributeResponseBehavior {
-        ///  // ...
-        ///};
-        /// </code>
-        /// </example>
         public NullAttributeResponseBehavior NullAttributeResponseBehavior { get; set; }
+
+        /// <summary>
+        /// The default behavior for serializing attributes that contain their types' default value.
+        /// </summary>
         public DefaultAttributeResponseBehavior DefaultAttributeResponseBehavior { get; set; }
 
         /// <summary>

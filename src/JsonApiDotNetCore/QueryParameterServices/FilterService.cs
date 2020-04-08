@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -29,14 +30,26 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
+        public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
-            EnsureNoNestedResourceRoute();
-            var queries = GetFilterQueries(queryParameter);
-            _filters.AddRange(queries.Select(GetQueryContexts));
+            return !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Filter);
         }
 
-        private FilterQueryContext GetQueryContexts(FilterQuery query)
+        /// <inheritdoc/>
+        public bool CanParse(string parameterName)
+        {
+            return parameterName.StartsWith("filter[") && parameterName.EndsWith("]");
+        }
+
+        /// <inheritdoc/>
+        public virtual void Parse(string parameterName, StringValues parameterValue)
+        {
+            EnsureNoNestedResourceRoute(parameterName);
+            var queries = GetFilterQueries(parameterName, parameterValue);
+            _filters.AddRange(queries.Select(x => GetQueryContexts(x, parameterName)));
+        }
+
+        private FilterQueryContext GetQueryContexts(FilterQuery query, string parameterName)
         {
             var queryContext = new FilterQueryContext(query);
             var customQuery = _requestResourceDefinition?.GetCustomQueryFilter(query.Target);
@@ -47,34 +60,37 @@ namespace JsonApiDotNetCore.Query
                 return queryContext;
             }
 
-            queryContext.Relationship = GetRelationship(query.Relationship);
-            var attribute = GetAttribute(query.Attribute, queryContext.Relationship);
+            queryContext.Relationship = GetRelationship(parameterName, query.Relationship);
+            var attribute = GetAttribute(parameterName, query.Attribute, queryContext.Relationship);
 
-            if (attribute.IsFilterable == false)
-                throw new JsonApiException(400, $"Filter is not allowed for attribute '{attribute.PublicAttributeName}'.");
+            if (!attribute.IsFilterable)
+            {
+                throw new InvalidQueryStringParameterException(parameterName, "Filtering on the requested attribute is not allowed.",
+                    $"Filtering on attribute '{attribute.PublicAttributeName}' is not allowed.");
+            }
+
             queryContext.Attribute = attribute;
 
             return queryContext;
         }
 
         /// todo: this could be simplified a bunch 
-        private List<FilterQuery> GetFilterQueries(KeyValuePair<string, StringValues> queryParameter)
+        private List<FilterQuery> GetFilterQueries(string parameterName, StringValues parameterValue)
         {
             // expected input = filter[id]=1
             // expected input = filter[id]=eq:1
-            var propertyName = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
+            var propertyName = parameterName.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
             var queries = new List<FilterQuery>();
             // InArray case
-            string op = GetFilterOperation(queryParameter.Value);
-            if (string.Equals(op, FilterOperation.@in.ToString(), StringComparison.OrdinalIgnoreCase)
-                || string.Equals(op, FilterOperation.nin.ToString(), StringComparison.OrdinalIgnoreCase))
+            string op = GetFilterOperation(parameterValue);
+            if (op == FilterOperation.@in.ToString() || op == FilterOperation.nin.ToString())
             {
-                var (_, filterValue) = ParseFilterOperation(queryParameter.Value);
+                var (_, filterValue) = ParseFilterOperation(parameterValue);
                 queries.Add(new FilterQuery(propertyName, filterValue, op));
             }
             else
             {
-                var values = ((string)queryParameter.Value).Split(QueryConstants.COMMA);
+                var values = ((string)parameterValue).Split(QueryConstants.COMMA);
                 foreach (var val in values)
                 {
                     var (operation, filterValue) = ParseFilterOperation(val);

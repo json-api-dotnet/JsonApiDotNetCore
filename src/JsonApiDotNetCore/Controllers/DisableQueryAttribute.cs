@@ -1,29 +1,47 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JsonApiDotNetCore.Controllers
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public sealed class DisableQueryAttribute : Attribute
     {
+        private readonly List<string> _parameterNames;
+
+        public IReadOnlyCollection<string> ParameterNames => _parameterNames.AsReadOnly();
+
+        public static readonly DisableQueryAttribute Empty = new DisableQueryAttribute(StandardQueryStringParameters.None);
+
         /// <summary>
-        /// Disabled one of the native query parameters for a controller.
+        /// Disables one or more of the builtin query parameters for a controller.
         /// </summary>
-        /// <param name="queryParams"></param>
-        public DisableQueryAttribute(QueryParams queryParams)
+        public DisableQueryAttribute(StandardQueryStringParameters parameters)
         {
-            QueryParams = queryParams.ToString("G").ToLower();
+            _parameterNames = parameters != StandardQueryStringParameters.None
+                ? ParseList(parameters.ToString())
+                : new List<string>();
         }
 
         /// <summary>
-        /// It is allowed to use strings to indicate which query parameters
-        /// should be disabled, because the user may have defined a custom
-        /// query parameter that is not included in the  <see cref="QueryParams"/> enum.
+        /// It is allowed to use a comma-separated list of strings to indicate which query parameters
+        /// should be disabled, because the user may have defined custom query parameters that are
+        /// not included in the <see cref="StandardQueryStringParameters"/> enum.
         /// </summary>
-        /// <param name="customQueryParams"></param>
-        public DisableQueryAttribute(string customQueryParams)
+        public DisableQueryAttribute(string parameterNames)
         {
-            QueryParams = customQueryParams.ToLower();
+            _parameterNames = ParseList(parameterNames);
         }
 
-        public string QueryParams { get; }
+        private static List<string> ParseList(string parameterNames)
+        {
+            return parameterNames.Split(",").Select(x => x.Trim().ToLowerInvariant()).ToList();
+        }
+
+        public bool ContainsParameter(StandardQueryStringParameters parameter)
+        {
+            var name = parameter.ToString().ToLowerInvariant();
+            return _parameterNames.Contains(name);
+        }
     }
 }

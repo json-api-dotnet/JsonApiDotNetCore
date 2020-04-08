@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -26,18 +27,27 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
+        public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
-            var value = (string)queryParameter.Value;
-            if (string.IsNullOrWhiteSpace(value))
-                throw new JsonApiException(400, "Include parameter must not be empty if provided");
-
-            var chains = value.Split(QueryConstants.COMMA).ToList();
-            foreach (var chain in chains)
-                ParseChain(chain);
+            return !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Include);
         }
 
-        private void ParseChain(string chain)
+        /// <inheritdoc/>
+        public bool CanParse(string parameterName)
+        {
+            return parameterName == "include";
+        }
+
+        /// <inheritdoc/>
+        public virtual void Parse(string parameterName, StringValues parameterValue)
+        {
+            var value = (string)parameterValue;
+            var chains = value.Split(QueryConstants.COMMA).ToList();
+            foreach (var chain in chains)
+                ParseChain(chain, parameterName);
+        }
+
+        private void ParseChain(string chain, string parameterName)
         {
             var parsedChain = new List<RelationshipAttribute>();
             var chainParts = chain.Split(QueryConstants.DOT);
@@ -46,26 +56,21 @@ namespace JsonApiDotNetCore.Query
             {
                 var relationship = resourceContext.Relationships.SingleOrDefault(r => r.PublicRelationshipName == relationshipName);
                 if (relationship == null)
-                    throw InvalidRelationshipError(resourceContext, relationshipName);
+                {
+                    throw new InvalidQueryStringParameterException(parameterName, "The requested relationship to include does not exist.",
+                        $"The relationship '{relationshipName}' on '{resourceContext.ResourceName}' does not exist.");
+                }
 
-                if (relationship.CanInclude == false)
-                    throw CannotIncludeError(resourceContext, relationshipName);
+                if (!relationship.CanInclude)
+                {
+                    throw new InvalidQueryStringParameterException(parameterName, "Including the requested relationship is not allowed.",
+                        $"Including the relationship '{relationshipName}' on '{resourceContext.ResourceName}' is not allowed.");
+                }
 
                 parsedChain.Add(relationship);
                 resourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
             }
             _includedChains.Add(parsedChain);
-        }
-
-        private JsonApiException CannotIncludeError(ResourceContext resourceContext, string requestedRelationship)
-        {
-           return new JsonApiException(400, $"Including the relationship {requestedRelationship} on {resourceContext.ResourceName} is not allowed");
-        }
-
-        private JsonApiException InvalidRelationshipError(ResourceContext resourceContext, string requestedRelationship)
-        {
-           return new JsonApiException(400, $"Invalid relationship {requestedRelationship} on {resourceContext.ResourceName}",
-                $"{resourceContext.ResourceName} does not have a relationship named {requestedRelationship}");
         }
     }
 }

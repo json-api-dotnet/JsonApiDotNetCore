@@ -1,7 +1,11 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -129,6 +133,46 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
             var result = deserializedBody["data"]["relationships"]["owner"]["links"]["related"].ToString();
             Assert.EndsWith($"{route}/owner", result);
+        }
+
+        [Fact]
+        public async Task ApiController_attribute_transforms_NotFound_action_result_without_arguments_into_ProblemDetails()
+        {
+            // Arrange
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var route = "/custom/route/todoItems/99999999";
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    id = "99999999",
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["ordinal"] = 1
+                    }
+                }
+            };
+
+            var content = JsonConvert.SerializeObject(requestBody);
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(HttpMethod.Patch, route) {Content = new StringContent(content)};
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.ContentType);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(responseBody);
+
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal("https://tools.ietf.org/html/rfc7231#section-6.5.4", errorDocument.Errors[0].Links.About);
         }
     }
 }

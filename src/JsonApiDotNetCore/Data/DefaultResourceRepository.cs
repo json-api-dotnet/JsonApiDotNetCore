@@ -42,23 +42,30 @@ namespace JsonApiDotNetCore.Data
             _context = contextResolver.GetContext();
             _dbSet = _context.Set<TResource>();
             _logger = loggerFactory.CreateLogger<DefaultResourceRepository<TResource, TId>>();
-
-            _logger.LogTrace("Executing constructor.");
         }
 
         /// <inheritdoc />
         public virtual IQueryable<TResource> Get()
         {
+            _logger.LogTrace($"Entering {nameof(Get)}().");
+
             var resourceContext = _resourceGraph.GetResourceContext<TResource>();
             return EagerLoad(_dbSet, resourceContext.EagerLoads);
         }
 
         /// <inheritdoc />
-        public virtual IQueryable<TResource> Get(TId id) => Get().Where(e => e.Id.Equals(id));
+        public virtual IQueryable<TResource> Get(TId id)
+        {
+            _logger.LogTrace($"Entering {nameof(Get)}('{id}').");
+
+            return Get().Where(e => e.Id.Equals(id));
+        }
 
         /// <inheritdoc />
         public virtual IQueryable<TResource> Select(IQueryable<TResource> entities, IEnumerable<AttrAttribute> fields = null)
         {
+            _logger.LogTrace($"Entering {nameof(Select)}({nameof(entities)}, {nameof(fields)}).");
+
             if (fields != null && fields.Any())
                 return entities.Select(fields);
 
@@ -68,6 +75,8 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual IQueryable<TResource> Filter(IQueryable<TResource> entities, FilterQueryContext filterQueryContext)
         {
+            _logger.LogTrace($"Entering {nameof(Filter)}({nameof(entities)}, {nameof(filterQueryContext)}).");
+
             if (filterQueryContext.IsCustom)
             {
                 var query = (Func<IQueryable<TResource>, FilterQuery, IQueryable<TResource>>)filterQueryContext.CustomQuery;
@@ -79,12 +88,16 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual IQueryable<TResource> Sort(IQueryable<TResource> entities, SortQueryContext sortQueryContext)
         {
+            _logger.LogTrace($"Entering {nameof(Sort)}({nameof(entities)}, {nameof(sortQueryContext)}).");
+
             return entities.Sort(sortQueryContext);
         }
 
         /// <inheritdoc />
         public virtual async Task<TResource> CreateAsync(TResource entity)
         {
+            _logger.LogTrace($"Entering {nameof(CreateAsync)}({(entity == null ? "null" : "object")}).");
+
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
                 object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, entity, out bool relationshipWasAlreadyTracked);
@@ -184,6 +197,8 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TResource> UpdateAsync(TResource updatedEntity)
         {
+            _logger.LogTrace($"Entering {nameof(UpdateAsync)}({(updatedEntity == null ? "null" : "object")}).");
+
             var databaseEntity = await Get(updatedEntity.Id).FirstOrDefaultAsync();
             if (databaseEntity == null)
                 return null;
@@ -264,6 +279,8 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
+            _logger.LogTrace($"Entering {nameof(UpdateRelationshipsAsync)}({nameof(parent)}, {nameof(relationship)}, {nameof(relationshipIds)}).");
+
             var typeToUpdate = (relationship is HasManyThroughAttribute hasManyThrough)
                 ? hasManyThrough.ThroughType
                 : relationship.RightType;
@@ -277,6 +294,8 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<bool> DeleteAsync(TId id)
         {
+            _logger.LogTrace($"Entering {nameof(DeleteAsync)}('{id}').");
+
             var entity = await Get(id).FirstOrDefaultAsync();
             if (entity == null) return false;
             _dbSet.Remove(entity);
@@ -299,6 +318,8 @@ namespace JsonApiDotNetCore.Data
 
         public virtual IQueryable<TResource> Include(IQueryable<TResource> entities, IEnumerable<RelationshipAttribute> inclusionChain = null)
         {
+            _logger.LogTrace($"Entering {nameof(Include)}({nameof(entities)}, {nameof(inclusionChain)}).");
+
             if (inclusionChain == null || !inclusionChain.Any())
             {
                 return entities;
@@ -321,6 +342,8 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<IEnumerable<TResource>> PageAsync(IQueryable<TResource> entities, int pageSize, int pageNumber)
         {
+            _logger.LogTrace($"Entering {nameof(PageAsync)}({nameof(entities)}, {pageSize}, {pageNumber}).");
+
             // the IQueryable returned from the hook executor is sometimes consumed here.
             // In this case, it does not support .ToListAsync(), so we use the method below.
             if (pageNumber >= 0)
@@ -351,6 +374,8 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public async Task<int> CountAsync(IQueryable<TResource> entities)
         {
+            _logger.LogTrace($"Entering {nameof(CountAsync)}({nameof(entities)}).");
+
             if (entities is IAsyncEnumerable<TResource>)
             {
                 return await entities.CountAsync();
@@ -361,6 +386,8 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TResource> FirstOrDefaultAsync(IQueryable<TResource> entities)
         {
+            _logger.LogTrace($"Entering {nameof(FirstOrDefaultAsync)}({nameof(entities)}).");
+
             return (entities is IAsyncEnumerable<TResource>)
                ? await entities.FirstOrDefaultAsync()
                : entities.FirstOrDefault();
@@ -369,6 +396,8 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public async Task<IReadOnlyList<TResource>> ToListAsync(IQueryable<TResource> entities)
         {
+            _logger.LogTrace($"Entering {nameof(ToListAsync)}({nameof(entities)}).");
+
             if (entities is IAsyncEnumerable<TResource>)
             {
                 return await entities.ToListAsync();

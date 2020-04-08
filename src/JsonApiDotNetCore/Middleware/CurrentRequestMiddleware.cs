@@ -1,13 +1,17 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Middleware
 {
@@ -51,7 +55,7 @@ namespace JsonApiDotNetCore.Middleware
                 _currentRequest.RelationshipId = GetRelationshipId();
             }
 
-            if (IsValid())
+            if (await IsValidAsync())
             {
                 await _next(httpContext);
             }
@@ -61,16 +65,10 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (_routeValues.TryGetValue("id", out object stringId))
             {
-                if ((string)stringId == string.Empty)
-                {
-                    throw new JsonApiException(400, "No empty string as id please.");
-                }
                 return (string)stringId;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
         private string GetRelationshipId()
         {
@@ -86,7 +84,7 @@ namespace JsonApiDotNetCore.Middleware
         private string[] SplitCurrentPath()
         {
             var path = _httpContext.Request.Path.Value;
-            var ns = $"/{GetNameSpace()}";
+            var ns = $"/{_options.Namespace}";
             var nonNameSpaced = path.Replace(ns, "");
             nonNameSpaced = nonNameSpaced.Trim('/');
             var individualComponents = nonNameSpaced.Split('/');
@@ -98,11 +96,11 @@ namespace JsonApiDotNetCore.Middleware
             var r = _httpContext.Request;
             if (_options.RelativeLinks)
             {
-                return GetNameSpace();
+                return _options.Namespace;
             }
-            var ns = GetNameSpace();
+
             var customRoute = GetCustomRoute(r.Path.Value, resourceName);
-            var toReturn = $"{r.Scheme}://{r.Host}/{ns}";
+            var toReturn = $"{r.Scheme}://{r.Host}/{_options.Namespace}";
             if (customRoute != null)
             {
                 toReturn += $"/{customRoute}";
@@ -112,12 +110,11 @@ namespace JsonApiDotNetCore.Middleware
 
         private object GetCustomRoute(string path, string resourceName)
         {
-            var ns = GetNameSpace();
             var trimmedComponents = path.Trim('/').Split('/').ToList();
             var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
             var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
             var customRoute = string.Join('/', newComponents);
-            if (customRoute == ns)
+            if (customRoute == _options.Namespace)
             {
                 return null;
             }
@@ -127,36 +124,36 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-        private string GetNameSpace()
-        {
-            return _options.Namespace;
-        }
-
         private bool PathIsRelationship()
         {
             var actionName = (string)_routeValues["action"];
-            return actionName.ToLower().Contains("relationships");
+            return actionName.ToLowerInvariant().Contains("relationships");
         }
 
-        private bool IsValid()
+        private async Task<bool> IsValidAsync()
         {
-            return IsValidContentTypeHeader(_httpContext) && IsValidAcceptHeader(_httpContext);
+            return await IsValidContentTypeHeaderAsync(_httpContext) && await IsValidAcceptHeaderAsync(_httpContext);
         }
 
-        private bool IsValidContentTypeHeader(HttpContext context)
+        private static async Task<bool> IsValidContentTypeHeaderAsync(HttpContext context)
         {
             var contentType = context.Request.ContentType;
             if (contentType != null && ContainsMediaTypeParameters(contentType))
             {
-                FlushResponse(context, 415);
+                await FlushResponseAsync(context, new Error(HttpStatusCode.UnsupportedMediaType)
+                {
+                    Title = "The specified Content-Type header value is not supported.",
+                    Detail = $"Please specify '{HeaderConstants.ContentType}' for the Content-Type header value."
+                });
+
                 return false;
             }
             return true;
         }
 
-        private bool IsValidAcceptHeader(HttpContext context)
+        private static async Task<bool> IsValidAcceptHeaderAsync(HttpContext context)
         {
-            if (context.Request.Headers.TryGetValue(Constants.AcceptHeader, out StringValues acceptHeaders) == false)
+            if (context.Request.Headers.TryGetValue(HeaderConstants.AcceptHeader, out StringValues acceptHeaders) == false)
                 return true;
 
             foreach (var acceptHeader in acceptHeaders)
@@ -166,7 +163,11 @@ namespace JsonApiDotNetCore.Middleware
                     continue;
                 }
 
-                FlushResponse(context, 406);
+                await FlushResponseAsync(context, new Error(HttpStatusCode.NotAcceptable)
+                {
+                    Title = "The specified Accept header value is not supported.",
+                    Detail = $"Please specify '{HeaderConstants.ContentType}' for the Accept header value."
+                });
                 return false;
             }
             return true;
@@ -177,25 +178,32 @@ namespace JsonApiDotNetCore.Middleware
             var incomingMediaTypeSpan = mediaType.AsSpan();
 
             // if the content type is not application/vnd.api+json then continue on
-            if (incomingMediaTypeSpan.Length < Constants.ContentType.Length)
+            if (incomingMediaTypeSpan.Length < HeaderConstants.ContentType.Length)
             {
                 return false;
             }
 
-            var incomingContentType = incomingMediaTypeSpan.Slice(0, Constants.ContentType.Length);
-            if (incomingContentType.SequenceEqual(Constants.ContentType.AsSpan()) == false)
+            var incomingContentType = incomingMediaTypeSpan.Slice(0, HeaderConstants.ContentType.Length);
+            if (incomingContentType.SequenceEqual(HeaderConstants.ContentType.AsSpan()) == false)
                 return false;
 
             // anything appended to "application/vnd.api+json;" will be considered a media type param
             return (
-                incomingMediaTypeSpan.Length >= Constants.ContentType.Length + 2
-                && incomingMediaTypeSpan[Constants.ContentType.Length] == ';'
+                incomingMediaTypeSpan.Length >= HeaderConstants.ContentType.Length + 2
+                && incomingMediaTypeSpan[HeaderConstants.ContentType.Length] == ';'
             );
         }
 
-        private void FlushResponse(HttpContext context, int statusCode)
+        private static async Task FlushResponseAsync(HttpContext context, Error error)
         {
-            context.Response.StatusCode = statusCode;
+            context.Response.StatusCode = (int) error.StatusCode;
+
+            string responseBody = JsonConvert.SerializeObject(new ErrorDocument(error));
+            await using (var writer = new StreamWriter(context.Response.Body))
+            {
+                await writer.WriteAsync(responseBody);
+            }
+
             context.Response.Body.Flush();
         }
 
@@ -218,7 +226,7 @@ namespace JsonApiDotNetCore.Middleware
             }
             if (_routeValues.TryGetValue("relationshipName", out object relationshipName))
             {
-                _currentRequest.RequestRelationship = requestResource.Relationships.Single(r => r.PublicRelationshipName == (string)relationshipName);
+                _currentRequest.RequestRelationship = requestResource.Relationships.SingleOrDefault(r => r.PublicRelationshipName == (string)relationshipName);
             }
             return requestResource;
         }

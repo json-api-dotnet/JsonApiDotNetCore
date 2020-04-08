@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
@@ -181,7 +182,7 @@ namespace JsonApiDotNetCore.Extensions
                     }
                     break;
                 default:
-                    throw new JsonApiException(500, $"Unknown filter operation {operation}");
+                    throw new NotSupportedException($"Filter operation '{operation}' is not supported.");
             }
 
             return body;
@@ -192,42 +193,52 @@ namespace JsonApiDotNetCore.Extensions
             var concreteType = typeof(TSource);
             var property = concreteType.GetProperty(filter.Attribute.PropertyInfo.Name);
 
-            try
+            var propertyValues = filter.Value.Split(QueryConstants.COMMA);
+            ParameterExpression entity = Expression.Parameter(concreteType, "entity");
+            MemberExpression member;
+            if (filter.IsAttributeOfRelationship)
             {
-                var propertyValues = filter.Value.Split(QueryConstants.COMMA);
-                ParameterExpression entity = Expression.Parameter(concreteType, "entity");
-                MemberExpression member;
-                if (filter.IsAttributeOfRelationship)
-                {
-                    var relation = Expression.PropertyOrField(entity, filter.Relationship.InternalRelationshipName);
-                    member = Expression.Property(relation, filter.Attribute.PropertyInfo.Name);
-                }
-                else
-                    member = Expression.Property(entity, filter.Attribute.PropertyInfo.Name);
-
-                var method = ContainsMethod.MakeGenericMethod(member.Type);
-                var obj = TypeHelper.ConvertListType(propertyValues, member.Type);
-
-                if (filter.Operation == FilterOperation.@in)
-                {
-                    // Where(i => arr.Contains(i.column))
-                    var contains = Expression.Call(method, new Expression[] { Expression.Constant(obj), member });
-                    var lambda = Expression.Lambda<Func<TSource, bool>>(contains, entity);
-
-                    return source.Where(lambda);
-                }
-                else
-                {
-                    // Where(i => !arr.Contains(i.column))
-                    var notContains = Expression.Not(Expression.Call(method, new Expression[] { Expression.Constant(obj), member }));
-                    var lambda = Expression.Lambda<Func<TSource, bool>>(notContains, entity);
-
-                    return source.Where(lambda);
-                }
+                var relation = Expression.PropertyOrField(entity, filter.Relationship.InternalRelationshipName);
+                member = Expression.Property(relation, filter.Attribute.PropertyInfo.Name);
             }
-            catch (FormatException)
+            else
+                member = Expression.Property(entity, filter.Attribute.PropertyInfo.Name);
+
+            var method = ContainsMethod.MakeGenericMethod(member.Type);
+            
+            var list = TypeHelper.CreateListFor(member.Type);
+            foreach (var value in propertyValues)
             {
-                throw new JsonApiException(400, $"Could not cast {filter.Value} to {property.PropertyType.Name}");
+                object targetType;
+                try
+                {
+                    targetType = TypeHelper.ConvertType(value, member.Type);
+                }
+                catch (FormatException)
+                {
+                    throw new InvalidQueryStringParameterException("filter",
+                        "Mismatch between query string parameter value and resource attribute type.",
+                        $"Failed to convert '{value}' in set '{filter.Value}' to '{property.PropertyType.Name}' for filtering on '{filter.Query.Attribute}' attribute.");
+                }
+
+                list.Add(targetType);
+            }
+
+            if (filter.Operation == FilterOperation.@in)
+            {
+                // Where(i => arr.Contains(i.column))
+                var contains = Expression.Call(method, new Expression[] { Expression.Constant(list), member });
+                var lambda = Expression.Lambda<Func<TSource, bool>>(contains, entity);
+
+                return source.Where(lambda);
+            }
+            else
+            {
+                // Where(i => !arr.Contains(i.column))
+                var notContains = Expression.Not(Expression.Call(method, new Expression[] { Expression.Constant(list), member }));
+                var lambda = Expression.Lambda<Func<TSource, bool>>(notContains, entity);
+
+                return source.Where(lambda);
             }
         }
 
@@ -275,29 +286,32 @@ namespace JsonApiDotNetCore.Extensions
                 left = Expression.PropertyOrField(parameter, property.Name);
             }
 
-            try
+            Expression right;
+            if (op == FilterOperation.isnotnull || op == FilterOperation.isnull)
+                right = Expression.Constant(null);
+            else
             {
-                Expression right;
-                if (op == FilterOperation.isnotnull || op == FilterOperation.isnull)
-                    right = Expression.Constant(null);
-                else
+                // convert the incoming value to the target value type
+                // "1" -> 1
+                object convertedValue;
+                try
                 {
-                    // convert the incoming value to the target value type
-                    // "1" -> 1
-                    var convertedValue = TypeHelper.ConvertType(filter.Value, property.PropertyType);
-
-                    right = CreateTupleAccessForConstantExpression(convertedValue, property.PropertyType);
+                    convertedValue = TypeHelper.ConvertType(filter.Value, property.PropertyType);
+                }
+                catch (FormatException)
+                {
+                    throw new InvalidQueryStringParameterException("filter",
+                        "Mismatch between query string parameter value and resource attribute type.",
+                        $"Failed to convert '{filter.Value}' to '{property.PropertyType.Name}' for filtering on '{filter.Query.Attribute}' attribute.");
                 }
 
-                var body = GetFilterExpressionLambda(left, right, filter.Operation);
-                var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
+                right = CreateTupleAccessForConstantExpression(convertedValue, property.PropertyType);
+            }
 
-                return source.Where(lambda);
-            }
-            catch (FormatException)
-            {
-                throw new JsonApiException(400, $"Could not cast {filter.Value} to {property.PropertyType.Name}");
-            }
+            var body = GetFilterExpressionLambda(left, right, filter.Operation);
+            var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
+
+            return source.Where(lambda);
         }
 
         private static Expression CreateTupleAccessForConstantExpression(object value, Type type)

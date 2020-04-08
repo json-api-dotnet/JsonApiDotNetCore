@@ -9,6 +9,7 @@ using JsonApiDotNetCore.QueryParameterServices.Common;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Benchmarks.Query
 {
@@ -44,7 +45,7 @@ namespace Benchmarks.Query
                 sortService
             };
 
-            return new QueryParameterParser(options, queryStringAccessor, queryServices);
+            return new QueryParameterParser(options, queryStringAccessor, queryServices, NullLoggerFactory.Instance);
         }
 
         private static QueryParameterParser CreateQueryParameterDiscoveryForAll(IResourceGraph resourceGraph,
@@ -65,7 +66,7 @@ namespace Benchmarks.Query
                 omitNullService
             };
 
-            return new QueryParameterParser(options, queryStringAccessor, queryServices);
+            return new QueryParameterParser(options, queryStringAccessor, queryServices, NullLoggerFactory.Instance);
         }
 
         [Benchmark]

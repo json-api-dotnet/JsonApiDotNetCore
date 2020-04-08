@@ -112,7 +112,7 @@ namespace JsonApiDotNetCore.Internal.Generics
 
             var newLinks = relationshipIds.Select(x =>
             {
-                var link = Activator.CreateInstance(relationship.ThroughType);
+                var link = relationship.ThroughType.New();
                 relationship.LeftIdProperty.SetValue(link, TypeHelper.ConvertType(parentId, relationship.LeftIdProperty.PropertyType));
                 relationship.RightIdProperty.SetValue(link, TypeHelper.ConvertType(x, relationship.RightIdProperty.PropertyType));
                 return link;

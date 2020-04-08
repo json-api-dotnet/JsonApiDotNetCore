@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Middleware;
@@ -64,16 +63,6 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
-        /// <summary>
-        /// Configures your application to return stack traces in error results.
-        /// </summary>
-        /// <param name="app"></param>
-        public static void EnableDetailedErrors(this IApplicationBuilder app)
-        {
-            JsonApiOptions.DisableErrorStackTraces = false;
-            JsonApiOptions.DisableErrorSource = false;
-        }
-
         private static void LogResourceGraphValidations(IApplicationBuilder app)
         {
             var logger = app.ApplicationServices.GetService(typeof(ILogger<ResourceGraphBuilder>)) as ILogger;
@@ -81,13 +70,7 @@ namespace JsonApiDotNetCore.Extensions
 
             if (logger != null)
             {
-                resourceGraph?.ValidationResults.ForEach((v) =>
-                    logger.Log(
-                        v.LogLevel,
-                        new EventId(),
-                        v.Message,
-                        exception: null,
-                        formatter: (m, e) => m));
+                resourceGraph?.ValidationResults.ForEach((v) => logger.Log(v.LogLevel, null, v.Message));
             }
         }
     }

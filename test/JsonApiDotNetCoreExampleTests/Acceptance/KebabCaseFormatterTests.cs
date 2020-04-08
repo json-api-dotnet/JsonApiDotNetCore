@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Acceptance.Spec;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
@@ -83,6 +85,23 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             AssertEqualStatusCode(HttpStatusCode.OK, response);
             var responseItem = _deserializer.DeserializeSingle<KebabCasedModel>(body).Data;
             Assert.Equal(model.CompoundAttr, responseItem.CompoundAttr);
+        }
+
+        [Fact]
+        public async Task KebabCaseFormatter_ErrorWithStackTrace_CasingConventionIsApplied()
+        {
+            // Arrange
+            const string content = "{ \"data\": {";
+
+            // Act
+            var (body, response) = await Patch($"api/v1/kebab-cased-models/1", content);
+
+            // Assert
+            var document = JsonConvert.DeserializeObject<JObject>(body);
+            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
+
+            var meta = document["errors"][0]["meta"];
+            Assert.NotNull(meta["stack-trace"]);
         }
     }
 }

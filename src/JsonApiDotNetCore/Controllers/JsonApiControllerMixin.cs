@@ -1,5 +1,7 @@
-using JsonApiDotNetCore.Internal;
+using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Controllers
@@ -7,19 +9,19 @@ namespace JsonApiDotNetCore.Controllers
     [ServiceFilter(typeof(IQueryParameterActionFilter))]
     public abstract class JsonApiControllerMixin : ControllerBase
     {
-        protected IActionResult Forbidden()
-        {
-            return new StatusCodeResult(403);
-        }
-
         protected IActionResult Error(Error error)
         {
-          return error.AsActionResult();
+            return Error(new[] {error});
         }
 
-        protected IActionResult Errors(ErrorCollection errors)
+        protected IActionResult Error(IEnumerable<Error> errors)
         {
-          return errors.AsActionResult();
+            var document = new ErrorDocument(errors.ToList());
+
+            return new ObjectResult(document)
+            {
+                StatusCode = (int) document.GetErrorStatusCode()
+            };
         }
     }
 }

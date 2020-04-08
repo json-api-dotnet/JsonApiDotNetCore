@@ -63,7 +63,7 @@ namespace NoEntityFrameworkExample.Services
             })).SingleOrDefault();
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }

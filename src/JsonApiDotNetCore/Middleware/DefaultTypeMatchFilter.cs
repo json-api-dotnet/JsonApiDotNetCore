@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Net.Http;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -29,19 +31,17 @@ namespace JsonApiDotNetCore.Middleware
 
                 if (deserializedType != null && targetType != null && deserializedType != targetType)
                 {
-                    var expectedJsonApiResource = _provider.GetResourceContext(targetType);
+                    ResourceContext resourceFromEndpoint = _provider.GetResourceContext(targetType);
+                    ResourceContext resourceFromBody = _provider.GetResourceContext(deserializedType);
 
-                    throw new JsonApiException(409,
-                        $"Cannot '{context.HttpContext.Request.Method}' type '{deserializedType.Name}' "
-                        + $"to '{expectedJsonApiResource?.ResourceName}' endpoint.",
-                        detail: "Check that the request payload type matches the type expected by this endpoint.");
+                    throw new ResourceTypeMismatchException(new HttpMethod(request.Method), request.Path, resourceFromEndpoint, resourceFromBody);
                 }
             }
         }
 
         private bool IsJsonApiRequest(HttpRequest request)
         {
-            return (request.ContentType?.Equals(Constants.ContentType, StringComparison.OrdinalIgnoreCase) == true);
+            return request.ContentType == HeaderConstants.ContentType;
         }
 
         public void OnActionExecuted(ActionExecutedContext context) { /* noop */ }

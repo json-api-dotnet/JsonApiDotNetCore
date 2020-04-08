@@ -1,7 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Services;
@@ -27,13 +26,8 @@ namespace JsonApiDotNetCoreExample.Services
         public override async Task<Article> GetAsync(int id)
         {
             var newEntity = await base.GetAsync(id);
-            if(newEntity == null)
-            {
-                throw new JsonApiException(404, "The entity could not be found");
-            }
             newEntity.Name = "None for you Glen Coco";
             return newEntity;
         }
     }
-
 }

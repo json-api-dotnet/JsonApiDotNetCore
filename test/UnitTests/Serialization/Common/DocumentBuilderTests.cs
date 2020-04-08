@@ -50,7 +50,7 @@ namespace UnitTests.Serialization.Serializer
         public void EntityToDocument_SingleEntity_CanBuild()
         {
             // Arrange
-            IIdentifiable dummy = new Identifiable();
+            IIdentifiable dummy = new DummyResource();
 
             // Act
             var document = _builder.Build(dummy);
@@ -64,7 +64,7 @@ namespace UnitTests.Serialization.Serializer
         public void EntityToDocument_EntityList_CanBuild()
         {
             // Arrange
-            var entities = new List<IIdentifiable> { new Identifiable(), new Identifiable() };
+            var entities = new List<IIdentifiable> { new DummyResource(), new DummyResource() };
 
             // Act
             var document = _builder.Build(entities);
@@ -72,6 +72,10 @@ namespace UnitTests.Serialization.Serializer
 
             // Assert
             Assert.Equal(2, data.Count);
+        }
+
+        public sealed class DummyResource : Identifiable
+        {
         }
     }
 }

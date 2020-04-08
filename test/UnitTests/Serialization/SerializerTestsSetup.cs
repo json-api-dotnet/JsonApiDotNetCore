@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCore.Query;
@@ -45,7 +46,7 @@ namespace UnitTests.Serialization
             var includedBuilder = GetIncludedBuilder();
             var fieldsToSerialize = GetSerializableFields();
             ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, GetSerializerSettingsProvider());
-            return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder);
+            return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, new CamelCaseFormatter());
         }
 
         protected ResponseResourceObjectBuilder GetResponseResourceObjectBuilder(List<List<RelationshipAttribute>> inclusionChains = null, ResourceLinks resourceLinks = null, RelationshipLinks relationshipLinks = null) 

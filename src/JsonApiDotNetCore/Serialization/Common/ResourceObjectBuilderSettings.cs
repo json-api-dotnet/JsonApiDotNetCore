@@ -8,12 +8,12 @@ namespace JsonApiDotNetCore.Serialization
     /// </summary>
     public sealed class ResourceObjectBuilderSettings 
     {
-        /// <param name="omitNullValuedAttributes">Omit null values from attributes</param>
-        /// <param name="omitDefaultValuedAttributes">Omit default values from attributes</param>
-        public ResourceObjectBuilderSettings(bool omitNullValuedAttributes = false, bool omitDefaultValuedAttributes = false)
+        /// <param name="omitAttributeIfValueIsNull">Omit null values from attributes</param>
+        /// <param name="omitAttributeIfValueIsDefault">Omit default values from attributes</param>
+        public ResourceObjectBuilderSettings(bool omitAttributeIfValueIsNull = false, bool omitAttributeIfValueIsDefault = false)
         {
-            OmitNullValuedAttributes = omitNullValuedAttributes;
-            OmitDefaultValuedAttributes = omitDefaultValuedAttributes;
+            OmitAttributeIfValueIsNull = omitAttributeIfValueIsNull;
+            OmitAttributeIfValueIsDefault = omitAttributeIfValueIsDefault;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Serialization
         /// options.NullAttributeResponseBehavior = new NullAttributeResponseBehavior(true);
         /// </code>
         /// </example>
-        public bool OmitNullValuedAttributes { get; }
+        public bool OmitAttributeIfValueIsNull { get; }
 
         /// <summary>
         /// Prevent attributes with default values from being included in the response.
@@ -38,8 +38,6 @@ namespace JsonApiDotNetCore.Serialization
         /// options.DefaultAttributeResponseBehavior = new DefaultAttributeResponseBehavior(true);
         /// </code>
         /// </example>
-        public bool OmitDefaultValuedAttributes { get; }
+        public bool OmitAttributeIfValueIsDefault { get; }
     }
-
 }
-

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -25,15 +26,6 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
-        {
-            EnsureNoNestedResourceRoute();
-            var queries = BuildQueries(queryParameter.Value);
-
-            _queries = queries.Select(BuildQueryContext).ToList();
-        }
-
-        /// <inheritdoc/>
         public List<SortQueryContext> Get()
         {
             if (_queries == null)
@@ -45,13 +37,36 @@ namespace JsonApiDotNetCore.Query
             return _queries.ToList();
         }
 
-        private List<SortQuery> BuildQueries(string value)
+        /// <inheritdoc/>
+        public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
+        {
+            return !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Sort);
+        }
+
+        /// <inheritdoc/>
+        public bool CanParse(string parameterName)
+        {
+            return parameterName == "sort";
+        }
+
+        /// <inheritdoc/>
+        public virtual void Parse(string parameterName, StringValues parameterValue)
+        {
+            EnsureNoNestedResourceRoute(parameterName);
+            var queries = BuildQueries(parameterValue, parameterName);
+
+            _queries = queries.Select(BuildQueryContext).ToList();
+        }
+
+        private List<SortQuery> BuildQueries(string value, string parameterName)
         {
             var sortParameters = new List<SortQuery>();
 
             var sortSegments = value.Split(QueryConstants.COMMA);
             if (sortSegments.Any(s => s == string.Empty))
-                throw new JsonApiException(400, "The sort URI segment contained a null value.");
+            {
+                throw new InvalidQueryStringParameterException(parameterName, "The list of fields to sort on contains empty elements.", null);
+            }
 
             foreach (var sortSegment in sortSegments)
             {
@@ -72,11 +87,14 @@ namespace JsonApiDotNetCore.Query
 
         private SortQueryContext BuildQueryContext(SortQuery query)
         {
-            var relationship = GetRelationship(query.Relationship);
-            var attribute = GetAttribute(query.Attribute, relationship);
+            var relationship = GetRelationship("sort", query.Relationship);
+            var attribute = GetAttribute("sort", query.Attribute, relationship);
 
-            if (attribute.IsSortable == false)
-                throw new JsonApiException(400, $"Sort is not allowed for attribute '{attribute.PublicAttributeName}'.");
+            if (!attribute.IsSortable)
+            {
+                throw new InvalidQueryStringParameterException("sort", "Sorting on the requested attribute is not allowed.",
+                    $"Sorting on attribute '{attribute.PublicAttributeName}' is not allowed.");
+            }
 
             return new SortQueryContext(query)
             {

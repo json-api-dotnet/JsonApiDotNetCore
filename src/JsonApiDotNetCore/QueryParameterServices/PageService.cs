@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -63,61 +63,80 @@ namespace JsonApiDotNetCore.Query
         public int? TotalRecords { get; set; }
 
         /// <inheritdoc/>
-        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
+        public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
-            EnsureNoNestedResourceRoute();
+            return !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Page);
+        }
+
+        /// <inheritdoc/>
+        public bool CanParse(string parameterName)
+        {
+            return parameterName == "page[size]" || parameterName == "page[number]";
+        }
+
+        /// <inheritdoc/>
+        public virtual void Parse(string parameterName, StringValues parameterValue)
+        {
+            EnsureNoNestedResourceRoute(parameterName);
             // expected input = page[size]=<integer>
             //                  page[number]=<integer greater than zero> 
-            var propertyName = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
+            var propertyName = parameterName.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
 
-            const string SIZE = "size";
-            const string NUMBER = "number";
-
-            if (propertyName == SIZE)
+            if (propertyName == "size")
             {
-                if (!int.TryParse(queryParameter.Value, out var size))
-                {
-                    ThrowBadPagingRequest(queryParameter, "value could not be parsed as an integer");
-                }
-                else if (size < 1)
-                {
-                    ThrowBadPagingRequest(queryParameter, "value needs to be greater than zero");
-                }
-                else if (size > _options.MaximumPageSize)
-                {
-                    ThrowBadPagingRequest(queryParameter, $"page size cannot be higher than {_options.MaximumPageSize}.");
-                }
-                else
-                {
-                    RequestedPageSize = size;
-                }
+                RequestedPageSize = ParsePageSize(parameterValue, _options.MaximumPageSize);
             }
-            else if (propertyName == NUMBER)
-            { 
-                if (!int.TryParse(queryParameter.Value, out var number))
-                {
-                    ThrowBadPagingRequest(queryParameter, "value could not be parsed as an integer");
-                }
-                else if (number == 0)
-                {
-                    ThrowBadPagingRequest(queryParameter, "page index is not zero-based");
-                }
-                else if (number > _options.MaximumPageNumber)
-                {
-                    ThrowBadPagingRequest(queryParameter, $"page index cannot be higher than {_options.MaximumPageNumber}.");
-                }
-                else
-                {
-                    Backwards = (number < 0);
-                    CurrentPage = Math.Abs(number);
-                }
+            else if (propertyName == "number")
+            {
+                var number = ParsePageNumber(parameterValue, _options.MaximumPageNumber);
+
+                // TODO: It doesn't seem right that a negative paging value reverses the sort order.
+                // A better way would be to allow ?sort=- to indicate reversing results.
+                // Then a negative paging value, like -5, could mean: "5 pages back from the last page"
+
+                Backwards = number < 0;
+                CurrentPage = Backwards ? -number : number;
             }
         }
 
-        private void ThrowBadPagingRequest(KeyValuePair<string, StringValues> parameter, string message)
+        private int ParsePageSize(string parameterValue, int? maxValue)
         {
-            throw new JsonApiException(400, $"Invalid page query parameter '{parameter.Key}={parameter.Value}': {message}");
+            bool success = int.TryParse(parameterValue, out int number);
+            int minValue = maxValue != null ? 1 : 0;
+
+            if (success && number >= minValue)
+            {
+                if (maxValue == null || number <= maxValue)
+                {
+                    return number;
+                }
+            }
+
+            var message = maxValue == null
+                ? $"Value '{parameterValue}' is invalid, because it must be a whole number that is greater than zero."
+                : $"Value '{parameterValue}' is invalid, because it must be a whole number that is zero or greater and not higher than {maxValue}.";
+
+            throw new InvalidQueryStringParameterException("page[size]",
+                "The specified value is not in the range of valid values.", message);
         }
 
+        private int ParsePageNumber(string parameterValue, int? maxValue)
+        {
+            bool success = int.TryParse(parameterValue, out int number);
+            if (success && number != 0)
+            {
+                if (maxValue == null || (number >= 0 ? number <= maxValue : number >= -maxValue))
+                {
+                    return number;
+                }
+            }
+
+            var message = maxValue == null
+                ? $"Value '{parameterValue}' is invalid, because it must be a whole number that is non-zero."
+                : $"Value '{parameterValue}' is invalid, because it must be a whole number that is non-zero and not higher than {maxValue} or lower than -{maxValue}.";
+
+            throw new InvalidQueryStringParameterException("page[number]",
+                "The specified value is not in the range of valid values.", message);
+        }
     }
 }

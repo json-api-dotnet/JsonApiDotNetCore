@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExample.Resources
 
         public override IEnumerable<Tag> OnReturn(HashSet<Tag> entities, ResourcePipeline pipeline)
         {
-            return entities.Where(t => t.Name != "This should be not be included");
+            return entities.Where(t => t.Name != "This should not be included");
         }
     }
 }

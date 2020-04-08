@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Newtonsoft.Json;
 using Xunit;
 using UnitTests.TestModels;
@@ -449,41 +450,32 @@ namespace UnitTests.Serialization.Server
         }
 
         [Fact]
-        public void SerializeError_CustomError_CanSerialize()
+        public void SerializeError_Error_CanSerialize()
         {
             // Arrange
-            var error = new CustomError(507, "title", "detail", "custom");
-            var errorCollection = new ErrorCollection();
-            errorCollection.Add(error);
+            var error = new Error(HttpStatusCode.InsufficientStorage) {Title = "title", Detail = "detail"};
+            var errorDocument = new ErrorDocument(error);
 
             var expectedJson = JsonConvert.SerializeObject(new
             {
-                errors = new dynamic[] {
-                    new {
-                        myCustomProperty = "custom",
+                errors = new[]
+                {
+                    new
+                    {
+                        id = error.Id,
+                        status = "507",
                         title = "title",
-                        detail = "detail",
-                        status = "507"
+                        detail = "detail"
                     }
                 }
             });
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
 
             // Act
-            var result = serializer.Serialize(errorCollection);
+            var result = serializer.Serialize(errorDocument);
 
             // Assert
             Assert.Equal(expectedJson, result);
-        }
-
-        private sealed class CustomError : Error
-        {
-            public CustomError(int status, string title, string detail, string myProp)
-            : base(status, title, detail)
-            {
-                MyCustomProperty = myProp;
-            }
-            public string MyCustomProperty { get; set; }
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using BenchmarkDotNet.Attributes;
+using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers;
 using JsonApiDotNetCore.Query;
@@ -33,7 +34,7 @@ namespace Benchmarks.Serialization
             var resourceObjectBuilder = new ResourceObjectBuilder(resourceGraph, new ResourceObjectBuilderSettings());
 
             _jsonApiSerializer = new ResponseSerializer<BenchmarkResource>(metaBuilderMock.Object, linkBuilderMock.Object,
-                includeBuilderMock.Object, fieldsToSerialize, resourceObjectBuilder);
+                includeBuilderMock.Object, fieldsToSerialize, resourceObjectBuilder, new CamelCaseFormatter());
         }
 
         private static FieldsToSerialize CreateFieldsToSerialize(IResourceGraph resourceGraph)

@@ -5,13 +5,16 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -59,10 +62,20 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Response400IfUpdatingNotSettableAttribute()
+        public async Task Response422IfUpdatingNotSettableAttribute()
         {
             // Arrange
             var builder = new WebHostBuilder().UseStartup<Startup>();
+
+            var loggerFactory = new FakeLoggerFactory();
+            builder.ConfigureLogging(options =>
+            {
+                options.AddProvider(loggerFactory);
+                options.SetMinimumLevel(LogLevel.Trace);
+                options.AddFilter((category, level) => level == LogLevel.Trace && 
+                    (category == typeof(JsonApiReader).FullName || category == typeof(JsonApiWriter).FullName));
+            });
+
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -78,16 +91,33 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
-            Assert.Equal(422, Convert.ToInt32(response.StatusCode));
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var document = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(document.Errors);
+
+            var error = document.Errors.Single();
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
+            Assert.Equal("Failed to deserialize request body.", error.Title);
+            Assert.StartsWith("Property set method not found. - Request body: <<", error.Detail);
+
+            Assert.NotEmpty(loggerFactory.Logger.Messages);
+            Assert.Contains(loggerFactory.Logger.Messages,
+                x => x.Text.StartsWith("Received request at ") && x.Text.Contains("with body:"));
+            Assert.Contains(loggerFactory.Logger.Messages,
+                x => x.Text.StartsWith("Sending 422 response for request at ") && x.Text.Contains("Failed to deserialize request body."));
         }
 
         [Fact]
         public async Task Respond_404_If_EntityDoesNotExist()
         {
             // Arrange
-            var maxPersonId = _context.TodoItems.ToList().LastOrDefault()?.Id ?? 0;
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+            await _context.SaveChangesAsync();
+
             var todoItem = _todoItemFaker.Generate();
-            todoItem.Id = maxPersonId + 100;
+            todoItem.Id = 100;
             todoItem.CreatedDate = DateTime.Now;
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
@@ -97,13 +127,20 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.Description, ti.Ordinal, ti.CreatedDate });
             var content = serializer.Serialize(todoItem);
-            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{maxPersonId + 100}", content);
+            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", content);
 
             // Act
             var response = await client.SendAsync(request);
 
             // Assert
+            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("Resource of type 'todoItems' with id '100' does not exist.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -118,7 +155,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.Description, ti.Ordinal, ti.CreatedDate });
+            var serializer = _fixture.GetSerializer<TodoItem>(ti => new {ti.Description, ti.Ordinal, ti.CreatedDate});
             var content = serializer.Serialize(todoItem);
             var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{maxPersonId}", content);
 
@@ -126,8 +163,45 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
-            Assert.Equal(422, Convert.ToInt32(response.StatusCode));
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
 
+            var body = await response.Content.ReadAsStringAsync();
+            var document = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(document.Errors);
+
+            var error = document.Errors.Single();
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
+            Assert.Equal("Failed to deserialize request body: Payload must include id attribute.", error.Title);
+            Assert.StartsWith("Request body: <<", error.Detail);
+        }
+        
+        [Fact]
+        public async Task Respond_422_If_Broken_JSON_Payload()
+        {
+            // Arrange
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            
+            var content = "{ \"data\" {";
+            var request = PrepareRequest("POST", $"/api/v1/todoItems", content);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var document = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(document.Errors);
+
+            var error = document.Errors.Single();
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
+            Assert.Equal("Failed to deserialize request body.", error.Title);
+            Assert.StartsWith("Invalid character after parsing", error.Detail);
         }
 
         [Fact]

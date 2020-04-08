@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Exceptions;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -21,8 +23,6 @@ namespace JsonApiDotNetCore.Query
         /// </summary>
         private readonly Dictionary<RelationshipAttribute, List<AttrAttribute>> _selectedRelationshipFields;
 
-        public override string Name => "fields";
-
         public SparseFieldsService(IResourceGraph resourceGraph, ICurrentRequest currentRequest) : base(resourceGraph, currentRequest)
         {
             _selectedFields = new List<AttrAttribute>();
@@ -40,20 +40,36 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
-        {   // expected: articles?fields=prop1,prop2
+        public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
+        {
+            return !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Fields);
+        }
+
+        /// <inheritdoc/>
+        public bool CanParse(string parameterName)
+        {
+            var isRelated = parameterName.StartsWith("fields[") && parameterName.EndsWith("]");
+            return parameterName == "fields" || isRelated;
+        }
+
+        /// <inheritdoc/>
+        public virtual void Parse(string parameterName, StringValues parameterValue)
+        {
+            // expected: articles?fields=prop1,prop2
             //           articles?fields[articles]=prop1,prop2  <-- this form in invalid UNLESS "articles" is actually a relationship on Article
             //           articles?fields[relationship]=prop1,prop2
-            EnsureNoNestedResourceRoute();
-            var fields = new List<string> { nameof(Identifiable.Id) };
-            fields.AddRange(((string)queryParameter.Value).Split(QueryConstants.COMMA));
+            EnsureNoNestedResourceRoute(parameterName);
 
-            var keySplit = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET);
+            HashSet<string> fields = new HashSet<string>();
+            fields.Add(nameof(Identifiable.Id).ToLowerInvariant());
+            fields.AddRange(((string) parameterValue).Split(QueryConstants.COMMA));
+
+            var keySplit = parameterName.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET);
 
             if (keySplit.Length == 1)
             {   // input format: fields=prop1,prop2
                 foreach (var field in fields)
-                    RegisterRequestResourceField(field);
+                    RegisterRequestResourceField(field, parameterName);
             }
             else
             {  // input format: fields[articles]=prop1,prop2
@@ -62,31 +78,45 @@ namespace JsonApiDotNetCore.Query
                 // that is equal to the resource name, like with self-referencing data types (eg directory structures)
                 // if not, no longer support this type of sparse field selection.
                 if (navigation == _requestResource.ResourceName && !_requestResource.Relationships.Any(a => a.Is(navigation)))
-                    throw new JsonApiException(400, $"Use '?fields=...' instead of 'fields[{navigation}]':" +
-                        " the square bracket navigations is now reserved " +
-                        "for relationships only. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/555#issuecomment-543100865");
+                {
+                    throw new InvalidQueryStringParameterException(parameterName,
+                        "Square bracket notation in 'filter' is now reserved for relationships only. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/555#issuecomment-543100865 for details.",
+                        $"Use '?fields=...' instead of '?fields[{navigation}]=...'.");
+                }
 
                 if (navigation.Contains(QueryConstants.DOT))
-                    throw new JsonApiException(400, $"fields[{navigation}] is not valid: deeply nested sparse field selection is not yet supported.");
+                {
+                    throw new InvalidQueryStringParameterException(parameterName,
+                        "Deeply nested sparse field selection is currently not supported.",
+                        $"Parameter fields[{navigation}] is currently not supported.");
+                }
 
                 var relationship = _requestResource.Relationships.SingleOrDefault(a => a.Is(navigation));
                 if (relationship == null)
-                    throw new JsonApiException(400, $"'{navigation}' in 'fields[{navigation}]' is not a valid relationship of {_requestResource.ResourceName}");
+                {
+                    throw new InvalidQueryStringParameterException(parameterName, "Sparse field navigation path refers to an invalid relationship.",
+                        $"'{navigation}' in 'fields[{navigation}]' is not a valid relationship of {_requestResource.ResourceName}.");
+                }
 
                 foreach (var field in fields)
-                    RegisterRelatedResourceField(field, relationship);
+                    RegisterRelatedResourceField(field, relationship, parameterName);
             }
         }
 
         /// <summary>
         /// Registers field selection queries of the form articles?fields[author]=firstName
         /// </summary>
-        private void RegisterRelatedResourceField(string field, RelationshipAttribute relationship)
+        private void RegisterRelatedResourceField(string field, RelationshipAttribute relationship, string parameterName)
         {
             var relationProperty = _resourceGraph.GetResourceContext(relationship.RightType);
             var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
             if (attr == null)
-                throw new JsonApiException(400, $"'{relationship.RightType.Name}' does not contain '{field}'.");
+            {
+                // TODO: Add unit test for this error, once the nesting limitation is removed and this code becomes reachable again.
+
+                throw new InvalidQueryStringParameterException(parameterName, "Sparse field navigation path refers to an invalid related field.",
+                    $"Related resource '{relationship.RightType.Name}' does not contain an attribute named '{field}'.");
+            }
 
             if (!_selectedRelationshipFields.TryGetValue(relationship, out var registeredFields))
                 _selectedRelationshipFields.Add(relationship, registeredFields = new List<AttrAttribute>());
@@ -96,11 +126,15 @@ namespace JsonApiDotNetCore.Query
         /// <summary>
         /// Registers field selection queries of the form articles?fields=title
         /// </summary>
-        private void RegisterRequestResourceField(string field)
+        private void RegisterRequestResourceField(string field, string parameterName)
         {
             var attr = _requestResource.Attributes.SingleOrDefault(a => a.Is(field));
             if (attr == null)
-                throw new JsonApiException(400, $"'{_requestResource.ResourceName}' does not contain '{field}'.");
+            {
+                throw new InvalidQueryStringParameterException(parameterName,
+                    "The specified field does not exist on the requested resource.",
+                    $"The field '{field}' does not exist on resource '{_requestResource.ResourceName}'.");
+            }
 
             (_selectedFields ??= new List<AttrAttribute>()).Add(attr);
         }

@@ -1,10 +1,11 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.QueryParameterServices.Common;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -14,53 +15,51 @@ namespace JsonApiDotNetCore.Services
         private readonly IJsonApiOptions _options;
         private readonly IRequestQueryStringAccessor _queryStringAccessor;
         private readonly IEnumerable<IQueryParameterService> _queryServices;
+        private ILogger<QueryParameterParser> _logger;
 
-        public QueryParameterParser(IJsonApiOptions options, IRequestQueryStringAccessor queryStringAccessor, IEnumerable<IQueryParameterService> queryServices)
+        public QueryParameterParser(IJsonApiOptions options, IRequestQueryStringAccessor queryStringAccessor, IEnumerable<IQueryParameterService> queryServices, ILoggerFactory loggerFactory)
         {
             _options = options;
             _queryStringAccessor = queryStringAccessor;
             _queryServices = queryServices;
+
+            _logger = loggerFactory.CreateLogger<QueryParameterParser>();
         }
 
-        /// <summary>
-        /// For a parameter in the query string of the request URL, calls
-        /// the <see cref="IQueryParameterService.Parse(KeyValuePair{string, Microsoft.Extensions.Primitives.StringValues})"/>
-        /// method of the corresponding service.
-        /// </summary>
-        public virtual void Parse(DisableQueryAttribute disabled)
+        /// <inheritdoc/>
+        public virtual void Parse(DisableQueryAttribute disableQueryAttribute)
         {
-            var disabledQuery = disabled?.QueryParams;
+            disableQueryAttribute ??= DisableQueryAttribute.Empty;
 
             foreach (var pair in _queryStringAccessor.Query)
             {
-                bool parsed = false;
-                foreach (var service in _queryServices)
+                if (string.IsNullOrEmpty(pair.Value))
                 {
-                    if (pair.Key.ToLower().StartsWith(service.Name, StringComparison.Ordinal))
-                    {
-                        if (disabledQuery == null || !IsDisabled(disabledQuery, service))
-                            service.Parse(pair);
-                        parsed = true;
-                        break;
-                    }
+                    throw new InvalidQueryStringParameterException(pair.Key, "Missing query string parameter value.",
+                        $"Missing value for '{pair.Key}' query string parameter.");
                 }
-                if (parsed)
-                    continue;
 
-                if (!_options.AllowCustomQueryParameters)
-                    throw new JsonApiException(400, $"{pair} is not a valid query.");
+                var service = _queryServices.FirstOrDefault(s => s.CanParse(pair.Key));
+                if (service != null)
+                {
+                    _logger.LogDebug($"Query string parameter '{pair.Key}' with value '{pair.Value}' was accepted by {service.GetType().Name}.");
+
+                    if (!service.IsEnabled(disableQueryAttribute))
+                    {
+                        throw new InvalidQueryStringParameterException(pair.Key,
+                            "Usage of one or more query string parameters is not allowed at the requested endpoint.",
+                            $"The parameter '{pair.Key}' cannot be used at this endpoint.");
+                    }
+
+                    service.Parse(pair.Key, pair.Value);
+                    _logger.LogDebug($"Query string parameter '{pair.Key}' was successfully parsed.");
+                }
+                else if (!_options.AllowCustomQueryStringParameters)
+                {
+                    throw new InvalidQueryStringParameterException(pair.Key, "Unknown query string parameter.",
+                        $"Query string parameter '{pair.Key}' is unknown. Set '{nameof(IJsonApiOptions.AllowCustomQueryStringParameters)}' to 'true' in options to ignore unknown parameters.");
+                }
             }
-        }
-
-        private bool IsDisabled(string disabledQuery, IQueryParameterService targetsService)
-        {
-            if (disabledQuery == QueryParams.All.ToString("G").ToLower())
-                return true;
-
-            if (disabledQuery == targetsService.Name)
-                return true;
-
-            return false;
         }
     }
 }

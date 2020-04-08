@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server.Builders;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
+using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -32,29 +34,45 @@ namespace JsonApiDotNetCore.Serialization.Server
         private readonly Type _primaryResourceType;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
+        private readonly JsonSerializerSettings _errorSerializerSettings;
 
         public ResponseSerializer(IMetaBuilder<TResource> metaBuilder,
-                                  ILinkBuilder linkBuilder,
-                                  IIncludedResourceObjectBuilder includedBuilder,
-                                  IFieldsToSerialize fieldsToSerialize,
-                                  IResourceObjectBuilder resourceObjectBuilder) :
-            base(resourceObjectBuilder)
+            ILinkBuilder linkBuilder,
+            IIncludedResourceObjectBuilder includedBuilder,
+            IFieldsToSerialize fieldsToSerialize,
+            IResourceObjectBuilder resourceObjectBuilder,
+            IResourceNameFormatter formatter)
+            : base(resourceObjectBuilder)
         {
             _fieldsToSerialize = fieldsToSerialize;
             _linkBuilder = linkBuilder;
             _metaBuilder = metaBuilder;
             _includedBuilder = includedBuilder;
             _primaryResourceType = typeof(TResource);
+
+            _errorSerializerSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new NewtonsoftNamingStrategyAdapter(formatter)
+                }
+            };
         }
 
         /// <inheritdoc/>
         public string Serialize(object data)
         {
-            if (data is ErrorCollection error)
-                return error.GetJson();
+            if (data is ErrorDocument errorDocument)
+                return SerializeErrorDocument(errorDocument);
             if (data is IEnumerable entities)
                 return SerializeMany(entities);
             return SerializeSingle((IIdentifiable)data);
+        }
+
+        private string SerializeErrorDocument(ErrorDocument errorDocument)
+        {
+            return JsonConvert.SerializeObject(errorDocument, _errorSerializerSettings);
         }
 
         /// <summary>
@@ -65,7 +83,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// </remarks>
         internal string SerializeSingle(IIdentifiable entity)
         {
-            if (RequestRelationship != null)
+            if (RequestRelationship != null && entity != null)
                return JsonConvert.SerializeObject(((ResponseResourceObjectBuilder)_resourceObjectBuilder).Build(entity, RequestRelationship));
 
             var (attributes, relationships) = GetFieldsToSerialize();
@@ -157,6 +175,24 @@ namespace JsonApiDotNetCore.Serialization.Server
             document.Links = _linkBuilder.GetTopLevelLinks();
             document.Meta = _metaBuilder.GetMeta();
             document.Included = _includedBuilder.Build();
+        }
+        
+        private sealed class NewtonsoftNamingStrategyAdapter : NamingStrategy
+        {
+            private readonly IResourceNameFormatter _formatter;
+
+            public NewtonsoftNamingStrategyAdapter(IResourceNameFormatter formatter)
+            {
+                _formatter = formatter;
+
+                ProcessDictionaryKeys = true;
+                ProcessExtensionDataNames = true;
+            }
+
+            protected override string ResolvePropertyName(string name)
+            {
+                return _formatter.ApplyCasingConvention(name);
+            }
         }
     }
 }

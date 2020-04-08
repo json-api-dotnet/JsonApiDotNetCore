@@ -25,6 +25,7 @@ namespace JsonApiDotNetCoreExample
                     options.IncludeTotalRecordCount = true;
                     options.LoadDatabaseValues = true;
                     options.AllowClientGeneratedIds = true;
+                    options.DefaultPageSize = 0;
                 },
                 discovery => discovery.AddAssembly(Assembly.Load(nameof(JsonApiDotNetCoreExample))),
                 mvcBuilder: mvcBuilder);

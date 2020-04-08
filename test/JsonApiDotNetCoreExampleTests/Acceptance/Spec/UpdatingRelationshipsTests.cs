@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -769,6 +770,83 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(2, dbPerson.TodoItems.Count);
             Assert.NotNull(dbPerson.TodoItems.SingleOrDefault(ti => ti.Id == todoItem1Id));
             Assert.NotNull(dbPerson.TodoItems.SingleOrDefault(ti => ti.Id == todoItem2Id));
+        }
+
+        [Fact]
+        public async Task Fails_On_Unknown_Relationship()
+        {
+            // Arrange
+            var person = _personFaker.Generate();
+            _context.People.Add(person);
+
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+
+            _context.SaveChanges();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var serializer = _fixture.GetSerializer<Person>(p => new { });
+            var content = serializer.Serialize(person);
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/invalid";
+            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(content)};
+
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The requested relationship does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("The resource 'todoItems' does not contain a relationship named 'invalid'.",errorDocument.Errors[0].Detail);
+        }
+
+        [Fact]
+        public async Task Fails_On_Missing_Resource()
+        {
+            // Arrange
+            var person = _personFaker.Generate();
+            _context.People.Add(person);
+
+            _context.SaveChanges();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var serializer = _fixture.GetSerializer<Person>(p => new { });
+            var content = serializer.Serialize(person);
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todoItems/99999999/relationships/owner";
+            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(content)};
+
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("Resource of type 'todoItems' with id '99999999' does not exist.",errorDocument.Errors[0].Detail);
         }
     }
 }

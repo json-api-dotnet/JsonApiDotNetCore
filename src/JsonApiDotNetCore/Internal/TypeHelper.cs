@@ -4,19 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Linq.Expressions;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
     internal static class TypeHelper
     {
-        public static IList ConvertCollection(IEnumerable<object> collection, Type targetType)
-        {
-            var list = Activator.CreateInstance(typeof(List<>).MakeGenericType(targetType)) as IList;
-            foreach (var item in collection)
-                list.Add(ConvertType(item, targetType));
-            return list;
-        }
         private static bool IsNullable(Type type)
         {
             return (!type.IsValueType || Nullable.GetUnderlyingType(type) != null);
@@ -53,22 +47,22 @@ namespace JsonApiDotNetCore.Internal
                 if (type == typeof(TimeSpan))
                     return TimeSpan.Parse(stringValue);
 
-                if (type.GetTypeInfo().IsEnum)
+                if (type.IsEnum)
                     return Enum.Parse(type, stringValue);
 
                 return Convert.ChangeType(stringValue, type);
             }
             catch (Exception e)
             {
-                throw new FormatException($"{ typeOfValue } cannot be converted to { type }", e);
+                throw new FormatException($"{typeOfValue} cannot be converted to {type}", e);
             }
         }
 
         private static object GetDefaultType(Type type)
         {
-            if (type.GetTypeInfo().IsValueType)
+            if (type.IsValueType)
             {
-                return Activator.CreateInstance(type);
+                return type.New();
             }
             return null;
         }

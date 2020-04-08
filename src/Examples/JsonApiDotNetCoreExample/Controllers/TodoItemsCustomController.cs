@@ -1,23 +1,24 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
+    [ApiController]
     [DisableRoutingConvention, Route("custom/route/todoItems")]
     public class TodoItemsCustomController : CustomJsonApiController<TodoItem>
     {
         public TodoItemsCustomController(
             IJsonApiOptions options,
-            IResourceService<TodoItem> resourceService,
-            ILoggerFactory loggerFactory) 
-            : base(options, resourceService, loggerFactory)
+            IResourceService<TodoItem> resourceService) 
+            : base(options, resourceService)
         { }
     }
 
@@ -26,8 +27,7 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public CustomJsonApiController(
             IJsonApiOptions options,
-            IResourceService<T, int> resourceService,
-            ILoggerFactory loggerFactory)
+            IResourceService<T, int> resourceService)
             : base(options, resourceService)
         {
         }
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCoreExample.Controllers
 
         private IActionResult Forbidden()
         {
-            return new StatusCodeResult(403);
+            return new StatusCodeResult((int)HttpStatusCode.Forbidden);
         }
 
         public CustomJsonApiController(
@@ -68,22 +68,29 @@ namespace JsonApiDotNetCoreExample.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(TId id)
         {
-            var entity = await _resourceService.GetAsync(id);
-
-            if (entity == null)
+            try
+            {
+                var entity = await _resourceService.GetAsync(id);
+                return Ok(entity);
+            }
+            catch (ResourceNotFoundException)
+            {
                 return NotFound();
-
-            return Ok(entity);
+            }
         }
 
         [HttpGet("{id}/relationships/{relationshipName}")]
         public async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
         {
-            var relationship = _resourceService.GetRelationshipAsync(id, relationshipName);
-            if (relationship == null)
+            try
+            {
+                var relationship = await _resourceService.GetRelationshipsAsync(id, relationshipName);
+                return Ok(relationship);
+            }
+            catch (ResourceNotFoundException)
+            {
                 return NotFound();
-
-            return await GetRelationshipAsync(id, relationshipName);
+            }
         }
 
         [HttpGet("{id}/{relationshipName}")]
@@ -113,12 +120,15 @@ namespace JsonApiDotNetCoreExample.Controllers
             if (entity == null)
                 return UnprocessableEntity();
 
-            var updatedEntity = await _resourceService.UpdateAsync(id, entity);
-
-            if (updatedEntity == null)
+            try
+            {
+                var updatedEntity = await _resourceService.UpdateAsync(id, entity);
+                return Ok(updatedEntity);
+            }
+            catch (ResourceNotFoundException)
+            {
                 return NotFound();
-
-            return Ok(updatedEntity);
+            }
         }
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
@@ -131,11 +141,7 @@ namespace JsonApiDotNetCoreExample.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(TId id)
         {
-            var wasDeleted = await _resourceService.DeleteAsync(id);
-
-            if (!wasDeleted)
-                return NotFound();
-
+            await _resourceService.DeleteAsync(id);
             return NoContent();
         }
     }

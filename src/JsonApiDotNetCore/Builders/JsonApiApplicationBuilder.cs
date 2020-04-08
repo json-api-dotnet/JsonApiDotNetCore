@@ -70,10 +70,17 @@ namespace JsonApiDotNetCore.Builders
                 options.EnableEndpointRouting = true;
                 options.Filters.Add(exceptionFilterProvider.Get());
                 options.Filters.Add(typeMatchFilterProvider.Get());
+                options.Filters.Add(new ConvertEmptyActionResultFilter());
                 options.InputFormatters.Insert(0, new JsonApiInputFormatter());
                 options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
                 options.Conventions.Insert(0, routingConvention);
             });
+
+            if (JsonApiOptions.ValidateModelState)
+            {
+                _mvcBuilder.AddDataAnnotations();
+            }
+
             _services.AddSingleton<IControllerResourceMapping>(routingConvention);
         }
 
@@ -140,9 +147,9 @@ namespace JsonApiDotNetCore.Builders
             _services.AddSingleton<ILinksConfiguration>(JsonApiOptions);
             _services.AddSingleton(resourceGraph);
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            _services.AddSingleton(resourceGraph);
             _services.AddSingleton<IResourceContextProvider>(resourceGraph);
             _services.AddSingleton<IRequestQueryStringAccessor, RequestQueryStringAccessor>();
+            _services.AddSingleton<IExceptionHandler, DefaultExceptionHandler>();
 
             _services.AddScoped<ICurrentRequest, CurrentRequest>();
             _services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();

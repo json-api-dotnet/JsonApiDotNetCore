@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using JsonApiDotNetCore.Internal;
+using System.Net;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Query;
 using Microsoft.Extensions.Primitives;
 using Xunit;
@@ -14,16 +15,29 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void Name_SortService_IsCorrect()
+        public void CanParse_SortService_SucceedOnMatch()
         {
             // Arrange
-            var filterService = GetService();
+            var service = GetService();
 
             // Act
-            var name = filterService.Name;
+            bool result = service.CanParse("sort");
 
             // Assert
-            Assert.Equal("sort", name);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void CanParse_SortService_FailOnMismatch()
+        {
+            // Arrange
+            var service = GetService();
+
+            // Act
+            bool result = service.CanParse("sorting");
+
+            // Assert
+            Assert.False(result);
         }
 
         [Theory]
@@ -37,8 +51,13 @@ namespace UnitTests.QueryParameters
             var sortService = GetService();
 
             // Act, assert
-            var exception = Assert.Throws<JsonApiException>(() => sortService.Parse(query));
-            Assert.Contains("sort", exception.Message);
+            var exception = Assert.Throws<InvalidQueryStringParameterException>(() => sortService.Parse(query.Key, query.Value));
+            
+            Assert.Equal("sort", exception.QueryParameterName);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
+            Assert.Equal("The list of fields to sort on contains empty elements.", exception.Error.Title);
+            Assert.Null(exception.Error.Detail);
+            Assert.Equal("sort", exception.Error.Source.Parameter);
         }
     }
 }

@@ -15,20 +15,20 @@ namespace JsonApiDotNetCore.Internal
         internal List<ValidationResult> ValidationResults { get; }
         private List<ResourceContext> Resources { get; }
 
-        public ResourceGraph(List<ResourceContext> entities, List<ValidationResult> validationResults = null)
+        public ResourceGraph(List<ResourceContext> resources, List<ValidationResult> validationResults = null)
         {
-            Resources = entities;
+            Resources = resources;
             ValidationResults = validationResults;
         }
 
         /// <inheritdoc />
         public ResourceContext[] GetResourceContexts() => Resources.ToArray();
         /// <inheritdoc />
-        public ResourceContext GetResourceContext(string entityName)
-            => Resources.SingleOrDefault(e => string.Equals(e.ResourceName, entityName, StringComparison.OrdinalIgnoreCase));
+        public ResourceContext GetResourceContext(string resourceName)
+            => Resources.SingleOrDefault(e => e.ResourceName == resourceName);
         /// <inheritdoc />
-        public ResourceContext GetResourceContext(Type entityType)
-            => Resources.SingleOrDefault(e => e.ResourceType == entityType);
+        public ResourceContext GetResourceContext(Type resourceType)
+            => Resources.SingleOrDefault(e => e.ResourceType == resourceType);
         /// <inheritdoc />
         public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
             => GetResourceContext(typeof(TResource));

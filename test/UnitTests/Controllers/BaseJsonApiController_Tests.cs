@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Http;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -5,7 +7,7 @@ using Moq;
 using Xunit;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -66,10 +68,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, null);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetAsync());
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetAsync());
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
+            Assert.Equal(HttpMethod.Get, exception.Method);
         }
 
         [Fact]
@@ -95,10 +98,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetAsync(id));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetAsync(id));
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
+            Assert.Equal(HttpMethod.Get, exception.Method);
         }
 
         [Fact]
@@ -124,10 +128,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetRelationshipsAsync(id, string.Empty));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetRelationshipsAsync(id, string.Empty));
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
+            Assert.Equal(HttpMethod.Get, exception.Method);
         }
 
         [Fact]
@@ -153,10 +158,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetRelationshipAsync(id, string.Empty));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetRelationshipAsync(id, string.Empty));
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
+            Assert.Equal(HttpMethod.Get, exception.Method);
         }
 
         [Fact]
@@ -177,43 +183,6 @@ namespace UnitTests
         }
 
         [Fact]
-        public async Task PatchAsync_ModelStateInvalid_ValidateModelStateDisabled()
-        {
-            // Arrange
-            const int id = 0;
-            var resource = new Resource();
-            var serviceMock = new Mock<IUpdateService<Resource>>();
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, update: serviceMock.Object);
-
-            // Act
-            var response = await controller.PatchAsync(id, resource);
-
-            // Assert
-            serviceMock.Verify(m => m.UpdateAsync(id, It.IsAny<Resource>()), Times.Once);
-            Assert.IsNotType<BadRequestObjectResult>(response);
-        }
-
-        [Fact]
-        public async Task PatchAsync_ModelStateInvalid_ValidateModelStateEnabled()
-        {
-            // Arrange
-            const int id = 0;
-            var resource = new Resource();
-            var serviceMock = new Mock<IUpdateService<Resource>>();
-
-            var controller = new ResourceController(new JsonApiOptions { ValidateModelState = true }, NullLoggerFactory.Instance, update: serviceMock.Object);
-            controller.ModelState.AddModelError("TestAttribute", "Failed Validation");
-
-            // Act
-            var response = await controller.PatchAsync(id, resource);
-
-            // Assert
-            serviceMock.Verify(m => m.UpdateAsync(id, It.IsAny<Resource>()), Times.Never);
-            Assert.IsType<UnprocessableEntityObjectResult>(response);
-            Assert.IsType<ErrorCollection>(((UnprocessableEntityObjectResult)response).Value);
-        }
-
-        [Fact]
         public async Task PatchAsync_Throws_405_If_No_Service()
         {
             // Arrange
@@ -221,10 +190,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.PatchAsync(id, It.IsAny<Resource>()));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.PatchAsync(id, It.IsAny<Resource>()));
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
+            Assert.Equal(HttpMethod.Patch, exception.Method);
         }
 
         [Fact]
@@ -243,53 +213,6 @@ namespace UnitTests
 
             // Assert
             serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>()), Times.Once);
-        }
-
-        [Fact]
-        public async Task PostAsync_ModelStateInvalid_ValidateModelStateDisabled()
-        {
-            // Arrange
-            var resource = new Resource();
-            var serviceMock = new Mock<ICreateService<Resource>>();
-            var controller = new ResourceController(new JsonApiOptions {ValidateModelState = false},
-                NullLoggerFactory.Instance, create: serviceMock.Object)
-            {
-                ControllerContext = new ControllerContext
-                {
-                    HttpContext = new DefaultHttpContext()
-                }
-            };
-            serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
-
-            // Act
-            var response = await controller.PostAsync(resource);
-
-            // Assert
-            serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>()), Times.Once);
-            Assert.IsNotType<BadRequestObjectResult>(response);
-        }
-
-        [Fact]
-        public async Task PostAsync_ModelStateInvalid_ValidateModelStateEnabled()
-        {
-            // Arrange
-            var resource = new Resource();
-            var serviceMock = new Mock<ICreateService<Resource>>();
-            var controller = new ResourceController(new JsonApiOptions {ValidateModelState = true},
-                NullLoggerFactory.Instance, create: serviceMock.Object)
-            {
-                ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()}
-            };
-            controller.ModelState.AddModelError("TestAttribute", "Failed Validation");
-            serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
-
-            // Act
-            var response = await controller.PostAsync(resource);
-
-            // Assert
-            serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>()), Times.Never);
-            Assert.IsType<UnprocessableEntityObjectResult>(response);
-            Assert.IsType<ErrorCollection>(((UnprocessableEntityObjectResult)response).Value);
         }
 
         [Fact]
@@ -315,10 +238,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.PatchRelationshipsAsync(id, string.Empty, null));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.PatchRelationshipsAsync(id, string.Empty, null));
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
+            Assert.Equal(HttpMethod.Patch, exception.Method);
         }
 
         [Fact]
@@ -344,10 +268,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.DeleteAsync(id));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.DeleteAsync(id));
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
+            Assert.Equal(HttpMethod.Delete, exception.Method);
         }
     }
 }
