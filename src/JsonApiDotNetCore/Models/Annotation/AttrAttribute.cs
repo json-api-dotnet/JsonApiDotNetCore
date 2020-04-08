@@ -124,7 +124,6 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// Whether or not the provided exposed name is equivalent to the one defined in on the model
         /// </summary>
-        public bool Is(string publicRelationshipName)
-            => string.Equals(publicRelationshipName, PublicAttributeName, StringComparison.OrdinalIgnoreCase);
+        public bool Is(string publicRelationshipName) => publicRelationshipName == PublicAttributeName;
     }
 }

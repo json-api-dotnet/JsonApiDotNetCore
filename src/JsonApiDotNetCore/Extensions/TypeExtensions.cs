@@ -9,28 +9,6 @@ namespace JsonApiDotNetCore.Extensions
 {
     internal static class TypeExtensions
     {
-
-        /// <summary>
-        /// Extension to use the LINQ AddRange method on an IList
-        /// </summary>
-        public static void AddRange<T>(this IList list, IEnumerable<T> items)
-        {
-            if (list == null) throw new ArgumentNullException(nameof(list));
-            if (items == null) throw new ArgumentNullException(nameof(items));
-
-            if (list is List<T> genericList)
-            {
-                genericList.AddRange(items);
-            }
-            else
-            {
-                foreach (var item in items)
-                {
-                    list.Add(item);
-                }
-            }
-        }
-            
         /// <summary>
         /// Extension to use the LINQ cast method in a non-generic way:
         /// <code>
@@ -42,32 +20,13 @@ namespace JsonApiDotNetCore.Extensions
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (type == null) throw new ArgumentNullException(nameof(type));
-            return TypeHelper.ConvertCollection(source.Cast<object>(), type);
-        }
 
-        public static Type GetElementType(this IEnumerable enumerable)
-        {
-            var enumerableTypes = enumerable.GetType()
-                .GetInterfaces()
-                .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                .ToList();
-
-            var numberOfEnumerableTypes = enumerableTypes.Count;
-
-            if (numberOfEnumerableTypes == 0)
+            var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(type));
+            foreach (var item in source.Cast<object>())
             {
-                throw new ArgumentException($"{nameof(enumerable)} of type {enumerable.GetType().FullName} does not implement a generic variant of {nameof(IEnumerable)}");
+                list.Add(TypeHelper.ConvertType(item, type));
             }
-
-            if (numberOfEnumerableTypes > 1)
-            {
-                throw new ArgumentException($"{nameof(enumerable)} of type {enumerable.GetType().FullName} implements more than one generic variant of {nameof(IEnumerable)}:\n" +
-                    $"{string.Join("\n", enumerableTypes.Select(t => t.FullName))}");
-            }
-
-            var elementType = enumerableTypes[0].GenericTypeArguments[0];
-
-            return elementType;
+            return list;
         }
 
         /// <summary>

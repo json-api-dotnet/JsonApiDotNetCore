@@ -68,8 +68,8 @@ namespace UnitTests.QueryParameters
 
             // Assert
             Assert.NotEmpty(result);
-            Assert.Equal(idAttribute, result.First());
-            Assert.Equal(attribute, result[1]);
+            Assert.Contains(idAttribute, result);
+            Assert.Contains(attribute, result);
         }
 
         [Fact]

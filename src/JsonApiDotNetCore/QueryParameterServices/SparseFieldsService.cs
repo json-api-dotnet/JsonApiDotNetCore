@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -58,8 +59,10 @@ namespace JsonApiDotNetCore.Query
             //           articles?fields[articles]=prop1,prop2  <-- this form in invalid UNLESS "articles" is actually a relationship on Article
             //           articles?fields[relationship]=prop1,prop2
             EnsureNoNestedResourceRoute(parameterName);
-            var fields = new List<string> { nameof(Identifiable.Id) };
-            fields.AddRange(((string)parameterValue).Split(QueryConstants.COMMA));
+
+            HashSet<string> fields = new HashSet<string>();
+            fields.Add(nameof(Identifiable.Id).ToLowerInvariant());
+            fields.AddRange(((string) parameterValue).Split(QueryConstants.COMMA));
 
             var keySplit = parameterName.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET);
 

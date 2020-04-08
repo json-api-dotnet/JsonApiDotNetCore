@@ -77,10 +77,9 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <summary>
-        /// Whether or not the provided exposed name is equivalent to the one defined in on the model
+        /// Whether or not the provided exposed name is equivalent to the one defined in the model
         /// </summary>
-        public virtual bool Is(string publicRelationshipName)
-            => string.Equals(publicRelationshipName, PublicRelationshipName, StringComparison.OrdinalIgnoreCase);
+        public virtual bool Is(string publicRelationshipName) => publicRelationshipName == PublicRelationshipName;
 
         /// <summary>
         /// The internal navigation property path to the related entity.

@@ -234,7 +234,7 @@ namespace JsonApiDotNetCore.Serialization
                     relatedInstance.StringId = rio.Id;
                     return relatedInstance;
                 });
-                var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.RightType);
+                var convertedCollection = relatedResources.Cast(attr.RightType);
                 attr.SetValue(entity, convertedCollection);
             }
 
