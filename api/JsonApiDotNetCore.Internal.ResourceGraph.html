@@ -107,7 +107,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceGraph(List&lt;ResourceContext&gt; entities, List&lt;ValidationResult&gt; validationResults = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public ResourceGraph(List&lt;ResourceContext&gt; resources, List&lt;ValidationResult&gt; validationResults = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -121,7 +121,7 @@
     <tbody>
       <tr>
         <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Internal.ResourceContext.html">ResourceContext</a>&gt;</td>
-        <td><span class="parametername">entities</span></td>
+        <td><span class="parametername">resources</span></td>
         <td></td>
       </tr>
       <tr>
@@ -541,7 +541,7 @@ exposed fields are returned.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceContext GetResourceContext(string entityName)</code></pre>
+    <pre><code class="lang-csharp hljs">public ResourceContext GetResourceContext(string resourceName)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -555,7 +555,7 @@ exposed fields are returned.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">entityName</span></td>
+        <td><span class="parametername">resourceName</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -589,7 +589,7 @@ exposed fields are returned.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceContext GetResourceContext(Type entityType)</code></pre>
+    <pre><code class="lang-csharp hljs">public ResourceContext GetResourceContext(Type resourceType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -603,7 +603,7 @@ exposed fields are returned.</p>
     <tbody>
       <tr>
         <td><span class="xref">Type</span></td>
-        <td><span class="parametername">entityType</span></td>
+        <td><span class="parametername">resourceType</span></td>
         <td></td>
       </tr>
     </tbody>

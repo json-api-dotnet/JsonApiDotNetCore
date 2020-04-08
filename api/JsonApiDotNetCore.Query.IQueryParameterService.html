@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Query_IQueryParameterService" data-uid="JsonApiDotNetCore.Query.IQueryParameterService" class="text-break">Interface IQueryParameterService
   </h1>
-  <div class="markdown level0 summary"><p>Base interface that all query parameter services should inherit.</p>
+  <div class="markdown level0 summary"><p>The interface to implement for parsing specific query string parameters.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Query.html">JsonApiDotNetCore.Query</a></h6>
@@ -82,56 +82,23 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public interface IQueryParameterService</code></pre>
   </div>
-  <h3 id="properties">Properties
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_IQueryParameterService_Name.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.IQueryParameterService.Name%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/IQueryParameterService.cs/#L19">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Query_IQueryParameterService_Name_" data-uid="JsonApiDotNetCore.Query.IQueryParameterService.Name*"></a>
-  <h4 id="JsonApiDotNetCore_Query_IQueryParameterService_Name" data-uid="JsonApiDotNetCore.Query.IQueryParameterService.Name">Name</h4>
-  <div class="markdown level1 summary"><p>The name of the query parameter as matched in the URL query string.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">string Name { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_IQueryParameterService_Parse_KeyValuePair_System_String_StringValues__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.IQueryParameterService.Parse(KeyValuePair%7BSystem.String%2CStringValues%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_IQueryParameterService_CanParse_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.IQueryParameterService.CanParse(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/IQueryParameterService.cs/#L15">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/IQueryParameterService.cs/#L19">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Query_IQueryParameterService_Parse_" data-uid="JsonApiDotNetCore.Query.IQueryParameterService.Parse*"></a>
-  <h4 id="JsonApiDotNetCore_Query_IQueryParameterService_Parse_KeyValuePair_System_String_StringValues__" data-uid="JsonApiDotNetCore.Query.IQueryParameterService.Parse(KeyValuePair{System.String,StringValues})">Parse(KeyValuePair&lt;String, StringValues&gt;)</h4>
-  <div class="markdown level1 summary"><p>Parses the value of the query parameter. Invoked in the middleware.</p>
+  <a id="JsonApiDotNetCore_Query_IQueryParameterService_CanParse_" data-uid="JsonApiDotNetCore.Query.IQueryParameterService.CanParse*"></a>
+  <h4 id="JsonApiDotNetCore_Query_IQueryParameterService_CanParse_System_String_" data-uid="JsonApiDotNetCore.Query.IQueryParameterService.CanParse(System.String)">CanParse(String)</h4>
+  <div class="markdown level1 summary"><p>Indicates whether this service supports parsing the specified query string parameter.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void Parse(KeyValuePair&lt;string, StringValues&gt; queryParameter)</code></pre>
+    <pre><code class="lang-csharp hljs">bool CanParse(string parameterName)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -144,10 +111,110 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">KeyValuePair</span>&lt;<span class="xref">System.String</span>, <span class="xref">StringValues</span>&gt;</td>
-        <td><span class="parametername">queryParameter</span></td>
-        <td><p>the value of the query parameter as retrieved from the url</p>
-</td>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">parameterName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_IQueryParameterService_IsEnabled_JsonApiDotNetCore_Controllers_DisableQueryAttribute_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.IQueryParameterService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/IQueryParameterService.cs/#L14">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Query_IQueryParameterService_IsEnabled_" data-uid="JsonApiDotNetCore.Query.IQueryParameterService.IsEnabled*"></a>
+  <h4 id="JsonApiDotNetCore_Query_IQueryParameterService_IsEnabled_JsonApiDotNetCore_Controllers_DisableQueryAttribute_" data-uid="JsonApiDotNetCore.Query.IQueryParameterService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)">IsEnabled(DisableQueryAttribute)</h4>
+  <div class="markdown level1 summary"><p>Indicates whether using this service is blocked using <a class="xref" href="JsonApiDotNetCore.Controllers.DisableQueryAttribute.html">DisableQueryAttribute</a> on a controller.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsEnabled(DisableQueryAttribute disableQueryAttribute)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Controllers.DisableQueryAttribute.html">DisableQueryAttribute</a></td>
+        <td><span class="parametername">disableQueryAttribute</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_IQueryParameterService_Parse_System_String_StringValues_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.IQueryParameterService.Parse(System.String%2CStringValues)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/IQueryParameterService.cs/#L24">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Query_IQueryParameterService_Parse_" data-uid="JsonApiDotNetCore.Query.IQueryParameterService.Parse*"></a>
+  <h4 id="JsonApiDotNetCore_Query_IQueryParameterService_Parse_System_String_StringValues_" data-uid="JsonApiDotNetCore.Query.IQueryParameterService.Parse(System.String,StringValues)">Parse(String, StringValues)</h4>
+  <div class="markdown level1 summary"><p>Parses the value of the query string parameter.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Parse(string parameterName, StringValues parameterValue)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">parameterName</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">StringValues</span></td>
+        <td><span class="parametername">parameterValue</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

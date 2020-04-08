@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior" data-uid="JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior" class="text-break">Struct DefaultAttributeResponseBehavior
   </h1>
-  <div class="markdown level0 summary"><p>Allows default valued attributes to be omitted from the response payload</p>
+  <div class="markdown level0 summary"><p>Determines how attributes that contain a default value are serialized in the response payload.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Configuration.html">JsonApiDotNetCore.Configuration</a></h6>
@@ -89,7 +89,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior__ctor_System_Boolean_System_Boolean_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.%23ctor(System.Boolean%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/DefaultAttributeResponseBehavior.cs/#L18">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/DefaultAttributeResponseBehavior.cs/#L10">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior__ctor_" data-uid="JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior__ctor_System_Boolean_System_Boolean_" data-uid="JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.#ctor(System.Boolean,System.Boolean)">DefaultAttributeResponseBehavior(Boolean, Boolean)</h4>
@@ -97,7 +97,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DefaultAttributeResponseBehavior(bool omitNullValuedAttributes = false, bool allowClientOverride = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public DefaultAttributeResponseBehavior(bool omitAttributeIfValueIsDefault = false, bool allowQueryStringOverride = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -111,17 +111,14 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">omitNullValuedAttributes</span></td>
-        <td><p>Do not serialize default value attributes</p>
+        <td><span class="parametername">omitAttributeIfValueIsDefault</span></td>
+        <td><p>Determines whether to serialize attributes that contain their types&apos; default value.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">allowClientOverride</span></td>
-        <td><p>Allow clients to override the serialization behavior through a query parameter.
-<example><p>
-<pre><code>GET /articles?omitDefaultValuedAttributes=true
-</code></pre><p></example></p>
+        <td><span class="parametername">allowQueryStringOverride</span></td>
+        <td><p>Determines whether serialization behavior can be controlled by a query string parameter.</p>
 </td>
       </tr>
     </tbody>
@@ -130,20 +127,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_AllowClientOverride.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.AllowClientOverride%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_AllowQueryStringOverride.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.AllowQueryStringOverride%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/DefaultAttributeResponseBehavior.cs/#L33">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/DefaultAttributeResponseBehavior.cs/#L24">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_AllowClientOverride_" data-uid="JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.AllowClientOverride*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_AllowClientOverride" data-uid="JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.AllowClientOverride">AllowClientOverride</h4>
-  <div class="markdown level1 summary"><p>Allows clients to specify a <code>omitDefaultValuedAttributes</code> boolean query param to control
-serialization behavior.</p>
+  <a id="JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_AllowQueryStringOverride_" data-uid="JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.AllowQueryStringOverride*"></a>
+  <h4 id="JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_AllowQueryStringOverride" data-uid="JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.AllowQueryStringOverride">AllowQueryStringOverride</h4>
+  <div class="markdown level1 summary"><p>Determines whether serialization behavior can be controlled by a query string parameter.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool AllowClientOverride { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool AllowQueryStringOverride { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -162,19 +158,19 @@ serialization behavior.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_OmitDefaultValuedAttributes.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.OmitDefaultValuedAttributes%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_OmitAttributeIfValueIsDefault.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.OmitAttributeIfValueIsDefault%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/DefaultAttributeResponseBehavior.cs/#L27">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/DefaultAttributeResponseBehavior.cs/#L19">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_OmitDefaultValuedAttributes_" data-uid="JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.OmitDefaultValuedAttributes*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_OmitDefaultValuedAttributes" data-uid="JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.OmitDefaultValuedAttributes">OmitDefaultValuedAttributes</h4>
-  <div class="markdown level1 summary"><p>Do (not) include default valued attributes in the response payload.</p>
+  <a id="JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_OmitAttributeIfValueIsDefault_" data-uid="JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.OmitAttributeIfValueIsDefault*"></a>
+  <h4 id="JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_OmitAttributeIfValueIsDefault" data-uid="JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.OmitAttributeIfValueIsDefault">OmitAttributeIfValueIsDefault</h4>
+  <div class="markdown level1 summary"><p>Determines whether to serialize attributes that contain their types&apos; default value.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool OmitDefaultValuedAttributes { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool OmitAttributeIfValueIsDefault { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

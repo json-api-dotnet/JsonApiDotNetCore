@@ -73,8 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Services_QueryParameterParser" data-uid="JsonApiDotNetCore.Services.QueryParameterParser" class="text-break">Class QueryParameterParser
   </h1>
-  <div class="markdown level0 summary"><p>Responsible for populating the various service implementations of
-<a class="xref" href="JsonApiDotNetCore.Query.IQueryParameterService.html">IQueryParameterService</a>.</p>
+  <div class="markdown level0 summary"><p>Responsible for populating the various service implementations of <a class="xref" href="JsonApiDotNetCore.Query.IQueryParameterService.html">IQueryParameterService</a>.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -96,18 +95,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_QueryParameterParser__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_QueryParameterServices_Common_IRequestQueryStringAccessor_IEnumerable_JsonApiDotNetCore_Query_IQueryParameterService__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.QueryParameterParser.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CJsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor%2CIEnumerable%7BJsonApiDotNetCore.Query.IQueryParameterService%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_QueryParameterParser__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_QueryParameterServices_Common_IRequestQueryStringAccessor_IEnumerable_JsonApiDotNetCore_Query_IQueryParameterService__ILoggerFactory_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.QueryParameterParser.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CJsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor%2CIEnumerable%7BJsonApiDotNetCore.Query.IQueryParameterService%7D%2CILoggerFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterParser.cs/#L18">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterParser.cs/#L20">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_QueryParameterParser__ctor_" data-uid="JsonApiDotNetCore.Services.QueryParameterParser.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Services_QueryParameterParser__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_QueryParameterServices_Common_IRequestQueryStringAccessor_IEnumerable_JsonApiDotNetCore_Query_IQueryParameterService__" data-uid="JsonApiDotNetCore.Services.QueryParameterParser.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor,IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService})">QueryParameterParser(IJsonApiOptions, IRequestQueryStringAccessor, IEnumerable&lt;IQueryParameterService&gt;)</h4>
+  <h4 id="JsonApiDotNetCore_Services_QueryParameterParser__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_QueryParameterServices_Common_IRequestQueryStringAccessor_IEnumerable_JsonApiDotNetCore_Query_IQueryParameterService__ILoggerFactory_" data-uid="JsonApiDotNetCore.Services.QueryParameterParser.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor,IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService},ILoggerFactory)">QueryParameterParser(IJsonApiOptions, IRequestQueryStringAccessor, IEnumerable&lt;IQueryParameterService&gt;, ILoggerFactory)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public QueryParameterParser(IJsonApiOptions options, IRequestQueryStringAccessor queryStringAccessor, IEnumerable&lt;IQueryParameterService&gt; queryServices)</code></pre>
+    <pre><code class="lang-csharp hljs">public QueryParameterParser(IJsonApiOptions options, IRequestQueryStringAccessor queryStringAccessor, IEnumerable&lt;IQueryParameterService&gt; queryServices, ILoggerFactory loggerFactory)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -134,6 +133,11 @@
         <td><span class="parametername">queryServices</span></td>
         <td></td>
       </tr>
+      <tr>
+        <td><span class="xref">ILoggerFactory</span></td>
+        <td><span class="parametername">loggerFactory</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   <h3 id="methods">Methods
@@ -147,14 +151,12 @@
   </span>
   <a id="JsonApiDotNetCore_Services_QueryParameterParser_Parse_" data-uid="JsonApiDotNetCore.Services.QueryParameterParser.Parse*"></a>
   <h4 id="JsonApiDotNetCore_Services_QueryParameterParser_Parse_JsonApiDotNetCore_Controllers_DisableQueryAttribute_" data-uid="JsonApiDotNetCore.Services.QueryParameterParser.Parse(JsonApiDotNetCore.Controllers.DisableQueryAttribute)">Parse(DisableQueryAttribute)</h4>
-  <div class="markdown level1 summary"><p>For a parameter in the query string of the request URL, calls
-the <see cref="!:IQueryParameterService.Parse(KeyValuePair&lt;string, Microsoft.Extensions.Primitives.StringValues>)"></see>
-method of the corresponding service.</p>
+  <div class="markdown level1 summary"><p>Parses the parameters from the request query string.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual void Parse(DisableQueryAttribute disabled)</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual void Parse(DisableQueryAttribute disableQueryAttribute)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -168,8 +170,9 @@ method of the corresponding service.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Controllers.DisableQueryAttribute.html">DisableQueryAttribute</a></td>
-        <td><span class="parametername">disabled</span></td>
-        <td></td>
+        <td><span class="parametername">disableQueryAttribute</span></td>
+        <td><p>The <a class="xref" href="JsonApiDotNetCore.Controllers.DisableQueryAttribute.html">DisableQueryAttribute</a> if set on the controller that is targeted by the current request.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -188,7 +191,7 @@ method of the corresponding service.</p>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_QueryParameterParser.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.QueryParameterParser%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterParser.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterParser.cs/#L13" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

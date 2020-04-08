@@ -110,20 +110,17 @@
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_DeleteAsync__1_">BaseJsonApiController&lt;T, TId&gt;.DeleteAsync(TId)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiControllerMixin.html#JsonApiDotNetCore_Controllers_JsonApiControllerMixin_Forbidden">JsonApiControllerMixin.Forbidden()</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiControllerMixin.html#JsonApiDotNetCore_Controllers_JsonApiControllerMixin_Error_JsonApiDotNetCore_Models_JsonApiDocuments_Error_">JsonApiControllerMixin.Error(Error)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiControllerMixin.html#JsonApiDotNetCore_Controllers_JsonApiControllerMixin_Error_JsonApiDotNetCore_Internal_Error_">JsonApiControllerMixin.Error(Error)</a>
-    </div>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiControllerMixin.html#JsonApiDotNetCore_Controllers_JsonApiControllerMixin_Errors_JsonApiDotNetCore_Internal_ErrorCollection_">JsonApiControllerMixin.Errors(ErrorCollection)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiControllerMixin.html#JsonApiDotNetCore_Controllers_JsonApiControllerMixin_Error_IEnumerable_JsonApiDotNetCore_Models_JsonApiDocuments_Error__">JsonApiControllerMixin.Error(IEnumerable&lt;Error&gt;)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Controllers.html">JsonApiDotNetCore.Controllers</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Controllers_JsonApiQueryController_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class JsonApiQueryController&lt;T, TId&gt; : BaseJsonApiController&lt;T, TId&gt; where T : class, IIdentifiable&lt;TId&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class JsonApiQueryController&lt;T, TId&gt; : BaseJsonApiController&lt;T, TId&gt; where T : class, IIdentifiable&lt;TId&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -159,7 +156,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public JsonApiQueryController(IJsonApiOptions jsonApiContext, ILoggerFactory loggerFactory, IResourceQueryService&lt;T, TId&gt; queryService)</code></pre>
+    <pre><code class="lang-csharp hljs">protected JsonApiQueryController(IJsonApiOptions jsonApiContext, ILoggerFactory loggerFactory, IResourceQueryService&lt;T, TId&gt; queryService)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">

@@ -103,7 +103,7 @@ a json:api <a class="xref" href="JsonApiDotNetCore.Models.Document.html">Documen
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceObjectBuilderSettings(bool omitNullValuedAttributes = false, bool omitDefaultValuedAttributes = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public ResourceObjectBuilderSettings(bool omitAttributeIfValueIsNull = false, bool omitAttributeIfValueIsDefault = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -117,13 +117,13 @@ a json:api <a class="xref" href="JsonApiDotNetCore.Models.Document.html">Documen
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">omitNullValuedAttributes</span></td>
+        <td><span class="parametername">omitAttributeIfValueIsNull</span></td>
         <td><p>Omit null values from attributes</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">omitDefaultValuedAttributes</span></td>
+        <td><span class="parametername">omitAttributeIfValueIsDefault</span></td>
         <td><p>Omit default values from attributes</p>
 </td>
       </tr>
@@ -133,13 +133,13 @@ a json:api <a class="xref" href="JsonApiDotNetCore.Models.Document.html">Documen
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitDefaultValuedAttributes.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitDefaultValuedAttributes%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitAttributeIfValueIsDefault.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsDefault%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Common/ResourceObjectBuilderSettings.cs/#L41">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitDefaultValuedAttributes_" data-uid="JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitDefaultValuedAttributes*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitDefaultValuedAttributes" data-uid="JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitDefaultValuedAttributes">OmitDefaultValuedAttributes</h4>
+  <a id="JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitAttributeIfValueIsDefault_" data-uid="JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsDefault*"></a>
+  <h4 id="JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitAttributeIfValueIsDefault" data-uid="JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsDefault">OmitAttributeIfValueIsDefault</h4>
   <div class="markdown level1 summary"><p>Prevent attributes with default values from being included in the response.
 This property is internal and if you want to enable this behavior, you
 should do so on the <a class="xref" href="JsonApiDotNetCore.Configuration.ISerializerOptions.html">ISerializerOptions</a>.</p>
@@ -147,7 +147,7 @@ should do so on the <a class="xref" href="JsonApiDotNetCore.Configuration.ISeria
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool OmitDefaultValuedAttributes { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool OmitAttributeIfValueIsDefault { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -164,18 +164,18 @@ should do so on the <a class="xref" href="JsonApiDotNetCore.Configuration.ISeria
       </tr>
     </tbody>
   </table>
-  <h5 id="JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitDefaultValuedAttributes_examples">Examples</h5>
+  <h5 id="JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitAttributeIfValueIsDefault_examples">Examples</h5>
   <pre><code>options.DefaultAttributeResponseBehavior = new DefaultAttributeResponseBehavior(true);</code></pre>
 
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitNullValuedAttributes.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitNullValuedAttributes%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitAttributeIfValueIsNull.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsNull%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Common/ResourceObjectBuilderSettings.cs/#L29">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitNullValuedAttributes_" data-uid="JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitNullValuedAttributes*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitNullValuedAttributes" data-uid="JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitNullValuedAttributes">OmitNullValuedAttributes</h4>
+  <a id="JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitAttributeIfValueIsNull_" data-uid="JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsNull*"></a>
+  <h4 id="JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitAttributeIfValueIsNull" data-uid="JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsNull">OmitAttributeIfValueIsNull</h4>
   <div class="markdown level1 summary"><p>Prevent attributes with null values from being included in the response.
 This property is internal and if you want to enable this behavior, you
 should do so on the <a class="xref" href="JsonApiDotNetCore.Configuration.ISerializerOptions.html">ISerializerOptions</a>.</p>
@@ -183,7 +183,7 @@ should do so on the <a class="xref" href="JsonApiDotNetCore.Configuration.ISeria
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool OmitNullValuedAttributes { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool OmitAttributeIfValueIsNull { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -200,7 +200,7 @@ should do so on the <a class="xref" href="JsonApiDotNetCore.Configuration.ISeria
       </tr>
     </tbody>
   </table>
-  <h5 id="JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitNullValuedAttributes_examples">Examples</h5>
+  <h5 id="JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitAttributeIfValueIsNull_examples">Examples</h5>
   <pre><code>options.NullAttributeResponseBehavior = new NullAttributeResponseBehavior(true);</code></pre>
 
 </article>

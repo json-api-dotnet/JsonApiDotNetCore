@@ -101,7 +101,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_QueryParameterService__ctor.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.QueryParameterService.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterService.cs/#L28">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterService.cs/#L19">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Query_QueryParameterService__ctor_" data-uid="JsonApiDotNetCore.Query.QueryParameterService.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Query_QueryParameterService__ctor" data-uid="JsonApiDotNetCore.Query.QueryParameterService.#ctor">QueryParameterService()</h4>
@@ -116,7 +116,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_QueryParameterService__ctor_JsonApiDotNetCore_Internal_Contracts_IResourceGraph_JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.QueryParameterService.%23ctor(JsonApiDotNetCore.Internal.Contracts.IResourceGraph%2CJsonApiDotNetCore.Managers.Contracts.ICurrentRequest)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterService.cs/#L19">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterService.cs/#L21">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Query_QueryParameterService__ctor_" data-uid="JsonApiDotNetCore.Query.QueryParameterService.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Query_QueryParameterService__ctor_JsonApiDotNetCore_Internal_Contracts_IResourceGraph_JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_" data-uid="JsonApiDotNetCore.Query.QueryParameterService.#ctor(JsonApiDotNetCore.Internal.Contracts.IResourceGraph,JsonApiDotNetCore.Managers.Contracts.ICurrentRequest)">QueryParameterService(IResourceGraph, ICurrentRequest)</h4>
@@ -208,77 +208,23 @@
       </tr>
     </tbody>
   </table>
-  <h3 id="properties">Properties
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_QueryParameterService_Name.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.QueryParameterService.Name%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterService.cs/#L38">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Query_QueryParameterService_Name_" data-uid="JsonApiDotNetCore.Query.QueryParameterService.Name*"></a>
-  <h4 id="JsonApiDotNetCore_Query_QueryParameterService_Name" data-uid="JsonApiDotNetCore.Query.QueryParameterService.Name">Name</h4>
-  <div class="markdown level1 summary"><p>Derives the name of the query parameter from the name of the implementing type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual string Name { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="JsonApiDotNetCore_Query_QueryParameterService_Name_examples">Examples</h5>
-  <p>The following query param service will match the query  displayed in URL
-<code>?include=some-relationship</code></p>
-<pre><code>public class IncludeService : QueryParameterService  { /* ... */  } </code></pre>
-
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_QueryParameterService_EnsureNoNestedResourceRoute.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.QueryParameterService.EnsureNoNestedResourceRoute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_QueryParameterService_EnsureNoNestedResourceRoute_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.QueryParameterService.EnsureNoNestedResourceRoute(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterService.cs/#L77">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterService.cs/#L69">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Query_QueryParameterService_EnsureNoNestedResourceRoute_" data-uid="JsonApiDotNetCore.Query.QueryParameterService.EnsureNoNestedResourceRoute*"></a>
-  <h4 id="JsonApiDotNetCore_Query_QueryParameterService_EnsureNoNestedResourceRoute" data-uid="JsonApiDotNetCore.Query.QueryParameterService.EnsureNoNestedResourceRoute">EnsureNoNestedResourceRoute()</h4>
+  <h4 id="JsonApiDotNetCore_Query_QueryParameterService_EnsureNoNestedResourceRoute_System_String_" data-uid="JsonApiDotNetCore.Query.QueryParameterService.EnsureNoNestedResourceRoute(System.String)">EnsureNoNestedResourceRoute(String)</h4>
   <div class="markdown level1 summary"><p>Throw an exception if query parameters are requested that are unsupported on nested resource routes.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void EnsureNoNestedResourceRoute()</code></pre>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_QueryParameterService_GetAttribute_System_String_JsonApiDotNetCore_Models_RelationshipAttribute_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.QueryParameterService.GetAttribute(System.String%2CJsonApiDotNetCore.Models.RelationshipAttribute)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterService.cs/#L49">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Query_QueryParameterService_GetAttribute_" data-uid="JsonApiDotNetCore.Query.QueryParameterService.GetAttribute*"></a>
-  <h4 id="JsonApiDotNetCore_Query_QueryParameterService_GetAttribute_System_String_JsonApiDotNetCore_Models_RelationshipAttribute_" data-uid="JsonApiDotNetCore.Query.QueryParameterService.GetAttribute(System.String,JsonApiDotNetCore.Models.RelationshipAttribute)">GetAttribute(String, RelationshipAttribute)</h4>
-  <div class="markdown level1 summary"><p>Helper method for parsing query parameters into attributes</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected AttrAttribute GetAttribute(string target, RelationshipAttribute relationship = null)</code></pre>
+    <pre><code class="lang-csharp hljs">protected void EnsureNoNestedResourceRoute(string parameterName)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -290,6 +236,44 @@
       </tr>
     </thead>
     <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">parameterName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_QueryParameterService_GetAttribute_System_String_System_String_JsonApiDotNetCore_Models_RelationshipAttribute_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.QueryParameterService.GetAttribute(System.String%2CSystem.String%2CJsonApiDotNetCore.Models.RelationshipAttribute)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterService.cs/#L33">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Query_QueryParameterService_GetAttribute_" data-uid="JsonApiDotNetCore.Query.QueryParameterService.GetAttribute*"></a>
+  <h4 id="JsonApiDotNetCore_Query_QueryParameterService_GetAttribute_System_String_System_String_JsonApiDotNetCore_Models_RelationshipAttribute_" data-uid="JsonApiDotNetCore.Query.QueryParameterService.GetAttribute(System.String,System.String,JsonApiDotNetCore.Models.RelationshipAttribute)">GetAttribute(String, String, RelationshipAttribute)</h4>
+  <div class="markdown level1 summary"><p>Helper method for parsing query parameters into attributes</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected AttrAttribute GetAttribute(string queryParameterName, string target, RelationshipAttribute relationship = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">queryParameterName</span></td>
+        <td></td>
+      </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">target</span></td>
@@ -319,19 +303,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_QueryParameterService_GetRelationship_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.QueryParameterService.GetRelationship(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_QueryParameterService_GetRelationship_System_String_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.QueryParameterService.GetRelationship(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterService.cs/#L64">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Common/QueryParameterService.cs/#L52">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Query_QueryParameterService_GetRelationship_" data-uid="JsonApiDotNetCore.Query.QueryParameterService.GetRelationship*"></a>
-  <h4 id="JsonApiDotNetCore_Query_QueryParameterService_GetRelationship_System_String_" data-uid="JsonApiDotNetCore.Query.QueryParameterService.GetRelationship(System.String)">GetRelationship(String)</h4>
+  <h4 id="JsonApiDotNetCore_Query_QueryParameterService_GetRelationship_System_String_System_String_" data-uid="JsonApiDotNetCore.Query.QueryParameterService.GetRelationship(System.String,System.String)">GetRelationship(String, String)</h4>
   <div class="markdown level1 summary"><p>Helper method for parsing query parameters into relationships attributes</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected RelationshipAttribute GetRelationship(string propertyName)</code></pre>
+    <pre><code class="lang-csharp hljs">protected RelationshipAttribute GetRelationship(string queryParameterName, string propertyName)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -343,6 +327,11 @@
       </tr>
     </thead>
     <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">queryParameterName</span></td>
+        <td></td>
+      </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">propertyName</span></td>
