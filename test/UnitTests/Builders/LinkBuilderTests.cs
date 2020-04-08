@@ -3,7 +3,6 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
@@ -50,7 +49,7 @@ namespace UnitTests
         {
             // Arrange
             var config = GetConfiguration(resourceLinks: global);
-            var primaryResource = GetResourceContext<Article>(resourceLinks: resource);
+            var primaryResource = GetArticleResourceContext(resourceLinks: resource);
             _provider.Setup(m => m.GetResourceContext("articles")).Returns(primaryResource);
             var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object, _queryStringAccessor);
 
@@ -98,7 +97,7 @@ namespace UnitTests
         {
             // Arrange
             var config = GetConfiguration(relationshipLinks: global);
-            var primaryResource = GetResourceContext<Article>(relationshipLinks: resource);
+            var primaryResource = GetArticleResourceContext(relationshipLinks: resource);
             _provider.Setup(m => m.GetResourceContext(typeof(Article))).Returns(primaryResource);
             var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object, _queryStringAccessor);
             var attr = new HasOneAttribute(links: relationship) { RightType = typeof(Author), PublicRelationshipName = "author" };
@@ -154,7 +153,7 @@ namespace UnitTests
         {
             // Arrange
             var config = GetConfiguration(topLevelLinks: global);
-            var primaryResource = GetResourceContext<Article>(topLevelLinks: resource);
+            var primaryResource = GetArticleResourceContext(topLevelLinks: resource);
             _provider.Setup(m => m.GetResourceContext<Article>()).Returns(primaryResource);
 
             bool useBaseId = expectedSelfLink != _topSelf;
@@ -220,19 +219,18 @@ namespace UnitTests
             mock.Setup(m => m.TotalPages).Returns(3);
             mock.Setup(m => m.PageSize).Returns(10);
             return mock.Object;
-
         }
 
-        private ResourceContext GetResourceContext<TResource>(Link resourceLinks = Link.NotConfigured,
-                                                          Link topLevelLinks = Link.NotConfigured,
-                                                          Link relationshipLinks = Link.NotConfigured) where TResource : class, IIdentifiable
+        private ResourceContext GetArticleResourceContext(Link resourceLinks = Link.NotConfigured,
+            Link topLevelLinks = Link.NotConfigured,
+            Link relationshipLinks = Link.NotConfigured)
         {
             return new ResourceContext
             {
                 ResourceLinks = resourceLinks,
                 TopLevelLinks = topLevelLinks,
                 RelationshipLinks = relationshipLinks,
-                ResourceName = typeof(TResource).Name.Dasherize() + "s"
+                ResourceName = "articles"
             };
         }
 

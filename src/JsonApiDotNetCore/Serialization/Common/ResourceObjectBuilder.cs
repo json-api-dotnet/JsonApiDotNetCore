@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 
@@ -28,7 +27,7 @@ namespace JsonApiDotNetCore.Serialization
             var resourceContext = _provider.GetResourceContext(entity.GetType());
 
             // populating the top-level "type" and "id" members.
-            var ro = new ResourceObject { Type = resourceContext.ResourceName, Id = entity.StringId.NullIfEmpty() };
+            var ro = new ResourceObject { Type = resourceContext.ResourceName, Id = entity.StringId == string.Empty ? null : entity.StringId };
 
             // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
             if (attributes != null && (attributes = attributes.Where(attr => attr.PropertyInfo.Name != _identifiablePropertyName)).Any())

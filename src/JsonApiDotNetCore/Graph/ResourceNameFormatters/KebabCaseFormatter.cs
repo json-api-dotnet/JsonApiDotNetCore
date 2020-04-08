@@ -1,4 +1,4 @@
-using str = JsonApiDotNetCore.Extensions.StringExtensions;
+using System.Text;
 
 namespace JsonApiDotNetCore.Graph
 {
@@ -34,6 +34,27 @@ namespace JsonApiDotNetCore.Graph
     public sealed class KebabCaseFormatter : BaseResourceNameFormatter
     {
         /// <inheritdoc/>
-        public override string ApplyCasingConvention(string properName) => str.Dasherize(properName);
+        public override string ApplyCasingConvention(string properName)
+        {
+            var chars = properName.ToCharArray();
+            if (chars.Length > 0)
+            {
+                var builder = new StringBuilder();
+                for (var i = 0; i < chars.Length; i++)
+                {
+                    if (char.IsUpper(chars[i]))
+                    {
+                        var hashedString = i > 0 ? $"-{char.ToLower(chars[i])}" : $"{char.ToLower(chars[i])}";
+                        builder.Append(hashedString);
+                    }
+                    else
+                    {
+                        builder.Append(chars[i]);
+                    }
+                }
+                return builder.ToString();
+            }
+            return properName;
+        }
     }
 }
