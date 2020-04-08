@@ -45,6 +45,7 @@ namespace JsonApiDotNetCoreExample
                     options.IncludeTotalRecordCount = true;
                     options.LoadDatabaseValues = true;
                     options.ValidateModelState = true;
+                    options.EnableResourceHooks = true;
                 },
                 discovery => discovery.AddCurrentAssembly());
             // once all tests have been moved to WebApplicationFactory format we can get rid of this line below
