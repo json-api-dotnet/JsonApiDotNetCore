@@ -66,23 +66,18 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         public async Task CheckNullBehaviorCombination(bool? omitAttributeIfValueIsNull, bool? allowQueryStringOverride,
             string queryStringOverride, bool expectNullsMissing)
         {
-
-            // Override some null handling options
-            NullAttributeResponseBehavior nullAttributeResponseBehavior;
-            if (omitAttributeIfValueIsNull.HasValue && allowQueryStringOverride.HasValue)
-                nullAttributeResponseBehavior = new NullAttributeResponseBehavior(omitAttributeIfValueIsNull.Value, allowQueryStringOverride.Value);
-            else if (omitAttributeIfValueIsNull.HasValue)
-                nullAttributeResponseBehavior = new NullAttributeResponseBehavior(omitAttributeIfValueIsNull.Value);
-            else if (allowQueryStringOverride.HasValue)
-                nullAttributeResponseBehavior = new NullAttributeResponseBehavior(allowQueryStringOverride: allowQueryStringOverride.Value);
-            else
-                nullAttributeResponseBehavior = new NullAttributeResponseBehavior();
-
             var jsonApiOptions = _fixture.GetService<IJsonApiOptions>();
-            jsonApiOptions.NullAttributeResponseBehavior = nullAttributeResponseBehavior;
+            if (omitAttributeIfValueIsNull != null)
+            {
+                jsonApiOptions.SerializerOmitAttributeIfValueIsNull = omitAttributeIfValueIsNull.Value;
+            }
+            if (allowQueryStringOverride != null)
+            {
+                jsonApiOptions.AllowOmitNullQueryStringOverride = allowQueryStringOverride.Value;
+            }
 
             var httpMethod = new HttpMethod("GET");
-            var queryString = allowQueryStringOverride.HasValue
+            var queryString = allowQueryStringOverride != null
                 ? $"&omitNull={queryStringOverride}"
                 : "";
             var route = $"/api/v1/todoItems/{_todoItem.Id}?include=owner{queryString}";

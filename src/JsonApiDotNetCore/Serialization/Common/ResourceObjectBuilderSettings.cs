@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Serialization
@@ -19,7 +20,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Prevent attributes with null values from being included in the response.
         /// This property is internal and if you want to enable this behavior, you
-        /// should do so on the <see cref="Configuration.ISerializerOptions" />.
+        /// should do so on the <see cref="IJsonApiOptions.SerializerSettings" />.
         /// </summary>
         /// <example>
         /// <code>
@@ -31,7 +32,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Prevent attributes with default values from being included in the response.
         /// This property is internal and if you want to enable this behavior, you
-        /// should do so on the <see cref="Configuration.ISerializerOptions" />.
+        /// should do so on the <see cref="IJsonApiOptions.SerializerSettings" />.
         /// </summary>
         /// <example>
         /// <code>

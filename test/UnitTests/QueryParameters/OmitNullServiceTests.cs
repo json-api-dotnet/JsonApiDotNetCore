@@ -15,7 +15,8 @@ namespace UnitTests.QueryParameters
         {
             var options = new JsonApiOptions
             {
-                NullAttributeResponseBehavior = new NullAttributeResponseBehavior(@default, @override)
+                SerializerOmitAttributeIfValueIsNull = @default,
+                AllowOmitNullQueryStringOverride = @override
             };
 
             return new OmitNullService(options);

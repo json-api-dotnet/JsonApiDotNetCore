@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Query
 
         public OmitDefaultService(IJsonApiOptions options)
         {
-            OmitAttributeIfValueIsDefault = options.DefaultAttributeResponseBehavior.OmitAttributeIfValueIsDefault;
+            OmitAttributeIfValueIsDefault = options.SerializerOmitAttributeIfValueIsDefault;
             _options = options;
         }
 
@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Query
 
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
-            return _options.DefaultAttributeResponseBehavior.AllowQueryStringOverride &&
+            return _options.AllowOmitDefaultQueryStringOverride &&
                    !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.OmitDefault);
         }
 

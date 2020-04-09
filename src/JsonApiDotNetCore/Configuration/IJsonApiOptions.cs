@@ -1,9 +1,10 @@
 using System;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Configuration
 {
-    public interface IJsonApiOptions : ILinksConfiguration, ISerializerOptions
+    public interface IJsonApiOptions : ILinksConfiguration
     {
         /// <summary>
         /// Whether or not <see cref="Exception"/> stack traces should be serialized in <see cref="ErrorMeta"/> objects.
@@ -33,11 +34,21 @@ namespace JsonApiDotNetCore.Configuration
         bool AllowClientGeneratedIds { get; }
         bool AllowCustomQueryStringParameters { get; set; }
         string Namespace { get; set; }
-    }
 
-    public interface ISerializerOptions
-    {
-        NullAttributeResponseBehavior NullAttributeResponseBehavior { get; set; }
-        DefaultAttributeResponseBehavior DefaultAttributeResponseBehavior { get; set; }
+        /// <summary>
+        /// Determines whether the <see cref="JsonSerializerSettings.NullValueHandling"/> serialization setting can be overridden by a query string parameter.
+        /// </summary>
+        bool AllowOmitNullQueryStringOverride { get; set; }
+
+        /// <summary>
+        /// Determines whether the <see cref="JsonSerializerSettings.DefaultValueHandling"/> serialization setting can be overridden by a query string parameter.
+        /// </summary>
+        bool AllowOmitDefaultQueryStringOverride { get; set; }
+
+        // TODO: Replace these with JsonSerializerSettings usage.
+        bool SerializerOmitAttributeIfValueIsNull { get; set; }
+        bool SerializerOmitAttributeIfValueIsDefault { get; set; }
+
+        JsonSerializerSettings SerializerSettings { get; }
     }
 }

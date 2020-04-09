@@ -52,6 +52,18 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         public string Namespace { get; set; }
 
+        /// <inheritdoc/>
+        public bool AllowOmitNullQueryStringOverride { get; set; }
+        
+        /// <inheritdoc/>
+        public bool AllowOmitDefaultQueryStringOverride { get; set; }
+        
+        /// <inheritdoc/>
+        public bool SerializerOmitAttributeIfValueIsNull { get; set; }
+        
+        /// <inheritdoc/>
+        public bool SerializerOmitAttributeIfValueIsDefault { get; set; }
+
         /// <summary>
         /// The default page size for all resources. The value zero means: no paging.
         /// </summary>
@@ -106,16 +118,6 @@ namespace JsonApiDotNetCore.Configuration
         /// </code>
         /// </example>
         public bool AllowCustomQueryStringParameters { get; set; }
-
-        /// <summary>
-        /// The default behavior for serializing attributes that contain null.
-        /// </summary>
-        public NullAttributeResponseBehavior NullAttributeResponseBehavior { get; set; }
-
-        /// <summary>
-        /// The default behavior for serializing attributes that contain their types' default value.
-        /// </summary>
-        public DefaultAttributeResponseBehavior DefaultAttributeResponseBehavior { get; set; }
 
         /// <summary>
         /// Whether or not to validate model state.

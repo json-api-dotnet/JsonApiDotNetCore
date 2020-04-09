@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Query
 
         public OmitNullService(IJsonApiOptions options)
         {
-            OmitAttributeIfValueIsNull = options.NullAttributeResponseBehavior.OmitAttributeIfValueIsNull;
+            OmitAttributeIfValueIsNull = options.SerializerOmitAttributeIfValueIsNull;
             _options = options;
         }
 
@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
-            return _options.NullAttributeResponseBehavior.AllowQueryStringOverride &&
+            return _options.AllowOmitNullQueryStringOverride && 
                    !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.OmitNull);
         }
 

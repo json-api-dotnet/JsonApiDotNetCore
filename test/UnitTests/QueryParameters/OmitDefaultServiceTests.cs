@@ -15,7 +15,8 @@ namespace UnitTests.QueryParameters
         {
             var options = new JsonApiOptions
             {
-                DefaultAttributeResponseBehavior = new DefaultAttributeResponseBehavior(@default, @override)
+                SerializerOmitAttributeIfValueIsDefault = @default,
+                AllowOmitDefaultQueryStringOverride = @override
             };
 
             return new OmitDefaultService(options);
