@@ -23,7 +23,7 @@ namespace Benchmarks.Query
         public QueryParserBenchmarks()
         {
             IJsonApiOptions options = new JsonApiOptions();
-            IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph();
+            IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
             
             var currentRequest = new CurrentRequest();
             currentRequest.SetRequestResource(resourceGraph.GetResourceContext(typeof(BenchmarkResource)));

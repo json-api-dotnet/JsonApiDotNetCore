@@ -25,7 +25,8 @@ namespace Benchmarks.Serialization
 
         public JsonApiSerializerBenchmarks()
         {
-            IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph();
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
             IFieldsToSerialize fieldsToSerialize = CreateFieldsToSerialize(resourceGraph);
 
             var metaBuilderMock = new Mock<IMetaBuilder<BenchmarkResource>>();
@@ -35,7 +36,7 @@ namespace Benchmarks.Serialization
             var resourceObjectBuilder = new ResourceObjectBuilder(resourceGraph, new ResourceObjectBuilderSettings());
 
             _jsonApiSerializer = new ResponseSerializer<BenchmarkResource>(metaBuilderMock.Object, linkBuilderMock.Object,
-                includeBuilderMock.Object, fieldsToSerialize, resourceObjectBuilder, new CamelCaseFormatter(), new JsonApiOptions());
+                includeBuilderMock.Object, fieldsToSerialize, resourceObjectBuilder, options);
         }
 
         private static FieldsToSerialize CreateFieldsToSerialize(IResourceGraph resourceGraph)

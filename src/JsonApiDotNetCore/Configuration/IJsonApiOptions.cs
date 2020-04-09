@@ -45,6 +45,19 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         bool AllowOmitDefaultQueryStringOverride { get; set; }
 
+        /// <summary>
+        /// Specifies the settings that are used by the <see cref="JsonSerializer"/>.
+        /// Note that at some places a few settings are ignored, to ensure json:api spec compliance.
+        /// <example>
+        /// The next example changes the casing convention to kebab casing.
+        /// <code><![CDATA[
+        /// options.SerializerSettings.ContractResolver = new DefaultContractResolver
+        /// {
+        ///     NamingStrategy = new KebabCaseNamingStrategy()
+        /// };
+        /// ]]></code>
+        /// </example>
+        /// </summary>
         JsonSerializerSettings SerializerSettings { get; }
     }
 }

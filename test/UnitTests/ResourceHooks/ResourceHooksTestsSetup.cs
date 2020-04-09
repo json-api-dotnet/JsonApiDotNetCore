@@ -35,9 +35,10 @@ namespace UnitTests.ResourceHooks
         protected readonly Faker<ArticleTag> _articleTagFaker;
         protected readonly Faker<IdentifiableArticleTag> _identifiableArticleTagFaker;
         protected readonly Faker<Passport> _passportFaker;
+
         public HooksDummyData()
         {
-            _resourceGraph = new ResourceGraphBuilder()
+            _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions())
                 .AddResource<TodoItem>()
                 .AddResource<Person>()
                 .AddResource<Passport>()
@@ -186,7 +187,7 @@ namespace UnitTests.ResourceHooks
 
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
-            var resourceGraph = new ResourceGraphBuilder()
+            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions())
                 .AddResource<TMain>()
                 .AddResource<TNested>()
                 .Build();
@@ -222,7 +223,7 @@ namespace UnitTests.ResourceHooks
 
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
-            var resourceGraph = new ResourceGraphBuilder()
+            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions())
                 .AddResource<TMain>()
                 .AddResource<TFirstNested>()
                 .AddResource<TSecondNested>()

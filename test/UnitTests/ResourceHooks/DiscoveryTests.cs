@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using System;
+using JsonApiDotNetCore.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace UnitTests.ResourceHooks
@@ -15,7 +16,7 @@ namespace UnitTests.ResourceHooks
         public class Dummy : Identifiable { }
         public sealed class DummyResourceDefinition : ResourceDefinition<Dummy>
         {
-            public DummyResourceDefinition() : base(new ResourceGraphBuilder().AddResource<Dummy>().Build()) { }
+            public DummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions()).AddResource<Dummy>().Build()) { }
 
             public override IEnumerable<Dummy> BeforeDelete(IEntityHashSet<Dummy> affected, ResourcePipeline pipeline) { return affected; }
             public override void AfterDelete(HashSet<Dummy> entities, ResourcePipeline pipeline, bool succeeded) { }
@@ -48,7 +49,7 @@ namespace UnitTests.ResourceHooks
 
         public sealed class AnotherDummyResourceDefinition : ResourceDefinitionBase<AnotherDummy>
         {
-            public AnotherDummyResourceDefinition() : base(new ResourceGraphBuilder().AddResource<AnotherDummy>().Build()) { }
+            public AnotherDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions()).AddResource<AnotherDummy>().Build()) { }
         }
 
         [Fact]
@@ -64,7 +65,7 @@ namespace UnitTests.ResourceHooks
         public class YetAnotherDummy : Identifiable { }
         public sealed class YetAnotherDummyResourceDefinition : ResourceDefinition<YetAnotherDummy>
         {
-            public YetAnotherDummyResourceDefinition() : base(new ResourceGraphBuilder().AddResource<YetAnotherDummy>().Build()) { }
+            public YetAnotherDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions()).AddResource<YetAnotherDummy>().Build()) { }
 
             public override IEnumerable<YetAnotherDummy> BeforeDelete(IEntityHashSet<YetAnotherDummy> affected, ResourcePipeline pipeline) { return affected; }
 
@@ -96,7 +97,7 @@ namespace UnitTests.ResourceHooks
 
         public sealed class GenericDummyResourceDefinition<TResource> : ResourceDefinition<TResource> where TResource : class, IIdentifiable<int>
         {
-            public GenericDummyResourceDefinition() : base(new ResourceGraphBuilder().AddResource<TResource>().Build()) { }
+            public GenericDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions()).AddResource<TResource>().Build()) { }
 
             public override IEnumerable<TResource> BeforeDelete(IEntityHashSet<TResource> entities, ResourcePipeline pipeline) { return entities; }
             public override void AfterDelete(HashSet<TResource> entities, ResourcePipeline pipeline, bool succeeded) { }

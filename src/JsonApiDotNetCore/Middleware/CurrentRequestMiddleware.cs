@@ -5,7 +5,6 @@ using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -29,7 +28,6 @@ namespace JsonApiDotNetCore.Middleware
         private IJsonApiOptions _options;
         private RouteValueDictionary _routeValues;
         private IControllerResourceMapping _controllerResourceMapping;
-        private IResourceNameFormatter _formatter;
 
         public CurrentRequestMiddleware(RequestDelegate next)
         {
@@ -40,15 +38,13 @@ namespace JsonApiDotNetCore.Middleware
                                  IControllerResourceMapping controllerResourceMapping,
                                  IJsonApiOptions options,
                                  ICurrentRequest currentRequest,
-                                 IResourceGraph resourceGraph,
-                                 IResourceNameFormatter formatter)
+                                 IResourceGraph resourceGraph)
         {
             _httpContext = httpContext;
             _currentRequest = currentRequest;
             _controllerResourceMapping = controllerResourceMapping;
             _resourceGraph = resourceGraph;
             _options = options;
-            _formatter = formatter;
             _routeValues = httpContext.GetRouteData().Values;
             var requestResource = GetCurrentEntity();
             if (requestResource != null)
@@ -204,7 +200,7 @@ namespace JsonApiDotNetCore.Middleware
             context.Response.StatusCode = (int) error.StatusCode;
 
             JsonSerializer serializer = JsonSerializer.CreateDefault(_options.SerializerSettings);
-            serializer.ApplyErrorSettings(_formatter);
+            serializer.ApplyErrorSettings();
 
             // https://github.com/JamesNK/Newtonsoft.Json/issues/1193
             await using (var stream = new MemoryStream())

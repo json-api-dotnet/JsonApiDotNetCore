@@ -9,14 +9,16 @@ using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Internal
 {
     /// <summary>
     /// The default routing convention registers the name of the resource as the route
-    /// using the <see cref="IResourceNameFormatter"/> that is registered. The default for this is
-    /// a camelCase formatter. If the controller directly inherits from JsonApiMixin and there is no
-    /// resource directly associated, it used the name of the controller instead of the name of the type.
+    /// using the serializer casing convention. The default for this is
+    /// a camel case formatter. If the controller directly inherits from JsonApiMixin and there is no
+    /// resource directly associated, it uses the name of the controller instead of the name of the type.
     /// </summary>
     /// <example>
     /// public class SomeResourceController: JsonApiController{SomeResource} { }
@@ -35,14 +37,15 @@ namespace JsonApiDotNetCore.Internal
     /// </example>
     public class DefaultRoutingConvention : IJsonApiRoutingConvention
     {
-        private readonly string _namespace;
-        private readonly IResourceNameFormatter _formatter;
+        private readonly IJsonApiOptions _options;
+        private readonly ResourceNameFormatter _formatter;
         private readonly HashSet<string> _registeredTemplates = new HashSet<string>();
         private readonly Dictionary<string, Type> _registeredResources = new Dictionary<string, Type>();
-        public DefaultRoutingConvention(IJsonApiOptions options, IResourceNameFormatter formatter)
+        
+        public DefaultRoutingConvention(IJsonApiOptions options)
         {
-            _namespace = options.Namespace;
-            _formatter = formatter;
+            _options = options;
+            _formatter = new ResourceNameFormatter(options);
         }
 
         /// <inheritdoc/>
@@ -90,7 +93,7 @@ namespace JsonApiDotNetCore.Internal
         {
             if (_registeredResources.TryGetValue(model.ControllerName, out Type resourceType))
             {
-                var template = $"{_namespace}/{_formatter.FormatResourceName(resourceType)}";
+                var template = $"{_options.Namespace}/{_formatter.FormatResourceName(resourceType)}";
                 if (_registeredTemplates.Add(template))
                 {
                     return template;
@@ -104,7 +107,10 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         private string TemplateFromController(ControllerModel model)
         {
-            var template = $"{_namespace}/{_formatter.ApplyCasingConvention(model.ControllerName)}";
+            var contractResolver = (DefaultContractResolver) _options.SerializerSettings.ContractResolver;
+            string controllerName = contractResolver.NamingStrategy.GetPropertyName(model.ControllerName, false);
+
+            var template = $"{_options.Namespace}/{controllerName}";
             if (_registeredTemplates.Add(template))
             {
                 return template;

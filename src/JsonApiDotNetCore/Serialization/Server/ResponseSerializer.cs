@@ -31,7 +31,6 @@ namespace JsonApiDotNetCore.Serialization.Server
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         private readonly IFieldsToSerialize _fieldsToSerialize;
-        private readonly IResourceNameFormatter _formatter;
         private readonly IJsonApiOptions _options;
         private readonly IMetaBuilder<TResource> _metaBuilder;
         private readonly Type _primaryResourceType;
@@ -43,12 +42,10 @@ namespace JsonApiDotNetCore.Serialization.Server
             IIncludedResourceObjectBuilder includedBuilder,
             IFieldsToSerialize fieldsToSerialize,
             IResourceObjectBuilder resourceObjectBuilder,
-            IResourceNameFormatter formatter,
             IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
             _fieldsToSerialize = fieldsToSerialize;
-            _formatter = formatter;
             _options = options;
             _linkBuilder = linkBuilder;
             _metaBuilder = metaBuilder;
@@ -68,7 +65,7 @@ namespace JsonApiDotNetCore.Serialization.Server
 
         private string SerializeErrorDocument(ErrorDocument errorDocument)
         {
-            return SerializeObject(errorDocument, _options.SerializerSettings, serializer => { serializer.ApplyErrorSettings(_formatter); });
+            return SerializeObject(errorDocument, _options.SerializerSettings, serializer => { serializer.ApplyErrorSettings(); });
         }
 
         /// <summary>

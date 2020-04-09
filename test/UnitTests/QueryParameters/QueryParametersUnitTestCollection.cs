@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -17,7 +18,7 @@ namespace UnitTests.QueryParameters
 
         public QueryParametersUnitTestCollection()
         {
-            var builder = new ResourceGraphBuilder();
+            var builder = new ResourceGraphBuilder(new JsonApiOptions());
             builder.AddResource<Article>();
             builder.AddResource<Person>();
             builder.AddResource<Blog>();

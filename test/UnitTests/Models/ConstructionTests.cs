@@ -1,5 +1,6 @@
 using System;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server;
@@ -13,7 +14,7 @@ namespace UnitTests.Models
         public void When_model_has_no_parameterless_contructor_it_must_fail()
         {
             // Arrange
-            var graph = new ResourceGraphBuilder().AddResource<ResourceWithParameters>().Build();
+            var graph = new ResourceGraphBuilder(new JsonApiOptions()).AddResource<ResourceWithParameters>().Build();
 
             var serializer = new RequestDeserializer(graph, new TargetedFields());
 

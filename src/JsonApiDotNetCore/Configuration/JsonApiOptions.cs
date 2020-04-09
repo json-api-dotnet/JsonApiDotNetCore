@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models.Links;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -123,6 +124,13 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         public bool ValidateModelState { get; set; }
 
-        public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings();
+        /// <inheritdoc/>
+        public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings
+        {
+            ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            }
+        };
     }
 }

@@ -25,14 +25,17 @@ namespace DiscoveryTests
     public sealed class ServiceDiscoveryFacadeTests
     {
         private readonly IServiceCollection _services = new ServiceCollection();
-        private readonly ResourceGraphBuilder _resourceGraphBuilder = new ResourceGraphBuilder();
+        private readonly ResourceGraphBuilder _resourceGraphBuilder;
 
         public ServiceDiscoveryFacadeTests()
         {
+            var options = new JsonApiOptions();
+
             var dbResolverMock = new Mock<IDbContextResolver>();
             dbResolverMock.Setup(m => m.GetContext()).Returns(new Mock<DbContext>().Object);
             TestModelRepository._dbContextResolver = dbResolverMock.Object;
-            _services.AddSingleton<IJsonApiOptions>(new JsonApiOptions());
+
+            _services.AddSingleton<IJsonApiOptions>(options);
             _services.AddSingleton<ILoggerFactory>(new LoggerFactory());
             _services.AddScoped((_) => new Mock<ILinkBuilder>().Object);
             _services.AddScoped((_) => new Mock<ICurrentRequest>().Object);
@@ -40,6 +43,8 @@ namespace DiscoveryTests
             _services.AddScoped((_) => new Mock<IResourceGraph>().Object);
             _services.AddScoped((_) => new Mock<IGenericServiceFactory>().Object);
             _services.AddScoped((_) => new Mock<IResourceContextProvider>().Object);
+
+            _resourceGraphBuilder = new ResourceGraphBuilder(options);
         }
 
         private ServiceDiscoveryFacade Facade => new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
