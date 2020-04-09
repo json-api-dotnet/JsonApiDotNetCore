@@ -354,7 +354,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?page[size]={numberOfItems}&include=owner&sort=owner.age";
+            var route = $"/api/v1/todoItems?page[size]={numberOfItems}&include=owner&sort=owner.the-Age";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -392,7 +392,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?page[size]={numberOfItems}&include=owner&sort=-owner.age";
+            var route = $"/api/v1/todoItems?page[size]={numberOfItems}&include=owner&sort=-owner.the-Age";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

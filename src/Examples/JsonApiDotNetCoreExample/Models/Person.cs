@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public string LastName { get; set; }
 
-        [Attr]
+        [Attr("the-Age")]
         public int Age { get; set; }
 
         [HasMany]
