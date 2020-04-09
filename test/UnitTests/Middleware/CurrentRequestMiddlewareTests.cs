@@ -11,6 +11,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Graph;
 using Xunit;
 
 namespace UnitTests.Middleware
@@ -87,7 +88,7 @@ namespace UnitTests.Middleware
             var options = holder.Options.Object;
             var currentRequest = holder.CurrentRequest;
             var resourceGraph = holder.ResourceGraph.Object;
-            return holder.MiddleWare.Invoke(context, controllerResourceMapping, options, currentRequest, resourceGraph);
+            return holder.MiddleWare.Invoke(context, controllerResourceMapping, options, currentRequest, resourceGraph, new CamelCaseFormatter());
         }
         private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", string action = "", string id =null, Type relType = null)
         {

@@ -27,12 +27,16 @@ namespace JsonApiDotNetCore.Serialization.Client
         public string Serialize(IIdentifiable entity)
         {
             if (entity == null)
-                return JsonConvert.SerializeObject(Build((IIdentifiable) null, new List<AttrAttribute>(), new List<RelationshipAttribute>()));
+            {
+                var empty = Build((IIdentifiable) null, new List<AttrAttribute>(), new List<RelationshipAttribute>());
+                return SerializeObject(empty, new JsonSerializerSettings());
+            }
 
             _currentTargetedResource = entity.GetType();
             var document = Build(entity, GetAttributesToSerialize(entity), GetRelationshipsToSerialize(entity));
             _currentTargetedResource = null;
-            return JsonConvert.SerializeObject(document);
+
+            return SerializeObject(document, new JsonSerializerSettings());
         }
 
         /// <inheritdoc/>
@@ -44,15 +48,19 @@ namespace JsonApiDotNetCore.Serialization.Client
                 entity = item;
                 break;
             }
+
             if (entity == null)
-                return JsonConvert.SerializeObject(Build(entities, new List<AttrAttribute>(), new List<RelationshipAttribute>()));
+            {
+                var result = Build(entities, new List<AttrAttribute>(), new List<RelationshipAttribute>());
+                return SerializeObject(result, new JsonSerializerSettings());
+            }
 
             _currentTargetedResource = entity.GetType();
             var attributes = GetAttributesToSerialize(entity);
             var relationships = GetRelationshipsToSerialize(entity);
             var document = Build(entities, attributes, relationships);
             _currentTargetedResource = null;
-            return JsonConvert.SerializeObject(document);
+            return SerializeObject(document, new JsonSerializerSettings());
         }
 
         /// <inheritdoc/>

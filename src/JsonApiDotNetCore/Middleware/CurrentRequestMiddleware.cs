@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -27,6 +29,7 @@ namespace JsonApiDotNetCore.Middleware
         private IJsonApiOptions _options;
         private RouteValueDictionary _routeValues;
         private IControllerResourceMapping _controllerResourceMapping;
+        private IResourceNameFormatter _formatter;
 
         public CurrentRequestMiddleware(RequestDelegate next)
         {
@@ -37,13 +40,15 @@ namespace JsonApiDotNetCore.Middleware
                                  IControllerResourceMapping controllerResourceMapping,
                                  IJsonApiOptions options,
                                  ICurrentRequest currentRequest,
-                                 IResourceGraph resourceGraph)
+                                 IResourceGraph resourceGraph,
+                                 IResourceNameFormatter formatter)
         {
             _httpContext = httpContext;
             _currentRequest = currentRequest;
             _controllerResourceMapping = controllerResourceMapping;
             _resourceGraph = resourceGraph;
             _options = options;
+            _formatter = formatter;
             _routeValues = httpContext.GetRouteData().Values;
             var requestResource = GetCurrentEntity();
             if (requestResource != null)
@@ -135,7 +140,7 @@ namespace JsonApiDotNetCore.Middleware
             return await IsValidContentTypeHeaderAsync(_httpContext) && await IsValidAcceptHeaderAsync(_httpContext);
         }
 
-        private static async Task<bool> IsValidContentTypeHeaderAsync(HttpContext context)
+        private async Task<bool> IsValidContentTypeHeaderAsync(HttpContext context)
         {
             var contentType = context.Request.ContentType;
             if (contentType != null && ContainsMediaTypeParameters(contentType))
@@ -151,7 +156,7 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private static async Task<bool> IsValidAcceptHeaderAsync(HttpContext context)
+        private async Task<bool> IsValidAcceptHeaderAsync(HttpContext context)
         {
             if (context.Request.Headers.TryGetValue(HeaderConstants.AcceptHeader, out StringValues acceptHeaders) == false)
                 return true;
@@ -194,14 +199,24 @@ namespace JsonApiDotNetCore.Middleware
             );
         }
 
-        private static async Task FlushResponseAsync(HttpContext context, Error error)
+        private async Task FlushResponseAsync(HttpContext context, Error error)
         {
             context.Response.StatusCode = (int) error.StatusCode;
 
-            string responseBody = JsonConvert.SerializeObject(new ErrorDocument(error));
-            await using (var writer = new StreamWriter(context.Response.Body))
+            JsonSerializer serializer = JsonSerializer.CreateDefault(_options.SerializerSettings);
+            serializer.ApplyErrorSettings(_formatter);
+
+            // https://github.com/JamesNK/Newtonsoft.Json/issues/1193
+            await using (var stream = new MemoryStream())
             {
-                await writer.WriteAsync(responseBody);
+                await using (var streamWriter = new StreamWriter(stream, leaveOpen: true))
+                {
+                    using var jsonWriter = new JsonTextWriter(streamWriter);
+                    serializer.Serialize(jsonWriter, new ErrorDocument(error));
+                }
+
+                stream.Seek(0, SeekOrigin.Begin);
+                await stream.CopyToAsync(context.Response.Body);
             }
 
             context.Response.Body.Flush();
