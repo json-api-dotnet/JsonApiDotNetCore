@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Query
 {
@@ -12,7 +13,7 @@ namespace JsonApiDotNetCore.Query
 
         public OmitNullService(IJsonApiOptions options)
         {
-            OmitAttributeIfValueIsNull = options.SerializerOmitAttributeIfValueIsNull;
+            OmitAttributeIfValueIsNull = options.SerializerSettings.NullValueHandling == NullValueHandling.Ignore;
             _options = options;
         }
 

@@ -69,7 +69,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var jsonApiOptions = _fixture.GetService<IJsonApiOptions>();
             if (omitAttributeIfValueIsNull != null)
             {
-                jsonApiOptions.SerializerOmitAttributeIfValueIsNull = omitAttributeIfValueIsNull.Value;
+                jsonApiOptions.SerializerSettings.NullValueHandling = omitAttributeIfValueIsNull.Value
+                    ? NullValueHandling.Ignore
+                    : NullValueHandling.Include;
             }
             if (allowQueryStringOverride != null)
             {

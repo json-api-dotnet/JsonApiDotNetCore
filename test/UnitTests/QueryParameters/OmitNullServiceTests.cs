@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Query;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace UnitTests.QueryParameters
@@ -15,7 +16,10 @@ namespace UnitTests.QueryParameters
         {
             var options = new JsonApiOptions
             {
-                SerializerOmitAttributeIfValueIsNull = @default,
+                SerializerSettings =
+                {
+                    NullValueHandling = @default ? NullValueHandling.Ignore : NullValueHandling.Include
+                },
                 AllowOmitNullQueryStringOverride = @override
             };
 

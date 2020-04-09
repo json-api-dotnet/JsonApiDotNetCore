@@ -45,10 +45,6 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         bool AllowOmitDefaultQueryStringOverride { get; set; }
 
-        // TODO: Replace these with JsonSerializerSettings usage.
-        bool SerializerOmitAttributeIfValueIsNull { get; set; }
-        bool SerializerOmitAttributeIfValueIsDefault { get; set; }
-
         JsonSerializerSettings SerializerSettings { get; }
     }
 }

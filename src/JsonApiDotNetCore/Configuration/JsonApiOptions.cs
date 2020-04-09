@@ -57,12 +57,6 @@ namespace JsonApiDotNetCore.Configuration
         
         /// <inheritdoc/>
         public bool AllowOmitDefaultQueryStringOverride { get; set; }
-        
-        /// <inheritdoc/>
-        public bool SerializerOmitAttributeIfValueIsNull { get; set; }
-        
-        /// <inheritdoc/>
-        public bool SerializerOmitAttributeIfValueIsDefault { get; set; }
 
         /// <summary>
         /// The default page size for all resources. The value zero means: no paging.
@@ -131,7 +125,6 @@ namespace JsonApiDotNetCore.Configuration
 
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings
         {
-            NullValueHandling = NullValueHandling.Ignore
         };
     }
 }
