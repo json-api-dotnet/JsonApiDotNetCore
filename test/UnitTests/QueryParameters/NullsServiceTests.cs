@@ -10,58 +10,58 @@ using Xunit;
 
 namespace UnitTests.QueryParameters
 {
-    public sealed class OmitNullServiceTests : QueryParametersUnitTestCollection
+    public sealed class NullsServiceTests : QueryParametersUnitTestCollection
     {
-        public OmitNullService GetService(bool @default, bool @override)
+        public NullsService GetService(bool defaultValue, bool allowOverride)
         {
             var options = new JsonApiOptions
             {
                 SerializerSettings =
                 {
-                    NullValueHandling = @default ? NullValueHandling.Ignore : NullValueHandling.Include
+                    NullValueHandling = defaultValue ? NullValueHandling.Ignore : NullValueHandling.Include
                 },
-                AllowOmitNullQueryStringOverride = @override
+                AllowQueryStringOverrideForSerializerNullValueHandling = allowOverride
             };
 
-            return new OmitNullService(options);
+            return new NullsService(options);
         }
 
         [Fact]
-        public void CanParse_OmitNullService_SucceedOnMatch()
+        public void CanParse_NullsService_SucceedOnMatch()
         {
             // Arrange
             var service = GetService(true, true);
 
             // Act
-            bool result = service.CanParse("omitNull");
+            bool result = service.CanParse("nulls");
 
             // Assert
             Assert.True(result);
         }
 
         [Fact]
-        public void CanParse_OmitNullService_FailOnMismatch()
+        public void CanParse_NullsService_FailOnMismatch()
         {
             // Arrange
             var service = GetService(true, true);
 
             // Act
-            bool result = service.CanParse("omit-null");
+            bool result = service.CanParse("nullsettings");
 
             // Assert
             Assert.False(result);
         }
 
         [Theory]
-        [InlineData("false", true, true, false)]
-        [InlineData("false", true, false, true)]
-        [InlineData("true", false, true, true)]
-        [InlineData("true", false, false, false)]
-        public void Parse_QueryConfigWithApiSettings_CanParse(string queryValue, bool @default, bool @override, bool expected)
+        [InlineData("true", true, true, false)]
+        [InlineData("true", true, false, true)]
+        [InlineData("false", false, true, true)]
+        [InlineData("false", false, false, false)]
+        public void Parse_QueryConfigWithApiSettings_CanParse(string queryValue, bool defaultValue, bool allowOverride, bool expected)
         {
             // Arrange
-            var query = new KeyValuePair<string, StringValues>("omitNull", queryValue);
-            var service = GetService(@default, @override);
+            var query = new KeyValuePair<string, StringValues>("nulls", queryValue);
+            var service = GetService(defaultValue, allowOverride);
 
             // Act
             if (service.CanParse(query.Key) && service.IsEnabled(DisableQueryAttribute.Empty))
@@ -74,10 +74,10 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void Parse_OmitNullService_FailOnNonBooleanValue()
+        public void Parse_NullsService_FailOnNonBooleanValue()
         {
             // Arrange
-            const string parameterName = "omit-null";
+            const string parameterName = "nulls";
             var service = GetService(true, true);
 
             // Act, assert

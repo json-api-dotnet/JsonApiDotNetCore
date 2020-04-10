@@ -7,11 +7,11 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Query
 {
     /// <inheritdoc/>
-    public class OmitDefaultService : QueryParameterService, IOmitDefaultService
+    public class DefaultsService : QueryParameterService, IDefaultsService
     {
         private readonly IJsonApiOptions _options;
 
-        public OmitDefaultService(IJsonApiOptions options)
+        public DefaultsService(IJsonApiOptions options)
         {
             OmitAttributeIfValueIsDefault = options.SerializerSettings.DefaultValueHandling == DefaultValueHandling.Ignore;
             _options = options;
@@ -22,27 +22,27 @@ namespace JsonApiDotNetCore.Query
 
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
-            return _options.AllowOmitDefaultQueryStringOverride &&
-                   !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.OmitDefault);
+            return _options.AllowQueryStringOverrideForSerializerDefaultValueHandling &&
+                   !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Defaults);
         }
 
         /// <inheritdoc/>
         public bool CanParse(string parameterName)
         {
-            return parameterName == "omitDefault";
+            return parameterName == "defaults";
         }
 
         /// <inheritdoc/>
         public virtual void Parse(string parameterName, StringValues parameterValue)
         {
-            if (!bool.TryParse(parameterValue, out var omitAttributeIfValueIsDefault))
+            if (!bool.TryParse(parameterValue, out var result))
             {
                 throw new InvalidQueryStringParameterException(parameterName,
                     "The specified query string value must be 'true' or 'false'.",
                     $"The value '{parameterValue}' for parameter '{parameterName}' is not a valid boolean value.");
             }
 
-            OmitAttributeIfValueIsDefault = omitAttributeIfValueIsDefault;
+            OmitAttributeIfValueIsDefault = !result;
         }
     }
 }

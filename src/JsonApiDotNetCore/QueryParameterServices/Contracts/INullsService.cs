@@ -1,9 +1,9 @@
 namespace JsonApiDotNetCore.Query
 {
     /// <summary>
-    /// Query parameter service responsible for url queries of the form ?omitNull=true
+    /// Query parameter service responsible for url queries of the form ?nulls=false
     /// </summary>
-    public interface IOmitNullService : IQueryParameterService
+    public interface INullsService : IQueryParameterService
     {
         /// <summary>
         /// Contains the effective value of default configuration and query string override, after parsing has occured.

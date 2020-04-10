@@ -36,14 +36,14 @@ namespace JsonApiDotNetCore.Configuration
         string Namespace { get; set; }
 
         /// <summary>
-        /// Determines whether the <see cref="JsonSerializerSettings.NullValueHandling"/> serialization setting can be overridden by a query string parameter.
+        /// Determines whether the <see cref="JsonSerializerSettings.NullValueHandling"/> serialization setting can be overridden by using a query string parameter.
         /// </summary>
-        bool AllowOmitNullQueryStringOverride { get; set; }
+        bool AllowQueryStringOverrideForSerializerNullValueHandling { get; set; }
 
         /// <summary>
-        /// Determines whether the <see cref="JsonSerializerSettings.DefaultValueHandling"/> serialization setting can be overridden by a query string parameter.
+        /// Determines whether the <see cref="JsonSerializerSettings.DefaultValueHandling"/> serialization setting can be overridden by using a query string parameter.
         /// </summary>
-        bool AllowOmitDefaultQueryStringOverride { get; set; }
+        bool AllowQueryStringOverrideForSerializerDefaultValueHandling { get; set; }
 
         /// <summary>
         /// Specifies the settings that are used by the <see cref="JsonSerializer"/>.

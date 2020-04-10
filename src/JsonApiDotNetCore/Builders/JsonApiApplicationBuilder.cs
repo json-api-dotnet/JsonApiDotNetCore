@@ -178,16 +178,16 @@ namespace JsonApiDotNetCore.Builders
             _services.AddScoped<ISortService, SortService>();
             _services.AddScoped<ISparseFieldsService, SparseFieldsService>();
             _services.AddScoped<IPageService, PageService>();
-            _services.AddScoped<IOmitDefaultService, OmitDefaultService>();
-            _services.AddScoped<IOmitNullService, OmitNullService>();
+            _services.AddScoped<IDefaultsService, DefaultsService>();
+            _services.AddScoped<INullsService, NullsService>();
 
             _services.AddScoped<IQueryParameterService>(sp => sp.GetService<IIncludeService>());
             _services.AddScoped<IQueryParameterService>(sp => sp.GetService<IFilterService>());
             _services.AddScoped<IQueryParameterService>(sp => sp.GetService<ISortService>());
             _services.AddScoped<IQueryParameterService>(sp => sp.GetService<ISparseFieldsService>());
             _services.AddScoped<IQueryParameterService>(sp => sp.GetService<IPageService>());
-            _services.AddScoped<IQueryParameterService>(sp => sp.GetService<IOmitDefaultService>());
-            _services.AddScoped<IQueryParameterService>(sp => sp.GetService<IOmitNullService>());
+            _services.AddScoped<IQueryParameterService>(sp => sp.GetService<IDefaultsService>());
+            _services.AddScoped<IQueryParameterService>(sp => sp.GetService<INullsService>());
         }
 
         private void AddResourceHooks()

@@ -10,58 +10,58 @@ using Xunit;
 
 namespace UnitTests.QueryParameters
 {
-    public sealed class OmitDefaultServiceTests : QueryParametersUnitTestCollection
+    public sealed class DefaultsServiceTests : QueryParametersUnitTestCollection
     {
-        public OmitDefaultService GetService(bool @default, bool @override)
+        public DefaultsService GetService(bool defaultValue, bool allowOverride)
         {
             var options = new JsonApiOptions
             {
                 SerializerSettings =
                 {
-                    DefaultValueHandling = @default ? DefaultValueHandling.Ignore : DefaultValueHandling.Include
+                    DefaultValueHandling = defaultValue ? DefaultValueHandling.Ignore : DefaultValueHandling.Include
                 },
-                AllowOmitDefaultQueryStringOverride = @override
+                AllowQueryStringOverrideForSerializerDefaultValueHandling = allowOverride
             };
 
-            return new OmitDefaultService(options);
+            return new DefaultsService(options);
         }
 
         [Fact]
-        public void CanParse_OmitDefaultService_SucceedOnMatch()
+        public void CanParse_DefaultsService_SucceedOnMatch()
         {
             // Arrange
             var service = GetService(true, true);
 
             // Act
-            bool result = service.CanParse("omitDefault");
+            bool result = service.CanParse("defaults");
 
             // Assert
             Assert.True(result);
         }
 
         [Fact]
-        public void CanParse_OmitDefaultService_FailOnMismatch()
+        public void CanParse_DefaultsService_FailOnMismatch()
         {
             // Arrange
             var service = GetService(true, true);
 
             // Act
-            bool result = service.CanParse("omit-default");
+            bool result = service.CanParse("defaultsettings");
 
             // Assert
             Assert.False(result);
         }
 
         [Theory]
-        [InlineData("false", true, true, false)]
-        [InlineData("false", true, false, true)]
-        [InlineData("true", false, true, true)]
-        [InlineData("true", false, false, false)]
-        public void Parse_QueryConfigWithApiSettings_CanParse(string queryValue, bool @default, bool @override, bool expected)
+        [InlineData("true", true, true, false)]
+        [InlineData("true", true, false, true)]
+        [InlineData("false", false, true, true)]
+        [InlineData("false", false, false, false)]
+        public void Parse_QueryConfigWithApiSettings_CanParse(string queryValue, bool defaultValue, bool allowOverride, bool expected)
         {
             // Arrange
-            var query = new KeyValuePair<string, StringValues>("omitDefault", queryValue);
-            var service = GetService(@default, @override);
+            var query = new KeyValuePair<string, StringValues>("defaults", queryValue);
+            var service = GetService(defaultValue, allowOverride);
 
             // Act
             if (service.CanParse(query.Key) && service.IsEnabled(DisableQueryAttribute.Empty))
@@ -74,10 +74,10 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void Parse_OmitDefaultService_FailOnNonBooleanValue()
+        public void Parse_DefaultsService_FailOnNonBooleanValue()
         {
             // Arrange
-            const string parameterName = "omit-default";
+            const string parameterName = "defaults";
             var service = GetService(true, true);
 
             // Act, assert
