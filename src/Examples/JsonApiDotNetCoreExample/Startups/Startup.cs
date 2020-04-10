@@ -9,6 +9,7 @@ using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCoreExample.Services;
+using Newtonsoft.Json.Converters;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -52,6 +53,7 @@ namespace JsonApiDotNetCoreExample
             options.IncludeTotalRecordCount = true;
             options.LoadDatabaseValues = true;
             options.ValidateModelState = true;
+            options.SerializerSettings.Converters.Add(new StringEnumConverter());
         }
 
         public void Configure(

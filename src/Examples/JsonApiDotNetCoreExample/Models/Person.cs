@@ -23,6 +23,9 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr("the-Age")]
         public int Age { get; set; }
 
+        [Attr]
+        public Gender Gender { get; set; }
+
         [HasMany]
         public List<TodoItem> TodoItems { get; set; }
 
