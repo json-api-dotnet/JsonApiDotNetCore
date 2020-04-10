@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Query;
-using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -12,14 +10,11 @@ namespace UnitTests.QueryParameters
 {
     public sealed class NullsServiceTests : QueryParametersUnitTestCollection
     {
-        public NullsService GetService(bool defaultValue, bool allowOverride)
+        public NullsService GetService(NullValueHandling defaultValue, bool allowOverride)
         {
             var options = new JsonApiOptions
             {
-                SerializerSettings =
-                {
-                    NullValueHandling = defaultValue ? NullValueHandling.Ignore : NullValueHandling.Include
-                },
+                SerializerSettings = { NullValueHandling = defaultValue },
                 AllowQueryStringOverrideForSerializerNullValueHandling = allowOverride
             };
 
@@ -30,7 +25,7 @@ namespace UnitTests.QueryParameters
         public void CanParse_NullsService_SucceedOnMatch()
         {
             // Arrange
-            var service = GetService(true, true);
+            var service = GetService(NullValueHandling.Include, true);
 
             // Act
             bool result = service.CanParse("nulls");
@@ -43,7 +38,7 @@ namespace UnitTests.QueryParameters
         public void CanParse_NullsService_FailOnMismatch()
         {
             // Arrange
-            var service = GetService(true, true);
+            var service = GetService(NullValueHandling.Include, true);
 
             // Act
             bool result = service.CanParse("nullsettings");
@@ -53,24 +48,28 @@ namespace UnitTests.QueryParameters
         }
 
         [Theory]
-        [InlineData("true", true, true, false)]
-        [InlineData("true", true, false, true)]
-        [InlineData("false", false, true, true)]
-        [InlineData("false", false, false, false)]
-        public void Parse_QueryConfigWithApiSettings_CanParse(string queryValue, bool defaultValue, bool allowOverride, bool expected)
+        [InlineData("false", NullValueHandling.Ignore, false, NullValueHandling.Ignore)]
+        [InlineData("true", NullValueHandling.Ignore, false, NullValueHandling.Ignore)]
+        [InlineData("false", NullValueHandling.Include, false, NullValueHandling.Include)]
+        [InlineData("true", NullValueHandling.Include, false, NullValueHandling.Include)]
+        [InlineData("false", NullValueHandling.Ignore, true, NullValueHandling.Ignore)]
+        [InlineData("true", NullValueHandling.Ignore, true, NullValueHandling.Include)]
+        [InlineData("false", NullValueHandling.Include, true, NullValueHandling.Ignore)]
+        [InlineData("true", NullValueHandling.Include, true, NullValueHandling.Include)]
+        public void Parse_QueryConfigWithApiSettings_Succeeds(string queryValue, NullValueHandling defaultValue, bool allowOverride, NullValueHandling expected)
         {
             // Arrange
-            var query = new KeyValuePair<string, StringValues>("nulls", queryValue);
+            const string parameterName = "nulls";
             var service = GetService(defaultValue, allowOverride);
 
             // Act
-            if (service.CanParse(query.Key) && service.IsEnabled(DisableQueryAttribute.Empty))
+            if (service.CanParse(parameterName) && service.IsEnabled(DisableQueryAttribute.Empty))
             {
-                service.Parse(query.Key, query.Value);
+                service.Parse(parameterName, queryValue);
             }
 
             // Assert
-            Assert.Equal(expected, service.OmitAttributeIfValueIsNull);
+            Assert.Equal(expected, service.SerializerNullValueHandling);
         }
 
         [Fact]
@@ -78,7 +77,7 @@ namespace UnitTests.QueryParameters
         {
             // Arrange
             const string parameterName = "nulls";
-            var service = GetService(true, true);
+            var service = GetService(NullValueHandling.Include, true);
 
             // Act, assert
             var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(parameterName, "some"));

@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace JsonApiDotNetCore.Query
 {
     /// <summary>
@@ -8,6 +10,6 @@ namespace JsonApiDotNetCore.Query
         /// <summary>
         /// Contains the effective value of default configuration and query string override, after parsing has occured.
         /// </summary>
-        bool OmitAttributeIfValueIsDefault { get; }
+        DefaultValueHandling SerializerDefaultValueHandling { get; }
     }
 }

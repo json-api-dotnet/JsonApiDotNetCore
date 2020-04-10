@@ -13,12 +13,12 @@ namespace JsonApiDotNetCore.Query
 
         public NullsService(IJsonApiOptions options)
         {
-            OmitAttributeIfValueIsNull = options.SerializerSettings.NullValueHandling == NullValueHandling.Ignore;
+            SerializerNullValueHandling = options.SerializerSettings.NullValueHandling;
             _options = options;
         }
 
         /// <inheritdoc/>
-        public bool OmitAttributeIfValueIsNull { get; private set; }
+        public NullValueHandling SerializerNullValueHandling { get; private set; }
 
         /// <inheritdoc/>
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Query
                     $"The value '{parameterValue}' for parameter '{parameterName}' is not a valid boolean value.");
             }
 
-            OmitAttributeIfValueIsNull = !result;
+            SerializerNullValueHandling = result ? NullValueHandling.Include : NullValueHandling.Ignore;
         }
     }
 }

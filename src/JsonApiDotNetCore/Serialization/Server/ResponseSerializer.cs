@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -12,7 +11,6 @@ using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
-
     /// <summary>
     /// Server serializer implementation of <see cref="BaseDocumentBuilder"/>
     /// </summary>
@@ -124,7 +122,7 @@ namespace JsonApiDotNetCore.Serialization.Server
 
         /// <summary>
         /// Gets the list of attributes to serialize for the given <paramref name="resourceType"/>.
-        /// Note that the choice omitting null-values is not handled here,
+        /// Note that the choice of omitting null/default-values is not handled here,
         /// but in <see cref="IResourceObjectBuilderSettingsProvider"/>.
         /// </summary>
         /// <param name="resourceType">Type of entity to be serialized</param>

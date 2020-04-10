@@ -13,13 +13,14 @@ namespace JsonApiDotNetCore.Query
 
         public DefaultsService(IJsonApiOptions options)
         {
-            OmitAttributeIfValueIsDefault = options.SerializerSettings.DefaultValueHandling == DefaultValueHandling.Ignore;
+            SerializerDefaultValueHandling = options.SerializerSettings.DefaultValueHandling;
             _options = options;
         }
 
         /// <inheritdoc/>
-        public bool OmitAttributeIfValueIsDefault { get; private set; }
+        public DefaultValueHandling SerializerDefaultValueHandling { get; private set; }
 
+        /// <inheritdoc/>
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
             return _options.AllowQueryStringOverrideForSerializerDefaultValueHandling &&
@@ -42,7 +43,7 @@ namespace JsonApiDotNetCore.Query
                     $"The value '{parameterValue}' for parameter '{parameterName}' is not a valid boolean value.");
             }
 
-            OmitAttributeIfValueIsDefault = !result;
+            SerializerDefaultValueHandling = result ? DefaultValueHandling.Include : DefaultValueHandling.Ignore;
         }
     }
 }

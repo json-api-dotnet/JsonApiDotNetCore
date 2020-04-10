@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Query;
-using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -12,14 +10,11 @@ namespace UnitTests.QueryParameters
 {
     public sealed class DefaultsServiceTests : QueryParametersUnitTestCollection
     {
-        public DefaultsService GetService(bool defaultValue, bool allowOverride)
+        public DefaultsService GetService(DefaultValueHandling defaultValue, bool allowOverride)
         {
             var options = new JsonApiOptions
             {
-                SerializerSettings =
-                {
-                    DefaultValueHandling = defaultValue ? DefaultValueHandling.Ignore : DefaultValueHandling.Include
-                },
+                SerializerSettings = { DefaultValueHandling = defaultValue },
                 AllowQueryStringOverrideForSerializerDefaultValueHandling = allowOverride
             };
 
@@ -30,7 +25,7 @@ namespace UnitTests.QueryParameters
         public void CanParse_DefaultsService_SucceedOnMatch()
         {
             // Arrange
-            var service = GetService(true, true);
+            var service = GetService(DefaultValueHandling.Include, true);
 
             // Act
             bool result = service.CanParse("defaults");
@@ -43,7 +38,7 @@ namespace UnitTests.QueryParameters
         public void CanParse_DefaultsService_FailOnMismatch()
         {
             // Arrange
-            var service = GetService(true, true);
+            var service = GetService(DefaultValueHandling.Include, true);
 
             // Act
             bool result = service.CanParse("defaultsettings");
@@ -53,24 +48,28 @@ namespace UnitTests.QueryParameters
         }
 
         [Theory]
-        [InlineData("true", true, true, false)]
-        [InlineData("true", true, false, true)]
-        [InlineData("false", false, true, true)]
-        [InlineData("false", false, false, false)]
-        public void Parse_QueryConfigWithApiSettings_CanParse(string queryValue, bool defaultValue, bool allowOverride, bool expected)
+        [InlineData("false", DefaultValueHandling.Ignore, false, DefaultValueHandling.Ignore)]
+        [InlineData("true", DefaultValueHandling.Ignore, false, DefaultValueHandling.Ignore)]
+        [InlineData("false", DefaultValueHandling.Include, false, DefaultValueHandling.Include)]
+        [InlineData("true", DefaultValueHandling.Include, false, DefaultValueHandling.Include)]
+        [InlineData("false", DefaultValueHandling.Ignore, true, DefaultValueHandling.Ignore)]
+        [InlineData("true", DefaultValueHandling.Ignore, true, DefaultValueHandling.Include)]
+        [InlineData("false", DefaultValueHandling.Include, true, DefaultValueHandling.Ignore)]
+        [InlineData("true", DefaultValueHandling.Include, true, DefaultValueHandling.Include)]
+        public void Parse_QueryConfigWithApiSettings_Succeeds(string queryValue, DefaultValueHandling defaultValue, bool allowOverride, DefaultValueHandling expected)
         {
             // Arrange
-            var query = new KeyValuePair<string, StringValues>("defaults", queryValue);
+            const string parameterName = "defaults";
             var service = GetService(defaultValue, allowOverride);
 
             // Act
-            if (service.CanParse(query.Key) && service.IsEnabled(DisableQueryAttribute.Empty))
+            if (service.CanParse(parameterName) && service.IsEnabled(DisableQueryAttribute.Empty))
             {
-                service.Parse(query.Key, query.Value);
+                service.Parse(parameterName, queryValue);
             }
 
             // Assert
-            Assert.Equal(expected, service.OmitAttributeIfValueIsDefault);
+            Assert.Equal(expected, service.SerializerDefaultValueHandling);
         }
 
         [Fact]
@@ -78,7 +77,7 @@ namespace UnitTests.QueryParameters
         {
             // Arrange
             const string parameterName = "defaults";
-            var service = GetService(true, true);
+            var service = GetService(DefaultValueHandling.Include, true);
 
             // Act, assert
             var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(parameterName, "some"));

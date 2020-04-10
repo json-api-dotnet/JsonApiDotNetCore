@@ -12,8 +12,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         private readonly IDefaultsService _defaultsService;
         private readonly INullsService _nullsService;
 
-        public ResourceObjectBuilderSettingsProvider(IDefaultsService defaultsService,
-                                                     INullsService nullsService)
+        public ResourceObjectBuilderSettingsProvider(IDefaultsService defaultsService, INullsService nullsService)
         {
             _defaultsService = defaultsService;
             _nullsService = nullsService;
@@ -22,7 +21,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <inheritdoc/>
         public ResourceObjectBuilderSettings Get()
         {
-            return new ResourceObjectBuilderSettings(_nullsService.OmitAttributeIfValueIsNull, _defaultsService.OmitAttributeIfValueIsDefault);
+            return new ResourceObjectBuilderSettings(_nullsService.SerializerNullValueHandling, _defaultsService.SerializerDefaultValueHandling);
         }
     }
 }
