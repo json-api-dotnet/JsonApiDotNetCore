@@ -35,6 +35,17 @@ namespace JsonApiDotNetCore.Extensions
                 return ResolvePropertyName(name);
             }
 
+            public override string GetDictionaryKey(string key)
+            {
+                // Ignore the value of ProcessDictionaryKeys property on the wrapped strategy (short-circuit).
+                return ResolvePropertyName(key);
+            }
+
+            public override string GetPropertyName(string name, bool hasSpecifiedName)
+            {
+                return _namingStrategy.GetPropertyName(name, hasSpecifiedName);
+            }
+
             protected override string ResolvePropertyName(string name)
             {
                 return _namingStrategy.GetPropertyName(name, false);

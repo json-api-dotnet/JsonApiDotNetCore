@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
+using NoEntityFrameworkExample;
+using NoEntityFrameworkExample.Models;
 using Xunit;
-using Startup = NoEntityFrameworkExample.Startup;
-using TodoItem = NoEntityFrameworkExample.Models.TodoItem;
 
 namespace NoEntityFrameworkTests.Acceptance.Extensibility
 {

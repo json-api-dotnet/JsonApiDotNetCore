@@ -15,6 +15,7 @@ namespace JsonApiDotNetCore.Serialization.Client
     {
         private Type _currentTargetedResource;
         private readonly IResourceGraph _resourceGraph;
+        private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings();
 
         public RequestSerializer(IResourceGraph resourceGraph,
                                 IResourceObjectBuilder resourceObjectBuilder)
@@ -29,14 +30,14 @@ namespace JsonApiDotNetCore.Serialization.Client
             if (entity == null)
             {
                 var empty = Build((IIdentifiable) null, new List<AttrAttribute>(), new List<RelationshipAttribute>());
-                return SerializeObject(empty, new JsonSerializerSettings());
+                return SerializeObject(empty, _jsonSerializerSettings);
             }
 
             _currentTargetedResource = entity.GetType();
             var document = Build(entity, GetAttributesToSerialize(entity), GetRelationshipsToSerialize(entity));
             _currentTargetedResource = null;
 
-            return SerializeObject(document, new JsonSerializerSettings());
+            return SerializeObject(document, _jsonSerializerSettings);
         }
 
         /// <inheritdoc/>
@@ -52,7 +53,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             if (entity == null)
             {
                 var result = Build(entities, new List<AttrAttribute>(), new List<RelationshipAttribute>());
-                return SerializeObject(result, new JsonSerializerSettings());
+                return SerializeObject(result, _jsonSerializerSettings);
             }
 
             _currentTargetedResource = entity.GetType();
@@ -60,7 +61,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             var relationships = GetRelationshipsToSerialize(entity);
             var document = Build(entities, attributes, relationships);
             _currentTargetedResource = null;
-            return SerializeObject(document, new JsonSerializerSettings());
+            return SerializeObject(document, _jsonSerializerSettings);
         }
 
         /// <inheritdoc/>

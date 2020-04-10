@@ -9,7 +9,7 @@ using NoEntityFrameworkExample.Models;
 using System;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Configuration;
-using Startup = NoEntityFrameworkExample.Startup;
+using NoEntityFrameworkExample;
 
 namespace NoEntityFrameworkTests
 {
