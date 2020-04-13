@@ -1849,6 +1849,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Data.DefaultResourceRepository(Of TResource, TId).FirstOrDefaultAsync
   nameWithType: DefaultResourceRepository<TResource, TId>.FirstOrDefaultAsync
   nameWithType.vb: DefaultResourceRepository(Of TResource, TId).FirstOrDefaultAsync
+- uid: JsonApiDotNetCore.Data.DefaultResourceRepository`2.FlushFromCache(`0)
+  name: FlushFromCache(TResource)
+  href: api/JsonApiDotNetCore.Data.DefaultResourceRepository-2.html#JsonApiDotNetCore_Data_DefaultResourceRepository_2_FlushFromCache__0_
+  commentId: M:JsonApiDotNetCore.Data.DefaultResourceRepository`2.FlushFromCache(`0)
+  fullName: JsonApiDotNetCore.Data.DefaultResourceRepository<TResource, TId>.FlushFromCache(TResource)
+  fullName.vb: JsonApiDotNetCore.Data.DefaultResourceRepository(Of TResource, TId).FlushFromCache(TResource)
+  nameWithType: DefaultResourceRepository<TResource, TId>.FlushFromCache(TResource)
+  nameWithType.vb: DefaultResourceRepository(Of TResource, TId).FlushFromCache(TResource)
+- uid: JsonApiDotNetCore.Data.DefaultResourceRepository`2.FlushFromCache*
+  name: FlushFromCache
+  href: api/JsonApiDotNetCore.Data.DefaultResourceRepository-2.html#JsonApiDotNetCore_Data_DefaultResourceRepository_2_FlushFromCache_
+  commentId: Overload:JsonApiDotNetCore.Data.DefaultResourceRepository`2.FlushFromCache
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Data.DefaultResourceRepository<TResource, TId>.FlushFromCache
+  fullName.vb: JsonApiDotNetCore.Data.DefaultResourceRepository(Of TResource, TId).FlushFromCache
+  nameWithType: DefaultResourceRepository<TResource, TId>.FlushFromCache
+  nameWithType.vb: DefaultResourceRepository(Of TResource, TId).FlushFromCache
 - uid: JsonApiDotNetCore.Data.DefaultResourceRepository`2.Get
   name: Get()
   href: api/JsonApiDotNetCore.Data.DefaultResourceRepository-2.html#JsonApiDotNetCore_Data_DefaultResourceRepository_2_Get
@@ -1981,14 +1998,14 @@ references:
   fullName.vb: JsonApiDotNetCore.Data.DefaultResourceRepository(Of TResource, TId).ToListAsync
   nameWithType: DefaultResourceRepository<TResource, TId>.ToListAsync
   nameWithType.vb: DefaultResourceRepository(Of TResource, TId).ToListAsync
-- uid: JsonApiDotNetCore.Data.DefaultResourceRepository`2.UpdateAsync(`0)
-  name: UpdateAsync(TResource)
-  href: api/JsonApiDotNetCore.Data.DefaultResourceRepository-2.html#JsonApiDotNetCore_Data_DefaultResourceRepository_2_UpdateAsync__0_
-  commentId: M:JsonApiDotNetCore.Data.DefaultResourceRepository`2.UpdateAsync(`0)
-  fullName: JsonApiDotNetCore.Data.DefaultResourceRepository<TResource, TId>.UpdateAsync(TResource)
-  fullName.vb: JsonApiDotNetCore.Data.DefaultResourceRepository(Of TResource, TId).UpdateAsync(TResource)
-  nameWithType: DefaultResourceRepository<TResource, TId>.UpdateAsync(TResource)
-  nameWithType.vb: DefaultResourceRepository(Of TResource, TId).UpdateAsync(TResource)
+- uid: JsonApiDotNetCore.Data.DefaultResourceRepository`2.UpdateAsync(`0,`0)
+  name: UpdateAsync(TResource, TResource)
+  href: api/JsonApiDotNetCore.Data.DefaultResourceRepository-2.html#JsonApiDotNetCore_Data_DefaultResourceRepository_2_UpdateAsync__0__0_
+  commentId: M:JsonApiDotNetCore.Data.DefaultResourceRepository`2.UpdateAsync(`0,`0)
+  fullName: JsonApiDotNetCore.Data.DefaultResourceRepository<TResource, TId>.UpdateAsync(TResource, TResource)
+  fullName.vb: JsonApiDotNetCore.Data.DefaultResourceRepository(Of TResource, TId).UpdateAsync(TResource, TResource)
+  nameWithType: DefaultResourceRepository<TResource, TId>.UpdateAsync(TResource, TResource)
+  nameWithType.vb: DefaultResourceRepository(Of TResource, TId).UpdateAsync(TResource, TResource)
 - uid: JsonApiDotNetCore.Data.DefaultResourceRepository`2.UpdateAsync*
   name: UpdateAsync
   href: api/JsonApiDotNetCore.Data.DefaultResourceRepository-2.html#JsonApiDotNetCore_Data_DefaultResourceRepository_2_UpdateAsync_
@@ -2292,14 +2309,31 @@ references:
   fullName.vb: JsonApiDotNetCore.Data.IResourceWriteRepository(Of TResource, TId).DeleteAsync
   nameWithType: IResourceWriteRepository<TResource, TId>.DeleteAsync
   nameWithType.vb: IResourceWriteRepository(Of TResource, TId).DeleteAsync
-- uid: JsonApiDotNetCore.Data.IResourceWriteRepository`2.UpdateAsync(`0)
-  name: UpdateAsync(TResource)
-  href: api/JsonApiDotNetCore.Data.IResourceWriteRepository-2.html#JsonApiDotNetCore_Data_IResourceWriteRepository_2_UpdateAsync__0_
-  commentId: M:JsonApiDotNetCore.Data.IResourceWriteRepository`2.UpdateAsync(`0)
-  fullName: JsonApiDotNetCore.Data.IResourceWriteRepository<TResource, TId>.UpdateAsync(TResource)
-  fullName.vb: JsonApiDotNetCore.Data.IResourceWriteRepository(Of TResource, TId).UpdateAsync(TResource)
-  nameWithType: IResourceWriteRepository<TResource, TId>.UpdateAsync(TResource)
-  nameWithType.vb: IResourceWriteRepository(Of TResource, TId).UpdateAsync(TResource)
+- uid: JsonApiDotNetCore.Data.IResourceWriteRepository`2.FlushFromCache(`0)
+  name: FlushFromCache(TResource)
+  href: api/JsonApiDotNetCore.Data.IResourceWriteRepository-2.html#JsonApiDotNetCore_Data_IResourceWriteRepository_2_FlushFromCache__0_
+  commentId: M:JsonApiDotNetCore.Data.IResourceWriteRepository`2.FlushFromCache(`0)
+  fullName: JsonApiDotNetCore.Data.IResourceWriteRepository<TResource, TId>.FlushFromCache(TResource)
+  fullName.vb: JsonApiDotNetCore.Data.IResourceWriteRepository(Of TResource, TId).FlushFromCache(TResource)
+  nameWithType: IResourceWriteRepository<TResource, TId>.FlushFromCache(TResource)
+  nameWithType.vb: IResourceWriteRepository(Of TResource, TId).FlushFromCache(TResource)
+- uid: JsonApiDotNetCore.Data.IResourceWriteRepository`2.FlushFromCache*
+  name: FlushFromCache
+  href: api/JsonApiDotNetCore.Data.IResourceWriteRepository-2.html#JsonApiDotNetCore_Data_IResourceWriteRepository_2_FlushFromCache_
+  commentId: Overload:JsonApiDotNetCore.Data.IResourceWriteRepository`2.FlushFromCache
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Data.IResourceWriteRepository<TResource, TId>.FlushFromCache
+  fullName.vb: JsonApiDotNetCore.Data.IResourceWriteRepository(Of TResource, TId).FlushFromCache
+  nameWithType: IResourceWriteRepository<TResource, TId>.FlushFromCache
+  nameWithType.vb: IResourceWriteRepository(Of TResource, TId).FlushFromCache
+- uid: JsonApiDotNetCore.Data.IResourceWriteRepository`2.UpdateAsync(`0,`0)
+  name: UpdateAsync(TResource, TResource)
+  href: api/JsonApiDotNetCore.Data.IResourceWriteRepository-2.html#JsonApiDotNetCore_Data_IResourceWriteRepository_2_UpdateAsync__0__0_
+  commentId: M:JsonApiDotNetCore.Data.IResourceWriteRepository`2.UpdateAsync(`0,`0)
+  fullName: JsonApiDotNetCore.Data.IResourceWriteRepository<TResource, TId>.UpdateAsync(TResource, TResource)
+  fullName.vb: JsonApiDotNetCore.Data.IResourceWriteRepository(Of TResource, TId).UpdateAsync(TResource, TResource)
+  nameWithType: IResourceWriteRepository<TResource, TId>.UpdateAsync(TResource, TResource)
+  nameWithType.vb: IResourceWriteRepository(Of TResource, TId).UpdateAsync(TResource, TResource)
 - uid: JsonApiDotNetCore.Data.IResourceWriteRepository`2.UpdateAsync*
   name: UpdateAsync
   href: api/JsonApiDotNetCore.Data.IResourceWriteRepository-2.html#JsonApiDotNetCore_Data_IResourceWriteRepository_2_UpdateAsync_
@@ -9486,6 +9520,183 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.QueryString
   nameWithType: IRequestQueryStringAccessor.QueryString
+- uid: JsonApiDotNetCore.RequestServices
+  name: JsonApiDotNetCore.RequestServices
+  href: api/JsonApiDotNetCore.RequestServices.html
+  commentId: N:JsonApiDotNetCore.RequestServices
+  fullName: JsonApiDotNetCore.RequestServices
+  nameWithType: JsonApiDotNetCore.RequestServices
+- uid: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1
+  name: DefaultResourceChangeTracker<TResource>
+  href: api/JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker-1.html
+  commentId: T:JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1
+  name.vb: DefaultResourceChangeTracker(Of TResource)
+  fullName: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker<TResource>
+  fullName.vb: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker(Of TResource)
+  nameWithType: DefaultResourceChangeTracker<TResource>
+  nameWithType.vb: DefaultResourceChangeTracker(Of TResource)
+- uid: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.Serialization.ITargetedFields)
+  name: DefaultResourceChangeTracker(IJsonApiOptions, IResourceContextProvider, ITargetedFields)
+  href: api/JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_DefaultResourceChangeTracker_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_Serialization_ITargetedFields_
+  commentId: M:JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.Serialization.ITargetedFields)
+  fullName: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker<TResource>.DefaultResourceChangeTracker(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider, JsonApiDotNetCore.Serialization.ITargetedFields)
+  fullName.vb: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker(Of TResource).DefaultResourceChangeTracker(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider, JsonApiDotNetCore.Serialization.ITargetedFields)
+  nameWithType: DefaultResourceChangeTracker<TResource>.DefaultResourceChangeTracker(IJsonApiOptions, IResourceContextProvider, ITargetedFields)
+  nameWithType.vb: DefaultResourceChangeTracker(Of TResource).DefaultResourceChangeTracker(IJsonApiOptions, IResourceContextProvider, ITargetedFields)
+- uid: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.#ctor*
+  name: DefaultResourceChangeTracker
+  href: api/JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_DefaultResourceChangeTracker_1__ctor_
+  commentId: Overload:JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker<TResource>.DefaultResourceChangeTracker
+  fullName.vb: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker(Of TResource).DefaultResourceChangeTracker
+  nameWithType: DefaultResourceChangeTracker<TResource>.DefaultResourceChangeTracker
+  nameWithType.vb: DefaultResourceChangeTracker(Of TResource).DefaultResourceChangeTracker
+- uid: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.HasImplicitChanges
+  name: HasImplicitChanges()
+  href: api/JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_DefaultResourceChangeTracker_1_HasImplicitChanges
+  commentId: M:JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.HasImplicitChanges
+  fullName: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker<TResource>.HasImplicitChanges()
+  fullName.vb: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker(Of TResource).HasImplicitChanges()
+  nameWithType: DefaultResourceChangeTracker<TResource>.HasImplicitChanges()
+  nameWithType.vb: DefaultResourceChangeTracker(Of TResource).HasImplicitChanges()
+- uid: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.HasImplicitChanges*
+  name: HasImplicitChanges
+  href: api/JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_DefaultResourceChangeTracker_1_HasImplicitChanges_
+  commentId: Overload:JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.HasImplicitChanges
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker<TResource>.HasImplicitChanges
+  fullName.vb: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker(Of TResource).HasImplicitChanges
+  nameWithType: DefaultResourceChangeTracker<TResource>.HasImplicitChanges
+  nameWithType.vb: DefaultResourceChangeTracker(Of TResource).HasImplicitChanges
+- uid: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.SetFinallyStoredAttributeValues(`0)
+  name: SetFinallyStoredAttributeValues(TResource)
+  href: api/JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_DefaultResourceChangeTracker_1_SetFinallyStoredAttributeValues__0_
+  commentId: M:JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.SetFinallyStoredAttributeValues(`0)
+  fullName: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker<TResource>.SetFinallyStoredAttributeValues(TResource)
+  fullName.vb: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker(Of TResource).SetFinallyStoredAttributeValues(TResource)
+  nameWithType: DefaultResourceChangeTracker<TResource>.SetFinallyStoredAttributeValues(TResource)
+  nameWithType.vb: DefaultResourceChangeTracker(Of TResource).SetFinallyStoredAttributeValues(TResource)
+- uid: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.SetFinallyStoredAttributeValues*
+  name: SetFinallyStoredAttributeValues
+  href: api/JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_DefaultResourceChangeTracker_1_SetFinallyStoredAttributeValues_
+  commentId: Overload:JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.SetFinallyStoredAttributeValues
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker<TResource>.SetFinallyStoredAttributeValues
+  fullName.vb: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker(Of TResource).SetFinallyStoredAttributeValues
+  nameWithType: DefaultResourceChangeTracker<TResource>.SetFinallyStoredAttributeValues
+  nameWithType.vb: DefaultResourceChangeTracker(Of TResource).SetFinallyStoredAttributeValues
+- uid: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.SetInitiallyStoredAttributeValues(`0)
+  name: SetInitiallyStoredAttributeValues(TResource)
+  href: api/JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_DefaultResourceChangeTracker_1_SetInitiallyStoredAttributeValues__0_
+  commentId: M:JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.SetInitiallyStoredAttributeValues(`0)
+  fullName: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker<TResource>.SetInitiallyStoredAttributeValues(TResource)
+  fullName.vb: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker(Of TResource).SetInitiallyStoredAttributeValues(TResource)
+  nameWithType: DefaultResourceChangeTracker<TResource>.SetInitiallyStoredAttributeValues(TResource)
+  nameWithType.vb: DefaultResourceChangeTracker(Of TResource).SetInitiallyStoredAttributeValues(TResource)
+- uid: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.SetInitiallyStoredAttributeValues*
+  name: SetInitiallyStoredAttributeValues
+  href: api/JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_DefaultResourceChangeTracker_1_SetInitiallyStoredAttributeValues_
+  commentId: Overload:JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.SetInitiallyStoredAttributeValues
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker<TResource>.SetInitiallyStoredAttributeValues
+  fullName.vb: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker(Of TResource).SetInitiallyStoredAttributeValues
+  nameWithType: DefaultResourceChangeTracker<TResource>.SetInitiallyStoredAttributeValues
+  nameWithType.vb: DefaultResourceChangeTracker(Of TResource).SetInitiallyStoredAttributeValues
+- uid: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.SetRequestedAttributeValues(`0)
+  name: SetRequestedAttributeValues(TResource)
+  href: api/JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_DefaultResourceChangeTracker_1_SetRequestedAttributeValues__0_
+  commentId: M:JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.SetRequestedAttributeValues(`0)
+  fullName: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker<TResource>.SetRequestedAttributeValues(TResource)
+  fullName.vb: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker(Of TResource).SetRequestedAttributeValues(TResource)
+  nameWithType: DefaultResourceChangeTracker<TResource>.SetRequestedAttributeValues(TResource)
+  nameWithType.vb: DefaultResourceChangeTracker(Of TResource).SetRequestedAttributeValues(TResource)
+- uid: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.SetRequestedAttributeValues*
+  name: SetRequestedAttributeValues
+  href: api/JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_DefaultResourceChangeTracker_1_SetRequestedAttributeValues_
+  commentId: Overload:JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker`1.SetRequestedAttributeValues
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker<TResource>.SetRequestedAttributeValues
+  fullName.vb: JsonApiDotNetCore.RequestServices.DefaultResourceChangeTracker(Of TResource).SetRequestedAttributeValues
+  nameWithType: DefaultResourceChangeTracker<TResource>.SetRequestedAttributeValues
+  nameWithType.vb: DefaultResourceChangeTracker(Of TResource).SetRequestedAttributeValues
+- uid: JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1
+  name: IResourceChangeTracker<TResource>
+  href: api/JsonApiDotNetCore.RequestServices.IResourceChangeTracker-1.html
+  commentId: T:JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1
+  name.vb: IResourceChangeTracker(Of TResource)
+  fullName: JsonApiDotNetCore.RequestServices.IResourceChangeTracker<TResource>
+  fullName.vb: JsonApiDotNetCore.RequestServices.IResourceChangeTracker(Of TResource)
+  nameWithType: IResourceChangeTracker<TResource>
+  nameWithType.vb: IResourceChangeTracker(Of TResource)
+- uid: JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.HasImplicitChanges
+  name: HasImplicitChanges()
+  href: api/JsonApiDotNetCore.RequestServices.IResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_IResourceChangeTracker_1_HasImplicitChanges
+  commentId: M:JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.HasImplicitChanges
+  fullName: JsonApiDotNetCore.RequestServices.IResourceChangeTracker<TResource>.HasImplicitChanges()
+  fullName.vb: JsonApiDotNetCore.RequestServices.IResourceChangeTracker(Of TResource).HasImplicitChanges()
+  nameWithType: IResourceChangeTracker<TResource>.HasImplicitChanges()
+  nameWithType.vb: IResourceChangeTracker(Of TResource).HasImplicitChanges()
+- uid: JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.HasImplicitChanges*
+  name: HasImplicitChanges
+  href: api/JsonApiDotNetCore.RequestServices.IResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_IResourceChangeTracker_1_HasImplicitChanges_
+  commentId: Overload:JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.HasImplicitChanges
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.RequestServices.IResourceChangeTracker<TResource>.HasImplicitChanges
+  fullName.vb: JsonApiDotNetCore.RequestServices.IResourceChangeTracker(Of TResource).HasImplicitChanges
+  nameWithType: IResourceChangeTracker<TResource>.HasImplicitChanges
+  nameWithType.vb: IResourceChangeTracker(Of TResource).HasImplicitChanges
+- uid: JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.SetFinallyStoredAttributeValues(`0)
+  name: SetFinallyStoredAttributeValues(TResource)
+  href: api/JsonApiDotNetCore.RequestServices.IResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_IResourceChangeTracker_1_SetFinallyStoredAttributeValues__0_
+  commentId: M:JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.SetFinallyStoredAttributeValues(`0)
+  fullName: JsonApiDotNetCore.RequestServices.IResourceChangeTracker<TResource>.SetFinallyStoredAttributeValues(TResource)
+  fullName.vb: JsonApiDotNetCore.RequestServices.IResourceChangeTracker(Of TResource).SetFinallyStoredAttributeValues(TResource)
+  nameWithType: IResourceChangeTracker<TResource>.SetFinallyStoredAttributeValues(TResource)
+  nameWithType.vb: IResourceChangeTracker(Of TResource).SetFinallyStoredAttributeValues(TResource)
+- uid: JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.SetFinallyStoredAttributeValues*
+  name: SetFinallyStoredAttributeValues
+  href: api/JsonApiDotNetCore.RequestServices.IResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_IResourceChangeTracker_1_SetFinallyStoredAttributeValues_
+  commentId: Overload:JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.SetFinallyStoredAttributeValues
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.RequestServices.IResourceChangeTracker<TResource>.SetFinallyStoredAttributeValues
+  fullName.vb: JsonApiDotNetCore.RequestServices.IResourceChangeTracker(Of TResource).SetFinallyStoredAttributeValues
+  nameWithType: IResourceChangeTracker<TResource>.SetFinallyStoredAttributeValues
+  nameWithType.vb: IResourceChangeTracker(Of TResource).SetFinallyStoredAttributeValues
+- uid: JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.SetInitiallyStoredAttributeValues(`0)
+  name: SetInitiallyStoredAttributeValues(TResource)
+  href: api/JsonApiDotNetCore.RequestServices.IResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_IResourceChangeTracker_1_SetInitiallyStoredAttributeValues__0_
+  commentId: M:JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.SetInitiallyStoredAttributeValues(`0)
+  fullName: JsonApiDotNetCore.RequestServices.IResourceChangeTracker<TResource>.SetInitiallyStoredAttributeValues(TResource)
+  fullName.vb: JsonApiDotNetCore.RequestServices.IResourceChangeTracker(Of TResource).SetInitiallyStoredAttributeValues(TResource)
+  nameWithType: IResourceChangeTracker<TResource>.SetInitiallyStoredAttributeValues(TResource)
+  nameWithType.vb: IResourceChangeTracker(Of TResource).SetInitiallyStoredAttributeValues(TResource)
+- uid: JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.SetInitiallyStoredAttributeValues*
+  name: SetInitiallyStoredAttributeValues
+  href: api/JsonApiDotNetCore.RequestServices.IResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_IResourceChangeTracker_1_SetInitiallyStoredAttributeValues_
+  commentId: Overload:JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.SetInitiallyStoredAttributeValues
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.RequestServices.IResourceChangeTracker<TResource>.SetInitiallyStoredAttributeValues
+  fullName.vb: JsonApiDotNetCore.RequestServices.IResourceChangeTracker(Of TResource).SetInitiallyStoredAttributeValues
+  nameWithType: IResourceChangeTracker<TResource>.SetInitiallyStoredAttributeValues
+  nameWithType.vb: IResourceChangeTracker(Of TResource).SetInitiallyStoredAttributeValues
+- uid: JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.SetRequestedAttributeValues(`0)
+  name: SetRequestedAttributeValues(TResource)
+  href: api/JsonApiDotNetCore.RequestServices.IResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_IResourceChangeTracker_1_SetRequestedAttributeValues__0_
+  commentId: M:JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.SetRequestedAttributeValues(`0)
+  fullName: JsonApiDotNetCore.RequestServices.IResourceChangeTracker<TResource>.SetRequestedAttributeValues(TResource)
+  fullName.vb: JsonApiDotNetCore.RequestServices.IResourceChangeTracker(Of TResource).SetRequestedAttributeValues(TResource)
+  nameWithType: IResourceChangeTracker<TResource>.SetRequestedAttributeValues(TResource)
+  nameWithType.vb: IResourceChangeTracker(Of TResource).SetRequestedAttributeValues(TResource)
+- uid: JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.SetRequestedAttributeValues*
+  name: SetRequestedAttributeValues
+  href: api/JsonApiDotNetCore.RequestServices.IResourceChangeTracker-1.html#JsonApiDotNetCore_RequestServices_IResourceChangeTracker_1_SetRequestedAttributeValues_
+  commentId: Overload:JsonApiDotNetCore.RequestServices.IResourceChangeTracker`1.SetRequestedAttributeValues
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.RequestServices.IResourceChangeTracker<TResource>.SetRequestedAttributeValues
+  fullName.vb: JsonApiDotNetCore.RequestServices.IResourceChangeTracker(Of TResource).SetRequestedAttributeValues
+  nameWithType: IResourceChangeTracker<TResource>.SetRequestedAttributeValues
+  nameWithType.vb: IResourceChangeTracker(Of TResource).SetRequestedAttributeValues
 - uid: JsonApiDotNetCore.Serialization
   name: JsonApiDotNetCore.Serialization
   href: api/JsonApiDotNetCore.Serialization.html
@@ -9517,24 +9728,24 @@ references:
   commentId: F:JsonApiDotNetCore.Serialization.BaseDocumentBuilder._resourceObjectBuilder
   fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder._resourceObjectBuilder
   nameWithType: BaseDocumentBuilder._resourceObjectBuilder
-- uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable,List{JsonApiDotNetCore.Models.AttrAttribute},List{JsonApiDotNetCore.Models.RelationshipAttribute})
-  name: Build(IEnumerable, List<AttrAttribute>, List<RelationshipAttribute>)
-  href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_Build_IEnumerable_List_JsonApiDotNetCore_Models_AttrAttribute__List_JsonApiDotNetCore_Models_RelationshipAttribute__
-  commentId: M:JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable,List{JsonApiDotNetCore.Models.AttrAttribute},List{JsonApiDotNetCore.Models.RelationshipAttribute})
-  name.vb: Build(IEnumerable, List(Of AttrAttribute), List(Of RelationshipAttribute))
-  fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable, List<JsonApiDotNetCore.Models.AttrAttribute>, List<JsonApiDotNetCore.Models.RelationshipAttribute>)
-  fullName.vb: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable, List(Of JsonApiDotNetCore.Models.AttrAttribute), List(Of JsonApiDotNetCore.Models.RelationshipAttribute))
-  nameWithType: BaseDocumentBuilder.Build(IEnumerable, List<AttrAttribute>, List<RelationshipAttribute>)
-  nameWithType.vb: BaseDocumentBuilder.Build(IEnumerable, List(Of AttrAttribute), List(Of RelationshipAttribute))
-- uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(JsonApiDotNetCore.Models.IIdentifiable,List{JsonApiDotNetCore.Models.AttrAttribute},List{JsonApiDotNetCore.Models.RelationshipAttribute})
-  name: Build(IIdentifiable, List<AttrAttribute>, List<RelationshipAttribute>)
-  href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_Build_JsonApiDotNetCore_Models_IIdentifiable_List_JsonApiDotNetCore_Models_AttrAttribute__List_JsonApiDotNetCore_Models_RelationshipAttribute__
-  commentId: M:JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(JsonApiDotNetCore.Models.IIdentifiable,List{JsonApiDotNetCore.Models.AttrAttribute},List{JsonApiDotNetCore.Models.RelationshipAttribute})
-  name.vb: Build(IIdentifiable, List(Of AttrAttribute), List(Of RelationshipAttribute))
-  fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(JsonApiDotNetCore.Models.IIdentifiable, List<JsonApiDotNetCore.Models.AttrAttribute>, List<JsonApiDotNetCore.Models.RelationshipAttribute>)
-  fullName.vb: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(JsonApiDotNetCore.Models.IIdentifiable, List(Of JsonApiDotNetCore.Models.AttrAttribute), List(Of JsonApiDotNetCore.Models.RelationshipAttribute))
-  nameWithType: BaseDocumentBuilder.Build(IIdentifiable, List<AttrAttribute>, List<RelationshipAttribute>)
-  nameWithType.vb: BaseDocumentBuilder.Build(IIdentifiable, List(Of AttrAttribute), List(Of RelationshipAttribute))
+- uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable,IReadOnlyCollection{JsonApiDotNetCore.Models.AttrAttribute},IReadOnlyCollection{JsonApiDotNetCore.Models.RelationshipAttribute})
+  name: Build(IEnumerable, IReadOnlyCollection<AttrAttribute>, IReadOnlyCollection<RelationshipAttribute>)
+  href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_Build_IEnumerable_IReadOnlyCollection_JsonApiDotNetCore_Models_AttrAttribute__IReadOnlyCollection_JsonApiDotNetCore_Models_RelationshipAttribute__
+  commentId: M:JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable,IReadOnlyCollection{JsonApiDotNetCore.Models.AttrAttribute},IReadOnlyCollection{JsonApiDotNetCore.Models.RelationshipAttribute})
+  name.vb: Build(IEnumerable, IReadOnlyCollection(Of AttrAttribute), IReadOnlyCollection(Of RelationshipAttribute))
+  fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable, IReadOnlyCollection<JsonApiDotNetCore.Models.AttrAttribute>, IReadOnlyCollection<JsonApiDotNetCore.Models.RelationshipAttribute>)
+  fullName.vb: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable, IReadOnlyCollection(Of JsonApiDotNetCore.Models.AttrAttribute), IReadOnlyCollection(Of JsonApiDotNetCore.Models.RelationshipAttribute))
+  nameWithType: BaseDocumentBuilder.Build(IEnumerable, IReadOnlyCollection<AttrAttribute>, IReadOnlyCollection<RelationshipAttribute>)
+  nameWithType.vb: BaseDocumentBuilder.Build(IEnumerable, IReadOnlyCollection(Of AttrAttribute), IReadOnlyCollection(Of RelationshipAttribute))
+- uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(JsonApiDotNetCore.Models.IIdentifiable,IReadOnlyCollection{JsonApiDotNetCore.Models.AttrAttribute},IReadOnlyCollection{JsonApiDotNetCore.Models.RelationshipAttribute})
+  name: Build(IIdentifiable, IReadOnlyCollection<AttrAttribute>, IReadOnlyCollection<RelationshipAttribute>)
+  href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_Build_JsonApiDotNetCore_Models_IIdentifiable_IReadOnlyCollection_JsonApiDotNetCore_Models_AttrAttribute__IReadOnlyCollection_JsonApiDotNetCore_Models_RelationshipAttribute__
+  commentId: M:JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(JsonApiDotNetCore.Models.IIdentifiable,IReadOnlyCollection{JsonApiDotNetCore.Models.AttrAttribute},IReadOnlyCollection{JsonApiDotNetCore.Models.RelationshipAttribute})
+  name.vb: Build(IIdentifiable, IReadOnlyCollection(Of AttrAttribute), IReadOnlyCollection(Of RelationshipAttribute))
+  fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(JsonApiDotNetCore.Models.IIdentifiable, IReadOnlyCollection<JsonApiDotNetCore.Models.AttrAttribute>, IReadOnlyCollection<JsonApiDotNetCore.Models.RelationshipAttribute>)
+  fullName.vb: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(JsonApiDotNetCore.Models.IIdentifiable, IReadOnlyCollection(Of JsonApiDotNetCore.Models.AttrAttribute), IReadOnlyCollection(Of JsonApiDotNetCore.Models.RelationshipAttribute))
+  nameWithType: BaseDocumentBuilder.Build(IIdentifiable, IReadOnlyCollection<AttrAttribute>, IReadOnlyCollection<RelationshipAttribute>)
+  nameWithType.vb: BaseDocumentBuilder.Build(IIdentifiable, IReadOnlyCollection(Of AttrAttribute), IReadOnlyCollection(Of RelationshipAttribute))
 - uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build*
   name: Build
   href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_Build_
@@ -10907,15 +11118,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.DefaultResourceService(Of TResource)
   nameWithType: DefaultResourceService<TResource>
   nameWithType.vb: DefaultResourceService(Of TResource)
-- uid: JsonApiDotNetCore.Services.DefaultResourceService`1.#ctor(IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService},JsonApiDotNetCore.Configuration.IJsonApiOptions,ILoggerFactory,JsonApiDotNetCore.Data.IResourceRepository{`0,System.Int32},JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.Hooks.IResourceHookExecutor)
-  name: DefaultResourceService(IEnumerable<IQueryParameterService>, IJsonApiOptions, ILoggerFactory, IResourceRepository<TResource, Int32>, IResourceContextProvider, IResourceHookExecutor)
-  href: api/JsonApiDotNetCore.Services.DefaultResourceService-1.html#JsonApiDotNetCore_Services_DefaultResourceService_1__ctor_IEnumerable_JsonApiDotNetCore_Query_IQueryParameterService__JsonApiDotNetCore_Configuration_IJsonApiOptions_ILoggerFactory_JsonApiDotNetCore_Data_IResourceRepository__0_System_Int32__JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_Hooks_IResourceHookExecutor_
-  commentId: M:JsonApiDotNetCore.Services.DefaultResourceService`1.#ctor(IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService},JsonApiDotNetCore.Configuration.IJsonApiOptions,ILoggerFactory,JsonApiDotNetCore.Data.IResourceRepository{`0,System.Int32},JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.Hooks.IResourceHookExecutor)
-  name.vb: DefaultResourceService(IEnumerable(Of IQueryParameterService), IJsonApiOptions, ILoggerFactory, IResourceRepository(Of TResource, Int32), IResourceContextProvider, IResourceHookExecutor)
-  fullName: JsonApiDotNetCore.Services.DefaultResourceService<TResource>.DefaultResourceService(IEnumerable<JsonApiDotNetCore.Query.IQueryParameterService>, JsonApiDotNetCore.Configuration.IJsonApiOptions, ILoggerFactory, JsonApiDotNetCore.Data.IResourceRepository<TResource, System.Int32>, JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider, JsonApiDotNetCore.Hooks.IResourceHookExecutor)
-  fullName.vb: JsonApiDotNetCore.Services.DefaultResourceService(Of TResource).DefaultResourceService(IEnumerable(Of JsonApiDotNetCore.Query.IQueryParameterService), JsonApiDotNetCore.Configuration.IJsonApiOptions, ILoggerFactory, JsonApiDotNetCore.Data.IResourceRepository(Of TResource, System.Int32), JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider, JsonApiDotNetCore.Hooks.IResourceHookExecutor)
-  nameWithType: DefaultResourceService<TResource>.DefaultResourceService(IEnumerable<IQueryParameterService>, IJsonApiOptions, ILoggerFactory, IResourceRepository<TResource, Int32>, IResourceContextProvider, IResourceHookExecutor)
-  nameWithType.vb: DefaultResourceService(Of TResource).DefaultResourceService(IEnumerable(Of IQueryParameterService), IJsonApiOptions, ILoggerFactory, IResourceRepository(Of TResource, Int32), IResourceContextProvider, IResourceHookExecutor)
+- uid: JsonApiDotNetCore.Services.DefaultResourceService`1.#ctor(IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService},JsonApiDotNetCore.Configuration.IJsonApiOptions,ILoggerFactory,JsonApiDotNetCore.Data.IResourceRepository{`0,System.Int32},JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.RequestServices.IResourceChangeTracker{`0},JsonApiDotNetCore.Hooks.IResourceHookExecutor)
+  name: DefaultResourceService(IEnumerable<IQueryParameterService>, IJsonApiOptions, ILoggerFactory, IResourceRepository<TResource, Int32>, IResourceContextProvider, IResourceChangeTracker<TResource>, IResourceHookExecutor)
+  href: api/JsonApiDotNetCore.Services.DefaultResourceService-1.html#JsonApiDotNetCore_Services_DefaultResourceService_1__ctor_IEnumerable_JsonApiDotNetCore_Query_IQueryParameterService__JsonApiDotNetCore_Configuration_IJsonApiOptions_ILoggerFactory_JsonApiDotNetCore_Data_IResourceRepository__0_System_Int32__JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_RequestServices_IResourceChangeTracker__0__JsonApiDotNetCore_Hooks_IResourceHookExecutor_
+  commentId: M:JsonApiDotNetCore.Services.DefaultResourceService`1.#ctor(IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService},JsonApiDotNetCore.Configuration.IJsonApiOptions,ILoggerFactory,JsonApiDotNetCore.Data.IResourceRepository{`0,System.Int32},JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.RequestServices.IResourceChangeTracker{`0},JsonApiDotNetCore.Hooks.IResourceHookExecutor)
+  name.vb: DefaultResourceService(IEnumerable(Of IQueryParameterService), IJsonApiOptions, ILoggerFactory, IResourceRepository(Of TResource, Int32), IResourceContextProvider, IResourceChangeTracker(Of TResource), IResourceHookExecutor)
+  fullName: JsonApiDotNetCore.Services.DefaultResourceService<TResource>.DefaultResourceService(IEnumerable<JsonApiDotNetCore.Query.IQueryParameterService>, JsonApiDotNetCore.Configuration.IJsonApiOptions, ILoggerFactory, JsonApiDotNetCore.Data.IResourceRepository<TResource, System.Int32>, JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider, JsonApiDotNetCore.RequestServices.IResourceChangeTracker<TResource>, JsonApiDotNetCore.Hooks.IResourceHookExecutor)
+  fullName.vb: JsonApiDotNetCore.Services.DefaultResourceService(Of TResource).DefaultResourceService(IEnumerable(Of JsonApiDotNetCore.Query.IQueryParameterService), JsonApiDotNetCore.Configuration.IJsonApiOptions, ILoggerFactory, JsonApiDotNetCore.Data.IResourceRepository(Of TResource, System.Int32), JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider, JsonApiDotNetCore.RequestServices.IResourceChangeTracker(Of TResource), JsonApiDotNetCore.Hooks.IResourceHookExecutor)
+  nameWithType: DefaultResourceService<TResource>.DefaultResourceService(IEnumerable<IQueryParameterService>, IJsonApiOptions, ILoggerFactory, IResourceRepository<TResource, Int32>, IResourceContextProvider, IResourceChangeTracker<TResource>, IResourceHookExecutor)
+  nameWithType.vb: DefaultResourceService(Of TResource).DefaultResourceService(IEnumerable(Of IQueryParameterService), IJsonApiOptions, ILoggerFactory, IResourceRepository(Of TResource, Int32), IResourceContextProvider, IResourceChangeTracker(Of TResource), IResourceHookExecutor)
 - uid: JsonApiDotNetCore.Services.DefaultResourceService`1.#ctor*
   name: DefaultResourceService
   href: api/JsonApiDotNetCore.Services.DefaultResourceService-1.html#JsonApiDotNetCore_Services_DefaultResourceService_1__ctor_
@@ -10934,15 +11145,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.DefaultResourceService(Of TResource, TId)
   nameWithType: DefaultResourceService<TResource, TId>
   nameWithType.vb: DefaultResourceService(Of TResource, TId)
-- uid: JsonApiDotNetCore.Services.DefaultResourceService`2.#ctor(IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService},JsonApiDotNetCore.Configuration.IJsonApiOptions,ILoggerFactory,JsonApiDotNetCore.Data.IResourceRepository{`0,`1},JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.Hooks.IResourceHookExecutor)
-  name: DefaultResourceService(IEnumerable<IQueryParameterService>, IJsonApiOptions, ILoggerFactory, IResourceRepository<TResource, TId>, IResourceContextProvider, IResourceHookExecutor)
-  href: api/JsonApiDotNetCore.Services.DefaultResourceService-2.html#JsonApiDotNetCore_Services_DefaultResourceService_2__ctor_IEnumerable_JsonApiDotNetCore_Query_IQueryParameterService__JsonApiDotNetCore_Configuration_IJsonApiOptions_ILoggerFactory_JsonApiDotNetCore_Data_IResourceRepository__0__1__JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_Hooks_IResourceHookExecutor_
-  commentId: M:JsonApiDotNetCore.Services.DefaultResourceService`2.#ctor(IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService},JsonApiDotNetCore.Configuration.IJsonApiOptions,ILoggerFactory,JsonApiDotNetCore.Data.IResourceRepository{`0,`1},JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.Hooks.IResourceHookExecutor)
-  name.vb: DefaultResourceService(IEnumerable(Of IQueryParameterService), IJsonApiOptions, ILoggerFactory, IResourceRepository(Of TResource, TId), IResourceContextProvider, IResourceHookExecutor)
-  fullName: JsonApiDotNetCore.Services.DefaultResourceService<TResource, TId>.DefaultResourceService(IEnumerable<JsonApiDotNetCore.Query.IQueryParameterService>, JsonApiDotNetCore.Configuration.IJsonApiOptions, ILoggerFactory, JsonApiDotNetCore.Data.IResourceRepository<TResource, TId>, JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider, JsonApiDotNetCore.Hooks.IResourceHookExecutor)
-  fullName.vb: JsonApiDotNetCore.Services.DefaultResourceService(Of TResource, TId).DefaultResourceService(IEnumerable(Of JsonApiDotNetCore.Query.IQueryParameterService), JsonApiDotNetCore.Configuration.IJsonApiOptions, ILoggerFactory, JsonApiDotNetCore.Data.IResourceRepository(Of TResource, TId), JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider, JsonApiDotNetCore.Hooks.IResourceHookExecutor)
-  nameWithType: DefaultResourceService<TResource, TId>.DefaultResourceService(IEnumerable<IQueryParameterService>, IJsonApiOptions, ILoggerFactory, IResourceRepository<TResource, TId>, IResourceContextProvider, IResourceHookExecutor)
-  nameWithType.vb: DefaultResourceService(Of TResource, TId).DefaultResourceService(IEnumerable(Of IQueryParameterService), IJsonApiOptions, ILoggerFactory, IResourceRepository(Of TResource, TId), IResourceContextProvider, IResourceHookExecutor)
+- uid: JsonApiDotNetCore.Services.DefaultResourceService`2.#ctor(IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService},JsonApiDotNetCore.Configuration.IJsonApiOptions,ILoggerFactory,JsonApiDotNetCore.Data.IResourceRepository{`0,`1},JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.RequestServices.IResourceChangeTracker{`0},JsonApiDotNetCore.Hooks.IResourceHookExecutor)
+  name: DefaultResourceService(IEnumerable<IQueryParameterService>, IJsonApiOptions, ILoggerFactory, IResourceRepository<TResource, TId>, IResourceContextProvider, IResourceChangeTracker<TResource>, IResourceHookExecutor)
+  href: api/JsonApiDotNetCore.Services.DefaultResourceService-2.html#JsonApiDotNetCore_Services_DefaultResourceService_2__ctor_IEnumerable_JsonApiDotNetCore_Query_IQueryParameterService__JsonApiDotNetCore_Configuration_IJsonApiOptions_ILoggerFactory_JsonApiDotNetCore_Data_IResourceRepository__0__1__JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_RequestServices_IResourceChangeTracker__0__JsonApiDotNetCore_Hooks_IResourceHookExecutor_
+  commentId: M:JsonApiDotNetCore.Services.DefaultResourceService`2.#ctor(IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService},JsonApiDotNetCore.Configuration.IJsonApiOptions,ILoggerFactory,JsonApiDotNetCore.Data.IResourceRepository{`0,`1},JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.RequestServices.IResourceChangeTracker{`0},JsonApiDotNetCore.Hooks.IResourceHookExecutor)
+  name.vb: DefaultResourceService(IEnumerable(Of IQueryParameterService), IJsonApiOptions, ILoggerFactory, IResourceRepository(Of TResource, TId), IResourceContextProvider, IResourceChangeTracker(Of TResource), IResourceHookExecutor)
+  fullName: JsonApiDotNetCore.Services.DefaultResourceService<TResource, TId>.DefaultResourceService(IEnumerable<JsonApiDotNetCore.Query.IQueryParameterService>, JsonApiDotNetCore.Configuration.IJsonApiOptions, ILoggerFactory, JsonApiDotNetCore.Data.IResourceRepository<TResource, TId>, JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider, JsonApiDotNetCore.RequestServices.IResourceChangeTracker<TResource>, JsonApiDotNetCore.Hooks.IResourceHookExecutor)
+  fullName.vb: JsonApiDotNetCore.Services.DefaultResourceService(Of TResource, TId).DefaultResourceService(IEnumerable(Of JsonApiDotNetCore.Query.IQueryParameterService), JsonApiDotNetCore.Configuration.IJsonApiOptions, ILoggerFactory, JsonApiDotNetCore.Data.IResourceRepository(Of TResource, TId), JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider, JsonApiDotNetCore.RequestServices.IResourceChangeTracker(Of TResource), JsonApiDotNetCore.Hooks.IResourceHookExecutor)
+  nameWithType: DefaultResourceService<TResource, TId>.DefaultResourceService(IEnumerable<IQueryParameterService>, IJsonApiOptions, ILoggerFactory, IResourceRepository<TResource, TId>, IResourceContextProvider, IResourceChangeTracker<TResource>, IResourceHookExecutor)
+  nameWithType.vb: DefaultResourceService(Of TResource, TId).DefaultResourceService(IEnumerable(Of IQueryParameterService), IJsonApiOptions, ILoggerFactory, IResourceRepository(Of TResource, TId), IResourceContextProvider, IResourceChangeTracker(Of TResource), IResourceHookExecutor)
 - uid: JsonApiDotNetCore.Services.DefaultResourceService`2.#ctor*
   name: DefaultResourceService
   href: api/JsonApiDotNetCore.Services.DefaultResourceService-2.html#JsonApiDotNetCore_Services_DefaultResourceService_2__ctor_

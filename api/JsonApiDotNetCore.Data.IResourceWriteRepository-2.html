@@ -199,18 +199,18 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceWriteRepository_2_UpdateAsync__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceWriteRepository%602.UpdateAsync(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceWriteRepository_2_FlushFromCache__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceWriteRepository%602.FlushFromCache(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceWriteRepository.cs/#L17">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceWriteRepository.cs/#L23">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Data_IResourceWriteRepository_2_UpdateAsync_" data-uid="JsonApiDotNetCore.Data.IResourceWriteRepository`2.UpdateAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Data_IResourceWriteRepository_2_UpdateAsync__0_" data-uid="JsonApiDotNetCore.Data.IResourceWriteRepository`2.UpdateAsync(`0)">UpdateAsync(TResource)</h4>
+  <a id="JsonApiDotNetCore_Data_IResourceWriteRepository_2_FlushFromCache_" data-uid="JsonApiDotNetCore.Data.IResourceWriteRepository`2.FlushFromCache*"></a>
+  <h4 id="JsonApiDotNetCore_Data_IResourceWriteRepository_2_FlushFromCache__0_" data-uid="JsonApiDotNetCore.Data.IResourceWriteRepository`2.FlushFromCache(`0)">FlushFromCache(TResource)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;TResource&gt; UpdateAsync(TResource entity)</code></pre>
+    <pre><code class="lang-csharp hljs">void FlushFromCache(TResource entity)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -229,6 +229,43 @@
       </tr>
     </tbody>
   </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceWriteRepository_2_UpdateAsync__0__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceWriteRepository%602.UpdateAsync(%600%2C%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceWriteRepository.cs/#L17">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_IResourceWriteRepository_2_UpdateAsync_" data-uid="JsonApiDotNetCore.Data.IResourceWriteRepository`2.UpdateAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Data_IResourceWriteRepository_2_UpdateAsync__0__0_" data-uid="JsonApiDotNetCore.Data.IResourceWriteRepository`2.UpdateAsync(`0,`0)">UpdateAsync(TResource, TResource)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task UpdateAsync(TResource requestEntity, TResource databaseEntity)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">requestEntity</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">databaseEntity</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -239,7 +276,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;TResource&gt;</td>
+        <td><span class="xref">Task</span></td>
         <td></td>
       </tr>
     </tbody>
