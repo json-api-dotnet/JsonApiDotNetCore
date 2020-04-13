@@ -67,6 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     ""id"": ""123"",
     ""attributes"": {
       ""firstName"": ""John"",
+      ""initials"": ""J"",
       ""lastName"": ""Doe"",
       ""the-Age"": 57,
       ""gender"": ""Male""
