@@ -60,6 +60,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.UnsupportedMediaType, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The specified Content-Type header value is not supported.", errorDocument.Errors[0].Title);
             Assert.Equal("Please specify 'application/vnd.api+json' for the Content-Type header value.", errorDocument.Errors[0].Detail);
+
+            Assert.Equal(
+                @"{""errors"":[{""id"":""" + errorDocument.Errors[0].Id +
+                @""",""status"":""415"",""title"":""The specified Content-Type header value is not supported."",""detail"":""Please specify 'application/vnd.api+json' for the Content-Type header value.""}]}",
+                body);
         }
 
         [Fact]

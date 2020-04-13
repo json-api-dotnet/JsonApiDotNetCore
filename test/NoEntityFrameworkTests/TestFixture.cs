@@ -8,7 +8,8 @@ using NoEntityFrameworkExample.Data;
 using NoEntityFrameworkExample.Models;
 using System;
 using System.Linq.Expressions;
-using Startup = NoEntityFrameworkExample.Startup;
+using JsonApiDotNetCore.Configuration;
+using NoEntityFrameworkExample;
 
 namespace NoEntityFrameworkTests
 {
@@ -39,7 +40,9 @@ namespace NoEntityFrameworkTests
 
         public IResponseDeserializer GetDeserializer()
         {
-            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItem>("todoItems").Build();
+            var options = GetService<IJsonApiOptions>();
+
+            var resourceGraph = new ResourceGraphBuilder(options).AddResource<TodoItem>("todoItems").Build();
             return new ResponseDeserializer(resourceGraph);
         }
 

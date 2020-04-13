@@ -1,7 +1,5 @@
-﻿using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Graph;
+using JsonApiDotNetCoreExample;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCoreExampleTests
 {
@@ -9,11 +7,7 @@ namespace JsonApiDotNetCoreExampleTests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.ConfigureServices(services =>
-            {
-                services.AddSingleton<IResourceNameFormatter, KebabCaseFormatter>();
-                services.AddClientSerialization();
-            });
+            builder.UseStartup<KebabCaseStartup>();
         }
     }
 }

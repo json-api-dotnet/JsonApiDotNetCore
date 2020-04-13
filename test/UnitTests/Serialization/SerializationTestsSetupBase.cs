@@ -1,5 +1,6 @@
-﻿using Bogus;
+using Bogus;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal.Contracts;
 using UnitTests.TestModels;
 using Person = UnitTests.TestModels.Person;
@@ -37,7 +38,7 @@ namespace UnitTests.Serialization
 
         protected IResourceGraph BuildGraph()
         {
-            var resourceGraphBuilder = new ResourceGraphBuilder();
+            var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions());
             resourceGraphBuilder.AddResource<TestResource>("testResource");
             resourceGraphBuilder.AddResource<TestResourceWithList>("testResource-with-list");
             // one to one relationships

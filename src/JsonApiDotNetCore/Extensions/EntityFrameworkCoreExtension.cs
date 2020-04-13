@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Extensions.EntityFrameworkCore
 
         private static string GetResourceNameFromDbSetProperty(PropertyInfo property, Type resourceType)
         {
-            // this check is actually duplicated in the DefaultResourceNameFormatter
+            // this check is actually duplicated in the ResourceNameFormatter
             // however, we perform it here so that we allow class attributes to be prioritized over
             // the DbSet attribute. Eventually, the DbSet attribute should be deprecated.
             //

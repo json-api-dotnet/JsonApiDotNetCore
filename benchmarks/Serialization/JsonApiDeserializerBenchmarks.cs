@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
@@ -32,7 +33,8 @@ namespace Benchmarks.Serialization
 
         public JsonApiDeserializerBenchmarks()
         {
-            IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph();
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
             var targetedFields = new TargetedFields();
 
             _jsonApiDeserializer = new RequestDeserializer(resourceGraph, targetedFields);

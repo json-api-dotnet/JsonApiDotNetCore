@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
@@ -73,9 +74,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
         protected IResponseDeserializer GetDeserializer()
         {
-            var formatter = GetService<IResourceNameFormatter>();
+            var options = GetService<IJsonApiOptions>();
+            var formatter = new ResourceNameFormatter(options);
             var resourcesContexts = GetService<IResourceGraph>().GetResourceContexts();
-            var builder = new ResourceGraphBuilder(formatter);
+            var builder = new ResourceGraphBuilder(options);
             foreach (var rc in resourcesContexts)
             {
                 if (rc.ResourceType == typeof(TodoItem) || rc.ResourceType == typeof(TodoItemCollection) || rc.ResourceType == typeof(Passport))

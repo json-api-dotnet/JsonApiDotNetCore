@@ -9,6 +9,7 @@ using JsonApiDotNetCore.Serialization.Client;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -44,9 +45,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 serializer.RelationshipsToSerialize = graph.GetRelationships(relationships);
             return serializer;
         }
+
         public IResponseDeserializer GetDeserializer()
         {
-            var resourceGraph = new ResourceGraphBuilder()
+            var options = GetService<IJsonApiOptions>();
+
+            var resourceGraph = new ResourceGraphBuilder(options)
                 .AddResource<PersonRole>()
                 .AddResource<Article>()
                 .AddResource<Tag>()

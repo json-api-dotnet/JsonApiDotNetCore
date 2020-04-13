@@ -11,27 +11,26 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Builders
 {
     public class ResourceGraphBuilder : IResourceGraphBuilder
     {
-        private List<ResourceContext> Resources { get; } = new List<ResourceContext>();
-        private List<ValidationResult> ValidationResults { get; } = new List<ValidationResult>();
-        private IResourceNameFormatter Formatter { get; } = new CamelCaseFormatter();
+        private readonly IJsonApiOptions _options;
+        private readonly List<ResourceContext> _resources = new List<ResourceContext>();
+        private readonly List<ValidationResult> _validationResults = new List<ValidationResult>();
 
-        public ResourceGraphBuilder() { }
-
-        public ResourceGraphBuilder(IResourceNameFormatter formatter)
+        public ResourceGraphBuilder(IJsonApiOptions options)
         {
-            Formatter = formatter;
+            _options = options;
         }
 
         /// <inheritdoc />
         public IResourceGraph Build()
         {
-            Resources.ForEach(SetResourceLinksOptions);
-            var resourceGraph = new ResourceGraph(Resources, ValidationResults);
+            _resources.ForEach(SetResourceLinksOptions);
+            var resourceGraph = new ResourceGraph(_resources, _validationResults);
             return resourceGraph;
         }
 
@@ -60,13 +59,13 @@ namespace JsonApiDotNetCore.Builders
             AssertEntityIsNotAlreadyDefined(resourceType);
             if (resourceType.Implements<IIdentifiable>())
             {
-                pluralizedTypeName ??= Formatter.FormatResourceName(resourceType);
+                pluralizedTypeName ??= FormatResourceName(resourceType);
                 idType ??= TypeLocator.GetIdType(resourceType);
-                Resources.Add(GetEntity(pluralizedTypeName, resourceType, idType));
+                _resources.Add(GetEntity(pluralizedTypeName, resourceType, idType));
             }
             else
             {
-                ValidationResults.Add(new ValidationResult(LogLevel.Warning, $"{resourceType} does not implement 'IIdentifiable<>'. "));
+                _validationResults.Add(new ValidationResult(LogLevel.Warning, $"{resourceType} does not implement 'IIdentifiable<>'. "));
             }
 
             return this;
@@ -98,7 +97,7 @@ namespace JsonApiDotNetCore.Builders
                 {
                     var idAttr = new AttrAttribute
                     {
-                        PublicAttributeName = Formatter.FormatPropertyName(prop),
+                        PublicAttributeName = FormatPropertyName(prop),
                         PropertyInfo = prop
                     };
                     attributes.Add(idAttr);
@@ -109,7 +108,7 @@ namespace JsonApiDotNetCore.Builders
                 if (attribute == null)
                     continue;
 
-                attribute.PublicAttributeName ??= Formatter.FormatPropertyName(prop);
+                attribute.PublicAttributeName ??= FormatPropertyName(prop);
                 attribute.PropertyInfo = prop;
 
                 attributes.Add(attribute);
@@ -126,7 +125,7 @@ namespace JsonApiDotNetCore.Builders
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
                 if (attribute == null) continue;
 
-                attribute.PublicRelationshipName ??= Formatter.FormatPropertyName(prop);
+                attribute.PublicRelationshipName ??= FormatPropertyName(prop);
                 attribute.InternalRelationshipName = prop.Name;
                 attribute.RightType = GetRelationshipType(attribute, prop);
                 attribute.LeftType = entityType;
@@ -216,8 +215,20 @@ namespace JsonApiDotNetCore.Builders
 
         private void AssertEntityIsNotAlreadyDefined(Type entityType)
         {
-            if (Resources.Any(e => e.ResourceType == entityType))
+            if (_resources.Any(e => e.ResourceType == entityType))
                 throw new InvalidOperationException($"Cannot add entity type {entityType} to context resourceGraph, there is already an entity of that type configured.");
+        }
+
+        private string FormatResourceName(Type resourceType)
+        {
+            var formatter = new ResourceNameFormatter(_options);
+            return formatter.FormatResourceName(resourceType);
+        }
+
+        private string FormatPropertyName(PropertyInfo resourceProperty)
+        {
+            var contractResolver = (DefaultContractResolver)_options.SerializerSettings.ContractResolver;
+            return contractResolver.NamingStrategy.GetPropertyName(resourceProperty.Name, false);
         }
     }
 }

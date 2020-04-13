@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using System.Linq;
+using JsonApiDotNetCore.Configuration;
 using Xunit;
 
 namespace UnitTests.Models
@@ -47,7 +48,7 @@ namespace UnitTests.Models
     {
         // this constructor will be resolved from the container
         // that means you can take on any dependency that is also defined in the container
-        public RequestFilteredResource(bool isAdmin) : base(new ResourceGraphBuilder().AddResource<Model>().Build())
+        public RequestFilteredResource(bool isAdmin) : base(new ResourceGraphBuilder(new JsonApiOptions()).AddResource<Model>().Build())
         {
             if (isAdmin)
                 HideFields(m => m.AlwaysExcluded);

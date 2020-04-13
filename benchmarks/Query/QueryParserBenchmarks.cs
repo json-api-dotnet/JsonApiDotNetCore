@@ -23,7 +23,7 @@ namespace Benchmarks.Query
         public QueryParserBenchmarks()
         {
             IJsonApiOptions options = new JsonApiOptions();
-            IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph();
+            IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
             
             var currentRequest = new CurrentRequest();
             currentRequest.SetRequestResource(resourceGraph.GetResourceContext(typeof(BenchmarkResource)));
@@ -57,13 +57,13 @@ namespace Benchmarks.Query
             ISortService sortService = new SortService(resourceDefinitionProvider, resourceGraph, currentRequest);
             ISparseFieldsService sparseFieldsService = new SparseFieldsService(resourceGraph, currentRequest);
             IPageService pageService = new PageService(options, resourceGraph, currentRequest);
-            IOmitDefaultService omitDefaultService = new OmitDefaultService(options);
-            IOmitNullService omitNullService = new OmitNullService(options);
+            IDefaultsService defaultsService = new DefaultsService(options);
+            INullsService nullsService = new NullsService(options);
 
             var queryServices = new List<IQueryParameterService>
             {
-                includeService, filterService, sortService, sparseFieldsService, pageService, omitDefaultService,
-                omitNullService
+                includeService, filterService, sortService, sparseFieldsService, pageService, defaultsService,
+                nullsService
             };
 
             return new QueryParameterParser(options, queryStringAccessor, queryServices, NullLoggerFactory.Instance);

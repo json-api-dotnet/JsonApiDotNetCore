@@ -6,8 +6,10 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCoreExample.Services;
+using Newtonsoft.Json.Converters;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -37,19 +39,22 @@ namespace JsonApiDotNetCoreExample
                         .EnableSensitiveDataLogging()
                         .UseNpgsql(GetDbConnectionString(), innerOptions => innerOptions.SetPostgresVersion(new Version(9,6)));
                 }, ServiceLifetime.Transient)
-                .AddJsonApi(options =>
-                {
-                    options.IncludeExceptionStackTraceInErrors = true;
-                    options.Namespace = "api/v1";
-                    options.DefaultPageSize = 5;
-                    options.IncludeTotalRecordCount = true;
-                    options.LoadDatabaseValues = true;
-                    options.ValidateModelState = true;
-                    options.EnableResourceHooks = true;
-                },
-                discovery => discovery.AddCurrentAssembly());
+                .AddJsonApi(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
+            
             // once all tests have been moved to WebApplicationFactory format we can get rid of this line below
             services.AddClientSerialization(); 
+        }
+
+        protected virtual void ConfigureJsonApiOptions(JsonApiOptions options)
+        {
+            options.IncludeExceptionStackTraceInErrors = true;
+            options.Namespace = "api/v1";
+            options.DefaultPageSize = 5;
+            options.IncludeTotalRecordCount = true;
+            options.LoadDatabaseValues = true;
+            options.ValidateModelState = true;
+            options.EnableResourceHooks = true;
+            options.SerializerSettings.Converters.Add(new StringEnumConverter());
         }
 
         public void Configure(

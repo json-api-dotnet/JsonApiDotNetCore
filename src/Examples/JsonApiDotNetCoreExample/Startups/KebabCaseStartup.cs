@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Hosting;
 using JsonApiDotNetCore.Configuration;
+using Microsoft.AspNetCore.Hosting;
+using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -7,15 +8,17 @@ namespace JsonApiDotNetCoreExample
     /// This should be in JsonApiDotNetCoreExampleTests project but changes in .net core 3.0
     /// do no longer allow that. See https://github.com/aspnet/AspNetCore/issues/15373.
     /// </summary>
-    public sealed class NoDefaultPageSizeStartup : Startup
+    public sealed class KebabCaseStartup : Startup
     {
-        public NoDefaultPageSizeStartup(IWebHostEnvironment env) : base(env) { }
+        public KebabCaseStartup(IWebHostEnvironment env) : base(env)
+        {
+        }
 
         protected override void ConfigureJsonApiOptions(JsonApiOptions options)
         {
             base.ConfigureJsonApiOptions(options);
 
-            options.DefaultPageSize = 0;
+            ((DefaultContractResolver)options.SerializerSettings.ContractResolver).NamingStrategy = new KebabCaseNamingStrategy();
         }
     }
 }

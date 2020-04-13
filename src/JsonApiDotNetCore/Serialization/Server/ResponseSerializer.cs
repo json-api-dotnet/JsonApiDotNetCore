@@ -1,17 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Graph;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
-using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
-
     /// <summary>
     /// Server serializer implementation of <see cref="BaseDocumentBuilder"/>
     /// </summary>
@@ -30,34 +29,26 @@ namespace JsonApiDotNetCore.Serialization.Server
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         private readonly IFieldsToSerialize _fieldsToSerialize;
+        private readonly IJsonApiOptions _options;
         private readonly IMetaBuilder<TResource> _metaBuilder;
         private readonly Type _primaryResourceType;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
-        private readonly JsonSerializerSettings _errorSerializerSettings;
 
         public ResponseSerializer(IMetaBuilder<TResource> metaBuilder,
             ILinkBuilder linkBuilder,
             IIncludedResourceObjectBuilder includedBuilder,
             IFieldsToSerialize fieldsToSerialize,
             IResourceObjectBuilder resourceObjectBuilder,
-            IResourceNameFormatter formatter)
+            IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
             _fieldsToSerialize = fieldsToSerialize;
+            _options = options;
             _linkBuilder = linkBuilder;
             _metaBuilder = metaBuilder;
             _includedBuilder = includedBuilder;
             _primaryResourceType = typeof(TResource);
-
-            _errorSerializerSettings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = new DefaultContractResolver
-                {
-                    NamingStrategy = new NewtonsoftNamingStrategyAdapter(formatter)
-                }
-            };
         }
 
         /// <inheritdoc/>
@@ -72,7 +63,7 @@ namespace JsonApiDotNetCore.Serialization.Server
 
         private string SerializeErrorDocument(ErrorDocument errorDocument)
         {
-            return JsonConvert.SerializeObject(errorDocument, _errorSerializerSettings);
+            return SerializeObject(errorDocument, _options.SerializerSettings, serializer => { serializer.ApplyErrorSettings(); });
         }
 
         /// <summary>
@@ -84,7 +75,10 @@ namespace JsonApiDotNetCore.Serialization.Server
         internal string SerializeSingle(IIdentifiable entity)
         {
             if (RequestRelationship != null && entity != null)
-               return JsonConvert.SerializeObject(((ResponseResourceObjectBuilder)_resourceObjectBuilder).Build(entity, RequestRelationship));
+            {
+                var relationship = ((ResponseResourceObjectBuilder)_resourceObjectBuilder).Build(entity, RequestRelationship);
+                return SerializeObject(relationship, _options.SerializerSettings, serializer => { serializer.NullValueHandling = NullValueHandling.Include; });
+            }
 
             var (attributes, relationships) = GetFieldsToSerialize();
             var document = Build(entity, attributes, relationships);
@@ -93,8 +87,8 @@ namespace JsonApiDotNetCore.Serialization.Server
                 resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
 
             AddTopLevelObjects(document);
-            return JsonConvert.SerializeObject(document);
 
+            return SerializeObject(document, _options.SerializerSettings, serializer => { serializer.NullValueHandling = NullValueHandling.Include; });
         }
 
         private (List<AttrAttribute>, List<RelationshipAttribute>) GetFieldsToSerialize()
@@ -122,12 +116,13 @@ namespace JsonApiDotNetCore.Serialization.Server
             }
 
             AddTopLevelObjects(document);
-            return JsonConvert.SerializeObject(document);
+
+            return SerializeObject(document, _options.SerializerSettings, serializer => { serializer.NullValueHandling = NullValueHandling.Include; });
         }
 
         /// <summary>
         /// Gets the list of attributes to serialize for the given <paramref name="resourceType"/>.
-        /// Note that the choice omitting null-values is not handled here,
+        /// Note that the choice of omitting null/default-values is not handled here,
         /// but in <see cref="IResourceObjectBuilderSettingsProvider"/>.
         /// </summary>
         /// <param name="resourceType">Type of entity to be serialized</param>
@@ -175,24 +170,6 @@ namespace JsonApiDotNetCore.Serialization.Server
             document.Links = _linkBuilder.GetTopLevelLinks();
             document.Meta = _metaBuilder.GetMeta();
             document.Included = _includedBuilder.Build();
-        }
-        
-        private sealed class NewtonsoftNamingStrategyAdapter : NamingStrategy
-        {
-            private readonly IResourceNameFormatter _formatter;
-
-            public NewtonsoftNamingStrategyAdapter(IResourceNameFormatter formatter)
-            {
-                _formatter = formatter;
-
-                ProcessDictionaryKeys = true;
-                ProcessExtensionDataNames = true;
-            }
-
-            protected override string ResolvePropertyName(string name)
-            {
-                return _formatter.ApplyCasingConvention(name);
-            }
         }
     }
 }

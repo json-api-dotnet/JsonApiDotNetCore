@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -153,7 +154,7 @@ namespace JADNC.IntegrationTests.Data
         {
             var contextResolverMock = new Mock<IDbContextResolver>();
             contextResolverMock.Setup(m => m.GetContext()).Returns(context);
-            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItem>().Build();
+            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions()).AddResource<TodoItem>().Build();
             var targetedFields = new Mock<ITargetedFields>();
             var repository = new DefaultResourceRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph, null, NullLoggerFactory.Instance);
             return (repository, targetedFields);

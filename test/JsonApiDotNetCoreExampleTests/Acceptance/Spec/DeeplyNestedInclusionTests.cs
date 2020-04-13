@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCoreExample;
@@ -39,7 +40,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             const string route = "/api/v1/todoItems?include=collection.owner";
-            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todoItems").AddResource<TodoItemCollection, Guid>().AddResource<Person>().Build();
+
+            var options = _fixture.GetService<IJsonApiOptions>();
+            var resourceGraph = new ResourceGraphBuilder(options).AddResource<TodoItemClient>("todoItems").AddResource<TodoItemCollection, Guid>().AddResource<Person>().Build();
             var deserializer = new ResponseDeserializer(resourceGraph);
             var todoItem = new TodoItem
             {

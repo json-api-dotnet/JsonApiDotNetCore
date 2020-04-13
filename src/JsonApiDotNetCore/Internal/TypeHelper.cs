@@ -15,6 +15,7 @@ namespace JsonApiDotNetCore.Internal
         {
             return (!type.IsValueType || Nullable.GetUnderlyingType(type) != null);
         }
+
         public static object ConvertType(object value, Type type)
         {
             if (value == null && !IsNullable(type))
@@ -35,7 +36,7 @@ namespace JsonApiDotNetCore.Internal
                 var stringValue = value.ToString();
 
                 if (string.IsNullOrEmpty(stringValue))
-                    return GetDefaultType(type);
+                    return GetDefaultValue(type);
 
                 if (type == typeof(Guid))
                     return Guid.Parse(stringValue);
@@ -58,18 +59,9 @@ namespace JsonApiDotNetCore.Internal
             }
         }
 
-        private static object GetDefaultType(Type type)
+        internal static object GetDefaultValue(this Type type)
         {
-            if (type.IsValueType)
-            {
-                return type.New();
-            }
-            return null;
-        }
-
-        public static T ConvertType<T>(object value)
-        {
-            return (T)ConvertType(value, typeof(T));
+            return type.IsValueType ? type.New() : null;
         }
 
         public static Type GetTypeOfList(Type type)
