@@ -8,35 +8,6 @@ namespace JsonApiDotNetCore.Models
     public sealed class AttrAttribute : Attribute, IResourceField
     {
         /// <summary>
-        /// Defines a public attribute exposed by the API
-        /// </summary>
-        /// <param name="publicName">How this attribute is exposed through the API</param>
-        /// <param name="isImmutable">Prevent PATCH requests from updating the value</param>
-        /// <param name="isFilterable">Prevent filters on this attribute</param>
-        /// <param name="isSortable">Prevent this attribute from being sorted by</param>
-        [Obsolete("Use one of the overloads with AttrCapabilities.", true)]
-        public AttrAttribute(string publicName = null, bool isImmutable = false, bool isFilterable = true, bool isSortable = true)
-        {
-            PublicAttributeName = publicName;
-            HasExplicitCapabilities = true;
-
-            if (!isImmutable)
-            {
-                Capabilities |= AttrCapabilities.AllowMutate;
-            }
-
-            if (isFilterable)
-            {
-                Capabilities |= AttrCapabilities.AllowFilter;
-            }
-
-            if (isSortable)
-            {
-                Capabilities |= AttrCapabilities.AllowSort;
-            }
-        }
-
-        /// <summary>
         /// Exposes a resource property as a json:api attribute using the configured casing convention and capabilities.
         /// </summary>
         /// <example>
