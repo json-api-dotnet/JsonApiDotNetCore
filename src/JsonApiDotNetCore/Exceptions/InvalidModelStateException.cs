@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -17,13 +16,14 @@ namespace JsonApiDotNetCore.Exceptions
     {
         public IList<Error> Errors { get; }
 
-        public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType, IJsonApiOptions options)
+        public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType,
+            bool includeExceptionStackTraceInErrors)
         {
-            Errors = FromModelState(modelState, resourceType, options);
+            Errors = FromModelState(modelState, resourceType, includeExceptionStackTraceInErrors);
         }
 
         private static List<Error> FromModelState(ModelStateDictionary modelState, Type resourceType,
-            IJsonApiOptions options)
+            bool includeExceptionStackTraceInErrors)
         {
             List<Error> errors = new List<Error>();
 
@@ -31,9 +31,10 @@ namespace JsonApiDotNetCore.Exceptions
             {
                 var propertyName = pair.Key;
                 PropertyInfo property = resourceType.GetProperty(propertyName);
-                
+
                 // TODO: Need access to ResourceContext here, in order to determine attribute name when not explicitly set.
-                string attributeName = property?.GetCustomAttribute<AttrAttribute>().PublicAttributeName ?? property?.Name;
+                string attributeName =
+                    property?.GetCustomAttribute<AttrAttribute>().PublicAttributeName ?? property?.Name;
 
                 foreach (var modelError in pair.Value.Errors)
                 {
@@ -43,7 +44,7 @@ namespace JsonApiDotNetCore.Exceptions
                     }
                     else
                     {
-                        errors.Add(FromModelError(modelError, attributeName, options));
+                        errors.Add(FromModelError(modelError, attributeName, includeExceptionStackTraceInErrors));
                     }
                 }
             }
@@ -51,19 +52,22 @@ namespace JsonApiDotNetCore.Exceptions
             return errors;
         }
 
-        private static Error FromModelError(ModelError modelError, string attributeName, IJsonApiOptions options)
+        private static Error FromModelError(ModelError modelError, string attributeName,
+            bool includeExceptionStackTraceInErrors)
         {
             var error = new Error(HttpStatusCode.UnprocessableEntity)
             {
                 Title = "Input validation failed.",
                 Detail = modelError.ErrorMessage,
-                Source = attributeName == null ? null : new ErrorSource
-                {
-                    Pointer = $"/data/attributes/{attributeName}"
-                }
+                Source = attributeName == null
+                    ? null
+                    : new ErrorSource
+                    {
+                        Pointer = $"/data/attributes/{attributeName}"
+                    }
             };
 
-            if (options.IncludeExceptionStackTraceInErrors && modelError.Exception != null)
+            if (includeExceptionStackTraceInErrors && modelError.Exception != null)
             {
                 error.Meta.IncludeExceptionStackTrace(modelError.Exception);
             }
