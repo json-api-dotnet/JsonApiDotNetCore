@@ -53,6 +53,7 @@ namespace JsonApiDotNetCoreExample
             options.IncludeTotalRecordCount = true;
             options.LoadDatabaseValues = true;
             options.ValidateModelState = true;
+            options.EnableResourceHooks = true;
             options.SerializerSettings.Converters.Add(new StringEnumConverter());
         }
 

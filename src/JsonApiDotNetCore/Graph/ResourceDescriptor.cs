@@ -13,6 +13,6 @@ namespace JsonApiDotNetCore.Graph
         public Type ResourceType { get; }
         public Type IdType { get; }
 
-        internal static ResourceDescriptor Empty => new ResourceDescriptor(null, null);
+        internal static ResourceDescriptor Empty { get; } = new ResourceDescriptor(null, null);
     }
 }

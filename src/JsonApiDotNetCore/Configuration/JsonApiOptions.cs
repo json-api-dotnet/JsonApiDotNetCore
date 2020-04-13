@@ -31,11 +31,10 @@ namespace JsonApiDotNetCore.Configuration
         public bool IncludeExceptionStackTraceInErrors { get; set; } = false;
 
         /// <summary>
-        /// Whether or not ResourceHooks are enabled. 
-        /// 
-        /// Default is set to <see langword="true"/>
+        /// Whether or not resource hooks are enabled. 
+        /// This is currently an experimental feature and defaults to <see langword="false"/>.
         /// </summary>
-        public bool EnableResourceHooks { get; set; } = true;
+        public bool EnableResourceHooks { get; set; } = false;
 
         /// <summary>
         /// Whether or not database values should be included by default
