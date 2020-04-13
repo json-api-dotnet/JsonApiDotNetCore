@@ -195,16 +195,12 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResource> UpdateAsync(TResource updatedEntity)
+        public virtual async Task UpdateAsync(TResource requestEntity, TResource databaseEntity)
         {
-            _logger.LogTrace($"Entering {nameof(UpdateAsync)}({(updatedEntity == null ? "null" : "object")}).");
-
-            var databaseEntity = await Get(updatedEntity.Id).FirstOrDefaultAsync();
-            if (databaseEntity == null)
-                return null;
+            _logger.LogTrace($"Entering {nameof(UpdateAsync)}({(requestEntity == null ? "null" : "object")}, {(databaseEntity == null ? "null" : "object")}).");
 
             foreach (var attribute in _targetedFields.Attributes)
-                attribute.SetValue(databaseEntity, attribute.GetValue(updatedEntity));
+                attribute.SetValue(databaseEntity, attribute.GetValue(requestEntity));
 
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
@@ -213,7 +209,7 @@ namespace JsonApiDotNetCore.Data
                 // trackedRelationshipValue is either equal to updatedPerson.todoItems,
                 // or replaced with the same set (same ids) of todoItems from the EF Core change tracker,
                 // which is the case if they were already tracked
-                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, updatedEntity, out _);
+                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, requestEntity, out _);
                 // loads into the db context any persons currently related
                 // to the todoItems in trackedRelationshipValue
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
@@ -223,7 +219,6 @@ namespace JsonApiDotNetCore.Data
             }
 
             await _context.SaveChangesAsync();
-            return databaseEntity;
         }
 
         /// <summary>
@@ -301,6 +296,13 @@ namespace JsonApiDotNetCore.Data
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public virtual void FlushFromCache(TResource entity)
+        {
+            _logger.LogTrace($"Entering {nameof(FlushFromCache)}({nameof(entity)}).");
+
+            _context.Entry(entity).State = EntityState.Detached;
         }
 
         private IQueryable<TResource> EagerLoad(IQueryable<TResource> entities, IEnumerable<EagerLoadAttribute> attributes, string chainPrefix = null)

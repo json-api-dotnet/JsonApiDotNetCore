@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         {
             if (entity == null)
             {
-                var empty = Build((IIdentifiable) null, new List<AttrAttribute>(), new List<RelationshipAttribute>());
+                var empty = Build((IIdentifiable) null, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
                 return SerializeObject(empty, _jsonSerializerSettings);
             }
 
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Serialization.Client
 
             if (entity == null)
             {
-                var result = Build(entities, new List<AttrAttribute>(), new List<RelationshipAttribute>());
+                var result = Build(entities, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
                 return SerializeObject(result, _jsonSerializerSettings);
             }
 

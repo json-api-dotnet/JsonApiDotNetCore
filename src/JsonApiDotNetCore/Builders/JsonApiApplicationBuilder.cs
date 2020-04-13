@@ -21,6 +21,7 @@ using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using JsonApiDotNetCore.QueryParameterServices.Common;
+using JsonApiDotNetCore.RequestServices;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -161,6 +162,7 @@ namespace JsonApiDotNetCore.Builders
             _services.AddScoped<ITargetedFields, TargetedFields>();
             _services.AddScoped<IResourceDefinitionProvider, ResourceDefinitionProvider>();
             _services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
+            _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(DefaultResourceChangeTracker<>));
             _services.AddScoped<IQueryParameterActionFilter, QueryParameterActionFilter>();
 
             AddServerSerialization();

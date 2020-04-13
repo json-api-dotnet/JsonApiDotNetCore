@@ -8,6 +8,7 @@ using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.RequestServices;
 
 namespace JsonApiDotNetCoreExample.Services
 {
@@ -19,8 +20,9 @@ namespace JsonApiDotNetCoreExample.Services
             ILoggerFactory loggerFactory,
             IResourceRepository<Article, int> repository,
             IResourceContextProvider provider,
+            IResourceChangeTracker<Article> resourceChangeTracker,
             IResourceHookExecutor hookExecutor = null)
-            : base(queryParameters, options, loggerFactory, repository, provider, hookExecutor)
+            : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, hookExecutor)
         { }
 
         public override async Task<Article> GetAsync(int id)

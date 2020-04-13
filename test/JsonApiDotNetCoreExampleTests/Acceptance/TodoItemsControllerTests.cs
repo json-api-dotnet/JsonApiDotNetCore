@@ -641,6 +641,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "description", newTodoItem.Description },
                         { "ordinal", newTodoItem.Ordinal },
+                        { "alwaysChangingValue", "ignored" },
                         { "createdDate", newTodoItem.CreatedDate }
                     }
                 }

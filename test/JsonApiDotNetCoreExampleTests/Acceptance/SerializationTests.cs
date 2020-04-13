@@ -48,9 +48,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var bodyText = await response.Content.ReadAsStringAsync();
             var token = JsonConvert.DeserializeObject<JToken>(bodyText);
-            var bodyFormatted = token.ToString().Replace("\r\n", "\n");
-            
-            Assert.Equal(@"{
+            var bodyFormatted = NormalizeLineEndings(token.ToString());
+
+            var expectedText = NormalizeLineEndings(@"{
   ""meta"": {
     ""copyright"": ""Copyright 2015 Example Corp."",
     ""authors"": [
@@ -67,6 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     ""id"": ""123"",
     ""attributes"": {
       ""firstName"": ""John"",
+      ""initials"": ""J"",
       ""lastName"": ""Doe"",
       ""the-Age"": 57,
       ""gender"": ""Male""
@@ -125,7 +126,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
       ""self"": ""http://localhost/api/v1/people/123""
     }
   }
-}", bodyFormatted);
+}");
+            Assert.Equal(expectedText, bodyFormatted);
+        }
+
+        private static string NormalizeLineEndings(string text)
+        {
+            return text.Replace("\r\n", "\n").Replace("\r", "\n");
         }
     }
 }

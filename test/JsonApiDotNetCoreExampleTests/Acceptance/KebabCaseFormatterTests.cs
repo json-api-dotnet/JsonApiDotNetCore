@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
@@ -84,7 +85,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
             var responseItem = _deserializer.DeserializeSingle<KebabCasedModel>(body).Data;
-            Assert.Equal(model.CompoundAttr, responseItem.CompoundAttr);
+            Assert.Null(responseItem);
+
+            var stored = _dbContext.KebabCasedModels.Single(x => x.Id == model.Id);
+            Assert.Equal(model.CompoundAttr, stored.CompoundAttr);
         }
 
         [Fact]

@@ -23,6 +23,13 @@ namespace JsonApiDotNetCoreExample.Models
         public Guid GuidProperty { get; set; }
 
         [Attr]
+        public string AlwaysChangingValue
+        {
+            get => Guid.NewGuid().ToString();
+            set { }
+        }
+
+        [Attr]
         public DateTime CreatedDate { get; set; }
 
         [Attr(isFilterable: false, isSortable: false)]

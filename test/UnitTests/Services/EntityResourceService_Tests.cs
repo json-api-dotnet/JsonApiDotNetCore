@@ -8,6 +8,8 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.RequestServices;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -100,10 +102,10 @@ namespace UnitTests.Services
             _repositoryMock.Setup(m => m.Include(query, relationships)).Returns(query);
             _repositoryMock.Setup(m => m.FirstOrDefaultAsync(query)).ReturnsAsync(todoItem);
 
-            var repository = GetService();
+            var service = GetService();
 
             // Act
-            var result = await repository.GetRelationshipAsync(id, relationshipName);
+            var result = await service.GetRelationshipAsync(id, relationshipName);
 
             // Assert
             Assert.NotNull(result);
@@ -119,7 +121,10 @@ namespace UnitTests.Services
                 _sortService.Object, _sparseFieldsService.Object
             };
 
-            return new DefaultResourceService<TodoItem>(queryParamServices, new JsonApiOptions(), NullLoggerFactory.Instance, _repositoryMock.Object, _resourceGraph);
+            var options = new JsonApiOptions();
+            var changeTracker = new DefaultResourceChangeTracker<TodoItem>(options, _resourceGraph, new TargetedFields());
+
+            return new DefaultResourceService<TodoItem>(queryParamServices, options, NullLoggerFactory.Instance, _repositoryMock.Object, _resourceGraph, changeTracker);
         }
     }
 }

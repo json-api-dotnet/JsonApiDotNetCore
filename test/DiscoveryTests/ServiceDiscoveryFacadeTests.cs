@@ -11,6 +11,7 @@ using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.RequestServices;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Services;
@@ -43,6 +44,7 @@ namespace DiscoveryTests
             _services.AddScoped((_) => new Mock<IResourceGraph>().Object);
             _services.AddScoped((_) => new Mock<IGenericServiceFactory>().Object);
             _services.AddScoped((_) => new Mock<IResourceContextProvider>().Object);
+            _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(DefaultResourceChangeTracker<>));
 
             _resourceGraphBuilder = new ResourceGraphBuilder(options);
         }
@@ -111,8 +113,9 @@ namespace DiscoveryTests
                 ILoggerFactory loggerFactory,
                 IResourceRepository<TestModel, int> repository,
                 IResourceContextProvider provider,
+                IResourceChangeTracker<TestModel> resourceChangeTracker,
                 IResourceHookExecutor hookExecutor = null)
-                : base(queryParameters, options, loggerFactory, repository, provider, hookExecutor)
+                : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, hookExecutor)
             { }
         }
 
