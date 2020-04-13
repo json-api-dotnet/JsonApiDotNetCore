@@ -15,8 +15,15 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
 
         public void IncludeExceptionStackTrace(Exception exception)
         {
-            Data["StackTrace"] = exception?.Demystify().ToString()
-                .Split(new[] {"\n"}, int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
+            if (exception == null)
+            {
+                Data.Remove("StackTrace");
+            }
+            else
+            {
+                Data["StackTrace"] = exception.Demystify().ToString()
+                    .Split(new[] { "\n" }, int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
+            }
         }
     }
 }
