@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using JsonApiDotNetCore.Models;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -48,6 +51,20 @@ namespace JsonApiDotNetCore.Serialization
                 data.Add(_resourceObjectBuilder.Build(entity, attributes, relationships));
 
             return new Document { Data = data };
+        }
+
+        protected string SerializeObject(object value, JsonSerializerSettings defaultSettings, Action<JsonSerializer> changeSerializer = null)
+        {
+            JsonSerializer serializer = JsonSerializer.CreateDefault(defaultSettings);
+            changeSerializer?.Invoke(serializer);
+
+            using var stringWriter = new StringWriter();
+            using (var jsonWriter = new JsonTextWriter(stringWriter))
+            {
+                serializer.Serialize(jsonWriter, value);
+            }
+
+            return stringWriter.ToString();
         }
     }
 }

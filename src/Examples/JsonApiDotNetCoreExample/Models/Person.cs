@@ -37,8 +37,11 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public string LastName { get; set; }
 
-        [Attr]
+        [Attr("the-Age")]
         public int Age { get; set; }
+
+        [Attr]
+        public Gender Gender { get; set; }
 
         [HasMany]
         public List<TodoItem> TodoItems { get; set; }

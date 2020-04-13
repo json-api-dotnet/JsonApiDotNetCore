@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Graph
         ///
         /// <example>
         /// <code>
-        /// DefaultResourceNameFormatter.FormatId("Article");
+        /// DefaultRelatedIdMapper.GetRelatedIdPropertyName("Article");
         /// // "ArticleId"
         /// </code>
         /// </example>

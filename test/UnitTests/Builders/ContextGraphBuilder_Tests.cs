@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -42,25 +43,10 @@ namespace UnitTests
         }
 
         [Fact]
-        public void Resources_Without_Names_Specified_Will_Use_Default_Formatter()
-        {
-            // Arrange
-            var builder = new ResourceGraphBuilder();
-            builder.AddResource<TestResource>();
-
-            // Act
-            var resourceGraph = builder.Build();
-
-            // Assert
-            var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("testResources", resource.ResourceName);
-        }
-
-        [Fact]
         public void Resources_Without_Names_Specified_Will_Use_Configured_Formatter()
         {
             // Arrange
-            var builder = new ResourceGraphBuilder(new CamelCaseFormatter());
+            var builder = new ResourceGraphBuilder(new JsonApiOptions());
             builder.AddResource<TestResource>();
 
             // Act
@@ -69,28 +55,13 @@ namespace UnitTests
             // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
             Assert.Equal("testResources", resource.ResourceName);
-        }
-
-        [Fact]
-        public void Attrs_Without_Names_Specified_Will_Use_Default_Formatter()
-        {
-            // Arrange
-            var builder = new ResourceGraphBuilder();
-            builder.AddResource<TestResource>();
-
-            // Act
-            var resourceGraph = builder.Build();
-
-            // Assert
-            var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compoundAttribute");
         }
 
         [Fact]
         public void Attrs_Without_Names_Specified_Will_Use_Configured_Formatter()
         {
             // Arrange
-            var builder = new ResourceGraphBuilder(new CamelCaseFormatter());
+            var builder = new ResourceGraphBuilder(new JsonApiOptions());
             builder.AddResource<TestResource>();
 
             // Act
@@ -102,10 +73,10 @@ namespace UnitTests
         }
 
         [Fact]
-        public void Relationships_Without_Names_Specified_Will_Use_Default_Formatter()
+        public void Relationships_Without_Names_Specified_Will_Use_Configured_Formatter()
         {
             // Arrange
-            var builder = new ResourceGraphBuilder();
+            var builder = new ResourceGraphBuilder(new JsonApiOptions());
             builder.AddResource<TestResource>();
 
             // Act

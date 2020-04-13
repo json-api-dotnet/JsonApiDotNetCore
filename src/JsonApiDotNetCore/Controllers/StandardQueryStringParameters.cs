@@ -11,10 +11,8 @@ namespace JsonApiDotNetCore.Controllers
         Include = 4,
         Page = 8,
         Fields = 16,
-        // TODO: Rename to single-word to prevent violating casing conventions.
-        OmitNull = 32,
-        // TODO: Rename to single-word to prevent violating casing conventions.
-        OmitDefault = 64,
-        All = Filter | Sort | Include | Page | Fields | OmitNull | OmitDefault
+        Nulls = 32,
+        Defaults = 64,
+        All = Filter | Sort | Include | Page | Fields | Nulls | Defaults
     }
 }

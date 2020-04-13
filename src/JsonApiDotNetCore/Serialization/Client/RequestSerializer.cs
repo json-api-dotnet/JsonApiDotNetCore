@@ -15,6 +15,7 @@ namespace JsonApiDotNetCore.Serialization.Client
     {
         private Type _currentTargetedResource;
         private readonly IResourceGraph _resourceGraph;
+        private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings();
 
         public RequestSerializer(IResourceGraph resourceGraph,
                                 IResourceObjectBuilder resourceObjectBuilder)
@@ -27,12 +28,16 @@ namespace JsonApiDotNetCore.Serialization.Client
         public string Serialize(IIdentifiable entity)
         {
             if (entity == null)
-                return JsonConvert.SerializeObject(Build((IIdentifiable) null, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>()));
+            {
+                var empty = Build((IIdentifiable) null, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
+                return SerializeObject(empty, _jsonSerializerSettings);
+            }
 
             _currentTargetedResource = entity.GetType();
             var document = Build(entity, GetAttributesToSerialize(entity), GetRelationshipsToSerialize(entity));
             _currentTargetedResource = null;
-            return JsonConvert.SerializeObject(document);
+
+            return SerializeObject(document, _jsonSerializerSettings);
         }
 
         /// <inheritdoc/>
@@ -44,15 +49,19 @@ namespace JsonApiDotNetCore.Serialization.Client
                 entity = item;
                 break;
             }
+
             if (entity == null)
-                return JsonConvert.SerializeObject(Build(entities, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>()));
+            {
+                var result = Build(entities, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
+                return SerializeObject(result, _jsonSerializerSettings);
+            }
 
             _currentTargetedResource = entity.GetType();
             var attributes = GetAttributesToSerialize(entity);
             var relationships = GetRelationshipsToSerialize(entity);
             var document = Build(entities, attributes, relationships);
             _currentTargetedResource = null;
-            return JsonConvert.SerializeObject(document);
+            return SerializeObject(document, _jsonSerializerSettings);
         }
 
         /// <inheritdoc/>

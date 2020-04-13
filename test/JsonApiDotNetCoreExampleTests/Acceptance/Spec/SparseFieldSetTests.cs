@@ -17,6 +17,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 using System.Net;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
@@ -26,6 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public sealed class SparseFieldSetTests
     {
+        private readonly TestFixture<Startup> _fixture;
         private readonly AppDbContext _dbContext;
         private readonly IResourceGraph _resourceGraph;
         private readonly Faker<Person> _personFaker;
@@ -33,6 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
         public SparseFieldSetTests(TestFixture<Startup> fixture)
         {
+            _fixture = fixture;
             _dbContext = fixture.GetService<AppDbContext>();
             _resourceGraph = fixture.GetService<IResourceGraph>();
             _personFaker = new Faker<Person>()
@@ -167,9 +170,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             using var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var route = "/api/v1/todoItems?include=owner&fields[owner]=firstName,age";
+            var route = "/api/v1/todoItems?include=owner&fields[owner]=firstName,the-Age";
             var request = new HttpRequestMessage(httpMethod, route);
-            var resourceGraph = new ResourceGraphBuilder().AddResource<Person>().AddResource<TodoItemClient>("todoItems").Build();
+            var options = _fixture.GetService<IJsonApiOptions>();
+            var resourceGraph = new ResourceGraphBuilder(options).AddResource<Person>().AddResource<TodoItemClient>("todoItems").Build();
             var deserializer = new ResponseDeserializer(resourceGraph);
             // Act
             var response = await client.SendAsync(request);
@@ -209,7 +213,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             using var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner&fields[owner]=firstName,age";
+            var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner&fields[owner]=firstName,the-Age";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -224,7 +228,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var included = deserializeBody.Included.First();
             Assert.Equal(owner.StringId, included.Id);
             Assert.Equal(owner.FirstName, included.Attributes["firstName"]);
-            Assert.Equal((long)owner.Age, included.Attributes["age"]);
+            Assert.Equal((long)owner.Age, included.Attributes["the-Age"]);
             Assert.DoesNotContain("lastName", included.Attributes.Keys);
         }
 

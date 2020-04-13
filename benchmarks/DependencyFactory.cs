@@ -1,5 +1,6 @@
 using System;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
@@ -9,9 +10,9 @@ namespace Benchmarks
 {
     internal static class DependencyFactory
     {
-        public static IResourceGraph CreateResourceGraph()
+        public static IResourceGraph CreateResourceGraph(IJsonApiOptions options)
         {
-            IResourceGraphBuilder builder = new ResourceGraphBuilder();
+            IResourceGraphBuilder builder = new ResourceGraphBuilder(options);
             builder.AddResource<BenchmarkResource>(BenchmarkResourcePublicNames.Type);
             return builder.Build();
         }

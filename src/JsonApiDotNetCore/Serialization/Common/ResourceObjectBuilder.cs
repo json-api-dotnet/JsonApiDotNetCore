@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -138,9 +140,19 @@ namespace JsonApiDotNetCore.Serialization
             ro.Attributes = new Dictionary<string, object>();
             foreach (var attr in attributes)
             {
-                var value = attr.GetValue(entity);
-                if (!(value == default && _settings.OmitAttributeIfValueIsDefault) && !(value == null && _settings.OmitAttributeIfValueIsNull))
-                    ro.Attributes.Add(attr.PublicAttributeName, value);
+                object value = attr.GetValue(entity);
+
+                if (_settings.SerializerNullValueHandling == NullValueHandling.Ignore && value == null)
+                {
+                    return;
+                }
+
+                if (_settings.SerializerDefaultValueHandling == DefaultValueHandling.Ignore && value == attr.PropertyInfo.PropertyType.GetDefaultValue())
+                {
+                    return;
+                }
+
+                ro.Attributes.Add(attr.PublicAttributeName, value);
             }
         }
     }

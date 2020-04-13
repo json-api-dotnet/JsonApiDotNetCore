@@ -12,8 +12,6 @@ namespace JsonApiDotNetCore.Graph
     /// </summary>
     internal static class TypeLocator
     {
-        private static readonly Dictionary<Assembly, List<ResourceDescriptor>> _identifiableTypeCache = new Dictionary<Assembly, List<ResourceDescriptor>>();
-
         /// <summary>
         /// Determine whether or not this is a json:api resource by checking if it implements <see cref="IIdentifiable"/>.
         /// Returns the status and the resultant id type, either `(true, Type)` OR `(false, null)`
@@ -22,29 +20,6 @@ namespace JsonApiDotNetCore.Graph
         {
             var identifiableInterface = resourceType.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIdentifiable<>));
             return identifiableInterface?.GetGenericArguments()[0];
-        }
-
-        /// <summary>
-        /// Get all implementations of <see cref="IIdentifiable"/> in the assembly
-        /// </summary>
-        public static IEnumerable<ResourceDescriptor> GetIdentifiableTypes(Assembly assembly)
-            => (_identifiableTypeCache.TryGetValue(assembly, out _) == false)
-                    ? FindIdentifiableTypes(assembly)
-                    : _identifiableTypeCache[assembly];
-
-        private static IEnumerable<ResourceDescriptor> FindIdentifiableTypes(Assembly assembly)
-        {
-            var descriptors = new List<ResourceDescriptor>();
-            _identifiableTypeCache[assembly] = descriptors;
-
-            foreach (var type in assembly.GetTypes())
-            {
-                if (TryGetResourceDescriptor(type, out var descriptor))
-                {
-                    descriptors.Add(descriptor);
-                    yield return descriptor;
-                }
-            }
         }
 
         /// <summary>

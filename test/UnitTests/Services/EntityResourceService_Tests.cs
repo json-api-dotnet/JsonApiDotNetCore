@@ -37,11 +37,10 @@ namespace UnitTests.Services
             _pageService = new Mock<IPageService>();
             _sortService = new Mock<ISortService>();
             _filterService = new Mock<IFilterService>();
-            _resourceGraph = new ResourceGraphBuilder()
+            _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions())
                                 .AddResource<TodoItem>()
                                 .AddResource<TodoItemCollection, Guid>()
                                 .Build();
-
         }
 
         [Fact]

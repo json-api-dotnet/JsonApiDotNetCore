@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models.Links;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -30,11 +31,10 @@ namespace JsonApiDotNetCore.Configuration
         public bool IncludeExceptionStackTraceInErrors { get; set; } = false;
 
         /// <summary>
-        /// Whether or not ResourceHooks are enabled. 
-        /// 
-        /// Default is set to <see langword="true"/>
+        /// Whether or not resource hooks are enabled. 
+        /// This is currently an experimental feature and defaults to <see langword="false"/>.
         /// </summary>
-        public bool EnableResourceHooks { get; set; } = true;
+        public bool EnableResourceHooks { get; set; } = false;
 
         /// <summary>
         /// Whether or not database values should be included by default
@@ -51,6 +51,12 @@ namespace JsonApiDotNetCore.Configuration
         /// <code>options.Namespace = "api/v1";</code>
         /// </example>
         public string Namespace { get; set; }
+
+        /// <inheritdoc/>
+        public bool AllowQueryStringOverrideForSerializerNullValueHandling { get; set; }
+        
+        /// <inheritdoc/>
+        public bool AllowQueryStringOverrideForSerializerDefaultValueHandling { get; set; }
 
         /// <summary>
         /// The default page size for all resources. The value zero means: no paging.
@@ -108,16 +114,6 @@ namespace JsonApiDotNetCore.Configuration
         public bool AllowCustomQueryStringParameters { get; set; }
 
         /// <summary>
-        /// The default behavior for serializing attributes that contain null.
-        /// </summary>
-        public NullAttributeResponseBehavior NullAttributeResponseBehavior { get; set; }
-
-        /// <summary>
-        /// The default behavior for serializing attributes that contain their types' default value.
-        /// </summary>
-        public DefaultAttributeResponseBehavior DefaultAttributeResponseBehavior { get; set; }
-
-        /// <summary>
         /// Whether or not to validate model state.
         /// </summary>
         /// <example>
@@ -127,9 +123,13 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         public bool ValidateModelState { get; set; }
 
+        /// <inheritdoc/>
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings
         {
-            NullValueHandling = NullValueHandling.Ignore
+            ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            }
         };
     }
 }

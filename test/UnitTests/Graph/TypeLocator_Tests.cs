@@ -82,33 +82,6 @@ namespace UnitTests.Internal
         }
 
         [Fact]
-        public void GetIdentifiableTypes_Locates_Identifiable_Resource()
-        {
-            // Arrange
-            var resourceType = typeof(Model);
-
-            // Act
-            var results = TypeLocator.GetIdentifiableTypes(resourceType.Assembly);
-
-            // Assert
-            Assert.Contains(results, r => r.ResourceType == resourceType);
-        }
-
-        [Fact]
-        public void GetIdentifiableTypes_Only_Contains_IIdentifiable_Types()
-        {
-            // Arrange
-            var resourceType = typeof(Model);
-
-            // Act
-            var resourceDescriptors = TypeLocator.GetIdentifiableTypes(resourceType.Assembly);
-
-            // Assert
-            foreach(var resourceDescriptor in resourceDescriptors)
-                Assert.True(typeof(IIdentifiable).IsAssignableFrom(resourceDescriptor.ResourceType));
-        }
-
-        [Fact]
         public void TryGetResourceDescriptor_Returns_True_If_Type_Is_IIdentifiable()
         {
             // Arrange
