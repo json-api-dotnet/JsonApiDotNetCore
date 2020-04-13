@@ -21,7 +21,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Builders.IResourceGraphBuilder.html",
-          "hash": "bJ60TWnKkSMxQr0Hg5gl2g=="
+          "hash": "VddQoMIpI/YPNxgfkMdbnA=="
         }
       },
       "is_incremental": false,
@@ -33,7 +33,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.html",
-          "hash": "VBMpEC5PZFyMpUi56L79nA=="
+          "hash": "RsX1132x7Q2hgbU1WAqaFQ=="
         }
       },
       "is_incremental": false,
@@ -45,7 +45,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Builders.ResourceGraphBuilder.html",
-          "hash": "pLfn42BHxG6bjiCOdSqfDA=="
+          "hash": "agcp6haoX3NGNYRw6Epp/g=="
         }
       },
       "is_incremental": false,
@@ -65,23 +65,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.html",
-          "hash": "dNeuHe1FtYr5rkYlDwxXfg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Configuration.IJsonApiOptions.yml",
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html",
-          "hash": "UI+tFw15JqT5PoS4IQNyPQ=="
+          "hash": "aCHR77Dvx8/6DL0pNEZEJA=="
         }
       },
       "is_incremental": false,
@@ -101,35 +89,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Configuration.ISerializerOptions.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Configuration.ISerializerOptions.html",
-          "hash": "VBVZa3vji2UnogzVi2pcHg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Configuration.JsonApiOptions.yml",
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Configuration.JsonApiOptions.html",
-          "hash": "77sDkalQrOPdHkBj2990tg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.html",
-          "hash": "t13KUeJjeCSiLdi0i/ZmbA=="
+          "hash": "6mfvGPhA35nlkclifedbRA=="
         }
       },
       "is_incremental": false,
@@ -141,7 +105,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Configuration.html",
-          "hash": "7JbByrmYpSgrgQQ2CWdAOg=="
+          "hash": "3nFK15Jgl4DtIjOETeJEUQ=="
         }
       },
       "is_incremental": false,
@@ -345,7 +309,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.StandardQueryStringParameters.html",
-          "hash": "Fw8t3flq404Zn7cPEdmw7A=="
+          "hash": "TVKKpYPZBhzXerSqIJBXGA=="
         }
       },
       "is_incremental": false,
@@ -833,30 +797,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Graph.BaseResourceNameFormatter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Graph.BaseResourceNameFormatter.html",
-          "hash": "Jht88s/6kIzBsqPc0cFx8Q=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Graph.CamelCaseFormatter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Graph.CamelCaseFormatter.html",
-          "hash": "ito6KQiK/uFX6+j8h9Bqbw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Graph.DefaultRelatedIdMapper.yml",
       "output": {
         ".html": {
@@ -873,19 +813,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Graph.IRelatedIdMapper.html",
-          "hash": "v0Vr+H2Y4uw7qWlBzURk1g=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Graph.IResourceNameFormatter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Graph.IResourceNameFormatter.html",
-          "hash": "wZ/v+c2CjkGdUjedz0lirQ=="
+          "hash": "o1gAekU6tRm2MJPnZB6/qg=="
         }
       },
       "is_incremental": false,
@@ -898,18 +826,6 @@
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Graph.IServiceDiscoveryFacade.html",
           "hash": "rRdcNvILMRbqjkSVPHUHHg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Graph.KebabCaseFormatter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Graph.KebabCaseFormatter.html",
-          "hash": "pAZo/fjNt4ZYipcHyFg2Qw=="
         }
       },
       "is_incremental": false,
@@ -933,7 +849,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Graph.html",
-          "hash": "RCfoosOeHpzeLLsSZrJnsg=="
+          "hash": "P3J0kcQ601yukW/Hz5WZSQ=="
         }
       },
       "is_incremental": false,
@@ -1341,7 +1257,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Internal.DefaultRoutingConvention.html",
-          "hash": "uG/30Ojp1+WTwDb9EeLGfA=="
+          "hash": "Kql8Vkn/fhdxrAd7Qt/rdw=="
         }
       },
       "is_incremental": false,
@@ -1653,7 +1569,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Internal.html",
-          "hash": "a9IOciAaleJN/nQ+2Jz0xQ=="
+          "hash": "ccdl0mfFKmqnt8eVut5pEQ=="
         }
       },
       "is_incremental": false,
@@ -1701,7 +1617,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.html",
-          "hash": "HObYqOXdBgK0z7Cw4Ct81w=="
+          "hash": "X8tjn2XgC/Cj/hpkrqsu/A=="
         }
       },
       "is_incremental": false,
@@ -1857,7 +1773,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Models.Document.html",
-          "hash": "b9C+1obaWNFB6bV/Ohalzg=="
+          "hash": "WVDZpTzFuR40c6ulsnNyiw=="
         }
       },
       "is_incremental": false,
@@ -1881,7 +1797,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Models.ExposableData-1.html",
-          "hash": "DKMJyxI3LVE8opB1JRyBUg=="
+          "hash": "MqD6mdoot8+89ruSeBGfsQ=="
         }
       },
       "is_incremental": false,
@@ -2169,7 +2085,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Models.RelationshipEntry.html",
-          "hash": "05PNK5wT5QbIjW+4IYGAyA=="
+          "hash": "zz0RKvZtOMxOdiLNhECkFw=="
         }
       },
       "is_incremental": false,
@@ -2261,11 +2177,35 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Query.DefaultsService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Query.DefaultsService.html",
+          "hash": "WHBqffb58pqYGfeU9xvsBA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Query.FilterService.yml",
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Query.FilterService.html",
           "hash": "2kjHSlNoI5cgAiOhWdBCyw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Query.IDefaultsService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Query.IDefaultsService.html",
+          "hash": "FQ6vpSCRQxmaAbF6CMq5TQ=="
         }
       },
       "is_incremental": false,
@@ -2297,23 +2237,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Query.IOmitDefaultService.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Query.INullsService.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Query.IOmitDefaultService.html",
-          "hash": "VbkH8kM1whBCXKNqevL7Jg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Query.IOmitNullService.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Query.IOmitNullService.html",
-          "hash": "8YlHaTax3fbo7EETc7E3vQ=="
+          "relative_path": "api/JsonApiDotNetCore.Query.INullsService.html",
+          "hash": "qpEvnDcDPvkpq+x1AQgimw=="
         }
       },
       "is_incremental": false,
@@ -2393,23 +2321,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Query.OmitDefaultService.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Query.NullsService.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Query.OmitDefaultService.html",
-          "hash": "l9EaMqVY8vBdK7/vJqWLYg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Query.OmitNullService.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Query.OmitNullService.html",
-          "hash": "K/Z9f/N6vHJ/YXaWvyMksw=="
+          "relative_path": "api/JsonApiDotNetCore.Query.NullsService.html",
+          "hash": "mpCPwFp63QwKw4BmdDVkVQ=="
         }
       },
       "is_incremental": false,
@@ -2433,7 +2349,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Query.QueryParameterService.html",
-          "hash": "Ad8f+EjRmz/FUfhUXiPJ1Q=="
+          "hash": "baedhD/6UUFslVrArI6skg=="
         }
       },
       "is_incremental": false,
@@ -2469,7 +2385,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Query.html",
-          "hash": "YNuH9lpOO/9OY4U+lBQz8g=="
+          "hash": "IsXNJNzvsOSY1cpujP672g=="
         }
       },
       "is_incremental": false,
@@ -2505,7 +2421,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html",
-          "hash": "2K5bnCH2ZoJ5zxmE1LkIBQ=="
+          "hash": "pTlq2j7yhKiroRDmHBQqAA=="
         }
       },
       "is_incremental": false,
@@ -2589,7 +2505,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html",
-          "hash": "UR0TwRE9TQvrN/FfqsNrhg=="
+          "hash": "rtZsm1GoLgfFgLDKJgejdw=="
         }
       },
       "is_incremental": false,
@@ -2649,7 +2565,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.ResourceObjectBuilder.html",
-          "hash": "bf1RMnAoBB7ra49GPU972w=="
+          "hash": "TBFNYUhzkFA+Zv52PGrBgQ=="
         }
       },
       "is_incremental": false,
@@ -2661,7 +2577,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.html",
-          "hash": "DEfEUJRgxs/X8rQBz1kylg=="
+          "hash": "c3PS3JTuzq/SRYe1//mUSQ=="
         }
       },
       "is_incremental": false,
@@ -2841,7 +2757,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.html",
-          "hash": "b5fpoA6u6+RBYxXCPsBPvw=="
+          "hash": "as2TsTPrm1GXjnW+x46Tcg=="
         }
       },
       "is_incremental": false,
@@ -2865,7 +2781,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Server.ResponseSerializer-1.html",
-          "hash": "3ZBoy5C6G+oJbmj6fp2udQ=="
+          "hash": "ub3lbOhj8VPvPWcJ16BGzg=="
         }
       },
       "is_incremental": false,
@@ -3300,7 +3216,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "/QOSUhhuynUqX8qovIyOnw=="
+          "hash": "5pcdU/6RiPcFWZ2XLjwbFw=="
         }
       },
       "is_incremental": false,
@@ -3720,7 +3636,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 272,
+          "total_file_count": 265,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

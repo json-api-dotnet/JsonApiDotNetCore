@@ -150,30 +150,18 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.ConfigureServices
   nameWithType: JsonApiApplicationBuilder.ConfigureServices
-- uid: JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.JsonApiOptions
-  name: JsonApiOptions
-  href: api/JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.html#JsonApiDotNetCore_Builders_JsonApiApplicationBuilder_JsonApiOptions
-  commentId: F:JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.JsonApiOptions
-  fullName: JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.JsonApiOptions
-  nameWithType: JsonApiApplicationBuilder.JsonApiOptions
 - uid: JsonApiDotNetCore.Builders.ResourceGraphBuilder
   name: ResourceGraphBuilder
   href: api/JsonApiDotNetCore.Builders.ResourceGraphBuilder.html
   commentId: T:JsonApiDotNetCore.Builders.ResourceGraphBuilder
   fullName: JsonApiDotNetCore.Builders.ResourceGraphBuilder
   nameWithType: ResourceGraphBuilder
-- uid: JsonApiDotNetCore.Builders.ResourceGraphBuilder.#ctor
-  name: ResourceGraphBuilder()
-  href: api/JsonApiDotNetCore.Builders.ResourceGraphBuilder.html#JsonApiDotNetCore_Builders_ResourceGraphBuilder__ctor
-  commentId: M:JsonApiDotNetCore.Builders.ResourceGraphBuilder.#ctor
-  fullName: JsonApiDotNetCore.Builders.ResourceGraphBuilder.ResourceGraphBuilder()
-  nameWithType: ResourceGraphBuilder.ResourceGraphBuilder()
-- uid: JsonApiDotNetCore.Builders.ResourceGraphBuilder.#ctor(JsonApiDotNetCore.Graph.IResourceNameFormatter)
-  name: ResourceGraphBuilder(IResourceNameFormatter)
-  href: api/JsonApiDotNetCore.Builders.ResourceGraphBuilder.html#JsonApiDotNetCore_Builders_ResourceGraphBuilder__ctor_JsonApiDotNetCore_Graph_IResourceNameFormatter_
-  commentId: M:JsonApiDotNetCore.Builders.ResourceGraphBuilder.#ctor(JsonApiDotNetCore.Graph.IResourceNameFormatter)
-  fullName: JsonApiDotNetCore.Builders.ResourceGraphBuilder.ResourceGraphBuilder(JsonApiDotNetCore.Graph.IResourceNameFormatter)
-  nameWithType: ResourceGraphBuilder.ResourceGraphBuilder(IResourceNameFormatter)
+- uid: JsonApiDotNetCore.Builders.ResourceGraphBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  name: ResourceGraphBuilder(IJsonApiOptions)
+  href: api/JsonApiDotNetCore.Builders.ResourceGraphBuilder.html#JsonApiDotNetCore_Builders_ResourceGraphBuilder__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_
+  commentId: M:JsonApiDotNetCore.Builders.ResourceGraphBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  fullName: JsonApiDotNetCore.Builders.ResourceGraphBuilder.ResourceGraphBuilder(JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  nameWithType: ResourceGraphBuilder.ResourceGraphBuilder(IJsonApiOptions)
 - uid: JsonApiDotNetCore.Builders.ResourceGraphBuilder.#ctor*
   name: ResourceGraphBuilder
   href: api/JsonApiDotNetCore.Builders.ResourceGraphBuilder.html#JsonApiDotNetCore_Builders_ResourceGraphBuilder__ctor_
@@ -270,51 +258,6 @@ references:
   commentId: N:JsonApiDotNetCore.Configuration
   fullName: JsonApiDotNetCore.Configuration
   nameWithType: JsonApiDotNetCore.Configuration
-- uid: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior
-  name: DefaultAttributeResponseBehavior
-  href: api/JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.html
-  commentId: T:JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior
-  fullName: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior
-  nameWithType: DefaultAttributeResponseBehavior
-- uid: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.#ctor(System.Boolean,System.Boolean)
-  name: DefaultAttributeResponseBehavior(Boolean, Boolean)
-  href: api/JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.html#JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior__ctor_System_Boolean_System_Boolean_
-  commentId: M:JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.#ctor(System.Boolean,System.Boolean)
-  fullName: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.DefaultAttributeResponseBehavior(System.Boolean, System.Boolean)
-  nameWithType: DefaultAttributeResponseBehavior.DefaultAttributeResponseBehavior(Boolean, Boolean)
-- uid: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.#ctor*
-  name: DefaultAttributeResponseBehavior
-  href: api/JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.html#JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior__ctor_
-  commentId: Overload:JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.DefaultAttributeResponseBehavior
-  nameWithType: DefaultAttributeResponseBehavior.DefaultAttributeResponseBehavior
-- uid: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.AllowQueryStringOverride
-  name: AllowQueryStringOverride
-  href: api/JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.html#JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_AllowQueryStringOverride
-  commentId: P:JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.AllowQueryStringOverride
-  fullName: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.AllowQueryStringOverride
-  nameWithType: DefaultAttributeResponseBehavior.AllowQueryStringOverride
-- uid: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.AllowQueryStringOverride*
-  name: AllowQueryStringOverride
-  href: api/JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.html#JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_AllowQueryStringOverride_
-  commentId: Overload:JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.AllowQueryStringOverride
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.AllowQueryStringOverride
-  nameWithType: DefaultAttributeResponseBehavior.AllowQueryStringOverride
-- uid: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.OmitAttributeIfValueIsDefault
-  name: OmitAttributeIfValueIsDefault
-  href: api/JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.html#JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_OmitAttributeIfValueIsDefault
-  commentId: P:JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.OmitAttributeIfValueIsDefault
-  fullName: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.OmitAttributeIfValueIsDefault
-  nameWithType: DefaultAttributeResponseBehavior.OmitAttributeIfValueIsDefault
-- uid: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.OmitAttributeIfValueIsDefault*
-  name: OmitAttributeIfValueIsDefault
-  href: api/JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.html#JsonApiDotNetCore_Configuration_DefaultAttributeResponseBehavior_OmitAttributeIfValueIsDefault_
-  commentId: Overload:JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.OmitAttributeIfValueIsDefault
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.DefaultAttributeResponseBehavior.OmitAttributeIfValueIsDefault
-  nameWithType: DefaultAttributeResponseBehavior.OmitAttributeIfValueIsDefault
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions
   name: IJsonApiOptions
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html
@@ -347,6 +290,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowCustomQueryStringParameters
   nameWithType: IJsonApiOptions.AllowCustomQueryStringParameters
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
+  name: AllowQueryStringOverrideForSerializerDefaultValueHandling
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_AllowQueryStringOverrideForSerializerDefaultValueHandling
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
+  nameWithType: IJsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling*
+  name: AllowQueryStringOverrideForSerializerDefaultValueHandling
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_AllowQueryStringOverrideForSerializerDefaultValueHandling_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
+  nameWithType: IJsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+  name: AllowQueryStringOverrideForSerializerNullValueHandling
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_AllowQueryStringOverrideForSerializerNullValueHandling
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+  nameWithType: IJsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling*
+  name: AllowQueryStringOverrideForSerializerNullValueHandling
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_AllowQueryStringOverrideForSerializerNullValueHandling_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+  nameWithType: IJsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultPageSize
   name: DefaultPageSize
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_DefaultPageSize
@@ -438,6 +407,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.Namespace
   nameWithType: IJsonApiOptions.Namespace
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.SerializerSettings
+  name: SerializerSettings
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_SerializerSettings
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.SerializerSettings
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.SerializerSettings
+  nameWithType: IJsonApiOptions.SerializerSettings
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.SerializerSettings*
+  name: SerializerSettings
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_SerializerSettings_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.SerializerSettings
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.SerializerSettings
+  nameWithType: IJsonApiOptions.SerializerSettings
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.ValidateModelState
   name: ValidateModelState
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_ValidateModelState
@@ -509,38 +491,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.ILinksConfiguration.TopLevelLinks
   nameWithType: ILinksConfiguration.TopLevelLinks
-- uid: JsonApiDotNetCore.Configuration.ISerializerOptions
-  name: ISerializerOptions
-  href: api/JsonApiDotNetCore.Configuration.ISerializerOptions.html
-  commentId: T:JsonApiDotNetCore.Configuration.ISerializerOptions
-  fullName: JsonApiDotNetCore.Configuration.ISerializerOptions
-  nameWithType: ISerializerOptions
-- uid: JsonApiDotNetCore.Configuration.ISerializerOptions.DefaultAttributeResponseBehavior
-  name: DefaultAttributeResponseBehavior
-  href: api/JsonApiDotNetCore.Configuration.ISerializerOptions.html#JsonApiDotNetCore_Configuration_ISerializerOptions_DefaultAttributeResponseBehavior
-  commentId: P:JsonApiDotNetCore.Configuration.ISerializerOptions.DefaultAttributeResponseBehavior
-  fullName: JsonApiDotNetCore.Configuration.ISerializerOptions.DefaultAttributeResponseBehavior
-  nameWithType: ISerializerOptions.DefaultAttributeResponseBehavior
-- uid: JsonApiDotNetCore.Configuration.ISerializerOptions.DefaultAttributeResponseBehavior*
-  name: DefaultAttributeResponseBehavior
-  href: api/JsonApiDotNetCore.Configuration.ISerializerOptions.html#JsonApiDotNetCore_Configuration_ISerializerOptions_DefaultAttributeResponseBehavior_
-  commentId: Overload:JsonApiDotNetCore.Configuration.ISerializerOptions.DefaultAttributeResponseBehavior
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.ISerializerOptions.DefaultAttributeResponseBehavior
-  nameWithType: ISerializerOptions.DefaultAttributeResponseBehavior
-- uid: JsonApiDotNetCore.Configuration.ISerializerOptions.NullAttributeResponseBehavior
-  name: NullAttributeResponseBehavior
-  href: api/JsonApiDotNetCore.Configuration.ISerializerOptions.html#JsonApiDotNetCore_Configuration_ISerializerOptions_NullAttributeResponseBehavior
-  commentId: P:JsonApiDotNetCore.Configuration.ISerializerOptions.NullAttributeResponseBehavior
-  fullName: JsonApiDotNetCore.Configuration.ISerializerOptions.NullAttributeResponseBehavior
-  nameWithType: ISerializerOptions.NullAttributeResponseBehavior
-- uid: JsonApiDotNetCore.Configuration.ISerializerOptions.NullAttributeResponseBehavior*
-  name: NullAttributeResponseBehavior
-  href: api/JsonApiDotNetCore.Configuration.ISerializerOptions.html#JsonApiDotNetCore_Configuration_ISerializerOptions_NullAttributeResponseBehavior_
-  commentId: Overload:JsonApiDotNetCore.Configuration.ISerializerOptions.NullAttributeResponseBehavior
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.ISerializerOptions.NullAttributeResponseBehavior
-  nameWithType: ISerializerOptions.NullAttributeResponseBehavior
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions
   name: JsonApiOptions
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html
@@ -573,19 +523,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowCustomQueryStringParameters
   nameWithType: JsonApiOptions.AllowCustomQueryStringParameters
-- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttributeResponseBehavior
-  name: DefaultAttributeResponseBehavior
-  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttributeResponseBehavior
-  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttributeResponseBehavior
-  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttributeResponseBehavior
-  nameWithType: JsonApiOptions.DefaultAttributeResponseBehavior
-- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttributeResponseBehavior*
-  name: DefaultAttributeResponseBehavior
-  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttributeResponseBehavior_
-  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttributeResponseBehavior
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
+  name: AllowQueryStringOverrideForSerializerDefaultValueHandling
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerDefaultValueHandling
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
+  nameWithType: JsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling*
+  name: AllowQueryStringOverrideForSerializerDefaultValueHandling
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerDefaultValueHandling_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttributeResponseBehavior
-  nameWithType: JsonApiOptions.DefaultAttributeResponseBehavior
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
+  nameWithType: JsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+  name: AllowQueryStringOverrideForSerializerNullValueHandling
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerNullValueHandling
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+  nameWithType: JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling*
+  name: AllowQueryStringOverrideForSerializerNullValueHandling
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerNullValueHandling_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+  nameWithType: JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultPageSize
   name: DefaultPageSize
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultPageSize
@@ -690,19 +653,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.Namespace
   nameWithType: JsonApiOptions.Namespace
-- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.NullAttributeResponseBehavior
-  name: NullAttributeResponseBehavior
-  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_NullAttributeResponseBehavior
-  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.NullAttributeResponseBehavior
-  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.NullAttributeResponseBehavior
-  nameWithType: JsonApiOptions.NullAttributeResponseBehavior
-- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.NullAttributeResponseBehavior*
-  name: NullAttributeResponseBehavior
-  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_NullAttributeResponseBehavior_
-  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.NullAttributeResponseBehavior
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.NullAttributeResponseBehavior
-  nameWithType: JsonApiOptions.NullAttributeResponseBehavior
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.RelatedIdMapper
   name: RelatedIdMapper
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_RelatedIdMapper
@@ -794,51 +744,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.ValidateModelState
   nameWithType: JsonApiOptions.ValidateModelState
-- uid: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior
-  name: NullAttributeResponseBehavior
-  href: api/JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.html
-  commentId: T:JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior
-  fullName: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior
-  nameWithType: NullAttributeResponseBehavior
-- uid: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.#ctor(System.Boolean,System.Boolean)
-  name: NullAttributeResponseBehavior(Boolean, Boolean)
-  href: api/JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.html#JsonApiDotNetCore_Configuration_NullAttributeResponseBehavior__ctor_System_Boolean_System_Boolean_
-  commentId: M:JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.#ctor(System.Boolean,System.Boolean)
-  fullName: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.NullAttributeResponseBehavior(System.Boolean, System.Boolean)
-  nameWithType: NullAttributeResponseBehavior.NullAttributeResponseBehavior(Boolean, Boolean)
-- uid: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.#ctor*
-  name: NullAttributeResponseBehavior
-  href: api/JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.html#JsonApiDotNetCore_Configuration_NullAttributeResponseBehavior__ctor_
-  commentId: Overload:JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.NullAttributeResponseBehavior
-  nameWithType: NullAttributeResponseBehavior.NullAttributeResponseBehavior
-- uid: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.AllowQueryStringOverride
-  name: AllowQueryStringOverride
-  href: api/JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.html#JsonApiDotNetCore_Configuration_NullAttributeResponseBehavior_AllowQueryStringOverride
-  commentId: P:JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.AllowQueryStringOverride
-  fullName: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.AllowQueryStringOverride
-  nameWithType: NullAttributeResponseBehavior.AllowQueryStringOverride
-- uid: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.AllowQueryStringOverride*
-  name: AllowQueryStringOverride
-  href: api/JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.html#JsonApiDotNetCore_Configuration_NullAttributeResponseBehavior_AllowQueryStringOverride_
-  commentId: Overload:JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.AllowQueryStringOverride
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.AllowQueryStringOverride
-  nameWithType: NullAttributeResponseBehavior.AllowQueryStringOverride
-- uid: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.OmitAttributeIfValueIsNull
-  name: OmitAttributeIfValueIsNull
-  href: api/JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.html#JsonApiDotNetCore_Configuration_NullAttributeResponseBehavior_OmitAttributeIfValueIsNull
-  commentId: P:JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.OmitAttributeIfValueIsNull
-  fullName: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.OmitAttributeIfValueIsNull
-  nameWithType: NullAttributeResponseBehavior.OmitAttributeIfValueIsNull
-- uid: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.OmitAttributeIfValueIsNull*
-  name: OmitAttributeIfValueIsNull
-  href: api/JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.html#JsonApiDotNetCore_Configuration_NullAttributeResponseBehavior_OmitAttributeIfValueIsNull_
-  commentId: Overload:JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.OmitAttributeIfValueIsNull
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.OmitAttributeIfValueIsNull
-  nameWithType: NullAttributeResponseBehavior.OmitAttributeIfValueIsNull
 - uid: JsonApiDotNetCore.Controllers
   name: JsonApiDotNetCore.Controllers
   href: api/JsonApiDotNetCore.Controllers.html
@@ -1707,6 +1612,12 @@ references:
   commentId: F:JsonApiDotNetCore.Controllers.StandardQueryStringParameters.All
   fullName: JsonApiDotNetCore.Controllers.StandardQueryStringParameters.All
   nameWithType: StandardQueryStringParameters.All
+- uid: JsonApiDotNetCore.Controllers.StandardQueryStringParameters.Defaults
+  name: Defaults
+  href: api/JsonApiDotNetCore.Controllers.StandardQueryStringParameters.html#JsonApiDotNetCore_Controllers_StandardQueryStringParameters_Defaults
+  commentId: F:JsonApiDotNetCore.Controllers.StandardQueryStringParameters.Defaults
+  fullName: JsonApiDotNetCore.Controllers.StandardQueryStringParameters.Defaults
+  nameWithType: StandardQueryStringParameters.Defaults
 - uid: JsonApiDotNetCore.Controllers.StandardQueryStringParameters.Fields
   name: Fields
   href: api/JsonApiDotNetCore.Controllers.StandardQueryStringParameters.html#JsonApiDotNetCore_Controllers_StandardQueryStringParameters_Fields
@@ -1731,18 +1642,12 @@ references:
   commentId: F:JsonApiDotNetCore.Controllers.StandardQueryStringParameters.None
   fullName: JsonApiDotNetCore.Controllers.StandardQueryStringParameters.None
   nameWithType: StandardQueryStringParameters.None
-- uid: JsonApiDotNetCore.Controllers.StandardQueryStringParameters.OmitDefault
-  name: OmitDefault
-  href: api/JsonApiDotNetCore.Controllers.StandardQueryStringParameters.html#JsonApiDotNetCore_Controllers_StandardQueryStringParameters_OmitDefault
-  commentId: F:JsonApiDotNetCore.Controllers.StandardQueryStringParameters.OmitDefault
-  fullName: JsonApiDotNetCore.Controllers.StandardQueryStringParameters.OmitDefault
-  nameWithType: StandardQueryStringParameters.OmitDefault
-- uid: JsonApiDotNetCore.Controllers.StandardQueryStringParameters.OmitNull
-  name: OmitNull
-  href: api/JsonApiDotNetCore.Controllers.StandardQueryStringParameters.html#JsonApiDotNetCore_Controllers_StandardQueryStringParameters_OmitNull
-  commentId: F:JsonApiDotNetCore.Controllers.StandardQueryStringParameters.OmitNull
-  fullName: JsonApiDotNetCore.Controllers.StandardQueryStringParameters.OmitNull
-  nameWithType: StandardQueryStringParameters.OmitNull
+- uid: JsonApiDotNetCore.Controllers.StandardQueryStringParameters.Nulls
+  name: Nulls
+  href: api/JsonApiDotNetCore.Controllers.StandardQueryStringParameters.html#JsonApiDotNetCore_Controllers_StandardQueryStringParameters_Nulls
+  commentId: F:JsonApiDotNetCore.Controllers.StandardQueryStringParameters.Nulls
+  fullName: JsonApiDotNetCore.Controllers.StandardQueryStringParameters.Nulls
+  nameWithType: StandardQueryStringParameters.Nulls
 - uid: JsonApiDotNetCore.Controllers.StandardQueryStringParameters.Page
   name: Page
   href: api/JsonApiDotNetCore.Controllers.StandardQueryStringParameters.html#JsonApiDotNetCore_Controllers_StandardQueryStringParameters_Page
@@ -3273,70 +3178,6 @@ references:
   commentId: N:JsonApiDotNetCore.Graph
   fullName: JsonApiDotNetCore.Graph
   nameWithType: JsonApiDotNetCore.Graph
-- uid: JsonApiDotNetCore.Graph.BaseResourceNameFormatter
-  name: BaseResourceNameFormatter
-  href: api/JsonApiDotNetCore.Graph.BaseResourceNameFormatter.html
-  commentId: T:JsonApiDotNetCore.Graph.BaseResourceNameFormatter
-  fullName: JsonApiDotNetCore.Graph.BaseResourceNameFormatter
-  nameWithType: BaseResourceNameFormatter
-- uid: JsonApiDotNetCore.Graph.BaseResourceNameFormatter.ApplyCasingConvention(System.String)
-  name: ApplyCasingConvention(String)
-  href: api/JsonApiDotNetCore.Graph.BaseResourceNameFormatter.html#JsonApiDotNetCore_Graph_BaseResourceNameFormatter_ApplyCasingConvention_System_String_
-  commentId: M:JsonApiDotNetCore.Graph.BaseResourceNameFormatter.ApplyCasingConvention(System.String)
-  fullName: JsonApiDotNetCore.Graph.BaseResourceNameFormatter.ApplyCasingConvention(System.String)
-  nameWithType: BaseResourceNameFormatter.ApplyCasingConvention(String)
-- uid: JsonApiDotNetCore.Graph.BaseResourceNameFormatter.ApplyCasingConvention*
-  name: ApplyCasingConvention
-  href: api/JsonApiDotNetCore.Graph.BaseResourceNameFormatter.html#JsonApiDotNetCore_Graph_BaseResourceNameFormatter_ApplyCasingConvention_
-  commentId: Overload:JsonApiDotNetCore.Graph.BaseResourceNameFormatter.ApplyCasingConvention
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Graph.BaseResourceNameFormatter.ApplyCasingConvention
-  nameWithType: BaseResourceNameFormatter.ApplyCasingConvention
-- uid: JsonApiDotNetCore.Graph.BaseResourceNameFormatter.FormatPropertyName(PropertyInfo)
-  name: FormatPropertyName(PropertyInfo)
-  href: api/JsonApiDotNetCore.Graph.BaseResourceNameFormatter.html#JsonApiDotNetCore_Graph_BaseResourceNameFormatter_FormatPropertyName_PropertyInfo_
-  commentId: M:JsonApiDotNetCore.Graph.BaseResourceNameFormatter.FormatPropertyName(PropertyInfo)
-  fullName: JsonApiDotNetCore.Graph.BaseResourceNameFormatter.FormatPropertyName(PropertyInfo)
-  nameWithType: BaseResourceNameFormatter.FormatPropertyName(PropertyInfo)
-- uid: JsonApiDotNetCore.Graph.BaseResourceNameFormatter.FormatPropertyName*
-  name: FormatPropertyName
-  href: api/JsonApiDotNetCore.Graph.BaseResourceNameFormatter.html#JsonApiDotNetCore_Graph_BaseResourceNameFormatter_FormatPropertyName_
-  commentId: Overload:JsonApiDotNetCore.Graph.BaseResourceNameFormatter.FormatPropertyName
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Graph.BaseResourceNameFormatter.FormatPropertyName
-  nameWithType: BaseResourceNameFormatter.FormatPropertyName
-- uid: JsonApiDotNetCore.Graph.BaseResourceNameFormatter.FormatResourceName(Type)
-  name: FormatResourceName(Type)
-  href: api/JsonApiDotNetCore.Graph.BaseResourceNameFormatter.html#JsonApiDotNetCore_Graph_BaseResourceNameFormatter_FormatResourceName_Type_
-  commentId: M:JsonApiDotNetCore.Graph.BaseResourceNameFormatter.FormatResourceName(Type)
-  fullName: JsonApiDotNetCore.Graph.BaseResourceNameFormatter.FormatResourceName(Type)
-  nameWithType: BaseResourceNameFormatter.FormatResourceName(Type)
-- uid: JsonApiDotNetCore.Graph.BaseResourceNameFormatter.FormatResourceName*
-  name: FormatResourceName
-  href: api/JsonApiDotNetCore.Graph.BaseResourceNameFormatter.html#JsonApiDotNetCore_Graph_BaseResourceNameFormatter_FormatResourceName_
-  commentId: Overload:JsonApiDotNetCore.Graph.BaseResourceNameFormatter.FormatResourceName
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Graph.BaseResourceNameFormatter.FormatResourceName
-  nameWithType: BaseResourceNameFormatter.FormatResourceName
-- uid: JsonApiDotNetCore.Graph.CamelCaseFormatter
-  name: CamelCaseFormatter
-  href: api/JsonApiDotNetCore.Graph.CamelCaseFormatter.html
-  commentId: T:JsonApiDotNetCore.Graph.CamelCaseFormatter
-  fullName: JsonApiDotNetCore.Graph.CamelCaseFormatter
-  nameWithType: CamelCaseFormatter
-- uid: JsonApiDotNetCore.Graph.CamelCaseFormatter.ApplyCasingConvention(System.String)
-  name: ApplyCasingConvention(String)
-  href: api/JsonApiDotNetCore.Graph.CamelCaseFormatter.html#JsonApiDotNetCore_Graph_CamelCaseFormatter_ApplyCasingConvention_System_String_
-  commentId: M:JsonApiDotNetCore.Graph.CamelCaseFormatter.ApplyCasingConvention(System.String)
-  fullName: JsonApiDotNetCore.Graph.CamelCaseFormatter.ApplyCasingConvention(System.String)
-  nameWithType: CamelCaseFormatter.ApplyCasingConvention(String)
-- uid: JsonApiDotNetCore.Graph.CamelCaseFormatter.ApplyCasingConvention*
-  name: ApplyCasingConvention
-  href: api/JsonApiDotNetCore.Graph.CamelCaseFormatter.html#JsonApiDotNetCore_Graph_CamelCaseFormatter_ApplyCasingConvention_
-  commentId: Overload:JsonApiDotNetCore.Graph.CamelCaseFormatter.ApplyCasingConvention
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Graph.CamelCaseFormatter.ApplyCasingConvention
-  nameWithType: CamelCaseFormatter.ApplyCasingConvention
 - uid: JsonApiDotNetCore.Graph.DefaultRelatedIdMapper
   name: DefaultRelatedIdMapper
   href: api/JsonApiDotNetCore.Graph.DefaultRelatedIdMapper.html
@@ -3375,51 +3216,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Graph.IRelatedIdMapper.GetRelatedIdPropertyName
   nameWithType: IRelatedIdMapper.GetRelatedIdPropertyName
-- uid: JsonApiDotNetCore.Graph.IResourceNameFormatter
-  name: IResourceNameFormatter
-  href: api/JsonApiDotNetCore.Graph.IResourceNameFormatter.html
-  commentId: T:JsonApiDotNetCore.Graph.IResourceNameFormatter
-  fullName: JsonApiDotNetCore.Graph.IResourceNameFormatter
-  nameWithType: IResourceNameFormatter
-- uid: JsonApiDotNetCore.Graph.IResourceNameFormatter.ApplyCasingConvention(System.String)
-  name: ApplyCasingConvention(String)
-  href: api/JsonApiDotNetCore.Graph.IResourceNameFormatter.html#JsonApiDotNetCore_Graph_IResourceNameFormatter_ApplyCasingConvention_System_String_
-  commentId: M:JsonApiDotNetCore.Graph.IResourceNameFormatter.ApplyCasingConvention(System.String)
-  fullName: JsonApiDotNetCore.Graph.IResourceNameFormatter.ApplyCasingConvention(System.String)
-  nameWithType: IResourceNameFormatter.ApplyCasingConvention(String)
-- uid: JsonApiDotNetCore.Graph.IResourceNameFormatter.ApplyCasingConvention*
-  name: ApplyCasingConvention
-  href: api/JsonApiDotNetCore.Graph.IResourceNameFormatter.html#JsonApiDotNetCore_Graph_IResourceNameFormatter_ApplyCasingConvention_
-  commentId: Overload:JsonApiDotNetCore.Graph.IResourceNameFormatter.ApplyCasingConvention
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Graph.IResourceNameFormatter.ApplyCasingConvention
-  nameWithType: IResourceNameFormatter.ApplyCasingConvention
-- uid: JsonApiDotNetCore.Graph.IResourceNameFormatter.FormatPropertyName(PropertyInfo)
-  name: FormatPropertyName(PropertyInfo)
-  href: api/JsonApiDotNetCore.Graph.IResourceNameFormatter.html#JsonApiDotNetCore_Graph_IResourceNameFormatter_FormatPropertyName_PropertyInfo_
-  commentId: M:JsonApiDotNetCore.Graph.IResourceNameFormatter.FormatPropertyName(PropertyInfo)
-  fullName: JsonApiDotNetCore.Graph.IResourceNameFormatter.FormatPropertyName(PropertyInfo)
-  nameWithType: IResourceNameFormatter.FormatPropertyName(PropertyInfo)
-- uid: JsonApiDotNetCore.Graph.IResourceNameFormatter.FormatPropertyName*
-  name: FormatPropertyName
-  href: api/JsonApiDotNetCore.Graph.IResourceNameFormatter.html#JsonApiDotNetCore_Graph_IResourceNameFormatter_FormatPropertyName_
-  commentId: Overload:JsonApiDotNetCore.Graph.IResourceNameFormatter.FormatPropertyName
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Graph.IResourceNameFormatter.FormatPropertyName
-  nameWithType: IResourceNameFormatter.FormatPropertyName
-- uid: JsonApiDotNetCore.Graph.IResourceNameFormatter.FormatResourceName(Type)
-  name: FormatResourceName(Type)
-  href: api/JsonApiDotNetCore.Graph.IResourceNameFormatter.html#JsonApiDotNetCore_Graph_IResourceNameFormatter_FormatResourceName_Type_
-  commentId: M:JsonApiDotNetCore.Graph.IResourceNameFormatter.FormatResourceName(Type)
-  fullName: JsonApiDotNetCore.Graph.IResourceNameFormatter.FormatResourceName(Type)
-  nameWithType: IResourceNameFormatter.FormatResourceName(Type)
-- uid: JsonApiDotNetCore.Graph.IResourceNameFormatter.FormatResourceName*
-  name: FormatResourceName
-  href: api/JsonApiDotNetCore.Graph.IResourceNameFormatter.html#JsonApiDotNetCore_Graph_IResourceNameFormatter_FormatResourceName_
-  commentId: Overload:JsonApiDotNetCore.Graph.IResourceNameFormatter.FormatResourceName
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Graph.IResourceNameFormatter.FormatResourceName
-  nameWithType: IResourceNameFormatter.FormatResourceName
 - uid: JsonApiDotNetCore.Graph.IServiceDiscoveryFacade
   name: IServiceDiscoveryFacade
   href: api/JsonApiDotNetCore.Graph.IServiceDiscoveryFacade.html
@@ -3452,25 +3248,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Graph.IServiceDiscoveryFacade.AddCurrentAssembly
   nameWithType: IServiceDiscoveryFacade.AddCurrentAssembly
-- uid: JsonApiDotNetCore.Graph.KebabCaseFormatter
-  name: KebabCaseFormatter
-  href: api/JsonApiDotNetCore.Graph.KebabCaseFormatter.html
-  commentId: T:JsonApiDotNetCore.Graph.KebabCaseFormatter
-  fullName: JsonApiDotNetCore.Graph.KebabCaseFormatter
-  nameWithType: KebabCaseFormatter
-- uid: JsonApiDotNetCore.Graph.KebabCaseFormatter.ApplyCasingConvention(System.String)
-  name: ApplyCasingConvention(String)
-  href: api/JsonApiDotNetCore.Graph.KebabCaseFormatter.html#JsonApiDotNetCore_Graph_KebabCaseFormatter_ApplyCasingConvention_System_String_
-  commentId: M:JsonApiDotNetCore.Graph.KebabCaseFormatter.ApplyCasingConvention(System.String)
-  fullName: JsonApiDotNetCore.Graph.KebabCaseFormatter.ApplyCasingConvention(System.String)
-  nameWithType: KebabCaseFormatter.ApplyCasingConvention(String)
-- uid: JsonApiDotNetCore.Graph.KebabCaseFormatter.ApplyCasingConvention*
-  name: ApplyCasingConvention
-  href: api/JsonApiDotNetCore.Graph.KebabCaseFormatter.html#JsonApiDotNetCore_Graph_KebabCaseFormatter_ApplyCasingConvention_
-  commentId: Overload:JsonApiDotNetCore.Graph.KebabCaseFormatter.ApplyCasingConvention
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Graph.KebabCaseFormatter.ApplyCasingConvention
-  nameWithType: KebabCaseFormatter.ApplyCasingConvention
 - uid: JsonApiDotNetCore.Graph.ServiceDiscoveryFacade
   name: ServiceDiscoveryFacade
   href: api/JsonApiDotNetCore.Graph.ServiceDiscoveryFacade.html
@@ -4883,12 +4660,12 @@ references:
   commentId: T:JsonApiDotNetCore.Internal.DefaultRoutingConvention
   fullName: JsonApiDotNetCore.Internal.DefaultRoutingConvention
   nameWithType: DefaultRoutingConvention
-- uid: JsonApiDotNetCore.Internal.DefaultRoutingConvention.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Graph.IResourceNameFormatter)
-  name: DefaultRoutingConvention(IJsonApiOptions, IResourceNameFormatter)
-  href: api/JsonApiDotNetCore.Internal.DefaultRoutingConvention.html#JsonApiDotNetCore_Internal_DefaultRoutingConvention__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Graph_IResourceNameFormatter_
-  commentId: M:JsonApiDotNetCore.Internal.DefaultRoutingConvention.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Graph.IResourceNameFormatter)
-  fullName: JsonApiDotNetCore.Internal.DefaultRoutingConvention.DefaultRoutingConvention(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Graph.IResourceNameFormatter)
-  nameWithType: DefaultRoutingConvention.DefaultRoutingConvention(IJsonApiOptions, IResourceNameFormatter)
+- uid: JsonApiDotNetCore.Internal.DefaultRoutingConvention.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  name: DefaultRoutingConvention(IJsonApiOptions)
+  href: api/JsonApiDotNetCore.Internal.DefaultRoutingConvention.html#JsonApiDotNetCore_Internal_DefaultRoutingConvention__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_
+  commentId: M:JsonApiDotNetCore.Internal.DefaultRoutingConvention.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  fullName: JsonApiDotNetCore.Internal.DefaultRoutingConvention.DefaultRoutingConvention(JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  nameWithType: DefaultRoutingConvention.DefaultRoutingConvention(IJsonApiOptions)
 - uid: JsonApiDotNetCore.Internal.DefaultRoutingConvention.#ctor*
   name: DefaultRoutingConvention
   href: api/JsonApiDotNetCore.Internal.DefaultRoutingConvention.html#JsonApiDotNetCore_Internal_DefaultRoutingConvention__ctor_
@@ -6776,6 +6553,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Models.ExposableData(Of T).GetPrimaryData
   nameWithType: ExposableData<T>.GetPrimaryData
   nameWithType.vb: ExposableData(Of T).GetPrimaryData
+- uid: JsonApiDotNetCore.Models.ExposableData`1.IsManyData
+  name: IsManyData
+  href: api/JsonApiDotNetCore.Models.ExposableData-1.html#JsonApiDotNetCore_Models_ExposableData_1_IsManyData
+  commentId: P:JsonApiDotNetCore.Models.ExposableData`1.IsManyData
+  fullName: JsonApiDotNetCore.Models.ExposableData<T>.IsManyData
+  fullName.vb: JsonApiDotNetCore.Models.ExposableData(Of T).IsManyData
+  nameWithType: ExposableData<T>.IsManyData
+  nameWithType.vb: ExposableData(Of T).IsManyData
+- uid: JsonApiDotNetCore.Models.ExposableData`1.IsManyData*
+  name: IsManyData
+  href: api/JsonApiDotNetCore.Models.ExposableData-1.html#JsonApiDotNetCore_Models_ExposableData_1_IsManyData_
+  commentId: Overload:JsonApiDotNetCore.Models.ExposableData`1.IsManyData
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Models.ExposableData<T>.IsManyData
+  fullName.vb: JsonApiDotNetCore.Models.ExposableData(Of T).IsManyData
+  nameWithType: ExposableData<T>.IsManyData
+  nameWithType.vb: ExposableData(Of T).IsManyData
 - uid: JsonApiDotNetCore.Models.ExposableData`1.ManyData
   name: ManyData
   href: api/JsonApiDotNetCore.Models.ExposableData-1.html#JsonApiDotNetCore_Models_ExposableData_1_ManyData
@@ -8728,6 +8522,77 @@ references:
   commentId: N:JsonApiDotNetCore.Query
   fullName: JsonApiDotNetCore.Query
   nameWithType: JsonApiDotNetCore.Query
+- uid: JsonApiDotNetCore.Query.DefaultsService
+  name: DefaultsService
+  href: api/JsonApiDotNetCore.Query.DefaultsService.html
+  commentId: T:JsonApiDotNetCore.Query.DefaultsService
+  fullName: JsonApiDotNetCore.Query.DefaultsService
+  nameWithType: DefaultsService
+- uid: JsonApiDotNetCore.Query.DefaultsService.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  name: DefaultsService(IJsonApiOptions)
+  href: api/JsonApiDotNetCore.Query.DefaultsService.html#JsonApiDotNetCore_Query_DefaultsService__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_
+  commentId: M:JsonApiDotNetCore.Query.DefaultsService.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  fullName: JsonApiDotNetCore.Query.DefaultsService.DefaultsService(JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  nameWithType: DefaultsService.DefaultsService(IJsonApiOptions)
+- uid: JsonApiDotNetCore.Query.DefaultsService.#ctor*
+  name: DefaultsService
+  href: api/JsonApiDotNetCore.Query.DefaultsService.html#JsonApiDotNetCore_Query_DefaultsService__ctor_
+  commentId: Overload:JsonApiDotNetCore.Query.DefaultsService.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.DefaultsService.DefaultsService
+  nameWithType: DefaultsService.DefaultsService
+- uid: JsonApiDotNetCore.Query.DefaultsService.CanParse(System.String)
+  name: CanParse(String)
+  href: api/JsonApiDotNetCore.Query.DefaultsService.html#JsonApiDotNetCore_Query_DefaultsService_CanParse_System_String_
+  commentId: M:JsonApiDotNetCore.Query.DefaultsService.CanParse(System.String)
+  fullName: JsonApiDotNetCore.Query.DefaultsService.CanParse(System.String)
+  nameWithType: DefaultsService.CanParse(String)
+- uid: JsonApiDotNetCore.Query.DefaultsService.CanParse*
+  name: CanParse
+  href: api/JsonApiDotNetCore.Query.DefaultsService.html#JsonApiDotNetCore_Query_DefaultsService_CanParse_
+  commentId: Overload:JsonApiDotNetCore.Query.DefaultsService.CanParse
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.DefaultsService.CanParse
+  nameWithType: DefaultsService.CanParse
+- uid: JsonApiDotNetCore.Query.DefaultsService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
+  name: IsEnabled(DisableQueryAttribute)
+  href: api/JsonApiDotNetCore.Query.DefaultsService.html#JsonApiDotNetCore_Query_DefaultsService_IsEnabled_JsonApiDotNetCore_Controllers_DisableQueryAttribute_
+  commentId: M:JsonApiDotNetCore.Query.DefaultsService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
+  fullName: JsonApiDotNetCore.Query.DefaultsService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
+  nameWithType: DefaultsService.IsEnabled(DisableQueryAttribute)
+- uid: JsonApiDotNetCore.Query.DefaultsService.IsEnabled*
+  name: IsEnabled
+  href: api/JsonApiDotNetCore.Query.DefaultsService.html#JsonApiDotNetCore_Query_DefaultsService_IsEnabled_
+  commentId: Overload:JsonApiDotNetCore.Query.DefaultsService.IsEnabled
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.DefaultsService.IsEnabled
+  nameWithType: DefaultsService.IsEnabled
+- uid: JsonApiDotNetCore.Query.DefaultsService.Parse(System.String,StringValues)
+  name: Parse(String, StringValues)
+  href: api/JsonApiDotNetCore.Query.DefaultsService.html#JsonApiDotNetCore_Query_DefaultsService_Parse_System_String_StringValues_
+  commentId: M:JsonApiDotNetCore.Query.DefaultsService.Parse(System.String,StringValues)
+  fullName: JsonApiDotNetCore.Query.DefaultsService.Parse(System.String, StringValues)
+  nameWithType: DefaultsService.Parse(String, StringValues)
+- uid: JsonApiDotNetCore.Query.DefaultsService.Parse*
+  name: Parse
+  href: api/JsonApiDotNetCore.Query.DefaultsService.html#JsonApiDotNetCore_Query_DefaultsService_Parse_
+  commentId: Overload:JsonApiDotNetCore.Query.DefaultsService.Parse
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.DefaultsService.Parse
+  nameWithType: DefaultsService.Parse
+- uid: JsonApiDotNetCore.Query.DefaultsService.SerializerDefaultValueHandling
+  name: SerializerDefaultValueHandling
+  href: api/JsonApiDotNetCore.Query.DefaultsService.html#JsonApiDotNetCore_Query_DefaultsService_SerializerDefaultValueHandling
+  commentId: P:JsonApiDotNetCore.Query.DefaultsService.SerializerDefaultValueHandling
+  fullName: JsonApiDotNetCore.Query.DefaultsService.SerializerDefaultValueHandling
+  nameWithType: DefaultsService.SerializerDefaultValueHandling
+- uid: JsonApiDotNetCore.Query.DefaultsService.SerializerDefaultValueHandling*
+  name: SerializerDefaultValueHandling
+  href: api/JsonApiDotNetCore.Query.DefaultsService.html#JsonApiDotNetCore_Query_DefaultsService_SerializerDefaultValueHandling_
+  commentId: Overload:JsonApiDotNetCore.Query.DefaultsService.SerializerDefaultValueHandling
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.DefaultsService.SerializerDefaultValueHandling
+  nameWithType: DefaultsService.SerializerDefaultValueHandling
 - uid: JsonApiDotNetCore.Query.FilterService
   name: FilterService
   href: api/JsonApiDotNetCore.Query.FilterService.html
@@ -8799,6 +8664,25 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.FilterService.Parse
   nameWithType: FilterService.Parse
+- uid: JsonApiDotNetCore.Query.IDefaultsService
+  name: IDefaultsService
+  href: api/JsonApiDotNetCore.Query.IDefaultsService.html
+  commentId: T:JsonApiDotNetCore.Query.IDefaultsService
+  fullName: JsonApiDotNetCore.Query.IDefaultsService
+  nameWithType: IDefaultsService
+- uid: JsonApiDotNetCore.Query.IDefaultsService.SerializerDefaultValueHandling
+  name: SerializerDefaultValueHandling
+  href: api/JsonApiDotNetCore.Query.IDefaultsService.html#JsonApiDotNetCore_Query_IDefaultsService_SerializerDefaultValueHandling
+  commentId: P:JsonApiDotNetCore.Query.IDefaultsService.SerializerDefaultValueHandling
+  fullName: JsonApiDotNetCore.Query.IDefaultsService.SerializerDefaultValueHandling
+  nameWithType: IDefaultsService.SerializerDefaultValueHandling
+- uid: JsonApiDotNetCore.Query.IDefaultsService.SerializerDefaultValueHandling*
+  name: SerializerDefaultValueHandling
+  href: api/JsonApiDotNetCore.Query.IDefaultsService.html#JsonApiDotNetCore_Query_IDefaultsService_SerializerDefaultValueHandling_
+  commentId: Overload:JsonApiDotNetCore.Query.IDefaultsService.SerializerDefaultValueHandling
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.IDefaultsService.SerializerDefaultValueHandling
+  nameWithType: IDefaultsService.SerializerDefaultValueHandling
 - uid: JsonApiDotNetCore.Query.IFilterService
   name: IFilterService
   href: api/JsonApiDotNetCore.Query.IFilterService.html
@@ -8908,44 +8792,25 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.IncludeService.Parse
   nameWithType: IncludeService.Parse
-- uid: JsonApiDotNetCore.Query.IOmitDefaultService
-  name: IOmitDefaultService
-  href: api/JsonApiDotNetCore.Query.IOmitDefaultService.html
-  commentId: T:JsonApiDotNetCore.Query.IOmitDefaultService
-  fullName: JsonApiDotNetCore.Query.IOmitDefaultService
-  nameWithType: IOmitDefaultService
-- uid: JsonApiDotNetCore.Query.IOmitDefaultService.OmitAttributeIfValueIsDefault
-  name: OmitAttributeIfValueIsDefault
-  href: api/JsonApiDotNetCore.Query.IOmitDefaultService.html#JsonApiDotNetCore_Query_IOmitDefaultService_OmitAttributeIfValueIsDefault
-  commentId: P:JsonApiDotNetCore.Query.IOmitDefaultService.OmitAttributeIfValueIsDefault
-  fullName: JsonApiDotNetCore.Query.IOmitDefaultService.OmitAttributeIfValueIsDefault
-  nameWithType: IOmitDefaultService.OmitAttributeIfValueIsDefault
-- uid: JsonApiDotNetCore.Query.IOmitDefaultService.OmitAttributeIfValueIsDefault*
-  name: OmitAttributeIfValueIsDefault
-  href: api/JsonApiDotNetCore.Query.IOmitDefaultService.html#JsonApiDotNetCore_Query_IOmitDefaultService_OmitAttributeIfValueIsDefault_
-  commentId: Overload:JsonApiDotNetCore.Query.IOmitDefaultService.OmitAttributeIfValueIsDefault
+- uid: JsonApiDotNetCore.Query.INullsService
+  name: INullsService
+  href: api/JsonApiDotNetCore.Query.INullsService.html
+  commentId: T:JsonApiDotNetCore.Query.INullsService
+  fullName: JsonApiDotNetCore.Query.INullsService
+  nameWithType: INullsService
+- uid: JsonApiDotNetCore.Query.INullsService.SerializerNullValueHandling
+  name: SerializerNullValueHandling
+  href: api/JsonApiDotNetCore.Query.INullsService.html#JsonApiDotNetCore_Query_INullsService_SerializerNullValueHandling
+  commentId: P:JsonApiDotNetCore.Query.INullsService.SerializerNullValueHandling
+  fullName: JsonApiDotNetCore.Query.INullsService.SerializerNullValueHandling
+  nameWithType: INullsService.SerializerNullValueHandling
+- uid: JsonApiDotNetCore.Query.INullsService.SerializerNullValueHandling*
+  name: SerializerNullValueHandling
+  href: api/JsonApiDotNetCore.Query.INullsService.html#JsonApiDotNetCore_Query_INullsService_SerializerNullValueHandling_
+  commentId: Overload:JsonApiDotNetCore.Query.INullsService.SerializerNullValueHandling
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.IOmitDefaultService.OmitAttributeIfValueIsDefault
-  nameWithType: IOmitDefaultService.OmitAttributeIfValueIsDefault
-- uid: JsonApiDotNetCore.Query.IOmitNullService
-  name: IOmitNullService
-  href: api/JsonApiDotNetCore.Query.IOmitNullService.html
-  commentId: T:JsonApiDotNetCore.Query.IOmitNullService
-  fullName: JsonApiDotNetCore.Query.IOmitNullService
-  nameWithType: IOmitNullService
-- uid: JsonApiDotNetCore.Query.IOmitNullService.OmitAttributeIfValueIsNull
-  name: OmitAttributeIfValueIsNull
-  href: api/JsonApiDotNetCore.Query.IOmitNullService.html#JsonApiDotNetCore_Query_IOmitNullService_OmitAttributeIfValueIsNull
-  commentId: P:JsonApiDotNetCore.Query.IOmitNullService.OmitAttributeIfValueIsNull
-  fullName: JsonApiDotNetCore.Query.IOmitNullService.OmitAttributeIfValueIsNull
-  nameWithType: IOmitNullService.OmitAttributeIfValueIsNull
-- uid: JsonApiDotNetCore.Query.IOmitNullService.OmitAttributeIfValueIsNull*
-  name: OmitAttributeIfValueIsNull
-  href: api/JsonApiDotNetCore.Query.IOmitNullService.html#JsonApiDotNetCore_Query_IOmitNullService_OmitAttributeIfValueIsNull_
-  commentId: Overload:JsonApiDotNetCore.Query.IOmitNullService.OmitAttributeIfValueIsNull
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.IOmitNullService.OmitAttributeIfValueIsNull
-  nameWithType: IOmitNullService.OmitAttributeIfValueIsNull
+  fullName: JsonApiDotNetCore.Query.INullsService.SerializerNullValueHandling
+  nameWithType: INullsService.SerializerNullValueHandling
 - uid: JsonApiDotNetCore.Query.IPageService
   name: IPageService
   href: api/JsonApiDotNetCore.Query.IPageService.html
@@ -9132,148 +8997,77 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.ISparseFieldsService.Get
   nameWithType: ISparseFieldsService.Get
-- uid: JsonApiDotNetCore.Query.OmitDefaultService
-  name: OmitDefaultService
-  href: api/JsonApiDotNetCore.Query.OmitDefaultService.html
-  commentId: T:JsonApiDotNetCore.Query.OmitDefaultService
-  fullName: JsonApiDotNetCore.Query.OmitDefaultService
-  nameWithType: OmitDefaultService
-- uid: JsonApiDotNetCore.Query.OmitDefaultService.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
-  name: OmitDefaultService(IJsonApiOptions)
-  href: api/JsonApiDotNetCore.Query.OmitDefaultService.html#JsonApiDotNetCore_Query_OmitDefaultService__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_
-  commentId: M:JsonApiDotNetCore.Query.OmitDefaultService.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
-  fullName: JsonApiDotNetCore.Query.OmitDefaultService.OmitDefaultService(JsonApiDotNetCore.Configuration.IJsonApiOptions)
-  nameWithType: OmitDefaultService.OmitDefaultService(IJsonApiOptions)
-- uid: JsonApiDotNetCore.Query.OmitDefaultService.#ctor*
-  name: OmitDefaultService
-  href: api/JsonApiDotNetCore.Query.OmitDefaultService.html#JsonApiDotNetCore_Query_OmitDefaultService__ctor_
-  commentId: Overload:JsonApiDotNetCore.Query.OmitDefaultService.#ctor
+- uid: JsonApiDotNetCore.Query.NullsService
+  name: NullsService
+  href: api/JsonApiDotNetCore.Query.NullsService.html
+  commentId: T:JsonApiDotNetCore.Query.NullsService
+  fullName: JsonApiDotNetCore.Query.NullsService
+  nameWithType: NullsService
+- uid: JsonApiDotNetCore.Query.NullsService.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  name: NullsService(IJsonApiOptions)
+  href: api/JsonApiDotNetCore.Query.NullsService.html#JsonApiDotNetCore_Query_NullsService__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_
+  commentId: M:JsonApiDotNetCore.Query.NullsService.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  fullName: JsonApiDotNetCore.Query.NullsService.NullsService(JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  nameWithType: NullsService.NullsService(IJsonApiOptions)
+- uid: JsonApiDotNetCore.Query.NullsService.#ctor*
+  name: NullsService
+  href: api/JsonApiDotNetCore.Query.NullsService.html#JsonApiDotNetCore_Query_NullsService__ctor_
+  commentId: Overload:JsonApiDotNetCore.Query.NullsService.#ctor
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.OmitDefaultService.OmitDefaultService
-  nameWithType: OmitDefaultService.OmitDefaultService
-- uid: JsonApiDotNetCore.Query.OmitDefaultService.CanParse(System.String)
+  fullName: JsonApiDotNetCore.Query.NullsService.NullsService
+  nameWithType: NullsService.NullsService
+- uid: JsonApiDotNetCore.Query.NullsService.CanParse(System.String)
   name: CanParse(String)
-  href: api/JsonApiDotNetCore.Query.OmitDefaultService.html#JsonApiDotNetCore_Query_OmitDefaultService_CanParse_System_String_
-  commentId: M:JsonApiDotNetCore.Query.OmitDefaultService.CanParse(System.String)
-  fullName: JsonApiDotNetCore.Query.OmitDefaultService.CanParse(System.String)
-  nameWithType: OmitDefaultService.CanParse(String)
-- uid: JsonApiDotNetCore.Query.OmitDefaultService.CanParse*
+  href: api/JsonApiDotNetCore.Query.NullsService.html#JsonApiDotNetCore_Query_NullsService_CanParse_System_String_
+  commentId: M:JsonApiDotNetCore.Query.NullsService.CanParse(System.String)
+  fullName: JsonApiDotNetCore.Query.NullsService.CanParse(System.String)
+  nameWithType: NullsService.CanParse(String)
+- uid: JsonApiDotNetCore.Query.NullsService.CanParse*
   name: CanParse
-  href: api/JsonApiDotNetCore.Query.OmitDefaultService.html#JsonApiDotNetCore_Query_OmitDefaultService_CanParse_
-  commentId: Overload:JsonApiDotNetCore.Query.OmitDefaultService.CanParse
+  href: api/JsonApiDotNetCore.Query.NullsService.html#JsonApiDotNetCore_Query_NullsService_CanParse_
+  commentId: Overload:JsonApiDotNetCore.Query.NullsService.CanParse
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.OmitDefaultService.CanParse
-  nameWithType: OmitDefaultService.CanParse
-- uid: JsonApiDotNetCore.Query.OmitDefaultService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
+  fullName: JsonApiDotNetCore.Query.NullsService.CanParse
+  nameWithType: NullsService.CanParse
+- uid: JsonApiDotNetCore.Query.NullsService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
   name: IsEnabled(DisableQueryAttribute)
-  href: api/JsonApiDotNetCore.Query.OmitDefaultService.html#JsonApiDotNetCore_Query_OmitDefaultService_IsEnabled_JsonApiDotNetCore_Controllers_DisableQueryAttribute_
-  commentId: M:JsonApiDotNetCore.Query.OmitDefaultService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
-  fullName: JsonApiDotNetCore.Query.OmitDefaultService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
-  nameWithType: OmitDefaultService.IsEnabled(DisableQueryAttribute)
-- uid: JsonApiDotNetCore.Query.OmitDefaultService.IsEnabled*
+  href: api/JsonApiDotNetCore.Query.NullsService.html#JsonApiDotNetCore_Query_NullsService_IsEnabled_JsonApiDotNetCore_Controllers_DisableQueryAttribute_
+  commentId: M:JsonApiDotNetCore.Query.NullsService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
+  fullName: JsonApiDotNetCore.Query.NullsService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
+  nameWithType: NullsService.IsEnabled(DisableQueryAttribute)
+- uid: JsonApiDotNetCore.Query.NullsService.IsEnabled*
   name: IsEnabled
-  href: api/JsonApiDotNetCore.Query.OmitDefaultService.html#JsonApiDotNetCore_Query_OmitDefaultService_IsEnabled_
-  commentId: Overload:JsonApiDotNetCore.Query.OmitDefaultService.IsEnabled
+  href: api/JsonApiDotNetCore.Query.NullsService.html#JsonApiDotNetCore_Query_NullsService_IsEnabled_
+  commentId: Overload:JsonApiDotNetCore.Query.NullsService.IsEnabled
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.OmitDefaultService.IsEnabled
-  nameWithType: OmitDefaultService.IsEnabled
-- uid: JsonApiDotNetCore.Query.OmitDefaultService.OmitAttributeIfValueIsDefault
-  name: OmitAttributeIfValueIsDefault
-  href: api/JsonApiDotNetCore.Query.OmitDefaultService.html#JsonApiDotNetCore_Query_OmitDefaultService_OmitAttributeIfValueIsDefault
-  commentId: P:JsonApiDotNetCore.Query.OmitDefaultService.OmitAttributeIfValueIsDefault
-  fullName: JsonApiDotNetCore.Query.OmitDefaultService.OmitAttributeIfValueIsDefault
-  nameWithType: OmitDefaultService.OmitAttributeIfValueIsDefault
-- uid: JsonApiDotNetCore.Query.OmitDefaultService.OmitAttributeIfValueIsDefault*
-  name: OmitAttributeIfValueIsDefault
-  href: api/JsonApiDotNetCore.Query.OmitDefaultService.html#JsonApiDotNetCore_Query_OmitDefaultService_OmitAttributeIfValueIsDefault_
-  commentId: Overload:JsonApiDotNetCore.Query.OmitDefaultService.OmitAttributeIfValueIsDefault
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.OmitDefaultService.OmitAttributeIfValueIsDefault
-  nameWithType: OmitDefaultService.OmitAttributeIfValueIsDefault
-- uid: JsonApiDotNetCore.Query.OmitDefaultService.Parse(System.String,StringValues)
+  fullName: JsonApiDotNetCore.Query.NullsService.IsEnabled
+  nameWithType: NullsService.IsEnabled
+- uid: JsonApiDotNetCore.Query.NullsService.Parse(System.String,StringValues)
   name: Parse(String, StringValues)
-  href: api/JsonApiDotNetCore.Query.OmitDefaultService.html#JsonApiDotNetCore_Query_OmitDefaultService_Parse_System_String_StringValues_
-  commentId: M:JsonApiDotNetCore.Query.OmitDefaultService.Parse(System.String,StringValues)
-  fullName: JsonApiDotNetCore.Query.OmitDefaultService.Parse(System.String, StringValues)
-  nameWithType: OmitDefaultService.Parse(String, StringValues)
-- uid: JsonApiDotNetCore.Query.OmitDefaultService.Parse*
+  href: api/JsonApiDotNetCore.Query.NullsService.html#JsonApiDotNetCore_Query_NullsService_Parse_System_String_StringValues_
+  commentId: M:JsonApiDotNetCore.Query.NullsService.Parse(System.String,StringValues)
+  fullName: JsonApiDotNetCore.Query.NullsService.Parse(System.String, StringValues)
+  nameWithType: NullsService.Parse(String, StringValues)
+- uid: JsonApiDotNetCore.Query.NullsService.Parse*
   name: Parse
-  href: api/JsonApiDotNetCore.Query.OmitDefaultService.html#JsonApiDotNetCore_Query_OmitDefaultService_Parse_
-  commentId: Overload:JsonApiDotNetCore.Query.OmitDefaultService.Parse
+  href: api/JsonApiDotNetCore.Query.NullsService.html#JsonApiDotNetCore_Query_NullsService_Parse_
+  commentId: Overload:JsonApiDotNetCore.Query.NullsService.Parse
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.OmitDefaultService.Parse
-  nameWithType: OmitDefaultService.Parse
-- uid: JsonApiDotNetCore.Query.OmitNullService
-  name: OmitNullService
-  href: api/JsonApiDotNetCore.Query.OmitNullService.html
-  commentId: T:JsonApiDotNetCore.Query.OmitNullService
-  fullName: JsonApiDotNetCore.Query.OmitNullService
-  nameWithType: OmitNullService
-- uid: JsonApiDotNetCore.Query.OmitNullService.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
-  name: OmitNullService(IJsonApiOptions)
-  href: api/JsonApiDotNetCore.Query.OmitNullService.html#JsonApiDotNetCore_Query_OmitNullService__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_
-  commentId: M:JsonApiDotNetCore.Query.OmitNullService.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
-  fullName: JsonApiDotNetCore.Query.OmitNullService.OmitNullService(JsonApiDotNetCore.Configuration.IJsonApiOptions)
-  nameWithType: OmitNullService.OmitNullService(IJsonApiOptions)
-- uid: JsonApiDotNetCore.Query.OmitNullService.#ctor*
-  name: OmitNullService
-  href: api/JsonApiDotNetCore.Query.OmitNullService.html#JsonApiDotNetCore_Query_OmitNullService__ctor_
-  commentId: Overload:JsonApiDotNetCore.Query.OmitNullService.#ctor
+  fullName: JsonApiDotNetCore.Query.NullsService.Parse
+  nameWithType: NullsService.Parse
+- uid: JsonApiDotNetCore.Query.NullsService.SerializerNullValueHandling
+  name: SerializerNullValueHandling
+  href: api/JsonApiDotNetCore.Query.NullsService.html#JsonApiDotNetCore_Query_NullsService_SerializerNullValueHandling
+  commentId: P:JsonApiDotNetCore.Query.NullsService.SerializerNullValueHandling
+  fullName: JsonApiDotNetCore.Query.NullsService.SerializerNullValueHandling
+  nameWithType: NullsService.SerializerNullValueHandling
+- uid: JsonApiDotNetCore.Query.NullsService.SerializerNullValueHandling*
+  name: SerializerNullValueHandling
+  href: api/JsonApiDotNetCore.Query.NullsService.html#JsonApiDotNetCore_Query_NullsService_SerializerNullValueHandling_
+  commentId: Overload:JsonApiDotNetCore.Query.NullsService.SerializerNullValueHandling
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.OmitNullService.OmitNullService
-  nameWithType: OmitNullService.OmitNullService
-- uid: JsonApiDotNetCore.Query.OmitNullService.CanParse(System.String)
-  name: CanParse(String)
-  href: api/JsonApiDotNetCore.Query.OmitNullService.html#JsonApiDotNetCore_Query_OmitNullService_CanParse_System_String_
-  commentId: M:JsonApiDotNetCore.Query.OmitNullService.CanParse(System.String)
-  fullName: JsonApiDotNetCore.Query.OmitNullService.CanParse(System.String)
-  nameWithType: OmitNullService.CanParse(String)
-- uid: JsonApiDotNetCore.Query.OmitNullService.CanParse*
-  name: CanParse
-  href: api/JsonApiDotNetCore.Query.OmitNullService.html#JsonApiDotNetCore_Query_OmitNullService_CanParse_
-  commentId: Overload:JsonApiDotNetCore.Query.OmitNullService.CanParse
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.OmitNullService.CanParse
-  nameWithType: OmitNullService.CanParse
-- uid: JsonApiDotNetCore.Query.OmitNullService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
-  name: IsEnabled(DisableQueryAttribute)
-  href: api/JsonApiDotNetCore.Query.OmitNullService.html#JsonApiDotNetCore_Query_OmitNullService_IsEnabled_JsonApiDotNetCore_Controllers_DisableQueryAttribute_
-  commentId: M:JsonApiDotNetCore.Query.OmitNullService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
-  fullName: JsonApiDotNetCore.Query.OmitNullService.IsEnabled(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
-  nameWithType: OmitNullService.IsEnabled(DisableQueryAttribute)
-- uid: JsonApiDotNetCore.Query.OmitNullService.IsEnabled*
-  name: IsEnabled
-  href: api/JsonApiDotNetCore.Query.OmitNullService.html#JsonApiDotNetCore_Query_OmitNullService_IsEnabled_
-  commentId: Overload:JsonApiDotNetCore.Query.OmitNullService.IsEnabled
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.OmitNullService.IsEnabled
-  nameWithType: OmitNullService.IsEnabled
-- uid: JsonApiDotNetCore.Query.OmitNullService.OmitAttributeIfValueIsNull
-  name: OmitAttributeIfValueIsNull
-  href: api/JsonApiDotNetCore.Query.OmitNullService.html#JsonApiDotNetCore_Query_OmitNullService_OmitAttributeIfValueIsNull
-  commentId: P:JsonApiDotNetCore.Query.OmitNullService.OmitAttributeIfValueIsNull
-  fullName: JsonApiDotNetCore.Query.OmitNullService.OmitAttributeIfValueIsNull
-  nameWithType: OmitNullService.OmitAttributeIfValueIsNull
-- uid: JsonApiDotNetCore.Query.OmitNullService.OmitAttributeIfValueIsNull*
-  name: OmitAttributeIfValueIsNull
-  href: api/JsonApiDotNetCore.Query.OmitNullService.html#JsonApiDotNetCore_Query_OmitNullService_OmitAttributeIfValueIsNull_
-  commentId: Overload:JsonApiDotNetCore.Query.OmitNullService.OmitAttributeIfValueIsNull
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.OmitNullService.OmitAttributeIfValueIsNull
-  nameWithType: OmitNullService.OmitAttributeIfValueIsNull
-- uid: JsonApiDotNetCore.Query.OmitNullService.Parse(System.String,StringValues)
-  name: Parse(String, StringValues)
-  href: api/JsonApiDotNetCore.Query.OmitNullService.html#JsonApiDotNetCore_Query_OmitNullService_Parse_System_String_StringValues_
-  commentId: M:JsonApiDotNetCore.Query.OmitNullService.Parse(System.String,StringValues)
-  fullName: JsonApiDotNetCore.Query.OmitNullService.Parse(System.String, StringValues)
-  nameWithType: OmitNullService.Parse(String, StringValues)
-- uid: JsonApiDotNetCore.Query.OmitNullService.Parse*
-  name: Parse
-  href: api/JsonApiDotNetCore.Query.OmitNullService.html#JsonApiDotNetCore_Query_OmitNullService_Parse_
-  commentId: Overload:JsonApiDotNetCore.Query.OmitNullService.Parse
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.OmitNullService.Parse
-  nameWithType: OmitNullService.Parse
+  fullName: JsonApiDotNetCore.Query.NullsService.SerializerNullValueHandling
+  nameWithType: NullsService.SerializerNullValueHandling
 - uid: JsonApiDotNetCore.Query.PageService
   name: PageService
   href: api/JsonApiDotNetCore.Query.PageService.html
@@ -9748,6 +9542,22 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build
   nameWithType: BaseDocumentBuilder.Build
+- uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.SerializeObject(System.Object,JsonSerializerSettings,Action{JsonSerializer})
+  name: SerializeObject(Object, JsonSerializerSettings, Action<JsonSerializer>)
+  href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_SerializeObject_System_Object_JsonSerializerSettings_Action_JsonSerializer__
+  commentId: M:JsonApiDotNetCore.Serialization.BaseDocumentBuilder.SerializeObject(System.Object,JsonSerializerSettings,Action{JsonSerializer})
+  name.vb: SerializeObject(Object, JsonSerializerSettings, Action(Of JsonSerializer))
+  fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.SerializeObject(System.Object, JsonSerializerSettings, Action<JsonSerializer>)
+  fullName.vb: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.SerializeObject(System.Object, JsonSerializerSettings, Action(Of JsonSerializer))
+  nameWithType: BaseDocumentBuilder.SerializeObject(Object, JsonSerializerSettings, Action<JsonSerializer>)
+  nameWithType.vb: BaseDocumentBuilder.SerializeObject(Object, JsonSerializerSettings, Action(Of JsonSerializer))
+- uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.SerializeObject*
+  name: SerializeObject
+  href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_SerializeObject_
+  commentId: Overload:JsonApiDotNetCore.Serialization.BaseDocumentBuilder.SerializeObject
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.SerializeObject
+  nameWithType: BaseDocumentBuilder.SerializeObject
 - uid: JsonApiDotNetCore.Serialization.BaseDocumentParser
   name: BaseDocumentParser
   href: api/JsonApiDotNetCore.Serialization.BaseDocumentParser.html
@@ -10297,12 +10107,12 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings
   fullName: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings
   nameWithType: ResourceObjectBuilderSettings
-- uid: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.#ctor(System.Boolean,System.Boolean)
-  name: ResourceObjectBuilderSettings(Boolean, Boolean)
-  href: api/JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.html#JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings__ctor_System_Boolean_System_Boolean_
-  commentId: M:JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.#ctor(System.Boolean,System.Boolean)
-  fullName: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.ResourceObjectBuilderSettings(System.Boolean, System.Boolean)
-  nameWithType: ResourceObjectBuilderSettings.ResourceObjectBuilderSettings(Boolean, Boolean)
+- uid: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.#ctor(NullValueHandling,DefaultValueHandling)
+  name: ResourceObjectBuilderSettings(NullValueHandling, DefaultValueHandling)
+  href: api/JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.html#JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings__ctor_NullValueHandling_DefaultValueHandling_
+  commentId: M:JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.#ctor(NullValueHandling,DefaultValueHandling)
+  fullName: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.ResourceObjectBuilderSettings(NullValueHandling, DefaultValueHandling)
+  nameWithType: ResourceObjectBuilderSettings.ResourceObjectBuilderSettings(NullValueHandling, DefaultValueHandling)
 - uid: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.#ctor*
   name: ResourceObjectBuilderSettings
   href: api/JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.html#JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings__ctor_
@@ -10310,32 +10120,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.ResourceObjectBuilderSettings
   nameWithType: ResourceObjectBuilderSettings.ResourceObjectBuilderSettings
-- uid: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsDefault
-  name: OmitAttributeIfValueIsDefault
-  href: api/JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.html#JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitAttributeIfValueIsDefault
-  commentId: P:JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsDefault
-  fullName: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsDefault
-  nameWithType: ResourceObjectBuilderSettings.OmitAttributeIfValueIsDefault
-- uid: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsDefault*
-  name: OmitAttributeIfValueIsDefault
-  href: api/JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.html#JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitAttributeIfValueIsDefault_
-  commentId: Overload:JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsDefault
+- uid: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.SerializerDefaultValueHandling
+  name: SerializerDefaultValueHandling
+  href: api/JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.html#JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_SerializerDefaultValueHandling
+  commentId: P:JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.SerializerDefaultValueHandling
+  fullName: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.SerializerDefaultValueHandling
+  nameWithType: ResourceObjectBuilderSettings.SerializerDefaultValueHandling
+- uid: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.SerializerDefaultValueHandling*
+  name: SerializerDefaultValueHandling
+  href: api/JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.html#JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_SerializerDefaultValueHandling_
+  commentId: Overload:JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.SerializerDefaultValueHandling
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsDefault
-  nameWithType: ResourceObjectBuilderSettings.OmitAttributeIfValueIsDefault
-- uid: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsNull
-  name: OmitAttributeIfValueIsNull
-  href: api/JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.html#JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitAttributeIfValueIsNull
-  commentId: P:JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsNull
-  fullName: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsNull
-  nameWithType: ResourceObjectBuilderSettings.OmitAttributeIfValueIsNull
-- uid: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsNull*
-  name: OmitAttributeIfValueIsNull
-  href: api/JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.html#JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_OmitAttributeIfValueIsNull_
-  commentId: Overload:JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsNull
+  fullName: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.SerializerDefaultValueHandling
+  nameWithType: ResourceObjectBuilderSettings.SerializerDefaultValueHandling
+- uid: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.SerializerNullValueHandling
+  name: SerializerNullValueHandling
+  href: api/JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.html#JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_SerializerNullValueHandling
+  commentId: P:JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.SerializerNullValueHandling
+  fullName: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.SerializerNullValueHandling
+  nameWithType: ResourceObjectBuilderSettings.SerializerNullValueHandling
+- uid: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.SerializerNullValueHandling*
+  name: SerializerNullValueHandling
+  href: api/JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.html#JsonApiDotNetCore_Serialization_ResourceObjectBuilderSettings_SerializerNullValueHandling_
+  commentId: Overload:JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.SerializerNullValueHandling
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.OmitAttributeIfValueIsNull
-  nameWithType: ResourceObjectBuilderSettings.OmitAttributeIfValueIsNull
+  fullName: JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.SerializerNullValueHandling
+  nameWithType: ResourceObjectBuilderSettings.SerializerNullValueHandling
 - uid: JsonApiDotNetCore.Serialization.Server
   name: JsonApiDotNetCore.Serialization.Server
   href: api/JsonApiDotNetCore.Serialization.Server.html
@@ -10886,12 +10696,12 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider
   fullName: JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider
   nameWithType: ResourceObjectBuilderSettingsProvider
-- uid: JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.#ctor(JsonApiDotNetCore.Query.IOmitDefaultService,JsonApiDotNetCore.Query.IOmitNullService)
-  name: ResourceObjectBuilderSettingsProvider(IOmitDefaultService, IOmitNullService)
-  href: api/JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.html#JsonApiDotNetCore_Serialization_Server_ResourceObjectBuilderSettingsProvider__ctor_JsonApiDotNetCore_Query_IOmitDefaultService_JsonApiDotNetCore_Query_IOmitNullService_
-  commentId: M:JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.#ctor(JsonApiDotNetCore.Query.IOmitDefaultService,JsonApiDotNetCore.Query.IOmitNullService)
-  fullName: JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.ResourceObjectBuilderSettingsProvider(JsonApiDotNetCore.Query.IOmitDefaultService, JsonApiDotNetCore.Query.IOmitNullService)
-  nameWithType: ResourceObjectBuilderSettingsProvider.ResourceObjectBuilderSettingsProvider(IOmitDefaultService, IOmitNullService)
+- uid: JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.#ctor(JsonApiDotNetCore.Query.IDefaultsService,JsonApiDotNetCore.Query.INullsService)
+  name: ResourceObjectBuilderSettingsProvider(IDefaultsService, INullsService)
+  href: api/JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.html#JsonApiDotNetCore_Serialization_Server_ResourceObjectBuilderSettingsProvider__ctor_JsonApiDotNetCore_Query_IDefaultsService_JsonApiDotNetCore_Query_INullsService_
+  commentId: M:JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.#ctor(JsonApiDotNetCore.Query.IDefaultsService,JsonApiDotNetCore.Query.INullsService)
+  fullName: JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.ResourceObjectBuilderSettingsProvider(JsonApiDotNetCore.Query.IDefaultsService, JsonApiDotNetCore.Query.INullsService)
+  nameWithType: ResourceObjectBuilderSettingsProvider.ResourceObjectBuilderSettingsProvider(IDefaultsService, INullsService)
 - uid: JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.#ctor*
   name: ResourceObjectBuilderSettingsProvider
   href: api/JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.html#JsonApiDotNetCore_Serialization_Server_ResourceObjectBuilderSettingsProvider__ctor_
@@ -10966,15 +10776,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Serialization.Server.ResponseSerializer(Of TResource)
   nameWithType: ResponseSerializer<TResource>
   nameWithType.vb: ResponseSerializer(Of TResource)
-- uid: JsonApiDotNetCore.Serialization.Server.ResponseSerializer`1.#ctor(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder{`0},JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder,JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder,JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize,JsonApiDotNetCore.Serialization.IResourceObjectBuilder,JsonApiDotNetCore.Graph.IResourceNameFormatter)
-  name: ResponseSerializer(IMetaBuilder<TResource>, ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder, IResourceNameFormatter)
-  href: api/JsonApiDotNetCore.Serialization.Server.ResponseSerializer-1.html#JsonApiDotNetCore_Serialization_Server_ResponseSerializer_1__ctor_JsonApiDotNetCore_Serialization_Server_Builders_IMetaBuilder__0__JsonApiDotNetCore_Serialization_Server_Builders_ILinkBuilder_JsonApiDotNetCore_Serialization_Server_Builders_IIncludedResourceObjectBuilder_JsonApiDotNetCore_Serialization_Server_IFieldsToSerialize_JsonApiDotNetCore_Serialization_IResourceObjectBuilder_JsonApiDotNetCore_Graph_IResourceNameFormatter_
-  commentId: M:JsonApiDotNetCore.Serialization.Server.ResponseSerializer`1.#ctor(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder{`0},JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder,JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder,JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize,JsonApiDotNetCore.Serialization.IResourceObjectBuilder,JsonApiDotNetCore.Graph.IResourceNameFormatter)
-  name.vb: ResponseSerializer(IMetaBuilder(Of TResource), ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder, IResourceNameFormatter)
-  fullName: JsonApiDotNetCore.Serialization.Server.ResponseSerializer<TResource>.ResponseSerializer(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder<TResource>, JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder, JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder, JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize, JsonApiDotNetCore.Serialization.IResourceObjectBuilder, JsonApiDotNetCore.Graph.IResourceNameFormatter)
-  fullName.vb: JsonApiDotNetCore.Serialization.Server.ResponseSerializer(Of TResource).ResponseSerializer(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder(Of TResource), JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder, JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder, JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize, JsonApiDotNetCore.Serialization.IResourceObjectBuilder, JsonApiDotNetCore.Graph.IResourceNameFormatter)
-  nameWithType: ResponseSerializer<TResource>.ResponseSerializer(IMetaBuilder<TResource>, ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder, IResourceNameFormatter)
-  nameWithType.vb: ResponseSerializer(Of TResource).ResponseSerializer(IMetaBuilder(Of TResource), ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder, IResourceNameFormatter)
+- uid: JsonApiDotNetCore.Serialization.Server.ResponseSerializer`1.#ctor(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder{`0},JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder,JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder,JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize,JsonApiDotNetCore.Serialization.IResourceObjectBuilder,JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  name: ResponseSerializer(IMetaBuilder<TResource>, ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder, IJsonApiOptions)
+  href: api/JsonApiDotNetCore.Serialization.Server.ResponseSerializer-1.html#JsonApiDotNetCore_Serialization_Server_ResponseSerializer_1__ctor_JsonApiDotNetCore_Serialization_Server_Builders_IMetaBuilder__0__JsonApiDotNetCore_Serialization_Server_Builders_ILinkBuilder_JsonApiDotNetCore_Serialization_Server_Builders_IIncludedResourceObjectBuilder_JsonApiDotNetCore_Serialization_Server_IFieldsToSerialize_JsonApiDotNetCore_Serialization_IResourceObjectBuilder_JsonApiDotNetCore_Configuration_IJsonApiOptions_
+  commentId: M:JsonApiDotNetCore.Serialization.Server.ResponseSerializer`1.#ctor(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder{`0},JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder,JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder,JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize,JsonApiDotNetCore.Serialization.IResourceObjectBuilder,JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  name.vb: ResponseSerializer(IMetaBuilder(Of TResource), ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder, IJsonApiOptions)
+  fullName: JsonApiDotNetCore.Serialization.Server.ResponseSerializer<TResource>.ResponseSerializer(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder<TResource>, JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder, JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder, JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize, JsonApiDotNetCore.Serialization.IResourceObjectBuilder, JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  fullName.vb: JsonApiDotNetCore.Serialization.Server.ResponseSerializer(Of TResource).ResponseSerializer(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder(Of TResource), JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder, JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder, JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize, JsonApiDotNetCore.Serialization.IResourceObjectBuilder, JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  nameWithType: ResponseSerializer<TResource>.ResponseSerializer(IMetaBuilder<TResource>, ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder, IJsonApiOptions)
+  nameWithType.vb: ResponseSerializer(Of TResource).ResponseSerializer(IMetaBuilder(Of TResource), ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder, IJsonApiOptions)
 - uid: JsonApiDotNetCore.Serialization.Server.ResponseSerializer`1.#ctor*
   name: ResponseSerializer
   href: api/JsonApiDotNetCore.Serialization.Server.ResponseSerializer-1.html#JsonApiDotNetCore_Serialization_Server_ResponseSerializer_1__ctor_

@@ -74,9 +74,9 @@
   <h1 id="JsonApiDotNetCore_Internal_DefaultRoutingConvention" data-uid="JsonApiDotNetCore.Internal.DefaultRoutingConvention" class="text-break">Class DefaultRoutingConvention
   </h1>
   <div class="markdown level0 summary"><p>The default routing convention registers the name of the resource as the route
-using the <a class="xref" href="JsonApiDotNetCore.Graph.IResourceNameFormatter.html">IResourceNameFormatter</a> that is registered. The default for this is
-a camelCase formatter. If the controller directly inherits from JsonApiMixin and there is no
-resource directly associated, it used the name of the controller instead of the name of the type.</p>
+using the serializer casing convention. The default for this is
+a camel case formatter. If the controller directly inherits from JsonApiMixin and there is no
+resource directly associated, it uses the name of the controller instead of the name of the type.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -112,18 +112,18 @@ public class SomeVeryCustomController{SomeResource} : JsonApiMixin { }
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_DefaultRoutingConvention__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Graph_IResourceNameFormatter_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.DefaultRoutingConvention.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CJsonApiDotNetCore.Graph.IResourceNameFormatter)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_DefaultRoutingConvention__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.DefaultRoutingConvention.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/DefaultRoutingConvention.cs/#L42">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/DefaultRoutingConvention.cs/#L45">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_DefaultRoutingConvention__ctor_" data-uid="JsonApiDotNetCore.Internal.DefaultRoutingConvention.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Internal_DefaultRoutingConvention__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Graph_IResourceNameFormatter_" data-uid="JsonApiDotNetCore.Internal.DefaultRoutingConvention.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Graph.IResourceNameFormatter)">DefaultRoutingConvention(IJsonApiOptions, IResourceNameFormatter)</h4>
+  <h4 id="JsonApiDotNetCore_Internal_DefaultRoutingConvention__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_" data-uid="JsonApiDotNetCore.Internal.DefaultRoutingConvention.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)">DefaultRoutingConvention(IJsonApiOptions)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DefaultRoutingConvention(IJsonApiOptions options, IResourceNameFormatter formatter)</code></pre>
+    <pre><code class="lang-csharp hljs">public DefaultRoutingConvention(IJsonApiOptions options)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -140,11 +140,6 @@ public class SomeVeryCustomController{SomeResource} : JsonApiMixin { }
         <td><span class="parametername">options</span></td>
         <td></td>
       </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Graph.IResourceNameFormatter.html">IResourceNameFormatter</a></td>
-        <td><span class="parametername">formatter</span></td>
-        <td></td>
-      </tr>
     </tbody>
   </table>
   <h3 id="methods">Methods
@@ -154,7 +149,7 @@ public class SomeVeryCustomController{SomeResource} : JsonApiMixin { }
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_DefaultRoutingConvention_Apply_ApplicationModel_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.DefaultRoutingConvention.Apply(ApplicationModel)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/DefaultRoutingConvention.cs/#L56">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/DefaultRoutingConvention.cs/#L59">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_DefaultRoutingConvention_Apply_" data-uid="JsonApiDotNetCore.Internal.DefaultRoutingConvention.Apply*"></a>
   <h4 id="JsonApiDotNetCore_Internal_DefaultRoutingConvention_Apply_ApplicationModel_" data-uid="JsonApiDotNetCore.Internal.DefaultRoutingConvention.Apply(ApplicationModel)">Apply(ApplicationModel)</h4>
@@ -186,7 +181,7 @@ public class SomeVeryCustomController{SomeResource} : JsonApiMixin { }
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_DefaultRoutingConvention_GetAssociatedResource_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.DefaultRoutingConvention.GetAssociatedResource(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/DefaultRoutingConvention.cs/#L49">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/DefaultRoutingConvention.cs/#L52">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_DefaultRoutingConvention_GetAssociatedResource_" data-uid="JsonApiDotNetCore.Internal.DefaultRoutingConvention.GetAssociatedResource*"></a>
   <h4 id="JsonApiDotNetCore_Internal_DefaultRoutingConvention_GetAssociatedResource_System_String_" data-uid="JsonApiDotNetCore.Internal.DefaultRoutingConvention.GetAssociatedResource(System.String)">GetAssociatedResource(String)</h4>
@@ -250,7 +245,7 @@ public class SomeVeryCustomController{SomeResource} : JsonApiMixin { }
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_DefaultRoutingConvention.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.DefaultRoutingConvention%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/DefaultRoutingConvention.cs/#L36" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/DefaultRoutingConvention.cs/#L38" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

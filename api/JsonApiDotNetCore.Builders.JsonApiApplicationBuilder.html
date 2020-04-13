@@ -127,37 +127,6 @@ and allows the user to override parts of the startup configuration.</p>
       </tr>
     </tbody>
   </table>
-  <h3 id="fields">Fields
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Builders_JsonApiApplicationBuilder_JsonApiOptions.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.JsonApiOptions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/JsonApiApplicationBuilder.cs/#L33">View Source</a>
-  </span>
-  <h4 id="JsonApiDotNetCore_Builders_JsonApiApplicationBuilder_JsonApiOptions" data-uid="JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.JsonApiOptions">JsonApiOptions</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly JsonApiOptions JsonApiOptions</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.JsonApiOptions.html">JsonApiOptions</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
@@ -202,7 +171,7 @@ and allows the user to override parts of the startup configuration.</p>
   </span>
   <a id="JsonApiDotNetCore_Builders_JsonApiApplicationBuilder_ConfigureJsonApiOptions_" data-uid="JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.ConfigureJsonApiOptions*"></a>
   <h4 id="JsonApiDotNetCore_Builders_JsonApiApplicationBuilder_ConfigureJsonApiOptions_Action_JsonApiDotNetCore_Configuration_JsonApiOptions__" data-uid="JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.ConfigureJsonApiOptions(Action{JsonApiDotNetCore.Configuration.JsonApiOptions})">ConfigureJsonApiOptions(Action&lt;JsonApiOptions&gt;)</h4>
-  <div class="markdown level1 summary"><p>Executes the action provided by the user to configure <a class="xref" href="JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.html#JsonApiDotNetCore_Builders_JsonApiApplicationBuilder_JsonApiOptions">JsonApiOptions</a></p>
+  <div class="markdown level1 summary"><p>Executes the action provided by the user to configure <a class="xref" href="JsonApiDotNetCore.Configuration.JsonApiOptions.html">JsonApiOptions</a></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -235,10 +204,10 @@ and allows the user to override parts of the startup configuration.</p>
   </span>
   <a id="JsonApiDotNetCore_Builders_JsonApiApplicationBuilder_ConfigureMvc_" data-uid="JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.ConfigureMvc*"></a>
   <h4 id="JsonApiDotNetCore_Builders_JsonApiApplicationBuilder_ConfigureMvc" data-uid="JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.ConfigureMvc">ConfigureMvc()</h4>
-  <div class="markdown level1 summary"><p>Configures built-in .net core MVC (things like middleware, routing). Most of this configuration can be adjusted for the developers need.
+  <div class="markdown level1 summary"><p>Configures built-in .NET Core MVC (things like middleware, routing). Most of this configuration can be adjusted for the developers&apos; need.
 Before calling .AddJsonApi(), a developer can register their own implementation of the following services to customize startup:
 <a class="xref" href="JsonApiDotNetCore.Builders.IResourceGraphBuilder.html">IResourceGraphBuilder</a>, <a class="xref" href="JsonApiDotNetCore.Graph.IServiceDiscoveryFacade.html">IServiceDiscoveryFacade</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiExceptionFilterProvider.html">IJsonApiExceptionFilterProvider</a>,
-<a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiTypeMatchFilterProvider.html">IJsonApiTypeMatchFilterProvider</a>, <a class="xref" href="JsonApiDotNetCore.Internal.IJsonApiRoutingConvention.html">IJsonApiRoutingConvention</a> and <a class="xref" href="JsonApiDotNetCore.Graph.IResourceNameFormatter.html">IResourceNameFormatter</a>.</p>
+<a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiTypeMatchFilterProvider.html">IJsonApiTypeMatchFilterProvider</a> and <a class="xref" href="JsonApiDotNetCore.Internal.IJsonApiRoutingConvention.html">IJsonApiRoutingConvention</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

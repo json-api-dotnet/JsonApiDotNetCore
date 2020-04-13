@@ -96,18 +96,18 @@ can, if provided, override the settings in <a class="xref" href="JsonApiDotNetCo
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Server_ResourceObjectBuilderSettingsProvider__ctor_JsonApiDotNetCore_Query_IOmitDefaultService_JsonApiDotNetCore_Query_IOmitNullService_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.%23ctor(JsonApiDotNetCore.Query.IOmitDefaultService%2CJsonApiDotNetCore.Query.IOmitNullService)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Server_ResourceObjectBuilderSettingsProvider__ctor_JsonApiDotNetCore_Query_IDefaultsService_JsonApiDotNetCore_Query_INullsService_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.%23ctor(JsonApiDotNetCore.Query.IDefaultsService%2CJsonApiDotNetCore.Query.INullsService)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/ResourceObjectBuilderSettingsProvider.cs/#L15">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Server_ResourceObjectBuilderSettingsProvider__ctor_" data-uid="JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_Server_ResourceObjectBuilderSettingsProvider__ctor_JsonApiDotNetCore_Query_IOmitDefaultService_JsonApiDotNetCore_Query_IOmitNullService_" data-uid="JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.#ctor(JsonApiDotNetCore.Query.IOmitDefaultService,JsonApiDotNetCore.Query.IOmitNullService)">ResourceObjectBuilderSettingsProvider(IOmitDefaultService, IOmitNullService)</h4>
+  <h4 id="JsonApiDotNetCore_Serialization_Server_ResourceObjectBuilderSettingsProvider__ctor_JsonApiDotNetCore_Query_IDefaultsService_JsonApiDotNetCore_Query_INullsService_" data-uid="JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.#ctor(JsonApiDotNetCore.Query.IDefaultsService,JsonApiDotNetCore.Query.INullsService)">ResourceObjectBuilderSettingsProvider(IDefaultsService, INullsService)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceObjectBuilderSettingsProvider(IOmitDefaultService defaultAttributeValues, IOmitNullService nullAttributeValues)</code></pre>
+    <pre><code class="lang-csharp hljs">public ResourceObjectBuilderSettingsProvider(IDefaultsService defaultsService, INullsService nullsService)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -120,13 +120,13 @@ can, if provided, override the settings in <a class="xref" href="JsonApiDotNetCo
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Query.IOmitDefaultService.html">IOmitDefaultService</a></td>
-        <td><span class="parametername">defaultAttributeValues</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Query.IDefaultsService.html">IDefaultsService</a></td>
+        <td><span class="parametername">defaultsService</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Query.IOmitNullService.html">IOmitNullService</a></td>
-        <td><span class="parametername">nullAttributeValues</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Query.INullsService.html">INullsService</a></td>
+        <td><span class="parametername">nullsService</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -138,7 +138,7 @@ can, if provided, override the settings in <a class="xref" href="JsonApiDotNetCo
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Server_ResourceObjectBuilderSettingsProvider_Get.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.Get%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/ResourceObjectBuilderSettingsProvider.cs/#L23">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/ResourceObjectBuilderSettingsProvider.cs/#L22">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Server_ResourceObjectBuilderSettingsProvider_Get_" data-uid="JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.Get*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Server_ResourceObjectBuilderSettingsProvider_Get" data-uid="JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.Get">Get()</h4>
