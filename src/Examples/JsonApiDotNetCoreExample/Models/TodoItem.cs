@@ -32,13 +32,13 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public DateTime CreatedDate { get; set; }
 
-        [Attr(isFilterable: false, isSortable: false)]
+        [Attr(AttrCapabilities.All & ~(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort))]
         public DateTime? AchievedDate { get; set; }
 
         [Attr]
         public DateTime? UpdatedDate { get; set; }
 
-        [Attr(isImmutable: true)]
+        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowMutate)]
         public string CalculatedValue => "calculated";
 
         [Attr]
