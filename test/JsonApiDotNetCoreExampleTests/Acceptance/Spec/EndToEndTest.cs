@@ -80,7 +80,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new ResourceGraphBuilder(options);
             foreach (var rc in resourcesContexts)
             {
-                if (rc.ResourceType == typeof(TodoItem) || rc.ResourceType == typeof(TodoItemCollection) || rc.ResourceType == typeof(Passport))
+                if (rc.ResourceType == typeof(TodoItem) || rc.ResourceType == typeof(TodoItemCollection))
                 {
                     continue;
                 }
@@ -88,7 +88,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             }
             builder.AddResource<TodoItemClient>(formatter.FormatResourceName(typeof(TodoItem)));
             builder.AddResource<TodoItemCollectionClient, Guid>(formatter.FormatResourceName(typeof(TodoItemCollection)));
-            builder.AddResource<PassportClient>(formatter.FormatResourceName(typeof(Passport)));
             return new ResponseDeserializer(builder.Build());
         }
 

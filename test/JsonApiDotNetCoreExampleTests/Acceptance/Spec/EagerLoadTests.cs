@@ -3,8 +3,9 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExampleTests.Helpers.Models;
+using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
@@ -58,11 +59,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
-            
-            var resultPassport = _deserializer.DeserializeSingle<PassportClient>(body).Data;
-            Assert.Equal(passport.Id, resultPassport.Id);
-            Assert.Equal(passport.BirthCountry.Name, resultPassport.BirthCountryName);
-            Assert.Equal(visa1.TargetCountry.Name + ", " + visa2.TargetCountry.Name, resultPassport.GrantedVisaCountries);
+
+            var document = JsonConvert.DeserializeObject<Document>(body);
+            Assert.NotNull(document.SingleData);
+            Assert.Equal(passport.StringId, document.SingleData.Id);
+            Assert.Equal(passport.BirthCountry.Name, document.SingleData.Attributes["birthCountryName"]);
+            Assert.Equal(visa1.TargetCountry.Name + ", " + visa2.TargetCountry.Name, document.SingleData.Attributes["grantedVisaCountries"]);
         }
 
         [Fact]
@@ -72,6 +74,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var person = _personFaker.Generate();
             person.Passport = _passportFaker.Generate();
             person.Passport.BirthCountry = _countryFaker.Generate();
+
+            var visa = _visaFaker.Generate();
+            visa.TargetCountry = _countryFaker.Generate();
+            person.Passport.GrantedVisas = new List<Visa> {visa};
 
             _dbContext.People.RemoveRange(_dbContext.People);
             _dbContext.Add(person);
@@ -83,12 +89,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
 
-            var resultPerson = _deserializer.DeserializeList<Person>(body).Data.Single();
-            Assert.Equal(person.Id, resultPerson.Id);
-            Assert.Equal(person.Passport.Id, resultPerson.Passport.Id);
-            Assert.Equal(person.Passport.BirthCountryName, resultPerson.Passport.BirthCountry.Name);
-        } 
-        
+            var document = JsonConvert.DeserializeObject<Document>(body);
+            Assert.NotEmpty(document.ManyData);
+            Assert.Equal(person.StringId, document.ManyData[0].Id);
+
+            Assert.NotEmpty(document.Included);
+            Assert.Equal(person.Passport.StringId, document.Included[0].Id);
+            Assert.Equal(person.Passport.BirthCountry.Name, document.Included[0].Attributes["birthCountryName"]);
+            Assert.Equal(person.Passport.GrantedVisaCountries, document.Included[0].Attributes["grantedVisaCountries"]);
+        }
+
         [Fact]
         public async Task GetMultiResource_DeeplyNested_AppliesEagerLoad()
         {
@@ -99,6 +109,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todo.Owner.Passport = _passportFaker.Generate();
             todo.Owner.Passport.BirthCountry = _countryFaker.Generate();
 
+            var visa = _visaFaker.Generate();
+            visa.TargetCountry = _countryFaker.Generate();
+            todo.Owner.Passport.GrantedVisas = new List<Visa> {visa};
+
             _dbContext.Add(todo);
             _dbContext.SaveChanges();
 
@@ -108,8 +122,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
 
-            var resultTodoItem = _deserializer.DeserializeList<TodoItemClient>(body).Data.Single();
-            Assert.Equal(todo.Owner.Passport.BirthCountryName, resultTodoItem.Owner.Passport.BirthCountry.Name);
+            var document = JsonConvert.DeserializeObject<Document>(body);
+            Assert.NotEmpty(document.ManyData);
+            Assert.Equal(todo.StringId, document.ManyData[0].Id);
+
+            Assert.Equal(2, document.Included.Count);
+            Assert.Equal(todo.Owner.StringId, document.Included[0].Id);
+            Assert.Equal(todo.Owner.Passport.StringId, document.Included[1].Id);
+            Assert.Equal(todo.Owner.Passport.BirthCountry.Name, document.Included[1].Attributes["birthCountryName"]);
+            Assert.Equal(todo.Owner.Passport.GrantedVisaCountries, document.Included[1].Attributes["grantedVisaCountries"]);
         }
 
         [Fact]
@@ -127,11 +148,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
-            
-            var resultPassport = _deserializer.DeserializeSingle<PassportClient>(body).Data;
-            Assert.Equal(passport.SocialSecurityNumber, resultPassport.SocialSecurityNumber);
-            Assert.Equal(passport.BirthCountry.Name, resultPassport.BirthCountryName);
-            Assert.Null(resultPassport.GrantedVisaCountries);
+
+            var document = JsonConvert.DeserializeObject<Document>(body);
+            Assert.NotNull(document.SingleData);
+            Assert.Equal((long?)passport.SocialSecurityNumber, document.SingleData.Attributes["socialSecurityNumber"]);
+            Assert.Equal(passport.BirthCountry.Name, document.SingleData.Attributes["birthCountryName"]);
+            Assert.Null(document.SingleData.Attributes["grantedVisaCountries"]);
         }
 
         [Fact]
@@ -140,6 +162,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var passport = _passportFaker.Generate();
             passport.BirthCountry = _countryFaker.Generate();
+
             var visa = _visaFaker.Generate();
             visa.TargetCountry = _countryFaker.Generate();
             passport.GrantedVisas = new List<Visa> { visa };
@@ -158,12 +181,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
-            
-            var resultPassport = _deserializer.DeserializeSingle<PassportClient>(body).Data;
-            Assert.Equal(passport.Id, resultPassport.Id);
-            Assert.Equal(passport.SocialSecurityNumber, resultPassport.SocialSecurityNumber);
-            Assert.Equal(passport.BirthCountry.Name, resultPassport.BirthCountryName);
-            Assert.Equal(passport.GrantedVisas.First().TargetCountry.Name, resultPassport.GrantedVisaCountries);
+
+            var document = JsonConvert.DeserializeObject<Document>(body);
+            Assert.NotNull(document.SingleData);
+            Assert.Equal(passport.StringId, document.SingleData.Id);
+            Assert.Equal((long?)passport.SocialSecurityNumber, document.SingleData.Attributes["socialSecurityNumber"]);
+            Assert.Equal(passport.BirthCountry.Name, document.SingleData.Attributes["birthCountryName"]);
+            Assert.Equal(passport.GrantedVisas.First().TargetCountry.Name, document.SingleData.Attributes["grantedVisaCountries"]);
         }
     }
 }
