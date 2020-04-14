@@ -1,6 +1,7 @@
 using System;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -59,5 +60,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         /// </summary>
         JsonSerializerSettings SerializerSettings { get; }
+
+        internal DefaultContractResolver SerializerContractResolver => (DefaultContractResolver)SerializerSettings.ContractResolver;
     }
 }

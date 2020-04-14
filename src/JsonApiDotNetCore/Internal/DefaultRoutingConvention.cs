@@ -107,8 +107,7 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         private string TemplateFromController(ControllerModel model)
         {
-            var contractResolver = (DefaultContractResolver) _options.SerializerSettings.ContractResolver;
-            string controllerName = contractResolver.NamingStrategy.GetPropertyName(model.ControllerName, false);
+            string controllerName = _options.SerializerContractResolver.NamingStrategy.GetPropertyName(model.ControllerName, false);
 
             var template = $"{_options.Namespace}/{controllerName}";
             if (_registeredTemplates.Add(template))
