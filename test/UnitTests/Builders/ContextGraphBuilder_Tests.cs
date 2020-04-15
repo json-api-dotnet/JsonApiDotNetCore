@@ -3,7 +3,6 @@ using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
-using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;

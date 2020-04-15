@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
@@ -160,7 +160,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Patch, route) {Content = new StringContent(content)};
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.ContentType);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await client.SendAsync(request);

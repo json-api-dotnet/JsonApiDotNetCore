@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
@@ -326,7 +327,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var httpMethod = new HttpMethod(method);
             var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(content)};
 
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
             return request;
         }
     }

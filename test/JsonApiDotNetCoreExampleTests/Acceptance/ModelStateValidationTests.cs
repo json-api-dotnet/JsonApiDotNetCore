@@ -2,8 +2,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -36,7 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(content)
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.ContentType);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             var options = (JsonApiOptions)_factory.GetService<IJsonApiOptions>();
             options.ValidateModelState = true;
@@ -72,7 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(content)
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.ContentType);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             var options = (JsonApiOptions)_factory.GetService<IJsonApiOptions>();
             options.ValidateModelState = false;
@@ -110,7 +110,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(content)
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.ContentType);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             var options = (JsonApiOptions)_factory.GetService<IJsonApiOptions>();
             options.ValidateModelState = true;
@@ -156,7 +156,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(content)
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.ContentType);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             var options = (JsonApiOptions)_factory.GetService<IJsonApiOptions>();
             options.ValidateModelState = false;

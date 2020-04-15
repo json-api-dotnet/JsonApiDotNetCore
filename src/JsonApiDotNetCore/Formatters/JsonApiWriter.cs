@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCore.Serialization.Server;
@@ -50,7 +49,7 @@ namespace JsonApiDotNetCore.Formatters
             }
             else
             {
-                response.ContentType = HeaderConstants.ContentType;
+                response.ContentType = HeaderConstants.MediaType;
                 try
                 {
                     responseContent = SerializeResponse(context.Object, (HttpStatusCode)response.StatusCode);

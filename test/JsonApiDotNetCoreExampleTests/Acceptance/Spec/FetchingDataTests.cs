@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
@@ -60,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("application/vnd.api+json", response.Content.Headers.ContentType.ToString());
+            Assert.Equal(HeaderConstants.MediaType, response.Content.Headers.ContentType.ToString());
             Assert.Empty(items);
             Assert.Equal(0, int.Parse(meta["total-records"].ToString()));
             context.Dispose();

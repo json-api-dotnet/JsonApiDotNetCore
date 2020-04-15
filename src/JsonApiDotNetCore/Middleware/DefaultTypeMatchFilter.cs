@@ -1,9 +1,9 @@
 using System.Linq;
 using System.Net.Http;
 using JsonApiDotNetCore.Exceptions;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Middleware
@@ -22,8 +22,13 @@ namespace JsonApiDotNetCore.Middleware
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
+            if (!context.HttpContext.IsJsonApiRequest())
+            {
+                return;
+            }
+
             var request = context.HttpContext.Request;
-            if (IsJsonApiRequest(request) && (request.Method == "PATCH" || request.Method == "POST"))
+            if (request.Method == "PATCH" || request.Method == "POST")
             {
                 var deserializedType = context.ActionArguments.FirstOrDefault().Value?.GetType();
                 var targetType = context.ActionDescriptor.Parameters.FirstOrDefault()?.ParameterType;
@@ -36,11 +41,6 @@ namespace JsonApiDotNetCore.Middleware
                     throw new ResourceTypeMismatchException(new HttpMethod(request.Method), request.Path, resourceFromEndpoint, resourceFromBody);
                 }
             }
-        }
-
-        private bool IsJsonApiRequest(HttpRequest request)
-        {
-            return request.ContentType == HeaderConstants.ContentType;
         }
 
         public void OnActionExecuted(ActionExecutedContext context) { /* noop */ }

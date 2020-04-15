@@ -1,7 +1,7 @@
-using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
@@ -54,12 +54,17 @@ namespace JsonApiDotNetCore.Middleware
                 _currentRequest.BasePath = GetBasePath(requestResource.ResourceName);
                 _currentRequest.BaseId = GetBaseId();
                 _currentRequest.RelationshipId = GetRelationshipId();
+
+                if (await IsValidAsync())
+                {
+                    _httpContext.SetJsonApiRequest();
+                    await _next(httpContext);
+                }
+
+                return;
             }
 
-            if (await IsValidAsync())
-            {
-                await _next(httpContext);
-            }
+            await _next(httpContext);
         }
 
         private string GetBaseId()
@@ -139,60 +144,50 @@ namespace JsonApiDotNetCore.Middleware
         private async Task<bool> IsValidContentTypeHeaderAsync(HttpContext context)
         {
             var contentType = context.Request.ContentType;
-            if (contentType != null && ContainsMediaTypeParameters(contentType))
+            if (contentType != null)
             {
-                await FlushResponseAsync(context, new Error(HttpStatusCode.UnsupportedMediaType)
+                if (!MediaTypeHeaderValue.TryParse(contentType, out var headerValue) ||
+                    headerValue.MediaType != HeaderConstants.MediaType || headerValue.CharSet != null ||
+                    headerValue.Parameters.Any(p => p.Name != "ext"))
                 {
-                    Title = "The specified Content-Type header value is not supported.",
-                    Detail = $"Please specify '{HeaderConstants.ContentType}' for the Content-Type header value."
-                });
+                    await FlushResponseAsync(context, new Error(HttpStatusCode.UnsupportedMediaType)
+                    {
+                        Title = "The specified Content-Type header value is not supported.",
+                        Detail = $"Please specify '{HeaderConstants.MediaType}' instead of '{contentType}' for the Content-Type header value."
+                    });
 
-                return false;
+                    return false;
+                }
             }
+
             return true;
         }
 
         private async Task<bool> IsValidAcceptHeaderAsync(HttpContext context)
         {
-            if (context.Request.Headers.TryGetValue(HeaderConstants.AcceptHeader, out StringValues acceptHeaders) == false)
-                return true;
-
-            foreach (var acceptHeader in acceptHeaders)
+            if (context.Request.Headers.TryGetValue("Accept", out StringValues acceptHeaders))
             {
-                if (ContainsMediaTypeParameters(acceptHeader) == false)
+                foreach (var acceptHeader in acceptHeaders)
                 {
-                    continue;
+                    if (MediaTypeHeaderValue.TryParse(acceptHeader, out var headerValue))
+                    {
+                        if (headerValue.MediaType == HeaderConstants.MediaType &&
+                            headerValue.Parameters.All(p => p.Name == "ext"))
+                        {
+                            return true;
+                        }
+                    }
                 }
 
                 await FlushResponseAsync(context, new Error(HttpStatusCode.NotAcceptable)
                 {
                     Title = "The specified Accept header value is not supported.",
-                    Detail = $"Please specify '{HeaderConstants.ContentType}' for the Accept header value."
+                    Detail = $"Please include '{HeaderConstants.MediaType}' in the Accept header values."
                 });
                 return false;
             }
+
             return true;
-        }
-
-        private static bool ContainsMediaTypeParameters(string mediaType)
-        {
-            var incomingMediaTypeSpan = mediaType.AsSpan();
-
-            // if the content type is not application/vnd.api+json then continue on
-            if (incomingMediaTypeSpan.Length < HeaderConstants.ContentType.Length)
-            {
-                return false;
-            }
-
-            var incomingContentType = incomingMediaTypeSpan.Slice(0, HeaderConstants.ContentType.Length);
-            if (incomingContentType.SequenceEqual(HeaderConstants.ContentType.AsSpan()) == false)
-                return false;
-
-            // anything appended to "application/vnd.api+json;" will be considered a media type param
-            return (
-                incomingMediaTypeSpan.Length >= HeaderConstants.ContentType.Length + 2
-                && incomingMediaTypeSpan[HeaderConstants.ContentType.Length] == ';'
-            );
         }
 
         private async Task FlushResponseAsync(HttpContext context, Error error)

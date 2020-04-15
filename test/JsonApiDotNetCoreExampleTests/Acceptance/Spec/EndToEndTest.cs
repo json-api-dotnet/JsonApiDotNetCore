@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Graph;
@@ -22,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     public class FunctionalTestCollection<TFactory> : IClassFixture<TFactory> where TFactory : class, IApplicationFactory
     {
-        public static MediaTypeHeaderValue JsonApiContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+        public static MediaTypeHeaderValue JsonApiContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
         protected readonly TFactory _factory;
         protected readonly HttpClient _client;
         protected readonly AppDbContext _dbContext;
@@ -131,7 +132,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     public class EndToEndTest
     {
-        public static MediaTypeHeaderValue JsonApiContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+        public static MediaTypeHeaderValue JsonApiContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
         private HttpClient _client;
         protected TestFixture<Startup> _fixture;
         protected readonly IResponseDeserializer _deserializer;

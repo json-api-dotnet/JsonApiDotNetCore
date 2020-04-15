@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
@@ -84,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(serializer.Serialize(user))
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -120,7 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(serializer.Serialize(user))
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -311,7 +312,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             string serializedContent = JsonConvert.SerializeObject(content);
             request.Content = new StringContent(serializedContent);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -363,7 +364,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             string serializedContent = JsonConvert.SerializeObject(content);
             request.Content = new StringContent(serializedContent);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -415,7 +416,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             string serializedContent = JsonConvert.SerializeObject(content);
             request.Content = new StringContent(serializedContent);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -500,7 +501,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             string serializedContent = JsonConvert.SerializeObject(content);
             request.Content = new StringContent(serializedContent);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -558,7 +559,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             string serializedContent = JsonConvert.SerializeObject(content);
             request.Content = new StringContent(serializedContent);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);

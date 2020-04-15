@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using Newtonsoft.Json;
@@ -40,7 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
