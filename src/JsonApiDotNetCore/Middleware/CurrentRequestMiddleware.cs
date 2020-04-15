@@ -17,17 +17,16 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
-    /// This sets all necessary parameters relating to the HttpContext for JADNC
+    /// Intercepts HTTP requests to populate injected <see cref="ICurrentRequest"/> instance for json:api requests.
     /// </summary>
     public sealed class CurrentRequestMiddleware
     {
         private readonly RequestDelegate _next;
         private HttpContext _httpContext;
+        private IJsonApiOptions _options;
         private ICurrentRequest _currentRequest;
         private IResourceGraph _resourceGraph;
-        private IJsonApiOptions _options;
         private RouteValueDictionary _routeValues;
-        private IControllerResourceMapping _controllerResourceMapping;
 
         public CurrentRequestMiddleware(RequestDelegate next)
         {
@@ -41,116 +40,50 @@ namespace JsonApiDotNetCore.Middleware
                                  IResourceGraph resourceGraph)
         {
             _httpContext = httpContext;
-            _currentRequest = currentRequest;
-            _controllerResourceMapping = controllerResourceMapping;
-            _resourceGraph = resourceGraph;
             _options = options;
+            _currentRequest = currentRequest;
+            _resourceGraph = resourceGraph;
             _routeValues = httpContext.GetRouteData().Values;
-            var requestResource = GetCurrentEntity();
-            if (requestResource != null)
-            {
-                _currentRequest.SetRequestResource(requestResource);
-                _currentRequest.IsRelationshipPath = PathIsRelationship();
-                _currentRequest.BasePath = GetBasePath(requestResource.ResourceName);
-                _currentRequest.BaseId = GetBaseId();
-                _currentRequest.RelationshipId = GetRelationshipId();
 
-                if (await IsValidAsync())
+            var resourceContext = CreateResourceContext(controllerResourceMapping);
+            if (resourceContext != null)
+            {
+                if (!await ValidateContentTypeHeaderAsync() || !await ValidateAcceptHeaderAsync())
                 {
-                    _httpContext.SetJsonApiRequest();
-                    await _next(httpContext);
+                    return;
                 }
 
-                return;
+                SetupCurrentRequest(resourceContext);
+
+                _httpContext.SetJsonApiRequest();
             }
 
             await _next(httpContext);
         }
 
-        private string GetBaseId()
+        private ResourceContext CreateResourceContext(IControllerResourceMapping controllerResourceMapping)
         {
-            if (_routeValues.TryGetValue("id", out object stringId))
-            {
-                return (string)stringId;
-            }
-
-            return null;
-        }
-        private string GetRelationshipId()
-        {
-            if (!_currentRequest.IsRelationshipPath)
+            var controllerName = (string)_routeValues["controller"];
+            if (controllerName == null)
             {
                 return null;
             }
-            var components = SplitCurrentPath();
-            var toReturn = components.ElementAtOrDefault(4);
 
-            return toReturn;
-        }
-        private string[] SplitCurrentPath()
-        {
-            var path = _httpContext.Request.Path.Value;
-            var ns = $"/{_options.Namespace}";
-            var nonNameSpaced = path.Replace(ns, "");
-            nonNameSpaced = nonNameSpaced.Trim('/');
-            var individualComponents = nonNameSpaced.Split('/');
-            return individualComponents;
+            var resourceType = controllerResourceMapping.GetAssociatedResource(controllerName);
+            var resourceContext = _resourceGraph.GetResourceContext(resourceType);
+            return resourceContext;
         }
 
-        private string GetBasePath(string resourceName = null)
+        private async Task<bool> ValidateContentTypeHeaderAsync()
         {
-            var r = _httpContext.Request;
-            if (_options.RelativeLinks)
-            {
-                return _options.Namespace;
-            }
-
-            var customRoute = GetCustomRoute(r.Path.Value, resourceName);
-            var toReturn = $"{r.Scheme}://{r.Host}/{_options.Namespace}";
-            if (customRoute != null)
-            {
-                toReturn += $"/{customRoute}";
-            }
-            return toReturn;
-        }
-
-        private object GetCustomRoute(string path, string resourceName)
-        {
-            var trimmedComponents = path.Trim('/').Split('/').ToList();
-            var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
-            var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
-            var customRoute = string.Join('/', newComponents);
-            if (customRoute == _options.Namespace)
-            {
-                return null;
-            }
-            else
-            {
-                return customRoute;
-            }
-        }
-
-        private bool PathIsRelationship()
-        {
-            var actionName = (string)_routeValues["action"];
-            return actionName.ToLowerInvariant().Contains("relationships");
-        }
-
-        private async Task<bool> IsValidAsync()
-        {
-            return await IsValidContentTypeHeaderAsync(_httpContext) && await IsValidAcceptHeaderAsync(_httpContext);
-        }
-
-        private async Task<bool> IsValidContentTypeHeaderAsync(HttpContext context)
-        {
-            var contentType = context.Request.ContentType;
+            var contentType = _httpContext.Request.ContentType;
             if (contentType != null)
             {
                 if (!MediaTypeHeaderValue.TryParse(contentType, out var headerValue) ||
                     headerValue.MediaType != HeaderConstants.MediaType || headerValue.CharSet != null ||
                     headerValue.Parameters.Any(p => p.Name != "ext"))
                 {
-                    await FlushResponseAsync(context, new Error(HttpStatusCode.UnsupportedMediaType)
+                    await FlushResponseAsync(_httpContext, new Error(HttpStatusCode.UnsupportedMediaType)
                     {
                         Title = "The specified Content-Type header value is not supported.",
                         Detail = $"Please specify '{HeaderConstants.MediaType}' instead of '{contentType}' for the Content-Type header value."
@@ -163,9 +96,9 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private async Task<bool> IsValidAcceptHeaderAsync(HttpContext context)
+        private async Task<bool> ValidateAcceptHeaderAsync()
         {
-            if (context.Request.Headers.TryGetValue("Accept", out StringValues acceptHeaders))
+            if (_httpContext.Request.Headers.TryGetValue("Accept", out StringValues acceptHeaders))
             {
                 foreach (var acceptHeader in acceptHeaders)
                 {
@@ -179,7 +112,7 @@ namespace JsonApiDotNetCore.Middleware
                     }
                 }
 
-                await FlushResponseAsync(context, new Error(HttpStatusCode.NotAcceptable)
+                await FlushResponseAsync(_httpContext, new Error(HttpStatusCode.NotAcceptable)
                 {
                     Title = "The specified Accept header value is not supported.",
                     Detail = $"Please include '{HeaderConstants.MediaType}' in the Accept header values."
@@ -213,28 +146,74 @@ namespace JsonApiDotNetCore.Middleware
             context.Response.Body.Flush();
         }
 
-        /// <summary>
-        /// Gets the current entity that we need for serialization and deserialization.
-        /// </summary>
-        /// <returns></returns>
-        private ResourceContext GetCurrentEntity()
+        private void SetupCurrentRequest(ResourceContext resourceContext)
         {
-            var controllerName = (string)_routeValues["controller"];
-            if (controllerName == null)
-            {
-                return null;
-            }
-            var resourceType = _controllerResourceMapping.GetAssociatedResource(controllerName);
-            var requestResource = _resourceGraph.GetResourceContext(resourceType);
-            if (requestResource == null)
-            {
-                return null;
-            }
+            _currentRequest.SetRequestResource(resourceContext);
+            _currentRequest.BaseId = GetBaseId();
+            _currentRequest.BasePath = GetBasePath(resourceContext.ResourceName);
+            _currentRequest.IsRelationshipPath = GetIsRelationshipPath();
+            _currentRequest.RelationshipId = GetRelationshipId();
+
             if (_routeValues.TryGetValue("relationshipName", out object relationshipName))
             {
-                _currentRequest.RequestRelationship = requestResource.Relationships.SingleOrDefault(r => r.PublicRelationshipName == (string)relationshipName);
+                _currentRequest.RequestRelationship = resourceContext.Relationships.SingleOrDefault(r => r.PublicRelationshipName == (string) relationshipName);
             }
-            return requestResource;
+        }
+
+        private string GetBaseId()
+        {
+            return _routeValues.TryGetValue("id", out var id) ? (string) id : null;
+        }
+
+        private string GetBasePath(string resourceName)
+        {
+            if (_options.RelativeLinks)
+            {
+                return _options.Namespace;
+            }
+
+            var customRoute = GetCustomRoute(_httpContext.Request.Path.Value, resourceName);
+            var toReturn = $"{_httpContext.Request.Scheme}://{_httpContext.Request.Host}/{_options.Namespace}";
+            if (customRoute != null)
+            {
+                toReturn += $"/{customRoute}";
+            }
+            return toReturn;
+        }
+
+        private string GetCustomRoute(string path, string resourceName)
+        {
+            var trimmedComponents = path.Trim('/').Split('/').ToList();
+            var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
+            var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
+            var customRoute = string.Join('/', newComponents);
+            return customRoute == _options.Namespace ? null : customRoute;
+        }
+
+        private bool GetIsRelationshipPath()
+        {
+            var actionName = (string)_routeValues["action"];
+            return actionName.ToLowerInvariant().Contains("relationships");
+        }
+
+        private string GetRelationshipId()
+        {
+            if (!_currentRequest.IsRelationshipPath)
+            {
+                return null;
+            }
+
+            var components = SplitCurrentPath();
+            return components.ElementAtOrDefault(4);
+        }
+
+        private string[] SplitCurrentPath()
+        {
+            var path = _httpContext.Request.Path.Value;
+            var ns = $"/{_options.Namespace}";
+            var nonNameSpaced = path.Replace(ns, "");
+            nonNameSpaced = nonNameSpaced.Trim('/');
+            return nonNameSpaced.Split('/');
         }
     }
 }

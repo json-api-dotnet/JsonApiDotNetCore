@@ -14,11 +14,11 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class ContentNegotiation
+    public class ContentNegotiationTests
     {
         private readonly TestFixture<Startup> _fixture;
 
-        public ContentNegotiation(TestFixture<Startup> fixture)
+        public ContentNegotiationTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
         }
