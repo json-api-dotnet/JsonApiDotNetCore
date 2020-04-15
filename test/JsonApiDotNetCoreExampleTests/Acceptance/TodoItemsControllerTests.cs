@@ -542,10 +542,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
-            Assert.Equal(nowOffset.ToString("yyyy-MM-ddTHH:mm:ssK"), deserializedBody.OffsetDate?.ToString("yyyy-MM-ddTHH:mm:ssK"));
+            Assert.Equal(nowOffset, deserializedBody.OffsetDate);
             Assert.Null(deserializedBody.AchievedDate);
         }
-
 
         [Fact]
         public async Task Can_Post_TodoItem_With_Different_Owner_And_Assignee()

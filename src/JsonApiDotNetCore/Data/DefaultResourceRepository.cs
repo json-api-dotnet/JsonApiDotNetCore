@@ -94,7 +94,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResource> CreateAsync(TResource entity)
+        public virtual async Task CreateAsync(TResource entity)
         {
             _logger.LogTrace($"Entering {nameof(CreateAsync)}({(entity == null ? "null" : "object")}).");
 
@@ -113,11 +113,11 @@ namespace JsonApiDotNetCore.Data
             _dbSet.Add(entity);
             await _context.SaveChangesAsync();
 
+            FlushFromCache(entity);
+
             // this ensures relationships get reloaded from the database if they have
             // been requested. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
             DetachRelationships(entity);
-
-            return entity;
         }
 
         /// <summary>

@@ -62,13 +62,12 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<TResource> CreateAsync(TResource entity)
         {
-            _logger.LogTrace($"Entering {nameof(CreateAsync)}({(entity == null ? "null" : "object")}).");
+            _logger.LogTrace($"Entering {nameof(CreateAsync)}(object).");
             
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeCreate(AsList(entity), ResourcePipeline.Post).SingleOrDefault();
-            entity = await _repository.CreateAsync(entity);
+            await _repository.CreateAsync(entity);
 
-            if (_includeService.Get().Any())
-                entity = await GetWithRelationshipsAsync(entity.Id);
+            entity = await GetWithRelationshipsAsync(entity.Id);
 
             if (!IsNull(_hookExecutor, entity))
             {
