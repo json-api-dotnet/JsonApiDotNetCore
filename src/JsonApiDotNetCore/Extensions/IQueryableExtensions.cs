@@ -64,8 +64,10 @@ namespace JsonApiDotNetCore.Extensions
             return CallGenericWhereMethod(source, filterQuery);
         }
 
-        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, IEnumerable<AttrAttribute> columns)
-            => CallGenericSelectMethod(source, columns.Select(attr => attr.PropertyInfo.Name).ToList());
+        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, IEnumerable<string> columns)
+        {
+            return columns == null || !columns.Any() ? source : CallGenericSelectMethod(source, columns);
+        }
 
         public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQueryContext sortQuery)
         {
@@ -339,26 +341,28 @@ namespace JsonApiDotNetCore.Extensions
             return Expression.Property(tupleCreateCall, "Item1");
         }
 
-        private static IQueryable<TSource> CallGenericSelectMethod<TSource>(IQueryable<TSource> source, List<string> columns)
+        private static IQueryable<TSource> CallGenericSelectMethod<TSource>(IQueryable<TSource> source, IEnumerable<string> columns)
         {
             var sourceType = typeof(TSource);
             var parameter = Expression.Parameter(source.ElementType, "x");
-            var sourceProperties = new List<string>();
+            var sourceProperties = new HashSet<string>();
 
             // Store all property names to it's own related property (name as key)
-            var nestedTypesAndProperties = new Dictionary<string, List<string>>();
+            var nestedTypesAndProperties = new Dictionary<string, HashSet<string>>();
             foreach (var column in columns)
             {
                 var props = column.Split('.');
                 if (props.Length > 1) // Nested property
                 {
                     if (nestedTypesAndProperties.TryGetValue(props[0], out var properties) == false)
-                        nestedTypesAndProperties.Add(props[0], new List<string> { nameof(Identifiable.Id), props[1] });
+                        nestedTypesAndProperties.Add(props[0], new HashSet<string> { nameof(Identifiable.Id), props[1] });
                     else
                         properties.Add(props[1]);
                 }
                 else
+                {
                     sourceProperties.Add(props[0]);
+                }
             }
 
             // Bind attributes on TSource

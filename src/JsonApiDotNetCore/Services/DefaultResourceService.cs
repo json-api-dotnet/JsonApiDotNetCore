@@ -159,7 +159,7 @@ namespace JsonApiDotNetCore.Services
             // BeforeRead hook execution
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
 
-            var entityQuery = ApplyInclude(_repository.Get(id), chainPrefix: new List<RelationshipAttribute> { relationship });
+            var entityQuery = ApplyInclude(_repository.Get(id), relationship);
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
 
             if (entity == null)
@@ -299,78 +299,92 @@ namespace JsonApiDotNetCore.Services
             return entities;
         }
 
-
         /// <summary>
         /// Applies include queries
         /// </summary>
-        protected virtual IQueryable<TResource> ApplyInclude(IQueryable<TResource> entities, IEnumerable<RelationshipAttribute> chainPrefix = null)
+        protected virtual IQueryable<TResource> ApplyInclude(IQueryable<TResource> entities, RelationshipAttribute chainPrefix = null)
         {
             var chains = _includeService.Get();
-            bool hasInclusionChain = chains.Any();
 
-            if (chains == null)
+            if (chainPrefix != null)
             {
-                throw new Exception();
+                chains.Add(new List<RelationshipAttribute>());
             }
 
-            if (chainPrefix != null && !hasInclusionChain)
+            foreach (var inclusionChain in chains)
             {
-               hasInclusionChain = true;
-               chains.Add(new List<RelationshipAttribute>());
-            }
-
-
-            if (hasInclusionChain)
-            {
-                foreach (var inclusionChain in chains)
+                if (chainPrefix != null)
                 {
-                    if (chainPrefix != null)
-                    {
-                        inclusionChain.InsertRange(0, chainPrefix);
-                    }
-                    entities = _repository.Include(entities, inclusionChain.ToArray());
+                    inclusionChain.Insert(0, chainPrefix);
                 }
+
+                entities = _repository.Include(entities, inclusionChain);
             }
 
             return entities;
         }
 
         /// <summary>
-        /// Applies sparse field selection queries
+        /// Applies sparse field selection to queries
         /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
         protected virtual IQueryable<TResource> ApplySelect(IQueryable<TResource> entities)
         {
-            var fields = _sparseFieldsService.Get();
-            if (fields != null && fields.Any())
-                entities = _repository.Select(entities, fields.ToArray());
+            var propertyNames = _sparseFieldsService.GetAll();
 
+            if (propertyNames.Any())
+            {
+                // All resources without a sparse fieldset specified must be entirely selected.
+                EnsureResourcesWithoutSparseFieldSetAreAddedToSelect(propertyNames);
+            }
+
+            entities = _repository.Select(entities, propertyNames);
             return entities;
+        }
+
+        private void EnsureResourcesWithoutSparseFieldSetAreAddedToSelect(ISet<string> propertyNames)
+        {
+            bool hasTopLevelSparseFieldSet = propertyNames.Any(x => !x.Contains("."));
+            if (!hasTopLevelSparseFieldSet)
+            {
+                var topPropertyNames = _currentRequestResource.Attributes
+                    .Where(x => x.PropertyInfo.SetMethod != null)
+                    .Select(x => x.PropertyInfo.Name);
+                propertyNames.AddRange(topPropertyNames);
+            }
+
+            var chains = _includeService.Get();
+            foreach (var inclusionChain in chains)
+            {
+                string relationshipPath = null;
+                foreach (var relationship in inclusionChain)
+                {
+                    relationshipPath = relationshipPath == null
+                        ? relationship.RelationshipPath
+                        : $"{relationshipPath}.{relationship.RelationshipPath}";
+                }
+
+                if (relationshipPath != null)
+                {
+                    bool hasRelationSparseFieldSet = propertyNames.Any(x => x.StartsWith(relationshipPath + "."));
+                    if (!hasRelationSparseFieldSet)
+                    {
+                        propertyNames.Add(relationshipPath);
+                    }
+                }
+            }
         }
 
         /// <summary>
         /// Get the specified id with relationships provided in the post request
         /// </summary>
-        /// <param name="id"></param>i
-        /// <returns></returns>
         private async Task<TResource> GetWithRelationshipsAsync(TId id)
         {
-            var sparseFieldset = _sparseFieldsService.Get();
-            var query = _repository.Select(_repository.Get(id), sparseFieldset.ToArray());
+            var query = _repository.Get(id);
+            query = ApplyInclude(query);
+            query = ApplySelect(query);
 
-            foreach (var chain in _includeService.Get())
-                query = _repository.Include(query, chain.ToArray());
-
-            TResource value;
-            // https://github.com/aspnet/EntityFrameworkCore/issues/6573
-            if (sparseFieldset.Any())
-                value = query.FirstOrDefault();
-            else
-                value = await _repository.FirstOrDefaultAsync(query);
-
-
-            return value;
+            var entity = await _repository.FirstOrDefaultAsync(query);
+            return entity;
         }
 
         private bool IsNull(params object[] values)

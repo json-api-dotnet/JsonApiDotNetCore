@@ -135,6 +135,32 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
+        public async Task CreateWithRelationship_HasManyAndIncludeAndSparseFieldset_IsCreatedAndIncludes()
+        {
+            // Arrange
+            var serializer = GetSerializer<TodoItemCollection>(e => new { e.Name }, e => new { e.TodoItems, e.Owner });
+            var owner = new Person();
+            var todoItem = new TodoItem { Owner = owner, Ordinal = 123, Description = "Description" };
+            _dbContext.People.Add(owner);
+            _dbContext.TodoItems.Add(todoItem);
+            _dbContext.SaveChanges();
+            var todoCollection = new TodoItemCollection {Owner = owner, Name = "Jack", TodoItems = new List<TodoItem> {todoItem}};
+
+            // Act
+            var (body, response) = await Post("/api/v1/todoCollections?include=todoItems&fields=name&fields[todoItems]=ordinal", serializer.Serialize(todoCollection));
+
+            // Assert
+            AssertEqualStatusCode(HttpStatusCode.Created, response);
+            var responseItem = _deserializer.DeserializeSingle<TodoItemCollectionClient>(body).Data;
+            Assert.NotNull(responseItem);
+            Assert.Equal(todoCollection.Name, responseItem.Name);
+
+            Assert.NotEmpty(responseItem.TodoItems);
+            Assert.Equal(todoItem.Ordinal, responseItem.TodoItems.Single().Ordinal);
+            Assert.Null(responseItem.TodoItems.Single().Description);
+        }
+
+        [Fact]
         public async Task CreateWithRelationship_HasOne_IsCreated()
         {
             // Arrange
@@ -177,6 +203,37 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.NotNull(responseItem);
             Assert.NotNull(responseItem.Owner);
             Assert.Equal(owner.FirstName, responseItem.Owner.FirstName);
+        }
+
+        [Fact]
+        public async Task CreateWithRelationship_HasOneAndIncludeAndSparseFieldset_IsCreatedAndIncludes()
+        {
+            // Arrange
+            var serializer = GetSerializer<TodoItem>(attributes: ti => new { ti.Ordinal }, relationships: ti => new { ti.Owner });
+            var todoItem = new TodoItem
+            {
+                Ordinal = 123,
+                Description = "some"
+            };
+            var owner = new Person { FirstName = "Alice", LastName = "Cooper" };
+            _dbContext.People.Add(owner);
+            _dbContext.SaveChanges();
+            todoItem.Owner = owner;
+
+            // Act
+            var (body, response) = await Post("/api/v1/todoItems?include=owner&fields=ordinal&fields[owner]=firstName", serializer.Serialize(todoItem));
+
+            // Assert
+            AssertEqualStatusCode(HttpStatusCode.Created, response);
+            var responseItem = _deserializer.DeserializeSingle<TodoItemClient>(body).Data;
+
+            Assert.NotNull(responseItem);
+            Assert.Equal(todoItem.Ordinal, responseItem.Ordinal);
+            Assert.Null(responseItem.Description);
+
+            Assert.NotNull(responseItem.Owner);
+            Assert.Equal(owner.FirstName, responseItem.Owner.FirstName);
+            Assert.Null(responseItem.Owner.LastName);
         }
 
         [Fact]

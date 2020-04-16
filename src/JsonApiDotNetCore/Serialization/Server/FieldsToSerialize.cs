@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization.Server
                 allowed = allowed.Intersect(resourceDefinition.GetAllowedAttributes()).ToList();
 
             var sparseFieldsSelection = _sparseFieldsService.Get(relationship);
-            if (sparseFieldsSelection != null && sparseFieldsSelection.Any())
+            if (sparseFieldsSelection.Any())
                 // from the allowed attributes, select the ones flagged by sparse field selection.
                 allowed = allowed.Intersect(sparseFieldsSelection).ToList();
 

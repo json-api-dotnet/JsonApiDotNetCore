@@ -62,14 +62,11 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual IQueryable<TResource> Select(IQueryable<TResource> entities, IEnumerable<AttrAttribute> fields = null)
+        public virtual IQueryable<TResource> Select(IQueryable<TResource> entities, IEnumerable<string> propertyNames = null)
         {
-            _logger.LogTrace($"Entering {nameof(Select)}({nameof(entities)}, {nameof(fields)}).");
+            _logger.LogTrace($"Entering {nameof(Select)}({nameof(entities)}, {nameof(propertyNames)}).");
 
-            if (fields != null && fields.Any())
-                return entities.Select(fields);
-
-            return entities;
+            return entities.Select(propertyNames);
         }
 
         /// <inheritdoc />

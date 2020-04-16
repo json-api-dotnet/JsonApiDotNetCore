@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
+using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Primitives;
 using Xunit;
 
@@ -47,9 +48,9 @@ namespace UnitTests.QueryParameters
         {
             // Arrange
             const string type = "articles";
-            const string attrName = "someField";
-            var attribute = new AttrAttribute(attrName);
-            var idAttribute = new AttrAttribute("id");
+            const string attrName = "name";
+            var attribute = new AttrAttribute(attrName) {PropertyInfo = typeof(Article).GetProperty(nameof(Article.Name))};
+            var idAttribute = new AttrAttribute("id") {PropertyInfo = typeof(Article).GetProperty(nameof(Article.Id))};
 
             var query = new KeyValuePair<string, StringValues>("fields", attrName);
 
@@ -138,7 +139,7 @@ namespace UnitTests.QueryParameters
             // Arrange
             const string type = "articles";
             const string attrName = "dne";
-            var idAttribute = new AttrAttribute("id");
+            var idAttribute = new AttrAttribute("id") {PropertyInfo = typeof(Article).GetProperty(nameof(Article.Id))};
 
             var query = new KeyValuePair<string, StringValues>("fields", attrName);
 
