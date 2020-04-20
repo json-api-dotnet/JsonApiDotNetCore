@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Exceptions;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -15,12 +16,15 @@ namespace JsonApiDotNetCore.Formatters
     public class JsonApiReader : IJsonApiReader
     {
         private readonly IJsonApiDeserializer _deserializer;
+        private readonly ICurrentRequest _currentRequest;
         private readonly ILogger<JsonApiReader> _logger;
 
         public JsonApiReader(IJsonApiDeserializer deserializer,
-                             ILoggerFactory loggerFactory)
+            ICurrentRequest currentRequest,
+            ILoggerFactory loggerFactory)
         {
             _deserializer = deserializer;
+            _currentRequest = currentRequest;
             _logger = loggerFactory.CreateLogger<JsonApiReader>();
         }
 
@@ -57,10 +61,15 @@ namespace JsonApiDotNetCore.Formatters
 
             if (context.HttpContext.Request.Method == "PATCH")
             {
-                var hasMissingId = model is IList list ? CheckForId(list) : CheckForId(model);
+                bool hasMissingId = model is IList list ? HasMissingId(list) : HasMissingId(model);
                 if (hasMissingId)
                 {
                     throw new InvalidRequestBodyException("Payload must include id attribute.", null, body);
+                }
+
+                if (!_currentRequest.IsRelationshipPath && TryGetId(model, out var bodyId) && bodyId != _currentRequest.BaseId)
+                {
+                    throw new ResourceIdMismatchException(bodyId, _currentRequest.BaseId, context.HttpContext.Request.GetDisplayUrl());
                 }
             }
 
@@ -68,35 +77,40 @@ namespace JsonApiDotNetCore.Formatters
         }
 
         /// <summary> Checks if the deserialized payload has an ID included </summary>
-        private bool CheckForId(object model)
+        private bool HasMissingId(object model)
         {
-            if (model == null) return false;
-            if (model is ResourceObject ro)
+            return TryGetId(model, out string id) && string.IsNullOrEmpty(id);
+        }
+
+        /// <summary> Checks if all elements in the deserialized payload have an ID included </summary>
+        private bool HasMissingId(IEnumerable models)
+        {
+            foreach (var model in models)
             {
-                if (string.IsNullOrEmpty(ro.Id)) return true;
+                if (TryGetId(model, out string id) && string.IsNullOrEmpty(id))
+                {
+                    return true;
+                }
             }
-            else if (model is IIdentifiable identifiable)
-            {
-                if (string.IsNullOrEmpty(identifiable.StringId)) return true;
-            }
+
             return false;
         }
 
-        /// <summary> Checks if the elements in the deserialized payload have an ID included </summary>
-        private bool CheckForId(IList modelList)
+        private static bool TryGetId(object model, out string id)
         {
-            foreach (var model in modelList)
+            if (model is ResourceObject resourceObject)
             {
-                if (model == null) continue;
-                if (model is ResourceObject ro)
-                {
-                    if (string.IsNullOrEmpty(ro.Id)) return true;
-                }
-                else if (model is IIdentifiable identifiable)
-                {
-                    if (string.IsNullOrEmpty(identifiable.StringId)) return true;
-                }
+                id = resourceObject.Id;
+                return true;
             }
+
+            if (model is IIdentifiable identifiable)
+            {
+                id = identifiable.StringId;
+                return true;
+            }
+
+            id = null;
             return false;
         }
 

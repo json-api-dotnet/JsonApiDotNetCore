@@ -178,7 +178,42 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal("Failed to deserialize request body: Payload must include id attribute.", error.Title);
             Assert.StartsWith("Request body: <<", error.Detail);
         }
-        
+
+        [Fact]
+        public async Task Respond_409_If_IdInUrlIsDifferentFromIdInRequestBody()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.CreatedDate = DateTime.Now;
+
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var wrongTodoItemId = todoItem.Id + 1;
+
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var serializer = _fixture.GetSerializer<TodoItem>(ti => new {ti.Description, ti.Ordinal, ti.CreatedDate});
+            var content = serializer.Serialize(todoItem);
+            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{wrongTodoItemId}", content);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var document = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(document.Errors);
+
+            var error = document.Errors.Single();
+            Assert.Equal(HttpStatusCode.Conflict, error.StatusCode);
+            Assert.Equal("Resource id mismatch between request body and endpoint URL.", error.Title);
+            Assert.Equal($"Expected resource id '{wrongTodoItemId}' in PATCH request body at endpoint 'http://localhost/api/v1/todoItems/{wrongTodoItemId}', instead of '{todoItem.Id}'.", error.Detail);
+        }
+
         [Fact]
         public async Task Respond_422_If_Broken_JSON_Payload()
         {
