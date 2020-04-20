@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(new HttpMethod("POST"), route) {Content = new StringContent(string.Empty)};
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("text/html");
 
             // Act
             var response = await client.SendAsync(request);
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Post, route) {Content = new StringContent(serializer.Serialize(todoItem))};
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(HeaderConstants.MediaType);
 
             // Act
             var response = await client.SendAsync(request);
@@ -88,32 +88,57 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Respond_201_If_Content_Type_Header_Is_JsonApi_Media_Type_With_Extension()
+        public async Task Respond_415_If_Content_Type_Header_Is_JsonApi_Media_Type_With_Profile()
         {
-            // Arrange
-            var serializer = _fixture.GetSerializer<TodoItem>(e => new { e.Description });
-            var todoItem = new TodoItem {Description = "something not to forget"};
-
             // Arrange
             var builder = new WebHostBuilder().UseStartup<Startup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var request = new HttpRequestMessage(HttpMethod.Post, route) {Content = new StringContent(serializer.Serialize(todoItem))};
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType)
-            {
-                Parameters = {new NameValueHeaderValue("ext", "some-extension")}
-            };
+            var request = new HttpRequestMessage(new HttpMethod("POST"), route) {Content = new StringContent(string.Empty)};
+            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(HeaderConstants.MediaType + "; profile=something");
 
             // Act
             var response = await client.SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.UnsupportedMediaType, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The specified Content-Type header value is not supported.", errorDocument.Errors[0].Title);
+            Assert.Equal("Please specify 'application/vnd.api+json' instead of 'application/vnd.api+json; profile=something' for the Content-Type header value.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]
-        public async Task Respond_415_If_Content_Type_Header_Is_JsonApi_Media_Type_With_CharSet_Parameter()
+        public async Task Respond_415_If_Content_Type_Header_Is_JsonApi_Media_Type_With_Extension()
+        {
+            // Arrange
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var route = "/api/v1/todoItems";
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(new HttpMethod("POST"), route) {Content = new StringContent(string.Empty)};
+            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(HeaderConstants.MediaType + "; ext=something");
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.UnsupportedMediaType, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The specified Content-Type header value is not supported.", errorDocument.Errors[0].Title);
+            Assert.Equal("Please specify 'application/vnd.api+json' instead of 'application/vnd.api+json; ext=something' for the Content-Type header value.", errorDocument.Errors[0].Detail);
+        }
+
+        [Fact]
+        public async Task Respond_415_If_Content_Type_Header_Is_JsonApi_Media_Type_With_CharSet()
         {
             // Arrange
             var builder = new WebHostBuilder().UseStartup<Startup>();
@@ -121,10 +146,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Post, route) {Content = new StringContent(string.Empty)};
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType)
-            {
-                CharSet = "ISO-8859-4"
-            };
+            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(HeaderConstants.MediaType + "; charset=ISO-8859-4");
 
             // Act
             var response = await client.SendAsync(request);
@@ -141,7 +163,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Respond_415_If_Content_Type_Header_Is_JsonApi_Media_Type_With_Unknown_Parameter()
+        public async Task Respond_415_If_Content_Type_Header_Is_JsonApi_Media_Type_With_Unknown()
         {
             // Arrange
             var builder = new WebHostBuilder().UseStartup<Startup>();
@@ -149,10 +171,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Post, route) {Content = new StringContent(string.Empty)};
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType)
-            {
-                Parameters = {new NameValueHeaderValue("unknown", "unexpected")}
-            };
+            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected");
 
             // Act
             var response = await client.SendAsync(request);
@@ -186,6 +205,44 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
+        public async Task Respond_200_If_Accept_Headers_Include_Any()
+        {
+            // Arrange
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var route = "/api/v1/todoItems";
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
+            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("*/*"));
+            var request = new HttpRequestMessage(HttpMethod.Get, route);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Respond_200_If_Accept_Headers_Include_Application_Prefix()
+        {
+            // Arrange
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var route = "/api/v1/todoItems";
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
+            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/*"));
+            var request = new HttpRequestMessage(HttpMethod.Get, route);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
         public async Task Respond_200_If_Accept_Headers_Contain_JsonApi_Media_Type()
         {
             // Arrange
@@ -194,8 +251,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
             client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
-            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; some=1"));
-            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; other=2"));
+            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"));
+            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; ext=other"));
+            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"));
             client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType));
             var request = new HttpRequestMessage(HttpMethod.Get, route);
 
@@ -207,42 +265,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Respond_200_If_Accept_Headers_Contain_JsonApi_Media_Type_With_Extension()
+        public async Task Respond_406_If_Accept_Headers_Only_Contain_JsonApi_Media_Type_With_Parameters()
         {
             // Arrange
             var builder = new WebHostBuilder().UseStartup<Startup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
-            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; some=1"));
-            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; other=2"));
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(HeaderConstants.MediaType)
-            {
-                Parameters =
-                {
-                    new NameValueHeaderValue("ext", "some-extension")
-                }
-            });
-            var request = new HttpRequestMessage(HttpMethod.Get, route);
-
-            // Act
-            var response = await client.SendAsync(request);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task Respond_406_If_Accept_Headers_Do_Not_Contain_JsonApi_Media_Type()
-        {
-            // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
-            var route = "/api/v1/todoItems";
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
-            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("image/*"));
+            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"));
+            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; ext=other"));
+            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"));
+            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; charset=ISO-8859-4"));
             var request = new HttpRequestMessage(HttpMethod.Get, route);
 
             // Act
@@ -255,34 +288,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotAcceptable, errorDocument.Errors[0].StatusCode);
-            Assert.Equal("The specified Accept header value is not supported.", errorDocument.Errors[0].Title);
-            Assert.Equal("Please include 'application/vnd.api+json' in the Accept header values.", errorDocument.Errors[0].Detail);
-        }
-
-        [Fact]
-        public async Task Respond_406_If_Accept_Headers_Contain_JsonApi_Media_Type_With_Only_Parameters_Other_Than_Extension()
-        {
-            // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
-            var route = "/api/v1/todoItems";
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
-            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; some=1"));
-            client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; other=2"));
-            var request = new HttpRequestMessage(HttpMethod.Get, route);
-
-            // Act
-            var response = await client.SendAsync(request);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.NotAcceptable, response.StatusCode);
-
-            var body = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-            Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.NotAcceptable, errorDocument.Errors[0].StatusCode);
-            Assert.Equal("The specified Accept header value is not supported.", errorDocument.Errors[0].Title);
+            Assert.Equal("The specified Accept header value does not contain any supported media types.", errorDocument.Errors[0].Title);
             Assert.Equal("Please include 'application/vnd.api+json' in the Accept header values.", errorDocument.Errors[0].Detail);
         }
     }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -77,20 +78,14 @@ namespace JsonApiDotNetCore.Middleware
         private async Task<bool> ValidateContentTypeHeaderAsync()
         {
             var contentType = _httpContext.Request.ContentType;
-            if (contentType != null)
+            if (contentType != null && contentType != HeaderConstants.MediaType)
             {
-                if (!MediaTypeHeaderValue.TryParse(contentType, out var headerValue) ||
-                    headerValue.MediaType != HeaderConstants.MediaType || headerValue.CharSet != null ||
-                    headerValue.Parameters.Any(p => p.Name != "ext"))
+                await FlushResponseAsync(_httpContext, new Error(HttpStatusCode.UnsupportedMediaType)
                 {
-                    await FlushResponseAsync(_httpContext, new Error(HttpStatusCode.UnsupportedMediaType)
-                    {
-                        Title = "The specified Content-Type header value is not supported.",
-                        Detail = $"Please specify '{HeaderConstants.MediaType}' instead of '{contentType}' for the Content-Type header value."
-                    });
-
-                    return false;
-                }
+                    Title = "The specified Content-Type header value is not supported.",
+                    Detail = $"Please specify '{HeaderConstants.MediaType}' instead of '{contentType}' for the Content-Type header value."
+                });
+                return false;
             }
 
             return true;
@@ -98,23 +93,37 @@ namespace JsonApiDotNetCore.Middleware
 
         private async Task<bool> ValidateAcceptHeaderAsync()
         {
-            if (_httpContext.Request.Headers.TryGetValue("Accept", out StringValues acceptHeaders))
+            StringValues acceptHeaders = _httpContext.Request.Headers["Accept"];
+            if (!acceptHeaders.Any() || acceptHeaders == HeaderConstants.MediaType)
             {
-                foreach (var acceptHeader in acceptHeaders)
+                return true;
+            }
+
+            bool seenCompatibleMediaType = false;
+
+            foreach (var acceptHeader in acceptHeaders)
+            {
+                if (MediaTypeHeaderValue.TryParse(acceptHeader, out var headerValue))
                 {
-                    if (MediaTypeHeaderValue.TryParse(acceptHeader, out var headerValue))
+                    if (headerValue.MediaType == "*/*" || headerValue.MediaType == "application/*")
                     {
-                        if (headerValue.MediaType == HeaderConstants.MediaType &&
-                            headerValue.Parameters.All(p => p.Name == "ext"))
-                        {
-                            return true;
-                        }
+                        seenCompatibleMediaType = true;
+                        break;
+                    }
+
+                    if (headerValue.MediaType == HeaderConstants.MediaType && !headerValue.Parameters.Any())
+                    {
+                        seenCompatibleMediaType = true;
+                        break;
                     }
                 }
+            }
 
+            if (!seenCompatibleMediaType)
+            {
                 await FlushResponseAsync(_httpContext, new Error(HttpStatusCode.NotAcceptable)
                 {
-                    Title = "The specified Accept header value is not supported.",
+                    Title = "The specified Accept header value does not contain any supported media types.",
                     Detail = $"Please include '{HeaderConstants.MediaType}' in the Accept header values."
                 });
                 return false;
