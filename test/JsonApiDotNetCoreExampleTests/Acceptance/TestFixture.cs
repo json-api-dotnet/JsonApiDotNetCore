@@ -13,6 +13,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Contracts;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
@@ -50,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             var options = GetService<IJsonApiOptions>();
 
-            var resourceGraph = new ResourceGraphBuilder(options)
+            var resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
                 .AddResource<PersonRole>()
                 .AddResource<Article>()
                 .AddResource<Tag>()

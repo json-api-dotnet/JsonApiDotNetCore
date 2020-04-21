@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace UnitTests
@@ -33,6 +34,7 @@ namespace UnitTests
         {
             // Arrange
             var services = new ServiceCollection();
+            services.AddLogging();
             services.AddDbContext<TestContext>();
             
             services.AddJsonApi<TestContext>(resources: builder => builder.AddResource<NonDbResource>("nonDbResources"));
@@ -53,7 +55,7 @@ namespace UnitTests
         public void Resources_Without_Names_Specified_Will_Use_Configured_Formatter()
         {
             // Arrange
-            var builder = new ResourceGraphBuilder(new JsonApiOptions());
+            var builder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
             builder.AddResource<TestResource>();
 
             // Act
@@ -68,7 +70,7 @@ namespace UnitTests
         public void Attrs_Without_Names_Specified_Will_Use_Configured_Formatter()
         {
             // Arrange
-            var builder = new ResourceGraphBuilder(new JsonApiOptions());
+            var builder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
             builder.AddResource<TestResource>();
 
             // Act
@@ -83,7 +85,7 @@ namespace UnitTests
         public void Relationships_Without_Names_Specified_Will_Use_Configured_Formatter()
         {
             // Arrange
-            var builder = new ResourceGraphBuilder(new JsonApiOptions());
+            var builder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
             builder.AddResource<TestResource>();
 
             // Act

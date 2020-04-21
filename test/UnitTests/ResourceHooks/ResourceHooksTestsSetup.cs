@@ -38,7 +38,7 @@ namespace UnitTests.ResourceHooks
 
         public HooksDummyData()
         {
-            _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions())
+            _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .AddResource<TodoItem>()
                 .AddResource<Person>()
                 .AddResource<Passport>()
@@ -187,7 +187,7 @@ namespace UnitTests.ResourceHooks
 
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
-            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions())
+            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .AddResource<TMain>()
                 .AddResource<TNested>()
                 .Build();
@@ -223,7 +223,7 @@ namespace UnitTests.ResourceHooks
 
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
-            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions())
+            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .AddResource<TMain>()
                 .AddResource<TFirstNested>()
                 .AddResource<TSecondNested>()

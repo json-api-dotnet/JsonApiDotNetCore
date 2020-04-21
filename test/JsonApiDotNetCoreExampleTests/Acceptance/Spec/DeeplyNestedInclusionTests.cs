@@ -11,6 +11,7 @@ using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -42,7 +43,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             const string route = "/api/v1/todoItems?include=collection.owner";
 
             var options = _fixture.GetService<IJsonApiOptions>();
-            var resourceGraph = new ResourceGraphBuilder(options).AddResource<TodoItemClient>("todoItems").AddResource<TodoItemCollection, Guid>().AddResource<Person>().Build();
+            var resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
+                .AddResource<TodoItemClient>("todoItems")
+                .AddResource<TodoItemCollection, Guid>()
+                .AddResource<Person>()
+                .Build();
             var deserializer = new ResponseDeserializer(resourceGraph);
             var todoItem = new TodoItem
             {

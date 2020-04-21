@@ -1,10 +1,7 @@
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore
 {
@@ -31,7 +28,6 @@ namespace JsonApiDotNetCore
         /// </example>
         public static void UseJsonApi(this IApplicationBuilder app, bool skipRegisterMiddleware = false, bool useAuthentication = false, bool useAuthorization = false)
         {
-            LogResourceGraphValidations(app);
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var inverseRelationshipResolver = scope.ServiceProvider.GetService<IInverseRelationships>();
@@ -58,17 +54,6 @@ namespace JsonApiDotNetCore
 
                 // Executes the endpoints that was selected by routing.
                 app.UseEndpoints(endpoints => endpoints.MapControllers());
-            }
-        }
-
-        private static void LogResourceGraphValidations(IApplicationBuilder app)
-        {
-            var logger = (ILogger)app.ApplicationServices.GetService(typeof(ILogger<ResourceGraphBuilder>));
-            var resourceGraph = (ResourceGraph)app.ApplicationServices.GetService(typeof(IResourceGraph));
-
-            if (logger != null)
-            {
-                resourceGraph?.ValidationResults.ForEach(v => logger.Log(v.LogLevel, null, v.Message));
             }
         }
     }

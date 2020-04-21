@@ -12,13 +12,11 @@ namespace JsonApiDotNetCore.Internal
     /// </summary>
     public class ResourceGraph : IResourceGraph
     {
-        internal List<ValidationResult> ValidationResults { get; }
         private List<ResourceContext> Resources { get; }
 
-        public ResourceGraph(List<ResourceContext> resources, List<ValidationResult> validationResults = null)
+        public ResourceGraph(List<ResourceContext> resources)
         {
             Resources = resources;
-            ValidationResults = validationResults;
         }
 
         /// <inheritdoc />

@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using UnitTests.TestModels;
 
@@ -18,7 +19,7 @@ namespace UnitTests.QueryParameters
 
         public QueryParametersUnitTestCollection()
         {
-            var builder = new ResourceGraphBuilder(new JsonApiOptions());
+            var builder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
             builder.AddResource<Article>();
             builder.AddResource<Person>();
             builder.AddResource<Blog>();

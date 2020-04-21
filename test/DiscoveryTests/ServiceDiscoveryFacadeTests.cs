@@ -18,6 +18,7 @@ using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 
@@ -46,7 +47,7 @@ namespace DiscoveryTests
             _services.AddScoped((_) => new Mock<IResourceContextProvider>().Object);
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(DefaultResourceChangeTracker<>));
 
-            _resourceGraphBuilder = new ResourceGraphBuilder(options);
+            _resourceGraphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
         }
 
         private ServiceDiscoveryFacade Facade => new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);

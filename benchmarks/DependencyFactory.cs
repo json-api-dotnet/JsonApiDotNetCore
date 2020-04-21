@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace Benchmarks
@@ -12,7 +13,7 @@ namespace Benchmarks
     {
         public static IResourceGraph CreateResourceGraph(IJsonApiOptions options)
         {
-            IResourceGraphBuilder builder = new ResourceGraphBuilder(options);
+            IResourceGraphBuilder builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
             builder.AddResource<BenchmarkResource>(BenchmarkResourcePublicNames.Type);
             return builder.Build();
         }

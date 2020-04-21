@@ -9,6 +9,7 @@ using NoEntityFrameworkExample.Models;
 using System;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Configuration;
+using Microsoft.Extensions.Logging.Abstractions;
 using NoEntityFrameworkExample;
 
 namespace NoEntityFrameworkTests
@@ -42,7 +43,7 @@ namespace NoEntityFrameworkTests
         {
             var options = GetService<IJsonApiOptions>();
 
-            var resourceGraph = new ResourceGraphBuilder(options).AddResource<TodoItem>("todoItems").Build();
+            var resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).AddResource<TodoItem>("todoItems").Build();
             return new ResponseDeserializer(resourceGraph);
         }
 

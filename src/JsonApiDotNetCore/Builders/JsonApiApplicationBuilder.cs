@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Builders
             _resourceGraphBuilder = intermediateProvider.GetRequiredService<IResourceGraphBuilder>();
             _serviceDiscoveryFacade = intermediateProvider.GetRequiredService<IServiceDiscoveryFacade>();
             _dbContextType = dbContextType;
-            
+
             AddResourceTypesFromDbContext(intermediateProvider);
 
             var exceptionFilterProvider = intermediateProvider.GetRequiredService<IJsonApiExceptionFilterProvider>();

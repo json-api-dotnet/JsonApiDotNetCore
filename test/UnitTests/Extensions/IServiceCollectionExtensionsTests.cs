@@ -64,7 +64,7 @@ namespace UnitTests.Extensions
         {
             // Arrange
             var services = new ServiceCollection();
-
+            services.AddLogging();
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
             services.AddJsonApi<AppDbContext>();
 
@@ -141,6 +141,7 @@ namespace UnitTests.Extensions
         {
             // Arrange
             var services = new ServiceCollection();
+            services.AddLogging();
             services.AddDbContext<TestContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
             services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();

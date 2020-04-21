@@ -18,20 +18,20 @@ namespace JsonApiDotNetCore.Builders
     public class ResourceGraphBuilder : IResourceGraphBuilder
     {
         private readonly IJsonApiOptions _options;
+        private readonly ILogger<ResourceGraphBuilder> _logger;
         private readonly List<ResourceContext> _resources = new List<ResourceContext>();
-        private readonly List<ValidationResult> _validationResults = new List<ValidationResult>();
 
-        public ResourceGraphBuilder(IJsonApiOptions options)
+        public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
             _options = options;
+            _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
         }
 
         /// <inheritdoc />
         public IResourceGraph Build()
         {
             _resources.ForEach(SetResourceLinksOptions);
-            var resourceGraph = new ResourceGraph(_resources, _validationResults);
-            return resourceGraph;
+            return new ResourceGraph(_resources);
         }
 
         private void SetResourceLinksOptions(ResourceContext resourceContext)
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Builders
                 }
                 else
                 {
-                    _validationResults.Add(new ValidationResult(LogLevel.Warning, $"{resourceType} does not implement '{nameof(IIdentifiable)}'. "));
+                    _logger.LogWarning($"Entity '{resourceType}' does not implement '{nameof(IIdentifiable)}'.");
                 }
             }
 
