@@ -12,19 +12,17 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<KebabCasedModel> KebabCasedModels { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<Author> AuthorDifferentDbContextName { get; set; }
-        public DbSet<NonJsonApiResource> NonJsonApiResources { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<SuperUser> SuperUsers { get; set; }
         public DbSet<PersonRole> PersonRoles { get; set; }
         public DbSet<ArticleTag> ArticleTags { get; set; }
-        public DbSet<IdentifiableArticleTag> IdentifiableArticleTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
-        public DbSet<ThrowingResource> ThrowingResources { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ThrowingResource>();
+
             modelBuilder.Entity<SuperUser>().HasBaseType<User>();
 
             modelBuilder.Entity<TodoItem>()

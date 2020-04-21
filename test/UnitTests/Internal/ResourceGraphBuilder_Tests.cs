@@ -1,6 +1,5 @@
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
 using JsonApiDotNetCore.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -17,8 +16,8 @@ namespace UnitTests.Internal
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions());
 
             // Act
-            resourceGraphBuilder.AddDbContext<TestContext>();
-            var resourceGraph = resourceGraphBuilder.Build() as ResourceGraph;
+            resourceGraphBuilder.AddResource(typeof(TestContext));
+            var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
 
             // Assert
             Assert.Empty(resourceGraph.GetResourceContexts());
@@ -31,8 +30,8 @@ namespace UnitTests.Internal
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions());
 
             // Act
-            resourceGraphBuilder.AddDbContext<TestContext>();
-            var resourceGraph = resourceGraphBuilder.Build() as ResourceGraph;
+            resourceGraphBuilder.AddResource(typeof(TestContext));
+            var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
 
             // Assert
             Assert.Single(resourceGraph.ValidationResults);

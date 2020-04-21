@@ -40,7 +40,7 @@ namespace JsonApiDotNetCoreExample
                         .EnableSensitiveDataLogging()
                         .UseNpgsql(GetDbConnectionString(), innerOptions => innerOptions.SetPostgresVersion(new Version(9,6)));
                 }, ServiceLifetime.Transient)
-                .AddJsonApi(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
+                .AddJsonApi<AppDbContext>(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
             
             // once all tests have been moved to WebApplicationFactory format we can get rid of this line below
             services.AddClientSerialization();

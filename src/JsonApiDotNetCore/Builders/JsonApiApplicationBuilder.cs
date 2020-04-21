@@ -1,7 +1,6 @@
 using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
 using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
@@ -34,7 +33,7 @@ namespace JsonApiDotNetCore.Builders
     {
         private readonly JsonApiOptions _options = new JsonApiOptions();
         private IResourceGraphBuilder _resourceGraphBuilder;
-        private bool _usesDbContext;
+        private Type _dbContextType;
         private readonly IServiceCollection _services;
         private IServiceDiscoveryFacade _serviceDiscoveryFacade;
         private readonly IMvcCoreBuilder _mvcBuilder;
@@ -59,13 +58,17 @@ namespace JsonApiDotNetCore.Builders
         /// <see cref="IResourceGraphBuilder"/>, <see cref="IServiceDiscoveryFacade"/>, <see cref="IJsonApiExceptionFilterProvider"/>,
         /// <see cref="IJsonApiTypeMatchFilterProvider"/> and <see cref="IJsonApiRoutingConvention"/>.
         /// </summary>
-        public void ConfigureMvc()
+        public void ConfigureMvc(Type dbContextType)
         {
             RegisterJsonApiStartupServices();
 
             var intermediateProvider = _services.BuildServiceProvider();
             _resourceGraphBuilder = intermediateProvider.GetRequiredService<IResourceGraphBuilder>();
             _serviceDiscoveryFacade = intermediateProvider.GetRequiredService<IServiceDiscoveryFacade>();
+            _dbContextType = dbContextType;
+            
+            AddResourceTypesFromDbContext(intermediateProvider);
+
             var exceptionFilterProvider = intermediateProvider.GetRequiredService<IJsonApiExceptionFilterProvider>();
             var typeMatchFilterProvider = intermediateProvider.GetRequiredService<IJsonApiTypeMatchFilterProvider>();
             var routingConvention = intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>();
@@ -89,22 +92,25 @@ namespace JsonApiDotNetCore.Builders
             _services.AddSingleton<IControllerResourceMapping>(routingConvention);
         }
 
+        private void AddResourceTypesFromDbContext(ServiceProvider intermediateProvider)
+        {
+            if (_dbContextType != null)
+            {
+                var dbContext = (DbContext) intermediateProvider.GetRequiredService(_dbContextType);
+
+                foreach (var entityType in dbContext.Model.GetEntityTypes())
+                {
+                    _resourceGraphBuilder.AddResource(entityType.ClrType);
+                }
+            }
+        }
+
         /// <summary>
         /// Executes auto-discovery of JADNC services.
         /// </summary>
         public void AutoDiscover(Action<IServiceDiscoveryFacade> autoDiscover)
         {
             autoDiscover?.Invoke(_serviceDiscoveryFacade);
-        }
-
-        public void ConfigureResourcesFromDbContext<TDbContext>(Action<IResourceGraphBuilder> resources)
-            where TDbContext : DbContext
-        {
-            _resourceGraphBuilder.AddDbContext<TDbContext>();
-            _usesDbContext = true;
-            _services.AddScoped<IDbContextResolver, DbContextResolver<TDbContext>>();
-
-            ConfigureResources(resources);
         }
 
         /// <summary>
@@ -122,7 +128,12 @@ namespace JsonApiDotNetCore.Builders
         {
             var resourceGraph = _resourceGraphBuilder.Build();
 
-            if (!_usesDbContext)
+            if (_dbContextType != null)
+            {
+                var contextResolverType = typeof(DbContextResolver<>).MakeGenericType(_dbContextType);
+                _services.AddScoped(typeof(IDbContextResolver), contextResolverType);
+            }
+            else
             {
                 _services.AddScoped<DbContext>();
                 _services.AddSingleton(new DbContextOptionsBuilder().Options);

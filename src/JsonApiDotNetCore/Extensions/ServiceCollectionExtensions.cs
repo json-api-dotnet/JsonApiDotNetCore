@@ -25,11 +25,7 @@ namespace JsonApiDotNetCore
             Action<IResourceGraphBuilder> resources = null,
             IMvcCoreBuilder mvcBuilder = null)
         {
-            var applicationBuilder = SetupApplicationBuilder(services, options, discovery, mvcBuilder);
-
-            applicationBuilder.ConfigureResources(resources);
-
-            applicationBuilder.ConfigureServices();
+            SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, null);
             return services;
         }
 
@@ -43,24 +39,21 @@ namespace JsonApiDotNetCore
             IMvcCoreBuilder mvcBuilder = null)
             where TDbContext : DbContext
         {
-            var applicationBuilder = SetupApplicationBuilder(services, options, discovery, mvcBuilder);
-
-            applicationBuilder.ConfigureResourcesFromDbContext<TDbContext>(resources);
-            
-            applicationBuilder.ConfigureServices();
+            SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, typeof(TDbContext));
             return services;
         }
 
-        private static JsonApiApplicationBuilder SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> options, Action<IServiceDiscoveryFacade> discovery,
-            IMvcCoreBuilder mvcBuilder)
+        private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> options,
+            Action<IServiceDiscoveryFacade> discovery,
+            Action<IResourceGraphBuilder> resources, IMvcCoreBuilder mvcBuilder, Type dbContextType)
         {
             var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
 
             applicationBuilder.ConfigureJsonApiOptions(options);
-            applicationBuilder.ConfigureMvc();
+            applicationBuilder.ConfigureMvc(dbContextType);
             applicationBuilder.AutoDiscover(discovery);
-
-            return applicationBuilder;
+            applicationBuilder.ConfigureResources(resources);
+            applicationBuilder.ConfigureServices();
         }
 
         /// <summary>

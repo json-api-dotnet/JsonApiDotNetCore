@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore;
@@ -20,6 +21,11 @@ namespace UnitTests
         private class TestContext : DbContext
         {
             public DbSet<DbResource> DbResources { get; set; }
+
+            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            {
+                optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
+            }
         }
 
         [Fact]
@@ -27,6 +33,8 @@ namespace UnitTests
         {
             // Arrange
             var services = new ServiceCollection();
+            services.AddDbContext<TestContext>();
+            
             services.AddJsonApi<TestContext>(resources: builder => builder.AddResource<NonDbResource>("nonDbResources"));
 
             // Act

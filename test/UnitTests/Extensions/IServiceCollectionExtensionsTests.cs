@@ -19,7 +19,6 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
-using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
 
 namespace UnitTests.Extensions
 {
@@ -142,6 +141,7 @@ namespace UnitTests.Extensions
         {
             // Arrange
             var services = new ServiceCollection();
+            services.AddDbContext<TestContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
             services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
 
@@ -185,6 +185,10 @@ namespace UnitTests.Extensions
 
         public class TestContext : DbContext
         {
+            public TestContext(DbContextOptions<TestContext> options) : base(options)
+            {
+            }
+
             public DbSet<IntResource> Resource { get; set; }
         }
     }

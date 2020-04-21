@@ -56,22 +56,25 @@ namespace JsonApiDotNetCore.Builders
         /// <inheritdoc />
         public IResourceGraphBuilder AddResource(Type resourceType, Type idType = null, string pluralizedTypeName = null)
         {
-            AssertEntityIsNotAlreadyDefined(resourceType);
-            if (resourceType.Implements<IIdentifiable>())
+            if (_resources.All(e => e.ResourceType != resourceType))
             {
-                pluralizedTypeName ??= FormatResourceName(resourceType);
-                idType ??= TypeLocator.GetIdType(resourceType);
-                _resources.Add(GetEntity(pluralizedTypeName, resourceType, idType));
-            }
-            else
-            {
-                _validationResults.Add(new ValidationResult(LogLevel.Warning, $"{resourceType} does not implement 'IIdentifiable<>'. "));
+                if (resourceType.Implements<IIdentifiable>())
+                {
+                    pluralizedTypeName ??= FormatResourceName(resourceType);
+                    idType ??= TypeLocator.GetIdType(resourceType);
+                    var resourceContext = CreateResourceContext(pluralizedTypeName, resourceType, idType);
+                    _resources.Add(resourceContext);
+                }
+                else
+                {
+                    _validationResults.Add(new ValidationResult(LogLevel.Warning, $"{resourceType} does not implement '{nameof(IIdentifiable)}'. "));
+                }
             }
 
             return this;
         }
 
-        private ResourceContext GetEntity(string pluralizedTypeName, Type entityType, Type idType) => new ResourceContext
+        private ResourceContext CreateResourceContext(string pluralizedTypeName, Type entityType, Type idType) => new ResourceContext
         {
             ResourceName = pluralizedTypeName,
             ResourceType = entityType,
@@ -212,12 +215,6 @@ namespace JsonApiDotNetCore.Builders
         }
 
         private Type GetResourceDefinitionType(Type entityType) => typeof(ResourceDefinition<>).MakeGenericType(entityType);
-
-        private void AssertEntityIsNotAlreadyDefined(Type entityType)
-        {
-            if (_resources.Any(e => e.ResourceType == entityType))
-                throw new InvalidOperationException($"Cannot add entity type {entityType} to context resourceGraph, there is already an entity of that type configured.");
-        }
 
         private string FormatResourceName(Type resourceType)
         {

@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var dbContext = PrepareTest<Startup>();
             var serializer = GetSerializer<SuperUser>(e => new { e.SecurityLevel, e.Username, e.Password });
             var superUser = new SuperUser { SecurityLevel = 1337, Username = "Super", Password = "User", LastPasswordChange = DateTime.Now.AddMinutes(-15) };
-            dbContext.SuperUsers.Add(superUser);
+            dbContext.Set<SuperUser>().Add(superUser);
             dbContext.SaveChanges();
             var su = new SuperUser { Id = superUser.Id, SecurityLevel = 2674, Username = "Power", Password = "secret" };
             var content = serializer.Serialize(su);
