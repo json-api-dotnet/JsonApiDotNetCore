@@ -6,6 +6,7 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCoreExample.Services;
@@ -42,7 +43,7 @@ namespace JsonApiDotNetCoreExample
                 .AddJsonApi(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
             
             // once all tests have been moved to WebApplicationFactory format we can get rid of this line below
-            services.AddClientSerialization(); 
+            services.AddClientSerialization();
         }
 
         protected virtual void ConfigureJsonApiOptions(JsonApiOptions options)

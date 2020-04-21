@@ -2,12 +2,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Data
 {
-    public sealed class DbContextResolver<TContext> : IDbContextResolver
-        where TContext : DbContext
+    public sealed class DbContextResolver<TDbContext> : IDbContextResolver
+        where TDbContext : DbContext
     {
-        private readonly TContext _context;
+        private readonly TDbContext _context;
 
-        public DbContextResolver(TContext context)
+        public DbContextResolver(TDbContext context)
         {
             _context = context;
         }

@@ -11,8 +11,7 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Extensions
 {
-    // ReSharper disable once InconsistentNaming
-    public static class IQueryableExtensions
+    public static class QueryableExtensions
     {
         private static MethodInfo _containsMethod;
         private static MethodInfo ContainsMethod

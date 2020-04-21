@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using System.Reflection;

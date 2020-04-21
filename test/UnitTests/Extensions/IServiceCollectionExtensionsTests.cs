@@ -14,6 +14,7 @@ using JsonApiDotNetCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server.Builders;

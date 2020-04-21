@@ -1,6 +1,7 @@
 using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
 using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
@@ -29,12 +30,12 @@ namespace JsonApiDotNetCore.Builders
     /// A utility class that builds a JsonApi application. It registers all required services
     /// and allows the user to override parts of the startup configuration.
     /// </summary>
-    public class JsonApiApplicationBuilder
+    internal sealed class JsonApiApplicationBuilder
     {
         private readonly JsonApiOptions _options = new JsonApiOptions();
-        internal IResourceGraphBuilder _resourceGraphBuilder;
-        internal bool _usesDbContext;
-        internal readonly IServiceCollection _services;
+        private IResourceGraphBuilder _resourceGraphBuilder;
+        private bool _usesDbContext;
+        private readonly IServiceCollection _services;
         private IServiceDiscoveryFacade _serviceDiscoveryFacade;
         private readonly IMvcCoreBuilder _mvcBuilder;
 
@@ -47,7 +48,10 @@ namespace JsonApiDotNetCore.Builders
         /// <summary>
         /// Executes the action provided by the user to configure <see cref="JsonApiOptions"/>
         /// </summary>
-        public void ConfigureJsonApiOptions(Action<JsonApiOptions> configureOptions) => configureOptions(_options);
+        public void ConfigureJsonApiOptions(Action<JsonApiOptions> options)
+        {
+            options?.Invoke(_options);
+        }
 
         /// <summary>
         /// Configures built-in .NET Core MVC (things like middleware, routing). Most of this configuration can be adjusted for the developers' need.
@@ -90,16 +94,25 @@ namespace JsonApiDotNetCore.Builders
         /// </summary>
         public void AutoDiscover(Action<IServiceDiscoveryFacade> autoDiscover)
         {
-            autoDiscover(_serviceDiscoveryFacade);
+            autoDiscover?.Invoke(_serviceDiscoveryFacade);
+        }
+
+        public void ConfigureResourcesFromDbContext<TDbContext>(Action<IResourceGraphBuilder> resources)
+            where TDbContext : DbContext
+        {
+            _resourceGraphBuilder.AddDbContext<TDbContext>();
+            _usesDbContext = true;
+            _services.AddScoped<IDbContextResolver, DbContextResolver<TDbContext>>();
+
+            ConfigureResources(resources);
         }
 
         /// <summary>
         /// Executes the action provided by the user to configure the resources using <see cref="IResourceGraphBuilder"/>
         /// </summary>
-        /// <param name="resourceGraphBuilder"></param>
-        public void ConfigureResources(Action<IResourceGraphBuilder> resourceGraphBuilder)
+        public void ConfigureResources(Action<IResourceGraphBuilder> resources)
         {
-            resourceGraphBuilder(_resourceGraphBuilder);
+            resources?.Invoke(_resourceGraphBuilder);
         }
 
         /// <summary>

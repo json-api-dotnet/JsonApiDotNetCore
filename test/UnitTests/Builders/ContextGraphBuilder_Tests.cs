@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;

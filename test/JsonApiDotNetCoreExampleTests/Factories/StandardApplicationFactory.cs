@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace JsonApiDotNetCoreExampleTests

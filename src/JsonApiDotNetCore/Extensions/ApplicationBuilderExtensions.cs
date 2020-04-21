@@ -6,29 +6,26 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCore.Extensions
+namespace JsonApiDotNetCore
 {
-    // ReSharper disable once InconsistentNaming
-    public static class IApplicationBuilderExtensions
+    public static class ApplicationBuilderExtensions
     {
         /// <summary>
-        /// Runs several internal JsonApiDotNetCore services to ensure proper configuration and registers required middlewares. 
-        /// The <paramref name="skipRegisterMiddleware"/> can be used to skip any middleware registration, in which case the developer
-        /// is responsible for registering middleware that are required for JsonApiDotNetCore.
+        /// Validates the resource graph and optionally registers the JsonApiDotNetCore middleware.
         /// </summary>
-        /// <param name="app"></param>
-        /// <param name="skipRegisterMiddleware">Indicates if JsonApiDotNetCore should skip middleware registration. This enables a user to take full control of middleware registration.</param>
-        /// <param name="useAuthentication">Indicates if .NET Core authentication middleware should be registered. Ignored when <paramref name="skipRegisterMiddleware"/> is set to true.</param>
-        /// <param name="useAuthorization">Indicates if .NET Core authentication middleware should be registered. Ignored when <paramref name="skipRegisterMiddleware"/> is set to true.</param>
+        /// <remarks>
+        /// The <paramref name="skipRegisterMiddleware"/> can be used to skip any middleware registration, in which case the developer
+        /// is responsible for registering required middleware.
+        /// </remarks>
+        /// <param name="skipRegisterMiddleware">Indicates to not register any middleware. This enables callers to take full control of middleware registration order.</param>
+        /// <param name="useAuthentication">Indicates if 'app.UseAuthentication()' should be called. Ignored when <paramref name="skipRegisterMiddleware"/> is set to true.</param>
+        /// <param name="useAuthorization">Indicates if 'app.UseAuthorization()' should be called. Ignored when <paramref name="skipRegisterMiddleware"/> is set to true.</param>
         /// <example>
-        /// This example illustrate which required middlewares should be registered when using the <paramref name="skipRegisterMiddleware"/> option.
+        /// The next example illustrates how to manually register middleware.
         /// <code>
         /// app.UseJsonApi(skipRegisterMiddleware: true);
-        /// // JADNC requires routing
         /// app.UseRouting();
-        /// // JADNC requires CurrentRequestMiddleware 
         /// app.UseMiddleware{CurrentRequestMiddleware}();
-        /// // JANDC requires the endpoint feature enabled as follows
         /// app.UseEndpoints(endpoints => endpoints.MapControllers());
         /// </code>
         /// </example>
@@ -41,7 +38,8 @@ namespace JsonApiDotNetCore.Extensions
                 inverseRelationshipResolver?.Resolve();
             }
 
-            if (!skipRegisterMiddleware) {
+            if (!skipRegisterMiddleware) 
+            {
                 // An endpoint is selected and set on the HttpContext if a match is found
                 app.UseRouting();
 
@@ -65,12 +63,12 @@ namespace JsonApiDotNetCore.Extensions
 
         private static void LogResourceGraphValidations(IApplicationBuilder app)
         {
-            var logger = app.ApplicationServices.GetService(typeof(ILogger<ResourceGraphBuilder>)) as ILogger;
-            var resourceGraph = app.ApplicationServices.GetService(typeof(IResourceGraph)) as ResourceGraph;
+            var logger = (ILogger)app.ApplicationServices.GetService(typeof(ILogger<ResourceGraphBuilder>));
+            var resourceGraph = (ResourceGraph)app.ApplicationServices.GetService(typeof(IResourceGraph));
 
             if (logger != null)
             {
-                resourceGraph?.ValidationResults.ForEach((v) => logger.Log(v.LogLevel, null, v.Message));
+                resourceGraph?.ValidationResults.ForEach(v => logger.Log(v.LogLevel, null, v.Message));
             }
         }
     }

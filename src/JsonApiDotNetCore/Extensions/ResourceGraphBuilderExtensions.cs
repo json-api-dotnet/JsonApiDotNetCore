@@ -1,20 +1,15 @@
 using System;
 using System.Reflection;
-using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Graph;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Data;
 
 namespace JsonApiDotNetCore.Extensions.EntityFrameworkCore
 {
-
     /// <summary>
     /// Extensions for configuring JsonApiDotNetCore with EF Core
     /// </summary>
-    public static class IResourceGraphBuilderExtensions
+    internal static class ResourceGraphBuilderExtensions
     {
         /// <summary>
         /// Add all the models that are part of the provided <see cref="DbContext" /> 
@@ -56,51 +51,6 @@ namespace JsonApiDotNetCore.Extensions.EntityFrameworkCore
                 return resourceAttribute.ResourceName;
 
             return null;
-        }
-    }
-
-    /// <summary>
-    /// Extensions for configuring JsonApiDotNetCore with EF Core
-    /// </summary>
-    public static class IServiceCollectionExtensions
-    {
-        /// <summary>
-        /// Enabling JsonApiDotNetCore using the EF Core DbContext to build the ResourceGraph.
-        /// </summary>
-        public static IServiceCollection AddJsonApi<TDbContext>(this IServiceCollection services,
-                                                    Action<JsonApiOptions> options = null,
-                                                    Action<IServiceDiscoveryFacade> discovery = null,
-                                                    Action<IResourceGraphBuilder> resources = null,
-                                                    IMvcCoreBuilder mvcBuilder = null)
-            where TDbContext : DbContext
-        {
-            var application = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
-            if (options != null)
-                application.ConfigureJsonApiOptions(options);
-            application.ConfigureMvc();
-            if (discovery != null)
-                application.AutoDiscover(discovery);
-            application.ConfigureResources<TDbContext>(resources);
-            application.ConfigureServices();
-            return services;
-        }
-    }
-
-    /// <summary>
-    /// Extensions for configuring JsonApiDotNetCore with EF Core
-    /// </summary>
-    public static class JsonApiApplicationBuildExtensions
-    {
-        /// <summary>
-        /// Executes the action provided by the user to configure the resources using <see cref="IResourceGraphBuilder"/>.
-        /// Additionally, inspects the EF core database context for models that implement IIdentifiable.
-        /// </summary>
-        public static void ConfigureResources<TContext>(this JsonApiApplicationBuilder builder, Action<IResourceGraphBuilder> resourceGraphBuilder) where TContext : DbContext
-        {
-            builder._resourceGraphBuilder.AddDbContext<TContext>();
-            builder._usesDbContext = true;
-            builder._services.AddScoped<IDbContextResolver, DbContextResolver<TContext>>();
-            resourceGraphBuilder?.Invoke(builder._resourceGraphBuilder);
         }
     }
 }
