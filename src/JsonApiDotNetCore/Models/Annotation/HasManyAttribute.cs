@@ -38,10 +38,9 @@ namespace JsonApiDotNetCore.Models
         public override object GetValue(object entity)
         {
            return entity?.GetType()
-               .GetProperty(InternalRelationshipName)?
+               .GetProperty(PropertyInfo.Name)?
                 .GetValue(entity);
         }
-
 
         /// <summary>
         /// Sets the value of the property identified by this attribute
@@ -52,7 +51,7 @@ namespace JsonApiDotNetCore.Models
         {
             var propertyInfo = entity
                 .GetType()
-                .GetProperty(InternalRelationshipName);
+                .GetProperty(PropertyInfo.Name);
 
             propertyInfo.SetValue(entity, newValue);
         }

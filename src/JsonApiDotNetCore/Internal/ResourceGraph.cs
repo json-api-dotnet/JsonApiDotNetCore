@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Internal
             if (relationship.InverseNavigation == null) return null;
             return GetResourceContext(relationship.RightType)
                             .Relationships
-                            .SingleOrDefault(r => r.InternalRelationshipName == relationship.InverseNavigation);
+                            .SingleOrDefault(r => r.PropertyInfo.Name == relationship.InverseNavigation);
         }
 
         private IEnumerable<IResourceField> Getter<T>(Expression<Func<T, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where T : IIdentifiable
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCore.Internal
             {   // model => model.Field1
                 try
                 {
-                    targeted.Add(available.Single(f => f.ExposedInternalMemberName == memberExpression.Member.Name));
+                    targeted.Add(available.Single(f => f.PropertyName == memberExpression.Member.Name));
                     return targeted;
                 }
                 catch (InvalidOperationException)
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCore.Internal
                     foreach (var member in newExpression.Members)
                     {
                         memberName = member.Name;
-                        targeted.Add(available.Single(f => f.ExposedInternalMemberName == memberName));
+                        targeted.Add(available.Single(f => f.PropertyName == memberName));
                     }
                     return targeted;
                 }

@@ -1,5 +1,5 @@
 using System;
-using JsonApiDotNetCore.Extensions;
+using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.Links;
 
@@ -17,10 +17,15 @@ namespace JsonApiDotNetCore.Models
             CanInclude = canInclude;
         }
 
-        public string ExposedInternalMemberName => InternalRelationshipName;
+        string IResourceField.PropertyName => PropertyInfo.Name;
+
         public string PublicRelationshipName { get; internal set; }
-        public string InternalRelationshipName { get; internal set; }
         public string InverseNavigation { get; internal set; }
+
+        /// <summary>
+        /// The resource property that this attribute is declared on.
+        /// </summary>
+        public PropertyInfo PropertyInfo { get; internal set; }
 
         /// <summary>
         /// The related entity type. This does not necessarily match the navigation property type.
@@ -38,9 +43,6 @@ namespace JsonApiDotNetCore.Models
         /// The parent entity type. This is the type of the class in which this attribute was used.
         /// </summary>
         public Type LeftType { get; internal set; }
-
-        public bool IsHasMany => GetType() == typeof(HasManyAttribute) || GetType().Inherits(typeof(HasManyAttribute));
-        public bool IsHasOne => GetType() == typeof(HasOneAttribute);
 
         /// <summary>
         /// Configures which links to show in the <see cref="RelationshipLinks"/>
@@ -85,8 +87,8 @@ namespace JsonApiDotNetCore.Models
         /// The internal navigation property path to the related entity.
         /// </summary>
         /// <remarks>
-        /// In all cases except the HasManyThrough relationships, this will just be the <see cref="InternalRelationshipName" />.
+        /// In all cases except the HasManyThrough relationships, this will just be the property name.
         /// </remarks>
-        public virtual string RelationshipPath => InternalRelationshipName;
+        public virtual string RelationshipPath => PropertyInfo.Name;
     }
 }

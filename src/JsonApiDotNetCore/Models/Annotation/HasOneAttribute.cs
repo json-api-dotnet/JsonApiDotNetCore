@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Models
         public override object GetValue(object entity)
         {
             return entity?.GetType()
-                .GetProperty(InternalRelationshipName)?
+                .GetProperty(PropertyInfo.Name)?
                  .GetValue(entity);
         }
 
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Models
         /// The independent resource identifier.
         /// </summary>
         public string IdentifiablePropertyName => string.IsNullOrWhiteSpace(_explicitIdentifiablePropertyName)
-            ? JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(InternalRelationshipName)
+            ? JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(PropertyInfo.Name)
             : _explicitIdentifiablePropertyName;
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.Models
         /// <param name="newValue">The new property value</param>
         public override void SetValue(object entity, object newValue)
         {
-            string propertyName = InternalRelationshipName;
+            string propertyName = PropertyInfo.Name;
             // if we're deleting the relationship (setting it to null),
             // we set the foreignKey to null. We could also set the actual property to null,
             // but then we would first need to load the current relationship, which requires an extra query.

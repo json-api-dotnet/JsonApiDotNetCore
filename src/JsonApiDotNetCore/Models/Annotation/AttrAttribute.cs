@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Models
             IsSortable = isSortable;
         }
 
-        public string ExposedInternalMemberName => PropertyInfo.Name;
+        string IResourceField.PropertyName => PropertyInfo.Name;
 
         /// <summary>
         /// How this attribute is exposed through the API
@@ -62,9 +62,9 @@ namespace JsonApiDotNetCore.Models
         public bool IsSortable { get; }
 
         /// <summary>
-        /// The member property info
+        /// The resource property that this attribute is declared on.
         /// </summary>
-        public PropertyInfo PropertyInfo { get; set; }
+        public PropertyInfo PropertyInfo { get; internal set; }
 
         /// <summary>
         /// Get the value of the attribute for the given object.

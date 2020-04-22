@@ -94,7 +94,6 @@ namespace JsonApiDotNetCore.Models
             return rightEntities.Cast(RightType);
         }
 
-
         /// <summary>
         /// Sets the value of the property identified by this attribute
         /// </summary>
@@ -104,7 +103,7 @@ namespace JsonApiDotNetCore.Models
         {
             var propertyInfo = entity
                 .GetType()
-                .GetProperty(InternalRelationshipName);
+                .GetProperty(PropertyInfo.Name);
             propertyInfo.SetValue(entity, newValue);
 
             if (newValue == null)

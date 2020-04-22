@@ -128,8 +128,8 @@ namespace JsonApiDotNetCore.Builders
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
                 if (attribute == null) continue;
 
+                attribute.PropertyInfo = prop;
                 attribute.PublicRelationshipName ??= FormatPropertyName(prop);
-                attribute.InternalRelationshipName = prop.Name;
                 attribute.RightType = GetRelationshipType(attribute, prop);
                 attribute.LeftType = entityType;
                 attributes.Add(attribute);
@@ -179,7 +179,7 @@ namespace JsonApiDotNetCore.Builders
         }
 
         protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop) =>
-            relation.IsHasMany ? prop.PropertyType.GetGenericArguments()[0] : prop.PropertyType;
+            relation is HasOneAttribute ? prop.PropertyType : prop.PropertyType.GetGenericArguments()[0];
 
         private List<EagerLoadAttribute> GetEagerLoads(Type entityType, int recursionDepth = 0)
         {

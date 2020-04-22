@@ -42,19 +42,19 @@ namespace UnitTests.ResourceHooks.AffectedEntities
             {
                 LeftType = typeof(Dummy),
                 RightType = typeof(ToOne),
-                InternalRelationshipName = "FirstToOne"
+                PropertyInfo = typeof(Dummy).GetProperty(nameof(Dummy.FirstToOne))
             };
             SecondToOneAttr = new HasOneAttribute("secondToOne")
             {
                 LeftType = typeof(Dummy),
                 RightType = typeof(ToOne),
-                InternalRelationshipName = "SecondToOne"
+                PropertyInfo = typeof(Dummy).GetProperty(nameof(Dummy.SecondToOne))
             };
             ToManyAttr = new HasManyAttribute("toManies")
             {
                 LeftType = typeof(Dummy),
                 RightType = typeof(ToMany),
-                InternalRelationshipName = "ToManies"
+                PropertyInfo = typeof(Dummy).GetProperty(nameof(Dummy.ToManies))
             };
             Relationships.Add(FirstToOneAttr, FirstToOnesEntities);
             Relationships.Add(SecondToOneAttr, SecondToOnesEntities);

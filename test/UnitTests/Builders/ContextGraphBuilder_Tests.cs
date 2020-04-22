@@ -93,8 +93,8 @@ namespace UnitTests
 
             // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("relatedResource", resource.Relationships.Single(r => r.IsHasOne).PublicRelationshipName);
-            Assert.Equal("relatedResources", resource.Relationships.Single(r => r.IsHasMany).PublicRelationshipName);
+            Assert.Equal("relatedResource", resource.Relationships.Single(r => r is HasOneAttribute).PublicRelationshipName);
+            Assert.Equal("relatedResources", resource.Relationships.Single(r => !(r is HasOneAttribute)).PublicRelationshipName);
         }
 
         public sealed class TestResource : Identifiable

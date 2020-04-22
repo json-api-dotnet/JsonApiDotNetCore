@@ -199,7 +199,7 @@ namespace JsonApiDotNetCore.Extensions
             MemberExpression member;
             if (filter.IsAttributeOfRelationship)
             {
-                var relation = Expression.PropertyOrField(entity, filter.Relationship.InternalRelationshipName);
+                var relation = Expression.PropertyOrField(entity, filter.Relationship.PropertyInfo.Name);
                 member = Expression.Property(relation, filter.Attribute.PropertyInfo.Name);
             }
             else
@@ -263,16 +263,16 @@ namespace JsonApiDotNetCore.Extensions
             // Is relationship attribute
             if (filter.IsAttributeOfRelationship)
             {
-                var relationProperty = concreteType.GetProperty(filter.Relationship.InternalRelationshipName);
+                var relationProperty = concreteType.GetProperty(filter.Relationship.PropertyInfo.Name);
                 if (relationProperty == null)
-                    throw new ArgumentException($"'{filter.Relationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
+                    throw new ArgumentException($"'{filter.Relationship.PropertyInfo.Name}' is not a valid relationship of '{concreteType}'");
 
                 var relatedType = filter.Relationship.RightType;
                 property = relatedType.GetProperty(filter.Attribute.PropertyInfo.Name);
                 if (property == null)
-                    throw new ArgumentException($"'{filter.Attribute.PropertyInfo.Name}' is not a valid attribute of '{filter.Relationship.InternalRelationshipName}'");
+                    throw new ArgumentException($"'{filter.Attribute.PropertyInfo.Name}' is not a valid attribute of '{filter.Relationship.PropertyInfo.Name}'");
 
-                var leftRelationship = Expression.PropertyOrField(parameter, filter.Relationship.InternalRelationshipName);
+                var leftRelationship = Expression.PropertyOrField(parameter, filter.Relationship.PropertyInfo.Name);
                 // {model.Relationship}
                 left = Expression.PropertyOrField(leftRelationship, property.Name);
             }
