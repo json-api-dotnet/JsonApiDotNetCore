@@ -51,9 +51,21 @@ namespace JsonApiDotNetCore.Models
         public Link RelationshipLinks { get; }
         public bool CanInclude { get; }
 
-        public abstract void SetValue(object entity, object newValue);
+        /// <summary>
+        /// Gets the value of the resource property this attributes was declared on.
+        /// </summary>
+        public virtual object GetValue(object entity)
+        {
+            return PropertyInfo.GetValue(entity);
+        }
 
-        public abstract object GetValue(object entity);
+        /// <summary>
+        /// Sets the value of the resource property this attributes was declared on.
+        /// </summary>
+        public virtual void SetValue(object entity, object newValue)
+        {
+            PropertyInfo.SetValue(entity, newValue);
+        }
 
         public override string ToString()
         {

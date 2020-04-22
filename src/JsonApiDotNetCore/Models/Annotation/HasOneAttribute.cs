@@ -37,14 +37,6 @@ namespace JsonApiDotNetCore.Models
             InverseNavigation = inverseNavigationProperty;
         }
 
-
-        public override object GetValue(object entity)
-        {
-            return entity?.GetType()
-                .GetProperty(PropertyInfo.Name)?
-                 .GetValue(entity);
-        }
-
         private readonly string _explicitIdentifiablePropertyName;
 
         /// <summary>
@@ -54,11 +46,7 @@ namespace JsonApiDotNetCore.Models
             ? JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(PropertyInfo.Name)
             : _explicitIdentifiablePropertyName;
 
-        /// <summary>
-        /// Sets the value of the property identified by this attribute
-        /// </summary>
-        /// <param name="entity">The target object</param>
-        /// <param name="newValue">The new property value</param>
+        /// <inheritdoc />
         public override void SetValue(object entity, object newValue)
         {
             string propertyName = PropertyInfo.Name;

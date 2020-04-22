@@ -30,30 +30,5 @@ namespace JsonApiDotNetCore.Models
         {
             InverseNavigation = inverseNavigationProperty;
         }
-
-        /// <summary>
-        /// Gets the value of the navigation property, defined by the relationshipName,
-        /// on the provided instance.
-        /// </summary>
-        public override object GetValue(object entity)
-        {
-           return entity?.GetType()
-               .GetProperty(PropertyInfo.Name)?
-                .GetValue(entity);
-        }
-
-        /// <summary>
-        /// Sets the value of the property identified by this attribute
-        /// </summary>
-        /// <param name="entity">The target object</param>
-        /// <param name="newValue">The new property value</param>
-        public override void SetValue(object entity, object newValue)
-        {
-            var propertyInfo = entity
-                .GetType()
-                .GetProperty(PropertyInfo.Name);
-
-            propertyInfo.SetValue(entity, newValue);
-        }
     }
 }

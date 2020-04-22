@@ -70,7 +70,7 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <summary>
-        /// Traverses the through the provided entity and returns the 
+        /// Traverses through the provided entity and returns the 
         /// value of the relationship on the other side of a join entity
         /// (e.g. Articles.ArticleTags.Tag).
         /// </summary>
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCore.Models
         {
             var throughNavigationProperty = entity.GetType()
                 .GetProperties()
-                .SingleOrDefault(p => p.Name == InternalThroughName);
+                .Single(p => p.Name == InternalThroughName);
 
             var throughEntities = throughNavigationProperty.GetValue(entity);
 
@@ -88,17 +88,13 @@ namespace JsonApiDotNetCore.Models
 
             // the right entities are included on the navigation/through entities. Extract and return them.
             var rightEntities = new List<IIdentifiable>();
-            foreach (var rightEntity in (IList)throughEntities)
+            foreach (var rightEntity in (IEnumerable)throughEntities)
                 rightEntities.Add((IIdentifiable)RightProperty.GetValue(rightEntity));
 
             return rightEntities.Cast(RightType);
         }
 
-        /// <summary>
-        /// Sets the value of the property identified by this attribute
-        /// </summary>
-        /// <param name="entity">The target object</param>
-        /// <param name="newValue">The new property value</param>
+        /// <inheritdoc />
         public override void SetValue(object entity, object newValue)
         {
             var propertyInfo = entity
