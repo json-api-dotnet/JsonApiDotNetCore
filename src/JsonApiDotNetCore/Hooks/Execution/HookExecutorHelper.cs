@@ -144,7 +144,6 @@ namespace JsonApiDotNetCore.Hooks
             return _genericProcessorFactory.Get<IResourceReadRepository<TResource, TId>>(typeof(IResourceReadRepository<,>), typeof(TResource), typeof(TId));
         }
 
-
         public Dictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(
             Dictionary<RelationshipAttribute, IEnumerable> leftEntitiesByRelation,
             IEnumerable existingRightEntities = null)
@@ -159,17 +158,20 @@ namespace JsonApiDotNetCore.Hooks
 
                 foreach (IIdentifiable ip in includedLefts)
                 {
-                    IList dbRightEntityList;
+                    IList dbRightEntityList = TypeHelper.CreateListFor(relationship.RightType);
                     var relationshipValue = relationship.GetValue(ip);
                     if (!(relationshipValue is IEnumerable))
                     {
-                        dbRightEntityList = TypeHelper.CreateListFor(relationship.RightType);
                         if (relationshipValue != null) dbRightEntityList.Add(relationshipValue);
                     }
                     else
                     {
-                        dbRightEntityList = (IList)relationshipValue;
+                        foreach (var item in (IEnumerable) relationshipValue)
+                        {
+                            dbRightEntityList.Add(item);
+                        }
                     }
+
                     var dbRightEntityListCast = dbRightEntityList.Cast<IIdentifiable>().ToList();
                     if (existingRightEntities != null) dbRightEntityListCast = dbRightEntityListCast.Except(existingRightEntities.Cast<IIdentifiable>(), _comparer).ToList();
 
