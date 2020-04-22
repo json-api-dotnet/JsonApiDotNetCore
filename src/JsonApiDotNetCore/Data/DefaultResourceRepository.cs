@@ -142,7 +142,7 @@ namespace JsonApiDotNetCore.Data
             }
             else if (relationshipAttr is HasManyAttribute hasManyAttr && !(relationshipAttr is HasManyThroughAttribute))
             {
-                foreach (IIdentifiable relationshipValue in (IList)trackedRelationshipValue)
+                foreach (IIdentifiable relationshipValue in (IEnumerable)trackedRelationshipValue)
                     _context.Entry(relationshipValue).Reference(hasManyAttr.InverseNavigation).Load();
             }
         }

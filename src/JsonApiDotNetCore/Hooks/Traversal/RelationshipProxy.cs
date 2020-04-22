@@ -62,7 +62,7 @@ namespace JsonApiDotNetCore.Hooks
                     return throughAttr.ThroughProperty.GetValue(entity);
                 }
                 var collection = new List<IIdentifiable>();
-                var joinEntities = (IList)throughAttr.ThroughProperty.GetValue(entity);
+                var joinEntities = (IEnumerable)throughAttr.ThroughProperty.GetValue(entity);
                 if (joinEntities == null) return null;
 
                 foreach (var joinEntity in joinEntities)
