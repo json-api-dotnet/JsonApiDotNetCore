@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -136,22 +135,19 @@ namespace JsonApiDotNetCore.Builders
 
                 if (attribute is HasManyThroughAttribute hasManyThroughAttribute)
                 {
-                    var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.InternalThroughName);
+                    var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.ThroughPropertyName);
                     if (throughProperty == null)
-                        throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Type does not contain a property named '{hasManyThroughAttribute.InternalThroughName}'.");
+                        throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.PropertyInfo.Name}': Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
 
-                    if (throughProperty.PropertyType.Implements<IList>() == false)
-                        throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}.{throughProperty.Name}'. Property type does not implement IList.");
+                    var throughType = TryGetManyThroughType(throughProperty);
+                    if (throughType == null)
+                        throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.PropertyInfo.Name}': Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
 
-                    // assumption: the property should be a generic collection, e.g. List<ArticleTag>
-                    if (throughProperty.PropertyType.IsGenericType == false)
-                        throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Expected through entity to be a generic type, such as List<{prop.PropertyType}>.");
-
-                    // Article → List<ArticleTag>
+                    // ICollection<ArticleTag>
                     hasManyThroughAttribute.ThroughProperty = throughProperty;
 
                     // ArticleTag
-                    hasManyThroughAttribute.ThroughType = throughProperty.PropertyType.GetGenericArguments()[0];
+                    hasManyThroughAttribute.ThroughType = throughType;
 
                     var throughProperties = hasManyThroughAttribute.ThroughType.GetProperties();
 
@@ -164,7 +160,7 @@ namespace JsonApiDotNetCore.Builders
                     hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(x => x.Name == leftIdPropertyName)
                         ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {entityType} with name {leftIdPropertyName}");
 
-                    // Article → ArticleTag.Tag
+                    // ArticleTag.Tag
                     hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.RightType)
                         ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {hasManyThroughAttribute.RightType}");
 
@@ -176,6 +172,24 @@ namespace JsonApiDotNetCore.Builders
             }
 
             return attributes;
+        }
+
+        private static Type TryGetManyThroughType(PropertyInfo throughProperty)
+        {
+            if (throughProperty.PropertyType.IsGenericType)
+            {
+                var typeArguments = throughProperty.PropertyType.GetGenericArguments();
+                if (typeArguments.Length == 1)
+                {
+                    var constructedThroughType = typeof(ICollection<>).MakeGenericType(typeArguments[0]);
+                    if (throughProperty.PropertyType.Implements(constructedThroughType))
+                    {
+                        return typeArguments[0];
+                    }
+                }
+            }
+
+            return null;
         }
 
         protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop) =>

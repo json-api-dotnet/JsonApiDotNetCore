@@ -86,7 +86,7 @@ namespace UnitTests.ResourceHooks
             var tagsSubset = _tagFaker.Generate(3);
             var joinsSubSet = _articleTagFaker.Generate(3);
             var articleTagsSubset = _articleFaker.Generate();
-            articleTagsSubset.ArticleTags = joinsSubSet;
+            articleTagsSubset.ArticleTags = joinsSubSet.ToHashSet();
             for (int i = 0; i < 3; i++)
             {
                 joinsSubSet[i].Article = articleTagsSubset;
@@ -97,7 +97,7 @@ namespace UnitTests.ResourceHooks
             var completeJoin = _articleTagFaker.Generate(6);
 
             var articleWithAllTags = _articleFaker.Generate();
-            articleWithAllTags.ArticleTags = completeJoin;
+            articleWithAllTags.ArticleTags = completeJoin.ToHashSet();
 
             for (int i = 0; i < 6; i++)
             {
@@ -116,7 +116,7 @@ namespace UnitTests.ResourceHooks
             var tagsSubset = _tagFaker.Generate(3);
             var joinsSubSet = _identifiableArticleTagFaker.Generate(3);
             var articleTagsSubset = _articleFaker.Generate();
-            articleTagsSubset.IdentifiableArticleTags = joinsSubSet;
+            articleTagsSubset.IdentifiableArticleTags = joinsSubSet.ToHashSet();
             for (int i = 0; i < 3; i++)
             {
                 joinsSubSet[i].Article = articleTagsSubset;
@@ -126,7 +126,7 @@ namespace UnitTests.ResourceHooks
             var completeJoin = _identifiableArticleTagFaker.Generate(6);
 
             var articleWithAllTags = _articleFaker.Generate();
-            articleWithAllTags.IdentifiableArticleTags = joinsSubSet;
+            articleWithAllTags.IdentifiableArticleTags = joinsSubSet.ToHashSet();
 
             for (int i = 0; i < 6; i++)
             {

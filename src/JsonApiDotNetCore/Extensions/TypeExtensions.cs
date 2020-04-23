@@ -108,7 +108,7 @@ namespace JsonApiDotNetCore.Extensions
         /// <summary>
         /// Whether or not a type implements an interface.
         /// </summary>
-        private static bool Implements(this Type concreteType, Type interfaceType) 
+        public static bool Implements(this Type concreteType, Type interfaceType) 
             => interfaceType?.IsAssignableFrom(concreteType) == true;
 
         /// <summary>

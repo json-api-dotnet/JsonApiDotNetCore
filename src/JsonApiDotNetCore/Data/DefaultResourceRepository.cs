@@ -423,7 +423,7 @@ namespace JsonApiDotNetCore.Data
         {
             if (relationshipAttribute is HasManyThroughAttribute throughAttribute)
             {
-                _context.Entry(oldEntity).Collection(throughAttribute.InternalThroughName).Load();
+                _context.Entry(oldEntity).Collection(throughAttribute.ThroughProperty.Name).Load();
             }
             else if (relationshipAttribute is HasManyAttribute hasManyAttribute)
             {
