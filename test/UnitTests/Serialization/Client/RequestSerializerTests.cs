@@ -129,7 +129,7 @@ namespace UnitTests.Serialization.Client
             var entityWithRelationships = new MultipleRelationshipsPrincipalPart
             {
                 PopulatedToOne = new OneToOneDependent { Id = 10 },
-                PopulatedToManies = new List<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
+                PopulatedToManies = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
             };
             _serializer.RelationshipsToSerialize = _resourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>(tr => new { tr.EmptyToOne, tr.EmptyToManies, tr.PopulatedToOne, tr.PopulatedToManies });
 

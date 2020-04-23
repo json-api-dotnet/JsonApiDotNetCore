@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -234,7 +235,8 @@ namespace JsonApiDotNetCore.Serialization
                     relatedInstance.StringId = rio.Id;
                     return relatedInstance;
                 });
-                var convertedCollection = relatedResources.Cast(attr.RightType);
+
+                var convertedCollection = relatedResources.CopyToTypedCollection(attr.PropertyInfo.PropertyType);
                 attr.SetValue(entity, convertedCollection);
             }
 

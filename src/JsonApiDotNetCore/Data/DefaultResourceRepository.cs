@@ -244,20 +244,22 @@ namespace JsonApiDotNetCore.Data
         }
 
         // helper method used in GetTrackedRelationshipValue. See comments below.
-        private IList GetTrackedManyRelationshipValue(IEnumerable<IIdentifiable> relationshipValueList, RelationshipAttribute relationshipAttr, ref bool wasAlreadyAttached)
+        private IEnumerable GetTrackedManyRelationshipValue(IEnumerable<IIdentifiable> relationshipValueList, RelationshipAttribute relationshipAttr, ref bool wasAlreadyAttached)
         {
             if (relationshipValueList == null) return null;
             bool newWasAlreadyAttached = false;
             var trackedPointerCollection = relationshipValueList.Select(pointer =>
-                {   // convert each element in the value list to relationshipAttr.DependentType.
+                {
+                    // convert each element in the value list to relationshipAttr.DependentType.
                     var tracked = AttachOrGetTracked(pointer);
                     if (tracked != null) newWasAlreadyAttached = true;
                     return Convert.ChangeType(tracked ?? pointer, relationshipAttr.RightType);
                 })
                 .ToList()
-                .Cast(relationshipAttr.RightType);
+                .CopyToTypedCollection(relationshipAttr.PropertyInfo.PropertyType);
+
             if (newWasAlreadyAttached) wasAlreadyAttached = true;
-            return (IList)trackedPointerCollection;
+            return trackedPointerCollection;
         }
 
         // helper method used in GetTrackedRelationshipValue. See comments there.

@@ -51,7 +51,7 @@ namespace UnitTests.Serialization.Server
         public void Build_RelationshipIncludedAndLinksDisabled_RelationshipEntryWithData()
         {
             // Arrange
-            var entity = new OneToManyPrincipal { Id = 10, Dependents = new List<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
+            var entity = new OneToManyPrincipal { Id = 10, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
             var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild } );
 
             // Act
@@ -68,7 +68,7 @@ namespace UnitTests.Serialization.Server
         public void Build_RelationshipIncludedAndLinksEnabled_RelationshipEntryWithDataAndLinks()
         {
             // Arrange
-            var entity = new OneToManyPrincipal { Id = 10, Dependents = new List<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
+            var entity = new OneToManyPrincipal { Id = 10, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
             var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild }, relationshipLinks: _dummyRelationshipLinks);
 
             // Act

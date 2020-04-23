@@ -224,7 +224,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource()
         {
             // Arrange
-            var todoCollection = new TodoItemCollection {TodoItems = new List<TodoItem>()};
+            var todoCollection = new TodoItemCollection {TodoItems = new HashSet<TodoItem>()};
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
             todoCollection.Owner = person;
@@ -297,7 +297,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // this user may not be reattached to the db context in the repository.
 
             // Arrange
-            var todoCollection = new TodoItemCollection {TodoItems = new List<TodoItem>()};
+            var todoCollection = new TodoItemCollection {TodoItems = new HashSet<TodoItem>()};
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
             todoCollection.Owner = person;
@@ -369,7 +369,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource_With_Overlap()
         {
             // Arrange
-            var todoCollection = new TodoItemCollection {TodoItems = new List<TodoItem>()};
+            var todoCollection = new TodoItemCollection {TodoItems = new HashSet<TodoItem>()};
             var person = _personFaker.Generate();
             var todoItem1 = _todoItemFaker.Generate();
             var todoItem2 = _todoItemFaker.Generate();
@@ -470,11 +470,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             var response = await client.SendAsync(request);
+
+            // Assert
+            var body = response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
             _context = _fixture.GetService<AppDbContext>();
             var personsTodoItems = _context.People.Include(p => p.TodoItems).Single(p => p.Id == person.Id).TodoItems;
 
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(personsTodoItems);
         }
 
@@ -576,7 +579,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
-            person.TodoItems = new List<TodoItem> { todoItem };
+            person.TodoItems = new HashSet<TodoItem> { todoItem };
             _context.People.Add(person);
             _context.SaveChanges();
 
@@ -717,13 +720,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var person1 = _personFaker.Generate();
-            person1.TodoItems = _todoItemFaker.Generate(3).ToList();
+            person1.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
             var person2 = _personFaker.Generate();
-            person2.TodoItems = _todoItemFaker.Generate(2).ToList();
+            person2.TodoItems = _todoItemFaker.Generate(2).ToHashSet();
             context.People.AddRange(new List<Person> { person1, person2 });
             await context.SaveChangesAsync();
-            var todoItem1Id = person1.TodoItems[0].Id;
-            var todoItem2Id = person1.TodoItems[1].Id;
+            var todoItem1Id = person1.TodoItems.ElementAt(0).Id;
+            var todoItem2Id = person1.TodoItems.ElementAt(1).Id;
 
             var content = new
             {

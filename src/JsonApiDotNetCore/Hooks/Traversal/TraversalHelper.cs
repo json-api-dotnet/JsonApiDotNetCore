@@ -161,7 +161,7 @@ namespace JsonApiDotNetCore.Hooks
             foreach (var kvp in rightEntitiesGrouped)
             {
                 var type = kvp.Key.RightType;
-                var list = kvp.Value.Cast(type);
+                var list = kvp.Value.CopyToList(type);
                 processEntitiesMethod.MakeGenericMethod(type).Invoke(this, new object[] { list });
             }
 
@@ -295,7 +295,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         private IRelationshipsFromPreviousLayer CreateRelationshipsFromInstance(RightType nodeType, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
-            var cast = relationshipsFromPrev.Cast(relationshipsFromPrev.First().GetType());
+            var cast = relationshipsFromPrev.CopyToList(relationshipsFromPrev.First().GetType());
             return (IRelationshipsFromPreviousLayer)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, cast);
         }
 
@@ -304,7 +304,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         private IRelationshipGroup CreateRelationshipGroupInstance(Type thisLayerType, RelationshipProxy proxy, List<IIdentifiable> leftEntities, List<IIdentifiable> rightEntities)
         {
-            var rightEntitiesHashed = TypeHelper.CreateInstanceOfOpenType(typeof(HashSet<>), thisLayerType, rightEntities.Cast(thisLayerType));
+            var rightEntitiesHashed = TypeHelper.CreateInstanceOfOpenType(typeof(HashSet<>), thisLayerType, rightEntities.CopyToList(thisLayerType));
             return (IRelationshipGroup)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipGroup<>),
                 thisLayerType, proxy, new HashSet<IIdentifiable>(leftEntities), rightEntitiesHashed);
         }

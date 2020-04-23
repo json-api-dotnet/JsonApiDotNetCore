@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExample.Models
         public string Name { get; set; }
 
         [HasMany]
-        public List<TodoItem> TodoItems { get; set; }
+        public ISet<TodoItem> TodoItems { get; set; }
 
         [HasOne]
         public Person Owner { get; set; }

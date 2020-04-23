@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Models
         /// public class Author : Identifiable 
         /// {
         ///     [HasMany("articles"]
-        ///     public virtual List&lt;Article&gt; Articles { get; set; }
+        ///     public List&lt;Article&gt; Articles { get; set; }
         /// }
         /// </code>
         /// 

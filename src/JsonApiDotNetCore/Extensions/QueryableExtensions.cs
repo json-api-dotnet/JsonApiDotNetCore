@@ -377,15 +377,14 @@ namespace JsonApiDotNetCore.Extensions
                 Expression bindExpression;
                 if (nestedPropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(nestedPropertyType))
                 {
-                    // Concrete type of Collection
-                    var singleType = nestedPropertyType.GetGenericArguments().Single();
+                    var collectionElementType = nestedPropertyType.GetGenericArguments().Single();
                     // {y}
-                    var nestedParameter = Expression.Parameter(singleType, "y");
+                    var nestedParameter = Expression.Parameter(collectionElementType, "y");
                     nestedBindings = item.Value.Select(prop => Expression.Bind(
-                        singleType.GetProperty(prop), Expression.PropertyOrField(nestedParameter, prop))).ToList();
+                        collectionElementType.GetProperty(prop), Expression.PropertyOrField(nestedParameter, prop))).ToList();
 
                     // { new Item() }
-                    var newNestedExp = Expression.New(singleType);
+                    var newNestedExp = Expression.New(collectionElementType);
                     var initNestedExp = Expression.MemberInit(newNestedExp, nestedBindings);
                     // { y => new Item() {Id = y.Id, Name = y.Name}}
                     var body = Expression.Lambda(initNestedExp, nestedParameter);
@@ -395,15 +394,15 @@ namespace JsonApiDotNetCore.Extensions
                     Expression selectMethod = Expression.Call(
                         typeof(Enumerable),
                         "Select",
-                        new[] { singleType, singleType },
+                        new[] { collectionElementType, collectionElementType },
                         propertyExpression, body);
 
-                    // { x.Items.Select(y => new Item() {Id = y.Id, Name = y.Name}).ToList() }
-                    bindExpression = Expression.Call(
-                         typeof(Enumerable),
-                         "ToList",
-                         new[] { singleType },
-                         selectMethod);
+                    var enumerableOfElementType = typeof(IEnumerable<>).MakeGenericType(collectionElementType);
+                    var typedCollection = nestedPropertyType.ToConcreteCollectionType();
+                    var typedCollectionConstructor = typedCollection.GetConstructor(new[] {enumerableOfElementType});
+
+                    // { new HashSet<Item>(x.Items.Select(y => new Item() {Id = y.Id, Name = y.Name})) }
+                    bindExpression = Expression.New(typedCollectionConstructor, selectMethod);
                 }
                 // [HasOne] attribute
                 else

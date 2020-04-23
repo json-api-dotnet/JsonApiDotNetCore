@@ -81,10 +81,10 @@ namespace JsonApiDotNetCore.Hooks
                     .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
                     .MakeGenericMethod(entityTypeForRepository, idType);
             var cast = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
-            var ids = cast.Select(e => e.StringId).Cast(idType);
+            var ids = cast.Select(e => e.StringId).CopyToList(idType);
             var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, relationshipsToNextLayer });
             if (values == null) return null;
-            return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(entityTypeForRepository), values.Cast(entityTypeForRepository));
+            return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(entityTypeForRepository), values.CopyToList(entityTypeForRepository));
         }
 
         public HashSet<TResource> LoadDbValues<TResource>(IEnumerable<TResource> entities, ResourceHook hook, params RelationshipAttribute[] relationships) where TResource : class, IIdentifiable

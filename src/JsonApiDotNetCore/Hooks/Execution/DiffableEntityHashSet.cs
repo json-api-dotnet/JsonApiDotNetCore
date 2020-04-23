@@ -75,7 +75,11 @@ namespace JsonApiDotNetCore.Hooks
         {
             var propertyInfo = TypeHelper.ParseNavigationExpression(navigationAction);
             var propertyType = propertyInfo.PropertyType;
-            if (propertyType.Inherits(typeof(IEnumerable))) propertyType = TypeHelper.GetTypeOfList(propertyType);
+            if (propertyType.ImplementsInterface(typeof(IEnumerable)))
+            {
+                propertyType = TypeHelper.TryGetCollectionElementType(propertyType);
+            }
+
             if (propertyType.Implements<IIdentifiable>())
             {
                 // the navigation action references a relationship. Redirect the call to the relationship dictionary. 

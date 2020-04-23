@@ -329,7 +329,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var owner = _personFaker.Generate();
-            owner.TodoItems = _todoItemFaker.Generate(2);
+            owner.TodoItems = _todoItemFaker.Generate(2).ToHashSet();
 
             _dbContext.People.Add(owner);
             _dbContext.SaveChanges();
@@ -369,7 +369,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var owner = _personFaker.Generate();
-            owner.TodoItems = _todoItemFaker.Generate(2);
+            owner.TodoItems = _todoItemFaker.Generate(2).ToHashSet();
 
             _dbContext.People.Add(owner);
             _dbContext.SaveChanges();
@@ -412,7 +412,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var owner = _personFaker.Generate();
-            owner.TodoItems = _todoItemFaker.Generate(2);
+            owner.TodoItems = _todoItemFaker.Generate(2).ToHashSet();
 
             _dbContext.People.Add(owner);
             _dbContext.SaveChanges();

@@ -68,8 +68,9 @@ namespace JsonApiDotNetCore.Hooks
 
                     if (currentValue is IEnumerable<IIdentifiable> relationshipCollection)
                     {
-                        var newValue = relationshipCollection.Intersect(unique, _comparer).Cast(proxy.RightType);
-                        proxy.SetValue(left, newValue);
+                        var intersection = relationshipCollection.Intersect(unique, _comparer);
+                        IEnumerable typedCollection = intersection.CopyToTypedCollection(relationshipCollection.GetType());
+                        proxy.SetValue(left, typedCollection);
                     }
                     else if (currentValue is IIdentifiable relationshipSingle)
                     {

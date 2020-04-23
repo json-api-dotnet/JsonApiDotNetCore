@@ -90,9 +90,9 @@ namespace UnitTests.Serialization.Server
             var reviewer = _personFaker.Generate();
             article.Reviewer = reviewer;
 
-            var blogs = _blogFaker.Generate(1).ToList();
+            var blogs = _blogFaker.Generate(1);
             blogs.Add(sharedBlog);
-            reviewer.Blogs = blogs;
+            reviewer.Blogs = blogs.ToHashSet();
 
             blogs[0].Author = reviewer;
             var author = _personFaker.Generate();
@@ -114,8 +114,8 @@ namespace UnitTests.Serialization.Server
             var author = _personFaker.Generate();
             article.Author = author;
 
-            var blogs = _blogFaker.Generate(2).ToList();
-            author.Blogs = blogs;
+            var blogs = _blogFaker.Generate(2);
+            author.Blogs = blogs.ToHashSet();
 
             blogs[0].Reviewer = author;
             var reviewer = _personFaker.Generate();
@@ -133,7 +133,7 @@ namespace UnitTests.Serialization.Server
         public void BuildIncluded_DuplicateChildrenMultipleChains_OnceInOutput()
         {
             var person = _personFaker.Generate();
-            var articles = _articleFaker.Generate(5).ToList();
+            var articles = _articleFaker.Generate(5);
             articles.ForEach(a => a.Author = person);
             articles.ForEach(a => a.Reviewer = person);
             var builder = GetBuilder();

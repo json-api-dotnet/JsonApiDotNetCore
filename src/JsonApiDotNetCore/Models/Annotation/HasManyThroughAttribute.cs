@@ -91,16 +91,13 @@ namespace JsonApiDotNetCore.Models
             foreach (var rightEntity in (IEnumerable)throughEntities)
                 rightEntities.Add((IIdentifiable)RightProperty.GetValue(rightEntity));
 
-            return rightEntities.Cast(RightType);
+            return rightEntities.CopyToList(RightType);
         }
 
         /// <inheritdoc />
         public override void SetValue(object entity, object newValue)
         {
-            var propertyInfo = entity
-                .GetType()
-                .GetProperty(PropertyInfo.Name);
-            propertyInfo.SetValue(entity, newValue);
+            base.SetValue(entity, newValue);
 
             if (newValue == null)
             {

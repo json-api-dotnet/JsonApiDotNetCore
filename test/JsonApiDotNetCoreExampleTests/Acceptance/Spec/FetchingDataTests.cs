@@ -108,7 +108,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.TodoItems.RemoveRange(context.TodoItems);
             await context.SaveChangesAsync();
 
-            var todoItems = _todoItemFaker.Generate(20).ToList();
+            var todoItems = _todoItemFaker.Generate(20);
             context.TodoItems.AddRange(todoItems);
             await context.SaveChangesAsync();
 

@@ -18,16 +18,16 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Models
     }
 
     [Resource("todoCollections")]
-    public class TodoItemCollectionClient : Identifiable<Guid>
+    public sealed class TodoItemCollectionClient : Identifiable<Guid>
     {
         [Attr]
         public string Name { get; set; }
         public int OwnerId { get; set; }
 
         [HasMany]
-        public virtual List<TodoItemClient> TodoItems { get; set; }
+        public ISet<TodoItemClient> TodoItems { get; set; }
 
         [HasOne]
-        public virtual Person Owner { get; set; }
+        public Person Owner { get; set; }
     }
 }

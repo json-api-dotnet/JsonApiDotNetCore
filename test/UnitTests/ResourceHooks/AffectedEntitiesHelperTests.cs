@@ -17,7 +17,7 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         [HasOne]
         public ToOne SecondToOne { get; set; }
         [HasMany]
-        public List<ToMany> ToManies { get; set; }
+        public ISet<ToMany> ToManies { get; set; }
     }
 
     public class NotTargeted : Identifiable { }

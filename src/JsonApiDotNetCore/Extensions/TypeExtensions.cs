@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Extensions
@@ -13,10 +14,10 @@ namespace JsonApiDotNetCore.Extensions
         /// Extension to use the LINQ cast method in a non-generic way:
         /// <code>
         /// Type targetType = typeof(TResource)
-        /// ((IList)myList).Cast(targetType).
+        /// ((IList)myList).CopyToList(targetType).
         /// </code>
         /// </summary>
-        public static IEnumerable Cast(this IEnumerable source, Type type)
+        public static IEnumerable CopyToList(this IEnumerable source, Type type)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -27,6 +28,28 @@ namespace JsonApiDotNetCore.Extensions
                 list.Add(TypeHelper.ConvertType(item, type));
             }
             return list;
+        }
+
+        /// <summary>
+        /// Creates a collection instance based on the specified collection type and copies the specified elements into it.
+        /// </summary>
+        /// <param name="source">Source to copy from.</param>
+        /// <param name="collectionType">Target collection type, for example: typeof(List{Article}) or typeof(ISet{Person}).</param>
+        /// <returns></returns>
+        public static IEnumerable CopyToTypedCollection(this IEnumerable source, Type collectionType)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (collectionType == null) throw new ArgumentNullException(nameof(collectionType));
+
+            var concreteCollectionType = collectionType.ToConcreteCollectionType();
+            dynamic concreteCollectionInstance = concreteCollectionType.New<dynamic>();
+
+            foreach (var item in source)
+            {
+                concreteCollectionInstance.Add((dynamic) item);
+            }
+
+            return concreteCollectionInstance;
         }
 
         /// <summary>
@@ -99,5 +122,10 @@ namespace JsonApiDotNetCore.Extensions
         /// </summary>
         public static bool Inherits(this Type concreteType, Type interfaceType) 
             => interfaceType?.IsAssignableFrom(concreteType) == true;
+
+        public static bool ImplementsInterface(this Type source, Type interfaceType)
+        {
+            return source.GetInterfaces().Any(type => type == interfaceType);
+        }
     }
 }

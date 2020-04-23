@@ -99,9 +99,14 @@ namespace UnitTests
 
         public sealed class TestResource : Identifiable
         {
-            [Attr] public string CompoundAttribute { get; set; }
-            [HasOne] public RelatedResource RelatedResource { get; set; }
-            [HasMany] public List<RelatedResource> RelatedResources { get; set; }
+            [Attr] 
+            public string CompoundAttribute { get; set; }
+            
+            [HasOne] 
+            public RelatedResource RelatedResource { get; set; }
+            
+            [HasMany] 
+            public ISet<RelatedResource> RelatedResources { get; set; }
         }
 
         public class RelatedResource : Identifiable { }

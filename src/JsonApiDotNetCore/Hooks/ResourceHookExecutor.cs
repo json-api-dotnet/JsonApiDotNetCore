@@ -404,7 +404,7 @@ namespace JsonApiDotNetCore.Hooks
         {
             foreach (var key in prevLayerRelationships.Keys.ToList())
             {
-                var replaced = prevLayerRelationships[key].Cast<IIdentifiable>().Select(entity => dbValues.Single(dbEntity => dbEntity.StringId == entity.StringId)).Cast(key.LeftType);
+                var replaced = prevLayerRelationships[key].Cast<IIdentifiable>().Select(entity => dbValues.Single(dbEntity => dbEntity.StringId == entity.StringId)).CopyToList(key.LeftType);
                 prevLayerRelationships[key] = TypeHelper.CreateHashSetFor(key.LeftType, replaced);
             }
             return prevLayerRelationships;

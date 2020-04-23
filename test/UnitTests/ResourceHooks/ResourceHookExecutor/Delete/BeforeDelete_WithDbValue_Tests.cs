@@ -23,7 +23,7 @@ namespace UnitTests.ResourceHooks
             var passport = _passportFaker.Generate();
 
             person.Passport = passport;
-            person.TodoItems = new List<TodoItem> { todo1 };
+            person.TodoItems = new HashSet<TodoItem> { todo1 };
             person.StakeHolderTodoItem = todo2;
             options = InitInMemoryDb(context =>
             {

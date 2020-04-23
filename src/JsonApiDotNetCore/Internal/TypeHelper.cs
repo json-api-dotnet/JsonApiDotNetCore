@@ -64,12 +64,19 @@ namespace JsonApiDotNetCore.Internal
             return type.IsValueType ? type.New() : null;
         }
 
-        public static Type GetTypeOfList(Type type)
+        public static Type TryGetCollectionElementType(Type type)
         {
-            if (type != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+            if (type != null)
             {
-                return type.GetGenericArguments()[0];
+                if (type.IsGenericType && type.GenericTypeArguments.Length == 1)
+                {
+                    if (type.ImplementsInterface(typeof(IEnumerable)))
+                    {
+                        return type.GenericTypeArguments[0];
+                    }
+                }
             }
+
             return null;
         }
 
@@ -183,7 +190,6 @@ namespace JsonApiDotNetCore.Internal
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, bool hasInternalConstructor, params object[] constructorArguments)
         {
             return CreateInstanceOfOpenType(openType, new[] { parameter }, hasInternalConstructor, constructorArguments);
-
         }
 
         /// <summary>
@@ -203,6 +209,30 @@ namespace JsonApiDotNetCore.Internal
         public static IEnumerable CreateHashSetFor(Type type, object elements = null)
         {
             return (IEnumerable)CreateInstanceOfOpenType(typeof(HashSet<>), type, elements ?? new object());
+        }
+
+        /// <summary>
+        /// Returns a compatible collection type that can be instantiated, for example IList{Article} -> List{Article} or ISet{Article} -> HashSet{Article}
+        /// </summary>
+        public static Type ToConcreteCollectionType(this Type collectionType)
+        {
+            if (collectionType.IsInterface && collectionType.IsGenericType)
+            {
+                var genericTypeDefinition = collectionType.GetGenericTypeDefinition();
+
+                if (genericTypeDefinition == typeof(ICollection<>) || genericTypeDefinition == typeof(ISet<>) ||
+                    genericTypeDefinition == typeof(IEnumerable<>) || genericTypeDefinition == typeof(IReadOnlyCollection<>))
+                {
+                    return typeof(HashSet<>).MakeGenericType(collectionType.GenericTypeArguments[0]);
+                }
+
+                if (genericTypeDefinition == typeof(IList<>) || genericTypeDefinition == typeof(IReadOnlyList<>))
+                {
+                    return typeof(List<>).MakeGenericType(collectionType.GenericTypeArguments[0]);
+                }
+            }
+
+            return collectionType;
         }
 
         /// <summary>

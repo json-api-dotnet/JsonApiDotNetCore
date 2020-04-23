@@ -89,7 +89,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 Collection = new TodoItemCollection
                 {
                     Owner = new Person(),
-                    TodoItems = new List<TodoItem> {
+                    TodoItems = new HashSet<TodoItem> {
                         new TodoItem(),
                         new TodoItem()
                     }
@@ -130,7 +130,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 Collection = new TodoItemCollection
                 {
                     Owner = new Person(),
-                    TodoItems = new List<TodoItem> {
+                    TodoItems = new HashSet<TodoItem> {
                         new TodoItem {
                             Owner = new Person()
                         },
@@ -176,7 +176,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                         Role = new PersonRole()
                     },
-                    TodoItems = new List<TodoItem> {
+                    TodoItems = new HashSet<TodoItem> {
                         new TodoItem {
                             Owner = new Person()
                         },
@@ -291,15 +291,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var person = new Person {
-                todoCollections = new List<TodoItemCollection> {
+                todoCollections = new HashSet<TodoItemCollection> {
                     new TodoItemCollection {
-                        TodoItems = new List<TodoItem> {
+                        TodoItems = new HashSet<TodoItem> {
                             new TodoItem(),
                             new TodoItem()
                         }
                     },
                     new TodoItemCollection {
-                        TodoItems = new List<TodoItem> {
+                        TodoItems = new HashSet<TodoItem> {
                             new TodoItem(),
                             new TodoItem(),
                             new TodoItem()

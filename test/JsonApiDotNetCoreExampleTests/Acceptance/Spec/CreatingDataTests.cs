@@ -94,7 +94,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = _todoItemFaker.Generate();
             _dbContext.TodoItems.Add(todoItem);
             _dbContext.SaveChanges();
-            var todoCollection = new TodoItemCollection { TodoItems = new List<TodoItem> { todoItem } };
+            var todoCollection = new TodoItemCollection { TodoItems = new HashSet<TodoItem> { todoItem } };
 
             // Act
             var (body, response) = await Post("/api/v1/todoCollections", serializer.Serialize(todoCollection));
@@ -121,7 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _dbContext.People.Add(owner);
             _dbContext.TodoItems.Add(todoItem);
             _dbContext.SaveChanges();
-            var todoCollection = new TodoItemCollection { Owner = owner, TodoItems = new List<TodoItem> { todoItem } };
+            var todoCollection = new TodoItemCollection { Owner = owner, TodoItems = new HashSet<TodoItem> { todoItem } };
 
             // Act
             var (body, response) = await Post("/api/v1/todoCollections?include=todoItems", serializer.Serialize(todoCollection));
@@ -144,7 +144,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _dbContext.People.Add(owner);
             _dbContext.TodoItems.Add(todoItem);
             _dbContext.SaveChanges();
-            var todoCollection = new TodoItemCollection {Owner = owner, Name = "Jack", TodoItems = new List<TodoItem> {todoItem}};
+            var todoCollection = new TodoItemCollection {Owner = owner, Name = "Jack", TodoItems = new HashSet<TodoItem> {todoItem}};
 
             // Act
             var (body, response) = await Post("/api/v1/todoCollections?include=todoItems&fields=name&fields[todoItems]=ordinal", serializer.Serialize(todoCollection));
@@ -356,16 +356,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var serializer = GetSerializer<Person>(e => new { e.FirstName }, e => new { e.TodoItems });
             var currentPerson = _personFaker.Generate();
-            var todoItems = _todoItemFaker.Generate(3).ToList();
-            currentPerson.TodoItems = todoItems;
+            var todoItems = _todoItemFaker.Generate(3);
+            currentPerson.TodoItems = todoItems.ToHashSet();
             _dbContext.Add(currentPerson);
             _dbContext.SaveChanges();
-            var firstTd = currentPerson.TodoItems[0];
-            var secondTd = currentPerson.TodoItems[1];
-            var thirdTd = currentPerson.TodoItems[2];
+            var firstTd = todoItems[0];
+            var secondTd = todoItems[1];
+            var thirdTd = todoItems[2];
 
             var newPerson = _personFaker.Generate();
-            newPerson.TodoItems = new List<TodoItem> { firstTd, secondTd };
+            newPerson.TodoItems = new HashSet<TodoItem> { firstTd, secondTd };
 
             // Act
             var (body, response) = await Post("/api/v1/people", serializer.Serialize(newPerson));

@@ -104,7 +104,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var person = new Person();
-            var todoItems = _todoItemFaker.Generate(3).ToList();
+            var todoItems = _todoItemFaker.Generate(3);
             _context.TodoItems.AddRange(todoItems);
             todoItems[0].Owner = person;
             _context.SaveChanges();

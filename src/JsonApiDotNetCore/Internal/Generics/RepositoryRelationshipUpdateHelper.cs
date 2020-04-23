@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -69,10 +70,17 @@ namespace JsonApiDotNetCore.Internal.Generics
 
         private async Task UpdateOneToManyAsync(IIdentifiable parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            var value = new List<TRelatedResource>();
-            if (relationshipIds.Any())
-            {   // [1, 2, 3]
-                var target = Expression.Constant(TypeHelper.ConvertListType(relationshipIds, TypeHelper.GetIdentifierType(relationship.RightType)));
+            IEnumerable value;
+            if (!relationshipIds.Any())
+            {
+                var collectionType = relationship.PropertyInfo.PropertyType.ToConcreteCollectionType();
+                value = collectionType.New<IEnumerable>();
+            }
+            else
+            {
+                // [1, 2, 3]
+                var target = Expression.Constant(TypeHelper.ConvertListType(relationshipIds,
+                    TypeHelper.GetIdentifierType(relationship.RightType)));
                 // (Person p) => ...
                 ParameterExpression parameter = Expression.Parameter(typeof(TRelatedResource));
                 // (Person p) => p.Id
@@ -80,8 +88,11 @@ namespace JsonApiDotNetCore.Internal.Generics
                 // [1,2,3].Contains(p.Id)
                 var callContains = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), new[] { idMember.Type }, target, idMember);
                 var containsLambda = Expression.Lambda<Func<TRelatedResource, bool>>(callContains, parameter);
-                value = await _context.Set<TRelatedResource>().Where(containsLambda).ToListAsync();
+
+                var resultSet = await _context.Set<TRelatedResource>().Where(containsLambda).ToListAsync();
+                value = resultSet.CopyToTypedCollection(relationship.PropertyInfo.PropertyType);
             }
+
             relationship.SetValue(parent, value);
         }
 

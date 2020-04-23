@@ -214,7 +214,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
 
-            var articles = _articleFaker.Generate(3).ToList();
+            var articles = _articleFaker.Generate(3);
             string toBeExcluded = "This should not be included";
             articles[0].Name = toBeExcluded;
 
@@ -467,10 +467,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            var persons = _personFaker.Generate(2).ToList();
+            var persons = _personFaker.Generate(2);
             var lockedTodo = _todoItemFaker.Generate();
             lockedTodo.IsLocked = true;
-            lockedTodo.StakeHolders = persons;
+            lockedTodo.StakeHolders = persons.ToHashSet();
             context.TodoItems.Add(lockedTodo);
             await context.SaveChangesAsync();
 
@@ -485,8 +485,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                             {
                                 data = new object[]
                                 {
-                                    new { type = "people", id = $"{lockedTodo.StakeHolders[0].Id}" },
-                                    new { type = "people", id = $"{lockedTodo.StakeHolders[1].Id}" }
+                                    new { type = "people", id = $"{persons[0].Id}" },
+                                    new { type = "people", id = $"{persons[1].Id}" }
                                 }
 
                             }
@@ -522,10 +522,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            var persons = _personFaker.Generate(2).ToList();
+            var persons = _personFaker.Generate(2);
             var lockedTodo = _todoItemFaker.Generate();
             lockedTodo.IsLocked = true;
-            lockedTodo.StakeHolders = persons;
+            lockedTodo.StakeHolders = persons.ToHashSet();
             context.TodoItems.Add(lockedTodo);
             var unlockedTodo = _todoItemFaker.Generate();
             context.TodoItems.Add(unlockedTodo);
@@ -543,8 +543,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                             {
                                 data = new object[]
                                 {
-                                    new { type = "people", id = $"{lockedTodo.StakeHolders[0].Id}" },
-                                    new { type = "people", id = $"{lockedTodo.StakeHolders[1].Id}" }
+                                    new { type = "people", id = $"{persons[0].Id}" },
+                                    new { type = "people", id = $"{persons[1].Id}" }
                                 }
 
                             }
@@ -580,15 +580,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            var persons = _personFaker.Generate(2).ToList();
+            var persons = _personFaker.Generate(2);
             var lockedTodo = _todoItemFaker.Generate();
             lockedTodo.IsLocked = true;
-            lockedTodo.StakeHolders = persons;
+            lockedTodo.StakeHolders = persons.ToHashSet();
             context.TodoItems.Add(lockedTodo);
             await context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("DELETE");
-            var route = $"/api/v1/people/{lockedTodo.StakeHolders[0].Id}";
+            var route = $"/api/v1/people/{persons[0].Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

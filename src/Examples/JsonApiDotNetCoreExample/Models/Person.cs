@@ -44,13 +44,13 @@ namespace JsonApiDotNetCoreExample.Models
         public Gender Gender { get; set; }
 
         [HasMany]
-        public List<TodoItem> TodoItems { get; set; }
+        public ISet<TodoItem> TodoItems { get; set; }
 
         [HasMany]
-        public List<TodoItem> AssignedTodoItems { get; set; }
+        public ISet<TodoItem> AssignedTodoItems { get; set; }
 
         [HasMany]
-        public List<TodoItemCollection> todoCollections { get; set; }
+        public HashSet<TodoItemCollection> todoCollections { get; set; }
 
         [HasOne]
         public PersonRole Role { get; set; }

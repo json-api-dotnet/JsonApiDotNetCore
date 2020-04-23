@@ -90,14 +90,14 @@ namespace JsonApiDotNetCore.Hooks
                 if (!_skipJoinTable)
                 {
                     var list = (IEnumerable<object>)value;
-                    ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, list.Cast(RightType));
+                    ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, list.CopyToList(RightType));
                     return;
                 }
                 var throughAttr = (HasManyThroughAttribute)Attribute;
                 var joinEntities = (IEnumerable<object>)throughAttr.ThroughProperty.GetValue(entity);
 
                 var filteredList = new List<object>();
-                var rightEntities = ((IEnumerable<object>)value).Cast(RightType);
+                var rightEntities = ((IEnumerable<object>)value).CopyToList(RightType);
                 foreach (var je in joinEntities)
                 {
 
@@ -106,7 +106,7 @@ namespace JsonApiDotNetCore.Hooks
                         filteredList.Add(je);
                     }
                 }
-                throughAttr.ThroughProperty.SetValue(entity, filteredList.Cast(throughAttr.ThroughType));
+                throughAttr.ThroughProperty.SetValue(entity, filteredList.CopyToList(throughAttr.ThroughType));
                 return;
             }
             Attribute.SetValue(entity, value);
