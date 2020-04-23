@@ -76,12 +76,12 @@ namespace JsonApiDotNetCore.Hooks
 
         public IEnumerable LoadDbValues(LeftType entityTypeForRepository, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] relationshipsToNextLayer)
         {
-            var idType = TypeHelper.GetIdentifierType(entityTypeForRepository);
+            var idType = TypeHelper.GetIdType(entityTypeForRepository);
             var parameterizedGetWhere = GetType()
                     .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
                     .MakeGenericMethod(entityTypeForRepository, idType);
             var cast = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
-            var ids = cast.Select(e => e.StringId).CopyToList(idType);
+            var ids = cast.Select(e => TypeHelper.ConvertType(e.StringId, idType)).CopyToList(idType);
             var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, relationshipsToNextLayer });
             if (values == null) return null;
             return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(entityTypeForRepository), values.CopyToList(entityTypeForRepository));

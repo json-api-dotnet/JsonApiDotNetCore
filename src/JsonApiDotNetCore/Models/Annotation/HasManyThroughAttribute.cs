@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Models
@@ -76,22 +75,13 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         public override object GetValue(object entity)
         {
-            var throughNavigationProperty = entity.GetType()
-                .GetProperties()
-                .Single(p => p.Name == ThroughProperty.Name);
+            IEnumerable joinEntities = (IEnumerable)ThroughProperty.GetValue(entity) ?? Array.Empty<object>();
 
-            var throughEntities = throughNavigationProperty.GetValue(entity);
+            IEnumerable<object> rightEntities = joinEntities
+                .Cast<object>()
+                .Select(rightEntity =>  RightProperty.GetValue(rightEntity));
 
-            if (throughEntities == null)
-                // return an empty list for the right-type of the property.
-                return TypeHelper.CreateListFor(RightType);
-
-            // the right entities are included on the navigation/through entities. Extract and return them.
-            var rightEntities = new List<IIdentifiable>();
-            foreach (var rightEntity in (IEnumerable)throughEntities)
-                rightEntities.Add((IIdentifiable)RightProperty.GetValue(rightEntity));
-
-            return rightEntities.CopyToList(RightType);
+            return rightEntities.CopyToTypedCollection(PropertyInfo.PropertyType);
         }
 
         /// <inheritdoc />
@@ -105,16 +95,16 @@ namespace JsonApiDotNetCore.Models
             }
             else
             {
-                List<object> instances = new List<object>();
+                List<object> joinEntities = new List<object>();
                 foreach (IIdentifiable resource in (IEnumerable)newValue)
                 {
-                    object throughInstance = ThroughType.New();
-                    LeftProperty.SetValue(throughInstance, entity);
-                    RightProperty.SetValue(throughInstance, resource);
-                    instances.Add(throughInstance);
+                    object joinEntity = ThroughType.New();
+                    LeftProperty.SetValue(joinEntity, entity);
+                    RightProperty.SetValue(joinEntity, resource);
+                    joinEntities.Add(joinEntity);
                 }
 
-                var typedCollection = instances.CopyToTypedCollection(ThroughProperty.PropertyType);
+                var typedCollection = joinEntities.CopyToTypedCollection(ThroughProperty.PropertyType);
                 ThroughProperty.SetValue(entity, typedCollection);
             }
         }

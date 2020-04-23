@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Extensions
@@ -17,17 +16,10 @@ namespace JsonApiDotNetCore.Extensions
         /// ((IList)myList).CopyToList(targetType).
         /// </code>
         /// </summary>
-        public static IEnumerable CopyToList(this IEnumerable source, Type type)
+        public static IList CopyToList(this IEnumerable source, Type type)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (type == null) throw new ArgumentNullException(nameof(type));
-
-            var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(type));
-            foreach (var item in source.Cast<object>())
-            {
-                list.Add(TypeHelper.ConvertType(item, type));
-            }
-            return list;
+            Type collectionType = typeof(List<>).MakeGenericType(type);
+            return (IList)CopyToTypedCollection(source, collectionType);
         }
 
         /// <summary>

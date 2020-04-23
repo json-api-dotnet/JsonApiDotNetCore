@@ -139,7 +139,7 @@ namespace JsonApiDotNetCore.Builders
                     if (throughProperty == null)
                         throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.PropertyInfo.Name}': Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
 
-                    var throughType = TryGetManyThroughType(throughProperty);
+                    var throughType = TryGetThroughType(throughProperty);
                     if (throughType == null)
                         throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.PropertyInfo.Name}': Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
 
@@ -149,32 +149,32 @@ namespace JsonApiDotNetCore.Builders
                     // ArticleTag
                     hasManyThroughAttribute.ThroughType = throughType;
 
-                    var throughProperties = hasManyThroughAttribute.ThroughType.GetProperties();
+                    var throughProperties = throughType.GetProperties();
 
                     // ArticleTag.Article
                     hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType == entityType)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {entityType}");
+                        ?? throw new JsonApiSetupException($"{throughType} does not contain a navigation property to type {entityType}");
 
                     // ArticleTag.ArticleId
                     var leftIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.LeftProperty.Name);
                     hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(x => x.Name == leftIdPropertyName)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {entityType} with name {leftIdPropertyName}");
+                        ?? throw new JsonApiSetupException($"{throughType} does not contain a relationship id property to type {entityType} with name {leftIdPropertyName}");
 
                     // ArticleTag.Tag
                     hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.RightType)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {hasManyThroughAttribute.RightType}");
+                        ?? throw new JsonApiSetupException($"{throughType} does not contain a navigation property to type {hasManyThroughAttribute.RightType}");
 
                     // ArticleTag.TagId
                     var rightIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.RightProperty.Name);
                     hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {hasManyThroughAttribute.RightType} with name {rightIdPropertyName}");
+                        ?? throw new JsonApiSetupException($"{throughType} does not contain a relationship id property to type {hasManyThroughAttribute.RightType} with name {rightIdPropertyName}");
                 }
             }
 
             return attributes;
         }
 
-        private static Type TryGetManyThroughType(PropertyInfo throughProperty)
+        private static Type TryGetThroughType(PropertyInfo throughProperty)
         {
             if (throughProperty.PropertyType.IsGenericType)
             {

@@ -5,30 +5,26 @@ using System.Linq;
 using System.Reflection;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
     internal static class TypeHelper
     {
-        private static bool IsNullable(Type type)
-        {
-            return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
-        }
-
         public static object ConvertType(object value, Type type)
         {
-            if (value == null && !IsNullable(type))
+            if (value == null && !CanBeNull(type))
                 throw new FormatException("Cannot convert null to a non-nullable type");
 
             if (value == null)
                 return null;
 
-            Type typeOfValue = value.GetType();
+            Type runtimeType = value.GetType();
 
             try
             {
-                if (typeOfValue == type || type.IsAssignableFrom(typeOfValue))
+                if (runtimeType == type || type.IsAssignableFrom(runtimeType))
                     return value;
 
                 type = Nullable.GetUnderlyingType(type) ?? type;
@@ -44,7 +40,6 @@ namespace JsonApiDotNetCore.Internal
                 if (type == typeof(DateTimeOffset))
                     return DateTimeOffset.Parse(stringValue);
 
-
                 if (type == typeof(TimeSpan))
                     return TimeSpan.Parse(stringValue);
 
@@ -53,10 +48,15 @@ namespace JsonApiDotNetCore.Internal
 
                 return Convert.ChangeType(stringValue, type);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                throw new FormatException($"{typeOfValue} cannot be converted to {type}", e);
+                throw new FormatException($"Failed to convert '{value}' of type '{runtimeType}' to type '{type}'.", exception);
             }
+        }
+
+        private static bool CanBeNull(Type type)
+        {
+            return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
         }
 
         internal static object GetDefaultValue(this Type type)
@@ -238,19 +238,11 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// Gets the type (Guid or int) of the Id of a type that implements IIdentifiable
         /// </summary>
-        public static Type GetIdentifierType(Type entityType)
+        public static Type GetIdType(Type resourceType)
         {
-            var property = entityType.GetProperty("Id");
-            if (property == null) throw new ArgumentException("Type does not have a property Id");
-            return entityType.GetProperty("Id").PropertyType;
-        }
-
-        /// <summary>
-        /// Gets the type (Guid or int) of the Id of a type that implements IIdentifiable
-        /// </summary>
-        public static Type GetIdentifierType<T>() where T : IIdentifiable
-        {
-            return typeof(T).GetProperty("Id").PropertyType;
+            var property = resourceType.GetProperty(nameof(Identifiable.Id));
+            if (property == null) throw new ArgumentException("Type does not have 'Id' property.");
+            return property.PropertyType;
         }
     }
 }

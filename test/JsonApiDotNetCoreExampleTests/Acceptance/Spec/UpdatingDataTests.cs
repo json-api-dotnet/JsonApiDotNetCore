@@ -47,7 +47,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var dbContext = PrepareTest<Startup>();
-            var serializer = GetSerializer<SuperUser>(e => new { e.SecurityLevel, e.Username, e.Password });
+
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var server = new TestServer(builder);
+
+            var serializer = TestFixture<Startup>.GetSerializer<SuperUser>(server.Host.Services, e => new { e.SecurityLevel, e.Username, e.Password });
             var superUser = new SuperUser { SecurityLevel = 1337, Username = "Super", Password = "User", LastPasswordChange = DateTime.Now.AddMinutes(-15) };
             dbContext.Set<SuperUser>().Add(superUser);
             dbContext.SaveChanges();
@@ -87,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
 
-            var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.CalculatedValue });
+            var serializer = TestFixture<Startup>.GetSerializer<TodoItem>(server.Host.Services, ti => new { ti.CalculatedValue });
             var content = serializer.Serialize(todoItem);
             var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", content);
 
@@ -129,7 +133,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.Description, ti.Ordinal, ti.CreatedDate });
+            var serializer = TestFixture<Startup>.GetSerializer<TodoItem>(server.Host.Services, ti => new { ti.Description, ti.Ordinal, ti.CreatedDate });
             var content = serializer.Serialize(todoItem);
             var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", content);
 
@@ -159,7 +163,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var serializer = _fixture.GetSerializer<TodoItem>(ti => new {ti.Description, ti.Ordinal, ti.CreatedDate});
+            var serializer = TestFixture<Startup>.GetSerializer<TodoItem>(server.Host.Services, ti => new {ti.Description, ti.Ordinal, ti.CreatedDate});
             var content = serializer.Serialize(todoItem);
             var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{maxPersonId}", content);
 
@@ -194,7 +198,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var serializer = _fixture.GetSerializer<TodoItem>(ti => new {ti.Description, ti.Ordinal, ti.CreatedDate});
+            var serializer = TestFixture<Startup>.GetSerializer<TodoItem>(server.Host.Services, ti => new {ti.Description, ti.Ordinal, ti.CreatedDate});
             var content = serializer.Serialize(todoItem);
             var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{wrongTodoItemId}", content);
 
@@ -263,7 +267,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var serializer = _fixture.GetSerializer<TodoItem>(p => new { p.Description, p.Ordinal });
+            var serializer = TestFixture<Startup>.GetSerializer<TodoItem>(server.Host.Services, p => new { p.Description, p.Ordinal });
 
             var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", serializer.Serialize(newTodoItem));
 
@@ -306,7 +310,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var serializer = _fixture.GetSerializer<Person>(p => new { p.LastName, p.FirstName });
+            var serializer = TestFixture<Startup>.GetSerializer<Person>(server.Host.Services, p => new { p.LastName, p.FirstName });
 
             var request = PrepareRequest("PATCH", $"/api/v1/people/{person.Id}", serializer.Serialize(newPerson));
 

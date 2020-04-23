@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Internal.Generics
             TRelatedResource value = null;
             if (relationshipIds.Any())
             {   // newOwner.id
-                var target = Expression.Constant(TypeHelper.ConvertType(relationshipIds.First(), TypeHelper.GetIdentifierType(relationship.RightType)));
+                var target = Expression.Constant(TypeHelper.ConvertType(relationshipIds.First(), TypeHelper.GetIdType(relationship.RightType)));
                 // (Person p) => ...
                 ParameterExpression parameter = Expression.Parameter(typeof(TRelatedResource));
                 // (Person p) => p.Id
@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Internal.Generics
             {
                 // [1, 2, 3]
                 var target = Expression.Constant(TypeHelper.ConvertListType(relationshipIds,
-                    TypeHelper.GetIdentifierType(relationship.RightType)));
+                    TypeHelper.GetIdType(relationship.RightType)));
                 // (Person p) => ...
                 ParameterExpression parameter = Expression.Parameter(typeof(TRelatedResource));
                 // (Person p) => p.Id

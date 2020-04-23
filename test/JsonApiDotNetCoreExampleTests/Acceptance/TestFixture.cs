@@ -35,6 +35,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public HttpClient Client { get; set; }
         public AppDbContext Context { get; private set; }
 
+        public static IRequestSerializer GetSerializer<TResource>(IServiceProvider serviceProvider, Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
+        {
+            var serializer = (IRequestSerializer)serviceProvider.GetService(typeof(IRequestSerializer));
+            var graph = (IResourceGraph)serviceProvider.GetService(typeof(IResourceGraph));
+            serializer.AttributesToSerialize = attributes != null ? graph.GetAttributes(attributes) : null;
+            serializer.RelationshipsToSerialize = relationships != null ? graph.GetRelationships(relationships) : null;
+            return serializer;
+        }
+
         public IRequestSerializer GetSerializer<TResource>(Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
         {
             var serializer = GetService<IRequestSerializer>();
