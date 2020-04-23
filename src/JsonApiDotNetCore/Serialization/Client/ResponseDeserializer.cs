@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// </summary>
         private IIdentifiable ParseIncludedRelationship(RelationshipAttribute relationshipAttr, ResourceIdentifierObject relatedResourceIdentifier)
         {
-            var relatedInstance = relationshipAttr.RightType.New<IIdentifiable>();
+            var relatedInstance = (IIdentifiable)TypeHelper.CreateInstance(relationshipAttr.RightType);
             relatedInstance.StringId = relatedResourceIdentifier.Id;
 
             var includedResource = GetLinkedResource(relatedResourceIdentifier);

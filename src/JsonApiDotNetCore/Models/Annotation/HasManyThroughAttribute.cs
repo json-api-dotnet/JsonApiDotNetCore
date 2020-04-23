@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Models
@@ -98,7 +99,7 @@ namespace JsonApiDotNetCore.Models
                 List<object> joinEntities = new List<object>();
                 foreach (IIdentifiable resource in (IEnumerable)newValue)
                 {
-                    object joinEntity = ThroughType.New();
+                    object joinEntity = TypeHelper.CreateInstance(ThroughType);
                     LeftProperty.SetValue(joinEntity, entity);
                     RightProperty.SetValue(joinEntity, resource);
                     joinEntities.Add(joinEntity);

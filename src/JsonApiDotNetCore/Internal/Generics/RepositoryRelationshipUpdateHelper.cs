@@ -74,7 +74,7 @@ namespace JsonApiDotNetCore.Internal.Generics
             if (!relationshipIds.Any())
             {
                 var collectionType = relationship.PropertyInfo.PropertyType.ToConcreteCollectionType();
-                value = collectionType.New<IEnumerable>();
+                value = (IEnumerable)TypeHelper.CreateInstance(collectionType);
             }
             else
             {
@@ -123,7 +123,7 @@ namespace JsonApiDotNetCore.Internal.Generics
 
             var newLinks = relationshipIds.Select(x =>
             {
-                var link = relationship.ThroughType.New();
+                var link = TypeHelper.CreateInstance(relationship.ThroughType);
                 relationship.LeftIdProperty.SetValue(link, TypeHelper.ConvertType(parentId, relationship.LeftIdProperty.PropertyType));
                 relationship.RightIdProperty.SetValue(link, TypeHelper.ConvertType(x, relationship.RightIdProperty.PropertyType));
                 return link;

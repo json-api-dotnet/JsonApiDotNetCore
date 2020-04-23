@@ -128,7 +128,6 @@ namespace JsonApiDotNetCore.Internal
             var controllerBase = typeof(ControllerBase);
             var jsonApiMixin = typeof(JsonApiControllerMixin);
             var target = typeof(BaseJsonApiController<,>);
-            var identifiable = typeof(IIdentifiable);
             var currentBaseType = type;
             while (!currentBaseType.IsGenericType || currentBaseType.GetGenericTypeDefinition() != target)
             {
@@ -136,7 +135,7 @@ namespace JsonApiDotNetCore.Internal
 
                 if ( (nextBaseType == controllerBase || nextBaseType == jsonApiMixin) && currentBaseType.IsGenericType)
                 {
-                    var potentialResource = currentBaseType.GetGenericArguments().FirstOrDefault(t => t.Inherits(identifiable));
+                    var potentialResource = currentBaseType.GetGenericArguments().FirstOrDefault(t => t.IsOrImplementsInterface(typeof(IIdentifiable)));
                     if (potentialResource != null)
                     {
                         return potentialResource;

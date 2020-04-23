@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
@@ -61,7 +60,7 @@ namespace JsonApiDotNetCore.Internal
 
         internal static object GetDefaultValue(this Type type)
         {
-            return type.IsValueType ? type.New() : null;
+            return type.IsValueType ? CreateInstance(type) : null;
         }
 
         public static Type TryGetCollectionElementType(Type type)
@@ -70,7 +69,7 @@ namespace JsonApiDotNetCore.Internal
             {
                 if (type.IsGenericType && type.GenericTypeArguments.Length == 1)
                 {
-                    if (type.ImplementsInterface(typeof(IEnumerable)))
+                    if (type.IsOrImplementsInterface(typeof(IEnumerable)))
                     {
                         return type.GenericTypeArguments[0];
                     }
@@ -161,18 +160,6 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <summary>
-        /// Use this overload if you need to instantiate a type that has a internal constructor
-        /// </summary>
-        private static object CreateInstanceOfOpenType(Type openType, Type[] parameters, bool hasInternalConstructor, params object[] constructorArguments)
-        {
-            if (!hasInternalConstructor) return CreateInstanceOfOpenType(openType, parameters, constructorArguments);
-            var parameterizedType = openType.MakeGenericType(parameters);
-            // note that if for whatever reason the constructor of AffectedResource is set from
-            // internal to public, this will throw an error, as it is looking for a no
-            return Activator.CreateInstance(parameterizedType, BindingFlags.NonPublic | BindingFlags.Instance, null, constructorArguments, null);
-        }
-
-        /// <summary>
         /// Creates an instance of the specified generic type
         /// </summary>
         /// <returns>The instance of the parameterized generic type</returns>
@@ -189,7 +176,12 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, bool hasInternalConstructor, params object[] constructorArguments)
         {
-            return CreateInstanceOfOpenType(openType, new[] { parameter }, hasInternalConstructor, constructorArguments);
+            Type[] parameters = { parameter };
+            if (!hasInternalConstructor) return CreateInstanceOfOpenType(openType, parameters, constructorArguments);
+            var parameterizedType = openType.MakeGenericType(parameters);
+            // note that if for whatever reason the constructor of AffectedResource is set from
+            // internal to public, this will throw an error, as it is looking for a no
+            return Activator.CreateInstance(parameterizedType, BindingFlags.NonPublic | BindingFlags.Instance, null, constructorArguments, null);
         }
 
         /// <summary>
@@ -243,6 +235,25 @@ namespace JsonApiDotNetCore.Internal
             var property = resourceType.GetProperty(nameof(Identifiable.Id));
             if (property == null) throw new ArgumentException("Type does not have 'Id' property.");
             return property.PropertyType;
+        }
+
+        public static T CreateInstance<T>()
+        {
+            return (T) CreateInstance(typeof(T));
+        }
+
+        public static object CreateInstance(Type type)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            
+            try
+            {
+                return Activator.CreateInstance(type);
+            }
+            catch (Exception exception)
+            {
+                throw new InvalidOperationException($"Failed to create an instance of '{type.FullName}' using its default constructor.", exception);
+            }
         }
     }
 }

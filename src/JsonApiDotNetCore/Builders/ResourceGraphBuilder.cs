@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Builders
         {
             if (_resources.All(e => e.ResourceType != resourceType))
             {
-                if (resourceType.Implements<IIdentifiable>())
+                if (resourceType.IsOrImplementsInterface(typeof(IIdentifiable)))
                 {
                     pluralizedTypeName ??= FormatResourceName(resourceType);
                     idType ??= TypeLocator.GetIdType(resourceType);
@@ -182,7 +182,7 @@ namespace JsonApiDotNetCore.Builders
                 if (typeArguments.Length == 1)
                 {
                     var constructedThroughType = typeof(ICollection<>).MakeGenericType(typeArguments[0]);
-                    if (throughProperty.PropertyType.Implements(constructedThroughType))
+                    if (throughProperty.PropertyType.IsOrImplementsInterface(constructedThroughType))
                     {
                         return typeArguments[0];
                     }

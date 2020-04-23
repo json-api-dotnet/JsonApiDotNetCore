@@ -264,7 +264,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="attr">Relationship attribute</param>
         private RightType GetRightTypeFromRelationship(RelationshipAttribute attr)
         {
-            if (attr is HasManyThroughAttribute throughAttr && throughAttr.ThroughType.Inherits(typeof(IIdentifiable)))
+            if (attr is HasManyThroughAttribute throughAttr && throughAttr.ThroughType.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
                 return throughAttr.ThroughType;
             }

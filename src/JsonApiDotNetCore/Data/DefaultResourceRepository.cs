@@ -159,7 +159,7 @@ namespace JsonApiDotNetCore.Data
             }
             // relationshipAttr is null when we don't put a [RelationshipAttribute] on the inverse navigation property.
             // In this case we use reflection to figure out what kind of relationship is pointing back.
-            return !type.GetProperty(internalRelationshipName).PropertyType.Inherits(typeof(IEnumerable));
+            return !type.GetProperty(internalRelationshipName).PropertyType.IsOrImplementsInterface(typeof(IEnumerable));
         }
 
         private void DetachRelationships(TResource entity)

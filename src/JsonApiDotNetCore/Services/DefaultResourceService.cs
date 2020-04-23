@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.Services
         {
             _logger.LogTrace($"Entering {nameof(DeleteAsync)}('{id}').");
 
-            var entity = typeof(TResource).New<TResource>();
+            var entity = TypeHelper.CreateInstance<TResource>();
             entity.Id = id;
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.BeforeDelete(AsList(entity), ResourcePipeline.Delete);
             

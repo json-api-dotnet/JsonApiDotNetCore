@@ -16,10 +16,10 @@ namespace JsonApiDotNetCore.Extensions
         /// ((IList)myList).CopyToList(targetType).
         /// </code>
         /// </summary>
-        public static IList CopyToList(this IEnumerable source, Type type)
+        public static IList CopyToList(this IEnumerable copyFrom, Type elementType)
         {
-            Type collectionType = typeof(List<>).MakeGenericType(type);
-            return (IList)CopyToTypedCollection(source, collectionType);
+            Type collectionType = typeof(List<>).MakeGenericType(elementType);
+            return (IList)CopyToTypedCollection(copyFrom, collectionType);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Extensions
             if (collectionType == null) throw new ArgumentNullException(nameof(collectionType));
 
             var concreteCollectionType = collectionType.ToConcreteCollectionType();
-            dynamic concreteCollectionInstance = concreteCollectionType.New<dynamic>();
+            dynamic concreteCollectionInstance = TypeHelper.CreateInstance(concreteCollectionType);
 
             foreach (var item in source)
             {
@@ -44,80 +44,29 @@ namespace JsonApiDotNetCore.Extensions
             return concreteCollectionInstance;
         }
 
-        /// <summary>
-        /// Creates a List{TInterface} where TInterface is the generic for type specified by t
-        /// </summary>
-        public static IEnumerable GetEmptyCollection(this Type t)
-        {
-            if (t == null) throw new ArgumentNullException(nameof(t));
-
-            var listType = typeof(List<>).MakeGenericType(t);
-            var list = (IEnumerable)CreateNewInstance(listType);
-            return list;
-        }
-
         public static string GetResourceStringId<TResource, TId>(TId id) where TResource : class, IIdentifiable<TId>
         {
-            var tempResource = typeof(TResource).New<TResource>();
+            var tempResource = TypeHelper.CreateInstance<TResource>();
             tempResource.Id = id;
             return tempResource.StringId;
         }
 
-        public static object New(this Type t)
-        {
-            return New<object>(t);
-        }
-
         /// <summary>
-        /// Creates a new instance of type t, casting it to the specified type.
+        /// Whether the specified source type implements or equals the specified interface.
         /// </summary>
-        public static T New<T>(this Type t)
+        public static bool IsOrImplementsInterface(this Type source, Type interfaceType)
         {
-            if (t == null) throw new ArgumentNullException(nameof(t));
-
-            var instance = (T)CreateNewInstance(t);
-            return instance;
-        }
-
-        private static object CreateNewInstance(Type type)
-        {
-            try
+            if (interfaceType == null)
             {
-                return Activator.CreateInstance(type);
+                throw new ArgumentNullException(nameof(interfaceType));
             }
-            catch (Exception exception)
+
+            if (source == null)
             {
-                throw new InvalidOperationException($"Failed to create an instance of '{type.FullName}' using its default constructor.", exception);
+                return false;
             }
-        }
 
-        /// <summary>
-        /// Whether or not a type implements an interface.
-        /// </summary>
-        public static bool Implements<T>(this Type concreteType) 
-            => Implements(concreteType, typeof(T));
-
-        /// <summary>
-        /// Whether or not a type implements an interface.
-        /// </summary>
-        public static bool Implements(this Type concreteType, Type interfaceType) 
-            => interfaceType?.IsAssignableFrom(concreteType) == true;
-
-        /// <summary>
-        /// Whether or not a type inherits a base type.
-        /// </summary>
-        public static bool Inherits<T>(this Type concreteType) 
-            => Inherits(concreteType, typeof(T));
-
-        /// <summary>
-        /// Whether or not a type inherits a base type.
-        /// </summary>
-        public static bool Inherits(this Type concreteType, Type interfaceType) 
-            => interfaceType?.IsAssignableFrom(concreteType) == true;
-
-        public static bool ImplementsInterface(this Type source, Type interfaceType)
-        {
-            return source.GetInterfaces().Any(type => type == interfaceType);
+            return source == interfaceType || source.GetInterfaces().Any(type => type == interfaceType);
         }
     }
 }

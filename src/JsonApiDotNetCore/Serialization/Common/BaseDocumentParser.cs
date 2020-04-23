@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -141,7 +140,7 @@ namespace JsonApiDotNetCore.Serialization
                     "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.", null);
             }
 
-            var entity = resourceContext.ResourceType.New<IIdentifiable>();
+            var entity = (IIdentifiable)TypeHelper.CreateInstance(resourceContext.ResourceType);
 
             entity = SetAttributes(entity, data.Attributes, resourceContext.Attributes);
             entity = SetRelationships(entity, data.Relationships, resourceContext.Relationships);
@@ -213,7 +212,7 @@ namespace JsonApiDotNetCore.Serialization
             }
             else
             {
-                var relatedInstance = attr.RightType.New<IIdentifiable>();
+                var relatedInstance = (IIdentifiable)TypeHelper.CreateInstance(attr.RightType);
                 relatedInstance.StringId = relatedId;
                 attr.SetValue(entity, relatedInstance);
             }
@@ -231,7 +230,7 @@ namespace JsonApiDotNetCore.Serialization
             {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
                 var relatedResources = relationshipData.ManyData.Select(rio =>
                 {
-                    var relatedInstance = attr.RightType.New<IIdentifiable>();
+                    var relatedInstance = (IIdentifiable)TypeHelper.CreateInstance(attr.RightType);
                     relatedInstance.StringId = rio.Id;
                     return relatedInstance;
                 });

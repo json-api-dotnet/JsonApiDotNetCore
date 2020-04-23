@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Graph
         /// </returns>
         internal static bool TryGetResourceDescriptor(Type type, out ResourceDescriptor descriptor)
         {
-            if (type.Implements<IIdentifiable>())
+            if (type.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
                 descriptor = new ResourceDescriptor(type, GetIdType(type));
                 return true;
