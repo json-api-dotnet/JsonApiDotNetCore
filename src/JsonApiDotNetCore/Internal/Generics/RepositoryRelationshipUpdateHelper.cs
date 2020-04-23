@@ -78,9 +78,11 @@ namespace JsonApiDotNetCore.Internal.Generics
             }
             else
             {
+                var idType = TypeHelper.GetIdType(relationship.RightType);
+                var typedIds = relationshipIds.CopyToList(idType, stringId => TypeHelper.ConvertType(stringId, idType));
+
                 // [1, 2, 3]
-                var target = Expression.Constant(TypeHelper.ConvertListType(relationshipIds,
-                    TypeHelper.GetIdType(relationship.RightType)));
+                var target = Expression.Constant(typedIds);
                 // (Person p) => ...
                 ParameterExpression parameter = Expression.Parameter(typeof(TRelatedResource));
                 // (Person p) => p.Id

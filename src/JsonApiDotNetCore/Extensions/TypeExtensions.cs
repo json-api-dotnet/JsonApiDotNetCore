@@ -16,9 +16,16 @@ namespace JsonApiDotNetCore.Extensions
         /// ((IList)myList).CopyToList(targetType).
         /// </code>
         /// </summary>
-        public static IList CopyToList(this IEnumerable copyFrom, Type elementType)
+        public static IList CopyToList(this IEnumerable copyFrom, Type elementType, Converter<object, object> elementConverter = null)
         {
             Type collectionType = typeof(List<>).MakeGenericType(elementType);
+
+            if (elementConverter != null)
+            {
+                var converted = copyFrom.Cast<object>().Select(element => elementConverter(element));
+                return (IList) CopyToTypedCollection(converted, collectionType);
+            }
+
             return (IList)CopyToTypedCollection(copyFrom, collectionType);
         }
 
