@@ -176,7 +176,7 @@ namespace JADNC.IntegrationTests.Data
                 .Options;
             var context = new AppDbContext(options);
 
-            context.TodoItems.RemoveRange(context.TodoItems.ToList());
+            context.TodoItems.RemoveRange(context.TodoItems);
             return context;
         }
 

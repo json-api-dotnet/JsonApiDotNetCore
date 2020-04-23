@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <inheritdoc />
-        public ResourceContext[] GetResourceContexts() => Resources.ToArray();
+        public IEnumerable<ResourceContext> GetResourceContexts() => Resources;
         /// <inheritdoc />
         public ResourceContext GetResourceContext(string resourceName)
             => Resources.SingleOrDefault(e => e.ResourceName == resourceName);

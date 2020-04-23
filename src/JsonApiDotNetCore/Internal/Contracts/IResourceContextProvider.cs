@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal.Contracts
@@ -11,7 +12,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// <summary>
         /// Gets all registered context entities
         /// </summary>
-        ResourceContext[] GetResourceContexts();
+        IEnumerable<ResourceContext> GetResourceContexts();
 
         /// <summary>
         /// Get the resource metadata by the DbSet property name

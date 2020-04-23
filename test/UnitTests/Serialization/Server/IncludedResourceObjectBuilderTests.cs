@@ -26,11 +26,11 @@ namespace UnitTests.Serialization.Server
             // Assert
             Assert.Equal(6, result.Count);
 
-            var authorResourceObject = result.Single((ro) => ro.Type == "people" && ro.Id == author.StringId);
+            var authorResourceObject = result.Single(ro => ro.Type == "people" && ro.Id == author.StringId);
             var authorFoodRelation = authorResourceObject.Relationships["favoriteFood"].SingleData;
             Assert.Equal(author.FavoriteFood.StringId, authorFoodRelation.Id);
 
-            var reviewerResourceObject = result.Single((ro) => ro.Type == "people" && ro.Id == reviewer.StringId);
+            var reviewerResourceObject = result.Single(ro => ro.Type == "people" && ro.Id == reviewer.StringId);
             var reviewerFoodRelation = reviewerResourceObject.Relationships["favoriteFood"].SingleData;
             Assert.Equal(reviewer.FavoriteFood.StringId, reviewerFoodRelation.Id);
         }
@@ -73,13 +73,13 @@ namespace UnitTests.Serialization.Server
 
             // Assert
             Assert.Equal(10, result.Count);
-            var overlappingBlogResourceObject = result.Single((ro) => ro.Type == "blogs" && ro.Id == sharedBlog.StringId);
+            var overlappingBlogResourceObject = result.Single(ro => ro.Type == "blogs" && ro.Id == sharedBlog.StringId);
 
-            Assert.Equal(2, overlappingBlogResourceObject.Relationships.Keys.ToList().Count);
-            var nonOverlappingBlogs = result.Where((ro) => ro.Type == "blogs" && ro.Id != sharedBlog.StringId).ToList();
+            Assert.Equal(2, overlappingBlogResourceObject.Relationships.Keys.Count);
+            var nonOverlappingBlogs = result.Where(ro => ro.Type == "blogs" && ro.Id != sharedBlog.StringId).ToList();
 
             foreach (var blog in nonOverlappingBlogs)
-                Assert.Single(blog.Relationships.Keys.ToList());
+                Assert.Single(blog.Relationships.Keys);
 
             Assert.Equal(authorSong.StringId, sharedBlogAuthor.FavoriteSong.StringId);
             Assert.Equal(reviewerFood.StringId, sharedBlogAuthor.FavoriteFood.StringId);

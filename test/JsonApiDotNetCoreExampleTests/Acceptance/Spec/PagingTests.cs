@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             const int expectedEntitiesPerPage = 2;
             var totalCount = expectedEntitiesPerPage * 2;
             var person = new Person();
-            var todoItems = _todoItemFaker.Generate(totalCount).ToList();
+            var todoItems = _todoItemFaker.Generate(totalCount);
             foreach (var todoItem in todoItems)
             {
                 todoItem.Owner = person;
@@ -82,7 +82,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 LastName = "&Ampersand"
             };
-            var todoItems = _todoItemFaker.Generate(totalCount).ToList();
+            var todoItems = _todoItemFaker.Generate(totalCount);
 
             foreach (var todoItem in todoItems)
                 todoItem.Owner = person;

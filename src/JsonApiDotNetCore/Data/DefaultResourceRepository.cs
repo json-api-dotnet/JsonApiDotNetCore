@@ -172,7 +172,7 @@ namespace JsonApiDotNetCore.Data
 
                 if (value is IEnumerable<IIdentifiable> collection)
                 {
-                    foreach (IIdentifiable single in collection.ToList())
+                    foreach (IIdentifiable single in collection)
                         _context.Entry(single).State = EntityState.Detached;
                     // detaching has many relationships is not sufficient to 
                     // trigger a full reload of relationships: the navigation 
@@ -255,7 +255,6 @@ namespace JsonApiDotNetCore.Data
                     if (tracked != null) newWasAlreadyAttached = true;
                     return Convert.ChangeType(tracked ?? pointer, relationshipAttr.RightType);
                 })
-                .ToList()
                 .CopyToTypedCollection(relationshipAttr.PropertyInfo.PropertyType);
 
             if (newWasAlreadyAttached) wasAlreadyAttached = true;

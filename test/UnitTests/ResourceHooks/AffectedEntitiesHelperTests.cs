@@ -89,9 +89,9 @@ namespace UnitTests.ResourceHooks.AffectedEntities
             var affectedThroughToMany = relationshipsDictionary.GetAffected(d => d.ToManies).ToList();
 
             // Assert
-            affectedThroughFirstToOne.ForEach((entity) => Assert.Contains(entity, FirstToOnesEntities));
-            affectedThroughSecondToOne.ForEach((entity) => Assert.Contains(entity, SecondToOnesEntities));
-            affectedThroughToMany.ForEach((entity) => Assert.Contains(entity, ToManiesEntities));
+            affectedThroughFirstToOne.ForEach(entity => Assert.Contains(entity, FirstToOnesEntities));
+            affectedThroughSecondToOne.ForEach(entity => Assert.Contains(entity, SecondToOnesEntities));
+            affectedThroughToMany.ForEach(entity => Assert.Contains(entity, ToManiesEntities));
         }
 
         [Fact]
@@ -178,9 +178,9 @@ namespace UnitTests.ResourceHooks.AffectedEntities
             var affectedThroughToMany = diffs.GetAffected(d => d.ToManies).ToList();
 
             // Assert
-            affectedThroughFirstToOne.ForEach((entity) => Assert.Contains(entity, FirstToOnesEntities));
-            affectedThroughSecondToOne.ForEach((entity) => Assert.Contains(entity, SecondToOnesEntities));
-            affectedThroughToMany.ForEach((entity) => Assert.Contains(entity, ToManiesEntities));
+            affectedThroughFirstToOne.ForEach(entity => Assert.Contains(entity, FirstToOnesEntities));
+            affectedThroughSecondToOne.ForEach(entity => Assert.Contains(entity, SecondToOnesEntities));
+            affectedThroughToMany.ForEach(entity => Assert.Contains(entity, ToManiesEntities));
         }
 
         [Fact]
@@ -195,8 +195,8 @@ namespace UnitTests.ResourceHooks.AffectedEntities
             DiffableEntityHashSet<Dummy> diffs = new DiffableEntityHashSet<Dummy>(AllEntities, dbEntities, Relationships, updatedAttributes);
 
             // Act
-            var affectedThroughSomeUpdatedProperty = diffs.GetAffected(d => d.SomeUpdatedProperty).ToList();
-            var affectedThroughSomeNotUpdatedProperty = diffs.GetAffected(d => d.SomeNotUpdatedProperty).ToList();
+            var affectedThroughSomeUpdatedProperty = diffs.GetAffected(d => d.SomeUpdatedProperty);
+            var affectedThroughSomeNotUpdatedProperty = diffs.GetAffected(d => d.SomeNotUpdatedProperty);
 
             // Assert
             Assert.NotEmpty(affectedThroughSomeUpdatedProperty);
@@ -213,17 +213,17 @@ namespace UnitTests.ResourceHooks.AffectedEntities
             Assert.Contains(ToManyAttr, toManies.Keys);
             Assert.Equal(relationshipsDictionary.Keys.Count, toOnes.Keys.Count + toManies.Keys.Count + notTargeted.Keys.Count);
 
-            toOnes[FirstToOneAttr].ToList().ForEach((entity) =>
+            toOnes[FirstToOneAttr].ToList().ForEach(entity =>
             {
                 Assert.Contains(entity, FirstToOnesEntities);
             });
 
-            toOnes[SecondToOneAttr].ToList().ForEach((entity) =>
+            toOnes[SecondToOneAttr].ToList().ForEach(entity =>
             {
                 Assert.Contains(entity, SecondToOnesEntities);
             });
 
-            toManies[ToManyAttr].ToList().ForEach((entity) =>
+            toManies[ToManyAttr].ToList().ForEach(entity =>
             {
                 Assert.Contains(entity, ToManiesEntities);
             });

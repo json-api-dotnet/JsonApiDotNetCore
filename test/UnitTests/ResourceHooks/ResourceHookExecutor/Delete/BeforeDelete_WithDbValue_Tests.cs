@@ -88,7 +88,7 @@ namespace UnitTests.ResourceHooks
 
         private bool CheckImplicitTodos(IRelationshipsDictionary<TodoItem> rh)
         {
-            var todos = rh.GetByRelationship<Person>().ToList();
+            var todos = rh.GetByRelationship<Person>();
             return todos.Count == 2;
         }
 

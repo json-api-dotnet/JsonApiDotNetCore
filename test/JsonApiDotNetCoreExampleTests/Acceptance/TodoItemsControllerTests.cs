@@ -47,7 +47,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Get_TodoItems_Paginate_Check()
         {
             // Arrange
-            _context.TodoItems.RemoveRange(_context.TodoItems.ToList());
+            _context.TodoItems.RemoveRange(_context.TodoItems);
             _context.SaveChanges();
             int expectedEntitiesPerPage = _fixture.GetService<IJsonApiOptions>().DefaultPageSize;
             var person = new Person();
