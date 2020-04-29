@@ -20,11 +20,11 @@ namespace JsonApiDotNetCore.Middleware
     /// <summary>
     /// Intercepts HTTP requests to populate injected <see cref="ICurrentRequest"/> instance for json:api requests.
     /// </summary>
-    public sealed class CurrentRequestMiddleware
+    public sealed class JsonApiMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public CurrentRequestMiddleware(RequestDelegate next)
+        public JsonApiMiddleware(RequestDelegate next)
         {
             _next = next;
         }

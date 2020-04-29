@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore
         /// <code>
         /// app.UseJsonApi(skipRegisterMiddleware: true);
         /// app.UseRouting();
-        /// app.UseMiddleware{CurrentRequestMiddleware}();
+        /// app.UseMiddleware{JsonApiMiddleware}();
         /// app.UseEndpoints(endpoints => endpoints.MapControllers());
         /// </code>
         /// </example>
@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore
                 }
 
                 // middleware to run after routing occurs.
-                app.UseMiddleware<CurrentRequestMiddleware>();
+                app.UseMiddleware<JsonApiMiddleware>();
 
                 // Executes the endpoints that was selected by routing.
                 app.UseEndpoints(endpoints => endpoints.MapControllers());
