@@ -23,11 +23,6 @@ namespace JsonApiDotNetCore.Middleware
     public sealed class CurrentRequestMiddleware
     {
         private readonly RequestDelegate _next;
-        private HttpContext _httpContext;
-        private IJsonApiOptions _options;
-        private ICurrentRequest _currentRequest;
-        private IResourceGraph _resourceGraph;
-        private RouteValueDictionary _routeValues;
 
         public CurrentRequestMiddleware(RequestDelegate next)
         {
@@ -40,47 +35,44 @@ namespace JsonApiDotNetCore.Middleware
                                  ICurrentRequest currentRequest,
                                  IResourceGraph resourceGraph)
         {
-            _httpContext = httpContext;
-            _options = options;
-            _currentRequest = currentRequest;
-            _resourceGraph = resourceGraph;
-            _routeValues = httpContext.GetRouteData().Values;
+            var routeValues = httpContext.GetRouteData().Values;
 
-            var resourceContext = CreateResourceContext(controllerResourceMapping);
+            var resourceContext = CreateResourceContext(routeValues, controllerResourceMapping, resourceGraph);
             if (resourceContext != null)
             {
-                if (!await ValidateContentTypeHeaderAsync() || !await ValidateAcceptHeaderAsync())
+                if (!await ValidateContentTypeHeaderAsync(httpContext, options.SerializerSettings) || 
+                    !await ValidateAcceptHeaderAsync(httpContext, options.SerializerSettings))
                 {
                     return;
                 }
 
-                SetupCurrentRequest(resourceContext);
+                SetupCurrentRequest(currentRequest, resourceContext, routeValues, options, httpContext.Request);
 
-                _httpContext.SetJsonApiRequest();
+                httpContext.SetJsonApiRequest();
             }
 
             await _next(httpContext);
         }
 
-        private ResourceContext CreateResourceContext(IControllerResourceMapping controllerResourceMapping)
+        private static ResourceContext CreateResourceContext(RouteValueDictionary routeValues,
+            IControllerResourceMapping controllerResourceMapping, IResourceContextProvider resourceGraph)
         {
-            var controllerName = (string)_routeValues["controller"];
+            var controllerName = (string) routeValues["controller"];
             if (controllerName == null)
             {
                 return null;
             }
 
             var resourceType = controllerResourceMapping.GetAssociatedResource(controllerName);
-            var resourceContext = _resourceGraph.GetResourceContext(resourceType);
-            return resourceContext;
+            return resourceGraph.GetResourceContext(resourceType);
         }
 
-        private async Task<bool> ValidateContentTypeHeaderAsync()
+        private static async Task<bool> ValidateContentTypeHeaderAsync(HttpContext httpContext, JsonSerializerSettings serializerSettings)
         {
-            var contentType = _httpContext.Request.ContentType;
+            var contentType = httpContext.Request.ContentType;
             if (contentType != null && contentType != HeaderConstants.MediaType)
             {
-                await FlushResponseAsync(_httpContext, new Error(HttpStatusCode.UnsupportedMediaType)
+                await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.UnsupportedMediaType)
                 {
                     Title = "The specified Content-Type header value is not supported.",
                     Detail = $"Please specify '{HeaderConstants.MediaType}' instead of '{contentType}' for the Content-Type header value."
@@ -91,9 +83,9 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private async Task<bool> ValidateAcceptHeaderAsync()
+        private static async Task<bool> ValidateAcceptHeaderAsync(HttpContext httpContext, JsonSerializerSettings serializerSettings)
         {
-            StringValues acceptHeaders = _httpContext.Request.Headers["Accept"];
+            StringValues acceptHeaders = httpContext.Request.Headers["Accept"];
             if (!acceptHeaders.Any() || acceptHeaders == HeaderConstants.MediaType)
             {
                 return true;
@@ -121,7 +113,7 @@ namespace JsonApiDotNetCore.Middleware
 
             if (!seenCompatibleMediaType)
             {
-                await FlushResponseAsync(_httpContext, new Error(HttpStatusCode.NotAcceptable)
+                await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.NotAcceptable)
                 {
                     Title = "The specified Accept header value does not contain any supported media types.",
                     Detail = $"Please include '{HeaderConstants.MediaType}' in the Accept header values."
@@ -132,11 +124,11 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private async Task FlushResponseAsync(HttpContext context, Error error)
+        private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerSettings serializerSettings, Error error)
         {
-            context.Response.StatusCode = (int) error.StatusCode;
+            httpResponse.StatusCode = (int) error.StatusCode;
 
-            JsonSerializer serializer = JsonSerializer.CreateDefault(_options.SerializerSettings);
+            JsonSerializer serializer = JsonSerializer.CreateDefault(serializerSettings);
             serializer.ApplyErrorSettings();
 
             // https://github.com/JamesNK/Newtonsoft.Json/issues/1193
@@ -149,40 +141,43 @@ namespace JsonApiDotNetCore.Middleware
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);
-                await stream.CopyToAsync(context.Response.Body);
+                await stream.CopyToAsync(httpResponse.Body);
             }
 
-            context.Response.Body.Flush();
+            httpResponse.Body.Flush();
         }
 
-        private void SetupCurrentRequest(ResourceContext resourceContext)
+        private static void SetupCurrentRequest(ICurrentRequest currentRequest, ResourceContext resourceContext,
+            RouteValueDictionary routeValues, IJsonApiOptions options, HttpRequest httpRequest)
         {
-            _currentRequest.SetRequestResource(resourceContext);
-            _currentRequest.BaseId = GetBaseId();
-            _currentRequest.BasePath = GetBasePath(resourceContext.ResourceName);
-            _currentRequest.IsRelationshipPath = GetIsRelationshipPath();
-            _currentRequest.RelationshipId = GetRelationshipId();
+            currentRequest.SetRequestResource(resourceContext);
+            currentRequest.BaseId = GetBaseId(routeValues);
+            currentRequest.BasePath = GetBasePath(resourceContext.ResourceName, options, httpRequest);
+            currentRequest.IsRelationshipPath = GetIsRelationshipPath(routeValues);
+            currentRequest.RelationshipId = GetRelationshipId(currentRequest.IsRelationshipPath, httpRequest.Path.Value, options.Namespace);
 
-            if (_routeValues.TryGetValue("relationshipName", out object relationshipName))
+            if (routeValues.TryGetValue("relationshipName", out object relationshipName))
             {
-                _currentRequest.RequestRelationship = resourceContext.Relationships.SingleOrDefault(r => r.PublicRelationshipName == (string) relationshipName);
+                currentRequest.RequestRelationship =
+                    resourceContext.Relationships.SingleOrDefault(relationship =>
+                        relationship.PublicRelationshipName == (string) relationshipName);
             }
         }
 
-        private string GetBaseId()
+        private static string GetBaseId(RouteValueDictionary routeValues)
         {
-            return _routeValues.TryGetValue("id", out var id) ? (string) id : null;
+            return routeValues.TryGetValue("id", out var id) ? (string) id : null;
         }
 
-        private string GetBasePath(string resourceName)
+        private static string GetBasePath(string resourceName, IJsonApiOptions options, HttpRequest httpRequest)
         {
-            if (_options.RelativeLinks)
+            if (options.RelativeLinks)
             {
-                return _options.Namespace;
+                return options.Namespace;
             }
 
-            var customRoute = GetCustomRoute(_httpContext.Request.Path.Value, resourceName);
-            var toReturn = $"{_httpContext.Request.Scheme}://{_httpContext.Request.Host}/{_options.Namespace}";
+            var customRoute = GetCustomRoute(httpRequest.Path.Value, resourceName, options.Namespace);
+            var toReturn = $"{httpRequest.Scheme}://{httpRequest.Host}/{options.Namespace}";
             if (customRoute != null)
             {
                 toReturn += $"/{customRoute}";
@@ -190,37 +185,37 @@ namespace JsonApiDotNetCore.Middleware
             return toReturn;
         }
 
-        private string GetCustomRoute(string path, string resourceName)
+        private static string GetCustomRoute(string path, string resourceName, string apiNamespace)
         {
             var trimmedComponents = path.Trim('/').Split('/').ToList();
             var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
             var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
             var customRoute = string.Join('/', newComponents);
-            return customRoute == _options.Namespace ? null : customRoute;
+            return customRoute == apiNamespace ? null : customRoute;
         }
 
-        private bool GetIsRelationshipPath()
+        private static bool GetIsRelationshipPath(RouteValueDictionary routeValues)
         {
-            var actionName = (string)_routeValues["action"];
+            var actionName = (string)routeValues["action"];
             return actionName.ToLowerInvariant().Contains("relationships");
         }
 
-        private string GetRelationshipId()
+        private static string GetRelationshipId(bool currentRequestIsRelationshipPath, string requestPath,
+            string apiNamespace)
         {
-            if (!_currentRequest.IsRelationshipPath)
+            if (!currentRequestIsRelationshipPath)
             {
                 return null;
             }
 
-            var components = SplitCurrentPath();
+            var components = SplitCurrentPath(requestPath, apiNamespace);
             return components.ElementAtOrDefault(4);
         }
 
-        private string[] SplitCurrentPath()
+        private static IEnumerable<string> SplitCurrentPath(string requestPath, string apiNamespace)
         {
-            var path = _httpContext.Request.Path.Value;
-            var ns = $"/{_options.Namespace}";
-            var nonNameSpaced = path.Replace(ns, "");
+            var namespacePrefix = $"/{apiNamespace}";
+            var nonNameSpaced = requestPath.Replace(namespacePrefix, "");
             nonNameSpaced = nonNameSpaced.Trim('/');
             return nonNameSpaced.Split('/');
         }
