@@ -14,6 +14,7 @@ namespace JsonApiDotNetCore
         /// The <paramref name="skipRegisterMiddleware"/> can be used to skip any middleware registration, in which case the developer
         /// is responsible for registering required middleware.
         /// </remarks>
+        /// <param name="app"></param>
         /// <param name="skipRegisterMiddleware">Indicates to not register any middleware. This enables callers to take full control of middleware registration order.</param>
         /// <param name="useAuthentication">Indicates if 'app.UseAuthentication()' should be called. Ignored when <paramref name="skipRegisterMiddleware"/> is set to true.</param>
         /// <param name="useAuthorization">Indicates if 'app.UseAuthorization()' should be called. Ignored when <paramref name="skipRegisterMiddleware"/> is set to true.</param>
