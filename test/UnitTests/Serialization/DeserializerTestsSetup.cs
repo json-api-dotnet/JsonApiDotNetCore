@@ -1,3 +1,4 @@
+using System;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
@@ -9,7 +10,7 @@ namespace UnitTests.Serialization
     {
         protected sealed class TestDocumentParser : BaseDocumentParser
         {
-            public TestDocumentParser(IResourceGraph resourceGraph) : base(resourceGraph) { }
+            public TestDocumentParser(IResourceGraph resourceGraph, IServiceProvider serviceProvider) : base(resourceGraph, serviceProvider) { }
 
             public new object Deserialize(string body)
             {

@@ -13,6 +13,8 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Contracts;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
@@ -20,13 +22,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     public class TestFixture<TStartup> : IDisposable where TStartup : class
     {
         private readonly TestServer _server;
-        private readonly IServiceProvider _services;
+        public readonly IServiceProvider ServiceProvider;
         public TestFixture()
         {
             var builder = new WebHostBuilder()
-                .UseStartup<TStartup>();
+                .UseStartup<TStartup>()
+                .ConfigureTestServices(services => services.AddSingleton<ISystemClock, AlwaysChangingSystemClock>());
             _server = new TestServer(builder);
-            _services = _server.Host.Services;
+            ServiceProvider = _server.Host.Services;
 
             Client = _server.CreateClient();
             Context = GetService<IDbContextResolver>().GetContext() as AppDbContext;
@@ -69,14 +72,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .AddResource<Passport>()
                 .AddResource<TodoItemClient>("todoItems")
                 .AddResource<TodoItemCollectionClient, Guid>().Build();
-            return new ResponseDeserializer(resourceGraph);
+            return new ResponseDeserializer(resourceGraph, ServiceProvider);
         }
 
-        public T GetService<T>() => (T)_services.GetService(typeof(T));
+        public T GetService<T>() => (T)ServiceProvider.GetService(typeof(T));
 
         public void ReloadDbContext()
         {
-            Context = new AppDbContext(GetService<DbContextOptions<AppDbContext>>());
+            var systemClock = ServiceProvider.GetRequiredService<ISystemClock>();
+            Context = new AppDbContext(GetService<DbContextOptions<AppDbContext>>(), systemClock);
         }
 
         private bool disposedValue;

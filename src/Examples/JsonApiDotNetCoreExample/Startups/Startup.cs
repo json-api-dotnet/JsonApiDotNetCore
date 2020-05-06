@@ -4,12 +4,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
-using JsonApiDotNetCore.Extensions;
 using System;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCoreExample.Services;
+using Microsoft.AspNetCore.Authentication;
 using Newtonsoft.Json.Converters;
 
 namespace JsonApiDotNetCoreExample
@@ -30,6 +30,7 @@ namespace JsonApiDotNetCoreExample
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<ISystemClock, SystemClock>();
             services.AddScoped<SkipCacheQueryParameterService>();
             services.AddScoped<IQueryParameterService>(sp => sp.GetService<SkipCacheQueryParameterService>());
 

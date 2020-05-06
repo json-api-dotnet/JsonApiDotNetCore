@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -235,6 +236,40 @@ namespace JsonApiDotNetCore.Internal
             catch (Exception exception)
             {
                 throw new InvalidOperationException($"Failed to create an instance of '{type.FullName}' using its default constructor.", exception);
+            }
+        }
+
+        public static T CreateEntityInstance<T>(IServiceProvider serviceProvider)
+        {
+            return (T) CreateEntityInstance(typeof(T), serviceProvider);
+        }
+
+        public static object CreateEntityInstance(Type type, IServiceProvider serviceProvider)
+        {
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (serviceProvider == null)
+            {
+                throw new ArgumentNullException(nameof(serviceProvider));
+            }
+
+            bool hasSingleConstructorWithoutParameters = type.HasSingleConstructorWithoutParameters();
+
+            try
+            {
+                return hasSingleConstructorWithoutParameters
+                    ? Activator.CreateInstance(type)
+                    : ActivatorUtilities.CreateInstance(serviceProvider, type);
+            }
+            catch (Exception exception)
+            {
+                throw new InvalidOperationException(hasSingleConstructorWithoutParameters
+                        ? $"Failed to create an instance of '{type.FullName}' using its default constructor."
+                        : $"Failed to create an instance of '{type.FullName}' using injected constructor parameters.",
+                    exception);
             }
         }
     }

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Extensions
@@ -74,6 +75,13 @@ namespace JsonApiDotNetCore.Extensions
             }
 
             return source == interfaceType || source.GetInterfaces().Any(type => type == interfaceType);
+        }
+
+        public static bool HasSingleConstructorWithoutParameters(this Type type)
+        {
+            ConstructorInfo[] constructors = type.GetConstructors();
+
+            return constructors.Length == 1 && constructors[0].GetParameters().Length == 0;
         }
     }
 }

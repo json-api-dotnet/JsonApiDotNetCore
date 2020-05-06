@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
@@ -85,7 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             }
             builder.AddResource<TodoItemClient>(formatter.FormatResourceName(typeof(TodoItem)));
             builder.AddResource<TodoItemCollectionClient, Guid>(formatter.FormatResourceName(typeof(TodoItemCollection)));
-            return new ResponseDeserializer(builder.Build());
+            return new ResponseDeserializer(builder.Build(), _factory.ServiceProvider);
         }
 
         protected AppDbContext GetDbContext() => GetService<AppDbContext>();

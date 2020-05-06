@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var serializer = GetSerializer<SuperUser>(e => new { e.SecurityLevel, e.Username, e.Password });
-            var superUser = new SuperUser { SecurityLevel = 1337, Username = "Super", Password = "User" };
+            var superUser = new SuperUser(_dbContext) { SecurityLevel = 1337, Username = "Super", Password = "User" };
 
             // Act
             var (body, response) = await Post("/api/v1/superUsers", serializer.Serialize(superUser));

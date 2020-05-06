@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -31,11 +32,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             .RuleFor(a => a.Author, f => new Author());
 
         private static readonly Faker<Tag> _tagFaker = new Faker<Tag>().RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
+
         public ResourceDefinitionTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
             _userFaker = new Faker<User>()
+                .CustomInstantiator(f => new User(_context))
                 .RuleFor(u => u.Username, f => f.Internet.UserName())
                 .RuleFor(u => u.Password, f => f.Internet.Password());
             _todoItemFaker = new Faker<TodoItem>()

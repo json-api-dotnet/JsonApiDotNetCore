@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IntegrationTests;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -174,7 +175,7 @@ namespace JADNC.IntegrationTests.Data
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase(databaseName: $"IntegrationDatabaseRepository{actualSeed}")
                 .Options;
-            var context = new AppDbContext(options);
+            var context = new AppDbContext(options, new FrozenSystemClock());
 
             context.TodoItems.RemoveRange(context.TodoItems);
             return context;

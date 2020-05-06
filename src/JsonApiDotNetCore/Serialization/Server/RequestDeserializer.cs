@@ -11,8 +11,8 @@ namespace JsonApiDotNetCore.Serialization.Server
     {
         private readonly ITargetedFields  _targetedFields;
 
-        public RequestDeserializer(IResourceContextProvider provider,
-                                  ITargetedFields  targetedFields) : base(provider)
+        public RequestDeserializer(IResourceContextProvider contextProvider, IServiceProvider serviceProvider, ITargetedFields  targetedFields) 
+            : base(contextProvider, serviceProvider)
         {
             _targetedFields = targetedFields;
         }

@@ -30,7 +30,7 @@ namespace NoEntityFrameworkTests
             var options = GetService<IJsonApiOptions>();
 
             var resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).AddResource<TodoItem>("todoItems").Build();
-            return new ResponseDeserializer(resourceGraph);
+            return new ResponseDeserializer(resourceGraph, _services);
         }
 
         public T GetService<T>() => (T)_services.GetService(typeof(T));

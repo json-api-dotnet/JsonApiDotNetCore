@@ -1,4 +1,5 @@
-﻿using JsonApiDotNetCoreExample;
+using System;
+using JsonApiDotNetCoreExample;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http;
@@ -9,6 +10,8 @@ namespace JsonApiDotNetCoreExampleTests
     {
         public readonly HttpClient Client;
         private readonly IServiceScope _scope;
+
+        public IServiceProvider ServiceProvider => _scope.ServiceProvider;
 
         public CustomApplicationFactoryBase()
         {
@@ -21,6 +24,8 @@ namespace JsonApiDotNetCoreExampleTests
 
     public interface IApplicationFactory
     {
+        IServiceProvider ServiceProvider { get; }
+
         T GetService<T>();
         HttpClient CreateClient();
     }

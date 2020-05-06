@@ -12,9 +12,11 @@ using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Xunit;
@@ -52,10 +54,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
 
             var serializer = TestFixture<Startup>.GetSerializer<SuperUser>(server.Host.Services, e => new { e.SecurityLevel, e.Username, e.Password });
-            var superUser = new SuperUser { SecurityLevel = 1337, Username = "Super", Password = "User", LastPasswordChange = DateTime.Now.AddMinutes(-15) };
+            var superUser = new SuperUser(_context) { SecurityLevel = 1337, Username = "Super", Password = "User", LastPasswordChange = DateTime.Now.AddMinutes(-15) };
             dbContext.Set<SuperUser>().Add(superUser);
             dbContext.SaveChanges();
-            var su = new SuperUser { Id = superUser.Id, SecurityLevel = 2674, Username = "Power", Password = "secret" };
+            var su = new SuperUser(_context) { Id = superUser.Id, SecurityLevel = 2674, Username = "Power", Password = "secret" };
             var content = serializer.Serialize(su);
 
             // Act
@@ -307,7 +309,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var newPerson = _personFaker.Generate();
             newPerson.Id = person.Id;
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<Startup>().ConfigureTestServices(services => services.AddSingleton<ISystemClock, FrozenSystemClock>());
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var serializer = TestFixture<Startup>.GetSerializer<Person>(server.Host.Services, p => new { p.LastName, p.FirstName });

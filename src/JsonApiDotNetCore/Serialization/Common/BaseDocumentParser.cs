@@ -21,12 +21,14 @@ namespace JsonApiDotNetCore.Serialization
     /// </summary>
     public abstract class BaseDocumentParser
     {
-        protected readonly IResourceContextProvider _provider;
+        protected readonly IResourceContextProvider _contextProvider;
+        private readonly IServiceProvider _serviceProvider;
         protected Document _document;
 
-        protected BaseDocumentParser(IResourceContextProvider provider)
+        protected BaseDocumentParser(IResourceContextProvider contextProvider, IServiceProvider serviceProvider)
         {
-            _provider = provider;
+            _contextProvider = contextProvider;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -131,7 +133,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns>The parsed entity</returns>
         private IIdentifiable ParseResourceObject(ResourceObject data)
         {
-            var resourceContext = _provider.GetResourceContext(data.Type);
+            var resourceContext = _contextProvider.GetResourceContext(data.Type);
             if (resourceContext == null)
             {
                 throw new InvalidRequestBodyException("Payload includes unknown resource type.",
@@ -140,7 +142,7 @@ namespace JsonApiDotNetCore.Serialization
                     "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.", null);
             }
 
-            var entity = (IIdentifiable)TypeHelper.CreateInstance(resourceContext.ResourceType);
+            var entity = (IIdentifiable)TypeHelper.CreateEntityInstance(resourceContext.ResourceType, _serviceProvider);
 
             entity = SetAttributes(entity, data.Attributes, resourceContext.Attributes);
             entity = SetRelationships(entity, data.Relationships, resourceContext.Relationships);

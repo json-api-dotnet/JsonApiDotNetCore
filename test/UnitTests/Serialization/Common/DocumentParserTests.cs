@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using JsonApiDotNetCore.Models;
 using Newtonsoft.Json;
@@ -15,7 +16,7 @@ namespace UnitTests.Serialization.Deserializer
 
         public BaseDocumentParserTests()
         {
-            _deserializer = new TestDocumentParser(_resourceGraph);
+            _deserializer = new TestDocumentParser(_resourceGraph, new ServiceContainer());
         }
 
         [Fact]

@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Serialization.Client
     /// </summary>
     public class ResponseDeserializer : BaseDocumentParser, IResponseDeserializer
     {
-        public ResponseDeserializer(IResourceContextProvider provider) : base(provider) { }
+        public ResponseDeserializer(IResourceContextProvider contextProvider, IServiceProvider serviceProvider) : base(contextProvider, serviceProvider) { }
 
         /// <inheritdoc/>
         public DeserializedSingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
@@ -87,7 +87,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             if (includedResource == null)
                 return relatedInstance;
 
-            var resourceContext = _provider.GetResourceContext(relatedResourceIdentifier.Type);
+            var resourceContext = _contextProvider.GetResourceContext(relatedResourceIdentifier.Type);
             if (resourceContext == null)
                 throw new InvalidOperationException($"Included type '{relationshipAttr.RightType}' is not a registered json:api resource.");
 

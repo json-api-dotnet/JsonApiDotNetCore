@@ -18,6 +18,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Query;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace UnitTests.ResourceHooks
@@ -185,7 +186,7 @@ namespace UnitTests.ResourceHooks
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, iqMock, gpfMock, options) = CreateMocks();
 
-            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
+            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions, new FrozenSystemClock()) : null;
 
             var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .AddResource<TMain>()
@@ -221,7 +222,7 @@ namespace UnitTests.ResourceHooks
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, iqMock, gpfMock, options) = CreateMocks();
 
-            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
+            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions, new FrozenSystemClock()) : null;
 
             var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .AddResource<TMain>()
@@ -272,7 +273,7 @@ namespace UnitTests.ResourceHooks
                 .UseInMemoryDatabase(databaseName: "repository_mock")
                 .Options;
 
-            using (var context = new AppDbContext(options))
+            using (var context = new AppDbContext(options, new FrozenSystemClock()))
             {
                 seeder(context);
                 ResolveInverseRelationships(context);
