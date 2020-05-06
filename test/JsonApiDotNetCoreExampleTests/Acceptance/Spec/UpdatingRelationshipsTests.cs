@@ -22,12 +22,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public sealed class UpdatingRelationshipsTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
         private AppDbContext _context;
         private readonly Faker<Person> _personFaker;
         private readonly Faker<TodoItem> _todoItemFaker;
 
-        public UpdatingRelationshipsTests(TestFixture<Startup> fixture)
+        public UpdatingRelationshipsTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -39,8 +39,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
                 .RuleFor(t => t.CreatedDate, f => f.Date.Past());
-
-
         }
 
         [Fact]
@@ -55,7 +53,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -113,7 +111,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -168,7 +166,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -238,7 +236,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -312,7 +310,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -380,7 +378,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -443,7 +441,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -494,7 +492,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -530,7 +528,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -634,7 +632,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -789,7 +787,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -826,7 +824,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();

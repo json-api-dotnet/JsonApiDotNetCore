@@ -15,11 +15,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public sealed class QueryFiltersTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
         private readonly AppDbContext _context;
         private readonly Faker<User> _userFaker;
 
-        public QueryFiltersTests(TestFixture<Startup> fixture)
+        public QueryFiltersTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var request = new HttpRequestMessage(httpMethod, route);
 
             // @TODO - Use fixture
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var request = new HttpRequestMessage(httpMethod, route);
 
             // @TODO - Use fixture
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 

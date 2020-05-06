@@ -21,9 +21,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public sealed class DeeplyNestedInclusionTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
 
-        public DeeplyNestedInclusionTests(TestFixture<Startup> fixture)
+        public DeeplyNestedInclusionTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
         }

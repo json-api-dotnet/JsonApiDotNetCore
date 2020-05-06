@@ -9,6 +9,8 @@ namespace JsonApiDotNetCoreExampleTests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            base.ConfigureWebHost(builder);
+
             builder.ConfigureServices(services =>
             {
                 services.AddClientSerialization();

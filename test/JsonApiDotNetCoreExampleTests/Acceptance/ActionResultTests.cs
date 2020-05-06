@@ -14,9 +14,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public sealed class ActionResultTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
 
-        public ActionResultTests(TestFixture<Startup> fixture)
+        public ActionResultTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
         }

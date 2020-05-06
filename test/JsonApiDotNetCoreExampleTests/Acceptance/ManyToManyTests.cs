@@ -27,8 +27,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         private static readonly Faker<Tag> _tagFaker = new Faker<Tag>().RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
 
-        private readonly TestFixture<Startup> _fixture;
-        public ManyToManyTests(TestFixture<Startup> fixture)
+        private readonly TestFixture<TestStartup> _fixture;
+        public ManyToManyTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
         }
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -142,7 +142,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -181,7 +181,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-              .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -219,7 +219,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-              .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -256,7 +256,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-              .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -315,7 +315,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-              .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -374,7 +374,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-              .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -439,7 +439,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // @TODO - Use fixture
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -507,7 +507,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // @TODO - Use fixture
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -556,7 +556,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // @TODO - Use fixture
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 

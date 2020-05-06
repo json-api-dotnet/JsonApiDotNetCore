@@ -16,9 +16,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class ContentNegotiationTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
 
-        public ContentNegotiationTests(TestFixture<Startup> fixture)
+        public ContentNegotiationTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
         }
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Server_Sends_Correct_ContentType_Header()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_415_If_Content_Type_Header_Is_Not_JsonApi_Media_Type()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -73,7 +73,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var serializer = _fixture.GetSerializer<TodoItem>(e => new { e.Description });
             var todoItem = new TodoItem {Description = "something not to forget"};
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_415_If_Content_Type_Header_Is_JsonApi_Media_Type_With_Profile()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -116,7 +116,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_415_If_Content_Type_Header_Is_JsonApi_Media_Type_With_Extension()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -141,7 +141,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_415_If_Content_Type_Header_Is_JsonApi_Media_Type_With_CharSet()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -166,7 +166,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_415_If_Content_Type_Header_Is_JsonApi_Media_Type_With_Unknown()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -191,7 +191,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_200_If_Accept_Headers_Are_Missing()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -208,7 +208,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_200_If_Accept_Headers_Include_Any()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -227,7 +227,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_200_If_Accept_Headers_Include_Application_Prefix()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -246,7 +246,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_200_If_Accept_Headers_Contain_JsonApi_Media_Type()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -268,7 +268,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_406_If_Accept_Headers_Only_Contain_JsonApi_Media_Type_With_Parameters()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();

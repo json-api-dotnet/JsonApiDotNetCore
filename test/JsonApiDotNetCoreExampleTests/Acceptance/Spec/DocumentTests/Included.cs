@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<TodoItemCollection> _todoItemCollectionFaker;
 
-        public Included(TestFixture<Startup> fixture)
+        public Included(TestFixture<TestStartup> fixture)
         {
             _context = fixture.GetService<AppDbContext>();
             _personFaker = new Faker<Person>()
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems?include=owner";
@@ -90,7 +90,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
 
@@ -130,7 +130,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/people?include=todoItems";
@@ -169,7 +169,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner&include=assignee";
@@ -208,7 +208,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems?include=owner";
@@ -246,7 +246,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             }
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
 
@@ -290,7 +290,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             }
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
 
@@ -322,7 +322,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var person = _context.People.First();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
 
@@ -353,7 +353,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var person = _context.People.First();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
 
@@ -384,7 +384,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var person = _context.People.First();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
 
@@ -425,7 +425,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
           

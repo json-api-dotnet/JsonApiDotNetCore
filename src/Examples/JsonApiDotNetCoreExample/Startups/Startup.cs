@@ -30,7 +30,8 @@ namespace JsonApiDotNetCoreExample
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ISystemClock, SystemClock>();
+            ConfigureClock(services);
+
             services.AddScoped<SkipCacheQueryParameterService>();
             services.AddScoped<IQueryParameterService>(sp => sp.GetService<SkipCacheQueryParameterService>());
 
@@ -45,6 +46,11 @@ namespace JsonApiDotNetCoreExample
             
             // once all tests have been moved to WebApplicationFactory format we can get rid of this line below
             services.AddClientSerialization();
+        }
+
+        protected virtual void ConfigureClock(IServiceCollection services)
+        {
+            services.AddSingleton<ISystemClock, SystemClock>();
         }
 
         protected virtual void ConfigureJsonApiOptions(JsonApiOptions options)

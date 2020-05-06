@@ -19,7 +19,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             const string queryString = "?someKey=someValue";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/todoItems" + queryString);
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             const string queryString = "?include=";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems" + queryString;
             var server = new TestServer(builder);
@@ -73,7 +73,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             const string queryString = "?sort=notSoGood";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems" + queryString;
             var server = new TestServer(builder);
@@ -101,7 +101,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             const string queryString = "?sort=notSoGood.evenWorse";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems" + queryString;
             var server = new TestServer(builder);
@@ -133,7 +133,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             string parameterName = queryParameter.Split('=')[0];
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/people/1/assignedTodoItems?{queryParameter}";
             var server = new TestServer(builder);

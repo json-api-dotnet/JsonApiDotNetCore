@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         private readonly AppDbContext _dbContext;
         private readonly TodoItem _todoItem;
 
-        public IgnoreNullValuesTests(TestFixture<Startup> fixture)
+        public IgnoreNullValuesTests(TestFixture<TestStartup> fixture)
         {
             _dbContext = fixture.GetService<AppDbContext>();
             var todoItem = new TodoItem
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         [InlineData(NullValueHandling.Include, true, "", null)]
         public async Task CheckBehaviorCombination(NullValueHandling? defaultValue, bool? allowQueryStringOverride, string queryStringValue, NullValueHandling? expected)
         {
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var services = server.Host.Services;
             var client = server.CreateClient();

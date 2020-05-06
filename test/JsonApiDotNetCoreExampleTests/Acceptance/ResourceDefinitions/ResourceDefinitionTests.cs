@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -22,7 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public sealed class ResourceDefinitionTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
         private readonly AppDbContext _context;
         private readonly Faker<User> _userFaker;
         private readonly Faker<TodoItem> _todoItemFaker;
@@ -33,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         private static readonly Faker<Tag> _tagFaker = new Faker<Tag>().RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
 
-        public ResourceDefinitionTests(TestFixture<Startup> fixture)
+        public ResourceDefinitionTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();

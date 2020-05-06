@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,10 +15,6 @@ using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 using System.Net;
-using JsonApiDotNetCore.Serialization.Client;
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 
@@ -28,13 +23,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public sealed class SparseFieldSetTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
         private readonly AppDbContext _dbContext;
         private readonly IResourceGraph _resourceGraph;
         private readonly Faker<Person> _personFaker;
         private readonly Faker<TodoItem> _todoItemFaker;
 
-        public SparseFieldSetTests(TestFixture<Startup> fixture)
+        public SparseFieldSetTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _dbContext = fixture.GetService<AppDbContext>();
@@ -97,7 +92,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             await _dbContext.SaveChangesAsync();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             using var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -132,7 +127,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             await _dbContext.SaveChangesAsync();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             using var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -171,7 +166,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _dbContext.TodoItems.Add(todoItem);
             _dbContext.SaveChanges();
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             using var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -214,7 +209,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _dbContext.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             using var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -255,7 +250,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _dbContext.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             using var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -298,7 +293,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _dbContext.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             using var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -335,7 +330,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _dbContext.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             using var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -375,7 +370,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _dbContext.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             using var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -418,7 +413,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _dbContext.SaveChanges();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             using var server = new TestServer(builder);
             var client = server.CreateClient();

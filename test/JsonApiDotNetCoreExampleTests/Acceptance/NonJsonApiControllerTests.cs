@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             const string route = "testValues";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -39,7 +39,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             const string route = "testValues?name=Jack";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Post, route) {Content = new StringContent("XXX")};
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             const string route = "testValues?name=Jack";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Patch, route) {Content = new StringContent("XXX")};
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             const string route = "testValues";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Delete, route);

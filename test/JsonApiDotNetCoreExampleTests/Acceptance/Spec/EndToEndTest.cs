@@ -129,9 +129,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     {
         public static MediaTypeHeaderValue JsonApiContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
         private HttpClient _client;
-        protected TestFixture<Startup> _fixture;
+        protected TestFixture<TestStartup> _fixture;
         protected readonly IResponseDeserializer _deserializer;
-        public EndToEndTest(TestFixture<Startup> fixture)
+        public EndToEndTest(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _deserializer = GetDeserializer();

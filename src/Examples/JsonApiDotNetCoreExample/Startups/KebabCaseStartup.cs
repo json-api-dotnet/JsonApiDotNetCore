@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreExample
     /// This should be in JsonApiDotNetCoreExampleTests project but changes in .net core 3.0
     /// do no longer allow that. See https://github.com/aspnet/AspNetCore/issues/15373.
     /// </summary>
-    public sealed class KebabCaseStartup : Startup
+    public sealed class KebabCaseStartup : TestStartup
     {
         public KebabCaseStartup(IWebHostEnvironment env) : base(env)
         {

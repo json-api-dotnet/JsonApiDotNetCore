@@ -11,9 +11,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public sealed class DisableQueryAttributeTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
 
-        public DisableQueryAttributeTests(TestFixture<Startup> fixture)
+        public DisableQueryAttributeTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
         }

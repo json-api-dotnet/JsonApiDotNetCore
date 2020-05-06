@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
 
-        public UpdatingDataTests(TestFixture<Startup> fixture) : base(fixture)
+        public UpdatingDataTests(TestFixture<TestStartup> fixture) : base(fixture)
         { 
             _context = fixture.GetService<AppDbContext>();
 
@@ -48,12 +48,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task PatchResource_ModelWithEntityFrameworkInheritance_IsPatched()
         {
             // Arrange
-            var dbContext = PrepareTest<Startup>();
+            var dbContext = PrepareTest<TestStartup>();
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
 
-            var serializer = TestFixture<Startup>.GetSerializer<SuperUser>(server.Host.Services, e => new { e.SecurityLevel, e.Username, e.Password });
+            var serializer = TestFixture<TestStartup>.GetSerializer<SuperUser>(server.Host.Services, e => new { e.SecurityLevel, e.Username, e.Password });
             var superUser = new SuperUser(_context) { SecurityLevel = 1337, Username = "Super", Password = "User", LastPasswordChange = DateTime.Now.AddMinutes(-15) };
             dbContext.Set<SuperUser>().Add(superUser);
             dbContext.SaveChanges();
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Response422IfUpdatingNotSettableAttribute()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
 
             var loggerFactory = new FakeLoggerFactory();
             builder.ConfigureLogging(options =>
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
 
-            var serializer = TestFixture<Startup>.GetSerializer<TodoItem>(server.Host.Services, ti => new { ti.CalculatedValue });
+            var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, ti => new { ti.CalculatedValue });
             var content = serializer.Serialize(todoItem);
             var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", content);
 
@@ -130,12 +130,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todoItem.Id = 100;
             todoItem.CreatedDate = DateTime.Now;
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var serializer = TestFixture<Startup>.GetSerializer<TodoItem>(server.Host.Services, ti => new { ti.Description, ti.Ordinal, ti.CreatedDate });
+            var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, ti => new { ti.Description, ti.Ordinal, ti.CreatedDate });
             var content = serializer.Serialize(todoItem);
             var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", content);
 
@@ -161,11 +161,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = _todoItemFaker.Generate();
             todoItem.CreatedDate = DateTime.Now;
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var serializer = TestFixture<Startup>.GetSerializer<TodoItem>(server.Host.Services, ti => new {ti.Description, ti.Ordinal, ti.CreatedDate});
+            var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, ti => new {ti.Description, ti.Ordinal, ti.CreatedDate});
             var content = serializer.Serialize(todoItem);
             var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{maxPersonId}", content);
 
@@ -197,10 +197,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var wrongTodoItemId = todoItem.Id + 1;
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var serializer = TestFixture<Startup>.GetSerializer<TodoItem>(server.Host.Services, ti => new {ti.Description, ti.Ordinal, ti.CreatedDate});
+            var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, ti => new {ti.Description, ti.Ordinal, ti.CreatedDate});
             var content = serializer.Serialize(todoItem);
             var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{wrongTodoItemId}", content);
 
@@ -225,7 +225,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -266,10 +266,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var newTodoItem = _todoItemFaker.Generate();
             newTodoItem.Id = todoItem.Id;
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var serializer = TestFixture<Startup>.GetSerializer<TodoItem>(server.Host.Services, p => new { p.Description, p.Ordinal });
+            var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, p => new { p.Description, p.Ordinal });
 
             var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", serializer.Serialize(newTodoItem));
 
@@ -309,10 +309,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var newPerson = _personFaker.Generate();
             newPerson.Id = person.Id;
-            var builder = new WebHostBuilder().UseStartup<Startup>().ConfigureTestServices(services => services.AddSingleton<ISystemClock, FrozenSystemClock>());
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var serializer = TestFixture<Startup>.GetSerializer<Person>(server.Host.Services, p => new { p.LastName, p.FirstName });
+            var serializer = TestFixture<TestStartup>.GetSerializer<Person>(server.Host.Services, p => new { p.LastName, p.FirstName });
 
             var request = PrepareRequest("PATCH", $"/api/v1/people/{person.Id}", serializer.Serialize(newPerson));
 
@@ -345,7 +345,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todoItem.Owner = person;
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.Description, ti.Ordinal, ti.CreatedDate }, ti => new { ti.Owner });

@@ -18,7 +18,6 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Query;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace UnitTests.ResourceHooks

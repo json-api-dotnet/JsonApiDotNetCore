@@ -25,9 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public readonly IServiceProvider ServiceProvider;
         public TestFixture()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<TStartup>()
-                .ConfigureTestServices(services => services.AddSingleton<ISystemClock, AlwaysChangingSystemClock>());
+            var builder = new WebHostBuilder().UseStartup<TStartup>();
             _server = new TestServer(builder);
             ServiceProvider = _server.Host.Services;
 
