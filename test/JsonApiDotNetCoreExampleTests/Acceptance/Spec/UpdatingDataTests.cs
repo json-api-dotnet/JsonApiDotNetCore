@@ -53,8 +53,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
 
+            var clock = server.Host.Services.GetRequiredService<ISystemClock>();
+
             var serializer = TestFixture<TestStartup>.GetSerializer<SuperUser>(server.Host.Services, e => new { e.SecurityLevel, e.Username, e.Password });
-            var superUser = new SuperUser(_context) { SecurityLevel = 1337, Username = "Super", Password = "User", LastPasswordChange = DateTime.Now.AddMinutes(-15) };
+            var superUser = new SuperUser(_context) { SecurityLevel = 1337, Username = "Super", Password = "User", LastPasswordChange = clock.UtcNow.LocalDateTime.AddMinutes(-15) };
             dbContext.Set<SuperUser>().Add(superUser);
             dbContext.SaveChanges();
             var su = new SuperUser(_context) { Id = superUser.Id, SecurityLevel = 2674, Username = "Power", Password = "secret" };
@@ -128,7 +130,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var todoItem = _todoItemFaker.Generate();
             todoItem.Id = 100;
-            todoItem.CreatedDate = DateTime.Now;
+            todoItem.CreatedDate = new DateTime(2002, 2,2);
             var builder = new WebHostBuilder()
                 .UseStartup<TestStartup>();
 
@@ -159,7 +161,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var maxPersonId = _context.TodoItems.ToList().LastOrDefault()?.Id ?? 0;
             var todoItem = _todoItemFaker.Generate();
-            todoItem.CreatedDate = DateTime.Now;
+            todoItem.CreatedDate = new DateTime(2002, 2,2);
             var builder = new WebHostBuilder()
                 .UseStartup<TestStartup>();
 
@@ -190,7 +192,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var todoItem = _todoItemFaker.Generate();
-            todoItem.CreatedDate = DateTime.Now;
+            todoItem.CreatedDate = new DateTime(2002, 2,2);
 
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
@@ -337,7 +339,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var todoItem = _todoItemFaker.Generate();
-            todoItem.CreatedDate = DateTime.Now;
+            todoItem.CreatedDate = new DateTime(2002, 2,2);
             var person = _personFaker.Generate();
             _context.TodoItems.Add(todoItem);
             _context.People.Add(person);

@@ -188,6 +188,7 @@ namespace JsonApiDotNetCore.Builders
             _services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(DefaultResourceChangeTracker<>));
             _services.AddScoped<IQueryParameterActionFilter, QueryParameterActionFilter>();
+            _services.AddScoped<IResourceFactory, DefaultResourceFactory>();
 
             AddServerSerialization();
             AddQueryParameterServices();

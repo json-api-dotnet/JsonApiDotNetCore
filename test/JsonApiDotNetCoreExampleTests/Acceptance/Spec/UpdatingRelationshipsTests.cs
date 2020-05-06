@@ -669,7 +669,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            var passport = new Passport();
+            var passport = new Passport(context);
             var person1 = _personFaker.Generate();
             person1.Passport = passport;
             var person2 = _personFaker.Generate();

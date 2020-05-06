@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -70,15 +71,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .AddResource<Passport>()
                 .AddResource<TodoItemClient>("todoItems")
                 .AddResource<TodoItemCollectionClient, Guid>().Build();
-            return new ResponseDeserializer(resourceGraph, ServiceProvider);
+            return new ResponseDeserializer(resourceGraph, new DefaultResourceFactory(ServiceProvider));
         }
 
         public T GetService<T>() => (T)ServiceProvider.GetService(typeof(T));
 
         public void ReloadDbContext()
         {
-            var systemClock = ServiceProvider.GetRequiredService<ISystemClock>();
-            Context = new AppDbContext(GetService<DbContextOptions<AppDbContext>>(), systemClock);
+            ISystemClock systemClock = ServiceProvider.GetRequiredService<ISystemClock>();
+            DbContextOptions<AppDbContext> options = GetService<DbContextOptions<AppDbContext>>();
+            
+            Context = new AppDbContext(options, systemClock);
         }
 
         private bool disposedValue;

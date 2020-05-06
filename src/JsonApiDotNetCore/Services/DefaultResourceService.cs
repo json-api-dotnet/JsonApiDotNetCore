@@ -32,6 +32,7 @@ namespace JsonApiDotNetCore.Services
         private readonly ISortService _sortService;
         private readonly IResourceRepository<TResource, TId> _repository;
         private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
+        private readonly IResourceFactory _resourceFactory;
         private readonly ILogger _logger;
         private readonly IResourceHookExecutor _hookExecutor;
         private readonly IIncludeService _includeService;
@@ -45,6 +46,7 @@ namespace JsonApiDotNetCore.Services
             IResourceRepository<TResource, TId> repository,
             IResourceContextProvider provider,
             IResourceChangeTracker<TResource> resourceChangeTracker,
+            IResourceFactory resourceFactory,
             IResourceHookExecutor hookExecutor = null)
         {
             _includeService = queryParameters.FirstOrDefault<IIncludeService>();
@@ -56,6 +58,7 @@ namespace JsonApiDotNetCore.Services
             _logger = loggerFactory.CreateLogger<DefaultResourceService<TResource, TId>>();
             _repository = repository;
             _resourceChangeTracker = resourceChangeTracker;
+            _resourceFactory = resourceFactory;
             _hookExecutor = hookExecutor;
             _currentRequestResource = provider.GetResourceContext<TResource>();
         }
@@ -81,18 +84,28 @@ namespace JsonApiDotNetCore.Services
         {
             _logger.LogTrace($"Entering {nameof(DeleteAsync)}('{id}').");
 
-            var entity = TypeHelper.CreateInstance<TResource>();
-            entity.Id = id;
-            if (!IsNull(_hookExecutor, entity)) _hookExecutor.BeforeDelete(AsList(entity), ResourcePipeline.Delete);
+            if (!IsNull(_hookExecutor))
+            {
+                var entity = _resourceFactory.CreateInstance<TResource>();
+                entity.Id = id;
+
+                _hookExecutor.BeforeDelete(AsList(entity), ResourcePipeline.Delete);
+            }
             
-            var succeeded = await _repository.DeleteAsync(entity.Id);
+            var succeeded = await _repository.DeleteAsync(id);
             if (!succeeded)
             {
                 string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
                 throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
             }
 
-            if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterDelete(AsList(entity), ResourcePipeline.Delete, succeeded);
+            if (!IsNull(_hookExecutor))
+            {
+                var entity = _resourceFactory.CreateInstance<TResource>();
+                entity.Id = id;
+
+                _hookExecutor.AfterDelete(AsList(entity), ResourcePipeline.Delete, succeeded);
+            }
         }
         
         public virtual async Task<IEnumerable<TResource>> GetAsync()
@@ -427,8 +440,9 @@ namespace JsonApiDotNetCore.Services
             IResourceRepository<TResource, int> repository,
             IResourceContextProvider provider,
             IResourceChangeTracker<TResource> resourceChangeTracker,
+            IResourceFactory resourceFactory,
             IResourceHookExecutor hookExecutor = null)
-            : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, hookExecutor)
+            : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, resourceFactory, hookExecutor)
         { }
     }
 }

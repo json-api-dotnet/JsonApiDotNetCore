@@ -331,7 +331,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var serializer = GetSerializer<Person>(e => new { e.FirstName }, e => new { e.Passport });
-            var passport = new Passport();
+            var passport = new Passport(_dbContext);
             var currentPerson = _personFaker.Generate();
             currentPerson.Passport = passport;
             _dbContext.People.Add(currentPerson);

@@ -238,39 +238,5 @@ namespace JsonApiDotNetCore.Internal
                 throw new InvalidOperationException($"Failed to create an instance of '{type.FullName}' using its default constructor.", exception);
             }
         }
-
-        public static T CreateEntityInstance<T>(IServiceProvider serviceProvider)
-        {
-            return (T) CreateEntityInstance(typeof(T), serviceProvider);
-        }
-
-        public static object CreateEntityInstance(Type type, IServiceProvider serviceProvider)
-        {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            if (serviceProvider == null)
-            {
-                throw new ArgumentNullException(nameof(serviceProvider));
-            }
-
-            bool hasSingleConstructorWithoutParameters = type.HasSingleConstructorWithoutParameters();
-
-            try
-            {
-                return hasSingleConstructorWithoutParameters
-                    ? Activator.CreateInstance(type)
-                    : ActivatorUtilities.CreateInstance(serviceProvider, type);
-            }
-            catch (Exception exception)
-            {
-                throw new InvalidOperationException(hasSingleConstructorWithoutParameters
-                        ? $"Failed to create an instance of '{type.FullName}' using its default constructor."
-                        : $"Failed to create an instance of '{type.FullName}' using injected constructor parameters.",
-                    exception);
-            }
-        }
     }
 }

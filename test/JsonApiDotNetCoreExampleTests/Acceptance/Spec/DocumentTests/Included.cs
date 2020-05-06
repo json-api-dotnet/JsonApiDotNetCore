@@ -412,15 +412,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task Can_Ignore_Null_Parent_In_Nested_Include()
         {
             // Arrange
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+            
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = _personFaker.Generate();
-            todoItem.CreatedDate = DateTime.Now;
+            todoItem.CreatedDate = new DateTime(2002, 2,2);
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
 
             var todoItemWithNullOwner = _todoItemFaker.Generate();
             todoItemWithNullOwner.Owner = null;
-            todoItemWithNullOwner.CreatedDate = DateTime.Now;
+            todoItemWithNullOwner.CreatedDate = new DateTime(2002, 2,2);
             _context.TodoItems.Add(todoItemWithNullOwner);
             _context.SaveChanges();
 

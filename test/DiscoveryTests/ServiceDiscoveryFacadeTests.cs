@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GettingStarted.Models;
 using GettingStarted.ResourceDefinitionExample;
@@ -6,6 +7,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Hooks;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -46,6 +48,7 @@ namespace DiscoveryTests
             _services.AddScoped((_) => new Mock<IGenericServiceFactory>().Object);
             _services.AddScoped((_) => new Mock<IResourceContextProvider>().Object);
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(DefaultResourceChangeTracker<>));
+            _services.AddScoped<IResourceFactory, FakeResourceFactory>();
 
             _resourceGraphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
         }
@@ -115,8 +118,9 @@ namespace DiscoveryTests
                 IResourceRepository<TestModel, int> repository,
                 IResourceContextProvider provider,
                 IResourceChangeTracker<TestModel> resourceChangeTracker,
+                IResourceFactory resourceFactory,
                 IResourceHookExecutor hookExecutor = null)
-                : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, hookExecutor)
+                : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, resourceFactory, hookExecutor)
             { }
         }
 
@@ -131,6 +135,19 @@ namespace DiscoveryTests
                 ILoggerFactory loggerFactory)
                 : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory, loggerFactory)
             { }
+        }
+
+        public class FakeResourceFactory : IResourceFactory
+        {
+            public IIdentifiable CreateInstance(Type resourceType)
+            {
+                throw new NotImplementedException();
+            }
+
+            public TResource CreateInstance<TResource>() where TResource : IIdentifiable
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

@@ -94,7 +94,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?include=owner&filter[achievedDate]={DateTime.UtcNow.Date}";
+            var route = $"/api/v1/todoItems?include=owner&filter[achievedDate]={new DateTime(2002, 2, 2).ToShortDateString()}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

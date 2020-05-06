@@ -22,13 +22,13 @@ namespace JsonApiDotNetCore.Serialization
     public abstract class BaseDocumentParser
     {
         protected readonly IResourceContextProvider _contextProvider;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IResourceFactory _resourceFactory;
         protected Document _document;
 
-        protected BaseDocumentParser(IResourceContextProvider contextProvider, IServiceProvider serviceProvider)
+        protected BaseDocumentParser(IResourceContextProvider contextProvider, IResourceFactory resourceFactory)
         {
             _contextProvider = contextProvider;
-            _serviceProvider = serviceProvider;
+            _resourceFactory = resourceFactory;
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace JsonApiDotNetCore.Serialization
                     "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.", null);
             }
 
-            var entity = (IIdentifiable)TypeHelper.CreateEntityInstance(resourceContext.ResourceType, _serviceProvider);
+            var entity = _resourceFactory.CreateInstance(resourceContext.ResourceType);
 
             entity = SetAttributes(entity, data.Attributes, resourceContext.Attributes);
             entity = SetRelationships(entity, data.Relationships, resourceContext.Relationships);
@@ -214,7 +214,7 @@ namespace JsonApiDotNetCore.Serialization
             }
             else
             {
-                var relatedInstance = (IIdentifiable)TypeHelper.CreateInstance(attr.RightType);
+                var relatedInstance = _resourceFactory.CreateInstance(attr.RightType);
                 relatedInstance.StringId = relatedId;
                 attr.SetValue(entity, relatedInstance);
             }

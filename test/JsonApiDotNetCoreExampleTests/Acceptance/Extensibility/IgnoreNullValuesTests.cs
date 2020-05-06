@@ -28,8 +28,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             {
                 Description = null,
                 Ordinal = 1,
-                CreatedDate = DateTime.Now,
-                AchievedDate = DateTime.Now.AddDays(2),
+                CreatedDate = new DateTime(2002, 2,2),
+                AchievedDate = new DateTime(2002, 2,4),
                 Owner = new Person { FirstName = "Bob", LastName = null }
             };
             _todoItem = _dbContext.TodoItems.Add(todoItem).Entity;

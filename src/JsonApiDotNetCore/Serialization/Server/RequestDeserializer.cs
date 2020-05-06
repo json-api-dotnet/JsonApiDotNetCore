@@ -1,4 +1,5 @@
 using System;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 
@@ -11,8 +12,8 @@ namespace JsonApiDotNetCore.Serialization.Server
     {
         private readonly ITargetedFields  _targetedFields;
 
-        public RequestDeserializer(IResourceContextProvider contextProvider, IServiceProvider serviceProvider, ITargetedFields  targetedFields) 
-            : base(contextProvider, serviceProvider)
+        public RequestDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory, ITargetedFields  targetedFields) 
+            : base(contextProvider, resourceFactory)
         {
             _targetedFields = targetedFields;
         }

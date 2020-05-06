@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCoreExample.Data;
+using Microsoft.AspNetCore.Authentication;
 
 namespace JsonApiDotNetCoreExample.Models
 {
     public class Passport : Identifiable
     {
+        private readonly ISystemClock _systemClock;
         private int? _socialSecurityNumber;
 
         [Attr]
@@ -18,7 +21,7 @@ namespace JsonApiDotNetCoreExample.Models
             {
                 if (value != _socialSecurityNumber)
                 {
-                    LastSocialSecurityNumberChange = DateTime.Now;
+                    LastSocialSecurityNumberChange = _systemClock.UtcNow.LocalDateTime;
                     _socialSecurityNumber = value;
                 }
             }
@@ -60,5 +63,10 @@ namespace JsonApiDotNetCoreExample.Models
 
         [EagerLoad]
         public ICollection<Visa> GrantedVisas { get; set; }
+
+        public Passport(AppDbContext appDbContext)
+        {
+            _systemClock = appDbContext.SystemClock;
+        }
     }
 }

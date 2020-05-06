@@ -53,8 +53,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 Description = "description",
                 Ordinal = 1,
-                CreatedDate = DateTime.Now,
-                AchievedDate = DateTime.Now.AddDays(2)
+                CreatedDate = new DateTime(2002, 2,2),
+                AchievedDate = new DateTime(2002, 2,4)
             };
             _dbContext.TodoItems.Add(todoItem);
             await _dbContext.SaveChangesAsync();
@@ -86,7 +86,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 Description = "description",
                 Ordinal = 1,
-                CreatedDate = DateTime.Now
+                CreatedDate = new DateTime(2002, 2,2)
             };
             _dbContext.TodoItems.Add(todoItem);
             await _dbContext.SaveChangesAsync();
@@ -121,7 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 Description = "description",
                 Ordinal = 1,
-                CreatedDate = DateTime.Now
+                CreatedDate = new DateTime(2002, 2,2)
             };
             _dbContext.TodoItems.Add(todoItem);
             await _dbContext.SaveChangesAsync();
@@ -160,7 +160,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 Description = "s",
                 Ordinal = 123,
-                CreatedDate = DateTime.Now,
+                CreatedDate = new DateTime(2002, 2,2),
                 Owner = owner
             };
             _dbContext.TodoItems.Add(todoItem);
@@ -202,7 +202,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 Description = "description",
                 Ordinal = 1,
-                CreatedDate = DateTime.Now,
+                CreatedDate = new DateTime(2002, 2,2),
                 Owner = owner
             };
             _dbContext.TodoItems.Add(todoItem);
@@ -243,7 +243,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 Description = "description",
                 Ordinal = 1,
-                CreatedDate = DateTime.Now,
+                CreatedDate = new DateTime(2002, 2,2),
                 Owner = owner
             };
             _dbContext.TodoItems.Add(todoItem);
@@ -286,7 +286,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 Description = "description",
                 Ordinal = 1,
-                CreatedDate = DateTime.Now,
+                CreatedDate = new DateTime(2002, 2,2),
                 Owner = owner
             };
             _dbContext.TodoItems.Add(todoItem);

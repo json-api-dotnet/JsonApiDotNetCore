@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.Design;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server;
@@ -23,7 +24,7 @@ namespace UnitTests.Models
                 .AddResource<ResourceWithoutConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new ServiceContainer(), new TargetedFields());
+            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(new ServiceContainer()), new TargetedFields());
 
             var body = new
             {
@@ -52,7 +53,7 @@ namespace UnitTests.Models
                 .AddResource<ResourceWithThrowingConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new ServiceContainer(), new TargetedFields());
+            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(new ServiceContainer()), new TargetedFields());
 
             var body = new
             {
@@ -88,7 +89,7 @@ namespace UnitTests.Models
             var serviceContainer = new ServiceContainer();
             serviceContainer.AddService(typeof(AppDbContext), appDbContext);
 
-            var serializer = new RequestDeserializer(graph, serviceContainer, new TargetedFields());
+            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(serviceContainer), new TargetedFields());
 
             var body = new
             {
@@ -118,7 +119,7 @@ namespace UnitTests.Models
                 .AddResource<ResourceWithStringConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new ServiceContainer(), new TargetedFields());
+            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(new ServiceContainer()), new TargetedFields());
 
             var body = new
             {

@@ -8,6 +8,7 @@ using JsonApiDotNetCore;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Graph;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Client;
@@ -84,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             }
             builder.AddResource<TodoItemClient>(formatter.FormatResourceName(typeof(TodoItem)));
             builder.AddResource<TodoItemCollectionClient, Guid>(formatter.FormatResourceName(typeof(TodoItemCollection)));
-            return new ResponseDeserializer(builder.Build(), _factory.ServiceProvider);
+            return new ResponseDeserializer(builder.Build(), new DefaultResourceFactory(_factory.ServiceProvider));
         }
 
         protected AppDbContext GetDbContext() => GetService<AppDbContext>();

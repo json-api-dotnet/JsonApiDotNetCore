@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCore.Serialization.Client;
@@ -17,7 +18,7 @@ namespace UnitTests.Serialization.Client
 
         public ResponseDeserializerTests()
         {
-            _deserializer = new ResponseDeserializer(_resourceGraph, new ServiceContainer());
+            _deserializer = new ResponseDeserializer(_resourceGraph, new DefaultResourceFactory(new ServiceContainer()));
             _linkValues.Add("self", "http://example.com/articles");
             _linkValues.Add("next", "http://example.com/articles?page[offset]=2");
             _linkValues.Add("last", "http://example.com/articles?page[offset]=10");

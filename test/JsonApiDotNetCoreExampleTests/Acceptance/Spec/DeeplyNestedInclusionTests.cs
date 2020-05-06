@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCoreExample;
@@ -48,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .AddResource<TodoItemCollection, Guid>()
                 .AddResource<Person>()
                 .Build();
-            var deserializer = new ResponseDeserializer(resourceGraph, _fixture.ServiceProvider);
+            var deserializer = new ResponseDeserializer(resourceGraph, new DefaultResourceFactory(_fixture.ServiceProvider));
             var todoItem = new TodoItem
             {
                 Collection = new TodoItemCollection

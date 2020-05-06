@@ -6,6 +6,7 @@ using NoEntityFrameworkExample.Data;
 using NoEntityFrameworkExample.Models;
 using System;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Internal;
 using Microsoft.Extensions.Logging.Abstractions;
 using NoEntityFrameworkExample;
 
@@ -30,7 +31,7 @@ namespace NoEntityFrameworkTests
             var options = GetService<IJsonApiOptions>();
 
             var resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).AddResource<TodoItem>("todoItems").Build();
-            return new ResponseDeserializer(resourceGraph, _services);
+            return new ResponseDeserializer(resourceGraph, new DefaultResourceFactory(_services));
         }
 
         public T GetService<T>() => (T)_services.GetService(typeof(T));

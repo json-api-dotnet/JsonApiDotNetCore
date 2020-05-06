@@ -4,7 +4,9 @@ using System.Net;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -21,6 +23,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
         public EagerLoadTests(StandardApplicationFactory factory) : base(factory)
         {
+            var appDbContext = factory.ServiceProvider.GetRequiredService<AppDbContext>();
+
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
@@ -29,6 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .RuleFor(t => t.FirstName, f => f.Name.FirstName())
                 .RuleFor(t => t.LastName, f => f.Name.LastName());
             _passportFaker = new Faker<Passport>()
+                .CustomInstantiator(f => new Passport(appDbContext))
                 .RuleFor(t => t.SocialSecurityNumber, f => f.Random.Number(100, 10_000));
             _countryFaker = new Faker<Country>()
                 .RuleFor(c => c.Name, f => f.Address.Country());

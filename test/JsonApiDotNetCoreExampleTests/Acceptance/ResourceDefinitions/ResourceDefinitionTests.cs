@@ -287,7 +287,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var lockedPerson = _personFaker.Generate();
             lockedPerson.IsLocked = true;
-            var passport = new Passport();
+            var passport = new Passport(context);
             lockedPerson.Passport = passport;
             context.People.AddRange(lockedPerson);
             await context.SaveChangesAsync();
@@ -336,10 +336,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var person = _personFaker.Generate();
-            var passport = new Passport { IsLocked = true };
+            var passport = new Passport(context) { IsLocked = true };
             person.Passport = passport;
             context.People.AddRange(person);
-            var newPassport = new Passport();
+            var newPassport = new Passport(context);
             context.Passports.Add(newPassport);
             await context.SaveChangesAsync();
 
@@ -388,10 +388,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var person = _personFaker.Generate();
-            var passport = new Passport { IsLocked = true };
+            var passport = new Passport(context) { IsLocked = true };
             person.Passport = passport;
             context.People.AddRange(person);
-            var newPassport = new Passport();
+            var newPassport = new Passport(context);
             context.Passports.Add(newPassport);
             await context.SaveChangesAsync();
 
@@ -441,7 +441,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var lockedPerson = _personFaker.Generate();
             lockedPerson.IsLocked = true;
-            var passport = new Passport();
+            var passport = new Passport(context);
             lockedPerson.Passport = passport;
             context.People.AddRange(lockedPerson);
             await context.SaveChangesAsync();

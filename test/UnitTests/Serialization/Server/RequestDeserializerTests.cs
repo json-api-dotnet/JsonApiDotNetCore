@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server;
@@ -17,7 +18,7 @@ namespace UnitTests.Serialization.Server
         private readonly Mock<ITargetedFields> _fieldsManagerMock = new Mock<ITargetedFields>();
         public RequestDeserializerTests()
         {
-            _deserializer = new RequestDeserializer(_resourceGraph, new ServiceContainer(), _fieldsManagerMock.Object);
+            _deserializer = new RequestDeserializer(_resourceGraph, new DefaultResourceFactory(new ServiceContainer()), _fieldsManagerMock.Object);
         }
 
         [Fact]

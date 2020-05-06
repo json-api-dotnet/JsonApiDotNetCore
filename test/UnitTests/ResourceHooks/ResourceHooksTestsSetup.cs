@@ -38,6 +38,8 @@ namespace UnitTests.ResourceHooks
 
         public HooksDummyData()
         {
+            var appDbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>().Options, new FrozenSystemClock());
+
             _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .AddResource<TodoItem>()
                 .AddResource<Person>()
@@ -48,8 +50,6 @@ namespace UnitTests.ResourceHooks
                 .AddResource<TodoItemCollection, Guid>()
                 .Build();
 
-
-
             _todoFaker = new Faker<TodoItem>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
             _personFaker = new Faker<Person>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
 
@@ -58,7 +58,9 @@ namespace UnitTests.ResourceHooks
             _identifiableArticleTagFaker = new Faker<IdentifiableArticleTag>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
             _tagFaker = new Faker<Tag>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
 
-            _passportFaker = new Faker<Passport>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
+            _passportFaker = new Faker<Passport>()
+                .CustomInstantiator(f => new Passport(appDbContext))
+                .Rules((f, i) => i.Id = f.UniqueIndex + 1);
         }
 
         protected List<TodoItem> CreateTodoWithToOnePerson()
