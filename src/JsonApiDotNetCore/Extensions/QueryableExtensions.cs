@@ -206,9 +206,7 @@ namespace JsonApiDotNetCore.Extensions
                 member = Expression.Property(entity, filter.Attribute.PropertyInfo.Name);
 
             var method = ContainsMethod.MakeGenericMethod(member.Type);
-
-            var listType = typeof(List<>).MakeGenericType(member.Type);
-            var list = (IList)TypeHelper.CreateInstance(listType);
+            var list = TypeHelper.CreateListFor(member.Type);
 
             foreach (var value in propertyValues)
             {

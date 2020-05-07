@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreExample
                 bytes.Add(bt);
             }
 
-            var chars = Encoding.Unicode.GetChars(bytes.ToArray());
+            var chars = Encoding.ASCII.GetChars(bytes.ToArray());
             return new string(chars);
         }
 
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCoreExample
         {
             var builder = new StringBuilder();
 
-            foreach (byte bt in Encoding.Unicode.GetBytes(value))
+            foreach (byte bt in Encoding.ASCII.GetBytes(value))
             {
                 builder.Append(bt.ToString("X2"));
             }

@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -194,6 +195,28 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             Assert.DoesNotContain(document.Included,
                 resource => resource.Attributes.ContainsKey("lastName"));
+        }
+
+        [Fact]
+        public async Task Fail_When_Deleting_Missing_Passport()
+        {
+            // Arrange
+            string passportId = HexadecimalObfuscationCodec.Encode(1234567890);
+
+            var request = new HttpRequestMessage(HttpMethod.Delete, "/api/v1/passports/" + passportId);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            _fixture.AssertEqualStatusCode(HttpStatusCode.NotFound, response);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("Resource of type 'passports' with id '" + passportId + "' does not exist.", errorDocument.Errors[0].Detail);
         }
     }
 }

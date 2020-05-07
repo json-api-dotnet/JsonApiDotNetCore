@@ -219,11 +219,6 @@ namespace JsonApiDotNetCore.Internal
             return property.PropertyType;
         }
 
-        public static T CreateInstance<T>()
-        {
-            return (T) CreateInstance(typeof(T));
-        }
-
         public static object CreateInstance(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -251,9 +246,9 @@ namespace JsonApiDotNetCore.Internal
             return property.GetValue(resource);
         }
 
-        public static string GetResourceStringId<TResource, TId>(TId id) where TResource : class, IIdentifiable<TId>
+        public static string GetResourceStringId<TResource, TId>(TId id, IResourceFactory resourceFactory) where TResource : class, IIdentifiable<TId>
         {
-            TResource tempResource = CreateInstance<TResource>();
+            TResource tempResource = resourceFactory.CreateInstance<TResource>();
             tempResource.Id = id;
             return tempResource.StringId;
         }
