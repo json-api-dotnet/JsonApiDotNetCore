@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Internal
                 try
                 {
                     object constructorArgument =
-                        ActivatorUtilities.CreateInstance(_serviceProvider, constructorParameter.ParameterType);
+                        ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, constructorParameter.ParameterType);
 
                     constructorArguments.Add(Expression.Constant(constructorArgument));
                 }

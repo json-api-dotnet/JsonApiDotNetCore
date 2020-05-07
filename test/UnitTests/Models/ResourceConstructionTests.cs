@@ -72,7 +72,7 @@ namespace UnitTests.Models
             // Assert
             var exception = Assert.Throws<InvalidOperationException>(action);
             Assert.Equal(
-                "Failed to create an instance of 'UnitTests.Models.ResourceConstructionTests+ResourceWithThrowingConstructor' using its default constructor.",
+                "Failed to create an instance of 'UnitTests.Models.ResourceWithThrowingConstructor' using its default constructor.",
                 exception.Message);
         }
 
@@ -138,40 +138,40 @@ namespace UnitTests.Models
             // Assert
             var exception = Assert.Throws<InvalidOperationException>(action);
             Assert.Equal(
-                "Failed to create an instance of 'UnitTests.Models.ResourceConstructionTests+ResourceWithStringConstructor' using injected constructor parameters.",
+                "Failed to create an instance of 'UnitTests.Models.ResourceWithStringConstructor' using injected constructor parameters.",
                 exception.Message);
         }
+    }
 
-        public class ResourceWithoutConstructor : Identifiable
+    public class ResourceWithoutConstructor : Identifiable
+    {
+    }
+
+    public class ResourceWithDbContextConstructor : Identifiable
+    {
+        public AppDbContext AppDbContext { get; }
+
+        public ResourceWithDbContextConstructor(AppDbContext appDbContext)
         {
+            AppDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
         }
+    }
 
-        public class ResourceWithDbContextConstructor : Identifiable
+    public class ResourceWithThrowingConstructor : Identifiable
+    {
+        public ResourceWithThrowingConstructor()
         {
-            public AppDbContext AppDbContext { get; }
-
-            public ResourceWithDbContextConstructor(AppDbContext appDbContext)
-            {
-                AppDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
-            }
+            throw new ArgumentException("Failed to initialize.");
         }
+    }
 
-        public class ResourceWithThrowingConstructor : Identifiable
+    public class ResourceWithStringConstructor : Identifiable
+    {
+        public string Text { get; }
+
+        public ResourceWithStringConstructor(string text)
         {
-            public ResourceWithThrowingConstructor()
-            {
-                throw new ArgumentException("Failed to initialize.");
-            }
-        }
-
-        public class ResourceWithStringConstructor : Identifiable
-        {
-            public string Text { get; }
-
-            public ResourceWithStringConstructor(string text)
-            {
-                Text = text ?? throw new ArgumentNullException(nameof(text));
-            }
+            Text = text ?? throw new ArgumentNullException(nameof(text));
         }
     }
 }
