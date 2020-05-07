@@ -18,6 +18,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Query;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace UnitTests.ResourceHooks
@@ -355,12 +356,13 @@ namespace UnitTests.ResourceHooks
             }
         }
 
-        private IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(
-        AppDbContext dbContext, IResourceGraph resourceGraph
-        ) where TModel : class, IIdentifiable<int>
+        private IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(AppDbContext dbContext, IResourceGraph resourceGraph) 
+            where TModel : class, IIdentifiable<int>
         {
+            var serviceProvider = ((IInfrastructure<IServiceProvider>) dbContext).Instance;
+            var resourceFactory = new DefaultResourceFactory(serviceProvider);
             IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
-            return new DefaultResourceRepository<TModel, int>(null, resolver, resourceGraph, null, NullLoggerFactory.Instance);
+            return new DefaultResourceRepository<TModel, int>(null, resolver, resourceGraph, null, resourceFactory, NullLoggerFactory.Instance);
         }
 
         private IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>

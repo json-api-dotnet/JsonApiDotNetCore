@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
@@ -27,6 +28,7 @@ namespace JsonApiDotNetCore.Data
         private readonly DbSet<TResource> _dbSet;
         private readonly IResourceGraph _resourceGraph;
         private readonly IGenericServiceFactory _genericServiceFactory;
+        private readonly IResourceFactory _resourceFactory;
         private readonly ILogger<DefaultResourceRepository<TResource, TId>> _logger;
 
         public DefaultResourceRepository(
@@ -34,11 +36,13 @@ namespace JsonApiDotNetCore.Data
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
             IGenericServiceFactory genericServiceFactory,
+            IResourceFactory resourceFactory,
             ILoggerFactory loggerFactory)
         {
             _targetedFields = targetedFields;
             _resourceGraph = resourceGraph;
             _genericServiceFactory = genericServiceFactory;
+            _resourceFactory = resourceFactory;
             _context = contextResolver.GetContext();
             _dbSet = _context.Set<TResource>();
             _logger = loggerFactory.CreateLogger<DefaultResourceRepository<TResource, TId>>();
@@ -66,7 +70,7 @@ namespace JsonApiDotNetCore.Data
         {
             _logger.LogTrace($"Entering {nameof(Select)}({nameof(entities)}, {nameof(propertyNames)}).");
 
-            return entities.Select(propertyNames);
+            return entities.Select(propertyNames, _resourceFactory);
         }
 
         /// <inheritdoc />
@@ -468,8 +472,9 @@ namespace JsonApiDotNetCore.Data
             IDbContextResolver contextResolver, 
             IResourceGraph resourceGraph, 
             IGenericServiceFactory genericServiceFactory,
+            IResourceFactory resourceFactory,
             ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, loggerFactory) 
+            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory) 
         { }
     }
 }

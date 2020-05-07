@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 using System.Net;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 
@@ -63,11 +65,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .GetAttributes<TodoItem>(e => new {e.Id, e.Description, e.CreatedDate, e.AchievedDate})
                 .Select(x => x.PropertyInfo.Name);
 
+            var resourceFactory = new DefaultResourceFactory(new ServiceContainer());
+
             // Act
             var query = _dbContext
                 .TodoItems
                 .Where(t => t.Id == todoItem.Id)
-                .Select(properties);
+                .Select(properties, resourceFactory);
 
             var result = await query.FirstAsync();
 

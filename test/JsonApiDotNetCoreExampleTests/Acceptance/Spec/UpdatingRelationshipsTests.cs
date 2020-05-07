@@ -570,7 +570,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Null(todoItemResult.Owner);
         }
 
-
         [Fact]
         public async Task Can_Delete_ToMany_Relationship_By_Patching_Resource()
         {

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using GettingStarted.Models;
 using GettingStarted.ResourceDefinitionExample;
@@ -41,14 +40,14 @@ namespace DiscoveryTests
 
             _services.AddSingleton<IJsonApiOptions>(options);
             _services.AddSingleton<ILoggerFactory>(new LoggerFactory());
-            _services.AddScoped((_) => new Mock<ILinkBuilder>().Object);
-            _services.AddScoped((_) => new Mock<ICurrentRequest>().Object);
-            _services.AddScoped((_) => new Mock<ITargetedFields>().Object);
-            _services.AddScoped((_) => new Mock<IResourceGraph>().Object);
-            _services.AddScoped((_) => new Mock<IGenericServiceFactory>().Object);
-            _services.AddScoped((_) => new Mock<IResourceContextProvider>().Object);
+            _services.AddScoped(_ => new Mock<ILinkBuilder>().Object);
+            _services.AddScoped(_ => new Mock<ICurrentRequest>().Object);
+            _services.AddScoped(_ => new Mock<ITargetedFields>().Object);
+            _services.AddScoped(_ => new Mock<IResourceGraph>().Object);
+            _services.AddScoped(_ => new Mock<IGenericServiceFactory>().Object);
+            _services.AddScoped(_ => new Mock<IResourceContextProvider>().Object);
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(DefaultResourceChangeTracker<>));
-            _services.AddScoped<IResourceFactory, FakeResourceFactory>();
+            _services.AddScoped(_ => new Mock<IResourceFactory>().Object);
 
             _resourceGraphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
         }
@@ -132,22 +131,10 @@ namespace DiscoveryTests
                 ITargetedFields targetedFields,
                 IResourceGraph resourceGraph,
                 IGenericServiceFactory genericServiceFactory,
+                IResourceFactory resourceFactory,
                 ILoggerFactory loggerFactory)
-                : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory, loggerFactory)
+                : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory)
             { }
-        }
-
-        public class FakeResourceFactory : IResourceFactory
-        {
-            public IIdentifiable CreateInstance(Type resourceType)
-            {
-                throw new NotImplementedException();
-            }
-
-            public TResource CreateInstance<TResource>() where TResource : IIdentifiable
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }

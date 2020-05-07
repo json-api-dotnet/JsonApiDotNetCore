@@ -71,9 +71,30 @@ namespace JsonApiDotNetCore.Extensions
 
         public static bool HasSingleConstructorWithoutParameters(this Type type)
         {
-            ConstructorInfo[] constructors = type.GetConstructors();
+            ConstructorInfo[] constructors = type.GetConstructors().Where(c => !c.IsStatic).ToArray();
 
             return constructors.Length == 1 && constructors[0].GetParameters().Length == 0;
+        }
+
+        public static ConstructorInfo GetLongestConstructor(this Type type)
+        {
+            ConstructorInfo[] constructors = type.GetConstructors().Where(c => !c.IsStatic).ToArray();
+
+            ConstructorInfo bestMatch = constructors[0];
+            int maxParameterLength = constructors[0].GetParameters().Length;
+
+            for (int index = 1; index < constructors.Length; index++)
+            {
+                var constructor = constructors[index];
+                int length = constructor.GetParameters().Length;
+                if (length > maxParameterLength)
+                {
+                    bestMatch = constructor;
+                    maxParameterLength = length;
+                }
+            }
+
+            return bestMatch;
         }
     }
 }

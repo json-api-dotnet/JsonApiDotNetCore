@@ -1,22 +1,24 @@
 using System;
-using System.Net.Http;
-using JsonApiDotNetCoreExample.Data;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using JsonApiDotNetCore.Data;
-using Microsoft.EntityFrameworkCore;
-using JsonApiDotNetCore.Serialization.Client;
 using System.Linq.Expressions;
-using JsonApiDotNetCore.Models;
+using System.Net;
+using System.Net.Http;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCoreExampleTests.Helpers.Models;
-using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
+using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
@@ -82,6 +84,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             DbContextOptions<AppDbContext> options = GetService<DbContextOptions<AppDbContext>>();
             
             Context = new AppDbContext(options, systemClock);
+        }
+
+        public void AssertEqualStatusCode(HttpStatusCode expected, HttpResponseMessage response)
+        {
+            Assert.True(expected == response.StatusCode, $"Got {response.StatusCode} status code with payload instead of {expected}. Payload: {response.Content.ReadAsStringAsync().Result}");
         }
 
         private bool disposedValue;

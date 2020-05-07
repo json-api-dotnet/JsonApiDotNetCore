@@ -63,9 +63,9 @@ namespace JsonApiDotNetCore.Extensions
             return CallGenericWhereMethod(source, filterQuery);
         }
 
-        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, IEnumerable<string> columns)
+        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, IEnumerable<string> columns, IResourceFactory resourceFactory)
         {
-            return columns == null || !columns.Any() ? source : CallGenericSelectMethod(source, columns);
+            return columns == null || !columns.Any() ? source : CallGenericSelectMethod(source, columns, resourceFactory);
         }
 
         public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQueryContext sortQuery)
@@ -342,7 +342,7 @@ namespace JsonApiDotNetCore.Extensions
             return Expression.Property(tupleCreateCall, "Item1");
         }
 
-        private static IQueryable<TSource> CallGenericSelectMethod<TSource>(IQueryable<TSource> source, IEnumerable<string> columns)
+        private static IQueryable<TSource> CallGenericSelectMethod<TSource>(IQueryable<TSource> source, IEnumerable<string> columns, IResourceFactory resourceFactory)
         {
             var sourceType = typeof(TSource);
             var parameter = Expression.Parameter(source.ElementType, "x");
@@ -386,7 +386,7 @@ namespace JsonApiDotNetCore.Extensions
                         collectionElementType.GetProperty(prop), Expression.PropertyOrField(nestedParameter, prop))).ToList();
 
                     // { new Item() }
-                    var newNestedExp = Expression.New(collectionElementType);
+                    var newNestedExp = resourceFactory.CreateNewExpression(collectionElementType);
                     var initNestedExp = Expression.MemberInit(newNestedExp, nestedBindings);
                     // { y => new Item() {Id = y.Id, Name = y.Name}}
                     var body = Expression.Lambda(initNestedExp, nestedParameter);
@@ -419,7 +419,7 @@ namespace JsonApiDotNetCore.Extensions
                         nestedBindings.Add(Expression.Bind(propInfo, nestedBody));
                     }
                     // { new Owner() }
-                    var newExp = Expression.New(nestedPropertyType);
+                    var newExp = resourceFactory.CreateNewExpression(nestedPropertyType);
                     // { new Owner() { Id = x.Owner.Id, Name = x.Owner.Name }}
                     var newInit = Expression.MemberInit(newExp, nestedBindings);
 
@@ -436,7 +436,8 @@ namespace JsonApiDotNetCore.Extensions
                 nestedBindings.Clear();
             }
 
-            var sourceInit = Expression.MemberInit(Expression.New(sourceType), sourceBindings);
+            var newExpression = resourceFactory.CreateNewExpression(sourceType);
+            var sourceInit = Expression.MemberInit(newExpression, sourceBindings);
             var finalBody = Expression.Lambda(sourceInit, parameter);
 
             return source.Provider.CreateQuery<TSource>(Expression.Call(

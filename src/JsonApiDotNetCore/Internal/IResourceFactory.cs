@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +12,7 @@ namespace JsonApiDotNetCore.Internal
     {
         public IIdentifiable CreateInstance(Type resourceType);
         public TResource CreateInstance<TResource>() where TResource : IIdentifiable;
+        public NewExpression CreateNewExpression(Type resourceType);
     }
 
     internal sealed class DefaultResourceFactory : IResourceFactory
@@ -52,6 +56,26 @@ namespace JsonApiDotNetCore.Internal
                         : $"Failed to create an instance of '{type.FullName}' using injected constructor parameters.",
                     exception);
             }
+        }
+
+        public NewExpression CreateNewExpression(Type resourceType)
+        {
+            if (resourceType.HasSingleConstructorWithoutParameters())
+            {
+                return Expression.New(resourceType);
+            }
+
+            List<Expression> constructorArguments = new List<Expression>();
+
+            var longestConstructor = resourceType.GetLongestConstructor();
+            foreach (ParameterInfo constructorParameter in longestConstructor.GetParameters())
+            {
+                var constructorArgument =
+                    ActivatorUtilities.CreateInstance(_serviceProvider, constructorParameter.ParameterType);
+                constructorArguments.Add(Expression.Constant(constructorArgument));
+            }
+
+            return Expression.New(longestConstructor, constructorArguments);
         }
     }
 }
