@@ -60,7 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _dbContext.SaveChanges();
 
             // Act
-            var (body, response) = await Get($"/api/v1/passports/{passport.Id}");
+            var (body, response) = await Get($"/api/v1/passports/{passport.StringId}");
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
@@ -182,7 +182,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var content = serializer.Serialize(passport);
 
             // Act
-            var (body, response) = await Patch($"/api/v1/passports/{passport.Id}", content);
+            var (body, response) = await Patch($"/api/v1/passports/{passport.StringId}", content);
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);

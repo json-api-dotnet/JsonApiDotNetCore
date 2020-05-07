@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.Hooks
                     .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
                     .MakeGenericMethod(entityTypeForRepository, idType);
             var cast = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
-            var ids = cast.Select(e => TypeHelper.ConvertType(e.StringId, idType)).CopyToList(idType);
+            var ids = cast.Select(TypeHelper.GetResourceTypedId).CopyToList(idType);
             var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, relationshipsToNextLayer });
             if (values == null) return null;
             return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(entityTypeForRepository), values.CopyToList(entityTypeForRepository));

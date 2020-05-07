@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -237,6 +236,26 @@ namespace JsonApiDotNetCore.Internal
             {
                 throw new InvalidOperationException($"Failed to create an instance of '{type.FullName}' using its default constructor.", exception);
             }
+        }
+
+        public static object ConvertStringIdToTypedId(Type resourceType, string stringId, IResourceFactory resourceFactory)
+        {
+            var tempResource = resourceFactory.CreateInstance(resourceType);
+            tempResource.StringId = stringId;
+            return GetResourceTypedId(tempResource);
+        }
+
+        public static object GetResourceTypedId(IIdentifiable resource)
+        {
+            PropertyInfo property = resource.GetType().GetProperty(nameof(Identifiable.Id));
+            return property.GetValue(resource);
+        }
+
+        public static string GetResourceStringId<TResource, TId>(TId id) where TResource : class, IIdentifiable<TId>
+        {
+            TResource tempResource = CreateInstance<TResource>();
+            tempResource.Id = id;
+            return tempResource.StringId;
         }
     }
 }

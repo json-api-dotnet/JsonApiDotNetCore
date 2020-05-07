@@ -686,7 +686,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                         { "passport", new
                             {
-                                data = new { type = "passports", id = $"{passportId}" }
+                                data = new { type = "passports", id = $"{passport.StringId}" }
                             }
                         }
                     }

@@ -301,7 +301,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "passport", new
                             {
-                                data = new { type = "passports", id = $"{lockedPerson.Passport.Id}" }
+                                data = new { type = "passports", id = $"{lockedPerson.Passport.StringId}" }
                             }
                         }
                     }
@@ -353,7 +353,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "passport", new
                             {
-                                data = new { type = "passports", id = $"{newPassport.Id}" }
+                                data = new { type = "passports", id = $"{newPassport.StringId}" }
                             }
                         }
                     }
@@ -447,7 +447,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             await context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("DELETE");
-            var route = $"/api/v1/passports/{lockedPerson.PassportId}";
+            var route = $"/api/v1/passports/{lockedPerson.Passport.StringId}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

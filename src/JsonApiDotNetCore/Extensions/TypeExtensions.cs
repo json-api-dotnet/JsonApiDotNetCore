@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -50,13 +49,6 @@ namespace JsonApiDotNetCore.Extensions
             }
 
             return concreteCollectionInstance;
-        }
-
-        public static string GetResourceStringId<TResource, TId>(TId id) where TResource : class, IIdentifiable<TId>
-        {
-            var tempResource = TypeHelper.CreateInstance<TResource>();
-            tempResource.Id = id;
-            return tempResource.StringId;
         }
 
         /// <summary>

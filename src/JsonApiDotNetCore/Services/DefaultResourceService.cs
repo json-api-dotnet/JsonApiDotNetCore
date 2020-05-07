@@ -95,7 +95,7 @@ namespace JsonApiDotNetCore.Services
             var succeeded = await _repository.DeleteAsync(id);
             if (!succeeded)
             {
-                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                string resourceId = TypeHelper.GetResourceStringId<TResource, TId>(id);
                 throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
             }
 
@@ -149,7 +149,7 @@ namespace JsonApiDotNetCore.Services
 
             if (entity == null)
             {
-                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                string resourceId = TypeHelper.GetResourceStringId<TResource, TId>(id);
                 throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
             }
 
@@ -177,7 +177,7 @@ namespace JsonApiDotNetCore.Services
 
             if (entity == null)
             {
-                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                string resourceId = TypeHelper.GetResourceStringId<TResource, TId>(id);
                 throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
             }
 
@@ -207,7 +207,7 @@ namespace JsonApiDotNetCore.Services
             TResource databaseEntity = await _repository.Get(id).FirstOrDefaultAsync();
             if (databaseEntity == null)
             {
-                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                string resourceId = TypeHelper.GetResourceStringId<TResource, TId>(id);
                 throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
             }
 
@@ -243,7 +243,7 @@ namespace JsonApiDotNetCore.Services
 
             if (entity == null)
             {
-                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                string resourceId = TypeHelper.GetResourceStringId<TResource, TId>(id);
                 throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
             }
 

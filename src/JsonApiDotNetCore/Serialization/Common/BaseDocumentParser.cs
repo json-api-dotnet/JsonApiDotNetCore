@@ -198,8 +198,9 @@ namespace JsonApiDotNetCore.Serialization
                 // For a server deserializer, it should be mapped to a BadRequest HTTP error code.
                 throw new FormatException($"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
             }
-            var convertedId = TypeHelper.ConvertType(id, foreignKey.PropertyType);
-            foreignKey.SetValue(entity, convertedId);
+
+            var typedId = TypeHelper.ConvertStringIdToTypedId(attr.PropertyInfo.PropertyType, id, _resourceFactory);
+            foreignKey.SetValue(entity, typedId);
         }
 
         /// <summary>
