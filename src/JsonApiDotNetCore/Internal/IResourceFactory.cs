@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Internal
@@ -70,9 +69,19 @@ namespace JsonApiDotNetCore.Internal
             var longestConstructor = resourceType.GetLongestConstructor();
             foreach (ParameterInfo constructorParameter in longestConstructor.GetParameters())
             {
-                var constructorArgument =
-                    ActivatorUtilities.CreateInstance(_serviceProvider, constructorParameter.ParameterType);
-                constructorArguments.Add(Expression.Constant(constructorArgument));
+                try
+                {
+                    object constructorArgument =
+                        ActivatorUtilities.CreateInstance(_serviceProvider, constructorParameter.ParameterType);
+
+                    constructorArguments.Add(Expression.Constant(constructorArgument));
+                }
+                catch (Exception exception)
+                {
+                    throw new InvalidOperationException(
+                        $"Failed to create an instance of '{resourceType.FullName}': Parameter '{constructorParameter.Name}' could not be resolved.",
+                        exception);
+                }
             }
 
             return Expression.New(longestConstructor, constructorArguments);
