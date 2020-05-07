@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task When_posting_tag_with_invalid_name_it_must_fail()
         {
             // Arrange
-            var tag = new Tag
+            var tag = new Tag(_dbContext)
             {
                 Name = "!@#$%^&*().-"
             };
@@ -60,7 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task When_posting_tag_with_invalid_name_without_model_state_validation_it_must_succeed()
         {
             // Arrange
-            var tag = new Tag
+            var tag = new Tag(_dbContext)
             {
                 Name = "!@#$%^&*().-"
             };
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task When_patching_tag_with_invalid_name_it_must_fail()
         {
             // Arrange
-            var existingTag = new Tag
+            var existingTag = new Tag(_dbContext)
             {
                 Name = "Technology"
             };
@@ -97,7 +97,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             context.Tags.Add(existingTag);
             context.SaveChanges();
 
-            var updatedTag = new Tag
+            var updatedTag = new Tag(_dbContext)
             {
                 Id = existingTag.Id,
                 Name = "!@#$%^&*().-"
@@ -134,7 +134,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task When_patching_tag_with_invalid_name_without_model_state_validation_it_must_succeed()
         {
             // Arrange
-            var existingTag = new Tag
+            var existingTag = new Tag(_dbContext)
             {
                 Name = "Technology"
             };
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             context.Tags.Add(existingTag);
             context.SaveChanges();
 
-            var updatedTag = new Tag
+            var updatedTag = new Tag(_dbContext)
             {
                 Id = existingTag.Id,
                 Name = "!@#$%^&*().-"

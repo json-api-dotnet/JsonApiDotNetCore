@@ -26,11 +26,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         private readonly Faker<User> _userFaker;
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
-        private static readonly Faker<Article> _articleFaker = new Faker<Article>()
+        private readonly Faker<Article> _articleFaker = new Faker<Article>()
             .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
             .RuleFor(a => a.Author, f => new Author());
 
-        private static readonly Faker<Tag> _tagFaker = new Faker<Tag>().RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
+        private readonly Faker<Tag> _tagFaker;
 
         public ResourceDefinitionTests(TestFixture<TestStartup> fixture)
         {
@@ -47,6 +47,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _personFaker = new Faker<Person>()
                 .RuleFor(p => p.FirstName, f => f.Name.FirstName())
                 .RuleFor(p => p.LastName, f => f.Name.LastName());
+            _tagFaker = new Faker<Tag>()
+                .CustomInstantiator(f => new Tag(_context))
+                .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
         }
 
         [Fact]

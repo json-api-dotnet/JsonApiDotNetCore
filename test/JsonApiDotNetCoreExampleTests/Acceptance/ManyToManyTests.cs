@@ -21,16 +21,21 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public sealed class ManyToManyTests
     {
-        private static readonly Faker<Article> _articleFaker = new Faker<Article>()
+        private readonly Faker<Article> _articleFaker = new Faker<Article>()
             .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
             .RuleFor(a => a.Author, f => new Author());
 
-        private static readonly Faker<Tag> _tagFaker = new Faker<Tag>().RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
+        private readonly Faker<Tag> _tagFaker;
 
         private readonly TestFixture<TestStartup> _fixture;
+
         public ManyToManyTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
+
+            _tagFaker = new Faker<Tag>()
+                .CustomInstantiator(f => new Tag(_fixture.GetService<AppDbContext>()))
+                .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
         }
 
         [Fact]

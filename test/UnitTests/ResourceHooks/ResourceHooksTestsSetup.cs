@@ -57,7 +57,9 @@ namespace UnitTests.ResourceHooks
             _articleFaker = new Faker<Article>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
             _articleTagFaker = new Faker<ArticleTag>().CustomInstantiator(f => new ArticleTag(appDbContext));
             _identifiableArticleTagFaker = new Faker<IdentifiableArticleTag>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
-            _tagFaker = new Faker<Tag>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
+            _tagFaker = new Faker<Tag>()
+                .CustomInstantiator(f => new Tag(appDbContext))
+                .Rules((f, i) => i.Id = f.UniqueIndex + 1);
 
             _passportFaker = new Faker<Passport>()
                 .CustomInstantiator(f => new Passport(appDbContext))
