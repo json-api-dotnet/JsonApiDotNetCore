@@ -10,8 +10,8 @@ namespace JsonApiDotNetCore.Internal
 {
     public interface IResourceFactory
     {
-        public IIdentifiable CreateInstance(Type resourceType);
-        public TResource CreateInstance<TResource>() where TResource : IIdentifiable;
+        public object CreateInstance(Type resourceType);
+        public TResource CreateInstance<TResource>();
         public NewExpression CreateNewExpression(Type resourceType);
     }
 
@@ -24,17 +24,17 @@ namespace JsonApiDotNetCore.Internal
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        public IIdentifiable CreateInstance(Type resourceType)
+        public object CreateInstance(Type resourceType)
         {
             if (resourceType == null)
             {
                 throw new ArgumentNullException(nameof(resourceType));
             }
 
-            return (IIdentifiable) InnerCreateInstance(resourceType, _serviceProvider);
+            return InnerCreateInstance(resourceType, _serviceProvider);
         }
 
-        public TResource CreateInstance<TResource>() where TResource : IIdentifiable
+        public TResource CreateInstance<TResource>()
         {
             return (TResource) InnerCreateInstance(typeof(TResource), _serviceProvider);
         }

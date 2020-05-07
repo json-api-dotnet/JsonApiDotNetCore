@@ -240,7 +240,7 @@ namespace JsonApiDotNetCore.Internal
 
         public static object ConvertStringIdToTypedId(Type resourceType, string stringId, IResourceFactory resourceFactory)
         {
-            var tempResource = resourceFactory.CreateInstance(resourceType);
+            var tempResource = (IIdentifiable)resourceFactory.CreateInstance(resourceType);
             tempResource.StringId = stringId;
             return GetResourceTypedId(tempResource);
         }

@@ -62,7 +62,7 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// Sets the value of the resource property this attributes was declared on.
         /// </summary>
-        public virtual void SetValue(object entity, object newValue)
+        public virtual void SetValue(object entity, object newValue, IResourceFactory resourceFactory)
         {
             PropertyInfo.SetValue(entity, newValue);
         }

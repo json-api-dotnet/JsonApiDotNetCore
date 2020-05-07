@@ -249,12 +249,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var articleTags = new[]
             {
-                new ArticleTag
+                new ArticleTag(context)
                 {
                     Article = article,
                     Tag = tags[0]
                 },
-                new ArticleTag
+                new ArticleTag(context)
                 {
                     Article = article,
                     Tag = tags[1]

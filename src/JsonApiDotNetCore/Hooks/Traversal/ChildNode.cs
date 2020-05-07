@@ -53,8 +53,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Reassignment is done according to provided relationships
         /// </summary>
-        /// <param name="updated"></param>
-        public void Reassign(IEnumerable updated = null)
+        public void Reassign(IResourceFactory resourceFactory, IEnumerable updated = null)
         {
             var unique = (HashSet<TResource>)UniqueEntities;
             foreach (var group in _relationshipsFromPreviousLayer)
@@ -70,13 +69,13 @@ namespace JsonApiDotNetCore.Hooks
                     {
                         var intersection = relationshipCollection.Intersect(unique, _comparer);
                         IEnumerable typedCollection = intersection.CopyToTypedCollection(relationshipCollection.GetType());
-                        proxy.SetValue(left, typedCollection);
+                        proxy.SetValue(left, typedCollection, resourceFactory);
                     }
                     else if (currentValue is IIdentifiable relationshipSingle)
                     {
                         if (!unique.Intersect(new HashSet<IIdentifiable> { relationshipSingle }, _comparer).Any())
                         {
-                            proxy.SetValue(left, null);
+                            proxy.SetValue(left, null, resourceFactory);
                         }
                     }
                 }

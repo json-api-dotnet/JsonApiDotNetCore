@@ -86,9 +86,9 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <inheritdoc />
-        public override void SetValue(object entity, object newValue)
+        public override void SetValue(object entity, object newValue, IResourceFactory resourceFactory)
         {
-            base.SetValue(entity, newValue);
+            base.SetValue(entity, newValue, resourceFactory);
 
             if (newValue == null)
             {
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.Models
                 List<object> joinEntities = new List<object>();
                 foreach (IIdentifiable resource in (IEnumerable)newValue)
                 {
-                    object joinEntity = TypeHelper.CreateInstance(ThroughType);
+                    object joinEntity = resourceFactory.CreateInstance(ThroughType);
                     LeftProperty.SetValue(joinEntity, entity);
                     RightProperty.SetValue(joinEntity, resource);
                     joinEntities.Add(joinEntity);

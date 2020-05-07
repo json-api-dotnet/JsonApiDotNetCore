@@ -22,19 +22,22 @@ namespace JsonApiDotNetCore.Hooks
         private readonly IIncludeService _includeService;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceGraph _resourceGraph;
+        private readonly IResourceFactory _resourceFactory;
 
         public ResourceHookExecutor(
             IHookExecutorHelper executorHelper,
             ITraversalHelper traversalHelper,
             ITargetedFields targetedFields,
             IIncludeService includedRelationships,
-            IResourceGraph resourceGraph)
+            IResourceGraph resourceGraph,
+            IResourceFactory resourceFactory)
         {
             _executorHelper = executorHelper;
             _traversalHelper = traversalHelper;
             _targetedFields = targetedFields;
             _includeService = includedRelationships;
             _resourceGraph = resourceGraph;
+            _resourceFactory = resourceFactory;
         }
 
         /// <inheritdoc/>
@@ -57,7 +60,7 @@ namespace JsonApiDotNetCore.Hooks
                 var diff = new DiffableEntityHashSet<TResource>(node.UniqueEntities, dbValues, node.LeftsToNextLayer(), _targetedFields);
                 IEnumerable<TResource> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
-                node.Reassign(entities);
+                node.Reassign(_resourceFactory, entities);
             }
 
             FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(node));
@@ -72,7 +75,7 @@ namespace JsonApiDotNetCore.Hooks
                 var affected = new EntityHashSet<TResource>((HashSet<TResource>)node.UniqueEntities, node.LeftsToNextLayer());
                 IEnumerable<TResource> updated = container.BeforeCreate(affected, pipeline);
                 node.UpdateUnique(updated);
-                node.Reassign(entities);
+                node.Reassign(_resourceFactory, entities);
             }
             FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(node));
             return entities;
@@ -89,7 +92,7 @@ namespace JsonApiDotNetCore.Hooks
 
                 IEnumerable<TResource> updated = container.BeforeDelete(affected, pipeline);
                 node.UpdateUnique(updated);
-                node.Reassign(entities);
+                node.Reassign(_resourceFactory, entities);
             }
 
             // If we're deleting an article, we're implicitly affected any owners related to it.
@@ -113,14 +116,14 @@ namespace JsonApiDotNetCore.Hooks
                 IEnumerable<TResource> updated = container.OnReturn((HashSet<TResource>)node.UniqueEntities, pipeline);
                 ValidateHookResponse(updated);
                 node.UpdateUnique(updated);
-                node.Reassign(entities);
+                node.Reassign(_resourceFactory, entities);
             }
 
             Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.OnReturn, (nextContainer, nextNode) =>
             {
                 var filteredUniqueSet = CallHook(nextContainer, ResourceHook.OnReturn, new object[] { nextNode.UniqueEntities, pipeline });
                 nextNode.UpdateUnique(filteredUniqueSet);
-                nextNode.Reassign();
+                nextNode.Reassign(_resourceFactory);
             });
             return entities;
         }
@@ -270,7 +273,7 @@ namespace JsonApiDotNetCore.Hooks
                         var allowedIds = CallHook(nestedHookContainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueEntities), resourcesByRelationship, pipeline }).Cast<string>();
                         var updated = GetAllowedEntities(uniqueEntities, allowedIds);
                         node.UpdateUnique(updated);
-                        node.Reassign();
+                        node.Reassign(_resourceFactory);
                     }
                 }
 

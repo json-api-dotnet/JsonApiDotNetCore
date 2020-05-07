@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Serialization
     public abstract class BaseDocumentParser
     {
         protected readonly IResourceContextProvider _contextProvider;
-        private readonly IResourceFactory _resourceFactory;
+        protected readonly IResourceFactory _resourceFactory;
         protected Document _document;
 
         protected BaseDocumentParser(IResourceContextProvider contextProvider, IResourceFactory resourceFactory)
@@ -142,7 +142,7 @@ namespace JsonApiDotNetCore.Serialization
                     "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.", null);
             }
 
-            var entity = _resourceFactory.CreateInstance(resourceContext.ResourceType);
+            var entity = (IIdentifiable)_resourceFactory.CreateInstance(resourceContext.ResourceType);
 
             entity = SetAttributes(entity, data.Attributes, resourceContext.Attributes);
             entity = SetRelationships(entity, data.Relationships, resourceContext.Relationships);
@@ -211,13 +211,13 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (relatedId == null)
             {
-                attr.SetValue(entity, null);
+                attr.SetValue(entity, null, _resourceFactory);
             }
             else
             {
-                var relatedInstance = _resourceFactory.CreateInstance(attr.RightType);
+                var relatedInstance = (IIdentifiable)_resourceFactory.CreateInstance(attr.RightType);
                 relatedInstance.StringId = relatedId;
-                attr.SetValue(entity, relatedInstance);
+                attr.SetValue(entity, relatedInstance, _resourceFactory);
             }
         }
 
@@ -239,7 +239,7 @@ namespace JsonApiDotNetCore.Serialization
                 });
 
                 var convertedCollection = relatedResources.CopyToTypedCollection(attr.PropertyInfo.PropertyType);
-                attr.SetValue(entity, convertedCollection);
+                attr.SetValue(entity, convertedCollection, _resourceFactory);
             }
 
             AfterProcessField(entity, attr, relationshipData);

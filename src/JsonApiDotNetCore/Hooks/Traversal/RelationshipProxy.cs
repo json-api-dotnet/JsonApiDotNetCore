@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Hooks
@@ -81,7 +82,8 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <param name="entity">Parent entity.</param>
         /// <param name="value">The relationship value.</param>
-        public void SetValue(IIdentifiable entity, object value)
+        /// <param name="resourceFactory"></param>
+        public void SetValue(IIdentifiable entity, object value, IResourceFactory resourceFactory)
         {
             if (Attribute is HasManyThroughAttribute hasManyThrough)
             {
@@ -108,7 +110,7 @@ namespace JsonApiDotNetCore.Hooks
                 return;
             }
 
-            Attribute.SetValue(entity, value);
+            Attribute.SetValue(entity, value, resourceFactory);
         }
     }
 }

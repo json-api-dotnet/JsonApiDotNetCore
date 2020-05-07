@@ -109,7 +109,7 @@ namespace JsonApiDotNetCore.Data
                     // was already tracked) than the one assigned to the to-be-created entity.
                     // Alternatively, even if we don't have to reassign anything because of already tracked 
                     // entities, we still need to assign the "through" entities in the case of many-to-many.
-                    relationshipAttr.SetValue(entity, trackedRelationshipValue);
+                    relationshipAttr.SetValue(entity, trackedRelationshipValue, _resourceFactory);
             }
             _dbSet.Add(entity);
             await _context.SaveChangesAsync();
@@ -182,7 +182,7 @@ namespace JsonApiDotNetCore.Data
                     // trigger a full reload of relationships: the navigation 
                     // property actually needs to be nulled out, otherwise
                     // EF will still add duplicate instances to the collection
-                    relationship.SetValue(entity, null);
+                    relationship.SetValue(entity, null, _resourceFactory);
                 }
                 else
                 {
@@ -216,7 +216,7 @@ namespace JsonApiDotNetCore.Data
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 // assigns the updated relationship to the database entity
                 //AssignRelationshipValue(databaseEntity, trackedRelationshipValue, relationshipAttr);
-                relationshipAttr.SetValue(databaseEntity, trackedRelationshipValue);
+                relationshipAttr.SetValue(databaseEntity, trackedRelationshipValue, _resourceFactory);
             }
 
             await _context.SaveChangesAsync();

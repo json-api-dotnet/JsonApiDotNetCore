@@ -44,7 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             context.Articles.RemoveRange(context.Articles);
             await context.SaveChangesAsync();
 
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = tag
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = tag
@@ -130,7 +130,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = tag
@@ -169,7 +169,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = tag
@@ -207,7 +207,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = tag
@@ -245,7 +245,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = tag
@@ -404,7 +404,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var firstTag = _tagFaker.Generate();
             var article = _articleFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = firstTag
@@ -468,7 +468,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var firstTag = _tagFaker.Generate();
             var article = _articleFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = firstTag

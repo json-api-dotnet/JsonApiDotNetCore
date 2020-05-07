@@ -65,13 +65,13 @@ namespace JsonApiDotNetCore.Serialization.Client
             {
                 // add attributes and relationships of a parsed HasOne relationship
                 var rio = data.SingleData;
-                hasOneAttr.SetValue(entity, rio == null ? null : ParseIncludedRelationship(hasOneAttr, rio));
+                hasOneAttr.SetValue(entity, rio == null ? null : ParseIncludedRelationship(hasOneAttr, rio), _resourceFactory);
             }
             else if (field is HasManyAttribute hasManyAttr)
             {  // add attributes and relationships of a parsed HasMany relationship
                 var items = data.ManyData.Select(rio => ParseIncludedRelationship(hasManyAttr, rio));
                 var values = items.CopyToTypedCollection(hasManyAttr.PropertyInfo.PropertyType);
-                hasManyAttr.SetValue(entity, values);
+                hasManyAttr.SetValue(entity, values, _resourceFactory);
             }
         }
 

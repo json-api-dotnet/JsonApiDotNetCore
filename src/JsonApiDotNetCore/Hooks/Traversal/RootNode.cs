@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Hooks
             _uniqueEntities = new HashSet<TResource>(intersected);
         }
 
-        public void Reassign(IEnumerable source = null)
+        public void Reassign(IResourceFactory resourceFactory, IEnumerable source = null)
         {
             var ids = _uniqueEntities.Select(ue => ue.StringId);
 

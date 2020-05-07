@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Models
             : _explicitIdentifiablePropertyName;
 
         /// <inheritdoc />
-        public override void SetValue(object entity, object newValue)
+        public override void SetValue(object entity, object newValue, IResourceFactory resourceFactory)
         {
             string propertyName = PropertyInfo.Name;
             // if we're deleting the relationship (setting it to null),

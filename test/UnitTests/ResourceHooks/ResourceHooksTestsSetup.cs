@@ -55,7 +55,7 @@ namespace UnitTests.ResourceHooks
             _personFaker = new Faker<Person>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
 
             _articleFaker = new Faker<Article>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
-            _articleTagFaker = new Faker<ArticleTag>();
+            _articleTagFaker = new Faker<ArticleTag>().CustomInstantiator(f => new ArticleTag(appDbContext));
             _identifiableArticleTagFaker = new Faker<IdentifiableArticleTag>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
             _tagFaker = new Faker<Tag>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
 
@@ -167,7 +167,7 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, iqMock.Object, _resourceGraph);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, iqMock.Object, _resourceGraph, null);
 
             return (iqMock, hookExecutor, mainResource);
         }
@@ -200,7 +200,7 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, iqMock.Object, _resourceGraph);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, iqMock.Object, _resourceGraph, null);
 
             return (iqMock, ufMock, hookExecutor, mainResource, nestedResource);
         }
@@ -238,7 +238,7 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, iqMock.Object, _resourceGraph);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, iqMock.Object, _resourceGraph, null);
 
             return (iqMock, hookExecutor, mainResource, firstNestedResource, secondNestedResource);
         }

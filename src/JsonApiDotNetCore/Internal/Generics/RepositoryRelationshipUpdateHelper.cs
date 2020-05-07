@@ -33,9 +33,12 @@ namespace JsonApiDotNetCore.Internal.Generics
     /// <inheritdoc/>
     public class RepositoryRelationshipUpdateHelper<TRelatedResource> : IRepositoryRelationshipUpdateHelper where TRelatedResource : class
     {
+        private readonly IResourceFactory _resourceFactory;
         private readonly DbContext _context;
-        public RepositoryRelationshipUpdateHelper(IDbContextResolver contextResolver)
+
+        public RepositoryRelationshipUpdateHelper(IDbContextResolver contextResolver, IResourceFactory resourceFactory)
         {
+            _resourceFactory = resourceFactory;
             _context = contextResolver.GetContext();
         }
 
@@ -65,7 +68,7 @@ namespace JsonApiDotNetCore.Internal.Generics
                 var equalsLambda = Expression.Lambda<Func<TRelatedResource, bool>>(callEquals, parameter);
                 value = await _context.Set<TRelatedResource>().FirstOrDefaultAsync(equalsLambda);
             }
-            relationship.SetValue(parent, value);
+            relationship.SetValue(parent, value, _resourceFactory);
         }
 
         private async Task UpdateOneToManyAsync(IIdentifiable parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
@@ -95,7 +98,7 @@ namespace JsonApiDotNetCore.Internal.Generics
                 value = resultSet.CopyToTypedCollection(relationship.PropertyInfo.PropertyType);
             }
 
-            relationship.SetValue(parent, value);
+            relationship.SetValue(parent, value, _resourceFactory);
         }
 
         private async Task UpdateManyToManyAsync(IIdentifiable parent, HasManyThroughAttribute relationship, IEnumerable<string> relationshipIds)
@@ -125,7 +128,7 @@ namespace JsonApiDotNetCore.Internal.Generics
 
             var newLinks = relationshipIds.Select(x =>
             {
-                var link = TypeHelper.CreateInstance(relationship.ThroughType);
+                var link = _resourceFactory.CreateInstance(relationship.ThroughType);
                 relationship.LeftIdProperty.SetValue(link, TypeHelper.ConvertType(parentId, relationship.LeftIdProperty.PropertyType));
                 relationship.RightIdProperty.SetValue(link, TypeHelper.ConvertType(x, relationship.RightIdProperty.PropertyType));
                 return link;
