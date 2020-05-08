@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Query
             queryContext.Relationship = GetRelationship(parameterName, query.Relationship);
             var attribute = GetAttribute(parameterName, query.Attribute, queryContext.Relationship);
 
-            if (!attribute.IsFilterable)
+            if (!attribute.Capabilities.HasFlag(AttrCapabilities.AllowFilter))
             {
                 throw new InvalidQueryStringParameterException(parameterName, "Filtering on the requested attribute is not allowed.",
                     $"Filtering on attribute '{attribute.PublicAttributeName}' is not allowed.");

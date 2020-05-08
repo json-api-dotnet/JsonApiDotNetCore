@@ -1,4 +1,5 @@
 using System;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
@@ -35,10 +36,16 @@ namespace JsonApiDotNetCore.Serialization.Server
         {
             if (field is AttrAttribute attr)
             {
-                if (!attr.IsImmutable)
+                if (attr.Capabilities.HasFlag(AttrCapabilities.AllowMutate))
+                {
                     _targetedFields.Attributes.Add(attr);
+                }
                 else
-                    throw new InvalidOperationException($"Attribute {attr.PublicAttributeName} is immutable and therefore cannot be updated.");
+                {
+                    throw new InvalidRequestBodyException(
+                        "Changing the value of the requested attribute is not allowed.",
+                        $"Changing the value of '{attr.PublicAttributeName}' is not allowed.", null);
+                }
             }
             else if (field is RelationshipAttribute relationship)
                 _targetedFields.Relationships.Add(relationship);

@@ -225,7 +225,7 @@ namespace JsonApiDotNetCore.Services
             }
 
             _repository.FlushFromCache(databaseEntity);
-            TResource afterEntity = await _repository.Get(databaseEntity.Id).FirstOrDefaultAsync();
+            TResource afterEntity = await _repository.Get(id).FirstOrDefaultAsync();
             _resourceChangeTracker.SetFinallyStoredAttributeValues(afterEntity);
 
             bool hasImplicitChanges = _resourceChangeTracker.HasImplicitChanges();

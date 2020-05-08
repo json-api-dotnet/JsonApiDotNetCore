@@ -65,7 +65,7 @@ namespace JsonApiDotNetCoreExample.Models
         [EagerLoad]
         public Country BirthCountry { get; set; }
 
-        [Attr(isImmutable: true)]
+        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowMutate)]
         [NotMapped]
         public string GrantedVisaCountries => GrantedVisas == null || !GrantedVisas.Any()
             ? null

@@ -88,30 +88,35 @@ namespace JsonApiDotNetCore.Builders
         {
             var attributes = new List<AttrAttribute>();
 
-            var properties = entityType.GetProperties();
-
-            foreach (var prop in properties)
+            foreach (var property in entityType.GetProperties())
             {
-                // todo: investigate why this is added in the exposed attributes list
+                var attribute = (AttrAttribute)property.GetCustomAttribute(typeof(AttrAttribute));
+
+                // TODO: investigate why this is added in the exposed attributes list
                 // because it is not really defined attribute considered from the json:api
                 // spec point of view.
-                if (prop.Name == nameof(Identifiable.Id))
+                if (property.Name == nameof(Identifiable.Id) && attribute == null)
                 {
                     var idAttr = new AttrAttribute
                     {
-                        PublicAttributeName = FormatPropertyName(prop),
-                        PropertyInfo = prop
+                        PublicAttributeName = FormatPropertyName(property),
+                        PropertyInfo = property,
+                        Capabilities = _options.DefaultAttrCapabilities
                     };
                     attributes.Add(idAttr);
                     continue;
                 }
 
-                var attribute = (AttrAttribute)prop.GetCustomAttribute(typeof(AttrAttribute));
                 if (attribute == null)
                     continue;
 
-                attribute.PublicAttributeName ??= FormatPropertyName(prop);
-                attribute.PropertyInfo = prop;
+                attribute.PublicAttributeName ??= FormatPropertyName(property);
+                attribute.PropertyInfo = property;
+
+                if (!attribute.HasExplicitCapabilities)
+                {
+                    attribute.Capabilities = _options.DefaultAttrCapabilities;
+                }
 
                 attributes.Add(attribute);
             }
@@ -238,8 +243,7 @@ namespace JsonApiDotNetCore.Builders
 
         private string FormatPropertyName(PropertyInfo resourceProperty)
         {
-            var contractResolver = (DefaultContractResolver)_options.SerializerSettings.ContractResolver;
-            return contractResolver.NamingStrategy.GetPropertyName(resourceProperty.Name, false);
+            return _options.SerializerContractResolver.NamingStrategy.GetPropertyName(resourceProperty.Name, false);
         }
     }
 }
