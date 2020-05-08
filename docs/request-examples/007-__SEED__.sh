@@ -1,5 +1,4 @@
 curl -vs http://localhost:5001/api/people           \
-    -H "Accept: application/vnd.api+json"           \
     -H "Content-Type: application/vnd.api+json"     \
     -d '{
             "data": {
@@ -11,7 +10,6 @@ curl -vs http://localhost:5001/api/people           \
         }'
 
 curl -vs http://localhost:5001/api/articles         \
-    -H "Accept: application/vnd.api+json"           \
     -H "Content-Type: application/vnd.api+json"     \
     -d '{
             "data": {

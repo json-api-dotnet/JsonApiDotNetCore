@@ -9,11 +9,14 @@ Resource Meta is metadata defined on the resource itself by implementing the `IH
 ```c#
 public class Person : Identifiable, IHasMeta
 {
-    public Dictionary<string, object> GetMeta(IJsonApiContext context)
-        => new Dictionary<string, object> {
-            { "copyright", "Copyright 2018 Example Corp." },
-            { "authors", new string[] { "Jared Nance" } }
+    public Dictionary<string, object> GetMeta()
+    {
+        return new Dictionary<string, object>
+        {
+            {"copyright", "Copyright 2018 Example Corp."},
+            {"authors", new[] {"John Doe"}}
         };
+    }
 }
 ```
 
@@ -29,20 +32,23 @@ public class RequestMetaService : IRequestMeta
         // ...
     }
 
-    public Dictionary<string, object> GetMeta(IJsonApiContext context)
-        => return new Dictionary<string, object> {
-                { "copyright", "Copyright 2018 Example Corp." },
-                { "authors", new string[] { "Jared Nance" } }
-            };
+    public Dictionary<string, object> GetMeta()
+    {
+        return new Dictionary<string, object>
+        {
+            {"copyright", "Copyright 2018 Example Corp."},
+            {"authors", new string[] {"John Doe"}}
+        };
+    }
 }
 ```
 
 ```json
 {
   "meta": {
-    "copyright": "Copyright 2015 Example Corp.",
+    "copyright": "Copyright 2018 Example Corp.",
     "authors": [
-      "Jared Nance"
+      "John Doe"
     ]
   },
   "data": {

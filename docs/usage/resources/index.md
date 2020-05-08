@@ -1,6 +1,6 @@
 # Resources
 
-At a minimum, resources must implement `IIdentifiable<TId>` where `TId` is the type of the primary key. The easiest way to do this is to inherit `Identifiable<TId>`.
+At a minimum, resources must implement `IIdentifiable<TId>` where `TId` is the type of the primary key. The easiest way to do this is to inherit from `Identifiable<TId>`.
 
 ```c#
 public class Person : Identifiable<Guid>
@@ -33,7 +33,7 @@ public class Person : Identifiable
 
 If your resource must inherit from another class, 
 you can always implement the interface yourself. 
-In this example, `ApplicationUser` inherits `IdentityUser` 
+In this example, `ApplicationUser` inherits from `IdentityUser` 
 which already contains an Id property of type string.
 
 ```c#

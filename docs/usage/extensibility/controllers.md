@@ -1,19 +1,19 @@
 # Controllers
 
-You need to create controllers that inherit from `JsonApiController<TEntity>`
+You need to create controllers that inherit from `JsonApiController<T>`
 
 ```c#
 public class ArticlesController : JsonApiController<Article>
 {
     public ArticlesController(
-        IJsonApiContext jsonApiContext,
-        IResourceService<Article> resourceService,
-        ILoggerFactory loggerFactory) 
-    : base(jsonApiContext, resourceService, loggerFactory)
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
+        IResourceService<Article> resourceService) 
+        : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 }
 ```
-        
+
 ## Non-Integer Type Keys
 
 If your model is using a type other than int for the primary key, you must explicitly declare it in the controller and service generic type definitions.
@@ -23,11 +23,11 @@ public class ArticlesController : JsonApiController<Article, Guid>
 //---------------------------------------------------------- ^^^^
 {
     public ArticlesController(
-        IJsonApiContext jsonApiContext,
-        IResourceService<Article, Guid> resourceService,
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
+        IResourceService<Article, Guid> resourceService)
         //----------------------- ^^^^
-        ILoggerFactory loggerFactory) 
-    : base(jsonApiContext, resourceService, loggerFactory)
+        : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 }
 ```
@@ -44,9 +44,10 @@ This approach is ok, but introduces some boilerplate that can easily be avoided.
 public class ArticlesController : BaseJsonApiController<Article>
 {
     public ArticlesController(
-        IJsonApiContext jsonApiContext,
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
         IResourceService<Article> resourceService) 
-    : base(jsonApiContext, resourceService)
+        : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 
     [HttpGet]
@@ -54,14 +55,14 @@ public class ArticlesController : BaseJsonApiController<Article>
         => await base.GetAsync();
 
     [HttpGet("{id}")]
-    public override async Task<IActionResult> GetAsync(TId id) 
+    public override async Task<IActionResult> GetAsync(int id) 
         => await base.GetAsync(id);
 }
 ```
-        
+
 ## Using ActionFilterAttributes
 
-The next option is to use the ActionFilterAttributes that ship with the library. The available attributes are:
+The next option is to use the ActionFilter attributes that ship with the library. The available attributes are:
 
 - `NoHttpPost`: disallow POST requests
 - `NoHttpPatch`: disallow PATCH requests
@@ -76,18 +77,19 @@ An attempt to use one blacklisted methods will result in a HTTP 405 Method Not A
 public class ArticlesController : BaseJsonApiController<Article>
 {
     public ArticlesController(
-        IJsonApiContext jsonApiContext,
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
         IResourceService<Article> resourceService) 
-    : base(jsonApiContext, resourceService)
+        : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 }
 ```
-        
+
 ## Implicit Access By Service Injection
 
-Finally, you can control the allowed methods by supplying only the available service implementations. In some cases, resources may be an aggregation of entities or a view on top of the underlying entities. In these cases, there may not be a writable IResourceService implementation. In these cases, simply inject the implementation that is available.
+Finally, you can control the allowed methods by supplying only the available service implementations. In some cases, resources may be an aggregation of entities or a view on top of the underlying entities. In these cases, there may not be a writable IResourceService implementation, so simply inject the implementation that is available.
 
-As with the ActionFilterAttributes, if a service implementation is not available to service a request, HTTP 405 Method Not Allowed will be returned.
+As with the ActionFilter attributes, if a service implementation is not available to service a request, HTTP 405 Method Not Allowed will be returned.
 
 For more information about resource injection, see the next section titled Resource Services.
 
@@ -95,9 +97,10 @@ For more information about resource injection, see the next section titled Resou
 public class ReportsController : BaseJsonApiController<Report> 
 {
     public ReportsController(
-        IJsonApiContext jsonApiContext, 
-        IGetAllService<Report> getAll)
-    : base(jsonApiContext, getAll: getAll)
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
+        IResourceService<Report> resourceService) 
+        : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 
     [HttpGet]

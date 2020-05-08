@@ -4,7 +4,6 @@ Resources can be paginated. This query would fetch the second page of 10 article
 
 ```http
 GET /articles?page[size]=10&page[number]=2 HTTP/1.1
-Accept: application/vnd.api+json
 ```
 
 ## Configuring Default Behavior

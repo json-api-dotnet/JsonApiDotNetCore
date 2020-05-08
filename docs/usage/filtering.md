@@ -30,11 +30,9 @@ The following are equivalent query forms to get articles whose ordinal values ar
 
 ```http
 GET /api/articles?filter[ordinal]=gt:1,lt:100 HTTP/1.1
-Accept: application/vnd.api+json
 ```
 ```http
 GET /api/articles?filter[ordinal]=gt:1&filter[ordinal]=lt:100 HTTP/1.1
-Accept: application/vnd.api+json
 ```
 
 ## Custom Filters
@@ -42,29 +40,29 @@ Accept: application/vnd.api+json
 There are two ways you can add custom filters:
 
 1. Creating a `ResourceDefinition` as [described previously](~/usage/resources/resource-definitions.html#custom-query-filters)
-2. Overriding the `DefaultEntityRepository` shown below
+2. Overriding the `DefaultResourceRepository` shown below
 
 ```c#
-public class AuthorRepository : DefaultEntityRepository<Author>
+public class AuthorRepository : DefaultResourceRepository<Author>
 {
-  public AuthorRepository(
-    AppDbContext context,
-    ILoggerFactory loggerFactory,
-    IJsonApiContext jsonApiContext)
-  : base(context, loggerFactory, jsonApiContext)
-  { }
+    public AuthorRepository(
+        ITargetedFields targetedFields,
+        IDbContextResolver contextResolver,
+        IResourceGraph resourceGraph,
+        IGenericServiceFactory genericServiceFactory,
+        IResourceFactory resourceFactory,
+        ILoggerFactory loggerFactory)
+        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory)
+    { }
 
-  public override IQueryable<TEntity> Filter(
-      IQueryable<TEntity> authors, 
-      FilterQuery filterQuery)
-        // if the filter key is "query" (filter[query]), 
-        // find Authors with matching first or last names
-        // for all other filter keys, use the base method
-        => filter.Attribute.Is("query")
-                    ? authors.Where(a => 
-                        a.First.Contains(filter.Value)
-                        || a.Last.Contains(filter.Value))
-                    : base.Filter(authors, filter);
-}
+    public override IQueryable<Author> Filter(IQueryable<Author> authors, FilterQueryContext filterQueryContext)
+    {
+        // If the filter key is "name" (filter[name]), find authors with matching first or last names.
+        // For all other filter keys, use the base method.
+        return filterQueryContext.Attribute.Is("name")
+            ? authors.Where(author =>
+                author.FirstName.Contains(filterQueryContext.Value) ||
+                author.LastName.Contains(filterQueryContext.Value))
+            : base.Filter(authors, filterQueryContext);
+    }
 ```
-

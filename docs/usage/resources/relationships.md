@@ -15,7 +15,7 @@ public class TodoItem : Identifiable<int>
     public string Description { get; set; }
 
     [HasOne("owner")]
-    public virtual Person Owner { get; set; }
+    public Person Owner { get; set; }
     public int OwnerId { get; set; }
 }
 ```
@@ -32,25 +32,52 @@ public class Person : Identifiable<int>
     public string FirstName { get; set; }
 
     [HasMany("todo-items")]
-    public virtual List<TodoItem> TodoItems { get; set; }
+    public ICollection<TodoItem> TodoItems { get; set; }
 }
 ```
 
 ## HasManyThrough
 
-Currently EntityFrameworkCore [does not support](https://github.com/aspnet/EntityFrameworkCore/issues/1368) Many-to-Many relationships without a join entity. 
-For this reason, we have decided to fill this gap by allowing applications to declare a relationships as `HasManyThrough`. 
+Currently, Entity Framework Core [does not support](https://github.com/aspnet/EntityFrameworkCore/issues/1368) many-to-many relationships without a join entity. 
+For this reason, we have decided to fill this gap by allowing applications to declare a relationship as `HasManyThrough`. 
 JsonApiDotNetCore will expose this attribute to the client the same way as any other `HasMany` attribute.
-However, under the covers it will use the join type and EntityFramework's APIs to get and set the relationship.
+However, under the covers it will use the join type and Entity Framework Core's APIs to get and set the relationship.
 
 ```c#
 public class Article : Identifiable
 {
-    [NotMapped] // ← tells EF to ignore this property
-    [HasManyThrough(nameof(ArticleTags))] // ← tells JADNC to use this as an alias to ArticleTags.Tags
-    public List<Tag> Tags { get; set; }
+    [NotMapped] // tells Entity Framework Core to ignore this property
+    [HasManyThrough(nameof(ArticleTags))] // tells JsonApiDotNetCore to use this as an alias to ArticleTags.Tags
+    public ICollection<Tag> Tags { get; set; }
 
-    // this is the EF join relationship
-    public List<ArticleTag> ArticleTags { get; set; }
+    // this is the Entity Framework Core join relationship
+    public ICollection<ArticleTag> ArticleTags { get; set; }
+}
+```
+
+# Eager loading
+
+_since v4.0_
+
+Your entity may contain a calculated property, whose value depends on a navigation property that is not exposed as a json:api resource.
+So for the calculated property to be evaluated correctly, the related entity must always be retrieved. You can achieve that using `EagerLoad`, for example:
+
+```c#
+public class ShippingAddress : Identifiable
+{
+    [Attr]
+    public string Street { get; set; }
+
+    [Attr]
+    public string CountryName => Country.DisplayName;
+
+    [EagerLoad] // not exposed as resource, but adds .Include("Country") to the query
+    public Country Country { get; set; }
+}
+
+public class Country
+{
+    public string IsoCode { get; set; }
+    public string DisplayName { get; set; }
 }
 ```

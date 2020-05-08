@@ -11,12 +11,11 @@ There are some cases where you want attributes excluded from your resource respo
 For example, you may accept some form data that shouldn't be exposed after creation.
 This kind of data may get hashed in the database and should never be exposed to the client.
 
-Using the techniques described below, you can achieve the following reques/response behavior:
+Using the techniques described below, you can achieve the following request/response behavior:
 
 ```http
 POST /users HTTP/1.1
 Content-Type: application/vnd.api+json
-Accept: application/vnd.api+json
 
 {
   "data": {
@@ -48,38 +47,24 @@ Content-Type: application/vnd.api+json
 ### Single Attribute
 
 ```c#
-public class ModelResource : ResourceDefinition<Model>
+public class UserResource : ResourceDefinition<User>
 {
-    protected override List<AttrAttribute> OutputAttrs()
-        => Remove(m => m.AccountNumber);
+    public UserResource(IResourceGraph resourceGraph) : base(resourceGraph)
+    {
+        HideFields(user => user.AccountNumber);
+    }
 }
 ```
 
 ### Multiple Attributes
 
 ```c#
-public class ModelResource : ResourceDefinition<Model>
+public class UserResource : ResourceDefinition<User>
 {
-    protected override List<AttrAttribute> OutputAttrs()
-        => Remove(m => new { m.AccountNumber, m.Password });
-}
-```
-
-### Derived ResourceDefinitions
-
-If you want to inherit from a different `ResourceDefinition`, these attributes can be composed like so:
-
-```c#
-public class BaseResource : ResourceDefinition<Model>
-{
-    protected override List<AttrAttribute> OutputAttrs()
-        => Remove(m => m.TenantId);
-}
-
-public class AccountResource : ResourceDefinition<Account>
-{
-    protected override List<AttrAttribute> OutputAttrs()
-        => Remove(m => m.AccountNumber, from: base.OutputAttrs());
+    public UserResource(IResourceGraph resourceGraph) : base(resourceGraph)
+    {
+        HideFields(user => new {user.AccountNumber, user.Password});
+    }
 }
 ```
 
@@ -92,11 +77,11 @@ You can define the default sort behavior if no `sort` query is provided.
 ```c#
 public class AccountResource : ResourceDefinition<Account>
 {
-    protected override PropertySortOrder GetDefaultSortOrder()
-        => new PropertySortOrder {
-            (t => t.Prop, SortDirection.Ascending),
-            (t => t.Prop2, SortDirection.Descending),
-        };
+    public override PropertySortOrder GetDefaultSortOrder() => new PropertySortOrder
+    {
+        (account => account.Prop, SortDirection.Ascending),
+        (account => account.Prop2, SortDirection.Descending),
+    };
 }
 ```
 
@@ -111,13 +96,18 @@ If the key is present in a filter request, the supplied query will be used rathe
 public class ItemResource : ResourceDefinition<Item>
 {
     // handles queries like: ?filter[was-active-on]=2018-10-15T01:25:52Z
-    public override QueryFilters GetQueryFilters()
-        => new QueryFilters {            
-            { "was-active-on", (items, filter) => DateTime.TryParse(filter.Value, out dateValue)
+    public override QueryFilters GetQueryFilters() => new QueryFilters
+    {
+        {
+            "was-active-on", (items, filter) => DateTime.TryParse(filter.Value, out DateTime dateValue)
                 ? items.Where(i => i.Expired == null || dateValue < i.Expired)
-                : throw new JsonApiException(400, $"'{filter.Value}' is not a valid date.")
-            }
-        };
+                : throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "Invalid filter value",
+                    Detail = $"'{filter.Value}' is not a valid date."
+                })
+        }
+    };
 }
 ```
 

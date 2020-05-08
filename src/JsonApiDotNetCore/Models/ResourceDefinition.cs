@@ -130,14 +130,14 @@ namespace JsonApiDotNetCore.Models
         public sealed class QueryFilters : Dictionary<string, Func<IQueryable<TResource>, FilterQuery, IQueryable<TResource>>> { }
 
         /// <summary>
-        /// Define a the default sort order if no sort key is provided.
+        /// Define the default sort order if no sort key is provided.
         /// </summary>
         /// <returns>
         /// A list of properties and the direction they should be sorted.
         /// </returns>
         /// <example>
         /// <code>
-        /// protected override PropertySortOrder GetDefaultSortOrder()
+        /// public override PropertySortOrder GetDefaultSortOrder()
         ///     => new PropertySortOrder {
         ///         (t => t.Prop1, SortDirection.Ascending),
         ///         (t => t.Prop2, SortDirection.Descending),

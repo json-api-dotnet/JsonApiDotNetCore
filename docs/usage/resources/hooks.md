@@ -455,9 +455,9 @@ public override void BeforeImplicitUpdateRelationship(IAffectedRelationships<Per
 }
 ```
 
-## Using Resource Hooks without EF Core
+## Using Resource Hooks without Entity Framework Core
 
-If you want to use Resource Hooks without EF Core, there are several things that you need to consider that need to be met. For any resource that you want to use hooks for:
+If you want to use Resource Hooks without Entity Framework Core, there are several things that you need to consider that need to be met. For any resource that you want to use hooks for:
 1. The corresponding resource repository must fully implement `IEntityReadRepository<TEntity, TId>`
 2. If you are using custom services, you will be responsible for injecting the `IResourceHookExecutor` service into your services and call the appropriate methods. See the [hook execution overview](#hook-execution-overview) to determine which hook should be fired in which scenario.
 
@@ -469,14 +469,14 @@ public class Article : Identifiable
 {
     ...
     [HasOne("author", inverseNavigationProperty: "OwnerOfArticle")]
-    public virtual Person Author { get; set; }
+    public Person Author { get; set; }
     ...
 }
 public class Person : Identifiable
 {
     ...
     [HasOne("article")]
-    public virtual Article OwnerOfArticle { get; set; }
+    public Article OwnerOfArticle { get; set; }
     ...
 }
 ```
@@ -491,7 +491,7 @@ public class CustomInverseRelationshipsResolver : IInverseRelationships
         // It should set the RelationshipAttribute.InverseRelationship property 
         // for all (relevant) relationships.
         // To have an idea of how to implement this method, see the InverseRelationships class
-        // in the source code of JADNC:
+        // in the source code of JsonApiDotNetCore:
         // https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/59a93590ac4f05c9c246eca9459b49e331250805/src/JsonApiDotNetCore/Internal/InverseRelationships.cs
     }
 }
