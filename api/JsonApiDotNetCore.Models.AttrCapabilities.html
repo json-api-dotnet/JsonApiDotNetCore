@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IResourceField
+    <title>Enum AttrCapabilities
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IResourceField
+    <meta name="title" content="Enum AttrCapabilities
    ">
     <meta name="generator" content="docfx 2.52.0.0">
     
@@ -68,51 +68,58 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Models.IResourceField">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Models.AttrCapabilities">
   
   
-  <h1 id="JsonApiDotNetCore_Models_IResourceField" data-uid="JsonApiDotNetCore.Models.IResourceField" class="text-break">Interface IResourceField
+  <h1 id="JsonApiDotNetCore_Models_AttrCapabilities" data-uid="JsonApiDotNetCore.Models.AttrCapabilities" class="text-break">Enum AttrCapabilities
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Indicates query string capabilities that can be performed on an <a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Models.html">JsonApiDotNetCore.Models</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Models_IResourceField_syntax">Syntax</h5>
+  <h5 id="JsonApiDotNetCore_Models_AttrCapabilities_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IResourceField</code></pre>
+    <pre><code class="lang-csharp hljs">public enum AttrCapabilities : int</code></pre>
   </div>
-  <h3 id="properties">Properties
+  <h3 id="fields">Fields
   </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_IResourceField_ExposedInternalMemberName.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.IResourceField.ExposedInternalMemberName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/IResourceField.cs/#L5">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Models_IResourceField_ExposedInternalMemberName_" data-uid="JsonApiDotNetCore.Models.IResourceField.ExposedInternalMemberName*"></a>
-  <h4 id="JsonApiDotNetCore_Models_IResourceField_ExposedInternalMemberName" data-uid="JsonApiDotNetCore.Models.IResourceField.ExposedInternalMemberName">ExposedInternalMemberName</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">string ExposedInternalMemberName { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
-        <th>Type</th>
+        <th>Name</th>
         <th>Description</th>
       </tr>
-    </thead>
+    <thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td id="JsonApiDotNetCore_Models_AttrCapabilities_All">All</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td id="JsonApiDotNetCore_Models_AttrCapabilities_AllowFilter">AllowFilter</td>
+        <td><p>Whether or not an attribute can be filtered on via a query string parameter.
+Attempts to sort when disabled will return an HTTP 400 response.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="JsonApiDotNetCore_Models_AttrCapabilities_AllowMutate">AllowMutate</td>
+        <td><p>Whether or not PATCH requests can update the attribute value.
+Attempts to update when disabled will return an HTTP 422 response.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="JsonApiDotNetCore_Models_AttrCapabilities_AllowSort">AllowSort</td>
+        <td><p>Whether or not an attribute can be sorted on via a query string parameter.
+Attempts to sort when disabled will return an HTTP 400 response.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="JsonApiDotNetCore_Models_AttrCapabilities_None">None</td>
         <td></td>
       </tr>
     </tbody>
-  </table>
+  </thead></thead></table>
 </article>
           </div>
           
@@ -121,10 +128,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_IResourceField.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.IResourceField%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_AttrCapabilities.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.AttrCapabilities%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/IResourceField.cs/#L3" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/AttrCapabilities.cs/#L8" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

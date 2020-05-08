@@ -316,6 +316,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
   nameWithType: IJsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultAttrCapabilities
+  name: DefaultAttrCapabilities
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_DefaultAttrCapabilities
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultAttrCapabilities
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultAttrCapabilities
+  nameWithType: IJsonApiOptions.DefaultAttrCapabilities
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultAttrCapabilities*
+  name: DefaultAttrCapabilities
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_DefaultAttrCapabilities_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultAttrCapabilities
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultAttrCapabilities
+  nameWithType: IJsonApiOptions.DefaultAttrCapabilities
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultPageSize
   name: DefaultPageSize
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_DefaultPageSize
@@ -549,6 +562,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
   nameWithType: JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttrCapabilities
+  name: DefaultAttrCapabilities
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttrCapabilities
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttrCapabilities
+  nameWithType: JsonApiOptions.DefaultAttrCapabilities
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttrCapabilities*
+  name: DefaultAttrCapabilities
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttrCapabilities
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttrCapabilities
+  nameWithType: JsonApiOptions.DefaultAttrCapabilities
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultPageSize
   name: DefaultPageSize
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultPageSize
@@ -6337,12 +6363,30 @@ references:
   commentId: T:JsonApiDotNetCore.Models.AttrAttribute
   fullName: JsonApiDotNetCore.Models.AttrAttribute
   nameWithType: AttrAttribute
-- uid: JsonApiDotNetCore.Models.AttrAttribute.#ctor(System.String,System.Boolean,System.Boolean,System.Boolean)
-  name: AttrAttribute(String, Boolean, Boolean, Boolean)
-  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute__ctor_System_String_System_Boolean_System_Boolean_System_Boolean_
-  commentId: M:JsonApiDotNetCore.Models.AttrAttribute.#ctor(System.String,System.Boolean,System.Boolean,System.Boolean)
-  fullName: JsonApiDotNetCore.Models.AttrAttribute.AttrAttribute(System.String, System.Boolean, System.Boolean, System.Boolean)
-  nameWithType: AttrAttribute.AttrAttribute(String, Boolean, Boolean, Boolean)
+- uid: JsonApiDotNetCore.Models.AttrAttribute.#ctor
+  name: AttrAttribute()
+  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute__ctor
+  commentId: M:JsonApiDotNetCore.Models.AttrAttribute.#ctor
+  fullName: JsonApiDotNetCore.Models.AttrAttribute.AttrAttribute()
+  nameWithType: AttrAttribute.AttrAttribute()
+- uid: JsonApiDotNetCore.Models.AttrAttribute.#ctor(JsonApiDotNetCore.Models.AttrCapabilities)
+  name: AttrAttribute(AttrCapabilities)
+  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute__ctor_JsonApiDotNetCore_Models_AttrCapabilities_
+  commentId: M:JsonApiDotNetCore.Models.AttrAttribute.#ctor(JsonApiDotNetCore.Models.AttrCapabilities)
+  fullName: JsonApiDotNetCore.Models.AttrAttribute.AttrAttribute(JsonApiDotNetCore.Models.AttrCapabilities)
+  nameWithType: AttrAttribute.AttrAttribute(AttrCapabilities)
+- uid: JsonApiDotNetCore.Models.AttrAttribute.#ctor(System.String)
+  name: AttrAttribute(String)
+  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute__ctor_System_String_
+  commentId: M:JsonApiDotNetCore.Models.AttrAttribute.#ctor(System.String)
+  fullName: JsonApiDotNetCore.Models.AttrAttribute.AttrAttribute(System.String)
+  nameWithType: AttrAttribute.AttrAttribute(String)
+- uid: JsonApiDotNetCore.Models.AttrAttribute.#ctor(System.String,JsonApiDotNetCore.Models.AttrCapabilities)
+  name: AttrAttribute(String, AttrCapabilities)
+  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute__ctor_System_String_JsonApiDotNetCore_Models_AttrCapabilities_
+  commentId: M:JsonApiDotNetCore.Models.AttrAttribute.#ctor(System.String,JsonApiDotNetCore.Models.AttrCapabilities)
+  fullName: JsonApiDotNetCore.Models.AttrAttribute.AttrAttribute(System.String, JsonApiDotNetCore.Models.AttrCapabilities)
+  nameWithType: AttrAttribute.AttrAttribute(String, AttrCapabilities)
 - uid: JsonApiDotNetCore.Models.AttrAttribute.#ctor*
   name: AttrAttribute
   href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute__ctor_
@@ -6350,6 +6394,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Models.AttrAttribute.AttrAttribute
   nameWithType: AttrAttribute.AttrAttribute
+- uid: JsonApiDotNetCore.Models.AttrAttribute.Capabilities
+  name: Capabilities
+  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_Capabilities
+  commentId: P:JsonApiDotNetCore.Models.AttrAttribute.Capabilities
+  fullName: JsonApiDotNetCore.Models.AttrAttribute.Capabilities
+  nameWithType: AttrAttribute.Capabilities
+- uid: JsonApiDotNetCore.Models.AttrAttribute.Capabilities*
+  name: Capabilities
+  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_Capabilities_
+  commentId: Overload:JsonApiDotNetCore.Models.AttrAttribute.Capabilities
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Models.AttrAttribute.Capabilities
+  nameWithType: AttrAttribute.Capabilities
 - uid: JsonApiDotNetCore.Models.AttrAttribute.ExposedInternalMemberName
   name: ExposedInternalMemberName
   href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_ExposedInternalMemberName
@@ -6389,45 +6446,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Models.AttrAttribute.Is
   nameWithType: AttrAttribute.Is
-- uid: JsonApiDotNetCore.Models.AttrAttribute.IsFilterable
-  name: IsFilterable
-  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_IsFilterable
-  commentId: P:JsonApiDotNetCore.Models.AttrAttribute.IsFilterable
-  fullName: JsonApiDotNetCore.Models.AttrAttribute.IsFilterable
-  nameWithType: AttrAttribute.IsFilterable
-- uid: JsonApiDotNetCore.Models.AttrAttribute.IsFilterable*
-  name: IsFilterable
-  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_IsFilterable_
-  commentId: Overload:JsonApiDotNetCore.Models.AttrAttribute.IsFilterable
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Models.AttrAttribute.IsFilterable
-  nameWithType: AttrAttribute.IsFilterable
-- uid: JsonApiDotNetCore.Models.AttrAttribute.IsImmutable
-  name: IsImmutable
-  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_IsImmutable
-  commentId: P:JsonApiDotNetCore.Models.AttrAttribute.IsImmutable
-  fullName: JsonApiDotNetCore.Models.AttrAttribute.IsImmutable
-  nameWithType: AttrAttribute.IsImmutable
-- uid: JsonApiDotNetCore.Models.AttrAttribute.IsImmutable*
-  name: IsImmutable
-  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_IsImmutable_
-  commentId: Overload:JsonApiDotNetCore.Models.AttrAttribute.IsImmutable
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Models.AttrAttribute.IsImmutable
-  nameWithType: AttrAttribute.IsImmutable
-- uid: JsonApiDotNetCore.Models.AttrAttribute.IsSortable
-  name: IsSortable
-  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_IsSortable
-  commentId: P:JsonApiDotNetCore.Models.AttrAttribute.IsSortable
-  fullName: JsonApiDotNetCore.Models.AttrAttribute.IsSortable
-  nameWithType: AttrAttribute.IsSortable
-- uid: JsonApiDotNetCore.Models.AttrAttribute.IsSortable*
-  name: IsSortable
-  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_IsSortable_
-  commentId: Overload:JsonApiDotNetCore.Models.AttrAttribute.IsSortable
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Models.AttrAttribute.IsSortable
-  nameWithType: AttrAttribute.IsSortable
 - uid: JsonApiDotNetCore.Models.AttrAttribute.PropertyInfo
   name: PropertyInfo
   href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_PropertyInfo
@@ -6467,6 +6485,42 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Models.AttrAttribute.SetValue
   nameWithType: AttrAttribute.SetValue
+- uid: JsonApiDotNetCore.Models.AttrCapabilities
+  name: AttrCapabilities
+  href: api/JsonApiDotNetCore.Models.AttrCapabilities.html
+  commentId: T:JsonApiDotNetCore.Models.AttrCapabilities
+  fullName: JsonApiDotNetCore.Models.AttrCapabilities
+  nameWithType: AttrCapabilities
+- uid: JsonApiDotNetCore.Models.AttrCapabilities.All
+  name: All
+  href: api/JsonApiDotNetCore.Models.AttrCapabilities.html#JsonApiDotNetCore_Models_AttrCapabilities_All
+  commentId: F:JsonApiDotNetCore.Models.AttrCapabilities.All
+  fullName: JsonApiDotNetCore.Models.AttrCapabilities.All
+  nameWithType: AttrCapabilities.All
+- uid: JsonApiDotNetCore.Models.AttrCapabilities.AllowFilter
+  name: AllowFilter
+  href: api/JsonApiDotNetCore.Models.AttrCapabilities.html#JsonApiDotNetCore_Models_AttrCapabilities_AllowFilter
+  commentId: F:JsonApiDotNetCore.Models.AttrCapabilities.AllowFilter
+  fullName: JsonApiDotNetCore.Models.AttrCapabilities.AllowFilter
+  nameWithType: AttrCapabilities.AllowFilter
+- uid: JsonApiDotNetCore.Models.AttrCapabilities.AllowMutate
+  name: AllowMutate
+  href: api/JsonApiDotNetCore.Models.AttrCapabilities.html#JsonApiDotNetCore_Models_AttrCapabilities_AllowMutate
+  commentId: F:JsonApiDotNetCore.Models.AttrCapabilities.AllowMutate
+  fullName: JsonApiDotNetCore.Models.AttrCapabilities.AllowMutate
+  nameWithType: AttrCapabilities.AllowMutate
+- uid: JsonApiDotNetCore.Models.AttrCapabilities.AllowSort
+  name: AllowSort
+  href: api/JsonApiDotNetCore.Models.AttrCapabilities.html#JsonApiDotNetCore_Models_AttrCapabilities_AllowSort
+  commentId: F:JsonApiDotNetCore.Models.AttrCapabilities.AllowSort
+  fullName: JsonApiDotNetCore.Models.AttrCapabilities.AllowSort
+  nameWithType: AttrCapabilities.AllowSort
+- uid: JsonApiDotNetCore.Models.AttrCapabilities.None
+  name: None
+  href: api/JsonApiDotNetCore.Models.AttrCapabilities.html#JsonApiDotNetCore_Models_AttrCapabilities_None
+  commentId: F:JsonApiDotNetCore.Models.AttrCapabilities.None
+  fullName: JsonApiDotNetCore.Models.AttrCapabilities.None
+  nameWithType: AttrCapabilities.None
 - uid: JsonApiDotNetCore.Models.Document
   name: Document
   href: api/JsonApiDotNetCore.Models.Document.html
