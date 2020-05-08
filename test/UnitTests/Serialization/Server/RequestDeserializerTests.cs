@@ -1,5 +1,6 @@
-using System;
 using System.Collections.Generic;
+using System.Net;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server;
@@ -55,7 +56,11 @@ namespace UnitTests.Serialization.Server
             var body = JsonConvert.SerializeObject(content);
 
             // Act, assert
-            Assert.Throws<InvalidOperationException>(() => _deserializer.Deserialize(body));
+            var exception = Assert.Throws<InvalidRequestBodyException>(() => _deserializer.Deserialize(body));
+
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, exception.Error.StatusCode);
+            Assert.Equal("Failed to deserialize request body: Changing the value of the requested attribute is not allowed.", exception.Error.Title);
+            Assert.Equal("Changing the value of 'immutable' is not allowed.", exception.Error.Detail);
         }
 
         [Fact]
