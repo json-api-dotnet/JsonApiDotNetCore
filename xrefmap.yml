@@ -2399,12 +2399,12 @@ references:
   commentId: T:JsonApiDotNetCore.Exceptions.InvalidModelStateException
   fullName: JsonApiDotNetCore.Exceptions.InvalidModelStateException
   nameWithType: InvalidModelStateException
-- uid: JsonApiDotNetCore.Exceptions.InvalidModelStateException.#ctor(ModelStateDictionary,Type,System.Boolean)
-  name: InvalidModelStateException(ModelStateDictionary, Type, Boolean)
-  href: api/JsonApiDotNetCore.Exceptions.InvalidModelStateException.html#JsonApiDotNetCore_Exceptions_InvalidModelStateException__ctor_ModelStateDictionary_Type_System_Boolean_
-  commentId: M:JsonApiDotNetCore.Exceptions.InvalidModelStateException.#ctor(ModelStateDictionary,Type,System.Boolean)
-  fullName: JsonApiDotNetCore.Exceptions.InvalidModelStateException.InvalidModelStateException(ModelStateDictionary, Type, System.Boolean)
-  nameWithType: InvalidModelStateException.InvalidModelStateException(ModelStateDictionary, Type, Boolean)
+- uid: JsonApiDotNetCore.Exceptions.InvalidModelStateException.#ctor(ModelStateDictionary,Type,System.Boolean,NamingStrategy)
+  name: InvalidModelStateException(ModelStateDictionary, Type, Boolean, NamingStrategy)
+  href: api/JsonApiDotNetCore.Exceptions.InvalidModelStateException.html#JsonApiDotNetCore_Exceptions_InvalidModelStateException__ctor_ModelStateDictionary_Type_System_Boolean_NamingStrategy_
+  commentId: M:JsonApiDotNetCore.Exceptions.InvalidModelStateException.#ctor(ModelStateDictionary,Type,System.Boolean,NamingStrategy)
+  fullName: JsonApiDotNetCore.Exceptions.InvalidModelStateException.InvalidModelStateException(ModelStateDictionary, Type, System.Boolean, NamingStrategy)
+  nameWithType: InvalidModelStateException.InvalidModelStateException(ModelStateDictionary, Type, Boolean, NamingStrategy)
 - uid: JsonApiDotNetCore.Exceptions.InvalidModelStateException.#ctor*
   name: InvalidModelStateException
   href: api/JsonApiDotNetCore.Exceptions.InvalidModelStateException.html#JsonApiDotNetCore_Exceptions_InvalidModelStateException__ctor_

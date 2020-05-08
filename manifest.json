@@ -69,7 +69,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html",
-          "hash": "mHRBFoa5HrViStBAzsnTSg=="
+          "hash": "ATquYiT1dGQ7lC9JeuzF0g=="
         }
       },
       "is_incremental": false,
@@ -117,7 +117,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.BaseJsonApiController-1.html",
-          "hash": "mqAyRaCtO9OiYCymOPj81A=="
+          "hash": "uQ3m+Lkc0zywTd9GYAAKcQ=="
         }
       },
       "is_incremental": false,
@@ -129,7 +129,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html",
-          "hash": "yjv9Cug7KNCl0ghrL1P9dw=="
+          "hash": "oSN5spiK2ghv65dFLo3IsQ=="
         }
       },
       "is_incremental": false,
@@ -465,7 +465,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Exceptions.InvalidModelStateException.html",
-          "hash": "WIghhPNUiQa3G7CRYyX+OQ=="
+          "hash": "4I8biJlzkQGIUhuw8as6mw=="
         }
       },
       "is_incremental": false,
