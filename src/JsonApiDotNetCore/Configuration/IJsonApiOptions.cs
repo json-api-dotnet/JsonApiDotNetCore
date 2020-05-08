@@ -2,6 +2,7 @@ using System;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -61,6 +62,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         JsonSerializerSettings SerializerSettings { get; }
 
+        internal DefaultContractResolver SerializerContractResolver => (DefaultContractResolver)SerializerSettings.ContractResolver;
+        
         /// <summary>
         /// Specifies the default query string capabilities that can be used on exposed json:api attributes.
         /// Defaults to <see cref="AttrCapabilities.All"/>.

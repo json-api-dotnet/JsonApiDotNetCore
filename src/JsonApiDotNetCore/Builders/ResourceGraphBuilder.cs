@@ -232,8 +232,7 @@ namespace JsonApiDotNetCore.Builders
 
         private string FormatPropertyName(PropertyInfo resourceProperty)
         {
-            var contractResolver = (DefaultContractResolver)_options.SerializerSettings.ContractResolver;
-            return contractResolver.NamingStrategy.GetPropertyName(resourceProperty.Name, false);
+            return _options.SerializerContractResolver.NamingStrategy.GetPropertyName(resourceProperty.Name, false);
         }
     }
 }
