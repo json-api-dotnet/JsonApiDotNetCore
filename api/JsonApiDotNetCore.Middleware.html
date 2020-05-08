@@ -79,9 +79,6 @@
   </h3>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter.html">ConvertEmptyActionResultFilter</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.html">CurrentRequestMiddleware</a></h4>
-      <section><p>This sets all necessary parameters relating to the HttpContext for JADNC</p>
-</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.DefaultExceptionFilter.html">DefaultExceptionFilter</a></h4>
       <section><p>Global exception filter that wraps any thrown error with a JsonApiException.</p>
 </section>
@@ -94,6 +91,9 @@
       <section><p>Provides the type of the global exception filter that is configured in MVC during startup.
 This can be overridden to let JADNC use your own exception filter. The default exception filter used
 is <a class="xref" href="JsonApiDotNetCore.Middleware.DefaultExceptionFilter.html">DefaultExceptionFilter</a></p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiMiddleware.html">JsonApiMiddleware</a></h4>
+      <section><p>Intercepts HTTP requests to populate injected <a class="xref" href="JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.html">ICurrentRequest</a> instance for json:api requests.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiTypeMatchFilterProvider.html">JsonApiTypeMatchFilterProvider</a></h4>
       <section><p>Provides the type of the global action filter that is configured in MVC during startup.

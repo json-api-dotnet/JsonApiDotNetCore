@@ -89,16 +89,16 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_ExposedInternalMemberName">RelationshipAttribute.ExposedInternalMemberName</a>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_JsonApiDotNetCore_Models_IResourceField_PropertyName">RelationshipAttribute.IResourceField.PropertyName</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_PublicRelationshipName">RelationshipAttribute.PublicRelationshipName</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_InternalRelationshipName">RelationshipAttribute.InternalRelationshipName</a>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_InverseNavigation">RelationshipAttribute.InverseNavigation</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_InverseNavigation">RelationshipAttribute.InverseNavigation</a>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_PropertyInfo">RelationshipAttribute.PropertyInfo</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_RightType">RelationshipAttribute.RightType</a>
@@ -107,16 +107,16 @@
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_LeftType">RelationshipAttribute.LeftType</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_IsHasMany">RelationshipAttribute.IsHasMany</a>
-    </div>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_IsHasOne">RelationshipAttribute.IsHasOne</a>
-    </div>
-    <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_RelationshipLinks">RelationshipAttribute.RelationshipLinks</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_CanInclude">RelationshipAttribute.CanInclude</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_GetValue_System_Object_">RelationshipAttribute.GetValue(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_SetValue_System_Object_System_Object_JsonApiDotNetCore_Internal_IResourceFactory_">RelationshipAttribute.SetValue(Object, Object, IResourceFactory)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_ToString">RelationshipAttribute.ToString()</a>
@@ -197,105 +197,10 @@
   <pre><code>public class Author : Identifiable 
 {
     [HasMany(&quot;articles&quot;]
-    public virtual List&lt;Article> Articles { get; set; }
+    public List&lt;Article> Articles { get; set; }
 }</code></pre>
 
 
-  <h3 id="methods">Methods
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyAttribute_GetValue_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyAttribute.GetValue(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyAttribute.cs/#L38">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Models_HasManyAttribute_GetValue_" data-uid="JsonApiDotNetCore.Models.HasManyAttribute.GetValue*"></a>
-  <h4 id="JsonApiDotNetCore_Models_HasManyAttribute_GetValue_System_Object_" data-uid="JsonApiDotNetCore.Models.HasManyAttribute.GetValue(System.Object)">GetValue(Object)</h4>
-  <div class="markdown level1 summary"><p>Gets the value of the navigation property, defined by the relationshipName,
-on the provided instance.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override object GetValue(object entity)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">entity</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_GetValue_System_Object_">RelationshipAttribute.GetValue(Object)</a></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyAttribute_SetValue_System_Object_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyAttribute.SetValue(System.Object%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyAttribute.cs/#L51">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Models_HasManyAttribute_SetValue_" data-uid="JsonApiDotNetCore.Models.HasManyAttribute.SetValue*"></a>
-  <h4 id="JsonApiDotNetCore_Models_HasManyAttribute_SetValue_System_Object_System_Object_" data-uid="JsonApiDotNetCore.Models.HasManyAttribute.SetValue(System.Object,System.Object)">SetValue(Object, Object)</h4>
-  <div class="markdown level1 summary"><p>Sets the value of the property identified by this attribute</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void SetValue(object entity, object newValue)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">entity</span></td>
-        <td><p>The target object</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">newValue</span></td>
-        <td><p>The new property value</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_SetValue_System_Object_System_Object_">RelationshipAttribute.SetValue(Object, Object)</a></div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="JsonApiDotNetCore.Models.IResourceField.html">IResourceField</a>

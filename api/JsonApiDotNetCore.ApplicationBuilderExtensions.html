@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class IApplicationBuilderExtensions
+    <title>Class ApplicationBuilderExtensions
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class IApplicationBuilderExtensions
+    <meta name="title" content="Class ApplicationBuilderExtensions
    ">
     <meta name="generator" content="docfx 2.52.0.0">
     
@@ -68,38 +68,36 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.ApplicationBuilderExtensions">
   
   
-  <h1 id="JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions" data-uid="JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions" class="text-break">Class IApplicationBuilderExtensions
+  <h1 id="JsonApiDotNetCore_ApplicationBuilderExtensions" data-uid="JsonApiDotNetCore.ApplicationBuilderExtensions" class="text-break">Class ApplicationBuilderExtensions
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">IApplicationBuilderExtensions</span></div>
+    <div class="level1"><span class="xref">ApplicationBuilderExtensions</span></div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Extensions.html">JsonApiDotNetCore.Extensions</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.html">JsonApiDotNetCore</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_syntax">Syntax</h5>
+  <h5 id="JsonApiDotNetCore_ApplicationBuilderExtensions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class IApplicationBuilderExtensions : object</code></pre>
+    <pre><code class="lang-csharp hljs">public static class ApplicationBuilderExtensions : object</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_System_Boolean_System_Boolean_System_Boolean_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder%2CSystem.Boolean%2CSystem.Boolean%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_ApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_System_Boolean_System_Boolean_System_Boolean_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.ApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder%2CSystem.Boolean%2CSystem.Boolean%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/IApplicationBuilderExtensions.cs/#L35">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/ApplicationBuilderExtensions.cs/#L30">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_UseJsonApi_" data-uid="JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.UseJsonApi*"></a>
-  <h4 id="JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_System_Boolean_System_Boolean_System_Boolean_" data-uid="JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder,System.Boolean,System.Boolean,System.Boolean)">UseJsonApi(IApplicationBuilder, Boolean, Boolean, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Runs several internal JsonApiDotNetCore services to ensure proper configuration and registers required middlewares. 
-The <code data-dev-comment-type="paramref" class="paramref">skipRegisterMiddleware</code> can be used to skip any middleware registration, in which case the developer
-is responsible for registering middleware that are required for JsonApiDotNetCore.</p>
+  <a id="JsonApiDotNetCore_ApplicationBuilderExtensions_UseJsonApi_" data-uid="JsonApiDotNetCore.ApplicationBuilderExtensions.UseJsonApi*"></a>
+  <h4 id="JsonApiDotNetCore_ApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_System_Boolean_System_Boolean_System_Boolean_" data-uid="JsonApiDotNetCore.ApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder,System.Boolean,System.Boolean,System.Boolean)">UseJsonApi(IApplicationBuilder, Boolean, Boolean, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Validates the resource graph and optionally registers the JsonApiDotNetCore middleware.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -124,31 +122,32 @@ is responsible for registering middleware that are required for JsonApiDotNetCor
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">skipRegisterMiddleware</span></td>
-        <td><p>Indicates if JsonApiDotNetCore should skip middleware registration. This enables a user to take full control of middleware registration.</p>
+        <td><p>Indicates to not register any middleware. This enables callers to take full control of middleware registration order.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">useAuthentication</span></td>
-        <td><p>Indicates if .NET Core authentication middleware should be registered. Ignored when <code data-dev-comment-type="paramref" class="paramref">skipRegisterMiddleware</code> is set to true.</p>
+        <td><p>Indicates if &apos;app.UseAuthentication()&apos; should be called. Ignored when <code data-dev-comment-type="paramref" class="paramref">skipRegisterMiddleware</code> is set to true.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">useAuthorization</span></td>
-        <td><p>Indicates if .NET Core authentication middleware should be registered. Ignored when <code data-dev-comment-type="paramref" class="paramref">skipRegisterMiddleware</code> is set to true.</p>
+        <td><p>Indicates if &apos;app.UseAuthorization()&apos; should be called. Ignored when <code data-dev-comment-type="paramref" class="paramref">skipRegisterMiddleware</code> is set to true.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  <h5 id="JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_System_Boolean_System_Boolean_System_Boolean__examples">Examples</h5>
-  <p>This example illustrate which required middlewares should be registered when using the <code data-dev-comment-type="paramref" class="paramref">skipRegisterMiddleware</code> option.</p>
+  <h5 id="JsonApiDotNetCore_ApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_System_Boolean_System_Boolean_System_Boolean__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The <code data-dev-comment-type="paramref" class="paramref">skipRegisterMiddleware</code> can be used to skip any middleware registration, in which case the developer
+is responsible for registering required middleware.</p>
+</div>
+  <h5 id="JsonApiDotNetCore_ApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_System_Boolean_System_Boolean_System_Boolean__examples">Examples</h5>
+  <p>The next example illustrates how to manually register middleware.</p>
 <pre><code>app.UseJsonApi(skipRegisterMiddleware: true);
-// JADNC requires routing
 app.UseRouting();
-// JADNC requires CurrentRequestMiddleware 
-app.UseMiddleware{CurrentRequestMiddleware}();
-// JANDC requires the endpoint feature enabled as follows
+app.UseMiddleware{JsonApiMiddleware}();
 app.UseEndpoints(endpoints => endpoints.MapControllers());</code></pre>
 
 </article>
@@ -159,10 +158,10 @@ app.UseEndpoints(endpoints => endpoints.MapControllers());</code></pre>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_ApplicationBuilderExtensions.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.ApplicationBuilderExtensions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/IApplicationBuilderExtensions.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/ApplicationBuilderExtensions.cs/#L8" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

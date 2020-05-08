@@ -94,18 +94,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Builders_ResourceGraphBuilder__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Builders.ResourceGraphBuilder.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Builders_ResourceGraphBuilder__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_ILoggerFactory_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Builders.ResourceGraphBuilder.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CILoggerFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L24">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L23">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Builders_ResourceGraphBuilder__ctor_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Builders_ResourceGraphBuilder__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)">ResourceGraphBuilder(IJsonApiOptions)</h4>
+  <h4 id="JsonApiDotNetCore_Builders_ResourceGraphBuilder__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_ILoggerFactory_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,ILoggerFactory)">ResourceGraphBuilder(IJsonApiOptions, ILoggerFactory)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceGraphBuilder(IJsonApiOptions options)</code></pre>
+    <pre><code class="lang-csharp hljs">public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -122,6 +122,11 @@
         <td><span class="parametername">options</span></td>
         <td></td>
       </tr>
+      <tr>
+        <td><span class="xref">ILoggerFactory</span></td>
+        <td><span class="parametername">loggerFactory</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   <h3 id="methods">Methods
@@ -131,7 +136,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource_Type_Type_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource(Type%2CType%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L57">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L56">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource*"></a>
   <h4 id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource_Type_Type_System_String_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource(Type,Type,System.String)">AddResource(Type, Type, String)</h4>
@@ -155,7 +160,8 @@
       <tr>
         <td><span class="xref">Type</span></td>
         <td><span class="parametername">resourceType</span></td>
-        <td></td>
+        <td><p>The resource model type</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">Type</span></td>
@@ -192,7 +198,7 @@ If nothing is specified, the configured name formatter will be used.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource__1_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource%60%601(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L49">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L48">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource*"></a>
   <h4 id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource__1_System_String_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource``1(System.String)">AddResource&lt;TResource&gt;(String)</h4>
@@ -259,7 +265,7 @@ If nothing is specified, the configured name formatter will be used.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource__2_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource%60%602(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L53">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L52">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource*"></a>
   <h4 id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource__2_System_String_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource``2(System.String)">AddResource&lt;TResource, TId&gt;(String)</h4>
@@ -362,7 +368,7 @@ If nothing is specified, the configured name formatter will be used.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Builders_ResourceGraphBuilder_GetAttributes_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Builders.ResourceGraphBuilder.GetAttributes(Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L85">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L87">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_GetAttributes_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.GetAttributes*"></a>
   <h4 id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_GetAttributes_Type_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.GetAttributes(Type)">GetAttributes(Type)</h4>
@@ -409,7 +415,7 @@ If nothing is specified, the configured name formatter will be used.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Builders_ResourceGraphBuilder_GetRelationships_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Builders.ResourceGraphBuilder.GetRelationships(Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L124">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L126">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_GetRelationships_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.GetRelationships*"></a>
   <h4 id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_GetRelationships_Type_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.GetRelationships(Type)">GetRelationships(Type)</h4>
@@ -456,7 +462,7 @@ If nothing is specified, the configured name formatter will be used.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Builders_ResourceGraphBuilder_GetRelationshipType_JsonApiDotNetCore_Models_RelationshipAttribute_PropertyInfo_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Builders.ResourceGraphBuilder.GetRelationshipType(JsonApiDotNetCore.Models.RelationshipAttribute%2CPropertyInfo)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L183">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L200">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_GetRelationshipType_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.GetRelationshipType*"></a>
   <h4 id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_GetRelationshipType_JsonApiDotNetCore_Models_RelationshipAttribute_PropertyInfo_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.GetRelationshipType(JsonApiDotNetCore.Models.RelationshipAttribute,PropertyInfo)">GetRelationshipType(RelationshipAttribute, PropertyInfo)</h4>
@@ -518,7 +524,7 @@ If nothing is specified, the configured name formatter will be used.</p>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Builders_ResourceGraphBuilder.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Builders.ResourceGraphBuilder%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L18" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Builders/ResourceGraphBuilder.cs/#L17" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -97,7 +97,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IResourceGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName = null)</code></pre>
+    <pre><code class="lang-csharp hljs">IResourceGraphBuilder AddResource(Type resourceType, Type idType = null, string pluralizedTypeName = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -111,7 +111,7 @@
     <tbody>
       <tr>
         <td><span class="xref">Type</span></td>
-        <td><span class="parametername">entityType</span></td>
+        <td><span class="parametername">resourceType</span></td>
         <td><p>The resource model type</p>
 </td>
       </tr>
@@ -315,10 +315,6 @@ If nothing is specified, the configured name formatter will be used.</p>
       </tr>
     </tbody>
   </table>
-  <h3 id="extensionmethods">Extension Methods</h3>
-  <div>
-      <a class="xref" href="JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions.html#JsonApiDotNetCore_Extensions_EntityFrameworkCore_IResourceGraphBuilderExtensions_AddDbContext__1_JsonApiDotNetCore_Builders_IResourceGraphBuilder_">IResourceGraphBuilderExtensions.AddDbContext&lt;TDbContext&gt;(IResourceGraphBuilder)</a>
-  </div>
 </article>
           </div>
           

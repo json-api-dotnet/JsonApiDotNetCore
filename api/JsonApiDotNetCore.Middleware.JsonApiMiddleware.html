@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class CurrentRequestMiddleware
+    <title>Class JsonApiMiddleware
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class CurrentRequestMiddleware
+    <meta name="title" content="Class JsonApiMiddleware
    ">
     <meta name="generator" content="docfx 2.52.0.0">
     
@@ -68,41 +68,41 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Middleware.CurrentRequestMiddleware">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Middleware.JsonApiMiddleware">
   
   
-  <h1 id="JsonApiDotNetCore_Middleware_CurrentRequestMiddleware" data-uid="JsonApiDotNetCore.Middleware.CurrentRequestMiddleware" class="text-break">Class CurrentRequestMiddleware
+  <h1 id="JsonApiDotNetCore_Middleware_JsonApiMiddleware" data-uid="JsonApiDotNetCore.Middleware.JsonApiMiddleware" class="text-break">Class JsonApiMiddleware
   </h1>
-  <div class="markdown level0 summary"><p>This sets all necessary parameters relating to the HttpContext for JADNC</p>
+  <div class="markdown level0 summary"><p>Intercepts HTTP requests to populate injected <a class="xref" href="JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.html">ICurrentRequest</a> instance for json:api requests.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">CurrentRequestMiddleware</span></div>
+    <div class="level1"><span class="xref">JsonApiMiddleware</span></div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Middleware.html">JsonApiDotNetCore.Middleware</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Middleware_CurrentRequestMiddleware_syntax">Syntax</h5>
+  <h5 id="JsonApiDotNetCore_Middleware_JsonApiMiddleware_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class CurrentRequestMiddleware : object</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class JsonApiMiddleware : object</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_CurrentRequestMiddleware__ctor_RequestDelegate_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.%23ctor(RequestDelegate)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_JsonApiMiddleware__ctor_RequestDelegate_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.JsonApiMiddleware.%23ctor(RequestDelegate)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/CurrentRequestMiddleware.cs/#L26">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMiddleware.cs/#L27">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Middleware_CurrentRequestMiddleware__ctor_" data-uid="JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Middleware_CurrentRequestMiddleware__ctor_RequestDelegate_" data-uid="JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.#ctor(RequestDelegate)">CurrentRequestMiddleware(RequestDelegate)</h4>
+  <a id="JsonApiDotNetCore_Middleware_JsonApiMiddleware__ctor_" data-uid="JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor*"></a>
+  <h4 id="JsonApiDotNetCore_Middleware_JsonApiMiddleware__ctor_RequestDelegate_" data-uid="JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor(RequestDelegate)">JsonApiMiddleware(RequestDelegate)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CurrentRequestMiddleware(RequestDelegate next)</code></pre>
+    <pre><code class="lang-csharp hljs">public JsonApiMiddleware(RequestDelegate next)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -125,13 +125,13 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_CurrentRequestMiddleware_Invoke_HttpContext_JsonApiDotNetCore_Internal_IControllerResourceMapping_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_JsonApiDotNetCore_Internal_Contracts_IResourceGraph_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.Invoke(HttpContext%2CJsonApiDotNetCore.Internal.IControllerResourceMapping%2CJsonApiDotNetCore.Configuration.IJsonApiOptions%2CJsonApiDotNetCore.Managers.Contracts.ICurrentRequest%2CJsonApiDotNetCore.Internal.Contracts.IResourceGraph)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_JsonApiMiddleware_Invoke_HttpContext_JsonApiDotNetCore_Internal_IControllerResourceMapping_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_JsonApiDotNetCore_Internal_Contracts_IResourceGraph_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.JsonApiMiddleware.Invoke(HttpContext%2CJsonApiDotNetCore.Internal.IControllerResourceMapping%2CJsonApiDotNetCore.Configuration.IJsonApiOptions%2CJsonApiDotNetCore.Managers.Contracts.ICurrentRequest%2CJsonApiDotNetCore.Internal.Contracts.IResourceGraph)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/CurrentRequestMiddleware.cs/#L31">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMiddleware.cs/#L32">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Middleware_CurrentRequestMiddleware_Invoke_" data-uid="JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.Invoke*"></a>
-  <h4 id="JsonApiDotNetCore_Middleware_CurrentRequestMiddleware_Invoke_HttpContext_JsonApiDotNetCore_Internal_IControllerResourceMapping_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_JsonApiDotNetCore_Internal_Contracts_IResourceGraph_" data-uid="JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.Invoke(HttpContext,JsonApiDotNetCore.Internal.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Managers.Contracts.ICurrentRequest,JsonApiDotNetCore.Internal.Contracts.IResourceGraph)">Invoke(HttpContext, IControllerResourceMapping, IJsonApiOptions, ICurrentRequest, IResourceGraph)</h4>
+  <a id="JsonApiDotNetCore_Middleware_JsonApiMiddleware_Invoke_" data-uid="JsonApiDotNetCore.Middleware.JsonApiMiddleware.Invoke*"></a>
+  <h4 id="JsonApiDotNetCore_Middleware_JsonApiMiddleware_Invoke_HttpContext_JsonApiDotNetCore_Internal_IControllerResourceMapping_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_JsonApiDotNetCore_Internal_Contracts_IResourceGraph_" data-uid="JsonApiDotNetCore.Middleware.JsonApiMiddleware.Invoke(HttpContext,JsonApiDotNetCore.Internal.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Managers.Contracts.ICurrentRequest,JsonApiDotNetCore.Internal.Contracts.IResourceGraph)">Invoke(HttpContext, IControllerResourceMapping, IJsonApiOptions, ICurrentRequest, IResourceGraph)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -198,10 +198,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_CurrentRequestMiddleware.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.CurrentRequestMiddleware%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_JsonApiMiddleware.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.JsonApiMiddleware%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/CurrentRequestMiddleware.cs/#L22" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMiddleware.cs/#L23" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
