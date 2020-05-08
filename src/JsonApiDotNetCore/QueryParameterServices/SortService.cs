@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.Models;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
@@ -90,7 +91,7 @@ namespace JsonApiDotNetCore.Query
             var relationship = GetRelationship("sort", query.Relationship);
             var attribute = GetAttribute("sort", query.Attribute, relationship);
 
-            if (!attribute.IsSortable)
+            if (!attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
             {
                 throw new InvalidQueryStringParameterException("sort", "Sorting on the requested attribute is not allowed.",
                     $"Sorting on attribute '{attribute.PublicAttributeName}' is not allowed.");
