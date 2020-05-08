@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
@@ -14,11 +13,12 @@ using JsonApiDotNetCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
-using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication;
 
 namespace UnitTests.Extensions
 {
@@ -30,6 +30,7 @@ namespace UnitTests.Extensions
             // Arrange
             var services = new ServiceCollection();
             services.AddLogging();
+            services.AddSingleton<ISystemClock, FrozenSystemClock>();
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
             services.AddJsonApi<AppDbContext>();
 
@@ -64,7 +65,8 @@ namespace UnitTests.Extensions
         {
             // Arrange
             var services = new ServiceCollection();
-
+            services.AddLogging();
+            services.AddSingleton<ISystemClock, FrozenSystemClock>();
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
             services.AddJsonApi<AppDbContext>();
 
@@ -141,6 +143,8 @@ namespace UnitTests.Extensions
         {
             // Arrange
             var services = new ServiceCollection();
+            services.AddLogging();
+            services.AddDbContext<TestContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
             services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
 
@@ -184,6 +188,10 @@ namespace UnitTests.Extensions
 
         public class TestContext : DbContext
         {
+            public TestContext(DbContextOptions<TestContext> options) : base(options)
+            {
+            }
+
             public DbSet<IntResource> Resource { get; set; }
         }
     }

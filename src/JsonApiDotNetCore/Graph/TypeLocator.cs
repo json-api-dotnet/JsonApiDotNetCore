@@ -13,9 +13,8 @@ namespace JsonApiDotNetCore.Graph
     internal static class TypeLocator
     {
         /// <summary>
-        /// Determine whether or not this is a json:api resource by checking if it implements <see cref="IIdentifiable"/>.
-        /// Returns the status and the resultant id type, either `(true, Type)` OR `(false, null)`
-        /// </summary>        
+        /// Determine whether or not this is a json:api resource by checking if it implements <see cref="IIdentifiable{T}"/>.
+        /// </summary>
         public static Type GetIdType(Type resourceType)
         {
             var identifiableInterface = resourceType.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIdentifiable<>));
@@ -30,7 +29,7 @@ namespace JsonApiDotNetCore.Graph
         /// </returns>
         internal static bool TryGetResourceDescriptor(Type type, out ResourceDescriptor descriptor)
         {
-            if (type.Implements<IIdentifiable>())
+            if (type.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
                 descriptor = new ResourceDescriptor(type, GetIdType(type));
                 return true;

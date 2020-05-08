@@ -2,8 +2,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task When_posting_tag_with_invalid_name_it_must_fail()
         {
             // Arrange
-            var tag = new Tag
+            var tag = new Tag(_dbContext)
             {
                 Name = "!@#$%^&*().-"
             };
@@ -36,7 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(content)
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.ContentType);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             var options = (JsonApiOptions)_factory.GetService<IJsonApiOptions>();
             options.ValidateModelState = true;
@@ -60,7 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task When_posting_tag_with_invalid_name_without_model_state_validation_it_must_succeed()
         {
             // Arrange
-            var tag = new Tag
+            var tag = new Tag(_dbContext)
             {
                 Name = "!@#$%^&*().-"
             };
@@ -72,7 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(content)
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.ContentType);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             var options = (JsonApiOptions)_factory.GetService<IJsonApiOptions>();
             options.ValidateModelState = false;
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task When_patching_tag_with_invalid_name_it_must_fail()
         {
             // Arrange
-            var existingTag = new Tag
+            var existingTag = new Tag(_dbContext)
             {
                 Name = "Technology"
             };
@@ -97,7 +97,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             context.Tags.Add(existingTag);
             context.SaveChanges();
 
-            var updatedTag = new Tag
+            var updatedTag = new Tag(_dbContext)
             {
                 Id = existingTag.Id,
                 Name = "!@#$%^&*().-"
@@ -110,7 +110,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(content)
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.ContentType);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             var options = (JsonApiOptions)_factory.GetService<IJsonApiOptions>();
             options.ValidateModelState = true;
@@ -134,7 +134,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task When_patching_tag_with_invalid_name_without_model_state_validation_it_must_succeed()
         {
             // Arrange
-            var existingTag = new Tag
+            var existingTag = new Tag(_dbContext)
             {
                 Name = "Technology"
             };
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             context.Tags.Add(existingTag);
             context.SaveChanges();
 
-            var updatedTag = new Tag
+            var updatedTag = new Tag(_dbContext)
             {
                 Id = existingTag.Id,
                 Name = "!@#$%^&*().-"
@@ -156,7 +156,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(content)
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.ContentType);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             var options = (JsonApiOptions)_factory.GetService<IJsonApiOptions>();
             options.ValidateModelState = false;

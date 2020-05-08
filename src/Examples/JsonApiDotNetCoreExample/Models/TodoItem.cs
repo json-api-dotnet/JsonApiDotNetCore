@@ -62,7 +62,7 @@ namespace JsonApiDotNetCoreExample.Models
         public int? OneToOnePersonId { get; set; }
 
         [HasMany]
-        public List<Person> StakeHolders { get; set; }
+        public ISet<Person> StakeHolders { get; set; }
 
         [HasOne]
         public TodoItemCollection Collection { get; set; }
@@ -80,6 +80,6 @@ namespace JsonApiDotNetCoreExample.Models
         public TodoItem ParentTodo { get; set; }
 
         [HasMany]
-        public List<TodoItem> ChildrenTodos { get; set; }
+        public IList<TodoItem> ChildrenTodos { get; set; }
     }
 }

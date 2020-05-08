@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Serialization.Client
     /// </summary>
     public class ResponseDeserializer : BaseDocumentParser, IResponseDeserializer
     {
-        public ResponseDeserializer(IResourceContextProvider provider) : base(provider) { }
+        public ResponseDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory) : base(contextProvider, resourceFactory) { }
 
         /// <inheritdoc/>
         public DeserializedSingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
@@ -65,15 +65,13 @@ namespace JsonApiDotNetCore.Serialization.Client
             {
                 // add attributes and relationships of a parsed HasOne relationship
                 var rio = data.SingleData;
-                hasOneAttr.SetValue(entity, rio == null ? null : ParseIncludedRelationship(hasOneAttr, rio));
+                hasOneAttr.SetValue(entity, rio == null ? null : ParseIncludedRelationship(hasOneAttr, rio), _resourceFactory);
             }
             else if (field is HasManyAttribute hasManyAttr)
             {  // add attributes and relationships of a parsed HasMany relationship
-                var values = TypeHelper.CreateListFor(hasManyAttr.RightType);
-                foreach (var rio in data.ManyData)
-                    values.Add(ParseIncludedRelationship(hasManyAttr, rio));
-
-                hasManyAttr.SetValue(entity, values);
+                var items = data.ManyData.Select(rio => ParseIncludedRelationship(hasManyAttr, rio));
+                var values = items.CopyToTypedCollection(hasManyAttr.PropertyInfo.PropertyType);
+                hasManyAttr.SetValue(entity, values, _resourceFactory);
             }
         }
 
@@ -82,14 +80,14 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// </summary>
         private IIdentifiable ParseIncludedRelationship(RelationshipAttribute relationshipAttr, ResourceIdentifierObject relatedResourceIdentifier)
         {
-            var relatedInstance = relationshipAttr.RightType.New<IIdentifiable>();
+            var relatedInstance = (IIdentifiable)_resourceFactory.CreateInstance(relationshipAttr.RightType);
             relatedInstance.StringId = relatedResourceIdentifier.Id;
 
             var includedResource = GetLinkedResource(relatedResourceIdentifier);
             if (includedResource == null)
                 return relatedInstance;
 
-            var resourceContext = _provider.GetResourceContext(relatedResourceIdentifier.Type);
+            var resourceContext = _contextProvider.GetResourceContext(relatedResourceIdentifier.Type);
             if (resourceContext == null)
                 throw new InvalidOperationException($"Included type '{relationshipAttr.RightType}' is not a registered json:api resource.");
 

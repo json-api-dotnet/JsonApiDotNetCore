@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Hooks
@@ -19,7 +20,6 @@ namespace JsonApiDotNetCore.Hooks
     /// </summary>
     internal sealed class RelationshipProxy
     {
-        private readonly bool _isHasManyThrough;
         private readonly bool _skipJoinTable;
 
         /// <summary>
@@ -40,7 +40,6 @@ namespace JsonApiDotNetCore.Hooks
             IsContextRelation = isContextRelation;
             if (attr is HasManyThroughAttribute throughAttr)
             {
-                _isHasManyThrough = true;
                 _skipJoinTable |= RightType != throughAttr.ThroughType;
             }
         }
@@ -54,23 +53,23 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="entity">Parent entity.</param>
         public object GetValue(IIdentifiable entity)
         {
-            if (_isHasManyThrough)
+            if (Attribute is HasManyThroughAttribute hasManyThrough)
             {
-                var throughAttr = (HasManyThroughAttribute)Attribute;
                 if (!_skipJoinTable)
                 {
-                    return throughAttr.ThroughProperty.GetValue(entity);
+                    return hasManyThrough.ThroughProperty.GetValue(entity);
                 }
                 var collection = new List<IIdentifiable>();
-                var joinEntities = (IList)throughAttr.ThroughProperty.GetValue(entity);
+                var joinEntities = (IEnumerable)hasManyThrough.ThroughProperty.GetValue(entity);
                 if (joinEntities == null) return null;
 
                 foreach (var joinEntity in joinEntities)
                 {
-                    var rightEntity = (IIdentifiable)throughAttr.RightProperty.GetValue(joinEntity);
+                    var rightEntity = (IIdentifiable)hasManyThrough.RightProperty.GetValue(joinEntity);
                     if (rightEntity == null) continue;
                     collection.Add(rightEntity);
                 }
+
                 return collection;
             }
             return Attribute.GetValue(entity);
@@ -83,33 +82,35 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <param name="entity">Parent entity.</param>
         /// <param name="value">The relationship value.</param>
-        public void SetValue(IIdentifiable entity, object value)
+        /// <param name="resourceFactory"></param>
+        public void SetValue(IIdentifiable entity, object value, IResourceFactory resourceFactory)
         {
-            if (_isHasManyThrough)
+            if (Attribute is HasManyThroughAttribute hasManyThrough)
             {
                 if (!_skipJoinTable)
                 {
-                    var list = (IEnumerable<object>)value;
-                    ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, list.Cast(RightType));
+                    hasManyThrough.ThroughProperty.SetValue(entity, value);
                     return;
                 }
-                var throughAttr = (HasManyThroughAttribute)Attribute;
-                var joinEntities = (IEnumerable<object>)throughAttr.ThroughProperty.GetValue(entity);
+
+                var joinEntities = (IEnumerable)hasManyThrough.ThroughProperty.GetValue(entity);
 
                 var filteredList = new List<object>();
-                var rightEntities = ((IEnumerable<object>)value).Cast(RightType);
-                foreach (var je in joinEntities)
+                var rightEntities = ((IEnumerable)value).CopyToList(RightType);
+                foreach (var joinEntity in joinEntities)
                 {
-
-                    if (((IList)rightEntities).Contains(throughAttr.RightProperty.GetValue(je)))
+                    if (((IList)rightEntities).Contains(hasManyThrough.RightProperty.GetValue(joinEntity)))
                     {
-                        filteredList.Add(je);
+                        filteredList.Add(joinEntity);
                     }
                 }
-                throughAttr.ThroughProperty.SetValue(entity, filteredList.Cast(throughAttr.ThroughType));
+
+                var collectionValue = filteredList.CopyToTypedCollection(hasManyThrough.ThroughProperty.PropertyType);
+                hasManyThrough.ThroughProperty.SetValue(entity, collectionValue);
                 return;
             }
-            Attribute.SetValue(entity, value);
+
+            Attribute.SetValue(entity, value, resourceFactory);
         }
     }
 }

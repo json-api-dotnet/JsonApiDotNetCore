@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
@@ -20,16 +21,21 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public sealed class ManyToManyTests
     {
-        private static readonly Faker<Article> _articleFaker = new Faker<Article>()
+        private readonly Faker<Article> _articleFaker = new Faker<Article>()
             .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
             .RuleFor(a => a.Author, f => new Author());
 
-        private static readonly Faker<Tag> _tagFaker = new Faker<Tag>().RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
+        private readonly Faker<Tag> _tagFaker;
 
-        private readonly TestFixture<Startup> _fixture;
-        public ManyToManyTests(TestFixture<Startup> fixture)
+        private readonly TestFixture<TestStartup> _fixture;
+
+        public ManyToManyTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
+
+            _tagFaker = new Faker<Tag>()
+                .CustomInstantiator(f => new Tag(_fixture.GetService<AppDbContext>()))
+                .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
         }
 
         [Fact]
@@ -43,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             context.Articles.RemoveRange(context.Articles);
             await context.SaveChangesAsync();
 
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = tag
@@ -54,7 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -87,7 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = tag
@@ -99,7 +105,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -129,7 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = tag
@@ -141,7 +147,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -168,7 +174,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = tag
@@ -180,7 +186,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-              .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -206,7 +212,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = tag
@@ -218,7 +224,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-              .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -244,7 +250,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = tag
@@ -255,7 +261,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-              .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -310,11 +316,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 }
             };
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-              .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -369,11 +375,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
-              .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -403,7 +409,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var firstTag = _tagFaker.Generate();
             var article = _articleFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = firstTag
@@ -435,10 +441,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // @TODO - Use fixture
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -467,7 +473,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var firstTag = _tagFaker.Generate();
             var article = _articleFaker.Generate();
-            var articleTag = new ArticleTag
+            var articleTag = new ArticleTag(context)
             {
                 Article = article,
                 Tag = firstTag
@@ -503,10 +509,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // @TODO - Use fixture
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -552,10 +558,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // @TODO - Use fixture
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 

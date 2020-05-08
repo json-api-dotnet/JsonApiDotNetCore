@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -12,6 +13,11 @@ namespace JsonApiDotNetCore.Middleware
 
         public void OnResultExecuting(ResultExecutingContext context)
         {
+            if (!context.HttpContext.IsJsonApiRequest())
+            {
+                return;
+            }
+
             if (context.Result is ObjectResult objectResult && objectResult.Value != null)
             {
                 return;

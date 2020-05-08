@@ -12,17 +12,15 @@ namespace JsonApiDotNetCore.Internal
     /// </summary>
     public class ResourceGraph : IResourceGraph
     {
-        internal List<ValidationResult> ValidationResults { get; }
         private List<ResourceContext> Resources { get; }
 
-        public ResourceGraph(List<ResourceContext> resources, List<ValidationResult> validationResults = null)
+        public ResourceGraph(List<ResourceContext> resources)
         {
             Resources = resources;
-            ValidationResults = validationResults;
         }
 
         /// <inheritdoc />
-        public ResourceContext[] GetResourceContexts() => Resources.ToArray();
+        public IEnumerable<ResourceContext> GetResourceContexts() => Resources;
         /// <inheritdoc />
         public ResourceContext GetResourceContext(string resourceName)
             => Resources.SingleOrDefault(e => e.ResourceName == resourceName);
@@ -68,7 +66,7 @@ namespace JsonApiDotNetCore.Internal
             if (relationship.InverseNavigation == null) return null;
             return GetResourceContext(relationship.RightType)
                             .Relationships
-                            .SingleOrDefault(r => r.InternalRelationshipName == relationship.InverseNavigation);
+                            .SingleOrDefault(r => r.PropertyInfo.Name == relationship.InverseNavigation);
         }
 
         private IEnumerable<IResourceField> Getter<T>(Expression<Func<T, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where T : IIdentifiable
@@ -90,7 +88,7 @@ namespace JsonApiDotNetCore.Internal
             {   // model => model.Field1
                 try
                 {
-                    targeted.Add(available.Single(f => f.ExposedInternalMemberName == memberExpression.Member.Name));
+                    targeted.Add(available.Single(f => f.PropertyName == memberExpression.Member.Name));
                     return targeted;
                 }
                 catch (InvalidOperationException)
@@ -111,7 +109,7 @@ namespace JsonApiDotNetCore.Internal
                     foreach (var member in newExpression.Members)
                     {
                         memberName = member.Name;
-                        targeted.Add(available.Single(f => f.ExposedInternalMemberName == memberName));
+                        targeted.Add(available.Single(f => f.PropertyName == memberName));
                     }
                     return targeted;
                 }

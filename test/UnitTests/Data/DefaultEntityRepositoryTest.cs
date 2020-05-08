@@ -5,8 +5,10 @@ using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Internal;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -65,9 +67,9 @@ namespace UnitTests.Data
             contextResolverMock.Setup(m => m.GetContext()).Returns(new Mock<DbContext>().Object);
             var resourceGraph = new Mock<IResourceGraph>();
             var targetedFields = new Mock<ITargetedFields>();
-            var repository = new DefaultResourceRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph.Object, null, NullLoggerFactory.Instance);
+            var resourceFactory = new DefaultResourceFactory(new ServiceContainer());
+            var repository = new DefaultResourceRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph.Object, null, resourceFactory, NullLoggerFactory.Instance);
             return repository;
         }
-
     }
 }

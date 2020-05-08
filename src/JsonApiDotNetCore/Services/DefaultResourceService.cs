@@ -32,6 +32,7 @@ namespace JsonApiDotNetCore.Services
         private readonly ISortService _sortService;
         private readonly IResourceRepository<TResource, TId> _repository;
         private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
+        private readonly IResourceFactory _resourceFactory;
         private readonly ILogger _logger;
         private readonly IResourceHookExecutor _hookExecutor;
         private readonly IIncludeService _includeService;
@@ -45,6 +46,7 @@ namespace JsonApiDotNetCore.Services
             IResourceRepository<TResource, TId> repository,
             IResourceContextProvider provider,
             IResourceChangeTracker<TResource> resourceChangeTracker,
+            IResourceFactory resourceFactory,
             IResourceHookExecutor hookExecutor = null)
         {
             _includeService = queryParameters.FirstOrDefault<IIncludeService>();
@@ -56,19 +58,19 @@ namespace JsonApiDotNetCore.Services
             _logger = loggerFactory.CreateLogger<DefaultResourceService<TResource, TId>>();
             _repository = repository;
             _resourceChangeTracker = resourceChangeTracker;
+            _resourceFactory = resourceFactory;
             _hookExecutor = hookExecutor;
             _currentRequestResource = provider.GetResourceContext<TResource>();
         }
 
         public virtual async Task<TResource> CreateAsync(TResource entity)
         {
-            _logger.LogTrace($"Entering {nameof(CreateAsync)}({(entity == null ? "null" : "object")}).");
+            _logger.LogTrace($"Entering {nameof(CreateAsync)}(object).");
             
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeCreate(AsList(entity), ResourcePipeline.Post).SingleOrDefault();
-            entity = await _repository.CreateAsync(entity);
+            await _repository.CreateAsync(entity);
 
-            if (_includeService.Get().Any())
-                entity = await GetWithRelationshipsAsync(entity.Id);
+            entity = await GetWithRelationshipsAsync(entity.Id);
 
             if (!IsNull(_hookExecutor, entity))
             {
@@ -82,18 +84,28 @@ namespace JsonApiDotNetCore.Services
         {
             _logger.LogTrace($"Entering {nameof(DeleteAsync)}('{id}').");
 
-            var entity = typeof(TResource).New<TResource>();
-            entity.Id = id;
-            if (!IsNull(_hookExecutor, entity)) _hookExecutor.BeforeDelete(AsList(entity), ResourcePipeline.Delete);
-            
-            var succeeded = await _repository.DeleteAsync(entity.Id);
+            if (!IsNull(_hookExecutor))
+            {
+                var entity = _resourceFactory.CreateInstance<TResource>();
+                entity.Id = id;
+
+                _hookExecutor.BeforeDelete(AsList(entity), ResourcePipeline.Delete);
+            }
+
+            var succeeded = await _repository.DeleteAsync(id);
             if (!succeeded)
             {
-                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                string resourceId = TypeHelper.GetResourceStringId<TResource, TId>(id, _resourceFactory);
                 throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
             }
 
-            if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterDelete(AsList(entity), ResourcePipeline.Delete, succeeded);
+            if (!IsNull(_hookExecutor))
+            {
+                var entity = _resourceFactory.CreateInstance<TResource>();
+                entity.Id = id;
+
+                _hookExecutor.AfterDelete(AsList(entity), ResourcePipeline.Delete, succeeded);
+            }
         }
         
         public virtual async Task<IEnumerable<TResource>> GetAsync()
@@ -137,7 +149,7 @@ namespace JsonApiDotNetCore.Services
 
             if (entity == null)
             {
-                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                string resourceId = TypeHelper.GetResourceStringId<TResource, TId>(id, _resourceFactory);
                 throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
             }
 
@@ -160,12 +172,12 @@ namespace JsonApiDotNetCore.Services
             // BeforeRead hook execution
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
 
-            var entityQuery = ApplyInclude(_repository.Get(id), chainPrefix: new List<RelationshipAttribute> { relationship });
+            var entityQuery = ApplyInclude(_repository.Get(id), relationship);
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
 
             if (entity == null)
             {
-                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                string resourceId = TypeHelper.GetResourceStringId<TResource, TId>(id, _resourceFactory);
                 throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
             }
 
@@ -195,7 +207,7 @@ namespace JsonApiDotNetCore.Services
             TResource databaseEntity = await _repository.Get(id).FirstOrDefaultAsync();
             if (databaseEntity == null)
             {
-                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                string resourceId = TypeHelper.GetResourceStringId<TResource, TId>(id, _resourceFactory);
                 throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
             }
 
@@ -231,7 +243,7 @@ namespace JsonApiDotNetCore.Services
 
             if (entity == null)
             {
-                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                string resourceId = TypeHelper.GetResourceStringId<TResource, TId>(id, _resourceFactory);
                 throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
             }
 
@@ -300,78 +312,92 @@ namespace JsonApiDotNetCore.Services
             return entities;
         }
 
-
         /// <summary>
         /// Applies include queries
         /// </summary>
-        protected virtual IQueryable<TResource> ApplyInclude(IQueryable<TResource> entities, IEnumerable<RelationshipAttribute> chainPrefix = null)
+        protected virtual IQueryable<TResource> ApplyInclude(IQueryable<TResource> entities, RelationshipAttribute chainPrefix = null)
         {
             var chains = _includeService.Get();
-            bool hasInclusionChain = chains.Any();
 
-            if (chains == null)
+            if (chainPrefix != null)
             {
-                throw new Exception();
+                chains.Add(new List<RelationshipAttribute>());
             }
 
-            if (chainPrefix != null && !hasInclusionChain)
+            foreach (var inclusionChain in chains)
             {
-               hasInclusionChain = true;
-               chains.Add(new List<RelationshipAttribute>());
-            }
-
-
-            if (hasInclusionChain)
-            {
-                foreach (var inclusionChain in chains)
+                if (chainPrefix != null)
                 {
-                    if (chainPrefix != null)
-                    {
-                        inclusionChain.InsertRange(0, chainPrefix);
-                    }
-                    entities = _repository.Include(entities, inclusionChain.ToArray());
+                    inclusionChain.Insert(0, chainPrefix);
                 }
+
+                entities = _repository.Include(entities, inclusionChain);
             }
 
             return entities;
         }
 
         /// <summary>
-        /// Applies sparse field selection queries
+        /// Applies sparse field selection to queries
         /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
         protected virtual IQueryable<TResource> ApplySelect(IQueryable<TResource> entities)
         {
-            var fields = _sparseFieldsService.Get();
-            if (fields != null && fields.Any())
-                entities = _repository.Select(entities, fields.ToArray());
+            var propertyNames = _sparseFieldsService.GetAll();
 
+            if (propertyNames.Any())
+            {
+                // All resources without a sparse fieldset specified must be entirely selected.
+                EnsureResourcesWithoutSparseFieldSetAreAddedToSelect(propertyNames);
+            }
+
+            entities = _repository.Select(entities, propertyNames);
             return entities;
+        }
+
+        private void EnsureResourcesWithoutSparseFieldSetAreAddedToSelect(ISet<string> propertyNames)
+        {
+            bool hasTopLevelSparseFieldSet = propertyNames.Any(x => !x.Contains("."));
+            if (!hasTopLevelSparseFieldSet)
+            {
+                var topPropertyNames = _currentRequestResource.Attributes
+                    .Where(x => x.PropertyInfo.SetMethod != null)
+                    .Select(x => x.PropertyInfo.Name);
+                propertyNames.AddRange(topPropertyNames);
+            }
+
+            var chains = _includeService.Get();
+            foreach (var inclusionChain in chains)
+            {
+                string relationshipPath = null;
+                foreach (var relationship in inclusionChain)
+                {
+                    relationshipPath = relationshipPath == null
+                        ? relationship.RelationshipPath
+                        : $"{relationshipPath}.{relationship.RelationshipPath}";
+                }
+
+                if (relationshipPath != null)
+                {
+                    bool hasRelationSparseFieldSet = propertyNames.Any(x => x.StartsWith(relationshipPath + "."));
+                    if (!hasRelationSparseFieldSet)
+                    {
+                        propertyNames.Add(relationshipPath);
+                    }
+                }
+            }
         }
 
         /// <summary>
         /// Get the specified id with relationships provided in the post request
         /// </summary>
-        /// <param name="id"></param>i
-        /// <returns></returns>
         private async Task<TResource> GetWithRelationshipsAsync(TId id)
         {
-            var sparseFieldset = _sparseFieldsService.Get();
-            var query = _repository.Select(_repository.Get(id), sparseFieldset.ToArray());
+            var query = _repository.Get(id);
+            query = ApplyInclude(query);
+            query = ApplySelect(query);
 
-            foreach (var chain in _includeService.Get())
-                query = _repository.Include(query, chain.ToArray());
-
-            TResource value;
-            // https://github.com/aspnet/EntityFrameworkCore/issues/6573
-            if (sparseFieldset.Any())
-                value = query.FirstOrDefault();
-            else
-                value = await _repository.FirstOrDefaultAsync(query);
-
-
-            return value;
+            var entity = await _repository.FirstOrDefaultAsync(query);
+            return entity;
         }
 
         private bool IsNull(params object[] values)
@@ -414,8 +440,9 @@ namespace JsonApiDotNetCore.Services
             IResourceRepository<TResource, int> repository,
             IResourceContextProvider provider,
             IResourceChangeTracker<TResource> resourceChangeTracker,
+            IResourceFactory resourceFactory,
             IResourceHookExecutor hookExecutor = null)
-            : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, hookExecutor)
+            : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, resourceFactory, hookExecutor)
         { }
     }
 }

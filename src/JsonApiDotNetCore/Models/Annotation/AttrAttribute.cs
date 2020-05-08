@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Models
             Capabilities = capabilities;
         }
 
-        public string ExposedInternalMemberName => PropertyInfo.Name;
+        string IResourceField.PropertyName => PropertyInfo.Name;
 
         /// <summary>
         /// The publicly exposed name of this json:api attribute.
@@ -79,7 +79,7 @@ namespace JsonApiDotNetCore.Models
         public AttrCapabilities Capabilities { get; internal set; }
 
         /// <summary>
-        /// Provides access to the property on which this attribute is applied.
+        /// The resource property that this attribute is declared on.
         /// </summary>
         public PropertyInfo PropertyInfo { get; internal set; }
 
@@ -91,10 +91,17 @@ namespace JsonApiDotNetCore.Models
         public object GetValue(object entity)
         {
             if (entity == null)
-                throw new InvalidOperationException("Cannot GetValue from null object.");
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
 
-            var prop = GetResourceProperty(entity);
-            return prop?.GetValue(entity);
+            var property = GetResourceProperty(entity);
+            if (property.GetMethod == null)
+            {
+                throw new InvalidOperationException($"Property '{property.DeclaringType?.Name}.{property.Name}' is write-only.");
+            }
+
+            return property.GetValue(entity);
         }
 
         /// <summary>
@@ -103,14 +110,19 @@ namespace JsonApiDotNetCore.Models
         public void SetValue(object entity, object newValue)
         {
             if (entity == null)
-                throw new InvalidOperationException("Cannot SetValue on null object.");
-
-            var prop = GetResourceProperty(entity);
-            if(prop != null)
             {
-                var convertedValue = TypeHelper.ConvertType(newValue, prop.PropertyType);
-                prop.SetValue(entity, convertedValue);
-            }            
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            var property = GetResourceProperty(entity);
+            if (property.SetMethod == null)
+            {
+                throw new InvalidOperationException(
+                    $"Property '{property.DeclaringType?.Name}.{property.Name}' is read-only.");
+            }
+
+            var convertedValue = TypeHelper.ConvertType(newValue, property.PropertyType);
+            property.SetValue(entity, convertedValue);
         }
 
         private PropertyInfo GetResourceProperty(object resource)

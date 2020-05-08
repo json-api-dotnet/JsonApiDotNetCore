@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Extensions;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,10 +13,9 @@ namespace JsonApiDotNetCore.Formatters
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
-            var contentTypeString = context.HttpContext.Request.ContentType;
-
-            return string.IsNullOrEmpty(contentTypeString) || contentTypeString == HeaderConstants.ContentType;
+            return context.HttpContext.IsJsonApiRequest();
         }
+
         public async Task WriteAsync(OutputFormatterWriteContext context)
         {
             var writer = context.HttpContext.RequestServices.GetService<IJsonApiWriter>();

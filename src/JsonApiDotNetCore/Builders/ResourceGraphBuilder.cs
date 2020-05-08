@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -18,20 +17,20 @@ namespace JsonApiDotNetCore.Builders
     public class ResourceGraphBuilder : IResourceGraphBuilder
     {
         private readonly IJsonApiOptions _options;
+        private readonly ILogger<ResourceGraphBuilder> _logger;
         private readonly List<ResourceContext> _resources = new List<ResourceContext>();
-        private readonly List<ValidationResult> _validationResults = new List<ValidationResult>();
 
-        public ResourceGraphBuilder(IJsonApiOptions options)
+        public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
             _options = options;
+            _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
         }
 
         /// <inheritdoc />
         public IResourceGraph Build()
         {
             _resources.ForEach(SetResourceLinksOptions);
-            var resourceGraph = new ResourceGraph(_resources, _validationResults);
-            return resourceGraph;
+            return new ResourceGraph(_resources);
         }
 
         private void SetResourceLinksOptions(ResourceContext resourceContext)
@@ -56,22 +55,25 @@ namespace JsonApiDotNetCore.Builders
         /// <inheritdoc />
         public IResourceGraphBuilder AddResource(Type resourceType, Type idType = null, string pluralizedTypeName = null)
         {
-            AssertEntityIsNotAlreadyDefined(resourceType);
-            if (resourceType.Implements<IIdentifiable>())
+            if (_resources.All(e => e.ResourceType != resourceType))
             {
-                pluralizedTypeName ??= FormatResourceName(resourceType);
-                idType ??= TypeLocator.GetIdType(resourceType);
-                _resources.Add(GetEntity(pluralizedTypeName, resourceType, idType));
-            }
-            else
-            {
-                _validationResults.Add(new ValidationResult(LogLevel.Warning, $"{resourceType} does not implement 'IIdentifiable<>'. "));
+                if (resourceType.IsOrImplementsInterface(typeof(IIdentifiable)))
+                {
+                    pluralizedTypeName ??= FormatResourceName(resourceType);
+                    idType ??= TypeLocator.GetIdType(resourceType);
+                    var resourceContext = CreateResourceContext(pluralizedTypeName, resourceType, idType);
+                    _resources.Add(resourceContext);
+                }
+                else
+                {
+                    _logger.LogWarning($"Entity '{resourceType}' does not implement '{nameof(IIdentifiable)}'.");
+                }
             }
 
             return this;
         }
 
-        private ResourceContext GetEntity(string pluralizedTypeName, Type entityType, Type idType) => new ResourceContext
+        private ResourceContext CreateResourceContext(string pluralizedTypeName, Type entityType, Type idType) => new ResourceContext
         {
             ResourceName = pluralizedTypeName,
             ResourceType = entityType,
@@ -130,58 +132,73 @@ namespace JsonApiDotNetCore.Builders
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
                 if (attribute == null) continue;
 
+                attribute.PropertyInfo = prop;
                 attribute.PublicRelationshipName ??= FormatPropertyName(prop);
-                attribute.InternalRelationshipName = prop.Name;
                 attribute.RightType = GetRelationshipType(attribute, prop);
                 attribute.LeftType = entityType;
                 attributes.Add(attribute);
 
                 if (attribute is HasManyThroughAttribute hasManyThroughAttribute)
                 {
-                    var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.InternalThroughName);
+                    var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.ThroughPropertyName);
                     if (throughProperty == null)
-                        throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Type does not contain a property named '{hasManyThroughAttribute.InternalThroughName}'.");
+                        throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.PropertyInfo.Name}': Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
 
-                    if (throughProperty.PropertyType.Implements<IList>() == false)
-                        throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}.{throughProperty.Name}'. Property type does not implement IList.");
+                    var throughType = TryGetThroughType(throughProperty);
+                    if (throughType == null)
+                        throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.PropertyInfo.Name}': Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
 
-                    // assumption: the property should be a generic collection, e.g. List<ArticleTag>
-                    if (throughProperty.PropertyType.IsGenericType == false)
-                        throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Expected through entity to be a generic type, such as List<{prop.PropertyType}>.");
-
-                    // Article → List<ArticleTag>
+                    // ICollection<ArticleTag>
                     hasManyThroughAttribute.ThroughProperty = throughProperty;
 
                     // ArticleTag
-                    hasManyThroughAttribute.ThroughType = throughProperty.PropertyType.GetGenericArguments()[0];
+                    hasManyThroughAttribute.ThroughType = throughType;
 
-                    var throughProperties = hasManyThroughAttribute.ThroughType.GetProperties();
+                    var throughProperties = throughType.GetProperties();
 
                     // ArticleTag.Article
                     hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType == entityType)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {entityType}");
+                        ?? throw new JsonApiSetupException($"{throughType} does not contain a navigation property to type {entityType}");
 
                     // ArticleTag.ArticleId
                     var leftIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.LeftProperty.Name);
                     hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(x => x.Name == leftIdPropertyName)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {entityType} with name {leftIdPropertyName}");
+                        ?? throw new JsonApiSetupException($"{throughType} does not contain a relationship id property to type {entityType} with name {leftIdPropertyName}");
 
-                    // Article → ArticleTag.Tag
+                    // ArticleTag.Tag
                     hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.RightType)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {hasManyThroughAttribute.RightType}");
+                        ?? throw new JsonApiSetupException($"{throughType} does not contain a navigation property to type {hasManyThroughAttribute.RightType}");
 
                     // ArticleTag.TagId
                     var rightIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.RightProperty.Name);
                     hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {hasManyThroughAttribute.RightType} with name {rightIdPropertyName}");
+                        ?? throw new JsonApiSetupException($"{throughType} does not contain a relationship id property to type {hasManyThroughAttribute.RightType} with name {rightIdPropertyName}");
                 }
             }
 
             return attributes;
         }
 
+        private static Type TryGetThroughType(PropertyInfo throughProperty)
+        {
+            if (throughProperty.PropertyType.IsGenericType)
+            {
+                var typeArguments = throughProperty.PropertyType.GetGenericArguments();
+                if (typeArguments.Length == 1)
+                {
+                    var constructedThroughType = typeof(ICollection<>).MakeGenericType(typeArguments[0]);
+                    if (throughProperty.PropertyType.IsOrImplementsInterface(constructedThroughType))
+                    {
+                        return typeArguments[0];
+                    }
+                }
+            }
+
+            return null;
+        }
+
         protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop) =>
-            relation.IsHasMany ? prop.PropertyType.GetGenericArguments()[0] : prop.PropertyType;
+            relation is HasOneAttribute ? prop.PropertyType : prop.PropertyType.GetGenericArguments()[0];
 
         private List<EagerLoadAttribute> GetEagerLoads(Type entityType, int recursionDepth = 0)
         {
@@ -217,12 +234,6 @@ namespace JsonApiDotNetCore.Builders
         }
 
         private Type GetResourceDefinitionType(Type entityType) => typeof(ResourceDefinition<>).MakeGenericType(entityType);
-
-        private void AssertEntityIsNotAlreadyDefined(Type entityType)
-        {
-            if (_resources.Any(e => e.ResourceType == entityType))
-                throw new InvalidOperationException($"Cannot add entity type {entityType} to context resourceGraph, there is already an entity of that type configured.");
-        }
 
         private string FormatResourceName(Type resourceType)
         {

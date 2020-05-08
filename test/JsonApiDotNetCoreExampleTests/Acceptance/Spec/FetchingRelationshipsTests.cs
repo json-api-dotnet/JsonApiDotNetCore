@@ -18,10 +18,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public sealed class FetchingRelationshipsTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
         private readonly Faker<TodoItem> _todoItemFaker;
 
-        public FetchingRelationshipsTests(TestFixture<Startup> fixture)
+        public FetchingRelationshipsTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var route = $"/api/v1/todoItems/{todoItem.Id}/owner";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/owner";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -105,7 +105,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var route = $"/api/v1/todoItems/{todoItem.Id}/childrenTodos";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -135,7 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/childrenTodos";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -158,7 +158,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var route = "/api/v1/todoItems/99999999/owner";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -182,7 +182,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var route = "/api/v1/todoItems/99999999/relationships/owner";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -212,7 +212,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var route = $"/api/v1/todoItems/{todoItem.Id}/invalid";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -242,7 +242,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/invalid";
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);

@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Models
 {
     /// <summary>
     /// Create a HasMany relationship through a many-to-many join relationship.
-    /// This type can only be applied on types that implement IList.
+    /// This type can only be applied on types that implement ICollection.
     /// </summary>
     /// 
     /// <example>
@@ -22,8 +22,8 @@ namespace JsonApiDotNetCore.Models
     /// <code>
     /// [NotMapped]
     /// [HasManyThrough("tags", nameof(ArticleTags))]
-    /// public List&lt;Tag&gt; Tags { get; set; }
-    /// public List&lt;ArticleTag&gt; ArticleTags { get; set; }
+    /// public ICollection&lt;Tag&gt; Tags { get; set; }
+    /// public ICollection&lt;ArticleTag&gt; ArticleTags { get; set; }
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
@@ -34,19 +34,19 @@ namespace JsonApiDotNetCore.Models
         /// The public name exposed through the API will be based on the configured convention.
         /// </summary>
         /// 
-        /// <param name="internalThroughName">The name of the navigation property that will be used to get the HasMany relationship</param>
+        /// <param name="throughPropertyName">The name of the navigation property that will be used to get the HasMany relationship</param>
         /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// 
         /// <example>
         /// <code>
-        /// [HasManyThrough(nameof(ArticleTags), documentLinks: Link.All, canInclude: true)]
+        /// [HasManyThrough(nameof(ArticleTags), relationshipLinks: Link.All, canInclude: true)]
         /// </code>
         /// </example>
-        public HasManyThroughAttribute(string internalThroughName, Link relationshipLinks = Link.All, bool canInclude = true)
+        public HasManyThroughAttribute(string throughPropertyName, Link relationshipLinks = Link.All, bool canInclude = true)
         : base(null, relationshipLinks, canInclude)
         {
-            InternalThroughName = internalThroughName;
+            ThroughPropertyName = throughPropertyName;
         }
 
         /// <summary>
@@ -54,58 +54,41 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         /// 
         /// <param name="publicName">The relationship name as exposed by the API</param>
-        /// <param name="internalThroughName">The name of the navigation property that will be used to get the HasMany relationship</param>
-        /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
+        /// <param name="throughPropertyName">The name of the navigation property that will be used to get the HasMany relationship</param>
+        /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// 
         /// <example>
         /// <code>
-        /// [HasManyThrough("tags", nameof(ArticleTags), documentLinks: Link.All, canInclude: true)]
+        /// [HasManyThrough("tags", nameof(ArticleTags), relationshipLinks: Link.All, canInclude: true)]
         /// </code>
         /// </example>
-        public HasManyThroughAttribute(string publicName, string internalThroughName, Link documentLinks = Link.All, bool canInclude = true)
-        : base(publicName, documentLinks, canInclude)
+        public HasManyThroughAttribute(string publicName, string throughPropertyName, Link relationshipLinks = Link.All, bool canInclude = true)
+        : base(publicName, relationshipLinks, canInclude)
         {
-            InternalThroughName = internalThroughName;
+            ThroughPropertyName = throughPropertyName;
         }
 
         /// <summary>
-        /// Traverses the through the provided entity and returns the 
+        /// Traverses through the provided entity and returns the 
         /// value of the relationship on the other side of a join entity
         /// (e.g. Articles.ArticleTags.Tag).
         /// </summary>
         public override object GetValue(object entity)
         {
-            var throughNavigationProperty = entity.GetType()
-                .GetProperties()
-                .SingleOrDefault(p => p.Name == InternalThroughName);
+            IEnumerable joinEntities = (IEnumerable)ThroughProperty.GetValue(entity) ?? Array.Empty<object>();
 
-            var throughEntities = throughNavigationProperty.GetValue(entity);
+            IEnumerable<object> rightEntities = joinEntities
+                .Cast<object>()
+                .Select(rightEntity =>  RightProperty.GetValue(rightEntity));
 
-            if (throughEntities == null)
-                // return an empty list for the right-type of the property.
-                return TypeHelper.CreateListFor(RightType);
-
-            // the right entities are included on the navigation/through entities. Extract and return them.
-            var rightEntities = new List<IIdentifiable>();
-            foreach (var rightEntity in (IList)throughEntities)
-                rightEntities.Add((IIdentifiable)RightProperty.GetValue(rightEntity));
-
-            return rightEntities.Cast(RightType);
+            return rightEntities.CopyToTypedCollection(PropertyInfo.PropertyType);
         }
 
-
-        /// <summary>
-        /// Sets the value of the property identified by this attribute
-        /// </summary>
-        /// <param name="entity">The target object</param>
-        /// <param name="newValue">The new property value</param>
-        public override void SetValue(object entity, object newValue)
+        /// <inheritdoc />
+        public override void SetValue(object entity, object newValue, IResourceFactory resourceFactory)
         {
-            var propertyInfo = entity
-                .GetType()
-                .GetProperty(InternalRelationshipName);
-            propertyInfo.SetValue(entity, newValue);
+            base.SetValue(entity, newValue, resourceFactory);
 
             if (newValue == null)
             {
@@ -113,16 +96,17 @@ namespace JsonApiDotNetCore.Models
             }
             else
             {
-                var throughRelationshipCollection = ThroughProperty.PropertyType.New<IList>();
-                ThroughProperty.SetValue(entity, throughRelationshipCollection);
-
-                foreach (IIdentifiable pointer in (IList)newValue)
+                List<object> joinEntities = new List<object>();
+                foreach (IIdentifiable resource in (IEnumerable)newValue)
                 {
-                    var throughInstance = ThroughType.New();
-                    LeftProperty.SetValue(throughInstance, entity);
-                    RightProperty.SetValue(throughInstance, pointer);
-                    throughRelationshipCollection.Add(throughInstance);
+                    object joinEntity = resourceFactory.CreateInstance(ThroughType);
+                    LeftProperty.SetValue(joinEntity, entity);
+                    RightProperty.SetValue(joinEntity, resource);
+                    joinEntities.Add(joinEntity);
                 }
+
+                var typedCollection = joinEntities.CopyToTypedCollection(ThroughProperty.PropertyType);
+                ThroughProperty.SetValue(entity, typedCollection);
             }
         }
 
@@ -133,7 +117,7 @@ namespace JsonApiDotNetCore.Models
         /// In the `[HasManyThrough("tags", nameof(ArticleTags))]` example
         /// this would be "ArticleTags".
         /// </example>
-        public string InternalThroughName { get; }
+        internal string ThroughPropertyName { get; }
 
         /// <summary>
         /// The join type.
@@ -213,7 +197,7 @@ namespace JsonApiDotNetCore.Models
         /// this would point to the `Article.ArticleTags` property
         ///
         /// <code>
-        /// public List&lt;ArticleTags&gt; ArticleTags { get; set; }
+        /// public ICollection&lt;ArticleTags&gt; ArticleTags { get; set; }
         /// </code>
         ///
         /// </example>
@@ -223,6 +207,6 @@ namespace JsonApiDotNetCore.Models
         /// <example>
         /// "ArticleTags.Tag"
         /// </example>
-        public override string RelationshipPath => $"{InternalThroughName}.{RightProperty.Name}";
+        public override string RelationshipPath => $"{ThroughProperty.Name}.{RightProperty.Name}";
     }
 }

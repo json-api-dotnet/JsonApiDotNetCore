@@ -11,24 +11,19 @@ namespace JsonApiDotNetCore.Internal
 {
     internal static class TypeHelper
     {
-        private static bool IsNullable(Type type)
-        {
-            return (!type.IsValueType || Nullable.GetUnderlyingType(type) != null);
-        }
-
         public static object ConvertType(object value, Type type)
         {
-            if (value == null && !IsNullable(type))
+            if (value == null && !CanBeNull(type))
                 throw new FormatException("Cannot convert null to a non-nullable type");
 
             if (value == null)
                 return null;
 
-            Type typeOfValue = value.GetType();
+            Type runtimeType = value.GetType();
 
             try
             {
-                if (typeOfValue == type || type.IsAssignableFrom(typeOfValue))
+                if (runtimeType == type || type.IsAssignableFrom(runtimeType))
                     return value;
 
                 type = Nullable.GetUnderlyingType(type) ?? type;
@@ -44,7 +39,6 @@ namespace JsonApiDotNetCore.Internal
                 if (type == typeof(DateTimeOffset))
                     return DateTimeOffset.Parse(stringValue);
 
-
                 if (type == typeof(TimeSpan))
                     return TimeSpan.Parse(stringValue);
 
@@ -53,23 +47,35 @@ namespace JsonApiDotNetCore.Internal
 
                 return Convert.ChangeType(stringValue, type);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                throw new FormatException($"{typeOfValue} cannot be converted to {type}", e);
+                throw new FormatException($"Failed to convert '{value}' of type '{runtimeType}' to type '{type}'.", exception);
             }
+        }
+
+        private static bool CanBeNull(Type type)
+        {
+            return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
         }
 
         internal static object GetDefaultValue(this Type type)
         {
-            return type.IsValueType ? type.New() : null;
+            return type.IsValueType ? CreateInstance(type) : null;
         }
 
-        public static Type GetTypeOfList(Type type)
+        public static Type TryGetCollectionElementType(Type type)
         {
-            if (type != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+            if (type != null)
             {
-                return type.GetGenericArguments()[0];
+                if (type.IsGenericType && type.GenericTypeArguments.Length == 1)
+                {
+                    if (type.IsOrImplementsInterface(typeof(IEnumerable)))
+                    {
+                        return type.GenericTypeArguments[0];
+                    }
+                }
             }
+
             return null;
         }
 
@@ -106,23 +112,6 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <summary>
-        /// Convert collection of query string params to Collection of concrete Type
-        /// </summary>
-        /// <param name="values">Collection like ["10","20","30"]</param>
-        /// <param name="type">Non array type. For e.g. int</param>
-        /// <returns>Collection of concrete type</returns>
-        public static IList ConvertListType(IEnumerable<string> values, Type type)
-        {
-            var list = CreateListFor(type);
-            foreach (var value in values)
-            {
-                list.Add(ConvertType(value, type));
-            }
-
-            return list;
-        }
-
-        /// <summary>
         /// Creates an instance of the specified generic type
         /// </summary>
         /// <returns>The instance of the parameterized generic type</returns>
@@ -154,18 +143,6 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <summary>
-        /// Use this overload if you need to instantiate a type that has a internal constructor
-        /// </summary>
-        private static object CreateInstanceOfOpenType(Type openType, Type[] parameters, bool hasInternalConstructor, params object[] constructorArguments)
-        {
-            if (!hasInternalConstructor) return CreateInstanceOfOpenType(openType, parameters, constructorArguments);
-            var parameterizedType = openType.MakeGenericType(parameters);
-            // note that if for whatever reason the constructor of AffectedResource is set from
-            // internal to public, this will throw an error, as it is looking for a no
-            return Activator.CreateInstance(parameterizedType, BindingFlags.NonPublic | BindingFlags.Instance, null, constructorArguments, null);
-        }
-
-        /// <summary>
         /// Creates an instance of the specified generic type
         /// </summary>
         /// <returns>The instance of the parameterized generic type</returns>
@@ -182,8 +159,12 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, bool hasInternalConstructor, params object[] constructorArguments)
         {
-            return CreateInstanceOfOpenType(openType, new[] { parameter }, hasInternalConstructor, constructorArguments);
-
+            Type[] parameters = { parameter };
+            if (!hasInternalConstructor) return CreateInstanceOfOpenType(openType, parameters, constructorArguments);
+            var parameterizedType = openType.MakeGenericType(parameters);
+            // note that if for whatever reason the constructor of AffectedResource is set from
+            // internal to public, this will throw an error, as it is looking for a no
+            return Activator.CreateInstance(parameterizedType, BindingFlags.NonPublic | BindingFlags.Instance, null, constructorArguments, null);
         }
 
         /// <summary>
@@ -193,8 +174,7 @@ namespace JsonApiDotNetCore.Internal
         /// <param name="type">The target type</param>
         public static IList CreateListFor(Type type)
         {
-            IList list = (IList)CreateInstanceOfOpenType(typeof(List<>), type);
-            return list;
+            return (IList)CreateInstanceOfOpenType(typeof(List<>), type);
         }
 
         /// <summary>
@@ -206,31 +186,71 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <summary>
-        /// Gets the generic argument T of List{T}
+        /// Returns a compatible collection type that can be instantiated, for example IList{Article} -> List{Article} or ISet{Article} -> HashSet{Article}
         /// </summary>
-        /// <returns>The type of the list</returns>
-        /// <param name="list">The list to be inspected</param>
-        public static Type GetListInnerType(IEnumerable list)
+        public static Type ToConcreteCollectionType(this Type collectionType)
         {
-            return list.GetType().GetGenericArguments()[0];
+            if (collectionType.IsInterface && collectionType.IsGenericType)
+            {
+                var genericTypeDefinition = collectionType.GetGenericTypeDefinition();
+
+                if (genericTypeDefinition == typeof(ICollection<>) || genericTypeDefinition == typeof(ISet<>) ||
+                    genericTypeDefinition == typeof(IEnumerable<>) || genericTypeDefinition == typeof(IReadOnlyCollection<>))
+                {
+                    return typeof(HashSet<>).MakeGenericType(collectionType.GenericTypeArguments[0]);
+                }
+
+                if (genericTypeDefinition == typeof(IList<>) || genericTypeDefinition == typeof(IReadOnlyList<>))
+                {
+                    return typeof(List<>).MakeGenericType(collectionType.GenericTypeArguments[0]);
+                }
+            }
+
+            return collectionType;
         }
 
         /// <summary>
         /// Gets the type (Guid or int) of the Id of a type that implements IIdentifiable
         /// </summary>
-        public static Type GetIdentifierType(Type entityType)
+        public static Type GetIdType(Type resourceType)
         {
-            var property = entityType.GetProperty("Id");
-            if (property == null) throw new ArgumentException("Type does not have a property Id");
-            return entityType.GetProperty("Id").PropertyType;
+            var property = resourceType.GetProperty(nameof(Identifiable.Id));
+            if (property == null) throw new ArgumentException("Type does not have 'Id' property.");
+            return property.PropertyType;
         }
 
-        /// <summary>
-        /// Gets the type (Guid or int) of the Id of a type that implements IIdentifiable
-        /// </summary>
-        public static Type GetIdentifierType<T>() where T : IIdentifiable
+        public static object CreateInstance(Type type)
         {
-            return typeof(T).GetProperty("Id").PropertyType;
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            
+            try
+            {
+                return Activator.CreateInstance(type);
+            }
+            catch (Exception exception)
+            {
+                throw new InvalidOperationException($"Failed to create an instance of '{type.FullName}' using its default constructor.", exception);
+            }
+        }
+
+        public static object ConvertStringIdToTypedId(Type resourceType, string stringId, IResourceFactory resourceFactory)
+        {
+            var tempResource = (IIdentifiable)resourceFactory.CreateInstance(resourceType);
+            tempResource.StringId = stringId;
+            return GetResourceTypedId(tempResource);
+        }
+
+        public static object GetResourceTypedId(IIdentifiable resource)
+        {
+            PropertyInfo property = resource.GetType().GetProperty(nameof(Identifiable.Id));
+            return property.GetValue(resource);
+        }
+
+        public static string GetResourceStringId<TResource, TId>(TId id, IResourceFactory resourceFactory) where TResource : class, IIdentifiable<TId>
+        {
+            TResource tempResource = resourceFactory.CreateInstance<TResource>();
+            tempResource.Id = id;
+            return tempResource.StringId;
         }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using BenchmarkDotNet.Attributes;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers;
 using JsonApiDotNetCore.Query;

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +15,7 @@ namespace JsonApiDotNetCore.Controllers
 
         protected IActionResult Error(IEnumerable<Error> errors)
         {
-            var document = new ErrorDocument(errors.ToList());
+            var document = new ErrorDocument(errors);
 
             return new ObjectResult(document)
             {

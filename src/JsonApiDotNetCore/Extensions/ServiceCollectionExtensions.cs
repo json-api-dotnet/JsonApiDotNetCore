@@ -2,39 +2,58 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Contracts;
+using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCore.Extensions
+namespace JsonApiDotNetCore
 {
-    // ReSharper disable once InconsistentNaming
-    public static class IServiceCollectionExtensions
+    public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Enabling JsonApiDotNetCore using manual declaration to build the ResourceGraph.
+        /// Configures JsonApiDotNetCore by registering resources manually.
         /// </summary>
         public static IServiceCollection AddJsonApi(this IServiceCollection services,
-                                                    Action<JsonApiOptions> options = null,
-                                                    Action<IServiceDiscoveryFacade> discovery = null,
-                                                    Action<IResourceGraphBuilder> resources = null,
-                                                    IMvcCoreBuilder mvcBuilder = null)
+            Action<JsonApiOptions> options = null,
+            Action<IServiceDiscoveryFacade> discovery = null,
+            Action<IResourceGraphBuilder> resources = null,
+            IMvcCoreBuilder mvcBuilder = null)
         {
-            var application = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
-            if (options != null)
-                application.ConfigureJsonApiOptions(options);
-            application.ConfigureMvc();
-            if (discovery != null)
-                application.AutoDiscover(discovery);
-            if (resources != null)
-                application.ConfigureResources(resources);
-            application.ConfigureServices();
+            SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, null);
             return services;
+        }
+
+        /// <summary>
+        /// Configures JsonApiDotNetCore by registering resources from an Entity Framework Core model.
+        /// </summary>
+        public static IServiceCollection AddJsonApi<TDbContext>(this IServiceCollection services,
+            Action<JsonApiOptions> options = null,
+            Action<IServiceDiscoveryFacade> discovery = null,
+            Action<IResourceGraphBuilder> resources = null,
+            IMvcCoreBuilder mvcBuilder = null)
+            where TDbContext : DbContext
+        {
+            SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, typeof(TDbContext));
+            return services;
+        }
+
+        private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> options,
+            Action<IServiceDiscoveryFacade> discovery,
+            Action<IResourceGraphBuilder> resources, IMvcCoreBuilder mvcBuilder, Type dbContextType)
+        {
+            var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
+
+            applicationBuilder.ConfigureJsonApiOptions(options);
+            applicationBuilder.ConfigureMvc(dbContextType);
+            applicationBuilder.AutoDiscover(discovery);
+            applicationBuilder.ConfigureResources(resources);
+            applicationBuilder.ConfigureServices();
         }
 
         /// <summary>
@@ -72,7 +91,7 @@ namespace JsonApiDotNetCore.Extensions
                 {
                     // A shorthand interface is one where the id type is omitted
                     // e.g. IResourceService<T> is the shorthand for IResourceService<T, TId>
-                    var isShorthandInterface = (openGenericType.GetTypeInfo().GenericTypeParameters.Length == 1);
+                    var isShorthandInterface = openGenericType.GetTypeInfo().GenericTypeParameters.Length == 1;
                     if (isShorthandInterface && resourceDescriptor.IdType != typeof(int))
                         continue; // we can't create a shorthand for id types other than int
 

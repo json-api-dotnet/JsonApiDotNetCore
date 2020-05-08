@@ -11,8 +11,7 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Extensions
 {
-    // ReSharper disable once InconsistentNaming
-    public static class IQueryableExtensions
+    public static class QueryableExtensions
     {
         private static MethodInfo _containsMethod;
         private static MethodInfo ContainsMethod
@@ -64,8 +63,10 @@ namespace JsonApiDotNetCore.Extensions
             return CallGenericWhereMethod(source, filterQuery);
         }
 
-        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, IEnumerable<AttrAttribute> columns)
-            => CallGenericSelectMethod(source, columns.Select(attr => attr.PropertyInfo.Name).ToList());
+        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, IEnumerable<string> columns, IResourceFactory resourceFactory)
+        {
+            return columns == null || !columns.Any() ? source : CallGenericSelectMethod(source, columns, resourceFactory);
+        }
 
         public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQueryContext sortQuery)
         {
@@ -198,15 +199,15 @@ namespace JsonApiDotNetCore.Extensions
             MemberExpression member;
             if (filter.IsAttributeOfRelationship)
             {
-                var relation = Expression.PropertyOrField(entity, filter.Relationship.InternalRelationshipName);
+                var relation = Expression.PropertyOrField(entity, filter.Relationship.PropertyInfo.Name);
                 member = Expression.Property(relation, filter.Attribute.PropertyInfo.Name);
             }
             else
                 member = Expression.Property(entity, filter.Attribute.PropertyInfo.Name);
 
             var method = ContainsMethod.MakeGenericMethod(member.Type);
-            
             var list = TypeHelper.CreateListFor(member.Type);
+
             foreach (var value in propertyValues)
             {
                 object targetType;
@@ -262,16 +263,16 @@ namespace JsonApiDotNetCore.Extensions
             // Is relationship attribute
             if (filter.IsAttributeOfRelationship)
             {
-                var relationProperty = concreteType.GetProperty(filter.Relationship.InternalRelationshipName);
+                var relationProperty = concreteType.GetProperty(filter.Relationship.PropertyInfo.Name);
                 if (relationProperty == null)
-                    throw new ArgumentException($"'{filter.Relationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
+                    throw new ArgumentException($"'{filter.Relationship.PropertyInfo.Name}' is not a valid relationship of '{concreteType}'");
 
                 var relatedType = filter.Relationship.RightType;
                 property = relatedType.GetProperty(filter.Attribute.PropertyInfo.Name);
                 if (property == null)
-                    throw new ArgumentException($"'{filter.Attribute.PropertyInfo.Name}' is not a valid attribute of '{filter.Relationship.InternalRelationshipName}'");
+                    throw new ArgumentException($"'{filter.Attribute.PropertyInfo.Name}' is not a valid attribute of '{filter.Relationship.PropertyInfo.Name}'");
 
-                var leftRelationship = Expression.PropertyOrField(parameter, filter.Relationship.InternalRelationshipName);
+                var leftRelationship = Expression.PropertyOrField(parameter, filter.Relationship.PropertyInfo.Name);
                 // {model.Relationship}
                 left = Expression.PropertyOrField(leftRelationship, property.Name);
             }
@@ -339,26 +340,28 @@ namespace JsonApiDotNetCore.Extensions
             return Expression.Property(tupleCreateCall, "Item1");
         }
 
-        private static IQueryable<TSource> CallGenericSelectMethod<TSource>(IQueryable<TSource> source, List<string> columns)
+        private static IQueryable<TSource> CallGenericSelectMethod<TSource>(IQueryable<TSource> source, IEnumerable<string> columns, IResourceFactory resourceFactory)
         {
             var sourceType = typeof(TSource);
             var parameter = Expression.Parameter(source.ElementType, "x");
-            var sourceProperties = new List<string>();
+            var sourceProperties = new HashSet<string>();
 
             // Store all property names to it's own related property (name as key)
-            var nestedTypesAndProperties = new Dictionary<string, List<string>>();
+            var nestedTypesAndProperties = new Dictionary<string, HashSet<string>>();
             foreach (var column in columns)
             {
                 var props = column.Split('.');
                 if (props.Length > 1) // Nested property
                 {
                     if (nestedTypesAndProperties.TryGetValue(props[0], out var properties) == false)
-                        nestedTypesAndProperties.Add(props[0], new List<string> { nameof(Identifiable.Id), props[1] });
+                        nestedTypesAndProperties.Add(props[0], new HashSet<string> { nameof(Identifiable.Id), props[1] });
                     else
                         properties.Add(props[1]);
                 }
                 else
+                {
                     sourceProperties.Add(props[0]);
+                }
             }
 
             // Bind attributes on TSource
@@ -374,15 +377,14 @@ namespace JsonApiDotNetCore.Extensions
                 Expression bindExpression;
                 if (nestedPropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(nestedPropertyType))
                 {
-                    // Concrete type of Collection
-                    var singleType = nestedPropertyType.GetGenericArguments().Single();
+                    var collectionElementType = nestedPropertyType.GetGenericArguments().Single();
                     // {y}
-                    var nestedParameter = Expression.Parameter(singleType, "y");
+                    var nestedParameter = Expression.Parameter(collectionElementType, "y");
                     nestedBindings = item.Value.Select(prop => Expression.Bind(
-                        singleType.GetProperty(prop), Expression.PropertyOrField(nestedParameter, prop))).ToList();
+                        collectionElementType.GetProperty(prop), Expression.PropertyOrField(nestedParameter, prop))).ToList();
 
                     // { new Item() }
-                    var newNestedExp = Expression.New(singleType);
+                    var newNestedExp = resourceFactory.CreateNewExpression(collectionElementType);
                     var initNestedExp = Expression.MemberInit(newNestedExp, nestedBindings);
                     // { y => new Item() {Id = y.Id, Name = y.Name}}
                     var body = Expression.Lambda(initNestedExp, nestedParameter);
@@ -392,15 +394,15 @@ namespace JsonApiDotNetCore.Extensions
                     Expression selectMethod = Expression.Call(
                         typeof(Enumerable),
                         "Select",
-                        new[] { singleType, singleType },
+                        new[] { collectionElementType, collectionElementType },
                         propertyExpression, body);
 
-                    // { x.Items.Select(y => new Item() {Id = y.Id, Name = y.Name}).ToList() }
-                    bindExpression = Expression.Call(
-                         typeof(Enumerable),
-                         "ToList",
-                         new[] { singleType },
-                         selectMethod);
+                    var enumerableOfElementType = typeof(IEnumerable<>).MakeGenericType(collectionElementType);
+                    var typedCollection = nestedPropertyType.ToConcreteCollectionType();
+                    var typedCollectionConstructor = typedCollection.GetConstructor(new[] {enumerableOfElementType});
+
+                    // { new HashSet<Item>(x.Items.Select(y => new Item() {Id = y.Id, Name = y.Name})) }
+                    bindExpression = Expression.New(typedCollectionConstructor, selectMethod);
                 }
                 // [HasOne] attribute
                 else
@@ -415,7 +417,7 @@ namespace JsonApiDotNetCore.Extensions
                         nestedBindings.Add(Expression.Bind(propInfo, nestedBody));
                     }
                     // { new Owner() }
-                    var newExp = Expression.New(nestedPropertyType);
+                    var newExp = resourceFactory.CreateNewExpression(nestedPropertyType);
                     // { new Owner() { Id = x.Owner.Id, Name = x.Owner.Name }}
                     var newInit = Expression.MemberInit(newExp, nestedBindings);
 
@@ -432,7 +434,8 @@ namespace JsonApiDotNetCore.Extensions
                 nestedBindings.Clear();
             }
 
-            var sourceInit = Expression.MemberInit(Expression.New(sourceType), sourceBindings);
+            var newExpression = resourceFactory.CreateNewExpression(sourceType);
+            var sourceInit = Expression.MemberInit(newExpression, sourceBindings);
             var finalBody = Expression.Lambda(sourceInit, parameter);
 
             return source.Provider.CreateQuery<TSource>(Expression.Call(

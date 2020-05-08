@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
@@ -21,11 +21,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
     [Collection("WebHostCollection")]
     public sealed class CustomControllerTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
 
-        public CustomControllerTests(TestFixture<Startup> fixture)
+        public CustomControllerTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         {
             // Arrange
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "testValues";
 
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         {
             // Arrange
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/custom/route/todoItems";
 
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             await context.SaveChangesAsync();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = $"/custom/route/todoItems/{todoItem.Id}";
 
@@ -114,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = $"/custom/route/todoItems/{todoItem.Id}";
 
@@ -139,7 +139,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         public async Task ApiController_attribute_transforms_NotFound_action_result_without_arguments_into_ProblemDetails()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var route = "/custom/route/todoItems/99999999";
 
             var requestBody = new
@@ -160,7 +160,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Patch, route) {Content = new StringContent(content)};
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.ContentType);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await client.SendAsync(request);

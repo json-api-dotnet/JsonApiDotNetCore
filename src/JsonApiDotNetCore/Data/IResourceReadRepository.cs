@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Data
         /// <summary>
         /// Apply fields to the provided queryable
         /// </summary>
-        IQueryable<TResource> Select(IQueryable<TResource> entities, IEnumerable<AttrAttribute> fields);
+        IQueryable<TResource> Select(IQueryable<TResource> entities, IEnumerable<string> propertyNames);
         /// <summary>
         /// Include a relationship in the query
         /// </summary>

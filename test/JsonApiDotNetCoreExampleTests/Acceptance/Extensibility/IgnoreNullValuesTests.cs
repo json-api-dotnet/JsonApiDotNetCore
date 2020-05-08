@@ -21,15 +21,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         private readonly AppDbContext _dbContext;
         private readonly TodoItem _todoItem;
 
-        public IgnoreNullValuesTests(TestFixture<Startup> fixture)
+        public IgnoreNullValuesTests(TestFixture<TestStartup> fixture)
         {
             _dbContext = fixture.GetService<AppDbContext>();
             var todoItem = new TodoItem
             {
                 Description = null,
                 Ordinal = 1,
-                CreatedDate = DateTime.Now,
-                AchievedDate = DateTime.Now.AddDays(2),
+                CreatedDate = new DateTime(2002, 2,2),
+                AchievedDate = new DateTime(2002, 2,4),
                 Owner = new Person { FirstName = "Bob", LastName = null }
             };
             _todoItem = _dbContext.TodoItems.Add(todoItem).Entity;
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         [InlineData(NullValueHandling.Include, true, "", null)]
         public async Task CheckBehaviorCombination(NullValueHandling? defaultValue, bool? allowQueryStringOverride, string queryStringValue, NullValueHandling? expected)
         {
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var services = server.Host.Services;
             var client = server.CreateClient();

@@ -1,4 +1,5 @@
 using System.Collections;
+using JsonApiDotNetCore.Internal;
 using RightType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks
@@ -30,7 +31,7 @@ namespace JsonApiDotNetCore.Hooks
         /// A helper method to assign relationships to the previous layer after firing hooks.
         /// Or, in case of the root node, to update the original source enumerable.
         /// </summary>
-        void Reassign(IEnumerable source = null);
+        void Reassign(IResourceFactory resourceFactory, IEnumerable source = null);
         /// <summary>
         /// A helper method to internally update the unique set of entities as a result of 
         /// a filter action in a hook.

@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
@@ -20,21 +21,23 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public sealed class ResourceDefinitionTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
         private readonly AppDbContext _context;
         private readonly Faker<User> _userFaker;
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
-        private static readonly Faker<Article> _articleFaker = new Faker<Article>()
+        private readonly Faker<Article> _articleFaker = new Faker<Article>()
             .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
             .RuleFor(a => a.Author, f => new Author());
 
-        private static readonly Faker<Tag> _tagFaker = new Faker<Tag>().RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
-        public ResourceDefinitionTests(TestFixture<Startup> fixture)
+        private readonly Faker<Tag> _tagFaker;
+
+        public ResourceDefinitionTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
             _userFaker = new Faker<User>()
+                .CustomInstantiator(f => new User(_context))
                 .RuleFor(u => u.Username, f => f.Internet.UserName())
                 .RuleFor(u => u.Password, f => f.Internet.Password());
             _todoItemFaker = new Faker<TodoItem>()
@@ -44,6 +47,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _personFaker = new Faker<Person>()
                 .RuleFor(p => p.FirstName, f => f.Name.FirstName())
                 .RuleFor(p => p.LastName, f => f.Name.LastName());
+            _tagFaker = new Faker<Tag>()
+                .CustomInstantiator(f => new Tag(_context))
+                .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
         }
 
         [Fact]
@@ -84,7 +90,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(serializer.Serialize(user))
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -120,7 +126,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(serializer.Serialize(user))
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -213,7 +219,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
 
-            var articles = _articleFaker.Generate(3).ToList();
+            var articles = _articleFaker.Generate(3);
             string toBeExcluded = "This should not be included";
             articles[0].Name = toBeExcluded;
 
@@ -246,12 +252,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var articleTags = new[]
             {
-                new ArticleTag
+                new ArticleTag(context)
                 {
                     Article = article,
                     Tag = tags[0]
                 },
-                new ArticleTag
+                new ArticleTag(context)
                 {
                     Article = article,
                     Tag = tags[1]
@@ -284,7 +290,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var lockedPerson = _personFaker.Generate();
             lockedPerson.IsLocked = true;
-            var passport = new Passport();
+            var passport = new Passport(context);
             lockedPerson.Passport = passport;
             context.People.AddRange(lockedPerson);
             await context.SaveChangesAsync();
@@ -298,7 +304,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "passport", new
                             {
-                                data = new { type = "passports", id = $"{lockedPerson.Passport.Id}" }
+                                data = new { type = "passports", id = $"{lockedPerson.Passport.StringId}" }
                             }
                         }
                     }
@@ -311,7 +317,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             string serializedContent = JsonConvert.SerializeObject(content);
             request.Content = new StringContent(serializedContent);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -333,10 +339,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var person = _personFaker.Generate();
-            var passport = new Passport { IsLocked = true };
+            var passport = new Passport(context) { IsLocked = true };
             person.Passport = passport;
             context.People.AddRange(person);
-            var newPassport = new Passport();
+            var newPassport = new Passport(context);
             context.Passports.Add(newPassport);
             await context.SaveChangesAsync();
 
@@ -350,7 +356,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "passport", new
                             {
-                                data = new { type = "passports", id = $"{newPassport.Id}" }
+                                data = new { type = "passports", id = $"{newPassport.StringId}" }
                             }
                         }
                     }
@@ -363,7 +369,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             string serializedContent = JsonConvert.SerializeObject(content);
             request.Content = new StringContent(serializedContent);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -385,10 +391,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var person = _personFaker.Generate();
-            var passport = new Passport { IsLocked = true };
+            var passport = new Passport(context) { IsLocked = true };
             person.Passport = passport;
             context.People.AddRange(person);
-            var newPassport = new Passport();
+            var newPassport = new Passport(context);
             context.Passports.Add(newPassport);
             await context.SaveChangesAsync();
 
@@ -415,7 +421,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             string serializedContent = JsonConvert.SerializeObject(content);
             request.Content = new StringContent(serializedContent);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -438,13 +444,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var lockedPerson = _personFaker.Generate();
             lockedPerson.IsLocked = true;
-            var passport = new Passport();
+            var passport = new Passport(context);
             lockedPerson.Passport = passport;
             context.People.AddRange(lockedPerson);
             await context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("DELETE");
-            var route = $"/api/v1/passports/{lockedPerson.PassportId}";
+            var route = $"/api/v1/passports/{lockedPerson.Passport.StringId}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -466,10 +472,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            var persons = _personFaker.Generate(2).ToList();
+            var persons = _personFaker.Generate(2);
             var lockedTodo = _todoItemFaker.Generate();
             lockedTodo.IsLocked = true;
-            lockedTodo.StakeHolders = persons;
+            lockedTodo.StakeHolders = persons.ToHashSet();
             context.TodoItems.Add(lockedTodo);
             await context.SaveChangesAsync();
 
@@ -484,8 +490,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                             {
                                 data = new object[]
                                 {
-                                    new { type = "people", id = $"{lockedTodo.StakeHolders[0].Id}" },
-                                    new { type = "people", id = $"{lockedTodo.StakeHolders[1].Id}" }
+                                    new { type = "people", id = $"{persons[0].Id}" },
+                                    new { type = "people", id = $"{persons[1].Id}" }
                                 }
 
                             }
@@ -500,7 +506,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             string serializedContent = JsonConvert.SerializeObject(content);
             request.Content = new StringContent(serializedContent);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -521,10 +527,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            var persons = _personFaker.Generate(2).ToList();
+            var persons = _personFaker.Generate(2);
             var lockedTodo = _todoItemFaker.Generate();
             lockedTodo.IsLocked = true;
-            lockedTodo.StakeHolders = persons;
+            lockedTodo.StakeHolders = persons.ToHashSet();
             context.TodoItems.Add(lockedTodo);
             var unlockedTodo = _todoItemFaker.Generate();
             context.TodoItems.Add(unlockedTodo);
@@ -542,8 +548,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                             {
                                 data = new object[]
                                 {
-                                    new { type = "people", id = $"{lockedTodo.StakeHolders[0].Id}" },
-                                    new { type = "people", id = $"{lockedTodo.StakeHolders[1].Id}" }
+                                    new { type = "people", id = $"{persons[0].Id}" },
+                                    new { type = "people", id = $"{persons[1].Id}" }
                                 }
 
                             }
@@ -558,7 +564,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             string serializedContent = JsonConvert.SerializeObject(content);
             request.Content = new StringContent(serializedContent);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -579,15 +585,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            var persons = _personFaker.Generate(2).ToList();
+            var persons = _personFaker.Generate(2);
             var lockedTodo = _todoItemFaker.Generate();
             lockedTodo.IsLocked = true;
-            lockedTodo.StakeHolders = persons;
+            lockedTodo.StakeHolders = persons.ToHashSet();
             context.TodoItems.Add(lockedTodo);
             await context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("DELETE");
-            var route = $"/api/v1/people/{lockedTodo.StakeHolders[0].Id}";
+            var route = $"/api/v1/people/{persons[0].Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

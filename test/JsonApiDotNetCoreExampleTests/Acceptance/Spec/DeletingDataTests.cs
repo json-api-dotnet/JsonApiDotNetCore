@@ -16,7 +16,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     {
         private readonly AppDbContext _context;
 
-        public DeletingDataTests(TestFixture<Startup> fixture)
+        public DeletingDataTests(TestFixture<TestStartup> fixture)
         {
             _context = fixture.GetService<AppDbContext>();
         }
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             await _context.SaveChangesAsync();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();

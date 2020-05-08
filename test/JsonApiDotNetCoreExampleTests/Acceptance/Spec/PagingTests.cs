@@ -14,12 +14,12 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public sealed class PagingTests : TestFixture<Startup>
+    public sealed class PagingTests : TestFixture<TestStartup>
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
         private readonly Faker<TodoItem> _todoItemFaker;
 
-        public PagingTests(TestFixture<Startup> fixture)
+        public PagingTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             const int expectedEntitiesPerPage = 2;
             var totalCount = expectedEntitiesPerPage * 2;
             var person = new Person();
-            var todoItems = _todoItemFaker.Generate(totalCount).ToList();
+            var todoItems = _todoItemFaker.Generate(totalCount);
             foreach (var todoItem in todoItems)
             {
                 todoItem.Owner = person;
@@ -82,7 +82,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 LastName = "&Ampersand"
             };
-            var todoItems = _todoItemFaker.Generate(totalCount).ToList();
+            var todoItems = _todoItemFaker.Generate(totalCount);
 
             foreach (var todoItem in todoItems)
                 todoItem.Owner = person;

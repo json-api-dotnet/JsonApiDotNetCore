@@ -59,11 +59,22 @@ namespace JsonApiDotNetCore.Hooks
             _uniqueEntities = new HashSet<TResource>(intersected);
         }
 
-        public void Reassign(IEnumerable source = null)
+        public void Reassign(IResourceFactory resourceFactory, IEnumerable source = null)
         {
             var ids = _uniqueEntities.Select(ue => ue.StringId);
-            ((List<TResource>)source).RemoveAll(se => !ids.Contains(se.StringId));
+
+            if (source is HashSet<TResource> hashSet)
+            {
+                hashSet.RemoveWhere(se => !ids.Contains(se.StringId));
+            }
+            else if (source is List<TResource> list)
+            {
+                list.RemoveAll(se => !ids.Contains(se.StringId));
+            }
+            else if (source != null)
+            {
+                throw new NotSupportedException($"Unsupported collection type '{source.GetType()}'.");
+            }
         }
     }
-
 }

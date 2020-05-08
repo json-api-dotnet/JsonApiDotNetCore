@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Data
     public interface IResourceWriteRepository<TResource, in TId>
         where TResource : class, IIdentifiable<TId>
     {
-        Task<TResource> CreateAsync(TResource entity);
+        Task CreateAsync(TResource entity);
 
         Task UpdateAsync(TResource requestEntity, TResource databaseEntity);
 

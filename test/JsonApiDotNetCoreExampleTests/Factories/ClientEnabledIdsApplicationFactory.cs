@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using System.Reflection;
@@ -9,6 +9,8 @@ namespace JsonApiDotNetCoreExampleTests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            base.ConfigureWebHost(builder);
+
             builder.ConfigureServices(services =>
             {
                 services.AddClientSerialization();

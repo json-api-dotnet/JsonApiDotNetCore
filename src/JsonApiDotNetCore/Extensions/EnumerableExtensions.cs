@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Query;
 
 namespace JsonApiDotNetCore.Extensions
 {
-    public static class IEnumerableExtensions
+    public static class EnumerableExtensions
     {
         /// <summary>
         /// gets the first element of type <typeparamref name="TImplementedService"/> if it exists and casts the result to that.

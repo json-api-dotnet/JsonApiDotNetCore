@@ -19,11 +19,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public sealed class AttributeFilterTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
 
-        public AttributeFilterTests(TestFixture<Startup> fixture)
+        public AttributeFilterTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()
@@ -94,7 +94,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?include=owner&filter[achievedDate]={DateTime.UtcNow.Date}";
+            var route = $"/api/v1/todoItems?include=owner&filter[achievedDate]={new DateTime(2002, 2, 2).ToShortDateString()}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

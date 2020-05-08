@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -32,9 +33,12 @@ namespace JsonApiDotNetCore.Internal.Generics
     /// <inheritdoc/>
     public class RepositoryRelationshipUpdateHelper<TRelatedResource> : IRepositoryRelationshipUpdateHelper where TRelatedResource : class
     {
+        private readonly IResourceFactory _resourceFactory;
         private readonly DbContext _context;
-        public RepositoryRelationshipUpdateHelper(IDbContextResolver contextResolver)
+
+        public RepositoryRelationshipUpdateHelper(IDbContextResolver contextResolver, IResourceFactory resourceFactory)
         {
+            _resourceFactory = resourceFactory;
             _context = contextResolver.GetContext();
         }
 
@@ -54,7 +58,7 @@ namespace JsonApiDotNetCore.Internal.Generics
             TRelatedResource value = null;
             if (relationshipIds.Any())
             {   // newOwner.id
-                var target = Expression.Constant(TypeHelper.ConvertType(relationshipIds.First(), TypeHelper.GetIdentifierType(relationship.RightType)));
+                var target = Expression.Constant(TypeHelper.ConvertType(relationshipIds.First(), TypeHelper.GetIdType(relationship.RightType)));
                 // (Person p) => ...
                 ParameterExpression parameter = Expression.Parameter(typeof(TRelatedResource));
                 // (Person p) => p.Id
@@ -64,15 +68,24 @@ namespace JsonApiDotNetCore.Internal.Generics
                 var equalsLambda = Expression.Lambda<Func<TRelatedResource, bool>>(callEquals, parameter);
                 value = await _context.Set<TRelatedResource>().FirstOrDefaultAsync(equalsLambda);
             }
-            relationship.SetValue(parent, value);
+            relationship.SetValue(parent, value, _resourceFactory);
         }
 
         private async Task UpdateOneToManyAsync(IIdentifiable parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            var value = new List<TRelatedResource>();
-            if (relationshipIds.Any())
-            {   // [1, 2, 3]
-                var target = Expression.Constant(TypeHelper.ConvertListType(relationshipIds, TypeHelper.GetIdentifierType(relationship.RightType)));
+            IEnumerable value;
+            if (!relationshipIds.Any())
+            {
+                var collectionType = relationship.PropertyInfo.PropertyType.ToConcreteCollectionType();
+                value = (IEnumerable)TypeHelper.CreateInstance(collectionType);
+            }
+            else
+            {
+                var idType = TypeHelper.GetIdType(relationship.RightType);
+                var typedIds = relationshipIds.CopyToList(idType, stringId => TypeHelper.ConvertType(stringId, idType));
+
+                // [1, 2, 3]
+                var target = Expression.Constant(typedIds);
                 // (Person p) => ...
                 ParameterExpression parameter = Expression.Parameter(typeof(TRelatedResource));
                 // (Person p) => p.Id
@@ -80,9 +93,12 @@ namespace JsonApiDotNetCore.Internal.Generics
                 // [1,2,3].Contains(p.Id)
                 var callContains = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), new[] { idMember.Type }, target, idMember);
                 var containsLambda = Expression.Lambda<Func<TRelatedResource, bool>>(callContains, parameter);
-                value = await _context.Set<TRelatedResource>().Where(containsLambda).ToListAsync();
+
+                var resultSet = await _context.Set<TRelatedResource>().Where(containsLambda).ToListAsync();
+                value = resultSet.CopyToTypedCollection(relationship.PropertyInfo.PropertyType);
             }
-            relationship.SetValue(parent, value);
+
+            relationship.SetValue(parent, value, _resourceFactory);
         }
 
         private async Task UpdateManyToManyAsync(IIdentifiable parent, HasManyThroughAttribute relationship, IEnumerable<string> relationshipIds)
@@ -112,7 +128,7 @@ namespace JsonApiDotNetCore.Internal.Generics
 
             var newLinks = relationshipIds.Select(x =>
             {
-                var link = relationship.ThroughType.New();
+                var link = _resourceFactory.CreateInstance(relationship.ThroughType);
                 relationship.LeftIdProperty.SetValue(link, TypeHelper.ConvertType(parentId, relationship.LeftIdProperty.PropertyType));
                 relationship.RightIdProperty.SetValue(link, TypeHelper.ConvertType(x, relationship.RightIdProperty.PropertyType));
                 return link;

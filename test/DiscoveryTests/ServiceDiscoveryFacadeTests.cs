@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Hooks;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -18,6 +19,7 @@ using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 
@@ -38,15 +40,16 @@ namespace DiscoveryTests
 
             _services.AddSingleton<IJsonApiOptions>(options);
             _services.AddSingleton<ILoggerFactory>(new LoggerFactory());
-            _services.AddScoped((_) => new Mock<ILinkBuilder>().Object);
-            _services.AddScoped((_) => new Mock<ICurrentRequest>().Object);
-            _services.AddScoped((_) => new Mock<ITargetedFields>().Object);
-            _services.AddScoped((_) => new Mock<IResourceGraph>().Object);
-            _services.AddScoped((_) => new Mock<IGenericServiceFactory>().Object);
-            _services.AddScoped((_) => new Mock<IResourceContextProvider>().Object);
+            _services.AddScoped(_ => new Mock<ILinkBuilder>().Object);
+            _services.AddScoped(_ => new Mock<ICurrentRequest>().Object);
+            _services.AddScoped(_ => new Mock<ITargetedFields>().Object);
+            _services.AddScoped(_ => new Mock<IResourceGraph>().Object);
+            _services.AddScoped(_ => new Mock<IGenericServiceFactory>().Object);
+            _services.AddScoped(_ => new Mock<IResourceContextProvider>().Object);
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(DefaultResourceChangeTracker<>));
+            _services.AddScoped(_ => new Mock<IResourceFactory>().Object);
 
-            _resourceGraphBuilder = new ResourceGraphBuilder(options);
+            _resourceGraphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
         }
 
         private ServiceDiscoveryFacade Facade => new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
@@ -114,8 +117,9 @@ namespace DiscoveryTests
                 IResourceRepository<TestModel, int> repository,
                 IResourceContextProvider provider,
                 IResourceChangeTracker<TestModel> resourceChangeTracker,
+                IResourceFactory resourceFactory,
                 IResourceHookExecutor hookExecutor = null)
-                : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, hookExecutor)
+                : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, resourceFactory, hookExecutor)
             { }
         }
 
@@ -127,8 +131,9 @@ namespace DiscoveryTests
                 ITargetedFields targetedFields,
                 IResourceGraph resourceGraph,
                 IGenericServiceFactory genericServiceFactory,
+                IResourceFactory resourceFactory,
                 ILoggerFactory loggerFactory)
-                : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory, loggerFactory)
+                : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory)
             { }
         }
     }

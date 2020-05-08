@@ -21,12 +21,14 @@ namespace JsonApiDotNetCore.Serialization
     /// </summary>
     public abstract class BaseDocumentParser
     {
-        protected readonly IResourceContextProvider _provider;
+        protected readonly IResourceContextProvider _contextProvider;
+        protected readonly IResourceFactory _resourceFactory;
         protected Document _document;
 
-        protected BaseDocumentParser(IResourceContextProvider provider)
+        protected BaseDocumentParser(IResourceContextProvider contextProvider, IResourceFactory resourceFactory)
         {
-            _provider = provider;
+            _contextProvider = contextProvider;
+            _resourceFactory = resourceFactory;
         }
 
         /// <summary>
@@ -131,7 +133,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns>The parsed entity</returns>
         private IIdentifiable ParseResourceObject(ResourceObject data)
         {
-            var resourceContext = _provider.GetResourceContext(data.Type);
+            var resourceContext = _contextProvider.GetResourceContext(data.Type);
             if (resourceContext == null)
             {
                 throw new InvalidRequestBodyException("Payload includes unknown resource type.",
@@ -140,7 +142,7 @@ namespace JsonApiDotNetCore.Serialization
                     "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.", null);
             }
 
-            var entity = resourceContext.ResourceType.New<IIdentifiable>();
+            var entity = (IIdentifiable)_resourceFactory.CreateInstance(resourceContext.ResourceType);
 
             entity = SetAttributes(entity, data.Attributes, resourceContext.Attributes);
             entity = SetRelationships(entity, data.Relationships, resourceContext.Relationships);
@@ -196,8 +198,9 @@ namespace JsonApiDotNetCore.Serialization
                 // For a server deserializer, it should be mapped to a BadRequest HTTP error code.
                 throw new FormatException($"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
             }
-            var convertedId = TypeHelper.ConvertType(id, foreignKey.PropertyType);
-            foreignKey.SetValue(entity, convertedId);
+
+            var typedId = TypeHelper.ConvertStringIdToTypedId(attr.PropertyInfo.PropertyType, id, _resourceFactory);
+            foreignKey.SetValue(entity, typedId);
         }
 
         /// <summary>
@@ -208,13 +211,13 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (relatedId == null)
             {
-                attr.SetValue(entity, null);
+                attr.SetValue(entity, null, _resourceFactory);
             }
             else
             {
-                var relatedInstance = attr.RightType.New<IIdentifiable>();
+                var relatedInstance = (IIdentifiable)_resourceFactory.CreateInstance(attr.RightType);
                 relatedInstance.StringId = relatedId;
-                attr.SetValue(entity, relatedInstance);
+                attr.SetValue(entity, relatedInstance, _resourceFactory);
             }
         }
 
@@ -230,12 +233,13 @@ namespace JsonApiDotNetCore.Serialization
             {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
                 var relatedResources = relationshipData.ManyData.Select(rio =>
                 {
-                    var relatedInstance = attr.RightType.New<IIdentifiable>();
+                    var relatedInstance = (IIdentifiable)_resourceFactory.CreateInstance(attr.RightType);
                     relatedInstance.StringId = rio.Id;
                     return relatedInstance;
                 });
-                var convertedCollection = relatedResources.Cast(attr.RightType);
-                attr.SetValue(entity, convertedCollection);
+
+                var convertedCollection = relatedResources.CopyToTypedCollection(attr.PropertyInfo.PropertyType);
+                attr.SetValue(entity, convertedCollection, _resourceFactory);
             }
 
             AfterProcessField(entity, attr, relationshipData);

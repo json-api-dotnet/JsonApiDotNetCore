@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
@@ -27,6 +28,7 @@ namespace JsonApiDotNetCore.Data
         private readonly DbSet<TResource> _dbSet;
         private readonly IResourceGraph _resourceGraph;
         private readonly IGenericServiceFactory _genericServiceFactory;
+        private readonly IResourceFactory _resourceFactory;
         private readonly ILogger<DefaultResourceRepository<TResource, TId>> _logger;
 
         public DefaultResourceRepository(
@@ -34,11 +36,13 @@ namespace JsonApiDotNetCore.Data
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
             IGenericServiceFactory genericServiceFactory,
+            IResourceFactory resourceFactory,
             ILoggerFactory loggerFactory)
         {
             _targetedFields = targetedFields;
             _resourceGraph = resourceGraph;
             _genericServiceFactory = genericServiceFactory;
+            _resourceFactory = resourceFactory;
             _context = contextResolver.GetContext();
             _dbSet = _context.Set<TResource>();
             _logger = loggerFactory.CreateLogger<DefaultResourceRepository<TResource, TId>>();
@@ -62,14 +66,11 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual IQueryable<TResource> Select(IQueryable<TResource> entities, IEnumerable<AttrAttribute> fields = null)
+        public virtual IQueryable<TResource> Select(IQueryable<TResource> entities, IEnumerable<string> propertyNames = null)
         {
-            _logger.LogTrace($"Entering {nameof(Select)}({nameof(entities)}, {nameof(fields)}).");
+            _logger.LogTrace($"Entering {nameof(Select)}({nameof(entities)}, {nameof(propertyNames)}).");
 
-            if (fields != null && fields.Any())
-                return entities.Select(fields);
-
-            return entities;
+            return entities.Select(propertyNames, _resourceFactory);
         }
 
         /// <inheritdoc />
@@ -94,7 +95,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResource> CreateAsync(TResource entity)
+        public virtual async Task CreateAsync(TResource entity)
         {
             _logger.LogTrace($"Entering {nameof(CreateAsync)}({(entity == null ? "null" : "object")}).");
 
@@ -108,16 +109,16 @@ namespace JsonApiDotNetCore.Data
                     // was already tracked) than the one assigned to the to-be-created entity.
                     // Alternatively, even if we don't have to reassign anything because of already tracked 
                     // entities, we still need to assign the "through" entities in the case of many-to-many.
-                    relationshipAttr.SetValue(entity, trackedRelationshipValue);
+                    relationshipAttr.SetValue(entity, trackedRelationshipValue, _resourceFactory);
             }
             _dbSet.Add(entity);
             await _context.SaveChangesAsync();
 
+            FlushFromCache(entity);
+
             // this ensures relationships get reloaded from the database if they have
             // been requested. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
             DetachRelationships(entity);
-
-            return entity;
         }
 
         /// <summary>
@@ -145,14 +146,14 @@ namespace JsonApiDotNetCore.Data
             }
             else if (relationshipAttr is HasManyAttribute hasManyAttr && !(relationshipAttr is HasManyThroughAttribute))
             {
-                foreach (IIdentifiable relationshipValue in (IList)trackedRelationshipValue)
+                foreach (IIdentifiable relationshipValue in (IEnumerable)trackedRelationshipValue)
                     _context.Entry(relationshipValue).Reference(hasManyAttr.InverseNavigation).Load();
             }
         }
 
         private bool IsHasOneRelationship(string internalRelationshipName, Type type)
         {
-            var relationshipAttr = _resourceGraph.GetRelationships(type).FirstOrDefault(r => r.InternalRelationshipName == internalRelationshipName);
+            var relationshipAttr = _resourceGraph.GetRelationships(type).FirstOrDefault(r => r.PropertyInfo.Name == internalRelationshipName);
             if (relationshipAttr != null)
             {
                 if (relationshipAttr is HasOneAttribute)
@@ -162,7 +163,7 @@ namespace JsonApiDotNetCore.Data
             }
             // relationshipAttr is null when we don't put a [RelationshipAttribute] on the inverse navigation property.
             // In this case we use reflection to figure out what kind of relationship is pointing back.
-            return !type.GetProperty(internalRelationshipName).PropertyType.Inherits(typeof(IEnumerable));
+            return !type.GetProperty(internalRelationshipName).PropertyType.IsOrImplementsInterface(typeof(IEnumerable));
         }
 
         private void DetachRelationships(TResource entity)
@@ -175,13 +176,13 @@ namespace JsonApiDotNetCore.Data
 
                 if (value is IEnumerable<IIdentifiable> collection)
                 {
-                    foreach (IIdentifiable single in collection.ToList())
+                    foreach (IIdentifiable single in collection)
                         _context.Entry(single).State = EntityState.Detached;
                     // detaching has many relationships is not sufficient to 
                     // trigger a full reload of relationships: the navigation 
                     // property actually needs to be nulled out, otherwise
                     // EF will still add duplicate instances to the collection
-                    relationship.SetValue(entity, null);
+                    relationship.SetValue(entity, null, _resourceFactory);
                 }
                 else
                 {
@@ -215,7 +216,7 @@ namespace JsonApiDotNetCore.Data
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 // assigns the updated relationship to the database entity
                 //AssignRelationshipValue(databaseEntity, trackedRelationshipValue, relationshipAttr);
-                relationshipAttr.SetValue(databaseEntity, trackedRelationshipValue);
+                relationshipAttr.SetValue(databaseEntity, trackedRelationshipValue, _resourceFactory);
             }
 
             await _context.SaveChangesAsync();
@@ -247,20 +248,21 @@ namespace JsonApiDotNetCore.Data
         }
 
         // helper method used in GetTrackedRelationshipValue. See comments below.
-        private IList GetTrackedManyRelationshipValue(IEnumerable<IIdentifiable> relationshipValueList, RelationshipAttribute relationshipAttr, ref bool wasAlreadyAttached)
+        private IEnumerable GetTrackedManyRelationshipValue(IEnumerable<IIdentifiable> relationshipValueList, RelationshipAttribute relationshipAttr, ref bool wasAlreadyAttached)
         {
             if (relationshipValueList == null) return null;
             bool newWasAlreadyAttached = false;
             var trackedPointerCollection = relationshipValueList.Select(pointer =>
-                {   // convert each element in the value list to relationshipAttr.DependentType.
+                {
+                    // convert each element in the value list to relationshipAttr.DependentType.
                     var tracked = AttachOrGetTracked(pointer);
                     if (tracked != null) newWasAlreadyAttached = true;
                     return Convert.ChangeType(tracked ?? pointer, relationshipAttr.RightType);
                 })
-                .ToList()
-                .Cast(relationshipAttr.RightType);
+                .CopyToTypedCollection(relationshipAttr.PropertyInfo.PropertyType);
+
             if (newWasAlreadyAttached) wasAlreadyAttached = true;
-            return (IList)trackedPointerCollection;
+            return trackedPointerCollection;
         }
 
         // helper method used in GetTrackedRelationshipValue. See comments there.
@@ -424,11 +426,11 @@ namespace JsonApiDotNetCore.Data
         {
             if (relationshipAttribute is HasManyThroughAttribute throughAttribute)
             {
-                _context.Entry(oldEntity).Collection(throughAttribute.InternalThroughName).Load();
+                _context.Entry(oldEntity).Collection(throughAttribute.ThroughProperty.Name).Load();
             }
             else if (relationshipAttribute is HasManyAttribute hasManyAttribute)
             {
-                _context.Entry(oldEntity).Collection(hasManyAttribute.InternalRelationshipName).Load();
+                _context.Entry(oldEntity).Collection(hasManyAttribute.PropertyInfo.Name).Load();
             }
         }
 
@@ -470,8 +472,9 @@ namespace JsonApiDotNetCore.Data
             IDbContextResolver contextResolver, 
             IResourceGraph resourceGraph, 
             IGenericServiceFactory genericServiceFactory,
+            IResourceFactory resourceFactory,
             ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, loggerFactory) 
+            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory) 
         { }
     }
 }
