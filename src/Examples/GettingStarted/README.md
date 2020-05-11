@@ -5,7 +5,7 @@
 `dotnet run` to run the project
 
 You can verify the project is running by checking this endpoint:
-`localhost:5001/api/sample-model`
+`localhost:14141/api/people`
 
 For further documentation and implementation of a JsonApiDotnetCore Application see the documentation or GitHub page:
 

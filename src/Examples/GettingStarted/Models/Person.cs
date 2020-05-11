@@ -5,10 +5,10 @@ namespace GettingStarted.Models
 {
     public sealed class Person : Identifiable
     {
-        [Attr] 
+        [Attr]
         public string Name { get; set; }
 
-        [HasMany] 
+        [HasMany]
         public ICollection<Article> Articles { get; set; }
     }
 }
