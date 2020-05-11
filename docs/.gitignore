@@ -1,2 +1,5 @@
 _site/
-*.manifest
+api/*.yml
+api/.manifest
+request-examples/*.json
+request-examples/*.temp
