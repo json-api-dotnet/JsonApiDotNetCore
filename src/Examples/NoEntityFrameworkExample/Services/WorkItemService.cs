@@ -11,25 +11,26 @@ using Npgsql;
 
 namespace NoEntityFrameworkExample.Services
 {
-    public sealed class TodoItemService : IResourceService<TodoItem>
+    public sealed class WorkItemService : IResourceService<WorkItem>
     {
         private readonly string _connectionString;
 
-        public TodoItemService(IConfiguration configuration)
+        public WorkItemService(IConfiguration configuration)
         {
-            _connectionString = configuration["Data:DefaultConnection"];
+            string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
+            _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
         }
 
-        public async Task<IEnumerable<TodoItem>> GetAsync()
+        public async Task<IEnumerable<WorkItem>> GetAsync()
         {
             return await QueryAsync(async connection =>
-                await connection.QueryAsync<TodoItem>(@"select * from ""TodoItems"""));
+                await connection.QueryAsync<WorkItem>(@"select * from ""WorkItems"""));
         }
 
-        public async Task<TodoItem> GetAsync(int id)
+        public async Task<WorkItem> GetAsync(int id)
         {
             var query = await QueryAsync(async connection =>
-                await connection.QueryAsync<TodoItem>(@"select * from ""TodoItems"" where ""Id""=@id", new { id }));
+                await connection.QueryAsync<WorkItem>(@"select * from ""WorkItems"" where ""Id""=@id", new { id }));
 
             return query.Single();
         }
@@ -39,17 +40,17 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        public Task<TodoItem> GetRelationshipsAsync(int id, string relationshipName)
+        public Task<WorkItem> GetRelationshipsAsync(int id, string relationshipName)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<TodoItem> CreateAsync(TodoItem entity)
+        public async Task<WorkItem> CreateAsync(WorkItem entity)
         {
             return (await QueryAsync(async connection =>
             {
-                var query = @"insert into ""TodoItems"" (""Description"", ""IsLocked"", ""Ordinal"", ""UniqueId"") values (@description, @isLocked, @ordinal, @uniqueId) returning ""Id"", ""Description"", ""IsLocked"", ""Ordinal"", ""UniqueId""";
-                var result = await connection.QueryAsync<TodoItem>(query, new { description = entity.Description, ordinal = entity.Ordinal, uniqueId = entity.UniqueId, isLocked = entity.IsLocked });
+                var query = @"insert into ""WorkItems"" (""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId"") values (@description, @isLocked, @ordinal, @uniqueId) returning ""Id"", ""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId""";
+                var result = await connection.QueryAsync<WorkItem>(query, new { description = entity.Title, ordinal = entity.DurationInHours, uniqueId = entity.ProjectId, isLocked = entity.IsBlocked });
                 return result;
             })).SingleOrDefault();
         }
@@ -57,10 +58,10 @@ namespace NoEntityFrameworkExample.Services
         public async Task DeleteAsync(int id)
         {
             await QueryAsync(async connection =>
-                await connection.QueryAsync<TodoItem>(@"delete from ""TodoItems"" where ""Id""=@id", new { id }));
+                await connection.QueryAsync<WorkItem>(@"delete from ""WorkItems"" where ""Id""=@id", new { id }));
         }
 
-        public Task<TodoItem> UpdateAsync(int id, TodoItem entity)
+        public Task<WorkItem> UpdateAsync(int id, WorkItem entity)
         {
             throw new NotImplementedException();
         }

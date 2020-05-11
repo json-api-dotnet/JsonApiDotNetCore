@@ -9,7 +9,9 @@ namespace JsonApiDotNetCoreExample
     /// </summary>
     public sealed class NoDefaultPageSizeStartup : TestStartup
     {
-        public NoDefaultPageSizeStartup(IWebHostEnvironment env) : base(env) { }
+        public NoDefaultPageSizeStartup(IWebHostEnvironment env) : base(env)
+        {
+        }
 
         protected override void ConfigureJsonApiOptions(JsonApiOptions options)
         {

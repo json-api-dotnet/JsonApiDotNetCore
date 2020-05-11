@@ -15,28 +15,28 @@ using Xunit;
 
 namespace NoEntityFrameworkTests
 {
-    public sealed class TodoItemTests : IClassFixture<WebApplicationFactory<Startup>>
+    public sealed class WorkItemTests : IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly WebApplicationFactory<Startup> _factory;
 
-        public TodoItemTests(WebApplicationFactory<Startup> factory)
+        public WorkItemTests(WebApplicationFactory<Startup> factory)
         {
             _factory = factory;
         }
 
         [Fact]
-        public async Task Can_Get_TodoItems()
+        public async Task Can_Get_WorkItems()
         {
             // Arrange
             await ExecuteOnDbContextAsync(async dbContext =>
             {
-                dbContext.TodoItems.Add(new TodoItem());
+                dbContext.WorkItems.Add(new WorkItem());
                 await dbContext.SaveChangesAsync();
             });
 
             var client = _factory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/todoItems");
+            var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/workItems");
 
             // Act
             var response = await client.SendAsync(request);
@@ -51,20 +51,20 @@ namespace NoEntityFrameworkTests
         }
 
         [Fact]
-        public async Task Can_Get_TodoItem_By_Id()
+        public async Task Can_Get_WorkItem_By_Id()
         {
             // Arrange
-            var todoItem = new TodoItem();
+            var workItem = new WorkItem();
 
             await ExecuteOnDbContextAsync(async dbContext =>
             {
-                dbContext.TodoItems.Add(todoItem);
+                dbContext.WorkItems.Add(workItem);
                 await dbContext.SaveChangesAsync();
             });
 
             var client = _factory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/todoItems/" + todoItem.StringId);
+            var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/workItems/" + workItem.StringId);
 
             // Act
             var response = await client.SendAsync(request);
@@ -76,23 +76,23 @@ namespace NoEntityFrameworkTests
             var document = JsonConvert.DeserializeObject<Document>(responseBody);
 
             Assert.NotNull(document.SingleData);
-            Assert.Equal(todoItem.StringId, document.SingleData.Id);
+            Assert.Equal(workItem.StringId, document.SingleData.Id);
         }
 
         [Fact]
-        public async Task Can_Create_TodoItem()
+        public async Task Can_Create_WorkItem()
         {
             // Arrange
-            var description = Guid.NewGuid().ToString();
+            var title = Guid.NewGuid().ToString();
 
             var requestContent = new
             {
                 data = new
                 {
-                    type = "todoItems",
+                    type = "workItems",
                     attributes = new
                     {
-                        description,
+                        title,
                         ordinal = 1
                     }
                 }
@@ -100,7 +100,7 @@ namespace NoEntityFrameworkTests
 
             var requestBody = JsonConvert.SerializeObject(requestContent);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, "/api/v1/todoItems/")
+            var request = new HttpRequestMessage(HttpMethod.Post, "/api/v1/workItems/")
             {
                 Content = new StringContent(requestBody)
             };
@@ -118,24 +118,24 @@ namespace NoEntityFrameworkTests
             var document = JsonConvert.DeserializeObject<Document>(responseBody);
 
             Assert.NotNull(document.SingleData);
-            Assert.Equal(description, document.SingleData.Attributes["description"]);
+            Assert.Equal(title, document.SingleData.Attributes["title"]);
         }
 
         [Fact]
-        public async Task Can_Delete_TodoItem()
+        public async Task Can_Delete_WorkItem()
         {
             // Arrange
-            var todoItem = new TodoItem();
+            var workItem = new WorkItem();
 
             await ExecuteOnDbContextAsync(async dbContext =>
             {
-                dbContext.TodoItems.Add(todoItem);
+                dbContext.WorkItems.Add(workItem);
                 await dbContext.SaveChangesAsync();
             });
 
             var client = _factory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Delete, "/api/v1/todoItems/" + todoItem.StringId);
+            var request = new HttpRequestMessage(HttpMethod.Delete, "/api/v1/workItems/" + workItem.StringId);
 
             // Act
             var response = await client.SendAsync(request);

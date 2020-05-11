@@ -5,7 +5,7 @@ namespace NoEntityFrameworkExample.Data
 {
     public sealed class AppDbContext : DbContext
     {
-        public DbSet<TodoItem> TodoItems { get; set; }
+        public DbSet<WorkItem> WorkItems { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)

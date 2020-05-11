@@ -17,18 +17,19 @@ namespace NoEntityFrameworkExample
 
         public Startup(IConfiguration configuration)
         {
-            _connectionString = configuration["Data:DefaultConnection"];
+            string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
+            _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public virtual void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddJsonApi(
                 options => options.Namespace = "api/v1",
-                resources: builder => builder.AddResource<TodoItem>("todoItems")
+                resources: builder => builder.AddResource<WorkItem>("workItems")
             );
 
-            services.AddScoped<IResourceService<TodoItem>, TodoItemService>();
+            services.AddScoped<IResourceService<WorkItem>, WorkItemService>();
 
             services.AddDbContext<AppDbContext>(options =>
             {
