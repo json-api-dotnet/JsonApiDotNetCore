@@ -2,17 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCoreExample.Models;
 
-namespace JsonApiDotNetCoreExample.Resources
+namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class ArticleResource : ResourceDefinition<Article>
+    public class ArticleDefinition : ResourceDefinition<Article>
     {
-        public ArticleResource(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        public ArticleDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
         public override IEnumerable<Article> OnReturn(HashSet<Article> entities, ResourcePipeline pipeline)
         {

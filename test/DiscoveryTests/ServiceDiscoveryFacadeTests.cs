@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using GettingStarted.Models;
-using GettingStarted.ResourceDefinitionExample;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
@@ -16,6 +14,7 @@ using JsonApiDotNetCore.RequestServices;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

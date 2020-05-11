@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCoreExample.Models;
 
-namespace JsonApiDotNetCoreExample.Resources
+namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class PersonResource : LockableResource<Person>, IHasMeta
+    public class PersonDefinition : LockableDefinition<Person>, IHasMeta
     {
-        public PersonResource(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        public PersonDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
         public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<Person> entitiesByRelationship, ResourcePipeline pipeline)
         {

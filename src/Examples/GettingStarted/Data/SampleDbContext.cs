@@ -1,5 +1,4 @@
 using GettingStarted.Models;
-using GettingStarted.ResourceDefinitionExample;
 using Microsoft.EntityFrameworkCore;
 
 namespace GettingStarted.Data
@@ -16,7 +15,6 @@ namespace GettingStarted.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Person>();
-            modelBuilder.Entity<Model>();
         }
     }
 }

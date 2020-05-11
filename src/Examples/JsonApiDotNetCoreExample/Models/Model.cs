@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Models;
 
-namespace GettingStarted.ResourceDefinitionExample
+namespace JsonApiDotNetCoreExample.Models
 {
     public sealed class Model : Identifiable
     {

@@ -3,15 +3,15 @@ using System.Linq;
 using System.Net;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCoreExample.Models;
 
-namespace JsonApiDotNetCoreExample.Resources
+namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class TodoResource : LockableResource<TodoItem>
+    public class TodoDefinition : LockableDefinition<TodoItem>
     {
-        public TodoResource(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        public TodoDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
         public override void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null)
         {

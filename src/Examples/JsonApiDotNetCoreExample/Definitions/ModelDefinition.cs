@@ -1,7 +1,8 @@
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCoreExample.Models;
 
-namespace GettingStarted.ResourceDefinitionExample
+namespace JsonApiDotNetCoreExample.Definitions
 {
     public class ModelDefinition : ResourceDefinition<Model>
     {
