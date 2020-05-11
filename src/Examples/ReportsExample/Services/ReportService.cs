@@ -17,22 +17,24 @@ namespace ReportsExample.Services
 
         public Task<IEnumerable<Report>> GetAsync()
         {
-            _logger.LogWarning("GetAsync");
+            _logger.LogInformation("GetAsync");
 
-            var task = new Task<IEnumerable<Report>>(Get);
-        
-            task.RunSynchronously(TaskScheduler.Default);
+            IEnumerable<Report> reports = GetReports();
 
-            return task;
+            return Task.FromResult(reports);
         }
 
-        private IEnumerable<Report> Get()
+        private IEnumerable<Report> GetReports()
         {
-            return new List<Report> {
-                new Report {
-                    Title = "My Report",
-                    ComplexType = new ComplexType {
-                        CompoundPropertyName = "value"
+            return new List<Report>
+            {
+                new Report
+                {
+                    Title = "Status Report",
+                    Statistics = new ReportStatistics
+                    {
+                        ProgressIndication = "Almost done",
+                        HoursSpent = 24
                     }
                 }
             };
