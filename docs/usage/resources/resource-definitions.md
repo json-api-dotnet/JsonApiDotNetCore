@@ -47,9 +47,9 @@ Content-Type: application/vnd.api+json
 ### Single Attribute
 
 ```c#
-public class UserResource : ResourceDefinition<User>
+public class UserDefinition : ResourceDefinition<User>
 {
-    public UserResource(IResourceGraph resourceGraph) : base(resourceGraph)
+    public UserDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
     {
         HideFields(user => user.AccountNumber);
     }
@@ -59,9 +59,9 @@ public class UserResource : ResourceDefinition<User>
 ### Multiple Attributes
 
 ```c#
-public class UserResource : ResourceDefinition<User>
+public class UserDefinition : ResourceDefinition<User>
 {
-    public UserResource(IResourceGraph resourceGraph) : base(resourceGraph)
+    public UserDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
     {
         HideFields(user => new {user.AccountNumber, user.Password});
     }
@@ -75,7 +75,7 @@ _since v3.0.0_
 You can define the default sort behavior if no `sort` query is provided.
 
 ```c#
-public class AccountResource : ResourceDefinition<Account>
+public class AccountDefinition : ResourceDefinition<Account>
 {
     public override PropertySortOrder GetDefaultSortOrder() => new PropertySortOrder
     {
@@ -93,7 +93,7 @@ You can define additional query parameters and the query that should be used.
 If the key is present in a filter request, the supplied query will be used rather than the default behavior.
 
 ```c#
-public class ItemResource : ResourceDefinition<Item>
+public class ItemDefinition : ResourceDefinition<Item>
 {
     // handles queries like: ?filter[was-active-on]=2018-10-15T01:25:52Z
     public override QueryFilters GetQueryFilters() => new QueryFilters
