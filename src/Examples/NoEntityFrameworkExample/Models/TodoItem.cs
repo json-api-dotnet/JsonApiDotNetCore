@@ -5,11 +5,7 @@ namespace NoEntityFrameworkExample.Models
 {
     public sealed class TodoItem : Identifiable
     {
-        public TodoItem()
-        {
-            GuidProperty = Guid.NewGuid();
-        }
-
+        [Attr]
         public bool IsLocked { get; set; }
 
         [Attr]
@@ -19,6 +15,6 @@ namespace NoEntityFrameworkExample.Models
         public long Ordinal { get; set; }
 
         [Attr]
-        public Guid GuidProperty { get; set; }
+        public Guid UniqueId { get; set; } = Guid.NewGuid();
     }
 }

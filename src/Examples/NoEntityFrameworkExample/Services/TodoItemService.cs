@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Configuration;
-using Npgsql;
-using Dapper;
-using System.Data;
 using NoEntityFrameworkExample.Models;
-using System.Linq;
+using Npgsql;
 
 namespace NoEntityFrameworkExample.Services
 {
@@ -15,32 +15,23 @@ namespace NoEntityFrameworkExample.Services
     {
         private readonly string _connectionString;
 
-        public TodoItemService(IConfiguration config)
+        public TodoItemService(IConfiguration configuration)
         {
-            _connectionString = config.GetValue<string>("Data:DefaultConnection");
-        }
-        
-        private IDbConnection Connection => new NpgsqlConnection(_connectionString);
-
-        private async Task<IEnumerable<T>> QueryAsync<T>(Func<IDbConnection, Task<IEnumerable<T>>> query)
-        {
-            using IDbConnection dbConnection = Connection;
-            dbConnection.Open();
-            return await query(dbConnection);
+            _connectionString = configuration["Data:DefaultConnection"];
         }
 
         public async Task<IEnumerable<TodoItem>> GetAsync()
         {
             return await QueryAsync(async connection =>
-                await connection.QueryAsync<TodoItem>("select * from \"TodoItems\""));
+                await connection.QueryAsync<TodoItem>(@"select * from ""TodoItems"""));
         }
 
         public async Task<TodoItem> GetAsync(int id)
         {
-            var query = await QueryAsync(async connection => 
-                await connection.QueryAsync<TodoItem>("select * from \"TodoItems\" where \"Id\"= @id", new {id}));
-            
-            return query.SingleOrDefault();
+            var query = await QueryAsync(async connection =>
+                await connection.QueryAsync<TodoItem>(@"select * from ""TodoItems"" where ""Id""=@id", new { id }));
+
+            return query.Single();
         }
 
         public Task<object> GetRelationshipAsync(int id, string relationshipName)
@@ -57,15 +48,16 @@ namespace NoEntityFrameworkExample.Services
         {
             return (await QueryAsync(async connection =>
             {
-                var query = "insert into \"TodoItems\" (\"Description\", \"IsLocked\", \"Ordinal\", \"GuidProperty\") values (@description, @isLocked, @ordinal, @guidProperty) returning \"Id\",\"Description\", \"IsLocked\", \"Ordinal\", \"GuidProperty\"";
-                var result = await connection.QueryAsync<TodoItem>(query, new { description = entity.Description, ordinal = entity.Ordinal, guidProperty =  entity.GuidProperty, isLocked = entity.IsLocked});
+                var query = @"insert into ""TodoItems"" (""Description"", ""IsLocked"", ""Ordinal"", ""UniqueId"") values (@description, @isLocked, @ordinal, @uniqueId) returning ""Id"", ""Description"", ""IsLocked"", ""Ordinal"", ""UniqueId""";
+                var result = await connection.QueryAsync<TodoItem>(query, new { description = entity.Description, ordinal = entity.Ordinal, uniqueId = entity.UniqueId, isLocked = entity.IsLocked });
                 return result;
             })).SingleOrDefault();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            await QueryAsync(async connection =>
+                await connection.QueryAsync<TodoItem>(@"delete from ""TodoItems"" where ""Id""=@id", new { id }));
         }
 
         public Task<TodoItem> UpdateAsync(int id, TodoItem entity)
@@ -77,5 +69,14 @@ namespace NoEntityFrameworkExample.Services
         {
             throw new NotImplementedException();
         }
+
+        private async Task<IEnumerable<T>> QueryAsync<T>(Func<IDbConnection, Task<IEnumerable<T>>> query)
+        {
+            using IDbConnection dbConnection = GetConnection;
+            dbConnection.Open();
+            return await query(dbConnection);
+        }
+
+        private IDbConnection GetConnection => new NpgsqlConnection(_connectionString);
     }
 }

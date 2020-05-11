@@ -11,11 +11,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Examples\NoEntityFrameworkExample\NoEntityFrameworkExample.csproj" />
-    <ProjectReference Include="..\..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
     <PackageReference Include="xunit" Version="$(XUnitVersion)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
