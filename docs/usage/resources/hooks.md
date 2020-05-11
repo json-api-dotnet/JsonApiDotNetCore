@@ -458,7 +458,7 @@ public override void BeforeImplicitUpdateRelationship(IAffectedRelationships<Per
 ## Using Resource Hooks without Entity Framework Core
 
 If you want to use Resource Hooks without Entity Framework Core, there are several things that you need to consider that need to be met. For any resource that you want to use hooks for:
-1. The corresponding resource repository must fully implement `IEntityReadRepository<TEntity, TId>`
+1. The corresponding resource repository must fully implement `IResourceReadRepository<TEntity, TId>`
 2. If you are using custom services, you will be responsible for injecting the `IResourceHookExecutor` service into your services and call the appropriate methods. See the [hook execution overview](#hook-execution-overview) to determine which hook should be fired in which scenario.
 
 If you are required to use the `BeforeImplicitUpdateRelationship` hook (see previous example), there is an additional requirement. For this hook, given a particular relationship, JsonApiDotNetCore needs to be able to resolve the inverse relationship. For example: if `Article` has one  author (a `Person`), then it needs to be able to resolve the `RelationshipAttribute` that corresponds to the inverse relationship for the `author` property. There are two approaches :
