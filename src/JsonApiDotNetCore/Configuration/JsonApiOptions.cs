@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Configuration
         public bool IncludeExceptionStackTraceInErrors { get; set; } = false;
 
         /// <summary>
-        /// Whether or not resource hooks are enabled. 
+        /// Whether or not resource hooks are enabled.
         /// This is currently an experimental feature and defaults to <see langword="false"/>.
         /// </summary>
         public bool EnableResourceHooks { get; set; } = false;
@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Whether or not database values should be included by default
         /// for resource hooks. Ignored if EnableResourceHooks is set false.
-        /// 
+        ///
         /// Defaults to <see langword="false"/>.
         /// </summary>
         public bool LoadDatabaseValues { get; set; }
@@ -55,12 +55,12 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <inheritdoc/>
         public bool AllowQueryStringOverrideForSerializerNullValueHandling { get; set; }
-        
+
         /// <inheritdoc/>
         public bool AllowQueryStringOverrideForSerializerDefaultValueHandling { get; set; }
 
         /// <inheritdoc/>
-        public AttrCapabilities DefaultAttrCapabilities { get; } = AttrCapabilities.All;
+        public AttrCapabilities DefaultAttrCapabilities { get; set; } = AttrCapabilities.All;
 
         /// <summary>
         /// The default page size for all resources. The value zero means: no paging.
@@ -98,8 +98,8 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <summary>
         /// Whether or not clients can provide ids when creating resources.
-        /// Defaults to false.  When disabled the application will respond 
-        /// with a 403 Forbidden response if a client attempts to create a 
+        /// Defaults to false.  When disabled the application will respond
+        /// with a 403 Forbidden response if a client attempts to create a
         /// resource with a defined id.
         /// </summary>
         /// <example>
