@@ -46,7 +46,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-Be aware that the previous command does not inject resource definitions and service layer overrides. You can it combine with auto-discovery to register them.
+Be aware that the previous command does not inject resource definitions and service layer overrides. You can combine it with auto-discovery to register them.
 
 ```c#
 // Startup.cs
