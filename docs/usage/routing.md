@@ -1,6 +1,6 @@
 # Routing
 
-By default the library will configure routes for each controller. 
+By default the library will configure routes for each controller.
 Based on the recommendations outlined in the json:api spec, routes are camel-cased.
 
 ```http
@@ -43,7 +43,7 @@ It is important to note that your routes must still end with the model name in t
 ```c#
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddJsonApi(resources: builder => 
+    services.AddJsonApi(resources: builder =>
         builder.AddResource<TodoItem>("my-models")); // kebab-cased
 }
 
@@ -55,5 +55,5 @@ public class MyModelsController : JsonApiController<TodoItem>
 }
 ```
 
-See [this](~/usage/resource-graph.html#public-resource-type-name) for 
+See [this](~/usage/resource-graph.html#public-resource-type-name) for
 more information on how the resource name is determined.

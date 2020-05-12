@@ -1,6 +1,6 @@
 # Including Relationships
 
-JsonApiDotNetCore supports [request include params](http://jsonapi.org/format/#fetching-includes) out of the box, 
+JsonApiDotNetCore supports [request include params](http://jsonapi.org/format/#fetching-includes) out of the box,
 for side-loading related resources.
 
 ```http
@@ -33,7 +33,7 @@ GET /articles/1?include=comments HTTP/1.1
       "attributes": {
         "body": "First!"
       }
-    }, 
+    },
     {
       "type": "comments",
       "id": "12",
@@ -49,5 +49,5 @@ GET /articles/1?include=comments HTTP/1.1
 
 _since v3.0.0_
 
-JsonApiDotNetCore also supports deeply nested inclusions. 
+JsonApiDotNetCore also supports deeply nested inclusions.
 This allows you to include data across relationships by using a period-delimited relationship path, such as comments.author.

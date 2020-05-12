@@ -8,7 +8,7 @@ public class ArticlesController : JsonApiController<Article>
     public ArticlesController(
         IJsonApiOptions jsonApiOptions,
         ILoggerFactory loggerFactory,
-        IResourceService<Article> resourceService) 
+        IResourceService<Article> resourceService)
         : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 }
@@ -31,7 +31,7 @@ public class ArticlesController : JsonApiController<Article, Guid>
     { }
 }
 ```
-        
+
 ## Resource Access Control
 
 It is often desirable to limit what methods are exposed on your controller. The first way, you can do this is to simply inherit from `BaseJsonApiController` and explicitly declare what methods are available.
@@ -46,18 +46,18 @@ public class ArticlesController : BaseJsonApiController<Article>
     public ArticlesController(
         IJsonApiOptions jsonApiOptions,
         ILoggerFactory loggerFactory,
-        IResourceService<Article> resourceService) 
+        IResourceService<Article> resourceService)
         : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 
     [HttpGet]
-    public override async Task<IActionResult> GetAsync() 
+    public override async Task<IActionResult> GetAsync()
     {
         return await base.GetAsync();
     }
 
     [HttpGet("{id}")]
-    public override async Task<IActionResult> GetAsync(int id) 
+    public override async Task<IActionResult> GetAsync(int id)
     {
         return await base.GetAsync(id);
     }
@@ -73,7 +73,7 @@ The next option is to use the ActionFilter attributes that ship with the library
 - `NoHttpDelete`: disallow DELETE requests
 - `HttpReadOnly`: all of the above
 
-Not only does this reduce boilerplate, but it also provides a more meaningful HTTP response code. 
+Not only does this reduce boilerplate, but it also provides a more meaningful HTTP response code.
 An attempt to use one blacklisted methods will result in a HTTP 405 Method Not Allowed response.
 
 ```c#
@@ -83,7 +83,7 @@ public class ArticlesController : BaseJsonApiController<Article>
     public ArticlesController(
         IJsonApiOptions jsonApiOptions,
         ILoggerFactory loggerFactory,
-        IResourceService<Article> resourceService) 
+        IResourceService<Article> resourceService)
         : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 }
@@ -98,17 +98,17 @@ As with the ActionFilter attributes, if a service implementation is not availabl
 For more information about resource injection, see the next section titled Resource Services.
 
 ```c#
-public class ReportsController : BaseJsonApiController<Report> 
+public class ReportsController : BaseJsonApiController<Report>
 {
     public ReportsController(
         IJsonApiOptions jsonApiOptions,
         ILoggerFactory loggerFactory,
-        IResourceService<Report> resourceService) 
+        IResourceService<Report> resourceService)
         : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 
     [HttpGet]
-    public override async Task<IActionResult> GetAsync() 
+    public override async Task<IActionResult> GetAsync()
     {
         return await base.GetAsync();
     }

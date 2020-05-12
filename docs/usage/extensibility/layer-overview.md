@@ -5,12 +5,12 @@ By default, data retrieval is distributed across 3 layers:
 ```
 JsonApiController (required)
 
-└── DefaultResourceService: IResourceService
++-- DefaultResourceService: IResourceService
 
-     └── DefaultResourceRepository: IResourceRepository
+     +-- DefaultResourceRepository: IResourceRepository
 ```
 
-Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible to keep the controllers free of unnecessary logic. 
+Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible to keep the controllers free of unnecessary logic.
 You can use the following as a general rule of thumb for where to put business logic:
 
 - `Controller`: simple validation logic that should result in the return of specific HTTP status codes, such as model validation

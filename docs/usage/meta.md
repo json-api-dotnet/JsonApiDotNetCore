@@ -22,7 +22,7 @@ public class Person : Identifiable, IHasMeta
 
 ## Request Meta
 
-Request Meta can be added by injecting a service that implements `IRequestMeta`. 
+Request Meta can be added by injecting a service that implements `IRequestMeta`.
 This is useful if you need access to other injected services to build the meta object.
 
 ```c#

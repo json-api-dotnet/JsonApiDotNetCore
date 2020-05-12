@@ -6,10 +6,10 @@ A [{ json:api }](https://jsonapi.org) web application framework for .Net Core.
 
 ### 1. Eliminate Boilerplate
 
-The goal of this package is to facility the development of json:api applications that leverage the full range 
+The goal of this package is to facility the development of json:api applications that leverage the full range
 of features provided by the specification.
 
-Eliminate CRUD boilerplate and provide the following features across all your resource endpoints: 
+Eliminate CRUD boilerplate and provide the following features across all your resource endpoints:
 
 - Relationship inclusion and navigation
 - Filtering

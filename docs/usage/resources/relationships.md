@@ -1,11 +1,11 @@
 # Relationships
 
-In order for navigation properties to be identified in the model, 
+In order for navigation properties to be identified in the model,
 they should be labeled with the appropriate attribute (either `HasOne`, `HasMany` or `HasManyThrough`).
 
 ## HasOne
 
-Dependent relationships should contain a property in the form `{RelationshipName}Id`. 
+Dependent relationships should contain a property in the form `{RelationshipName}Id`.
 For example, a TodoItem may have an Owner and so the Id attribute should be OwnerId.
 
 ```c#
@@ -38,8 +38,8 @@ public class Person : Identifiable<int>
 
 ## HasManyThrough
 
-Currently, Entity Framework Core [does not support](https://github.com/aspnet/EntityFrameworkCore/issues/1368) many-to-many relationships without a join entity. 
-For this reason, we have decided to fill this gap by allowing applications to declare a relationship as `HasManyThrough`. 
+Currently, Entity Framework Core [does not support](https://github.com/aspnet/EntityFrameworkCore/issues/1368) many-to-many relationships without a join entity.
+For this reason, we have decided to fill this gap by allowing applications to declare a relationship as `HasManyThrough`.
 JsonApiDotNetCore will expose this attribute to the client the same way as any other `HasMany` attribute.
 However, under the covers it will use the join type and Entity Framework Core's APIs to get and set the relationship.
 

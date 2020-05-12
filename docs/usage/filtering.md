@@ -1,7 +1,7 @@
 # Filtering
 
-Resources can be filtered by attributes using the `filter` query parameter. 
-By default, all attributes are filterable. 
+Resources can be filtered by attributes using the `filter` query parameter.
+By default, all attributes are filterable.
 The filtering strategy we have selected, uses the following form.
 
 ```
@@ -25,7 +25,7 @@ Examples can be found in the table below.
 | Is Null                       | `isnull`      | `?filter[attribute]=isnull:`              |
 | Is Not Null                   | `isnotnull`   | `?filter[attribute]=isnotnull:`           |
 
-Filters can be combined and will be applied using an AND operator. 
+Filters can be combined and will be applied using an AND operator.
 The following are equivalent query forms to get articles whose ordinal values are between 1-100.
 
 ```http

@@ -1,6 +1,6 @@
 # Step-By-Step Guide to a Running API
 
-The most basic use case leverages Entity Framework Core. 
+The most basic use case leverages Entity Framework Core.
 The shortest path to a running API looks like:
 
 - Create a new web app
@@ -33,20 +33,20 @@ Install-Package JsonApiDotnetCore
 ```
 
 ### Define Models
-        
+
 Define your domain models such that they implement `IIdentifiable<TId>`.
 The easiest way to do this is to inherit from `Identifiable`
 
 ```c#
 public class Person : Identifiable
-{ 
+{
     [Attr("name")]
     public string Name { get; set; }
 }
 ```
 
 ### Define DbContext
-        
+
 Nothing special here, just an ordinary `DbContext`
 
 ```
@@ -54,13 +54,13 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }
-        
+
     public DbSet<Person> People { get; set; }
 }
 ```
 
 ### Define Controllers
-        
+
 You need to create controllers that inherit from `JsonApiController<T>` or `JsonApiController<T, TId>`
 where `T` is the model that inherits from `Identifiable<TId>`
 
@@ -86,7 +86,7 @@ public void ConfigureServices(IServiceCollection services)
 {
     // Add the Entity Framework Core DbContext like you normally would
     services.AddDbContext<AppDbContext>(options =>
-    { 
+    {
         // Use whatever provider you want, this is just an example
         options.UseNpgsql(GetDbConnectionString());
     });
@@ -96,7 +96,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-Add the middleware to the Startup.Configure method. Note that under the hood, 
+Add the middleware to the Startup.Configure method. Note that under the hood,
 this will call `app.UseRouting()` and `app.UseEndpoints(...)` so there is no need to add that as well.
 
 ```c#

@@ -36,7 +36,7 @@ See the [examples](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/mas
 
 ## Installation And Usage
 
-See [the documentation](https://json-api-dotnet.github.io/#/) for detailed usage. 
+See [the documentation](https://json-api-dotnet.github.io/#/) for detailed usage.
 
 ### Models
 
@@ -56,7 +56,7 @@ public class ArticlesController : JsonApiController<Article>
         public ArticlesController(
             IJsonApiOptions jsonApiOptions,
             IResourceService<Article> resourceService,
-            ILoggerFactory loggerFactory) 
+            ILoggerFactory loggerFactory)
             : base(jsonApiOptions, resourceService, loggerFactory)
         { }
 }
@@ -65,7 +65,7 @@ public class ArticlesController : JsonApiController<Article>
 ### Middleware
 
 ```csharp
-public class Startup 
+public class Startup
 {
     public IServiceProvider ConfigureServices(IServiceCollection services) {
         services.AddJsonApi<AppDbContext>();
@@ -89,7 +89,7 @@ dotnet restore
 
 #### Testing
 
-Running tests locally requires access to a PostgreSQL database.  If you have docker installed, this can be propped up via: 
+Running tests locally requires access to a PostgreSQL database.  If you have docker installed, this can be propped up via:
 
 ```bash
 docker run --rm --name jsonapi-dotnet-core-testing  -e POSTGRES_DB=JsonApiDotNetCoreExample -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:12.0

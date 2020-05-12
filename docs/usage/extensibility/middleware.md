@@ -5,7 +5,7 @@ Add the following to your Startup.ConfigureServices method. Replace AppDbContext
 services.AddJsonApi<AppDbContext>();
 ```
 
-Add the middleware to the Startup.Configure method. Note that under the hood, 
+Add the middleware to the Startup.Configure method. Note that under the hood,
 this will call `app.UseRouting()` and `app.UseEndpoints(...)` so there is no need to add that as well.
 
 ```c3

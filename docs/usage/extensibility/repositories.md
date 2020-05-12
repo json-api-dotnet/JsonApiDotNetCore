@@ -5,7 +5,7 @@ If you want to use Entity Framework Core, but need additional data access logic 
 The repository should then be added to the service collection in Startup.cs.
 
 ```c#
-public void ConfigureServices(IServiceCollection services) 
+public void ConfigureServices(IServiceCollection services)
 {
     services.AddScoped<IResourceRepository<Article>, AuthorizedArticleRepository>();
     // ...

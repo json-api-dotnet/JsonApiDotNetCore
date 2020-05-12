@@ -1,7 +1,7 @@
 # Sorting
 
 Resources can be sorted by one or more attributes.
-The default sort order is ascending. 
+The default sort order is ascending.
 To sort descending, prepend the sort key with a minus (-) sign.
 
 ## Ascending

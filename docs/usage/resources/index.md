@@ -19,21 +19,21 @@ public class Person : Identifiable<int>
 { }
 ```
 
-If you need to hang annotations or attributes on the `Id` property, 
+If you need to hang annotations or attributes on the `Id` property,
 you can override the virtual property.
 
 ```c#
 public class Person : Identifiable
-{ 
+{
     [Key]
     [Column("person_id")]
     public override int Id { get; set; }
 }
 ```
 
-If your resource must inherit from another class, 
-you can always implement the interface yourself. 
-In this example, `ApplicationUser` inherits from `IdentityUser` 
+If your resource must inherit from another class,
+you can always implement the interface yourself.
+In this example, `ApplicationUser` inherits from `IdentityUser`
 which already contains an Id property of type string.
 
 ```c#

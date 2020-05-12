@@ -86,8 +86,8 @@ public class Bar
 }
 ```
 
-If you need your complex attributes persisted as a 
-JSON string in your database, but you need access to it as a concrete type, you can define two members on your resource. 
+If you need your complex attributes persisted as a
+JSON string in your database, but you need access to it as a concrete type, you can define two members on your resource.
 The first member is the concrete type that you will directly interact with in your application. You can use the `NotMapped` attribute to prevent Entity Framework Core from mapping it to the database. The second is the raw JSON property that will be persisted to the database. How you use these members should determine which one is responsible for serialization. In this example, we only serialize and deserialize at the time of persistence
 and retrieval.
 
@@ -105,8 +105,8 @@ public class Foo : Identifiable
         }
         set
         {
-            Bar = string.IsNullOrWhiteSpace(value) 
-                ? null 
+            Bar = string.IsNullOrWhiteSpace(value)
+                ? null
                 : JsonConvert.DeserializeObject<Bar>(value);
         }
     }
