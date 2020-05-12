@@ -11,6 +11,19 @@ namespace UnitTests.Models
     public sealed class ResourceDefinition_Scenario_Tests
     {
         [Fact]
+        public void Property_Sort_Order_Uses_NewExpression()
+        {
+            // Arrange
+            var resource = new RequestFilteredResource(isAdmin: false);
+
+            // Act
+            var sorts = resource.DefaultSort();
+
+            // Assert
+            Assert.Equal(SortDirection.Ascending, sorts[0].Item2);
+        }
+        
+        [Fact]
         public void Request_Filter_Uses_Member_Expression()
         {
             // Arrange
