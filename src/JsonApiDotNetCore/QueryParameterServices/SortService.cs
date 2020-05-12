@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public List<SortQueryContext> Get()
         {
-            if (_queries == null)
+            if (!_queries.Any())
             {
                 var requestResourceDefinition = _resourceDefinitionProvider.Get(_requestResource.ResourceType);
                 if (requestResourceDefinition != null)
