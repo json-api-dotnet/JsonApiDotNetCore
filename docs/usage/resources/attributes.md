@@ -97,15 +97,18 @@ public class Foo : Identifiable
     [Attr, NotMapped]
     public Bar Bar { get; set; }
 
-    public string BarJson 
-    { 
-        get => (Bar == null) 
-                ? "{}"
-                : JsonConvert.SerializeObject(Bar);
-        
-        set => Bar = string.IsNullOrWhiteSpace(value)
-                ? null
-                : JsonConvert.DeserializeObject(value);
-    };
+    public string BarJson
+    {
+        get
+        {
+            return Bar == null ? "{}" : JsonConvert.SerializeObject(Bar);
+        }
+        set
+        {
+            Bar = string.IsNullOrWhiteSpace(value) 
+                ? null 
+                : JsonConvert.DeserializeObject<Bar>(value);
+        }
+    }
 }
 ```

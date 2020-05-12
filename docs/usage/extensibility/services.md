@@ -156,11 +156,15 @@ public class ArticlesController : BaseJsonApiController<Article>
     { }
 
     [HttpPost]
-    public override async Task<IActionResult> PostAsync([FromBody] Article entity) 
-        => await base.PostAsync(entity);
+    public override async Task<IActionResult> PostAsync([FromBody] Article entity)
+    {
+        return await base.PostAsync(entity);
+    } 
 
     [HttpDelete("{id}")]
     public override async Task<IActionResult>DeleteAsync(int id) 
-        => await base.DeleteAsync(id);
+    {
+        return await base.DeleteAsync(id);
+    }
 }
 ```

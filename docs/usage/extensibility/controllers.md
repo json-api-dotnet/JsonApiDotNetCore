@@ -52,11 +52,15 @@ public class ArticlesController : BaseJsonApiController<Article>
 
     [HttpGet]
     public override async Task<IActionResult> GetAsync() 
-        => await base.GetAsync();
+    {
+        return await base.GetAsync();
+    }
 
     [HttpGet("{id}")]
     public override async Task<IActionResult> GetAsync(int id) 
-        => await base.GetAsync(id);
+    {
+        return await base.GetAsync(id);
+    }
 }
 ```
 
@@ -105,6 +109,8 @@ public class ReportsController : BaseJsonApiController<Report>
 
     [HttpGet]
     public override async Task<IActionResult> GetAsync() 
-        => await base.GetAsync();
+    {
+        return await base.GetAsync();
+    }
 }
 ```

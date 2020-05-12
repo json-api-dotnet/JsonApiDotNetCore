@@ -69,7 +69,10 @@ public class ShippingAddress : Identifiable
     public string Street { get; set; }
 
     [Attr]
-    public string CountryName => Country.DisplayName;
+    public string CountryName
+    {
+        get { return Country.DisplayName; }
+    }
 
     [EagerLoad] // not exposed as resource, but adds .Include("Country") to the query
     public Country Country { get; set; }

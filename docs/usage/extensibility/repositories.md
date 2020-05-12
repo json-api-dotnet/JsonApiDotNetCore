@@ -71,7 +71,10 @@ public class DbContextAResolver : IDbContextResolver
         _context = context;
     }
 
-    public DbContext GetContext() => _context;
+    public DbContext GetContext()
+    {
+        return _context;
+    }
 }
 
 

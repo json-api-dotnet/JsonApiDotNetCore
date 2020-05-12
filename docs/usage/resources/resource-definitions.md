@@ -77,11 +77,14 @@ You can define the default sort behavior if no `sort` query is provided.
 ```c#
 public class AccountDefinition : ResourceDefinition<Account>
 {
-    public override PropertySortOrder GetDefaultSortOrder() => new PropertySortOrder
+    public override PropertySortOrder GetDefaultSortOrder()
     {
-        (account => account.Prop, SortDirection.Ascending),
-        (account => account.Prop2, SortDirection.Descending),
-    };
+        return new PropertySortOrder
+        {
+            (account => account.LastLoginTime, SortDirection.Descending),
+            (account => account.UserName, SortDirection.Ascending)
+        };
+    }
 }
 ```
 
@@ -96,18 +99,24 @@ If the key is present in a filter request, the supplied query will be used rathe
 public class ItemDefinition : ResourceDefinition<Item>
 {
     // handles queries like: ?filter[was-active-on]=2018-10-15T01:25:52Z
-    public override QueryFilters GetQueryFilters() => new QueryFilters
+    public override QueryFilters GetQueryFilters()
     {
+        return new QueryFilters
         {
-            "was-active-on", (items, filter) => DateTime.TryParse(filter.Value, out DateTime dateValue)
-                ? items.Where(i => i.Expired == null || dateValue < i.Expired)
-                : throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+            {
+                "was-active-on", (items, filter) =>
                 {
-                    Title = "Invalid filter value",
-                    Detail = $"'{filter.Value}' is not a valid date."
-                })
-        }
-    };
+                    return DateTime.TryParse(filter.Value, out DateTime timeValue)
+                        ? items.Where(item => item.ExpireTime == null || timeValue < item.ExpireTime)
+                        : throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                        {
+                            Title = "Invalid filter value",
+                            Detail = $"'{filter.Value}' is not a valid date."
+                        });
+                }
+            }
+        };
+    }
 }
 ```
 
