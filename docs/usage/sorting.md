@@ -16,10 +16,18 @@ GET /api/articles?sort=author HTTP/1.1
 GET /api/articles?sort=-author HTTP/1.1
 ```
 
-## Multiple
+## Multiple attributes
 
 ```http
 GET /api/articles?sort=author,-pageCount HTTP/1.1
+```
+
+## Limitations
+
+Sorting currently does **not** work on nested endpoints:
+
+```http
+GET /api/blogs/1/articles?sort=title HTTP/1.1
 ```
 
 ## Default Sort

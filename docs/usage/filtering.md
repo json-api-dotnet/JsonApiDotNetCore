@@ -11,8 +11,8 @@ The filtering strategy we have selected, uses the following form.
 For operations other than equality, the query can be prefixed with an operation identifier.
 Examples can be found in the table below.
 
-| Operation                     | Prefix         | Example                                  |
-|-------------------------------|---------------|------------------------------------------|
+| Operation                     | Prefix        | Example                                   |
+|-------------------------------|---------------|-------------------------------------------|
 | Equals                        | `eq`          | `?filter[attribute]=eq:value`             |
 | Not Equals                    | `ne`          | `?filter[attribute]=ne:value`             |
 | Less Than                     | `lt`          | `?filter[attribute]=lt:10`                |
@@ -34,6 +34,19 @@ GET /api/articles?filter[ordinal]=gt:1,lt:100 HTTP/1.1
 ```http
 GET /api/articles?filter[ordinal]=gt:1&filter[ordinal]=lt:100 HTTP/1.1
 ```
+
+Aside from filtering on the resource being requested (top-level), filtering on single-depth related resources that are being included can be done too.
+
+```http
+GET /api/articles?include=author&filter[title]=like:marketing&filter[author.lastName]=Smith HTTP/1.1
+```
+
+Due to a [limitation](https://github.com/dotnet/efcore/issues/1833) in Entity Framework Core 3.x, filtering does **not** work on nested endpoints:
+
+```http
+GET /api/blogs/1/articles?filter[title]=like:new HTTP/1.1
+```
+
 
 ## Custom Filters
 
