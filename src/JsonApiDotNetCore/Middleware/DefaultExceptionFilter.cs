@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -17,12 +18,15 @@ namespace JsonApiDotNetCore.Middleware
 
         public void OnException(ExceptionContext context)
         {
-            var errorDocument = _exceptionHandler.HandleException(context.Exception);
-
-            context.Result = new ObjectResult(errorDocument)
+            if (context.HttpContext.IsJsonApiRequest())
             {
-                StatusCode = (int) errorDocument.GetErrorStatusCode()
-            };
+                var errorDocument = _exceptionHandler.HandleException(context.Exception);
+
+                context.Result = new ObjectResult(errorDocument)
+                {
+                    StatusCode = (int) errorDocument.GetErrorStatusCode()
+                };
+            }
         }
     }
 }

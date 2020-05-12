@@ -1,12 +1,23 @@
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Services;
+using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers.Restricted
 {
-    [Route("[controller]")]
+    [DisableRoutingConvention, Route("[controller]")]
     [HttpReadOnly]
-    public class ReadOnlyController : ControllerBase
+    public class ReadOnlyController : BaseJsonApiController<Article>
     {
+        public ReadOnlyController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
+            IResourceService<Article> resourceService) 
+            : base(jsonApiOptions, loggerFactory, resourceService)
+        { }
+
         [HttpGet]
         public IActionResult Get() => Ok();
 
@@ -20,10 +31,17 @@ namespace JsonApiDotNetCoreExample.Controllers.Restricted
         public IActionResult Delete() => Ok();
     }
 
-    [Route("[controller]")]
+    [DisableRoutingConvention, Route("[controller]")]
     [NoHttpPost]
-    public class NoHttpPostController : ControllerBase
+    public class NoHttpPostController : BaseJsonApiController<Article>
     {
+        public NoHttpPostController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
+            IResourceService<Article> resourceService) 
+            : base(jsonApiOptions, loggerFactory, resourceService)
+        { }
+
         [HttpGet]
         public IActionResult Get() => Ok();
 
@@ -37,10 +55,17 @@ namespace JsonApiDotNetCoreExample.Controllers.Restricted
         public IActionResult Delete() => Ok();
     }
 
-    [Route("[controller]")]
+    [DisableRoutingConvention, Route("[controller]")]
     [NoHttpPatch]
-    public class NoHttpPatchController : ControllerBase
+    public class NoHttpPatchController : BaseJsonApiController<Article>
     {
+        public NoHttpPatchController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
+            IResourceService<Article> resourceService) 
+            : base(jsonApiOptions, loggerFactory, resourceService)
+        { }
+
         [HttpGet]
         public IActionResult Get() => Ok();
 
@@ -54,10 +79,17 @@ namespace JsonApiDotNetCoreExample.Controllers.Restricted
         public IActionResult Delete() => Ok();
     }
 
-    [Route("[controller]")]
+    [DisableRoutingConvention, Route("[controller]")]
     [NoHttpDelete]
-    public class NoHttpDeleteController : ControllerBase
+    public class NoHttpDeleteController : BaseJsonApiController<Article>
     {
+        public NoHttpDeleteController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
+            IResourceService<Article> resourceService) 
+            : base(jsonApiOptions, loggerFactory, resourceService)
+        { }
+
         [HttpGet]
         public IActionResult Get() => Ok();
 
