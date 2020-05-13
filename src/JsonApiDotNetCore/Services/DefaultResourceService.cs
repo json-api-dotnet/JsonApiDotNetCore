@@ -143,8 +143,10 @@ namespace JsonApiDotNetCore.Services
             _hookExecutor?.BeforeRead<TResource>(pipeline, id.ToString());
 
             var entityQuery = _repository.Get(id);
+            entityQuery = ApplyFilter(entityQuery);
             entityQuery = ApplyInclude(entityQuery);
             entityQuery = ApplySelect(entityQuery);
+
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
 
             if (entity == null)
