@@ -29,12 +29,6 @@ namespace JsonApiDotNetCore
         /// </example>
         public static void UseJsonApi(this IApplicationBuilder app, bool skipRegisterMiddleware = false, bool useAuthentication = false, bool useAuthorization = false)
         {
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var inverseRelationshipResolver = scope.ServiceProvider.GetService<IInverseRelationships>();
-                inverseRelationshipResolver?.Resolve();
-            }
-
             if (!skipRegisterMiddleware) 
             {
                 // An endpoint is selected and set on the HttpContext if a match is found
