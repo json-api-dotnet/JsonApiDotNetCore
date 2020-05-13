@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
@@ -20,9 +21,15 @@ namespace UnitTests.Models
             var sorts = resource.DefaultSort();
 
             // Assert
-            Assert.Equal(SortDirection.Ascending, sorts[0].Item2);
+            Assert.Equal(2, sorts.Count);
+
+            Assert.Equal(nameof(Model.Prop), sorts[0].Attribute.PropertyInfo.Name);
+            Assert.Equal(SortDirection.Ascending, sorts[0].SortDirection);
+
+            Assert.Equal(nameof(Model.Password), sorts[1].Attribute.PropertyInfo.Name);
+            Assert.Equal(SortDirection.Descending, sorts[1].SortDirection);
         }
-        
+
         [Fact]
         public void Request_Filter_Uses_Member_Expression()
         {
@@ -76,7 +83,8 @@ namespace UnitTests.Models
             };
         public override PropertySortOrder GetDefaultSortOrder()
             => new PropertySortOrder {
-                (t => t.Prop, SortDirection.Ascending)
+                (t => t.Prop, SortDirection.Ascending),
+                (t => t.Password, SortDirection.Descending)
             };
     }
 }
