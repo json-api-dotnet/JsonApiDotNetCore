@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -54,11 +55,22 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <inheritdoc/>
         public string Serialize(object data)
         {
+            if (data == null || data is IIdentifiable)
+            {
+                return SerializeSingle((IIdentifiable)data);
+            }
+
+            if (data is IEnumerable<IIdentifiable> collectionOfIdentifiable)
+            {
+                return SerializeMany(collectionOfIdentifiable);
+            }
+
             if (data is ErrorDocument errorDocument)
+            {
                 return SerializeErrorDocument(errorDocument);
-            if (data is IEnumerable entities)
-                return SerializeMany(entities);
-            return SerializeSingle((IIdentifiable)data);
+            }
+
+            throw new InvalidOperationException("Data being returned must be errors or resources.");
         }
 
         private string SerializeErrorDocument(ErrorDocument errorDocument)
@@ -102,11 +114,11 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <remarks>
         /// This method is set internal instead of private for easier testability.
         /// </remarks>
-        internal string SerializeMany(IEnumerable entities)
+        internal string SerializeMany(IEnumerable<IIdentifiable> entities)
         {
             var (attributes, relationships) = GetFieldsToSerialize();
             var document = Build(entities, attributes, relationships);
-            foreach (ResourceObject resourceObject in (IEnumerable)document.Data)
+            foreach (ResourceObject resourceObject in document.ManyData)
             {
                 var links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
                 if (links == null)

@@ -115,7 +115,7 @@ namespace UnitTests.Serialization
                 return base.Build(entity, attributes, relationships);
             }
 
-            public new Document Build(IEnumerable entities, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
+            public new Document Build(IEnumerable<IIdentifiable> entities, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
             {
                 return base.Build(entities, attributes, relationships);
             }

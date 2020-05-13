@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         }
 
         /// <inheritdoc/>
-        public string Serialize(IEnumerable entities)
+        public string Serialize(IEnumerable<IIdentifiable> entities)
         {
             IIdentifiable entity = null;
             foreach (IIdentifiable item in entities)

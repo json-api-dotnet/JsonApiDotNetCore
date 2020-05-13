@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// </summary>
         /// <param name="entities">Entities to serialize</param>
         /// <returns>The serialized content</returns>
-        string Serialize(IEnumerable entities);
+        string Serialize(IEnumerable<IIdentifiable> entities);
         /// <summary>
         /// Sets the attributes that will be included in the serialized payload.
         /// You can use <see cref="IResourceGraph.GetAttributes{TResource}"/>

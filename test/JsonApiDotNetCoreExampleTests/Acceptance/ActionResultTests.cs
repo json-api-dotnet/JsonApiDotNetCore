@@ -77,5 +77,41 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal("NotFound", errorDocument.Errors[0].Title);
             Assert.Null(errorDocument.Errors[0].Detail);
         }
+
+        [Fact]
+        public async Task ActionResult_With_String_Object_Is_Converted_To_Error_Collection()
+        {
+            // Arrange
+            var route = "/abstract/123";
+            var request = new HttpRequestMessage(HttpMethod.Patch, route);
+            var content = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    id = 123,
+                    attributes = new Dictionary<string, object>
+                    {
+                        {"ordinal", 1}
+                    }
+                }
+            };
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.InternalServerError, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("An unhandled error occurred while processing this request.", errorDocument.Errors[0].Title);
+            Assert.Equal("Data being returned must be errors or resources.", errorDocument.Errors[0].Detail);
+        }
     }
 }
