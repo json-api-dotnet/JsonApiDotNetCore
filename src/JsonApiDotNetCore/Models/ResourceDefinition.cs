@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Models
         List<AttrAttribute> GetAllowedAttributes();
         List<RelationshipAttribute> GetAllowedRelationships();
         object GetCustomQueryFilter(string key);
-        List<(AttrAttribute, SortDirection)> DefaultSort();
+        List<(AttrAttribute Attribute, SortDirection SortDirection)> DefaultSort();
     }
 
     /// <summary>
@@ -146,14 +146,16 @@ namespace JsonApiDotNetCore.Models
         /// </example>
         public virtual PropertySortOrder GetDefaultSortOrder() => null;
 
-        public List<(AttrAttribute, SortDirection)> DefaultSort()
+        public List<(AttrAttribute Attribute, SortDirection SortDirection)> DefaultSort()
         {
             var defaultSortOrder = GetDefaultSortOrder();
             if (defaultSortOrder != null && defaultSortOrder.Count > 0)
             {
-                var order = new List<(AttrAttribute, SortDirection)>();
+                var order = new List<(AttrAttribute Attribute, SortDirection SortDirection)>();
                 foreach (var sortProp in defaultSortOrder)
-                    order.Add((_resourceGraph.GetAttributes(sortProp.Item1).Single(), sortProp.Item2));
+                {
+                    order.Add((_resourceGraph.GetAttributes(sortProp.Attribute).Single(), sortProp.SortDirection));
+                }
 
                 return order;
             }
@@ -166,6 +168,6 @@ namespace JsonApiDotNetCore.Models
         /// method signature.
         /// See <see cref="GetQueryFilters" /> for usage details.
         /// </summary>
-        public sealed class PropertySortOrder : List<(Expression<Func<TResource, dynamic>>, SortDirection)> { }
+        public sealed class PropertySortOrder : List<(Expression<Func<TResource, dynamic>> Attribute, SortDirection SortDirection)> { }
     }
 }
