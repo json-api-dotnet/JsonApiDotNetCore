@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal.Query;
@@ -23,7 +24,7 @@ namespace UnitTests.Models
             // Assert
             Assert.Equal(2, sorts.Count);
 
-            Assert.Equal(nameof(Model.Prop), sorts[0].Attribute.PropertyInfo.Name);
+            Assert.Equal(nameof(Model.CreatedAt), sorts[0].Attribute.PropertyInfo.Name);
             Assert.Equal(SortDirection.Ascending, sorts[0].SortDirection);
 
             Assert.Equal(nameof(Model.Password), sorts[1].Attribute.PropertyInfo.Name);
@@ -62,7 +63,7 @@ namespace UnitTests.Models
     {
         [Attr] public string AlwaysExcluded { get; set; }
         [Attr] public string Password { get; set; }
-        [Attr] public string Prop { get; set; }
+        [Attr] public DateTime CreatedAt { get; set; }
     }
 
     public sealed class RequestFilteredResource : ResourceDefinition<Model>
@@ -72,19 +73,21 @@ namespace UnitTests.Models
         public RequestFilteredResource(bool isAdmin) : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).AddResource<Model>().Build())
         {
             if (isAdmin)
-                HideFields(m => m.AlwaysExcluded);
+                HideFields(model => model.AlwaysExcluded);
             else
-                HideFields(m => new { m.AlwaysExcluded, m.Password });
+                HideFields(model => new { model.AlwaysExcluded, model.Password });
         }
 
         public override QueryFilters GetQueryFilters()
             => new QueryFilters {
                 { "is-active", (query, value) => query.Select(x => x) }
             };
+
         public override PropertySortOrder GetDefaultSortOrder()
-            => new PropertySortOrder {
-                (t => t.Prop, SortDirection.Ascending),
-                (t => t.Password, SortDirection.Descending)
+            => new PropertySortOrder
+            {
+                (model => model.CreatedAt, SortDirection.Ascending),
+                (model => model.Password, SortDirection.Descending)
             };
     }
 }
