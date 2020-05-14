@@ -187,10 +187,6 @@ namespace JsonApiDotNetCore.Data
                 else
                 {
                     _context.Entry(value).State = EntityState.Detached;
-
-                    // temporary work around for https://github.com/aspnet/EntityFrameworkCore/issues/18621
-                    // as soon as ef core 3.1 lands we can get rid of this again.
-                    _context.Entry(entity).State = EntityState.Detached;
                 }
             }
         }
