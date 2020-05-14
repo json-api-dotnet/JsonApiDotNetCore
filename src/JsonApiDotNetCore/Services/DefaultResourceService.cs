@@ -290,10 +290,7 @@ namespace JsonApiDotNetCore.Services
         protected virtual IQueryable<TResource> ApplySort(IQueryable<TResource> entities)
         {
             var queries = _sortService.Get();
-            if (queries != null && queries.Any())
-                foreach (var query in queries)
-                    entities = _repository.Sort(entities, query);
-
+            entities = _repository.Sort(entities, queries);
             return entities;
         }
 

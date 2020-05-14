@@ -87,11 +87,24 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual IQueryable<TResource> Sort(IQueryable<TResource> entities, SortQueryContext sortQueryContext)
+        public virtual IQueryable<TResource> Sort(IQueryable<TResource> entities, IReadOnlyCollection<SortQueryContext> sortQueryContexts)
         {
-            _logger.LogTrace($"Entering {nameof(Sort)}({nameof(entities)}, {nameof(sortQueryContext)}).");
+            _logger.LogTrace($"Entering {nameof(Sort)}({nameof(entities)}, {nameof(sortQueryContexts)}).");
 
-            return entities.Sort(sortQueryContext);
+            if (!sortQueryContexts.Any())
+            {
+                return entities;
+            }
+            
+            var primarySort = sortQueryContexts.First();
+            var entitiesSorted = entities.Sort(primarySort);
+
+            foreach (var secondarySort in sortQueryContexts.Skip(1))
+            {
+                entitiesSorted = entitiesSorted.Sort(secondarySort);
+            }
+
+            return entitiesSorted;
         }
 
         /// <inheritdoc />
