@@ -26,7 +26,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 FirstName = "John",
                 LastName = "Doe",
                 Age = 57,
-                Gender = Gender.Male
+                Gender = Gender.Male,
+                Category = "Family"
             };
 
             _dbContext.People.RemoveRange(_dbContext.People);
@@ -65,7 +66,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
       ""initials"": ""J"",
       ""lastName"": ""Doe"",
       ""the-Age"": 57,
-      ""gender"": ""Male""
+      ""gender"": ""Male"",
+      ""category"": ""Family""
     },
     ""relationships"": {
       ""todoItems"": {

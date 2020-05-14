@@ -43,6 +43,9 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public Gender Gender { get; set; }
 
+        [Attr]
+        public string Category { get; set; }
+
         [HasMany]
         public ISet<TodoItem> TodoItems { get; set; }
 

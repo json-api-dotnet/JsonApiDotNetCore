@@ -29,13 +29,21 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public List<SortQueryContext> Get()
         {
-            if (!_queries.Any())
+            if (_queries.Any())
             {
-                var requestResourceDefinition = _resourceDefinitionProvider.Get(_requestResource.ResourceType);
-                if (requestResourceDefinition != null)
-                    return requestResourceDefinition.DefaultSort()?.Select(d => BuildQueryContext(new SortQuery(d.Attribute.PublicAttributeName, d.SortDirection))).ToList();
+                return _queries.ToList();
             }
-            return _queries.ToList();
+
+            var requestResourceDefinition = _resourceDefinitionProvider.Get(_requestResource.ResourceType);
+            var defaultSort = requestResourceDefinition?.DefaultSort();
+            if (defaultSort != null)
+            {
+                return defaultSort
+                    .Select(d => BuildQueryContext(new SortQuery(d.Attribute.PublicAttributeName, d.SortDirection)))
+                    .ToList();
+            }
+
+            return new List<SortQueryContext>();
         }
 
         /// <inheritdoc/>

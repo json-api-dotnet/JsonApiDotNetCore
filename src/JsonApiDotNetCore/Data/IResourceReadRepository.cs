@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Data
         /// <summary>
         /// Apply a sort to the provided queryable
         /// </summary>
-        IQueryable<TResource> Sort(IQueryable<TResource> entities, SortQueryContext sortQueries);
+        IQueryable<TResource> Sort(IQueryable<TResource> entities, IReadOnlyCollection<SortQueryContext> sortQueryContexts);
         /// <summary>
         /// Paginate the provided queryable
         /// </summary>

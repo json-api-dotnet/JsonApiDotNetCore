@@ -77,7 +77,6 @@ namespace JsonApiDotNetCore.Extensions
 
         public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, SortQueryContext sortQuery)
         {
-
             return sortQuery.Direction == SortDirection.Descending
                 ? source.ThenByDescending(sortQuery.GetPropertyPath())
                 : source.ThenBy(sortQuery.GetPropertyPath());
