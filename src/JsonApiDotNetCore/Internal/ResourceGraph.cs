@@ -84,7 +84,9 @@ namespace JsonApiDotNetCore.Internal
 
             var targeted = new List<IResourceField>();
 
-            if (selector.Body is MemberExpression memberExpression)
+            var selectorBody = RemoveConvert(selector.Body);
+
+            if (selectorBody is MemberExpression memberExpression)
             {   // model => model.Field1
                 try
                 {
@@ -97,8 +99,7 @@ namespace JsonApiDotNetCore.Internal
                 }
             }
 
-
-            if (selector.Body is NewExpression newExpression)
+            if (selectorBody is NewExpression newExpression)
             {   // model => new { model.Field1, model.Field2 }
                 string memberName = null;
                 try
@@ -119,10 +120,16 @@ namespace JsonApiDotNetCore.Internal
                 }
             }
 
-            throw new ArgumentException($"The expression returned by '{selector}' for '{GetType()}' is of type {selector.Body.GetType()}"
-                        + " and cannot be used to select resource attributes. The type must be a NewExpression.Example: article => new { article.Author };");
-
+            throw new ArgumentException(
+                $"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " + 
+                $"For example: 'article => article.Title' or 'article => new {{ article.Title, article.PageCount }}'.");
         }
+
+        private static Expression RemoveConvert(Expression expression)
+            => expression is UnaryExpression unaryExpression
+               && unaryExpression.NodeType == ExpressionType.Convert
+                ? RemoveConvert(unaryExpression.Operand)
+                : expression;
 
         private void ThrowNotExposedError(string memberName, FieldFilterType type)
         {
