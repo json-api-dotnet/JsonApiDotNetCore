@@ -19,10 +19,10 @@ namespace UnitTests.ResourceHooks
 var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var person1 = new Person();
             var todo = new TodoItem { Owner = person1 };
-            var person2 = new Person { AssignedTodoItems = new List<TodoItem> { todo } };
+            var person2 = new Person { AssignedTodoItems = new HashSet<TodoItem> { todo } };
             todo.Assignee = person2;
             var person3 = new Person { StakeHolderTodoItem = todo };
-            todo.StakeHolders = new List<Person> { person3 };
+            todo.StakeHolders = new HashSet<Person> { person3 };
             var todoList = new List<TodoItem> { todo };
 
             // Act
@@ -78,4 +78,3 @@ var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObject
         }
     }
 }
-

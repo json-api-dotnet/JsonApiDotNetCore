@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
@@ -96,7 +97,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             {
                 Content = new StringContent(JsonConvert.SerializeObject(content))
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();

@@ -1,9 +1,9 @@
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
 using JsonApiDotNetCore.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace UnitTests.Internal
@@ -11,32 +11,34 @@ namespace UnitTests.Internal
     public sealed class ResourceGraphBuilder_Tests
     {
         [Fact]
-        public void AddDbContext_Does_Not_Throw_If_Context_Contains_Members_That_DoNot_Implement_IIdentifiable()
+        public void AddDbContext_Does_Not_Throw_If_Context_Contains_Members_That_Do_Not_Implement_IIdentifiable()
         {
             // Arrange
-            var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions());
+            var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
 
             // Act
-            resourceGraphBuilder.AddDbContext<TestContext>();
-            var resourceGraph = resourceGraphBuilder.Build() as ResourceGraph;
+            resourceGraphBuilder.AddResource(typeof(TestContext));
+            var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
 
             // Assert
             Assert.Empty(resourceGraph.GetResourceContexts());
         }
 
         [Fact]
-        public void Adding_DbContext_Members_That_DoNot_Implement_IIdentifiable_Creates_Warning()
+        public void Adding_DbContext_Members_That_Do_Not_Implement_IIdentifiable_Logs_Warning()
         {
             // Arrange
-            var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions());
+            var loggerFactory = new FakeLoggerFactory();
+            var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), loggerFactory);
+            resourceGraphBuilder.AddResource(typeof(TestContext));
 
             // Act
-            resourceGraphBuilder.AddDbContext<TestContext>();
-            var resourceGraph = resourceGraphBuilder.Build() as ResourceGraph;
+            resourceGraphBuilder.Build();
 
             // Assert
-            Assert.Single(resourceGraph.ValidationResults);
-            Assert.Contains(resourceGraph.ValidationResults, v => v.LogLevel == LogLevel.Warning);
+            Assert.Single(loggerFactory.Logger.Messages);
+            Assert.Equal(LogLevel.Warning, loggerFactory.Logger.Messages[0].LogLevel);
+            Assert.Equal("Entity 'UnitTests.Internal.ResourceGraphBuilder_Tests+TestContext' does not implement 'IIdentifiable'.", loggerFactory.Logger.Messages[0].Text);
         }
 
         private class Foo { }

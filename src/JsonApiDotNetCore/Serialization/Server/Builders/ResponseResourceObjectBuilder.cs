@@ -69,9 +69,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         private bool ShouldInclude(RelationshipAttribute relationship, out List<List<RelationshipAttribute>> inclusionChain)
         {
             inclusionChain = _includeService.Get()?.Where(l => l.First().Equals(relationship)).ToList();
-            if (inclusionChain == null || !inclusionChain.Any())
-                return false;
-            return true;
+            return inclusionChain != null && inclusionChain.Any();
         }
     }
 }

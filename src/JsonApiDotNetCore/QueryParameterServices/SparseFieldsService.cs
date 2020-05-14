@@ -17,16 +17,16 @@ namespace JsonApiDotNetCore.Query
         /// <summary>
         /// The selected fields for the primary resource of this request.
         /// </summary>
-        private List<AttrAttribute> _selectedFields;
+        private readonly List<AttrAttribute> _selectedFields = new List<AttrAttribute>();
+
         /// <summary>
         /// The selected field for any included relationships
         /// </summary>
-        private readonly Dictionary<RelationshipAttribute, List<AttrAttribute>> _selectedRelationshipFields;
+        private readonly Dictionary<RelationshipAttribute, List<AttrAttribute>> _selectedRelationshipFields = new Dictionary<RelationshipAttribute, List<AttrAttribute>>();
 
-        public SparseFieldsService(IResourceGraph resourceGraph, ICurrentRequest currentRequest) : base(resourceGraph, currentRequest)
+        public SparseFieldsService(IResourceGraph resourceGraph, ICurrentRequest currentRequest) 
+            : base(resourceGraph, currentRequest)
         {
-            _selectedFields = new List<AttrAttribute>();
-            _selectedRelationshipFields = new Dictionary<RelationshipAttribute, List<AttrAttribute>>();
         }
 
         /// <inheritdoc/>
@@ -35,8 +35,23 @@ namespace JsonApiDotNetCore.Query
             if (relationship == null)
                 return _selectedFields;
 
-            _selectedRelationshipFields.TryGetValue(relationship, out var fields);
-            return fields;
+            return _selectedRelationshipFields.TryGetValue(relationship, out var fields)
+                ? fields
+                : new List<AttrAttribute>();
+        }
+
+        public ISet<string> GetAll()
+        {
+            var properties = new HashSet<string>();
+            properties.AddRange(_selectedFields.Select(x => x.PropertyInfo.Name));
+
+            foreach (var pair in _selectedRelationshipFields)
+            {
+                string pathPrefix = pair.Key.RelationshipPath + ".";
+                properties.AddRange(pair.Value.Select(x => pathPrefix + x.PropertyInfo.Name));
+            }
+
+            return properties;
         }
 
         /// <inheritdoc/>
@@ -67,9 +82,9 @@ namespace JsonApiDotNetCore.Query
             var keySplit = parameterName.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET);
 
             if (keySplit.Length == 1)
-            {   // input format: fields=prop1,prop2
-                foreach (var field in fields)
-                    RegisterRequestResourceField(field, parameterName);
+            {
+                // input format: fields=prop1,prop2
+                RegisterRequestResourceFields(fields, parameterName);
             }
             else
             {  // input format: fields[articles]=prop1,prop2
@@ -98,45 +113,73 @@ namespace JsonApiDotNetCore.Query
                         $"'{navigation}' in 'fields[{navigation}]' is not a valid relationship of {_requestResource.ResourceName}.");
                 }
 
-                foreach (var field in fields)
-                    RegisterRelatedResourceField(field, relationship, parameterName);
+                RegisterRelatedResourceFields(fields, relationship, parameterName);
             }
         }
 
         /// <summary>
-        /// Registers field selection queries of the form articles?fields[author]=firstName
+        /// Registers field selection of the form articles?fields[author]=firstName,lastName
         /// </summary>
-        private void RegisterRelatedResourceField(string field, RelationshipAttribute relationship, string parameterName)
+        private void RegisterRelatedResourceFields(IEnumerable<string> fields, RelationshipAttribute relationship, string parameterName)
         {
-            var relationProperty = _resourceGraph.GetResourceContext(relationship.RightType);
-            var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
-            if (attr == null)
-            {
-                // TODO: Add unit test for this error, once the nesting limitation is removed and this code becomes reachable again.
+            var selectedFields = new List<AttrAttribute>();
 
-                throw new InvalidQueryStringParameterException(parameterName, "Sparse field navigation path refers to an invalid related field.",
-                    $"Related resource '{relationship.RightType.Name}' does not contain an attribute named '{field}'.");
+            foreach (var field in fields)
+            {
+                var relationProperty = _resourceGraph.GetResourceContext(relationship.RightType);
+                var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
+                if (attr == null)
+                {
+                    // TODO: Add unit test for this error, once the nesting limitation is removed and this code becomes reachable again.
+
+                    throw new InvalidQueryStringParameterException(parameterName,
+                        "Sparse field navigation path refers to an invalid related field.",
+                        $"Related resource '{relationship.RightType.Name}' does not contain an attribute named '{field}'.");
+                }
+
+                if (attr.PropertyInfo.SetMethod == null)
+                {
+                    // A read-only property was selected. Its value likely depends on another property, so include all related fields.
+                    return;
+                }
+
+                selectedFields.Add(attr);
             }
 
             if (!_selectedRelationshipFields.TryGetValue(relationship, out var registeredFields))
+            {
                 _selectedRelationshipFields.Add(relationship, registeredFields = new List<AttrAttribute>());
-            registeredFields.Add(attr);
+            }
+            registeredFields.AddRange(selectedFields);
         }
 
         /// <summary>
-        /// Registers field selection queries of the form articles?fields=title
+        /// Registers field selection of the form articles?fields=title,description
         /// </summary>
-        private void RegisterRequestResourceField(string field, string parameterName)
+        private void RegisterRequestResourceFields(IEnumerable<string> fields, string parameterName)
         {
-            var attr = _requestResource.Attributes.SingleOrDefault(a => a.Is(field));
-            if (attr == null)
+            var selectedFields = new List<AttrAttribute>();
+
+            foreach (var field in fields)
             {
-                throw new InvalidQueryStringParameterException(parameterName,
-                    "The specified field does not exist on the requested resource.",
-                    $"The field '{field}' does not exist on resource '{_requestResource.ResourceName}'.");
+                var attr = _requestResource.Attributes.SingleOrDefault(a => a.Is(field));
+                if (attr == null)
+                {
+                    throw new InvalidQueryStringParameterException(parameterName,
+                        "The specified field does not exist on the requested resource.",
+                        $"The field '{field}' does not exist on resource '{_requestResource.ResourceName}'.");
+                }
+
+                if (attr.PropertyInfo.SetMethod == null)
+                {
+                    // A read-only property was selected. Its value likely depends on another property, so include all resource fields.
+                    return;
+                }
+
+                selectedFields.Add(attr);
             }
 
-            (_selectedFields ??= new List<AttrAttribute>()).Add(attr);
+            _selectedFields.AddRange(selectedFields);
         }
     }
 }

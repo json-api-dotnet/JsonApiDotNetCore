@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
@@ -22,12 +23,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public sealed class TodoItemControllerTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
         private readonly AppDbContext _context;
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
 
-        public TodoItemControllerTests(TestFixture<Startup> fixture)
+        public TodoItemControllerTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -46,7 +47,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Get_TodoItems_Paginate_Check()
         {
             // Arrange
-            _context.TodoItems.RemoveRange(_context.TodoItems.ToList());
+            _context.TodoItems.RemoveRange(_context.TodoItems);
             _context.SaveChanges();
             int expectedEntitiesPerPage = _fixture.GetService<IJsonApiOptions>().DefaultPageSize;
             var person = new Person();
@@ -103,7 +104,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var person = new Person();
-            var todoItems = _todoItemFaker.Generate(3).ToList();
+            var todoItems = _todoItemFaker.Generate(3);
             _context.TodoItems.AddRange(todoItems);
             todoItems[0].Owner = person;
             _context.SaveChanges();
@@ -530,7 +531,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(serializer.Serialize(todoItem))
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -542,10 +543,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
-            Assert.Equal(nowOffset.ToString("yyyy-MM-ddTHH:mm:ssK"), deserializedBody.OffsetDate?.ToString("yyyy-MM-ddTHH:mm:ssK"));
+            Assert.Equal(nowOffset, deserializedBody.OffsetDate);
             Assert.Null(deserializedBody.AchievedDate);
         }
-
 
         [Fact]
         public async Task Can_Post_TodoItem_With_Different_Owner_And_Assignee()
@@ -598,7 +598,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(JsonConvert.SerializeObject(content))
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -654,7 +654,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(JsonConvert.SerializeObject(content))
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -678,13 +678,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var todoItem = _todoItemFaker.Generate();
-            todoItem.AchievedDate = DateTime.Now;
+            todoItem.AchievedDate = new DateTime(2002, 2,2);
             todoItem.Owner = person;
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
 
             var newTodoItem = _todoItemFaker.Generate();
-            newTodoItem.AchievedDate = DateTime.Now.AddDays(2);
+            newTodoItem.AchievedDate = new DateTime(2002, 2,4);
 
             var content = new
             {
@@ -709,7 +709,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(JsonConvert.SerializeObject(content))
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -733,7 +733,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var todoItem = _todoItemFaker.Generate();
-            todoItem.AchievedDate = DateTime.Now;
+            todoItem.AchievedDate = new DateTime(2002, 2,2);
             todoItem.Owner = person;
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
@@ -763,7 +763,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Content = new StringContent(JsonConvert.SerializeObject(content))
             };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -795,7 +795,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var route = $"/api/v1/todoItems/{todoItem.Id}";
 
             var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(string.Empty)};
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
             var response = await _fixture.Client.SendAsync(request);

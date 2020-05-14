@@ -18,6 +18,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Query;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace UnitTests.ResourceHooks
@@ -38,7 +39,9 @@ namespace UnitTests.ResourceHooks
 
         public HooksDummyData()
         {
-            _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions())
+            var appDbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>().Options, new FrozenSystemClock());
+
+            _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .AddResource<TodoItem>()
                 .AddResource<Person>()
                 .AddResource<Passport>()
@@ -48,17 +51,19 @@ namespace UnitTests.ResourceHooks
                 .AddResource<TodoItemCollection, Guid>()
                 .Build();
 
-
-
             _todoFaker = new Faker<TodoItem>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
             _personFaker = new Faker<Person>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
 
             _articleFaker = new Faker<Article>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
-            _articleTagFaker = new Faker<ArticleTag>();
+            _articleTagFaker = new Faker<ArticleTag>().CustomInstantiator(f => new ArticleTag(appDbContext));
             _identifiableArticleTagFaker = new Faker<IdentifiableArticleTag>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
-            _tagFaker = new Faker<Tag>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
+            _tagFaker = new Faker<Tag>()
+                .CustomInstantiator(f => new Tag(appDbContext))
+                .Rules((f, i) => i.Id = f.UniqueIndex + 1);
 
-            _passportFaker = new Faker<Passport>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
+            _passportFaker = new Faker<Passport>()
+                .CustomInstantiator(f => new Passport(appDbContext))
+                .Rules((f, i) => i.Id = f.UniqueIndex + 1);
         }
 
         protected List<TodoItem> CreateTodoWithToOnePerson()
@@ -71,11 +76,11 @@ namespace UnitTests.ResourceHooks
             return todoList;
         }
 
-        protected List<TodoItem> CreateTodoWithOwner()
+        protected HashSet<TodoItem> CreateTodoWithOwner()
         {
             var todoItem = _todoFaker.Generate();
             var person = _personFaker.Generate();
-            var todoList = new List<TodoItem> { todoItem };
+            var todoList = new HashSet<TodoItem> { todoItem };
             person.AssignedTodoItems = todoList;
             todoItem.Owner = person;
             return todoList;
@@ -83,21 +88,21 @@ namespace UnitTests.ResourceHooks
 
         protected (List<Article>, List<ArticleTag>, List<Tag>) CreateManyToManyData()
         {
-            var tagsSubset = _tagFaker.Generate(3).ToList();
-            var joinsSubSet = _articleTagFaker.Generate(3).ToList();
+            var tagsSubset = _tagFaker.Generate(3);
+            var joinsSubSet = _articleTagFaker.Generate(3);
             var articleTagsSubset = _articleFaker.Generate();
-            articleTagsSubset.ArticleTags = joinsSubSet;
+            articleTagsSubset.ArticleTags = joinsSubSet.ToHashSet();
             for (int i = 0; i < 3; i++)
             {
                 joinsSubSet[i].Article = articleTagsSubset;
                 joinsSubSet[i].Tag = tagsSubset[i];
             }
 
-            var allTags = _tagFaker.Generate(3).ToList().Concat(tagsSubset).ToList();
-            var completeJoin = _articleTagFaker.Generate(6).ToList();
+            var allTags = _tagFaker.Generate(3).Concat(tagsSubset).ToList();
+            var completeJoin = _articleTagFaker.Generate(6);
 
             var articleWithAllTags = _articleFaker.Generate();
-            articleWithAllTags.ArticleTags = completeJoin;
+            articleWithAllTags.ArticleTags = completeJoin.ToHashSet();
 
             for (int i = 0; i < 6; i++)
             {
@@ -113,20 +118,20 @@ namespace UnitTests.ResourceHooks
 
         protected (List<Article>, List<IdentifiableArticleTag>, List<Tag>) CreateIdentifiableManyToManyData()
         {
-            var tagsSubset = _tagFaker.Generate(3).ToList();
-            var joinsSubSet = _identifiableArticleTagFaker.Generate(3).ToList();
+            var tagsSubset = _tagFaker.Generate(3);
+            var joinsSubSet = _identifiableArticleTagFaker.Generate(3);
             var articleTagsSubset = _articleFaker.Generate();
-            articleTagsSubset.IdentifiableArticleTags = joinsSubSet;
+            articleTagsSubset.IdentifiableArticleTags = joinsSubSet.ToHashSet();
             for (int i = 0; i < 3; i++)
             {
                 joinsSubSet[i].Article = articleTagsSubset;
                 joinsSubSet[i].Tag = tagsSubset[i];
             }
-            var allTags = _tagFaker.Generate(3).ToList().Concat(tagsSubset).ToList();
-            var completeJoin = _identifiableArticleTagFaker.Generate(6).ToList();
+            var allTags = _tagFaker.Generate(3).Concat(tagsSubset).ToList();
+            var completeJoin = _identifiableArticleTagFaker.Generate(6);
 
             var articleWithAllTags = _articleFaker.Generate();
-            articleWithAllTags.IdentifiableArticleTags = joinsSubSet;
+            articleWithAllTags.IdentifiableArticleTags = joinsSubSet.ToHashSet();
 
             for (int i = 0; i < 6; i++)
             {
@@ -164,7 +169,7 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, iqMock.Object, _resourceGraph);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, iqMock.Object, _resourceGraph, null);
 
             return (iqMock, hookExecutor, mainResource);
         }
@@ -185,9 +190,9 @@ namespace UnitTests.ResourceHooks
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, iqMock, gpfMock, options) = CreateMocks();
 
-            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
+            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions, new FrozenSystemClock()) : null;
 
-            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions())
+            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .AddResource<TMain>()
                 .AddResource<TNested>()
                 .Build();
@@ -197,7 +202,7 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, iqMock.Object, _resourceGraph);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, iqMock.Object, _resourceGraph, null);
 
             return (iqMock, ufMock, hookExecutor, mainResource, nestedResource);
         }
@@ -221,9 +226,9 @@ namespace UnitTests.ResourceHooks
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, iqMock, gpfMock, options) = CreateMocks();
 
-            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
+            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions, new FrozenSystemClock()) : null;
 
-            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions())
+            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .AddResource<TMain>()
                 .AddResource<TFirstNested>()
                 .AddResource<TSecondNested>()
@@ -235,7 +240,7 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, iqMock.Object, _resourceGraph);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, iqMock.Object, _resourceGraph, null);
 
             return (iqMock, hookExecutor, mainResource, firstNestedResource, secondNestedResource);
         }
@@ -272,7 +277,7 @@ namespace UnitTests.ResourceHooks
                 .UseInMemoryDatabase(databaseName: "repository_mock")
                 .Options;
 
-            using (var context = new AppDbContext(options))
+            using (var context = new AppDbContext(options, new FrozenSystemClock()))
             {
                 seeder(context);
                 ResolveInverseRelationships(context);
@@ -339,7 +344,7 @@ namespace UnitTests.ResourceHooks
 
             if (dbContext != null)
             {
-                var idType = TypeHelper.GetIdentifierType<TModel>();
+                var idType = TypeHelper.GetIdType(typeof(TModel));
                 if (idType == typeof(int))
                 {
                     IResourceReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext, resourceGraph);
@@ -353,12 +358,13 @@ namespace UnitTests.ResourceHooks
             }
         }
 
-        private IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(
-        AppDbContext dbContext, IResourceGraph resourceGraph
-        ) where TModel : class, IIdentifiable<int>
+        private IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(AppDbContext dbContext, IResourceGraph resourceGraph) 
+            where TModel : class, IIdentifiable<int>
         {
+            var serviceProvider = ((IInfrastructure<IServiceProvider>) dbContext).Instance;
+            var resourceFactory = new DefaultResourceFactory(serviceProvider);
             IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
-            return new DefaultResourceRepository<TModel, int>(null, resolver, resourceGraph, null, NullLoggerFactory.Instance);
+            return new DefaultResourceRepository<TModel, int>(null, resolver, resourceGraph, null, resourceFactory, NullLoggerFactory.Instance);
         }
 
         private IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>

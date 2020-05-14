@@ -26,11 +26,11 @@ namespace UnitTests.Serialization.Server
             // Assert
             Assert.Equal(6, result.Count);
 
-            var authorResourceObject = result.Single((ro) => ro.Type == "people" && ro.Id == author.StringId);
+            var authorResourceObject = result.Single(ro => ro.Type == "people" && ro.Id == author.StringId);
             var authorFoodRelation = authorResourceObject.Relationships["favoriteFood"].SingleData;
             Assert.Equal(author.FavoriteFood.StringId, authorFoodRelation.Id);
 
-            var reviewerResourceObject = result.Single((ro) => ro.Type == "people" && ro.Id == reviewer.StringId);
+            var reviewerResourceObject = result.Single(ro => ro.Type == "people" && ro.Id == reviewer.StringId);
             var reviewerFoodRelation = reviewerResourceObject.Relationships["favoriteFood"].SingleData;
             Assert.Equal(reviewer.FavoriteFood.StringId, reviewerFoodRelation.Id);
         }
@@ -73,13 +73,13 @@ namespace UnitTests.Serialization.Server
 
             // Assert
             Assert.Equal(10, result.Count);
-            var overlappingBlogResourceObject = result.Single((ro) => ro.Type == "blogs" && ro.Id == sharedBlog.StringId);
+            var overlappingBlogResourceObject = result.Single(ro => ro.Type == "blogs" && ro.Id == sharedBlog.StringId);
 
-            Assert.Equal(2, overlappingBlogResourceObject.Relationships.Keys.ToList().Count);
-            var nonOverlappingBlogs = result.Where((ro) => ro.Type == "blogs" && ro.Id != sharedBlog.StringId).ToList();
+            Assert.Equal(2, overlappingBlogResourceObject.Relationships.Keys.Count);
+            var nonOverlappingBlogs = result.Where(ro => ro.Type == "blogs" && ro.Id != sharedBlog.StringId).ToList();
 
             foreach (var blog in nonOverlappingBlogs)
-                Assert.Single(blog.Relationships.Keys.ToList());
+                Assert.Single(blog.Relationships.Keys);
 
             Assert.Equal(authorSong.StringId, sharedBlogAuthor.FavoriteSong.StringId);
             Assert.Equal(reviewerFood.StringId, sharedBlogAuthor.FavoriteFood.StringId);
@@ -90,9 +90,9 @@ namespace UnitTests.Serialization.Server
             var reviewer = _personFaker.Generate();
             article.Reviewer = reviewer;
 
-            var blogs = _blogFaker.Generate(1).ToList();
+            var blogs = _blogFaker.Generate(1);
             blogs.Add(sharedBlog);
-            reviewer.Blogs = blogs;
+            reviewer.Blogs = blogs.ToHashSet();
 
             blogs[0].Author = reviewer;
             var author = _personFaker.Generate();
@@ -114,8 +114,8 @@ namespace UnitTests.Serialization.Server
             var author = _personFaker.Generate();
             article.Author = author;
 
-            var blogs = _blogFaker.Generate(2).ToList();
-            author.Blogs = blogs;
+            var blogs = _blogFaker.Generate(2);
+            author.Blogs = blogs.ToHashSet();
 
             blogs[0].Reviewer = author;
             var reviewer = _personFaker.Generate();
@@ -133,7 +133,7 @@ namespace UnitTests.Serialization.Server
         public void BuildIncluded_DuplicateChildrenMultipleChains_OnceInOutput()
         {
             var person = _personFaker.Generate();
-            var articles = _articleFaker.Generate(5).ToList();
+            var articles = _articleFaker.Generate(5);
             articles.ForEach(a => a.Author = person);
             articles.ForEach(a => a.Reviewer = person);
             var builder = GetBuilder();

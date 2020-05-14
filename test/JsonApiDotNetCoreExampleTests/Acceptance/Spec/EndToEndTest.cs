@@ -4,9 +4,11 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Graph;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Client;
@@ -16,13 +18,14 @@ using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     public class FunctionalTestCollection<TFactory> : IClassFixture<TFactory> where TFactory : class, IApplicationFactory
     {
-        public static MediaTypeHeaderValue JsonApiContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+        public static MediaTypeHeaderValue JsonApiContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
         protected readonly TFactory _factory;
         protected readonly HttpClient _client;
         protected readonly AppDbContext _dbContext;
@@ -61,14 +64,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             var serializer = GetService<IRequestSerializer>();
             var graph = GetService<IResourceGraph>();
-            if (attributes != null)
-            {
-                serializer.AttributesToSerialize = graph.GetAttributes(attributes);
-            }
-            if (relationships != null)
-            {
-                serializer.RelationshipsToSerialize = graph.GetRelationships(relationships);
-            }
+            serializer.AttributesToSerialize = attributes != null ? graph.GetAttributes(attributes) : null;
+            serializer.RelationshipsToSerialize = relationships != null ? graph.GetRelationships(relationships) : null;
             return serializer;
         }
 
@@ -77,10 +74,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var options = GetService<IJsonApiOptions>();
             var formatter = new ResourceNameFormatter(options);
             var resourcesContexts = GetService<IResourceGraph>().GetResourceContexts();
-            var builder = new ResourceGraphBuilder(options);
+            var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
             foreach (var rc in resourcesContexts)
             {
-                if (rc.ResourceType == typeof(TodoItem) || rc.ResourceType == typeof(TodoItemCollection) || rc.ResourceType == typeof(Passport))
+                if (rc.ResourceType == typeof(TodoItem) || rc.ResourceType == typeof(TodoItemCollection))
                 {
                     continue;
                 }
@@ -88,8 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             }
             builder.AddResource<TodoItemClient>(formatter.FormatResourceName(typeof(TodoItem)));
             builder.AddResource<TodoItemCollectionClient, Guid>(formatter.FormatResourceName(typeof(TodoItemCollection)));
-            builder.AddResource<PassportClient>(formatter.FormatResourceName(typeof(Passport)));
-            return new ResponseDeserializer(builder.Build());
+            return new ResponseDeserializer(builder.Build(), new DefaultResourceFactory(_factory.ServiceProvider));
         }
 
         protected AppDbContext GetDbContext() => GetService<AppDbContext>();
@@ -132,11 +128,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     public class EndToEndTest
     {
-        public static MediaTypeHeaderValue JsonApiContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+        public static MediaTypeHeaderValue JsonApiContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
         private HttpClient _client;
-        protected TestFixture<Startup> _fixture;
+        protected TestFixture<TestStartup> _fixture;
         protected readonly IResponseDeserializer _deserializer;
-        public EndToEndTest(TestFixture<Startup> fixture)
+        public EndToEndTest(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _deserializer = GetDeserializer();

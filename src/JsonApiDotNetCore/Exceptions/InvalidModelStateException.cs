@@ -6,6 +6,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Exceptions
 {
@@ -17,13 +18,13 @@ namespace JsonApiDotNetCore.Exceptions
         public IList<Error> Errors { get; }
 
         public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType,
-            bool includeExceptionStackTraceInErrors)
+            bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
         {
-            Errors = FromModelState(modelState, resourceType, includeExceptionStackTraceInErrors);
+            Errors = FromModelState(modelState, resourceType, includeExceptionStackTraceInErrors, namingStrategy);
         }
 
         private static List<Error> FromModelState(ModelStateDictionary modelState, Type resourceType,
-            bool includeExceptionStackTraceInErrors)
+            bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
         {
             List<Error> errors = new List<Error>();
 
@@ -32,9 +33,8 @@ namespace JsonApiDotNetCore.Exceptions
                 var propertyName = pair.Key;
                 PropertyInfo property = resourceType.GetProperty(propertyName);
 
-                // TODO: Need access to ResourceContext here, in order to determine attribute name when not explicitly set.
                 string attributeName =
-                    property?.GetCustomAttribute<AttrAttribute>().PublicAttributeName ?? property?.Name;
+                    property.GetCustomAttribute<AttrAttribute>().PublicAttributeName ?? namingStrategy.GetPropertyName(property.Name, false);
 
                 foreach (var modelError in pair.Value.Errors)
                 {

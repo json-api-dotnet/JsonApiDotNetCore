@@ -33,12 +33,12 @@ namespace JsonApiDotNetCore.Builders
         /// <summary>
         /// Add a Json:Api resource
         /// </summary>
-        /// <param name="entityType">The resource model type</param>
+        /// <param name="resourceType">The resource model type</param>
         /// <param name="idType">The resource model identifier type</param>
         /// <param name="pluralizedTypeName">
         /// The pluralized name that should be exposed by the API. 
         /// If nothing is specified, the configured name formatter will be used.
         /// </param>
-        IResourceGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName = null);
+        IResourceGraphBuilder AddResource(Type resourceType, Type idType = null, string pluralizedTypeName = null);
     }
 }

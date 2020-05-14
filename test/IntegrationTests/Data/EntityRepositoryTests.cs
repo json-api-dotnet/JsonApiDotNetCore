@@ -10,7 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IntegrationTests;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Internal;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -160,11 +163,13 @@ namespace JADNC.IntegrationTests.Data
 
         private (DefaultResourceRepository<TodoItem> Repository, Mock<ITargetedFields> TargetedFields) Setup(AppDbContext context)
         {
+            var serviceProvider = ((IInfrastructure<IServiceProvider>) context).Instance;
+            var resourceFactory = new DefaultResourceFactory(serviceProvider);
             var contextResolverMock = new Mock<IDbContextResolver>();
             contextResolverMock.Setup(m => m.GetContext()).Returns(context);
-            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions()).AddResource<TodoItem>().Build();
+            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).AddResource<TodoItem>().Build();
             var targetedFields = new Mock<ITargetedFields>();
-            var repository = new DefaultResourceRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph, null, NullLoggerFactory.Instance);
+            var repository = new DefaultResourceRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph, null, resourceFactory, NullLoggerFactory.Instance);
             return (repository, targetedFields);
         }
 
@@ -174,9 +179,9 @@ namespace JADNC.IntegrationTests.Data
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase(databaseName: $"IntegrationDatabaseRepository{actualSeed}")
                 .Options;
-            var context = new AppDbContext(options);
+            var context = new AppDbContext(options, new FrozenSystemClock());
 
-            context.TodoItems.RemoveRange(context.TodoItems.ToList());
+            context.TodoItems.RemoveRange(context.TodoItems);
             return context;
         }
 

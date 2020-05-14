@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Query
@@ -12,7 +12,11 @@ namespace JsonApiDotNetCore.Query
         /// Gets the list of targeted fields. If a relationship is supplied,
         /// gets the list of targeted fields for that relationship.
         /// </summary>
-        /// <param name="relationship"></param>
         List<AttrAttribute> Get(RelationshipAttribute relationship = null);
+
+        /// <summary>
+        /// Gets the set of all targeted fields, including fields for related entities, as a set of dotted property names.
+        /// </summary>
+        ISet<string> GetAll();
     }
 }

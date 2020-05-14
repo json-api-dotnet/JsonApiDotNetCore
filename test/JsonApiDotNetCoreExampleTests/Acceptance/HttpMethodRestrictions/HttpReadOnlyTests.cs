@@ -93,7 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         private async Task<HttpResponseMessage> MakeRequestAsync(string route, string method)
         {
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod(method);
             var server = new TestServer(builder);
             var client = server.CreateClient();

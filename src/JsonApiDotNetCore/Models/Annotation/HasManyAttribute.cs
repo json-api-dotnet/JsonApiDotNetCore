@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Models
         /// public class Author : Identifiable 
         /// {
         ///     [HasMany("articles"]
-        ///     public virtual List&lt;Article&gt; Articles { get; set; }
+        ///     public List&lt;Article&gt; Articles { get; set; }
         /// }
         /// </code>
         /// 
@@ -29,32 +29,6 @@ namespace JsonApiDotNetCore.Models
         : base(publicName, relationshipLinks, canInclude)
         {
             InverseNavigation = inverseNavigationProperty;
-        }
-
-        /// <summary>
-        /// Gets the value of the navigation property, defined by the relationshipName,
-        /// on the provided instance.
-        /// </summary>
-        public override object GetValue(object entity)
-        {
-           return entity?.GetType()
-               .GetProperty(InternalRelationshipName)?
-                .GetValue(entity);
-        }
-
-
-        /// <summary>
-        /// Sets the value of the property identified by this attribute
-        /// </summary>
-        /// <param name="entity">The target object</param>
-        /// <param name="newValue">The new property value</param>
-        public override void SetValue(object entity, object newValue)
-        {
-            var propertyInfo = entity
-                .GetType()
-                .GetProperty(InternalRelationshipName);
-
-            propertyInfo.SetValue(entity, newValue);
         }
     }
 }

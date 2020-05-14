@@ -1,14 +1,13 @@
 using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using NoEntityFrameworkExample.Data;
 using NoEntityFrameworkExample.Models;
 using System;
-using System.Linq.Expressions;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Internal;
+using Microsoft.Extensions.Logging.Abstractions;
 using NoEntityFrameworkExample;
 
 namespace NoEntityFrameworkTests
@@ -27,23 +26,12 @@ namespace NoEntityFrameworkTests
             _services = Server.Host.Services;
         }
 
-        public IRequestSerializer GetSerializer<TResource>(Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
-        {
-            var serializer = GetService<IRequestSerializer>();
-            var graph = GetService<IResourceGraph>();
-            if (attributes != null)
-                serializer.AttributesToSerialize = graph.GetAttributes(attributes);
-            if (relationships != null)
-                serializer.RelationshipsToSerialize = graph.GetRelationships(relationships);
-            return serializer;
-        }
-
         public IResponseDeserializer GetDeserializer()
         {
             var options = GetService<IJsonApiOptions>();
 
-            var resourceGraph = new ResourceGraphBuilder(options).AddResource<TodoItem>("todoItems").Build();
-            return new ResponseDeserializer(resourceGraph);
+            var resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).AddResource<TodoItem>("todoItems").Build();
+            return new ResponseDeserializer(resourceGraph, new DefaultResourceFactory(_services));
         }
 
         public T GetService<T>() => (T)_services.GetService(typeof(T));

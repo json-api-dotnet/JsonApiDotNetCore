@@ -1,8 +1,8 @@
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
@@ -19,11 +19,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public sealed class FetchingDataTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
 
-        public FetchingDataTests(TestFixture<Startup> fixture)
+        public FetchingDataTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()
@@ -44,7 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             await context.SaveChangesAsync();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
@@ -60,7 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("application/vnd.api+json", response.Content.Headers.ContentType.ToString());
+            Assert.Equal(HeaderConstants.MediaType, response.Content.Headers.ContentType.ToString());
             Assert.Empty(items);
             Assert.Equal(0, int.Parse(meta["total-records"].ToString()));
             context.Dispose();
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             await context.SaveChangesAsync();
 
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner";
             var server = new TestServer(builder);
@@ -107,7 +107,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.TodoItems.RemoveRange(context.TodoItems);
             await context.SaveChangesAsync();
 
-            var todoItems = _todoItemFaker.Generate(20).ToList();
+            var todoItems = _todoItemFaker.Generate(20);
             context.TodoItems.AddRange(todoItems);
             await context.SaveChangesAsync();
 

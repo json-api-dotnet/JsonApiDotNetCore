@@ -23,7 +23,7 @@ namespace UnitTests.ResourceHooks
             var passport = _passportFaker.Generate();
 
             person.Passport = passport;
-            person.TodoItems = new List<TodoItem> { todo1 };
+            person.TodoItems = new HashSet<TodoItem> { todo1 };
             person.StakeHolderTodoItem = todo2;
             options = InitInMemoryDb(context =>
             {
@@ -88,7 +88,7 @@ namespace UnitTests.ResourceHooks
 
         private bool CheckImplicitTodos(IRelationshipsDictionary<TodoItem> rh)
         {
-            var todos = rh.GetByRelationship<Person>().ToList();
+            var todos = rh.GetByRelationship<Person>();
             return todos.Count == 2;
         }
 

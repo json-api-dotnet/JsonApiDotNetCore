@@ -15,18 +15,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public sealed class QueryFiltersTests
     {
-      private readonly TestFixture<Startup> _fixture;
-      private readonly AppDbContext _context;
-      private readonly Faker<User> _userFaker;
+        private readonly TestFixture<TestStartup> _fixture;
+        private readonly AppDbContext _context;
+        private readonly Faker<User> _userFaker;
 
-      public QueryFiltersTests(TestFixture<Startup> fixture)
-      {
-        _fixture = fixture;
-        _context = fixture.GetService<AppDbContext>();
-        _userFaker = new Faker<User>()
-          .RuleFor(u => u.Username, f => f.Internet.UserName())
-          .RuleFor(u => u.Password, f => f.Internet.Password());
-      }
+        public QueryFiltersTests(TestFixture<TestStartup> fixture)
+        {
+            _fixture = fixture;
+            _context = fixture.GetService<AppDbContext>();
+            _userFaker = new Faker<User>()
+                .CustomInstantiator(f => new User(_context))
+                .RuleFor(u => u.Username, f => f.Internet.UserName())
+                .RuleFor(u => u.Password, f => f.Internet.Password());
+        }
 
         [Fact]
         public async Task FiltersWithCustomQueryFiltersEquals()
@@ -42,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var request = new HttpRequestMessage(httpMethod, route);
 
             // @TODO - Use fixture
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -74,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var request = new HttpRequestMessage(httpMethod, route);
 
             // @TODO - Use fixture
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 

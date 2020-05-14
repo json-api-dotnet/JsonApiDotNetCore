@@ -13,8 +13,7 @@ namespace JsonApiDotNetCore.Graph
 
         public ResourceNameFormatter(IJsonApiOptions options)
         {
-            var contractResolver = (DefaultContractResolver) options.SerializerSettings.ContractResolver;
-            _namingStrategy = contractResolver.NamingStrategy;
+            _namingStrategy = options.SerializerContractResolver.NamingStrategy;
         }
 
         /// <summary>

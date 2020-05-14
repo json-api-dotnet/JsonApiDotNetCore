@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreExample.Models
         public string Name { get; set; }
 
         [HasMany]
-        public List<Article> Articles { get; set; }
+        public IList<Article> Articles { get; set; }
     }
 }
 

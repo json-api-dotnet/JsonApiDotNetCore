@@ -8,16 +8,9 @@ namespace JsonApiDotNetCore.Models
     public sealed class AttrAttribute : Attribute, IResourceField
     {
         /// <summary>
-        /// Defines a public attribute exposed by the API
+        /// Exposes a resource property as a json:api attribute using the configured casing convention and capabilities.
         /// </summary>
-        /// 
-        /// <param name="publicName">How this attribute is exposed through the API</param>
-        /// <param name="isImmutable">Prevent PATCH requests from updating the value</param>
-        /// <param name="isFilterable">Prevent filters on this attribute</param>
-        /// <param name="isSortable">Prevent this attribute from being sorted by</param>
-        /// 
         /// <example>
-        /// 
         /// <code>
         /// public class Author : Identifiable
         /// {
@@ -25,46 +18,70 @@ namespace JsonApiDotNetCore.Models
         ///     public string Name { get; set; }
         /// }
         /// </code>
-        /// 
         /// </example>
-        public AttrAttribute(string publicName = null, bool isImmutable = false, bool isFilterable = true, bool isSortable = true)
+        public AttrAttribute()
         {
-            PublicAttributeName = publicName;
-            IsImmutable = isImmutable;
-            IsFilterable = isFilterable;
-            IsSortable = isSortable;
         }
 
-        public string ExposedInternalMemberName => PropertyInfo.Name;
+        /// <summary>
+        /// Exposes a resource property as a json:api attribute with an explicit name, using configured capabilities.
+        /// </summary>
+        public AttrAttribute(string publicName)
+        {
+            if (publicName == null)
+            {
+                throw new ArgumentNullException(nameof(publicName));
+            }
+
+            if (string.IsNullOrWhiteSpace(publicName))
+            {
+                throw new ArgumentException("Exposed name cannot be empty or contain only whitespace.", nameof(publicName));
+            }
+
+            PublicAttributeName = publicName;
+        }
 
         /// <summary>
-        /// How this attribute is exposed through the API
+        /// Exposes a resource property as a json:api attribute using the configured casing convention and an explicit set of capabilities.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// public class Author : Identifiable
+        /// {
+        ///     [Attr(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)]
+        ///     public string Name { get; set; }
+        /// }
+        /// </code>
+        /// </example>
+        public AttrAttribute(AttrCapabilities capabilities)
+        {
+            HasExplicitCapabilities = true;
+            Capabilities = capabilities;
+        }
+
+        /// <summary>
+        /// Exposes a resource property as a json:api attribute with an explicit name and capabilities.
+        /// </summary>
+        public AttrAttribute(string publicName, AttrCapabilities capabilities) : this(publicName)
+        {
+            HasExplicitCapabilities = true;
+            Capabilities = capabilities;
+        }
+
+        string IResourceField.PropertyName => PropertyInfo.Name;
+
+        /// <summary>
+        /// The publicly exposed name of this json:api attribute.
         /// </summary>
         public string PublicAttributeName { get; internal set; }
 
-        /// <summary>
-        /// Prevents PATCH requests from updating the value.
-        /// </summary>
-        public bool IsImmutable { get; }
+        internal bool HasExplicitCapabilities { get; }
+        public AttrCapabilities Capabilities { get; internal set; }
 
         /// <summary>
-        /// Whether or not this attribute can be filtered on via a query string filters.
-        /// Attempts to filter on an attribute with `IsFilterable == false` will return
-        /// an HTTP 400 response.
+        /// The resource property that this attribute is declared on.
         /// </summary>
-        public bool IsFilterable { get; }
-
-        /// <summary>
-        /// Whether or not this attribute can be sorted on via a query string sort.
-        /// Attempts to filter on an attribute with `IsSortable == false` will return
-        /// an HTTP 400 response.
-        /// </summary>
-        public bool IsSortable { get; }
-
-        /// <summary>
-        /// The member property info
-        /// </summary>
-        public PropertyInfo PropertyInfo { get; set; }
+        public PropertyInfo PropertyInfo { get; internal set; }
 
         /// <summary>
         /// Get the value of the attribute for the given object.
@@ -74,10 +91,17 @@ namespace JsonApiDotNetCore.Models
         public object GetValue(object entity)
         {
             if (entity == null)
-                throw new InvalidOperationException("Cannot GetValue from null object.");
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
 
-            var prop = GetResourceProperty(entity);
-            return prop?.GetValue(entity);
+            var property = GetResourceProperty(entity);
+            if (property.GetMethod == null)
+            {
+                throw new InvalidOperationException($"Property '{property.DeclaringType?.Name}.{property.Name}' is write-only.");
+            }
+
+            return property.GetValue(entity);
         }
 
         /// <summary>
@@ -86,14 +110,19 @@ namespace JsonApiDotNetCore.Models
         public void SetValue(object entity, object newValue)
         {
             if (entity == null)
-                throw new InvalidOperationException("Cannot SetValue on null object.");
-
-            var prop = GetResourceProperty(entity);
-            if(prop != null)
             {
-                var convertedValue = TypeHelper.ConvertType(newValue, prop.PropertyType);
-                prop.SetValue(entity, convertedValue);
-            }            
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            var property = GetResourceProperty(entity);
+            if (property.SetMethod == null)
+            {
+                throw new InvalidOperationException(
+                    $"Property '{property.DeclaringType?.Name}.{property.Name}' is read-only.");
+            }
+
+            var convertedValue = TypeHelper.ConvertType(newValue, property.PropertyType);
+            property.SetValue(entity, convertedValue);
         }
 
         private PropertyInfo GetResourceProperty(object resource)

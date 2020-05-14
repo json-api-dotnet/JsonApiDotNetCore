@@ -73,7 +73,7 @@ namespace UnitTests.Middleware
 
         private sealed class InvokeConfiguration
         {
-            public CurrentRequestMiddleware MiddleWare;
+            public JsonApiMiddleware MiddleWare;
             public HttpContext HttpContext;
             public Mock<IControllerResourceMapping> ControllerResourceMapping;
             public Mock<IJsonApiOptions> Options;
@@ -95,7 +95,7 @@ namespace UnitTests.Middleware
             {
                 throw new ArgumentException("Path should start with a '/'");
             }
-            var middleware = new CurrentRequestMiddleware(httpContext =>
+            var middleware = new JsonApiMiddleware(httpContext =>
             {
                 return Task.Run(() => Console.WriteLine("finished"));
             });

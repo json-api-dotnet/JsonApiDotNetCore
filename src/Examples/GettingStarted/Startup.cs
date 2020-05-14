@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore;
 
 namespace GettingStarted
 {

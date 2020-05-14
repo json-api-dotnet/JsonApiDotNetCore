@@ -12,29 +12,10 @@ namespace JsonApiDotNetCore.Extensions
     public static class DbContextExtensions
     {
         /// <summary>
-        /// Get the DbSet when the model type is unknown until runtime
-        /// </summary>
-        public static IQueryable<object> Set(this DbContext context, Type t)
-            => (IQueryable<object>)context
-                .GetType()
-                .GetMethod("Set")
-                .MakeGenericMethod(t) // TODO: will caching help runtime performance?
-                .Invoke(context, null);
-
-        /// <summary>
-        /// Determines whether or not EF is already tracking an entity of the same Type and Id
-        /// </summary>
-        public static bool EntityIsTracked(this DbContext context, IIdentifiable entity)
-        {
-            return GetTrackedEntity(context, entity) != null;
-        }
-
-
-        /// <summary>
         /// Determines whether or not EF is already tracking an entity of the same Type and Id
         /// and returns that entity.
         /// </summary>
-        public static IIdentifiable GetTrackedEntity(this DbContext context, IIdentifiable entity)
+        internal static IIdentifiable GetTrackedEntity(this DbContext context, IIdentifiable entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -48,7 +29,6 @@ namespace JsonApiDotNetCore.Extensions
 
             return (IIdentifiable)trackedEntries?.Entity;
         }
-
 
         /// <summary>
         /// Gets the current transaction or creates a new one.

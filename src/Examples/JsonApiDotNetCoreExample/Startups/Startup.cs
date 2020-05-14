@@ -4,11 +4,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
-using JsonApiDotNetCore.Extensions;
 using System;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCoreExample.Services;
+using Microsoft.AspNetCore.Authentication;
 using Newtonsoft.Json.Converters;
 
 namespace JsonApiDotNetCoreExample
@@ -29,6 +30,8 @@ namespace JsonApiDotNetCoreExample
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            ConfigureClock(services);
+
             services.AddScoped<SkipCacheQueryParameterService>();
             services.AddScoped<IQueryParameterService>(sp => sp.GetService<SkipCacheQueryParameterService>());
 
@@ -39,10 +42,15 @@ namespace JsonApiDotNetCoreExample
                         .EnableSensitiveDataLogging()
                         .UseNpgsql(GetDbConnectionString(), innerOptions => innerOptions.SetPostgresVersion(new Version(9,6)));
                 }, ServiceLifetime.Transient)
-                .AddJsonApi(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
+                .AddJsonApi<AppDbContext>(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
             
             // once all tests have been moved to WebApplicationFactory format we can get rid of this line below
-            services.AddClientSerialization(); 
+            services.AddClientSerialization();
+        }
+
+        protected virtual void ConfigureClock(IServiceCollection services)
+        {
+            services.AddSingleton<ISystemClock, SystemClock>();
         }
 
         protected virtual void ConfigureJsonApiOptions(JsonApiOptions options)

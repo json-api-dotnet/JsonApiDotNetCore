@@ -94,7 +94,7 @@ namespace JsonApiDotNetCore.Hooks
         public HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
         {
             var property = TypeHelper.ParseNavigationExpression(navigationAction);
-            return this.Where(p => p.Key.InternalRelationshipName == property.Name).Select(p => p.Value).SingleOrDefault();
+            return this.Where(p => p.Key.PropertyInfo.Name == property.Name).Select(p => p.Value).SingleOrDefault();
         }
     }
 }

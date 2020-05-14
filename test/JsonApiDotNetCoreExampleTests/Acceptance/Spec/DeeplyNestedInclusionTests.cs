@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCoreExample;
@@ -11,6 +12,7 @@ using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -20,9 +22,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public sealed class DeeplyNestedInclusionTests
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
 
-        public DeeplyNestedInclusionTests(TestFixture<Startup> fixture)
+        public DeeplyNestedInclusionTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
         }
@@ -42,8 +44,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             const string route = "/api/v1/todoItems?include=collection.owner";
 
             var options = _fixture.GetService<IJsonApiOptions>();
-            var resourceGraph = new ResourceGraphBuilder(options).AddResource<TodoItemClient>("todoItems").AddResource<TodoItemCollection, Guid>().AddResource<Person>().Build();
-            var deserializer = new ResponseDeserializer(resourceGraph);
+            var resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
+                .AddResource<TodoItemClient>("todoItems")
+                .AddResource<TodoItemCollection, Guid>()
+                .AddResource<Person>()
+                .Build();
+            var deserializer = new ResponseDeserializer(resourceGraph, new DefaultResourceFactory(_fixture.ServiceProvider));
             var todoItem = new TodoItem
             {
                 Collection = new TodoItemCollection
@@ -84,7 +90,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 Collection = new TodoItemCollection
                 {
                     Owner = new Person(),
-                    TodoItems = new List<TodoItem> {
+                    TodoItems = new HashSet<TodoItem> {
                         new TodoItem(),
                         new TodoItem()
                     }
@@ -125,7 +131,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 Collection = new TodoItemCollection
                 {
                     Owner = new Person(),
-                    TodoItems = new List<TodoItem> {
+                    TodoItems = new HashSet<TodoItem> {
                         new TodoItem {
                             Owner = new Person()
                         },
@@ -171,7 +177,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                         Role = new PersonRole()
                     },
-                    TodoItems = new List<TodoItem> {
+                    TodoItems = new HashSet<TodoItem> {
                         new TodoItem {
                             Owner = new Person()
                         },
@@ -286,15 +292,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var person = new Person {
-                todoCollections = new List<TodoItemCollection> {
+                todoCollections = new HashSet<TodoItemCollection> {
                     new TodoItemCollection {
-                        TodoItems = new List<TodoItem> {
+                        TodoItems = new HashSet<TodoItem> {
                             new TodoItem(),
                             new TodoItem()
                         }
                     },
                     new TodoItemCollection {
-                        TodoItems = new List<TodoItem> {
+                        TodoItems = new HashSet<TodoItem> {
                             new TodoItem(),
                             new TodoItem(),
                             new TodoItem()

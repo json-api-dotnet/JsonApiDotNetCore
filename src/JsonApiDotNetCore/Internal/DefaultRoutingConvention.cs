@@ -9,7 +9,6 @@ using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Internal
@@ -107,8 +106,7 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         private string TemplateFromController(ControllerModel model)
         {
-            var contractResolver = (DefaultContractResolver) _options.SerializerSettings.ContractResolver;
-            string controllerName = contractResolver.NamingStrategy.GetPropertyName(model.ControllerName, false);
+            string controllerName = _options.SerializerContractResolver.NamingStrategy.GetPropertyName(model.ControllerName, false);
 
             var template = $"{_options.Namespace}/{controllerName}";
             if (_registeredTemplates.Add(template))
@@ -129,7 +127,6 @@ namespace JsonApiDotNetCore.Internal
             var controllerBase = typeof(ControllerBase);
             var jsonApiMixin = typeof(JsonApiControllerMixin);
             var target = typeof(BaseJsonApiController<,>);
-            var identifiable = typeof(IIdentifiable);
             var currentBaseType = type;
             while (!currentBaseType.IsGenericType || currentBaseType.GetGenericTypeDefinition() != target)
             {
@@ -137,7 +134,7 @@ namespace JsonApiDotNetCore.Internal
 
                 if ( (nextBaseType == controllerBase || nextBaseType == jsonApiMixin) && currentBaseType.IsGenericType)
                 {
-                    var potentialResource = currentBaseType.GetGenericArguments().FirstOrDefault(t => t.Inherits(identifiable));
+                    var potentialResource = currentBaseType.GetGenericArguments().FirstOrDefault(t => t.IsOrImplementsInterface(typeof(IIdentifiable)));
                     if (potentialResource != null)
                     {
                         return potentialResource;

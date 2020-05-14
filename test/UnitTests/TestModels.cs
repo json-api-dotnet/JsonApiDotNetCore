@@ -13,7 +13,7 @@ namespace UnitTests.TestModels
         [Attr] public int? NullableIntField { get; set; }
         [Attr] public Guid GuidField { get; set; }
         [Attr] public ComplexType ComplexField { get; set; }
-        [Attr(isImmutable: true)] public string Immutable { get; set; }
+        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowMutate)] public string Immutable { get; set; }
     }
 
     public class TestResourceWithList : Identifiable
@@ -57,7 +57,7 @@ namespace UnitTests.TestModels
 
     public sealed class OneToManyPrincipal : IdentifiableWithAttribute
     {
-        [HasMany] public List<OneToManyDependent> Dependents { get; set; }
+        [HasMany] public ISet<OneToManyDependent> Dependents { get; set; }
     }
 
     public class IdentifiableWithAttribute : Identifiable
@@ -69,8 +69,8 @@ namespace UnitTests.TestModels
     {
         [HasOne] public OneToOneDependent PopulatedToOne { get; set; }
         [HasOne] public OneToOneDependent EmptyToOne { get; set; }
-        [HasMany] public List<OneToManyDependent> PopulatedToManies { get; set; }
-        [HasMany] public List<OneToManyDependent> EmptyToManies { get; set; }
+        [HasMany] public ISet<OneToManyDependent> PopulatedToManies { get; set; }
+        [HasMany] public ISet<OneToManyDependent> EmptyToManies { get; set; }
         [HasOne] public MultipleRelationshipsPrincipalPart Multi { get; set; }
     }
 
@@ -98,7 +98,7 @@ namespace UnitTests.TestModels
     public class Person : Identifiable
     {
         [Attr] public string Name { get; set; }
-        [HasMany] public List<Blog> Blogs { get; set; }
+        [HasMany] public ISet<Blog> Blogs { get; set; }
         [HasOne] public Food FavoriteFood { get; set; }
         [HasOne] public Song FavoriteSong { get; set; }
     }

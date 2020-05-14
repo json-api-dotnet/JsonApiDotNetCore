@@ -32,13 +32,13 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public DateTime CreatedDate { get; set; }
 
-        [Attr(isFilterable: false, isSortable: false)]
+        [Attr(AttrCapabilities.All & ~(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort))]
         public DateTime? AchievedDate { get; set; }
 
         [Attr]
         public DateTime? UpdatedDate { get; set; }
 
-        [Attr(isImmutable: true)]
+        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowMutate)]
         public string CalculatedValue => "calculated";
 
         [Attr]
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCoreExample.Models
         public int? OneToOnePersonId { get; set; }
 
         [HasMany]
-        public List<Person> StakeHolders { get; set; }
+        public ISet<Person> StakeHolders { get; set; }
 
         [HasOne]
         public TodoItemCollection Collection { get; set; }
@@ -80,6 +80,6 @@ namespace JsonApiDotNetCoreExample.Models
         public TodoItem ParentTodo { get; set; }
 
         [HasMany]
-        public List<TodoItem> ChildrenTodos { get; set; }
+        public IList<TodoItem> ChildrenTodos { get; set; }
     }
 }

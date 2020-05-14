@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using Xunit;
 
@@ -9,28 +8,13 @@ namespace UnitTests.Extensions
     public sealed class TypeExtensions_Tests
     {
         [Fact]
-        public void GetCollection_Creates_List_If_T_Implements_Interface()
-        {
-            // Arrange
-            var type = typeof(Model);
-
-            // Act
-            var collection = type.GetEmptyCollection();
-
-            // Assert
-            Assert.NotNull(collection);
-            Assert.Empty(collection);
-            Assert.IsType<List<Model>>(collection);
-        }
-
-        [Fact]
         public void New_Creates_An_Instance_If_T_Implements_Interface()
         {
             // Arrange
             var type = typeof(Model);
 
             // Act
-            var instance = type.New<IIdentifiable>();
+            var instance = (IIdentifiable)TypeHelper.CreateInstance(type);
 
             // Assert
             Assert.NotNull(instance);
@@ -44,7 +28,7 @@ namespace UnitTests.Extensions
             var type = typeof(Model);
 
             // Act
-            var result = type.Implements<IIdentifiable>();
+            var result = type.IsOrImplementsInterface(typeof(IIdentifiable));
 
             // Assert
             Assert.True(result);
@@ -54,10 +38,10 @@ namespace UnitTests.Extensions
         public void Implements_Returns_False_If_Type_DoesNot_Implement_Interface()
         {
             // Arrange
-            var type = typeof(String);
+            var type = typeof(string);
 
             // Act
-            var result = type.Implements<IIdentifiable>();
+            var result = type.IsOrImplementsInterface(typeof(IIdentifiable));
 
             // Assert
             Assert.False(result);

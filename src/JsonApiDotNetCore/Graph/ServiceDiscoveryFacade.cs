@@ -45,6 +45,7 @@ namespace JsonApiDotNetCore.Graph
             typeof(IResourceReadRepository<>),
             typeof(IResourceReadRepository<,>)
         };
+
         private readonly IServiceCollection _services;
         private readonly IResourceGraphBuilder _resourceGraphBuilder;
         private readonly IdentifiableTypeCache _typeCache = new IdentifiableTypeCache();
@@ -56,14 +57,13 @@ namespace JsonApiDotNetCore.Graph
         }
 
         /// <summary>
-        /// Add resources, services and repository implementations to the container.
+        /// Adds resource, service and repository implementations to the container.
         /// </summary>
         public ServiceDiscoveryFacade AddCurrentAssembly() => AddAssembly(Assembly.GetCallingAssembly());
 
         /// <summary>
-        /// Add resources, services and repository implementations to the container.
+        /// Adds resource, service and repository implementations defined in the specified assembly to the container.
         /// </summary>
-        /// <param name="assembly">The assembly to search for resources in.</param>
         public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
         {
             AddDbContextResolvers(assembly);
@@ -78,20 +78,6 @@ namespace JsonApiDotNetCore.Graph
             return this;
         }
 
-        public IEnumerable<Type> FindDerivedTypes(Type baseType)
-        {
-            return baseType.Assembly.GetTypes().Where(t =>
-            {
-                if (t.BaseType != null)
-                {
-                    return baseType.IsSubclassOf(t);
-                }
-                return false;
-
-            });
-        }
-
-
         private void AddDbContextResolvers(Assembly assembly)
         {
             var dbContextTypes = TypeLocator.GetDerivedTypes(assembly, typeof(DbContext));
@@ -102,23 +88,11 @@ namespace JsonApiDotNetCore.Graph
             }
         }
 
-        /// <summary>
-        /// Adds resources to the resourceGraph and registers <see cref="ResourceDefinition{T}"/> types on the container.
-        /// </summary>
-        /// <param name="assembly">The assembly to search for resources in.</param>
-        public ServiceDiscoveryFacade AddResources(Assembly assembly)
-        {
-            var resourceDescriptors = _typeCache.GetIdentifiableTypes(assembly);
-            foreach (var resourceDescriptor in resourceDescriptors)
-                AddResource(assembly, resourceDescriptor);
-
-            return this;
-        }
-
         private void AddResource(Assembly assembly, ResourceDescriptor resourceDescriptor)
         {
             RegisterResourceDefinition(assembly, resourceDescriptor);
-            AddResourceToGraph(resourceDescriptor);
+
+            _resourceGraphBuilder.AddResource(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
         }
 
         private void RegisterResourceDefinition(Assembly assembly, ResourceDescriptor identifiable)
@@ -137,46 +111,12 @@ namespace JsonApiDotNetCore.Graph
             }
         }
 
-        private void AddResourceToGraph(ResourceDescriptor identifiable)
-        {
-            _resourceGraphBuilder.AddResource(identifiable.ResourceType, identifiable.IdType);
-        }
-
-        /// <summary>
-        /// Add <see cref="IResourceService{T, TId}"/> implementations to container.
-        /// </summary>
-        /// <param name="assembly">The assembly to search for resources in.</param>
-        public ServiceDiscoveryFacade AddServices(Assembly assembly)
-        {
-            var resourceDescriptors = _typeCache.GetIdentifiableTypes(assembly);
-            foreach (var resourceDescriptor in resourceDescriptors)
-            {
-                AddServices(assembly, resourceDescriptor);
-            }
-            return this;
-        }
-
         private void AddServices(Assembly assembly, ResourceDescriptor resourceDescriptor)
         {
             foreach (var serviceInterface in ServiceInterfaces)
             {
                 RegisterServiceImplementations(assembly, serviceInterface, resourceDescriptor);
             }
-        }
-
-        /// <summary>
-        /// Add <see cref="IResourceRepository{T, TId}"/> implementations to container.
-        /// </summary>
-        /// <param name="assembly">The assembly to search for resources in.</param>
-        public ServiceDiscoveryFacade AddRepositories(Assembly assembly)
-        {
-            var resourceDescriptors = _typeCache.GetIdentifiableTypes(assembly);
-            foreach (var resourceDescriptor in resourceDescriptors)
-            {
-                AddRepositories(assembly, resourceDescriptor);
-            }
-
-            return this;
         }
 
         private void AddRepositories(Assembly assembly, ResourceDescriptor resourceDescriptor)
@@ -195,10 +135,7 @@ namespace JsonApiDotNetCore.Graph
             }
             var genericArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2 ? new[] { resourceDescriptor.ResourceType, resourceDescriptor.IdType } : new[] { resourceDescriptor.ResourceType };
             var service = TypeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);
-            //if(service.implementation?.Name == "CustomArticleService" && genericArguments[0].Name != "Article")
-            //{
-            //    service = TypeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);
-            //}
+
             if (service.implementation != null)
             {
                 _services.AddScoped(service.registrationInterface, service.implementation);

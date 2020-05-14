@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Controllers
 {
@@ -114,7 +115,10 @@ namespace JsonApiDotNetCore.Controllers
                 throw new ResourceIdInPostRequestNotAllowedException();
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
-                throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions.IncludeExceptionStackTraceInErrors);
+            {
+                var namingStrategy = _jsonApiOptions.SerializerContractResolver.NamingStrategy;
+                throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions.IncludeExceptionStackTraceInErrors, namingStrategy);
+            }
 
             entity = await _create.CreateAsync(entity);
 
@@ -130,7 +134,10 @@ namespace JsonApiDotNetCore.Controllers
                 throw new InvalidRequestBodyException(null, null, null);
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
-                throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions.IncludeExceptionStackTraceInErrors);
+            {
+                var namingStrategy = _jsonApiOptions.SerializerContractResolver.NamingStrategy;
+                throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions.IncludeExceptionStackTraceInErrors, namingStrategy);
+            }
 
             var updatedEntity = await _update.UpdateAsync(id, entity);
             return updatedEntity == null ? Ok(null) : Ok(updatedEntity);

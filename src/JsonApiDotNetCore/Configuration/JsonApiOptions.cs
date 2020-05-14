@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Graph;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -57,6 +58,9 @@ namespace JsonApiDotNetCore.Configuration
         
         /// <inheritdoc/>
         public bool AllowQueryStringOverrideForSerializerDefaultValueHandling { get; set; }
+
+        /// <inheritdoc/>
+        public AttrCapabilities DefaultAttrCapabilities { get; } = AttrCapabilities.All;
 
         /// <summary>
         /// The default page size for all resources. The value zero means: no paging.

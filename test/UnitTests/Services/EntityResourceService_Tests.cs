@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
@@ -37,7 +39,7 @@ namespace UnitTests.Services
             _pageService = new Mock<IPageService>();
             _sortService = new Mock<ISortService>();
             _filterService = new Mock<IFilterService>();
-            _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions())
+            _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                                 .AddResource<TodoItem>()
                                 .AddResource<TodoItemCollection, Guid>()
                                 .Build();
@@ -124,7 +126,7 @@ namespace UnitTests.Services
             var options = new JsonApiOptions();
             var changeTracker = new DefaultResourceChangeTracker<TodoItem>(options, _resourceGraph, new TargetedFields());
 
-            return new DefaultResourceService<TodoItem>(queryParamServices, options, NullLoggerFactory.Instance, _repositoryMock.Object, _resourceGraph, changeTracker);
+            return new DefaultResourceService<TodoItem>(queryParamServices, options, NullLoggerFactory.Instance, _repositoryMock.Object, _resourceGraph, changeTracker, new DefaultResourceFactory(new ServiceContainer()));
         }
     }
 }
