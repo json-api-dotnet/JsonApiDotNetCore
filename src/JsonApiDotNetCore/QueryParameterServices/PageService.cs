@@ -90,10 +90,6 @@ namespace JsonApiDotNetCore.Query
             {
                 var number = ParsePageNumber(parameterValue, _options.MaximumPageNumber);
 
-                // TODO: It doesn't seem right that a negative paging value reverses the sort order.
-                // A better way would be to allow ?sort=- to indicate reversing results.
-                // Then a negative paging value, like -5, could mean: "5 pages back from the last page"
-
                 Backwards = number < 0;
                 CurrentPage = Backwards ? -number : number;
             }
