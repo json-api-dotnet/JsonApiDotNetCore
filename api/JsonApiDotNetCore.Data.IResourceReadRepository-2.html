@@ -501,19 +501,19 @@ such as authorization of resources.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_Sort_IQueryable__0__JsonApiDotNetCore_Internal_Query_SortQueryContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.Sort(IQueryable%7B%600%7D%2CJsonApiDotNetCore.Internal.Query.SortQueryContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_Sort_IQueryable__0__IReadOnlyCollection_JsonApiDotNetCore_Internal_Query_SortQueryContext__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.Sort(IQueryable%7B%600%7D%2CIReadOnlyCollection%7BJsonApiDotNetCore.Internal.Query.SortQueryContext%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceReadRepository.cs/#L46">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Sort_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Sort*"></a>
-  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Sort_IQueryable__0__JsonApiDotNetCore_Internal_Query_SortQueryContext_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Sort(IQueryable{`0},JsonApiDotNetCore.Internal.Query.SortQueryContext)">Sort(IQueryable&lt;TResource&gt;, SortQueryContext)</h4>
+  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Sort_IQueryable__0__IReadOnlyCollection_JsonApiDotNetCore_Internal_Query_SortQueryContext__" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Sort(IQueryable{`0},IReadOnlyCollection{JsonApiDotNetCore.Internal.Query.SortQueryContext})">Sort(IQueryable&lt;TResource&gt;, IReadOnlyCollection&lt;SortQueryContext&gt;)</h4>
   <div class="markdown level1 summary"><p>Apply a sort to the provided queryable</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IQueryable&lt;TResource&gt; Sort(IQueryable&lt;TResource&gt; entities, SortQueryContext sortQueries)</code></pre>
+    <pre><code class="lang-csharp hljs">IQueryable&lt;TResource&gt; Sort(IQueryable&lt;TResource&gt; entities, IReadOnlyCollection&lt;SortQueryContext&gt; sortQueryContexts)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -531,8 +531,8 @@ such as authorization of resources.</p>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Internal.Query.SortQueryContext.html">SortQueryContext</a></td>
-        <td><span class="parametername">sortQueries</span></td>
+        <td><span class="xref">IReadOnlyCollection</span>&lt;<a class="xref" href="JsonApiDotNetCore.Internal.Query.SortQueryContext.html">SortQueryContext</a>&gt;</td>
+        <td><span class="parametername">sortQueryContexts</span></td>
         <td></td>
       </tr>
     </tbody>

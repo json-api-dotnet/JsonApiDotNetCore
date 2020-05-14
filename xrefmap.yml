@@ -1920,15 +1920,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Data.DefaultResourceRepository(Of TResource, TId).Select
   nameWithType: DefaultResourceRepository<TResource, TId>.Select
   nameWithType.vb: DefaultResourceRepository(Of TResource, TId).Select
-- uid: JsonApiDotNetCore.Data.DefaultResourceRepository`2.Sort(IQueryable{`0},JsonApiDotNetCore.Internal.Query.SortQueryContext)
-  name: Sort(IQueryable<TResource>, SortQueryContext)
-  href: api/JsonApiDotNetCore.Data.DefaultResourceRepository-2.html#JsonApiDotNetCore_Data_DefaultResourceRepository_2_Sort_IQueryable__0__JsonApiDotNetCore_Internal_Query_SortQueryContext_
-  commentId: M:JsonApiDotNetCore.Data.DefaultResourceRepository`2.Sort(IQueryable{`0},JsonApiDotNetCore.Internal.Query.SortQueryContext)
-  name.vb: Sort(IQueryable(Of TResource), SortQueryContext)
-  fullName: JsonApiDotNetCore.Data.DefaultResourceRepository<TResource, TId>.Sort(IQueryable<TResource>, JsonApiDotNetCore.Internal.Query.SortQueryContext)
-  fullName.vb: JsonApiDotNetCore.Data.DefaultResourceRepository(Of TResource, TId).Sort(IQueryable(Of TResource), JsonApiDotNetCore.Internal.Query.SortQueryContext)
-  nameWithType: DefaultResourceRepository<TResource, TId>.Sort(IQueryable<TResource>, SortQueryContext)
-  nameWithType.vb: DefaultResourceRepository(Of TResource, TId).Sort(IQueryable(Of TResource), SortQueryContext)
+- uid: JsonApiDotNetCore.Data.DefaultResourceRepository`2.Sort(IQueryable{`0},IReadOnlyCollection{JsonApiDotNetCore.Internal.Query.SortQueryContext})
+  name: Sort(IQueryable<TResource>, IReadOnlyCollection<SortQueryContext>)
+  href: api/JsonApiDotNetCore.Data.DefaultResourceRepository-2.html#JsonApiDotNetCore_Data_DefaultResourceRepository_2_Sort_IQueryable__0__IReadOnlyCollection_JsonApiDotNetCore_Internal_Query_SortQueryContext__
+  commentId: M:JsonApiDotNetCore.Data.DefaultResourceRepository`2.Sort(IQueryable{`0},IReadOnlyCollection{JsonApiDotNetCore.Internal.Query.SortQueryContext})
+  name.vb: Sort(IQueryable(Of TResource), IReadOnlyCollection(Of SortQueryContext))
+  fullName: JsonApiDotNetCore.Data.DefaultResourceRepository<TResource, TId>.Sort(IQueryable<TResource>, IReadOnlyCollection<JsonApiDotNetCore.Internal.Query.SortQueryContext>)
+  fullName.vb: JsonApiDotNetCore.Data.DefaultResourceRepository(Of TResource, TId).Sort(IQueryable(Of TResource), IReadOnlyCollection(Of JsonApiDotNetCore.Internal.Query.SortQueryContext))
+  nameWithType: DefaultResourceRepository<TResource, TId>.Sort(IQueryable<TResource>, IReadOnlyCollection<SortQueryContext>)
+  nameWithType.vb: DefaultResourceRepository(Of TResource, TId).Sort(IQueryable(Of TResource), IReadOnlyCollection(Of SortQueryContext))
 - uid: JsonApiDotNetCore.Data.DefaultResourceRepository`2.Sort*
   name: Sort
   href: api/JsonApiDotNetCore.Data.DefaultResourceRepository-2.html#JsonApiDotNetCore_Data_DefaultResourceRepository_2_Sort_
@@ -2161,15 +2161,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Data.IResourceReadRepository(Of TResource, TId).Select
   nameWithType: IResourceReadRepository<TResource, TId>.Select
   nameWithType.vb: IResourceReadRepository(Of TResource, TId).Select
-- uid: JsonApiDotNetCore.Data.IResourceReadRepository`2.Sort(IQueryable{`0},JsonApiDotNetCore.Internal.Query.SortQueryContext)
-  name: Sort(IQueryable<TResource>, SortQueryContext)
-  href: api/JsonApiDotNetCore.Data.IResourceReadRepository-2.html#JsonApiDotNetCore_Data_IResourceReadRepository_2_Sort_IQueryable__0__JsonApiDotNetCore_Internal_Query_SortQueryContext_
-  commentId: M:JsonApiDotNetCore.Data.IResourceReadRepository`2.Sort(IQueryable{`0},JsonApiDotNetCore.Internal.Query.SortQueryContext)
-  name.vb: Sort(IQueryable(Of TResource), SortQueryContext)
-  fullName: JsonApiDotNetCore.Data.IResourceReadRepository<TResource, TId>.Sort(IQueryable<TResource>, JsonApiDotNetCore.Internal.Query.SortQueryContext)
-  fullName.vb: JsonApiDotNetCore.Data.IResourceReadRepository(Of TResource, TId).Sort(IQueryable(Of TResource), JsonApiDotNetCore.Internal.Query.SortQueryContext)
-  nameWithType: IResourceReadRepository<TResource, TId>.Sort(IQueryable<TResource>, SortQueryContext)
-  nameWithType.vb: IResourceReadRepository(Of TResource, TId).Sort(IQueryable(Of TResource), SortQueryContext)
+- uid: JsonApiDotNetCore.Data.IResourceReadRepository`2.Sort(IQueryable{`0},IReadOnlyCollection{JsonApiDotNetCore.Internal.Query.SortQueryContext})
+  name: Sort(IQueryable<TResource>, IReadOnlyCollection<SortQueryContext>)
+  href: api/JsonApiDotNetCore.Data.IResourceReadRepository-2.html#JsonApiDotNetCore_Data_IResourceReadRepository_2_Sort_IQueryable__0__IReadOnlyCollection_JsonApiDotNetCore_Internal_Query_SortQueryContext__
+  commentId: M:JsonApiDotNetCore.Data.IResourceReadRepository`2.Sort(IQueryable{`0},IReadOnlyCollection{JsonApiDotNetCore.Internal.Query.SortQueryContext})
+  name.vb: Sort(IQueryable(Of TResource), IReadOnlyCollection(Of SortQueryContext))
+  fullName: JsonApiDotNetCore.Data.IResourceReadRepository<TResource, TId>.Sort(IQueryable<TResource>, IReadOnlyCollection<JsonApiDotNetCore.Internal.Query.SortQueryContext>)
+  fullName.vb: JsonApiDotNetCore.Data.IResourceReadRepository(Of TResource, TId).Sort(IQueryable(Of TResource), IReadOnlyCollection(Of JsonApiDotNetCore.Internal.Query.SortQueryContext))
+  nameWithType: IResourceReadRepository<TResource, TId>.Sort(IQueryable<TResource>, IReadOnlyCollection<SortQueryContext>)
+  nameWithType.vb: IResourceReadRepository(Of TResource, TId).Sort(IQueryable(Of TResource), IReadOnlyCollection(Of SortQueryContext))
 - uid: JsonApiDotNetCore.Data.IResourceReadRepository`2.Sort*
   name: Sort
   href: api/JsonApiDotNetCore.Data.IResourceReadRepository-2.html#JsonApiDotNetCore_Data_IResourceReadRepository_2_Sort_
