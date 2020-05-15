@@ -69,7 +69,7 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="step-by-step-guide-to-a-running-api">Step-By-Step Guide to a Running API</h1>
 
-<p>The most basic use case leverages Entity Framework. 
+<p>The most basic use case leverages Entity Framework Core.
 The shortest path to a running API looks like:</p>
 <ul>
 <li>Create a new web app</li>
@@ -94,9 +94,9 @@ dotnet new webapi
 Install-Package JsonApiDotnetCore
 </code></pre><h3 id="define-models">Define Models</h3>
 <p>Define your domain models such that they implement <code>IIdentifiable&lt;TId&gt;</code>.
-The easiest way to do this is to inherit <code>Identifiable</code></p>
+The easiest way to do this is to inherit from <code>Identifiable</code></p>
 <pre><code class="lang-c#">public class Person : Identifiable
-{ 
+{
     [Attr(&quot;name&quot;)]
     public string Name { get; set; }
 }
@@ -110,52 +110,54 @@ The easiest way to do this is to inherit <code>Identifiable</code></p>
     public DbSet&lt;Person&gt; People { get; set; }
 }
 </code></pre><h3 id="define-controllers">Define Controllers</h3>
-<p>You need to create controllers that inherit from <code>JsonApiController&lt;TEntity&gt;</code> or <code>JsonApiController&lt;TEntity, TId&gt;</code>
-where <code>TEntity</code> is the model that inherits from <code>Identifiable&lt;TId&gt;</code></p>
+<p>You need to create controllers that inherit from <code>JsonApiController&lt;T&gt;</code> or <code>JsonApiController&lt;T, TId&gt;</code>
+where <code>T</code> is the model that inherits from <code>Identifiable&lt;TId&gt;</code></p>
 <pre><code class="lang-c#">public class PeopleController : JsonApiController&lt;Person&gt;
 {
     public PeopleController(
-        IJsonApiContext jsonApiContext,
-        IResourceService&lt;Person&gt; resourceService,
-        ILoggerFactory loggerFactory) 
-    : base(jsonApiContext, resourceService, loggerFactory)
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
+        IResourceService&lt;Person&gt; resourceService)
+    : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 }
 </code></pre><h3 id="middleware-and-services">Middleware and Services</h3>
 <p>Finally, add the services by adding the following to your Startup.ConfigureServices:</p>
-<pre><code class="lang-c#">public IServiceProvider ConfigureServices(IServiceCollection services)
+<pre><code class="lang-c#">// This method gets called by the runtime. Use this method to add services to the container.
+public void ConfigureServices(IServiceCollection services)
 {
-    // add the db context like you normally would
+    // Add the Entity Framework Core DbContext like you normally would
     services.AddDbContext&lt;AppDbContext&gt;(options =&gt;
-    { // use whatever provider you want, this is just an example
+    {
+        // Use whatever provider you want, this is just an example
         options.UseNpgsql(GetDbConnectionString());
-    }, ServiceLifetime.Transient);
+    });
 
-    // add jsonapi dotnet core
+    // Add JsonApiDotNetCore
     services.AddJsonApi&lt;AppDbContext&gt;();
-    // ...
 }
-</code></pre><p>Add the middleware to the Startup.Configure method. Note that under the hood, 
-this will call <code>app.UseMvc()</code> so there is no need to add that as well.</p>
-<pre><code class="lang-c#">public void Configure(IApplicationBuilder app)
+</code></pre><p>Add the middleware to the Startup.Configure method. Note that under the hood,
+this will call <code>app.UseRouting()</code> and <code>app.UseEndpoints(...)</code> so there is no need to add that as well.</p>
+<pre><code class="lang-c#">// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+public void Configure(IApplicationBuilder app)
 {
     app.UseJsonApi();
 }
 </code></pre><h3 id="seeding-the-database">Seeding the Database</h3>
 <p>One way to seed the database is in your Configure method:</p>
-<pre><code class="lang-c#">public void Configure(
-    IApplicationBuilder app,
-    AppDbContext context)
+<pre><code class="lang-c#">public void Configure(IApplicationBuilder app, AppDbContext context)
 {
     context.Database.EnsureCreated();
-    if(context.People.Any() == false) 
+
+    if (!context.People.Any())
     {
-        context.People.Add(new Person {
+        context.People.Add(new Person
+        {
             Name = &quot;John Doe&quot;
         });
         context.SaveChanges();
     }
-    // ...
+
     app.UseJsonApi();
 }
 </code></pre><h3 id="start-the-app">Start the App</h3>

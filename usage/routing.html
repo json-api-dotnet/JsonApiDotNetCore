@@ -69,42 +69,44 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="routing">Routing</h1>
 
-<p>By default the library will configure routes for each controller. 
-Based on the recommendations outlined in the JSONAPI spec, routes are hyphenated.</p>
-<pre><code class="lang-http">GET /api/compound-models HTTP/1.1
-Accept: application/vnd.api+json
+<p>By default the library will configure routes for each controller.
+Based on the recommendations outlined in the json:api spec, routes are camel-cased.</p>
+<pre><code class="lang-http">GET /api/compoundModels HTTP/1.1
 </code></pre><h2 id="namespacing-and-versioning-urls">Namespacing and Versioning URLs</h2>
-<p>You can add a namespace to the URL by specifying it in ConfigureServices</p>
-<pre><code class="lang-c#">public IServiceProvider ConfigureServices(IServiceCollection services) {
+<p>You can add a namespace to all URLs by specifying it in ConfigureServices</p>
+<pre><code class="lang-c#">public void ConfigureServices(IServiceCollection services)
+{
   services.AddJsonApi&lt;AppDbContext&gt;(
-      opt =&gt; opt.Namespace = &quot;api/v1&quot;);
+      options =&gt; options.Namespace = &quot;api/v1&quot;);
 }
-</code></pre><h2 id="disable-convention">Disable Convention</h2>
-<p>You can disable the dasherized convention and specify your own template by using the <code>DisableRoutingConvention</code> Attribute.</p>
+</code></pre><p>Which results in URLs like: <a href="https://yourdomain.com/api/v1/people">https://yourdomain.com/api/v1/people</a></p>
+<h2 id="disable-convention">Disable Convention</h2>
+<p>You can disable the default casing convention and specify your own template by using the <code>DisableRoutingConvention</code> attribute.</p>
 <pre><code class="lang-c#">[Route(&quot;[controller]&quot;)]
 [DisableRoutingConvention]
-public class CamelCasedModelsController : JsonApiController&lt;CamelCasedModel&gt; {
+public class CamelCasedModelsController : JsonApiController&lt;CamelCasedModel&gt;
+{
     public CamelCasedModelsController(
-        IJsonApiContext jsonApiContext,
-        IResourceService&lt;CamelCasedModel&gt; resourceService) 
-        : base(jsonApiContext, resourceService)
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
+        IResourceService&lt;CamelCasedModel&gt; resourceService)
+        : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 }
-</code></pre><p>It is important to note that your routes must still end with the model name in the same format as the resource name. This is so that we can build accurate resource links in the json:api document. For example, if you define a resource as MyModels the controller route must match.</p>
-<pre><code class="lang-c#">public IServiceProvider ConfigureServices(IServiceCollection services) {
-  services.AddJsonApi(options =&gt; {
-      options.BuildContextGraph((builder) =&gt; {
-          builder.AddResource&lt;TodoItem&gt;(&quot;myModels&quot;); // camelCased
-      });
-  });
+</code></pre><p>It is important to note that your routes must still end with the model name in the same format as the resource name. This is so that we can build accurate resource links in the json:api document. For example, if you define a resource as MyModels, the controller route must match.</p>
+<pre><code class="lang-c#">public void ConfigureServices(IServiceCollection services)
+{
+    services.AddJsonApi(resources: builder =&gt;
+        builder.AddResource&lt;TodoItem&gt;(&quot;my-models&quot;)); // kebab-cased
 }
 
 // controller definition
-[Route(&quot;api/myModels&quot;), DisableRoutingConvention]
-public class MyModelsController : JsonApiController&lt;TodoItem&gt; { 
+[Route(&quot;api/my-models&quot;), DisableRoutingConvention]
+public class MyModelsController : JsonApiController&lt;TodoItem&gt;
+{
   //...
 }
-</code></pre><p>See <a href="resource-graph.html#public-resource-type-name">this</a> for 
+</code></pre><p>See <a href="resource-graph.html#public-resource-type-name">this</a> for
 more information on how the resource name is determined.</p>
 </article>
           </div>

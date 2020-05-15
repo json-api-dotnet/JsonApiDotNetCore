@@ -67,7 +67,6 @@
 <h2 id="simple-crud">Simple CRUD</h2>
 <h3 id="create">Create</h3>
 <pre><code class="lang-sh" name="CREATE">curl -vs http://localhost:5001/api/people           \
-    -H &quot;Accept: application/vnd.api+json&quot;           \
     -H &quot;Content-Type: application/vnd.api+json&quot;     \
     -d &#39;{
             &quot;data&quot;: {
@@ -80,7 +79,6 @@
 </code></pre><!-- Can not find reference 000-CREATE_Person-Response.json -->
 <h3 id="create-with-relationship">Create with Relationship</h3>
 <pre><code class="lang-sh" name="CREATE">curl -vs http://localhost:5001/api/articles         \
-    -H &quot;Accept: application/vnd.api+json&quot;           \
     -H &quot;Content-Type: application/vnd.api+json&quot;     \
     -d &#39;{
             &quot;data&quot;: {
@@ -100,20 +98,16 @@
         }&#39;
 </code></pre><!-- Can not find reference 001-CREATE_Article-Response.json -->
 <h3 id="get-all">Get All</h3>
-<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles     \
-    -H &quot;Accept: application/vnd.api+json&quot;
+<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles
 </code></pre><!-- Can not find reference 002-GET_Articles-Response.json -->
 <h3 id="get-by-id">Get By Id</h3>
-<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles/1     \
-    -H &quot;Accept: application/vnd.api+json&quot;
+<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles/1
 </code></pre><!-- Can not find reference 003-GET_Article-Response.json -->
 <h3 id="get-with-relationship">Get with Relationship</h3>
-<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles?include=author     \
-    -H &quot;Accept: application/vnd.api+json&quot;
+<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles?include=author
 </code></pre><!-- Can not find reference 004-GET_Articles_With_Authors-Response.json -->
 <h3 id="update">Update</h3>
-<pre><code class="lang-sh" name="PATCH Request">curl -vs http://localhost:5001/api/people/1       \
-    -H &quot;Accept: application/vnd.api+json&quot;           \
+<pre><code class="lang-sh" name="PATCH Request">curl -vs http://localhost:5001/api/people/1         \
     -H &quot;Content-Type: application/vnd.api+json&quot;     \
     -X PATCH                                        \
     -d &#39;{
@@ -127,18 +121,15 @@
 </code></pre><!-- Can not find reference 005-PATCH_Article-Response.json -->
 <h3 id="delete">Delete</h3>
 <pre><code class="lang-sh" name="DELETE Request">curl -vs http://localhost:5001/api/articles/1     \
-    -H &quot;Accept: application/vnd.api+json&quot;           \
     -X DELETE
 </code></pre><!-- Can not find reference 006-DELETE_Article-Response.json -->
 <h2 id="filters">Filters</h2>
 <p><em>Note that cURL requires URLs to be escaped.</em></p>
 <h3 id="equality">Equality</h3>
-<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles?filter%5Btitle%5D=Moby     \
-    -H &quot;Accept: application/vnd.api+json&quot;
+<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles?filter%5Btitle%5D=Moby
 </code></pre><!-- Can not find reference 008-GET_Articles_With_Filter_Eq-Response.json -->
 <h3 id="like">Like</h3>
-<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/people?filter%5Bname%5D=like:Al     \
-    -H &quot;Accept: application/vnd.api+json&quot;
+<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/people?filter%5Bname%5D=like:Al
 </code></pre><!-- Can not find reference 009-GET_Articles_With_Filter_Like-Response.json -->
 <h2 id="sorting">Sorting</h2>
 <h1 id="see-also">See Also</h1>

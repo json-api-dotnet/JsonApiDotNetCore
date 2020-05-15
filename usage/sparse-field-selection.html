@@ -69,9 +69,16 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="sparse-field-selection">Sparse Field Selection</h1>
 
-<p>We currently support top-level field selection. What this means is you can restrict which fields are returned by a query using the fields query parameter, but this does not yet apply to included relationships.</p>
-<pre><code class="lang-http">GET /articles?fields[articles]=title,body HTTP/1.1
-Accept: application/vnd.api+json
+<p>As an alternative to returning all attributes from a resource, the fields query parameter can be used to select only a subset.
+This can be used on the resource being requested (top-level), as well as on single-depth related resources that are being included.</p>
+<p>Top-level example:</p>
+<pre><code class="lang-http">GET /articles?fields=title,body HTTP/1.1
+</code></pre><p>Example for an included relationship:</p>
+<pre><code class="lang-http">GET /articles?include=author&amp;fields[author]=name HTTP/1.1
+</code></pre><p>Example for both top-level and relationship:</p>
+<pre><code class="lang-http">GET /articles?fields=title,body&amp;include=author&amp;fields[author]=name HTTP/1.1
+</code></pre><p>Field selection currently does <strong>not</strong> work on nested endpoints:</p>
+<pre><code class="lang-http">GET /api/blogs/1/articles?fields=title,body HTTP/1.1
 </code></pre></article>
           </div>
           

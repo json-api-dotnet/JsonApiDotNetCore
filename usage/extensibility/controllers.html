@@ -69,14 +69,14 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="controllers">Controllers</h1>
 
-<p>You need to create controllers that inherit from <code>JsonApiController&lt;TEntity&gt;</code></p>
+<p>You need to create controllers that inherit from <code>JsonApiController&lt;T&gt;</code></p>
 <pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article&gt;
 {
     public ArticlesController(
-        IJsonApiContext jsonApiContext,
-        IResourceService&lt;Article&gt; resourceService,
-        ILoggerFactory loggerFactory) 
-    : base(jsonApiContext, resourceService, loggerFactory)
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
+        IResourceService&lt;Article&gt; resourceService)
+        : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 }
 </code></pre><h2 id="non-integer-type-keys">Non-Integer Type Keys</h2>
@@ -85,11 +85,11 @@
 //---------------------------------------------------------- ^^^^
 {
     public ArticlesController(
-        IJsonApiContext jsonApiContext,
-        IResourceService&lt;Article, Guid&gt; resourceService,
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
+        IResourceService&lt;Article, Guid&gt; resourceService)
         //----------------------- ^^^^
-        ILoggerFactory loggerFactory) 
-    : base(jsonApiContext, resourceService, loggerFactory)
+        : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 }
 </code></pre><h2 id="resource-access-control">Resource Access Control</h2>
@@ -99,53 +99,62 @@
 <pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article&gt;
 {
     public ArticlesController(
-        IJsonApiContext jsonApiContext,
-        IResourceService&lt;Article&gt; resourceService) 
-    : base(jsonApiContext, resourceService)
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
+        IResourceService&lt;Article&gt; resourceService)
+        : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 
     [HttpGet]
-    public override async Task&lt;IActionResult&gt; GetAsync() 
-        =&gt; await base.GetAsync();
+    public override async Task&lt;IActionResult&gt; GetAsync()
+    {
+        return await base.GetAsync();
+    }
 
     [HttpGet(&quot;{id}&quot;)]
-    public override async Task&lt;IActionResult&gt; GetAsync(TId id) 
-        =&gt; await base.GetAsync(id);
+    public override async Task&lt;IActionResult&gt; GetAsync(int id)
+    {
+        return await base.GetAsync(id);
+    }
 }
 </code></pre><h2 id="using-actionfilterattributes">Using ActionFilterAttributes</h2>
-<p>The next option is to use the ActionFilterAttributes that ship with the library. The available attributes are:</p>
+<p>The next option is to use the ActionFilter attributes that ship with the library. The available attributes are:</p>
 <ul>
 <li><code>NoHttpPost</code>: disallow POST requests</li>
 <li><code>NoHttpPatch</code>: disallow PATCH requests</li>
 <li><code>NoHttpDelete</code>: disallow DELETE requests</li>
 <li><code>HttpReadOnly</code>: all of the above</li>
 </ul>
-<p>Not only does this reduce boilerplate, but it also provides a more meaningful HTTP response code. 
+<p>Not only does this reduce boilerplate, but it also provides a more meaningful HTTP response code.
 An attempt to use one blacklisted methods will result in a HTTP 405 Method Not Allowed response.</p>
 <pre><code class="lang-c#">[HttpReadOnly]
 public class ArticlesController : BaseJsonApiController&lt;Article&gt;
 {
     public ArticlesController(
-        IJsonApiContext jsonApiContext,
-        IResourceService&lt;Article&gt; resourceService) 
-    : base(jsonApiContext, resourceService)
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
+        IResourceService&lt;Article&gt; resourceService)
+        : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 }
 </code></pre><h2 id="implicit-access-by-service-injection">Implicit Access By Service Injection</h2>
-<p>Finally, you can control the allowed methods by supplying only the available service implementations. In some cases, resources may be an aggregation of entities or a view on top of the underlying entities. In these cases, there may not be a writable IResourceService implementation. In these cases, simply inject the implementation that is available.</p>
-<p>As with the ActionFilterAttributes, if a service implementation is not available to service a request, HTTP 405 Method Not Allowed will be returned.</p>
+<p>Finally, you can control the allowed methods by supplying only the available service implementations. In some cases, resources may be an aggregation of entities or a view on top of the underlying entities. In these cases, there may not be a writable IResourceService implementation, so simply inject the implementation that is available.</p>
+<p>As with the ActionFilter attributes, if a service implementation is not available to service a request, HTTP 405 Method Not Allowed will be returned.</p>
 <p>For more information about resource injection, see the next section titled Resource Services.</p>
-<pre><code class="lang-c#">public class ReportsController : BaseJsonApiController&lt;Report&gt; 
+<pre><code class="lang-c#">public class ReportsController : BaseJsonApiController&lt;Report&gt;
 {
     public ReportsController(
-        IJsonApiContext jsonApiContext, 
-        IGetAllService&lt;Report&gt; getAll)
-    : base(jsonApiContext, getAll: getAll)
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
+        IResourceService&lt;Report&gt; resourceService)
+        : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 
     [HttpGet]
-    public override async Task&lt;IActionResult&gt; GetAsync() 
-        =&gt; await base.GetAsync();
+    public override async Task&lt;IActionResult&gt; GetAsync()
+    {
+        return await base.GetAsync();
+    }
 }
 </code></pre></article>
           </div>

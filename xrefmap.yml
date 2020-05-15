@@ -9510,15 +9510,15 @@ references:
   commentId: F:JsonApiDotNetCore.Serialization.BaseDocumentBuilder._resourceObjectBuilder
   fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder._resourceObjectBuilder
   nameWithType: BaseDocumentBuilder._resourceObjectBuilder
-- uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable,IReadOnlyCollection{JsonApiDotNetCore.Models.AttrAttribute},IReadOnlyCollection{JsonApiDotNetCore.Models.RelationshipAttribute})
-  name: Build(IEnumerable, IReadOnlyCollection<AttrAttribute>, IReadOnlyCollection<RelationshipAttribute>)
-  href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_Build_IEnumerable_IReadOnlyCollection_JsonApiDotNetCore_Models_AttrAttribute__IReadOnlyCollection_JsonApiDotNetCore_Models_RelationshipAttribute__
-  commentId: M:JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable,IReadOnlyCollection{JsonApiDotNetCore.Models.AttrAttribute},IReadOnlyCollection{JsonApiDotNetCore.Models.RelationshipAttribute})
-  name.vb: Build(IEnumerable, IReadOnlyCollection(Of AttrAttribute), IReadOnlyCollection(Of RelationshipAttribute))
-  fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable, IReadOnlyCollection<JsonApiDotNetCore.Models.AttrAttribute>, IReadOnlyCollection<JsonApiDotNetCore.Models.RelationshipAttribute>)
-  fullName.vb: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable, IReadOnlyCollection(Of JsonApiDotNetCore.Models.AttrAttribute), IReadOnlyCollection(Of JsonApiDotNetCore.Models.RelationshipAttribute))
-  nameWithType: BaseDocumentBuilder.Build(IEnumerable, IReadOnlyCollection<AttrAttribute>, IReadOnlyCollection<RelationshipAttribute>)
-  nameWithType.vb: BaseDocumentBuilder.Build(IEnumerable, IReadOnlyCollection(Of AttrAttribute), IReadOnlyCollection(Of RelationshipAttribute))
+- uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable{JsonApiDotNetCore.Models.IIdentifiable},IReadOnlyCollection{JsonApiDotNetCore.Models.AttrAttribute},IReadOnlyCollection{JsonApiDotNetCore.Models.RelationshipAttribute})
+  name: Build(IEnumerable<IIdentifiable>, IReadOnlyCollection<AttrAttribute>, IReadOnlyCollection<RelationshipAttribute>)
+  href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_Build_IEnumerable_JsonApiDotNetCore_Models_IIdentifiable__IReadOnlyCollection_JsonApiDotNetCore_Models_AttrAttribute__IReadOnlyCollection_JsonApiDotNetCore_Models_RelationshipAttribute__
+  commentId: M:JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable{JsonApiDotNetCore.Models.IIdentifiable},IReadOnlyCollection{JsonApiDotNetCore.Models.AttrAttribute},IReadOnlyCollection{JsonApiDotNetCore.Models.RelationshipAttribute})
+  name.vb: Build(IEnumerable(Of IIdentifiable), IReadOnlyCollection(Of AttrAttribute), IReadOnlyCollection(Of RelationshipAttribute))
+  fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable<JsonApiDotNetCore.Models.IIdentifiable>, IReadOnlyCollection<JsonApiDotNetCore.Models.AttrAttribute>, IReadOnlyCollection<JsonApiDotNetCore.Models.RelationshipAttribute>)
+  fullName.vb: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(IEnumerable(Of JsonApiDotNetCore.Models.IIdentifiable), IReadOnlyCollection(Of JsonApiDotNetCore.Models.AttrAttribute), IReadOnlyCollection(Of JsonApiDotNetCore.Models.RelationshipAttribute))
+  nameWithType: BaseDocumentBuilder.Build(IEnumerable<IIdentifiable>, IReadOnlyCollection<AttrAttribute>, IReadOnlyCollection<RelationshipAttribute>)
+  nameWithType.vb: BaseDocumentBuilder.Build(IEnumerable(Of IIdentifiable), IReadOnlyCollection(Of AttrAttribute), IReadOnlyCollection(Of RelationshipAttribute))
 - uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.Build(JsonApiDotNetCore.Models.IIdentifiable,IReadOnlyCollection{JsonApiDotNetCore.Models.AttrAttribute},IReadOnlyCollection{JsonApiDotNetCore.Models.RelationshipAttribute})
   name: Build(IIdentifiable, IReadOnlyCollection<AttrAttribute>, IReadOnlyCollection<RelationshipAttribute>)
   href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_Build_JsonApiDotNetCore_Models_IIdentifiable_IReadOnlyCollection_JsonApiDotNetCore_Models_AttrAttribute__IReadOnlyCollection_JsonApiDotNetCore_Models_RelationshipAttribute__
@@ -9794,12 +9794,15 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.RelationshipsToSerialize
   nameWithType: IRequestSerializer.RelationshipsToSerialize
-- uid: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.Serialize(IEnumerable)
-  name: Serialize(IEnumerable)
-  href: api/JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html#JsonApiDotNetCore_Serialization_Client_IRequestSerializer_Serialize_IEnumerable_
-  commentId: M:JsonApiDotNetCore.Serialization.Client.IRequestSerializer.Serialize(IEnumerable)
-  fullName: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.Serialize(IEnumerable)
-  nameWithType: IRequestSerializer.Serialize(IEnumerable)
+- uid: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.Serialize(IEnumerable{JsonApiDotNetCore.Models.IIdentifiable})
+  name: Serialize(IEnumerable<IIdentifiable>)
+  href: api/JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html#JsonApiDotNetCore_Serialization_Client_IRequestSerializer_Serialize_IEnumerable_JsonApiDotNetCore_Models_IIdentifiable__
+  commentId: M:JsonApiDotNetCore.Serialization.Client.IRequestSerializer.Serialize(IEnumerable{JsonApiDotNetCore.Models.IIdentifiable})
+  name.vb: Serialize(IEnumerable(Of IIdentifiable))
+  fullName: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.Serialize(IEnumerable<JsonApiDotNetCore.Models.IIdentifiable>)
+  fullName.vb: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.Serialize(IEnumerable(Of JsonApiDotNetCore.Models.IIdentifiable))
+  nameWithType: IRequestSerializer.Serialize(IEnumerable<IIdentifiable>)
+  nameWithType.vb: IRequestSerializer.Serialize(IEnumerable(Of IIdentifiable))
 - uid: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.Serialize(JsonApiDotNetCore.Models.IIdentifiable)
   name: Serialize(IIdentifiable)
   href: api/JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html#JsonApiDotNetCore_Serialization_Client_IRequestSerializer_Serialize_JsonApiDotNetCore_Models_IIdentifiable_
@@ -9896,12 +9899,15 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Client.RequestSerializer.RelationshipsToSerialize
   nameWithType: RequestSerializer.RelationshipsToSerialize
-- uid: JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(IEnumerable)
-  name: Serialize(IEnumerable)
-  href: api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html#JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_IEnumerable_
-  commentId: M:JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(IEnumerable)
-  fullName: JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(IEnumerable)
-  nameWithType: RequestSerializer.Serialize(IEnumerable)
+- uid: JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(IEnumerable{JsonApiDotNetCore.Models.IIdentifiable})
+  name: Serialize(IEnumerable<IIdentifiable>)
+  href: api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html#JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_IEnumerable_JsonApiDotNetCore_Models_IIdentifiable__
+  commentId: M:JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(IEnumerable{JsonApiDotNetCore.Models.IIdentifiable})
+  name.vb: Serialize(IEnumerable(Of IIdentifiable))
+  fullName: JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(IEnumerable<JsonApiDotNetCore.Models.IIdentifiable>)
+  fullName.vb: JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(IEnumerable(Of JsonApiDotNetCore.Models.IIdentifiable))
+  nameWithType: RequestSerializer.Serialize(IEnumerable<IIdentifiable>)
+  nameWithType.vb: RequestSerializer.Serialize(IEnumerable(Of IIdentifiable))
 - uid: JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(JsonApiDotNetCore.Models.IIdentifiable)
   name: Serialize(IIdentifiable)
   href: api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html#JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_JsonApiDotNetCore_Models_IIdentifiable_

@@ -80,53 +80,53 @@
 <li>Manually specifying each resource</li>
 </ol>
 <h3 id="auto-discovery">Auto-Discovery</h3>
-<p>Auto-discovery refers to process of reflecting on an assembly and 
+<p>Auto-discovery refers to the process of reflecting on an assembly and
 detecting all of the json:api resources and services.</p>
 <p>The following command will build the resource graph using all <code>IIdentifiable</code>
-implementations. It also injects service layer overrides which we will 
-cover in a later section. You can enable auto-discovery for the 
+implementations. It also injects resource definitions and service layer overrides which we will
+cover in a later section. You can enable auto-discovery for the
 current assembly by adding the following to your <code>Startup</code> class.</p>
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddJsonApi(
-        options =&gt; { /* ... */ }, 
-        mvcBuilder,
+        options =&gt; { /* ... */ },
         discovery =&gt; discovery.AddCurrentAssembly());
 }
-</code></pre><h3 id="entity-framework-dbcontext">Entity Framework DbContext</h3>
+</code></pre><h3 id="entity-framework-core-dbcontext">Entity Framework Core DbContext</h3>
 <p>If you are using Entity Framework Core as your ORM, you can add an entire <code>DbContext</code> with one line.</p>
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddJsonApi&lt;AppDbContext&gt;();
 }
+</code></pre><p>Be aware that the previous command does not inject resource definitions and service layer overrides. You can combine it with auto-discovery to register them.</p>
+<pre><code class="lang-c#">// Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddJsonApi&lt;AppDbContext&gt;(
+        options =&gt; { /* ... */ },
+        discovery =&gt; discovery.AddCurrentAssembly());
+}
 </code></pre><h3 id="manual-specification">Manual Specification</h3>
 <p>You can also manually construct the graph.</p>
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
-    var mvcBuilder = services.AddMvc();
-
-    services.AddJsonApi(options =&gt; {
-        options.BuildResourceGraph((builder) =&gt; {
-            builder.AddResource&lt;MyModel&gt;();
-        });
-    }, mvcBuilder);
+    services.AddJsonApi(resources: builder =&gt;
+    {
+        builder.AddResource&lt;Person&gt;();
+    });
 }
 </code></pre><h3 id="public-resource-type-name">Public Resource Type Name</h3>
-<p>The public resource type name for is determined by the following criteria (in order of priority):</p>
+<p>The public resource type name is determined by the following criteria (in order of priority):</p>
 <ol>
 <li><p>The model is decorated with a <code>ResourceAttribute</code></p>
 <pre><code class="lang-c#">[Resource(&quot;my-models&quot;)]
 public class MyModel : Identifiable { /* ... */ }
 </code></pre></li>
-<li><p>The <code>DbSet</code> is decorated with a <code>ResourceAttribute</code>. Note that this only applies if the graph was created from the DbContext (i.e. <code>services.AddJsonApi&lt;AppDbContext&gt;()</code>)</p>
-<pre><code class="lang-c#">[Resource(&quot;my-models&quot;)] 
-public DbSet&lt;MyModel&gt; MyModel { get; set; }
-</code></pre></li>
-<li><p>The configured naming convention (by default this is kebab-case).</p>
-<pre><code class="lang-c#">// this will be registered as &quot;my-models&quot;
+<li><p>The configured naming convention (by default this is camel-case).</p>
+<pre><code class="lang-c#">// this will be registered as &quot;myModels&quot;
 public class MyModel : Identifiable { /* ... */ }
 </code></pre></li>
 </ol>

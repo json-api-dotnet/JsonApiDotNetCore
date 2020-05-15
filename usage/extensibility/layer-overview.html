@@ -72,24 +72,24 @@
 <p>By default, data retrieval is distributed across 3 layers:</p>
 <pre><code>JsonApiController (required)
 
-└── EntityResourceService: IResourceService
++-- DefaultResourceService: IResourceService
 
-     └── DefaultEntityRepository: IEntityRepository
-</code></pre><p>Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible to keep the controllers free of unnecessary logic. 
+     +-- DefaultResourceRepository: IResourceRepository
+</code></pre><p>Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible to keep the controllers free of unnecessary logic.
 You can use the following as a general rule of thumb for where to put business logic:</p>
 <ul>
-<li><code>Controller</code>: simple validation logic that should result in the return of specific HTTP status codes such as model validation</li>
-<li><code>IResourceService</code>: advanced BL and replacement of data access mechanisms</li>
-<li><code>IEntityRepository</code>: custom logic that builds on the EF APIs, such as Authorization of data</li>
+<li><code>Controller</code>: simple validation logic that should result in the return of specific HTTP status codes, such as model validation</li>
+<li><code>IResourceService</code>: advanced business logic and replacement of data access mechanisms</li>
+<li><code>IResourceRepository</code>: custom logic that builds on the Entity Framework Core APIs, such as Authorization of data</li>
 </ul>
 <h2 id="replacing-services">Replacing Services</h2>
 <p><strong>Note:</strong> If you are using auto-discovery, services will be automatically registered for you.</p>
-<p>Replacing services is done on a per resource basis and can be done through simple DI in your Startup.cs file.</p>
+<p>Replacing services is done on a per-resource basis and can be done through simple DI in your Startup.cs file.</p>
 <p>In v3.0.0 we introduced an extenion method that you should use to
 register services. This method handles some of the common issues
 users have had with service registration.</p>
 <pre><code class="lang-c#">// Startup.cs
-public IServiceProvider ConfigureServices(IServiceCollection services)
+public void ConfigureServices(IServiceCollection services)
 {
     // custom service
     services.AddResourceService&lt;FooService&gt;();
@@ -99,13 +99,13 @@ public IServiceProvider ConfigureServices(IServiceCollection services)
 }
 </code></pre><p>Prior to v3.0.0 you could do it like so:</p>
 <pre><code class="lang-c#">// Startup.cs
-public IServiceProvider ConfigureServices(IServiceCollection services)
+public void ConfigureServices(IServiceCollection services)
 {
     // custom service
-    services.AddScoped&lt;IEntityRepository&lt;Foo&gt;, FooService&gt;();
+    services.AddScoped&lt;IResourceRepository&lt;Foo&gt;, FooService&gt;();
 
     // custom repository
-    services.AddScoped&lt;IEntityRepository&lt;Foo&gt;, FooService&gt;();
+    services.AddScoped&lt;IResourceRepository&lt;Foo&gt;, FooService&gt;();
 
     // ...
 }

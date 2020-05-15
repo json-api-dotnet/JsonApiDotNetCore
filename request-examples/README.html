@@ -65,15 +65,13 @@
 <p>To update these requests:</p>
 <ol>
 <li><p>Add a bash (.sh) file prefixed by a number that is used to determine the order the scripts are executed. The bash script should execute a request and output the response. Example:</p>
-<pre><code>curl -vs http://localhost:5001/api/articles     \
- -H &quot;Accept: application/vnd.api+json&quot;
+<pre><code>curl -vs http://localhost:5001/api/articles
 </code></pre></li>
 <li><p>Add the example to <code>index.md</code>. Example:</p>
 <pre><code>## Get Article with Author
 </code></pre></li>
 </ol>
-<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles?include=author     \
-    -H &quot;Accept: application/vnd.api+json&quot;
+<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles?include=author
 </code></pre><!-- Can not find reference 004-GET_Articles_With_Authors-Response.json -->
 <pre><code>
 3. Run `./generate.sh`

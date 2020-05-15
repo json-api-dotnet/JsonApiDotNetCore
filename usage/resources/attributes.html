@@ -78,38 +78,44 @@
 </code></pre><h2 id="public-name">Public name</h2>
 <p>There are two ways the public attribute name is determined:</p>
 <ol>
-<li><p>By convention, specified by <a class="xref" href="../../api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_ResourceNameFormatter">JsonApiOptions</a></p>
-<pre><code class="lang-c#">options.ResourceNameFormatter = new DefaultResourceNameFormatter();
-</code></pre></li>
-<li><p>Individually using the attribute&#39;s constructor</p>
-<pre><code class="lang-c#">public class Person : Identifiable
+<li>By convention, specified by <a class="xref" href="../../api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_SerializerSettings">JsonApiOptions</a>
+<code>c#
+options.SerializerSettings.ContractResolver = new DefaultContractResolver
+{
+ NamingStrategy = new CamelCaseNamingStrategy()
+};</code></li>
+<li>Individually using the attribute&#39;s constructor
+<code>c#
+public class Person : Identifiable
 {
  [Attr(&quot;first-name&quot;)]
  public string FirstName { get; set; }
-}
-</code></pre></li>
+}</code></li>
 </ol>
-<h2 id="immutability">Immutability</h2>
-<p>Attributes can be marked as immutable which will prevent <code>PATCH</code> requests from updating them.</p>
+<h2 id="capabilities">Capabilities</h2>
+<p><em>since v4.0</em></p>
+<p>Default json:api attribute capabilities are specified by @JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities:</p>
+<pre><code class="lang-c#">options.DefaultAttrCapabilities = AttrCapabilities.None; // default: All
+</code></pre><p>This can be overridden per attribute.</p>
+<h1 id="mutability">Mutability</h1>
+<p>Attributes can be marked as mutable, which will allow <code>PATCH</code> requests to update them. When immutable, an HTTP 422 response is returned.</p>
 <pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
-    [Attr(immutable: true)]
+    [Attr(AttrCapabilities.AllowMutate)]
     public string FirstName { get; set; }
 }
-</code></pre><h2 id="filtersort-ability">Filter|Sort-ability</h2>
-<p>All attributes are filterable and sortable by default. 
-You can disable this by setting <code>IsFiterable</code> and <code>IsSortable</code> to <code>false</code>.
-Requests to filter or sort these attributes will receive an HTTP 400 response.</p>
+</code></pre><h1 id="filtersort-ability">Filter/Sort-ability</h1>
+<p>Attributes can be marked to allow filtering and/or sorting. When not allowed, it results in an HTTP 400 response.</p>
 <pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
-    [Attr(isFilterable: false, isSortable: false)]
+    [Attr(AttrCapabilities.AllowSort | AttrCapabilities.AllowFilter)]
     public string FirstName { get; set; }
 }
 </code></pre><h2 id="complex-attributes">Complex Attributes</h2>
 <p>Models may contain complex attributes.
 Serialization of these types is done by Newtonsoft.Json,
 so you should use their APIs to specify serialization formats.
-You can also use global options to specify the <code>JsonSerializer</code> that gets used.</p>
+You can also use global options to specify <code>JsonSerializer</code> configuration.</p>
 <pre><code class="lang-c#">public class Foo : Identifiable
 {
     [Attr]
@@ -121,25 +127,28 @@ public class Bar
     [JsonProperty(&quot;compound-member&quot;)]
     public string CompoundMember { get; set; }
 }
-</code></pre><p>If you need your complex attributes persisted as a 
-JSON string in your database, but you need access to it as a concrete type, you can define two members on your resource. 
-The first member is the concrete type that you will directly interact with in your application. We can use the <code>NotMapped</code> attribute to prevent Entity Framework from mapping it to the database. The second is the raw JSON property that will be persisted to the database. How you use these members should determine which one is responsible for serialization. In this example, we only serialize and deserialize at the time of persistence
+</code></pre><p>If you need your complex attributes persisted as a
+JSON string in your database, but you need access to it as a concrete type, you can define two members on your resource.
+The first member is the concrete type that you will directly interact with in your application. You can use the <code>NotMapped</code> attribute to prevent Entity Framework Core from mapping it to the database. The second is the raw JSON property that will be persisted to the database. How you use these members should determine which one is responsible for serialization. In this example, we only serialize and deserialize at the time of persistence
 and retrieval.</p>
 <pre><code class="lang-c#">public class Foo : Identifiable
 {
     [Attr, NotMapped]
     public Bar Bar { get; set; }
 
-    public string BarJson 
-    { 
-        get =&gt; (Bar == null) 
-                ? &quot;{}&quot;
-                : JsonConvert.SerializeObject(Bar);
-
-        set =&gt; Bar = string.IsNullOrWhiteSpace(value)
+    public string BarJson
+    {
+        get
+        {
+            return Bar == null ? &quot;{}&quot; : JsonConvert.SerializeObject(Bar);
+        }
+        set
+        {
+            Bar = string.IsNullOrWhiteSpace(value)
                 ? null
-                : JsonConvert.DeserializeObject(value);
-    };
+                : JsonConvert.DeserializeObject&lt;Bar&gt;(value);
+        }
+    }
 }
 </code></pre></article>
           </div>

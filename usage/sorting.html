@@ -69,15 +69,18 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="sorting">Sorting</h1>
 
-<p>Resources can be sorted by an attribute. 
-The default sort order is ascending. 
+<p>Resources can be sorted by one or more attributes.
+The default sort order is ascending.
 To sort descending, prepend the sort key with a minus (-) sign.</p>
 <h2 id="ascending">Ascending</h2>
 <pre><code class="lang-http">GET /api/articles?sort=author HTTP/1.1
-Accept: application/vnd.api+json
 </code></pre><h2 id="descending">Descending</h2>
 <pre><code class="lang-http">GET /api/articles?sort=-author HTTP/1.1
-Accept: application/vnd.api+json
+</code></pre><h2 id="multiple-attributes">Multiple attributes</h2>
+<pre><code class="lang-http">GET /api/articles?sort=author,-pageCount HTTP/1.1
+</code></pre><h2 id="limitations">Limitations</h2>
+<p>Sorting currently does <strong>not</strong> work on nested endpoints:</p>
+<pre><code class="lang-http">GET /api/blogs/1/articles?sort=title HTTP/1.1
 </code></pre><h2 id="default-sort">Default Sort</h2>
 <p>See the topic on <a href="resources/resource-definitions">Resource Definitions</a>
 for defining the default sort behavior.</p>

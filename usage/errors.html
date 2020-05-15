@@ -69,49 +69,23 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="errors">Errors</h1>
 
-<p>By default, errors will only contain the properties defined by the <code>Error</code> class. 
-However, you can create your own by inheriting from Error and either throwing it in a <code>JsonApiException</code> or returning the error from your controller.</p>
-<pre><code class="lang-c#">public class CustomError : Error 
+<p>Errors returned will contain only the properties that are set on the <code>Error</code> class. Custom fields can be added through <code>Error.Meta</code>.
+You can create a custom error by throwing a <code>JsonApiException</code> (which accepts an <code>Error</code> instance), or returning an <code>Error</code> instance from an <code>ActionResult</code> in a controller.
+Please keep in mind that json:api requires Title to be a generic message, while Detail should contain information about the specific problem occurence.</p>
+<p>From a controller method:</p>
+<pre><code class="lang-c#">return Conflict(new Error(HttpStatusCode.Conflict)
 {
-    public CustomError(int status, string title, string detail, string myProp)
-        : base(status, title, detail)
-    {
-        MyCustomProperty = myProp;
-    }
-
-    public string MyCustomProperty { get; set; }
-}
-</code></pre><p>If you throw a <code>JsonApiException</code> that is unhandled, the middleware will properly serialize it and return it as a json:api error.</p>
-<pre><code class="lang-c#">public void MyMethod() 
+    Title = &quot;Target resource was modified by another user.&quot;,
+    Detail = $&quot;User {userName} changed the {resourceField} field on the {resourceName} resource.&quot;
+});
+</code></pre><p>From other code:</p>
+<pre><code class="lang-c#">throw new JsonApiException(new Error(HttpStatusCode.Conflict)
 {
-    var error = new CustomError(507, &quot;title&quot;, &quot;detail&quot;, &quot;custom&quot;);
-    throw new JsonApiException(error);
-}
-</code></pre><p>You can use the <code>IActionResult Error(Error error)</code> method to return a single error message, or you can use the <code>IActionResult Errors(ErrorCollection errors)</code> method to return a collection of errors from your controller.</p>
-<pre><code class="lang-c#">[HttpPost]
-public override async Task&lt;IActionResult&gt; PostAsync([FromBody] MyEntity entity)
-{
-    if(_db.IsFull)
-        return Error(new CustomError(&quot;507&quot;, &quot;Database is full.&quot;, &quot;Theres no more room.&quot;, &quot;Sorry.&quot;));
-
-    if(model.Validations.IsValid == false)
-        return Errors(model.Validations.GetErrors());
-}
-</code></pre><h2 id="example-including-links">Example: Including Links</h2>
-<p>This example demonstrates one way you can include links with your error payloads.</p>
-<p>This example assumes that there is a support documentation site that provides additional information based on the HTTP Status Code.</p>
-<pre><code class="lang-c#">public class LinkableError : Error 
-{
-    public LinkableError(int status, string title)
-        : base(status, title)
-    { }
-
-    public ErrorLink Links =&gt; &quot;https://example.com/errors/&quot; + Status;
-}
-
-var error = new LinkableError(401, &quot;You&#39;re not allowed to do that.&quot;);
-throw new JsonApiException(error);
-</code></pre></article>
+    Title = &quot;Target resource was modified by another user.&quot;,
+    Detail = $&quot;User {userName} changed the {resourceField} field on the {resourceName} resource.&quot;
+});
+</code></pre><p>In both cases, the middleware will properly serialize it and return it as a json:api error.</p>
+</article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">

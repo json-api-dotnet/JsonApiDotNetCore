@@ -71,7 +71,8 @@
 
 <p>Resources can be paginated. This query would fetch the second page of 10 articles (articles 11 - 21).</p>
 <pre><code class="lang-http">GET /articles?page[size]=10&amp;page[number]=2 HTTP/1.1
-Accept: application/vnd.api+json
+</code></pre><p>Due to a <a href="https://github.com/dotnet/efcore/issues/1833">limitation</a> in Entity Framework Core 3.x, paging does <strong>not</strong> work on nested endpoints:</p>
+<pre><code class="lang-http">GET /blogs/1/articles?page[number]=2 HTTP/1.1
 </code></pre><h2 id="configuring-default-behavior">Configuring Default Behavior</h2>
 <p>You can configure the global default behavior as <a href="options.html#pagination">described previously</a>.</p>
 </article>

@@ -74,14 +74,17 @@
 <p>Resource Meta is metadata defined on the resource itself by implementing the <code>IHasMeta</code> interface.</p>
 <pre><code class="lang-c#">public class Person : Identifiable, IHasMeta
 {
-    public Dictionary&lt;string, object&gt; GetMeta(IJsonApiContext context)
-        =&gt; new Dictionary&lt;string, object&gt; {
-            { &quot;copyright&quot;, &quot;Copyright 2018 Example Corp.&quot; },
-            { &quot;authors&quot;, new string[] { &quot;Jared Nance&quot; } }
+    public Dictionary&lt;string, object&gt; GetMeta()
+    {
+        return new Dictionary&lt;string, object&gt;
+        {
+            {&quot;copyright&quot;, &quot;Copyright 2018 Example Corp.&quot;},
+            {&quot;authors&quot;, new[] {&quot;John Doe&quot;}}
         };
+    }
 }
 </code></pre><h2 id="request-meta">Request Meta</h2>
-<p>Request Meta can be added by injecting a service that implements <code>IRequestMeta</code>. 
+<p>Request Meta can be added by injecting a service that implements <code>IRequestMeta</code>.
 This is useful if you need access to other injected services to build the meta object.</p>
 <pre><code class="lang-c#">public class RequestMetaService : IRequestMeta
 {
@@ -89,17 +92,20 @@ This is useful if you need access to other injected services to build the meta o
         // ...
     }
 
-    public Dictionary&lt;string, object&gt; GetMeta(IJsonApiContext context)
-        =&gt; return new Dictionary&lt;string, object&gt; {
-                { &quot;copyright&quot;, &quot;Copyright 2018 Example Corp.&quot; },
-                { &quot;authors&quot;, new string[] { &quot;Jared Nance&quot; } }
-            };
+    public Dictionary&lt;string, object&gt; GetMeta()
+    {
+        return new Dictionary&lt;string, object&gt;
+        {
+            {&quot;copyright&quot;, &quot;Copyright 2018 Example Corp.&quot;},
+            {&quot;authors&quot;, new string[] {&quot;John Doe&quot;}}
+        };
+    }
 }
 </code></pre><pre><code class="lang-json">{
   &quot;meta&quot;: {
-    &quot;copyright&quot;: &quot;Copyright 2015 Example Corp.&quot;,
+    &quot;copyright&quot;: &quot;Copyright 2018 Example Corp.&quot;,
     &quot;authors&quot;: [
-      &quot;Jared Nance&quot;
+      &quot;John Doe&quot;
     ]
   },
   &quot;data&quot;: {

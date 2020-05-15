@@ -69,41 +69,46 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="resource-services">Resource Services</h1>
 
-<p>The <code>IResourceService</code> acts as a service layer between the controller and the data access layer. 
-This allows you to customize it however you want and not be dependent upon Entity Framework. 
+<p>The <code>IResourceService</code> acts as a service layer between the controller and the data access layer.
+This allows you to customize it however you want and not be dependent upon Entity Framework Core.
 This is also a good place to implement custom business logic.</p>
 <h2 id="supplementing-default-behavior">Supplementing Default Behavior</h2>
-<p>If you don&#39;t need to alter the actual persistence mechanism, you can inherit from the EntityResourceService<tmodel> and override the existing methods. 
+<p>If you don&#39;t need to alter the actual persistence mechanism, you can inherit from the DefaultResourceService<tmodel> and override the existing methods.
 In simple cases, you can also just wrap the base implementation with your custom logic.<p>
 <p>A simple example would be to send notifications when an entity gets created.</p>
-<pre><code class="lang-c#">public class TodoItemService : EntityResourceService&lt;TodoItem&gt; 
+<pre><code class="lang-c#">public class TodoItemService : DefaultResourceService&lt;TodoItem&gt;
 {
     private readonly INotificationService _notificationService;
 
     public TodoItemService(
-        IJsonApiContext jsonApiContext,
-        IEntityRepository&lt;TodoItem, int&gt; repository,
+        INotificationService notificationService,
+        IEnumerable&lt;IQueryParameterService&gt; queryParameters,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
-        INotificationService notificationService) 
-    : base(jsonApiContext, repository, loggerFactory)
+        IResourceRepository&lt;TodoItem&gt; repository,
+        IResourceContextProvider provider,
+        IResourceChangeTracker&lt;TodoItem&gt; resourceChangeTracker,
+        IResourceFactory resourceFactory,
+        IResourceHookExecutor hookExecutor)
+        : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, resourceFactory, hookExecutor)
     {
         _notificationService = notificationService;
     }
 
     public override async Task&lt;TodoItem&gt; CreateAsync(TodoItem entity)
     {
-        // call the base implementation which uses Entity Framework
+        // Call the base implementation which uses Entity Framework Core
         var newEntity = await base.CreateAsync(entity);
 
-        // custom code
-        _notificationService.Notify($&quot;Entity created: { newEntity.Id }&quot;);
+        // Custom code
+        _notificationService.Notify($&quot;Entity created: {newEntity.Id}&quot;);
 
-        // don&#39;t forget to return the new entity
+        // Don&#39;t forget to return the new entity
         return newEntity;
     }
 }
-</code></pre><h2 id="not-using-entity-framework">Not Using Entity Framework?</h2>
-<p>As previously discussed, this library uses Entity Framework by default. 
+</code></pre><h2 id="not-using-entity-framework-core">Not Using Entity Framework Core?</h2>
+<p>As previously discussed, this library uses Entity Framework Core by default.
 If you&#39;d like to use another ORM that does not implement <code>IQueryable</code>, you can use a custom <code>IResourceService&lt;TModel&gt;</code> implementation.</p>
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
@@ -111,7 +116,7 @@ public void ConfigureServices(IServiceCollection services)
     // add the service override for MyModel
     services.AddScoped&lt;IResourceService&lt;MyModel&gt;, MyModelService&gt;();
 
-    // add your own DAO
+    // add your own Data Access Object
     services.AddScoped&lt;IMyModelDao, MyModelDao&gt;();
     // ...
 }
@@ -122,9 +127,9 @@ public class MyModelService : IResourceService&lt;MyModel&gt;
     private readonly IMyModelDao _dao;
 
     public MyModelService(IMyModelDao dao)
-    { 
+    {
         _dao = dao;
-    } 
+    }
 
     public Task&lt;IEnumerable&lt;MyModel&gt;&gt; GetAsync()
     {
@@ -138,42 +143,42 @@ public class MyModelService : IResourceService&lt;MyModel&gt;
 <p>This interface hierarchy is defined by this tree structure.</p>
 <pre><code>IResourceService
 |
-├── IResourceQueryService
++-- IResourceQueryService
 |   |
-│   ├── IGetAllService
-│   │   GET /
+�   +-- IGetAllService
+�   �   GET /
 |   |
-│   ├── IGetByIdService
+�   +-- IGetByIdService
 |   |   GET /{id}
 |   |
-│   ├── IGetRelationshipService
+�   +-- IGetRelationshipService
 |   |   GET /{id}/{relationship}
 |   |
-│   └── IGetRelationshipsService
+�   +-- IGetRelationshipsService
 |       GET /{id}/relationships/{relationship}
 |
-└── IResourceCommandService
++-- IResourceCommandService
     |
-    ├── ICreateService
+    +-- ICreateService
     |   POST /
     |
-    ├── IDeleteService
+    +-- IDeleteService
     |   DELETE /{id}
     |
-    ├── IUpdateService
+    +-- IUpdateService
     |   PATCH /{id}
     |
-    └── IUpdateRelationshipService
+    +-- IUpdateRelationshipService
         PATCH /{id}/relationships/{relationship}
 </code></pre><p>In order to take advantage of these interfaces you first need to inject the service for each implemented interface.</p>
-<pre><code class="lang-c#">public class ArticleService : ICreateService&lt;Article&gt;, IDeleteService&lt;Article&gt; 
+<pre><code class="lang-c#">public class ArticleService : ICreateService&lt;Article&gt;, IDeleteService&lt;Article&gt;
 {
   // ...
 }
 
-public class Startup 
+public class Startup
 {
-    public IServiceProvider ConfigureServices(IServiceCollection services) 
+    public void ConfigureServices(IServiceCollection services)
     {
         services.AddScoped&lt;ICreateService&lt;Article&gt;, ArticleService&gt;();
         services.AddScoped&lt;IDeleteService&lt;Article&gt;, ArticleService&gt;();
@@ -181,22 +186,28 @@ public class Startup
 }
 </code></pre><p>Other dependency injection frameworks such as Autofac can be used to simplify this syntax.</p>
 <pre><code class="lang-c#">builder.RegisterType&lt;ArticleService&gt;().AsImplementedInterfaces();
-</code></pre><p>Then in the controller, you should inherit the base controller and pass the services into the named, optional base parameters:</p>
-<pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article&gt; 
+</code></pre><p>Then in the controller, you should inherit from the base controller and pass the services into the named, optional base parameters:</p>
+<pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article&gt;
 {
     public ArticlesController(
-        IJsonApiContext jsonApiContext, 
-        ICreateService&lt;Article&gt; create,
-        IDeleteService&lt;Article&gt; delete
-    ) : base(jsonApiContext, create: create, delete: delete) { }
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
+        ICreateService&lt;Article, int&gt; create,
+        IDeleteService&lt;Article, int&gt; delete)
+        : base(jsonApiOptions, loggerFactory, create: create, delete: delete)
+    { }
 
     [HttpPost]
-    public override async Task&lt;IActionResult&gt; PostAsync([FromBody] Article entity) 
-        =&gt; await base.PostAsync(entity);
+    public override async Task&lt;IActionResult&gt; PostAsync([FromBody] Article entity)
+    {
+        return await base.PostAsync(entity);
+    }
 
     [HttpDelete(&quot;{id}&quot;)]
-    public override async Task&lt;IActionResult&gt;DeleteAsync(int id) 
-        =&gt; await base.DeleteAsync(id);
+    public override async Task&lt;IActionResult&gt;DeleteAsync(int id)
+    {
+        return await base.DeleteAsync(id);
+    }
 }
 </code></pre></tmodel></article>
           </div>

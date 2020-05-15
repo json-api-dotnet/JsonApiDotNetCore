@@ -70,8 +70,8 @@
 <h1 id="custom-query-formats">Custom Query Formats</h1>
 
 <p>For information on the default query parameter formats, see the documentation for each query method.</p>
-<p>In order to customize the query formats, you need to implement the <code>IQueryParser</code> interface and inject it.</p>
-<pre><code class="lang-c#">services.AddScoped&lt;IQueryParser, FooQueryParser&gt;();
+<p>In order to customize the query formats, you need to implement the <code>IQueryParameterParser</code> interface and inject it.</p>
+<pre><code class="lang-c#">services.AddScoped&lt;IQueryParameterParser, FooQueryParameterParser&gt;();
 </code></pre></article>
           </div>
           

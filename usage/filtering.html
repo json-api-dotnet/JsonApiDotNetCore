@@ -69,8 +69,8 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="filtering">Filtering</h1>
 
-<p>Resources can be filtered by attributes using the <code>filter</code> query parameter. 
-By default, all attributes are filterable. 
+<p>Resources can be filtered by attributes using the <code>filter</code> query parameter.
+By default, all attributes are filterable.
 The filtering strategy we have selected, uses the following form.</p>
 <pre><code>?filter[attribute]=value
 </code></pre><p>For operations other than equality, the query can be prefixed with an operation identifier.
@@ -141,39 +141,42 @@ Examples can be found in the table below.</p>
 </tr>
 </tbody>
 </table>
-<p>Filters can be combined and will be applied using an AND operator. 
+<p>Filters can be combined and will be applied using an AND operator.
 The following are equivalent query forms to get articles whose ordinal values are between 1-100.</p>
 <pre><code class="lang-http">GET /api/articles?filter[ordinal]=gt:1,lt:100 HTTP/1.1
-Accept: application/vnd.api+json
 </code></pre><pre><code class="lang-http">GET /api/articles?filter[ordinal]=gt:1&amp;filter[ordinal]=lt:100 HTTP/1.1
-Accept: application/vnd.api+json
+</code></pre><p>Aside from filtering on the resource being requested (top-level), filtering on single-depth related resources that are being included can be done too.</p>
+<pre><code class="lang-http">GET /api/articles?include=author&amp;filter[title]=like:marketing&amp;filter[author.lastName]=Smith HTTP/1.1
+</code></pre><p>Due to a <a href="https://github.com/dotnet/efcore/issues/1833">limitation</a> in Entity Framework Core 3.x, filtering does <strong>not</strong> work on nested endpoints:</p>
+<pre><code class="lang-http">GET /api/blogs/1/articles?filter[title]=like:new HTTP/1.1
 </code></pre><h2 id="custom-filters">Custom Filters</h2>
 <p>There are two ways you can add custom filters:</p>
 <ol>
 <li>Creating a <code>ResourceDefinition</code> as <a href="resources/resource-definitions.html#custom-query-filters">described previously</a></li>
-<li>Overriding the <code>DefaultEntityRepository</code> shown below</li>
+<li>Overriding the <code>DefaultResourceRepository</code> shown below</li>
 </ol>
-<pre><code class="lang-c#">public class AuthorRepository : DefaultEntityRepository&lt;Author&gt;
+<pre><code class="lang-c#">public class AuthorRepository : DefaultResourceRepository&lt;Author&gt;
 {
-  public AuthorRepository(
-    AppDbContext context,
-    ILoggerFactory loggerFactory,
-    IJsonApiContext jsonApiContext)
-  : base(context, loggerFactory, jsonApiContext)
-  { }
+    public AuthorRepository(
+        ITargetedFields targetedFields,
+        IDbContextResolver contextResolver,
+        IResourceGraph resourceGraph,
+        IGenericServiceFactory genericServiceFactory,
+        IResourceFactory resourceFactory,
+        ILoggerFactory loggerFactory)
+        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory)
+    { }
 
-  public override IQueryable&lt;TEntity&gt; Filter(
-      IQueryable&lt;TEntity&gt; authors, 
-      FilterQuery filterQuery)
-        // if the filter key is &quot;query&quot; (filter[query]), 
-        // find Authors with matching first or last names
-        // for all other filter keys, use the base method
-        =&gt; filter.Attribute.Is(&quot;query&quot;)
-                    ? authors.Where(a =&gt; 
-                        a.First.Contains(filter.Value)
-                        || a.Last.Contains(filter.Value))
-                    : base.Filter(authors, filter);
-}
+    public override IQueryable&lt;Author&gt; Filter(IQueryable&lt;Author&gt; authors, FilterQueryContext filterQueryContext)
+    {
+        // If the filter key is &quot;name&quot; (filter[name]), find authors with matching first or last names.
+        // For all other filter keys, use the base method.
+        return filterQueryContext.Attribute.Is(&quot;name&quot;)
+            ? authors.Where(author =&gt;
+                author.FirstName.Contains(filterQueryContext.Value) ||
+                author.LastName.Contains(filterQueryContext.Value))
+            : base.Filter(authors, filterQueryContext);
+    }
 </code></pre></article>
           </div>
           

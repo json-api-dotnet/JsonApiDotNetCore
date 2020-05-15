@@ -69,7 +69,7 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="resources">Resources</h1>
 
-<p>At a minimum, resources must implement <code>IIdentifiable&lt;TId&gt;</code> where <code>TId</code> is the type of the primary key. The easiest way to do this is to inherit <code>Identifiable&lt;TId&gt;</code>.</p>
+<p>At a minimum, resources must implement <code>IIdentifiable&lt;TId&gt;</code> where <code>TId</code> is the type of the primary key. The easiest way to do this is to inherit from <code>Identifiable&lt;TId&gt;</code>.</p>
 <pre><code class="lang-c#">public class Person : Identifiable&lt;Guid&gt;
 { }
 </code></pre><p>You can use the non-generic <code>Identifiable</code> if your primary key is an integer.</p>
@@ -80,17 +80,17 @@
 
 public class Person : Identifiable&lt;int&gt;
 { }
-</code></pre><p>If you need to hang annotations or attributes on the <code>Id</code> property, 
+</code></pre><p>If you need to hang annotations or attributes on the <code>Id</code> property,
 you can override the virtual property.</p>
 <pre><code class="lang-c#">public class Person : Identifiable
-{ 
+{
     [Key]
     [Column(&quot;person_id&quot;)]
     public override int Id { get; set; }
 }
-</code></pre><p>If your resource must inherit from another class, 
-you can always implement the interface yourself. 
-In this example, <code>ApplicationUser</code> inherits <code>IdentityUser</code> 
+</code></pre><p>If your resource must inherit from another class,
+you can always implement the interface yourself.
+In this example, <code>ApplicationUser</code> inherits from <code>IdentityUser</code>
 which already contains an Id property of type string.</p>
 <pre><code class="lang-c#">public class ApplicationUser : IdentityUser, IIdentifiable&lt;string&gt;
 {

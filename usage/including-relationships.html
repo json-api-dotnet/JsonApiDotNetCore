@@ -69,10 +69,9 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="including-relationships">Including Relationships</h1>
 
-<p>JADNC supports <a href="http://jsonapi.org/format/#fetching-includes">request include params</a> out of the box, 
-for side loading related resources.</p>
+<p>JsonApiDotNetCore supports <a href="http://jsonapi.org/format/#fetching-includes">request include params</a> out of the box,
+for side-loading related resources.</p>
 <pre><code class="lang-http">GET /articles/1?include=comments HTTP/1.1
-Accept: application/vnd.api+json
 
 {
   &quot;data&quot;: {
@@ -101,7 +100,7 @@ Accept: application/vnd.api+json
       &quot;attributes&quot;: {
         &quot;body&quot;: &quot;First!&quot;
       }
-    }, 
+    },
     {
       &quot;type&quot;: &quot;comments&quot;,
       &quot;id&quot;: &quot;12&quot;,
@@ -113,10 +112,14 @@ Accept: application/vnd.api+json
 }
 </code></pre><h2 id="deeply-nested-inclusions">Deeply Nested Inclusions</h2>
 <p><em>since v3.0.0</em></p>
-<p>JsonApiDotNetCore also supports deeply nested inclusions. 
-This allows you to include data across relationships by using a period delimited
-relationship path such as comments.author.</p>
-</article>
+<p>JsonApiDotNetCore also supports deeply nested inclusions.
+This allows you to include data across relationships by using a period-delimited relationship path, for example:</p>
+<pre><code class="lang-http">GET /api/articles?include=author.livingAddress.country
+</code></pre><p>which is equivalent to:</p>
+<pre><code class="lang-http">GET /api/articles?include=author&amp;include=author.livingAddress&amp;include=author.livingAddress.country
+</code></pre><p>This can be used on nested endpoints too:</p>
+<pre><code class="lang-http">GET /api/blogs/1/articles?include=author.livingAddress.country
+</code></pre></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">

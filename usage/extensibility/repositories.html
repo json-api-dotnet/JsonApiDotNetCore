@@ -69,52 +69,50 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="entity-repositories">Entity Repositories</h1>
 
-<p>If you want to use EF, but need additional data access logic (such as authorization), you can implement custom methods for accessing the data by creating an implementation of IEntityRepository&lt;Entity, TId&gt;. If you only need minor changes you can override the methods defined in DefaultEntityRepository&lt;TEntity, TId&gt;.</p>
-<p>The repository should then be add to the service collection in Startup.cs.</p>
-<pre><code class="lang-c#">public IServiceProvider ConfigureServices(IServiceCollection services) 
+<p>If you want to use Entity Framework Core, but need additional data access logic (such as authorization), you can implement custom methods for accessing the data by creating an implementation of IResourceRepository&lt;TResource, TId&gt;. If you only need minor changes you can override the methods defined in DefaultResourceRepository&lt;TResource, TId&gt;.</p>
+<p>The repository should then be added to the service collection in Startup.cs.</p>
+<pre><code class="lang-c#">public void ConfigureServices(IServiceCollection services)
 {
-    services.AddScoped&lt;IEntityRepository&lt;Article&gt;, AuthorizedArticleRepository&gt;();
+    services.AddScoped&lt;IResourceRepository&lt;Article&gt;, AuthorizedArticleRepository&gt;();
     // ...
 }
 </code></pre><p>A sample implementation that performs data authorization might look like this.</p>
-<p>All of the methods in the DefaultEntityRepository will use the Get() method to get the DbSet<tentity> so this is a good method to apply scoped filters such as user or tenant authorization.<p>
-<pre><code class="lang-c#">public class AuthorizedArticleRepository 
-  : DefaultEntityRepository&lt;Article&gt;
+<p>All of the methods in the DefaultResourceRepository will use the Get() method to get the DbSet<tentity>, so this is a good method to apply scoped filters such as user or tenant authorization.<p>
+<pre><code class="lang-c#">public class AuthorizedArticleRepository : DefaultResourceRepository&lt;Article&gt;
 {
     private readonly IAuthenticationService _authenticationService;
 
     public AuthorizedArticleRepository(
-        ILoggerFactory loggerFactory,
-        IJsonApiContext jsonApiContext,
+        IAuthenticationService authenticationService,
+        ITargetedFields targetedFields,
         IDbContextResolver contextResolver,
-        IAuthenticationService authenticationService)
-    : base(loggerFactory, jsonApiContext, contextResolver)
+        IResourceGraph resourceGraph,
+        IGenericServiceFactory genericServiceFactory,
+        IResourceFactory resourceFactory,
+        ILoggerFactory loggerFactory)
+        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory)
     {
         _authenticationService = authenticationService;
     }
 
-    public override IQueryable&lt;MyEntity&gt; Get() 
-        =&gt; base.Get()
-            .Where(e =&gt; 
-                e.UserId == _authenticationService.UserId
-            );
+    public override IQueryable&lt;Article&gt; Get()
+    {
+        return base.Get().Where(article =&gt; article.UserId == _authenticationService.UserId);
+    }
 }
 </code></pre><h2 id="multiple-dbcontexts">Multiple DbContexts</h2>
-<p>If you need to use multiple EF DbContext, first add each DbContext to the ContextGraphBuilder.</p>
+<p>If you need to use multiple Entity Framework Core DbContexts, first add each DbContext to the ResourceGraphBuilder.</p>
 <p>Then, create an implementation of IDbContextResolver for each context.</p>
-<p>Register each of the new IDbContextResolver implementations in the Startup.</p>
+<p>Register each of the new IDbContextResolver implementations in Startup.cs.</p>
 <p>You can then create a general repository for each context and inject it per resource type. This example shows a single DbContextARepository for all entities that are members of DbContextA.</p>
 <p>Then inject the repository for the correct entity, in this case Foo is a member of DbContextA.</p>
 <pre><code class="lang-c#">// Startup.cs
-services.AddJsonApi(options =&gt; {
-  options.BuildContextGraph((builder) =&gt;
-  {
-      // Add both contexts using the builder
-      builder.AddDbContext&lt;DbContextA&gt;();
-      builder.AddDbContext&lt;DbContextB&gt;();
-  });
-}, mvcBuilder);
-
+services.AddJsonApi(resources: builder =&gt;
+{
+    // Add both contexts using the builder
+    builder.AddDbContext&lt;DbContextA&gt;();
+    builder.AddDbContext&lt;DbContextB&gt;();
+});
 
 public class DbContextAResolver : IDbContextResolver
 {
@@ -125,7 +123,10 @@ public class DbContextAResolver : IDbContextResolver
         _context = context;
     }
 
-    public DbContext GetContext() =&gt; _context;
+    public DbContext GetContext()
+    {
+        return _context;
+    }
 }
 
 
@@ -134,20 +135,23 @@ services.AddScoped&lt;DbContextAResolver&gt;();
 services.AddScoped&lt;DbContextBResolver&gt;();
 
 
-public class DbContextARepository&lt;TEntity&gt; 
-: DefaultEntityRepository&lt;TEntity&gt; where TEntity : class, IIdentifiable&lt;T&gt;
+public class DbContextARepository&lt;TResource&gt; : DefaultResourceRepository&lt;TResource&gt;
+    where TResource : class, IIdentifiable&lt;int&gt;
 {
-  public DbContextARepository(
-      ILoggerFactory loggerFactory,
-      IJsonApiContext jsonApiContext,
-      DbContextAResolver contextResolver)
-  : base(loggerFactory, jsonApiContext, contextResolver)
-  { }
+    public DbContextARepository(
+        ITargetedFields targetedFields,
+        DbContextAResolver contextResolver,
+        IResourceGraph resourceGraph,
+        IGenericServiceFactory genericServiceFactory,
+        IResourceFactory resourceFactory,
+        ILoggerFactory loggerFactory)
+        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory)
+    { }
 }
 
 
 // Startup.cs
-services.AddScoped&lt;IEntityRepository&lt;Foo&gt;, DbContextARepository&lt;Foo&gt;&gt;();
+services.AddScoped&lt;IResourceRepository&lt;Foo&gt;, DbContextARepository&lt;Foo&gt;&gt;();
 </code></pre></tentity></article>
           </div>
           

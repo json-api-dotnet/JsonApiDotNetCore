@@ -70,28 +70,31 @@
 <h1 id="global-options">Global Options</h1>
 
 <p>Configuration can be applied when adding the services to the DI container.</p>
-<pre><code class="lang-c#">public IServiceProvider ConfigureServices(IServiceCollection services) {
-    services.AddJsonApi&lt;AppDbContext&gt;(options =&gt; {
-        // configure the options here
-    });
+<pre><code class="lang-c#">public class Startup
+{
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddJsonApi&lt;AppDbContext&gt;(options =&gt;
+        {
+            // configure the options here
+        });
+    }
 }
 </code></pre><h2 id="client-generated-ids">Client Generated Ids</h2>
-<p>By default, the server will respond with a 403 Forbidden HTTP Status Code if a POST request is received with a client generated id.</p>
+<p>By default, the server will respond with a 403 Forbidden HTTP Status Code if a POST request is received with a client-generated ID.</p>
 <p>However, this can be allowed by setting the AllowClientGeneratedIds flag in the options</p>
-<pre><code class="lang-c#">services.AddJsonApi&lt;AppDbContext&gt;(options =&gt; {
-    options.AllowClientGeneratedIds = true;
-});
+<pre><code class="lang-c#">options.AllowClientGeneratedIds = true;
 </code></pre><h2 id="pagination">Pagination</h2>
-<p>If you would like pagination implemented for all resources, you can specify a default page size.</p>
-<p>You can also include the total number of records in each request. Note that when using this feature, it does add some query overhead since we have to also request the total number of records.</p>
-<pre><code class="lang-c#">services.AddJsonApi&lt;AppDbContext&gt;(options =&gt; {
-    options.DefaultPageSize = 10;
-});
+<p>The default page size used for all resources can be overridden in options (10 by default). To disable paging, set it to 0.
+The maximum page size and maximum page number allowed from client requests can be set too (unconstrained by default).
+You can also include the total number of records in each request. Note that when using this feature, it does add some query overhead since we have to also request the total number of records.</p>
+<pre><code class="lang-c#">options.DefaultPageSize = 25;
+options.MaximumPageSize = 100;
+options.MaximumPageNumber = 50;
 </code></pre><h2 id="relative-links">Relative Links</h2>
 <p>All links are absolute by default. However, you can configure relative links.</p>
-<pre><code class="lang-c#">services.AddJsonApi&lt;AppDbContext&gt;(options =&gt; {
-    options.RelativeLinks = true;
-});
+<pre><code class="lang-c#">options.RelativeLinks = true;
 </code></pre><pre><code class="lang-json">{
   &quot;type&quot;: &quot;articles&quot;,
   &quot;id&quot;: &quot;4309&quot;,
@@ -104,21 +107,18 @@
      }
   }
 }
-</code></pre><h2 id="custom-query-parameters">Custom Query Parameters</h2>
-<p>If you would like to use custom query params (parameters not reserved by the json:api specification), you can set <code>AllowCustomQueryParameters = true</code>. The default behavior is to return an HTTP 400 Bad Request for unknown query parameters.</p>
-<pre><code class="lang-c#">services.AddJsonApi&lt;AppDbContext&gt;(options =&gt; {
-    options.AllowCustomQueryParameters = true;
-});
+</code></pre><h2 id="custom-query-string-parameters">Custom Query String Parameters</h2>
+<p>If you would like to use custom query string parameters (parameters not reserved by the json:api specification), you can set <code>AllowCustomQueryStringParameters = true</code>. The default behavior is to return an HTTP 400 Bad Request for unknown query string parameters.</p>
+<pre><code class="lang-c#">options.AllowCustomQueryStringParameters = true;
 </code></pre><h2 id="custom-serializer-settings">Custom Serializer Settings</h2>
 <p>We use Newtonsoft.Json for all serialization needs.
 If you want to change the default serializer settings, you can:</p>
-<pre><code class="lang-c#">options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-options.SerializerSettings.ContractResolver = new DasherizedResolver();
+<pre><code class="lang-c#">options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+options.SerializerSettings.Converters.Add(new StringEnumConverter());
+options.SerializerSettings.Formatting = Formatting.Indented;
 </code></pre><h2 id="enable-modelstate-validation">Enable ModelState Validation</h2>
-<p>If you would like to use ModelState validation into your controllers when creating / updating resources you set <code>ValidateModelState = true</code>. By default, no model validation is performed.</p>
-<pre><code class="lang-c#">services.AddJsonApi&lt;AppDbContext&gt;(options =&gt; {
-    options.ValidateModelState = true;
-});
+<p>If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set <code>ValidateModelState = true</code>. By default, no model validation is performed.</p>
+<pre><code class="lang-c#">options.ValidateModelState = true;
 </code></pre></article>
           </div>
           
