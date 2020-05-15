@@ -6,12 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace NoEntityFrameworkExample.Controllers
 {
-    public sealed class TodoItemsController : JsonApiController<TodoItem>
+    public sealed class WorkItemsController : JsonApiController<WorkItem>
     {
-        public TodoItemsController(
+        public WorkItemsController(
             IJsonApiOptions jsonApiOptions,
             ILoggerFactory loggerFactory,
-            IResourceService<TodoItem> resourceService)
+            IResourceService<WorkItem> resourceService)
             : base(jsonApiOptions, loggerFactory, resourceService)
         { }
     }

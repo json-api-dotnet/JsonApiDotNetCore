@@ -1,14 +1,14 @@
 using System.Linq;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCore.Internal.Query;
-using JsonApiDotNetCore.Internal.Contracts;
 
-namespace JsonApiDotNetCoreExample.Resources
+namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class UserResource : ResourceDefinition<User>
+    public class UserDefinition : ResourceDefinition<User>
     {
-        public UserResource(IResourceGraph resourceGraph) : base(resourceGraph)
+        public UserDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
         {
             HideFields(u => u.Password);
         }

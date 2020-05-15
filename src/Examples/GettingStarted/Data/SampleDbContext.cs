@@ -1,14 +1,20 @@
 using GettingStarted.Models;
-using GettingStarted.ResourceDefinitionExample;
 using Microsoft.EntityFrameworkCore;
 
-namespace GettingStarted
+namespace GettingStarted.Data
 {
     public class SampleDbContext : DbContext
     {
-        public SampleDbContext(DbContextOptions<SampleDbContext> options) : base(options) { }
         public DbSet<Article> Articles { get; set; }
-        public DbSet<Person> People { get; set; }
-        public DbSet<Model> Models { get; set; }
+
+        public SampleDbContext(DbContextOptions<SampleDbContext> options)
+            : base(options)
+        {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Person>();
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace JsonApiDotNetCoreExample
 {
     public class Startup
     {
-        public readonly IConfiguration Config;
+        private readonly string _connectionString;
 
         public Startup(IWebHostEnvironment env)
         {
@@ -25,7 +25,10 @@ namespace JsonApiDotNetCoreExample
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
-            Config = builder.Build();
+            var configuration = builder.Build();
+            
+            string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
+            _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
         }
 
         public virtual void ConfigureServices(IServiceCollection services)
@@ -40,7 +43,7 @@ namespace JsonApiDotNetCoreExample
                 {
                     options
                         .EnableSensitiveDataLogging()
-                        .UseNpgsql(GetDbConnectionString(), innerOptions => innerOptions.SetPostgresVersion(new Version(9,6)));
+                        .UseNpgsql(_connectionString, innerOptions => innerOptions.SetPostgresVersion(new Version(9,6)));
                 }, ServiceLifetime.Transient)
                 .AddJsonApi<AppDbContext>(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
             
@@ -72,7 +75,5 @@ namespace JsonApiDotNetCoreExample
             context.Database.EnsureCreated();
             app.UseJsonApi();
         }
-
-        public string GetDbConnectionString() => Config["Data:DefaultConnection"];
     }
 }

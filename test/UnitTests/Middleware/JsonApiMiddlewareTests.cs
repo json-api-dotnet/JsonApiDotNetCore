@@ -15,7 +15,7 @@ using Xunit;
 
 namespace UnitTests.Middleware
 {
-    public sealed class CurrentRequestMiddlewareTests
+    public sealed class JsonApiMiddlewareTests
     {
         [Fact]
         public async Task ParseUrlBase_ObfuscatedIdClass_ShouldSetIdCorrectly()

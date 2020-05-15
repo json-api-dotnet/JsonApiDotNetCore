@@ -6,13 +6,8 @@ namespace ReportsExample.Models
     {
         [Attr]
         public string Title { get; set; }
-    
-        [Attr]
-        public ComplexType ComplexType { get; set; }
-    }
 
-    public sealed class ComplexType
-    {
-        public string CompoundPropertyName { get; set; }
+        [Attr]
+        public ReportStatistics Statistics { get; set; }
     }
 }

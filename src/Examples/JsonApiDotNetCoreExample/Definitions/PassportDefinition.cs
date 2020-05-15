@@ -2,17 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCoreExample.Models;
 
-namespace JsonApiDotNetCoreExample.Resources
+namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class PassportResource : ResourceDefinition<Passport>
+    public class PassportDefinition : ResourceDefinition<Passport>
     {
-        public PassportResource(IResourceGraph resourceGraph) : base(resourceGraph)
+        public PassportDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
         {
         }
 

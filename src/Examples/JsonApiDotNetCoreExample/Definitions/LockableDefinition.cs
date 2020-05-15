@@ -7,11 +7,11 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample.Models;
 
-namespace JsonApiDotNetCoreExample.Resources
+namespace JsonApiDotNetCoreExample.Definitions
 {
-    public abstract class LockableResource<T> : ResourceDefinition<T> where T : class, IIsLockable, IIdentifiable
+    public abstract class LockableDefinition<T> : ResourceDefinition<T> where T : class, IIsLockable, IIdentifiable
     {
-        protected LockableResource(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        protected LockableDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
         protected void DisallowLocked(IEnumerable<T> entities)
         {

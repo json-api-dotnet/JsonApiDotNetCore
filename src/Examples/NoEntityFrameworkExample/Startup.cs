@@ -2,55 +2,48 @@ using System;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NoEntityFrameworkExample.Services;
-using Microsoft.EntityFrameworkCore;
 using NoEntityFrameworkExample.Data;
 using NoEntityFrameworkExample.Models;
+using NoEntityFrameworkExample.Services;
 
 namespace NoEntityFrameworkExample
 {
     public class Startup
     {
-        public Startup(IWebHostEnvironment env)
+        private readonly string _connectionString;
+
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
+            _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
         }
 
-        public IConfigurationRoot Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
-        public virtual void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            var mvcBuilder = services.AddMvcCore();
             services.AddJsonApi(
-                    options => options.Namespace = "api/v1",
-                    resources: resources => resources.AddResource<TodoItem>("todoItems"),
-                    mvcBuilder: mvcBuilder
-                );
-            services.AddScoped<IResourceService<TodoItem>, TodoItemService>();
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>(); 
-            optionsBuilder.UseNpgsql(GetDbConnectionString(), options => options.SetPostgresVersion(new Version(9,6)));
-            services.AddSingleton<IConfiguration>(Configuration);
-            services.AddSingleton(optionsBuilder.Options);
-            services.AddScoped<AppDbContext>();
+                options => options.Namespace = "api/v1",
+                resources: builder => builder.AddResource<WorkItem>("workItems")
+            );
+
+            services.AddScoped<IResourceService<WorkItem>, WorkItemService>();
+
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseNpgsql(_connectionString,
+                    postgresOptions => postgresOptions.SetPostgresVersion(new Version(9, 6)));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, AppDbContext context)
         {
             context.Database.EnsureCreated();
+
             app.UseJsonApi();
         }
-
-        public string GetDbConnectionString() => Configuration["Data:DefaultConnection"];
     }
 }

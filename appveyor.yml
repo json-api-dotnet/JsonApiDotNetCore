@@ -2,13 +2,8 @@ version: '{build}'
 os: Visual Studio 2019
 
 environment:
-  POSTGRES_PORT: tcp://localhost:5432
-  POSTGRES_ENV_POSTGRES_USER: postgres
-  POSTGRES_ENV_POSTGRES_PASSWORD: Password12!
-  POSTGRES_ENV_POSTGRES_DB: JsonApiDotNetCoreExample
   PGUSER: postgres
   PGPASSWORD: Password12!
-  Data:DefaultConnection: "Host=localhost;Port=5432;Database=JsonApiDotNetCoreExample;User ID=postgres;Password=Password12!"
   ACCESS_TOKEN:
     secure: g1T332Uarmdgtkftchpafa8tDP/7eM4O0BD6iu1wu+zR224IyH5R8pb4sTChr4Ia
 
@@ -63,10 +58,9 @@ init:
   - SET PATH=C:\Program Files\PostgreSQL\9.6\bin\;%PATH%
 
 services:  
-  - postgresql
+  - postgresql96
 
 build_script:
-- ps: createdb JsonApiDotNetCoreExample
 - ps: dotnet --version
 - ps: .\Build.ps1
 

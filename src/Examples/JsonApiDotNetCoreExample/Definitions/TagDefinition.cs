@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Models;
+using JsonApiDotNetCoreExample.Models;
 
-namespace JsonApiDotNetCoreExample.Resources
+namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class TagResource : ResourceDefinition<Tag>
+    public class TagDefinition : ResourceDefinition<Tag>
     {
-        public TagResource(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        public TagDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
         public override IEnumerable<Tag> BeforeCreate(IEntityHashSet<Tag> affected, ResourcePipeline pipeline)
         {
