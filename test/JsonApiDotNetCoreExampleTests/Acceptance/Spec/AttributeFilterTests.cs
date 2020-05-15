@@ -90,6 +90,52 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
+        public async Task Can_Filter_On_Related_Attrs_From_GetById()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var person = _personFaker.Generate();
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+            context.TodoItems.Add(todoItem);
+            await context.SaveChangesAsync();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner&filter[owner.firstName]=SOMETHING-ELSE";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Cannot_Filter_On_Related_ToMany_Attrs()
+        {
+            // Arrange
+            var httpMethod = new HttpMethod("GET");
+            var route = "/api/v1/todoItems?include=childrenTodos&filter[childrenTodos.ordinal]=1";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("Filtering on one-to-many and many-to-many relationships is currently not supported.", errorDocument.Errors[0].Title);
+            Assert.Equal("Filtering on the relationship 'childrenTodos.ordinal' is currently not supported.", errorDocument.Errors[0].Detail);
+            Assert.Equal("filter[childrenTodos.ordinal]", errorDocument.Errors[0].Source.Parameter);
+        }
+
+        [Fact]
         public async Task Cannot_Filter_If_Explicitly_Forbidden()
         {
             // Arrange

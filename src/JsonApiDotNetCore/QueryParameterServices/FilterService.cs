@@ -63,6 +63,13 @@ namespace JsonApiDotNetCore.Query
             queryContext.Relationship = GetRelationship(parameterName, query.Relationship);
             var attribute = GetAttribute(parameterName, query.Attribute, queryContext.Relationship);
 
+            if (queryContext.Relationship is HasManyAttribute)
+            {
+                throw new InvalidQueryStringParameterException(parameterName,
+                    "Filtering on one-to-many and many-to-many relationships is currently not supported.",
+                    $"Filtering on the relationship '{queryContext.Relationship.PublicRelationshipName}.{attribute.PublicAttributeName}' is currently not supported.");
+            }
+
             if (!attribute.Capabilities.HasFlag(AttrCapabilities.AllowFilter))
             {
                 throw new InvalidQueryStringParameterException(parameterName, "Filtering on the requested attribute is not allowed.",
