@@ -146,7 +146,7 @@ namespace NoEntityFrameworkTests
             string responseBody = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<Document>(responseBody);
 
-            Assert.Null(document.Data);
+            Assert.Null(document);
         }
 
         private async Task ExecuteOnDbContextAsync(Func<AppDbContext, Task> asyncAction)
