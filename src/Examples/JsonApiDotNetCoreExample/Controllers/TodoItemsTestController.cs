@@ -61,7 +61,9 @@ namespace JsonApiDotNetCoreExample.Controllers
         [HttpPatch("{id}")]
         public override async Task<IActionResult> PatchAsync(int id, [FromBody] TodoItem entity)
         {
-            return await base.PatchAsync(id, entity);
+            await Task.Yield();
+
+            return Conflict("Something went wrong");
         }
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
