@@ -9,15 +9,15 @@ This article describes
 
 Below is a list of the query parameters that are supported. Each supported query parameter has it's own dedicated service.
 
-| Query Parameter Service | Occurence in URL               | Domain                                                |
-|-------------------------|--------------------------------|-------------------------------------------------------|
-| `IFilterService`         | `?filter[article.title]=title`    | filtering the resultset                               |
-| `IIncludeService`         | `?include=article.author`        | including related data                                |
-| `IPageService`            | `?page[size]=10&page[number]=3`  | pagination of the resultset                           |
-| `ISortService`            | `?sort=-title`                   | sorting the resultset                                 |
-| `ISparseFieldsService`    | `?fields[article]=title,summary` | sparse field selection                                |
-| `IOmitDefaultService`     | `?omitDefault=true`              | omitting default values from the serialization result, eg `guid-value": "00000000-0000-0000-0000-000000000000"` |
-| `IOmitNullService`        | `?omitNull=false`                | omitting null values from the serialization result    |
+| Query Parameter Service | Occurence in URL                 | Domain                                                |
+|-------------------------|----------------------------------|-------------------------------------------------------|
+| `IFilterService`        | `?filter[article.title]=title`   | filtering the resultset                               |
+| `IIncludeService`       | `?include=article.author`        | including related data                                |
+| `IPageService`          | `?page[size]=10&page[number]=3`  | pagination of the resultset                           |
+| `ISortService`          | `?sort=-title`                   | sorting the resultset                                 |
+| `ISparseFieldsService`  | `?fields[article]=title,summary` | sparse field selection                                |
+| `IDefaultsService`      | `?default=false`                 | omitting default values from the serialization result, eg `guid-value": "00000000-0000-0000-0000-000000000000"` |
+| `INullsService`         | `?nulls=true`                    | omitting null values from the serialization result    |
 
 
 These services are responsible for parsing the value from the URL by gathering relevant (meta)data and performing validations as required by JsonApiDotNetCore down the pipeline. For example, the `IIncludeService` is responsible for checking if `article.author` is a valid relationship chain, and pre-processes the chain into a `List<RelationshipAttibute>` so that the rest of the framework can process it easier.

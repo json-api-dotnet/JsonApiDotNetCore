@@ -16,12 +16,12 @@ There are three ways the resource graph can be created:
 
 ### Auto-Discovery
 
-Auto-discovery refers to process of reflecting on an assembly and 
+Auto-discovery refers to the process of reflecting on an assembly and
 detecting all of the json:api resources and services.
 
 The following command will build the resource graph using all `IIdentifiable`
-implementations. It also injects service layer overrides which we will 
-cover in a later section. You can enable auto-discovery for the 
+implementations. It also injects resource definitions and service layer overrides which we will
+cover in a later section. You can enable auto-discovery for the
 current assembly by adding the following to your `Startup` class.
 
 ```c#
@@ -29,13 +29,12 @@ current assembly by adding the following to your `Startup` class.
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddJsonApi(
-        options => { /* ... */ }, 
-        mvcBuilder,
+        options => { /* ... */ },
         discovery => discovery.AddCurrentAssembly());
 }
 ```
 
-### Entity Framework DbContext
+### Entity Framework Core DbContext
 
 If you are using Entity Framework Core as your ORM, you can add an entire `DbContext` with one line.
 
@@ -47,6 +46,18 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+Be aware that the previous command does not inject resource definitions and service layer overrides. You can combine it with auto-discovery to register them.
+
+```c#
+// Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddJsonApi<AppDbContext>(
+        options => { /* ... */ },
+        discovery => discovery.AddCurrentAssembly());
+}
+```
+
 ### Manual Specification
 
 You can also manually construct the graph.
@@ -55,19 +66,16 @@ You can also manually construct the graph.
 // Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
-    var mvcBuilder = services.AddMvc();
-
-    services.AddJsonApi(options => {
-        options.BuildResourceGraph((builder) => {
-            builder.AddResource<MyModel>();
-        });
-    }, mvcBuilder);
+    services.AddJsonApi(resources: builder =>
+    {
+        builder.AddResource<Person>();
+    });
 }
 ```
 
 ### Public Resource Type Name
 
-The public resource type name for is determined by the following criteria (in order of priority):
+The public resource type name is determined by the following criteria (in order of priority):
 
 1. The model is decorated with a `ResourceAttribute`
 ```c#
@@ -75,14 +83,8 @@ The public resource type name for is determined by the following criteria (in or
 public class MyModel : Identifiable { /* ... */ }
 ```
 
-2. The `DbSet` is decorated with a `ResourceAttribute`. Note that this only applies if the graph was created from the DbContext (i.e. `services.AddJsonApi<AppDbContext>()`)
+2. The configured naming convention (by default this is camel-case).
 ```c#
-[Resource("my-models")] 
-public DbSet<MyModel> MyModel { get; set; }
-```
-
-3. The configured naming convention (by default this is kebab-case).
-```c#
-// this will be registered as "my-models"
+// this will be registered as "myModels"
 public class MyModel : Identifiable { /* ... */ }
 ```

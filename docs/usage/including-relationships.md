@@ -1,11 +1,10 @@
 # Including Relationships
 
-JADNC supports [request include params](http://jsonapi.org/format/#fetching-includes) out of the box, 
-for side loading related resources.
+JsonApiDotNetCore supports [request include params](http://jsonapi.org/format/#fetching-includes) out of the box,
+for side-loading related resources.
 
 ```http
 GET /articles/1?include=comments HTTP/1.1
-Accept: application/vnd.api+json
 
 {
   "data": {
@@ -34,7 +33,7 @@ Accept: application/vnd.api+json
       "attributes": {
         "body": "First!"
       }
-    }, 
+    },
     {
       "type": "comments",
       "id": "12",
@@ -50,6 +49,21 @@ Accept: application/vnd.api+json
 
 _since v3.0.0_
 
-JsonApiDotNetCore also supports deeply nested inclusions. 
-This allows you to include data across relationships by using a period delimited
-relationship path such as comments.author.
+JsonApiDotNetCore also supports deeply nested inclusions.
+This allows you to include data across relationships by using a period-delimited relationship path, for example:
+
+```http
+GET /api/articles?include=author.livingAddress.country
+```
+
+which is equivalent to:
+
+```http
+GET /api/articles?include=author&include=author.livingAddress&include=author.livingAddress.country
+```
+
+This can be used on nested endpoints too:
+
+```http
+GET /api/blogs/1/articles?include=author.livingAddress.country
+```

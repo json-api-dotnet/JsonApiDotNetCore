@@ -1,5 +1,4 @@
-curl -vs http://localhost:5001/api/people/1       \
-    -H "Accept: application/vnd.api+json"           \
+curl -vs http://localhost:5001/api/people/1         \
     -H "Content-Type: application/vnd.api+json"     \
     -X PATCH                                        \
     -d '{

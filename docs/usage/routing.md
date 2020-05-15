@@ -1,57 +1,59 @@
 # Routing
 
-By default the library will configure routes for each controller. 
-Based on the recommendations outlined in the JSONAPI spec, routes are hyphenated.
+By default the library will configure routes for each controller.
+Based on the recommendations outlined in the json:api spec, routes are camel-cased.
 
 ```http
-GET /api/compound-models HTTP/1.1
-Accept: application/vnd.api+json
+GET /api/compoundModels HTTP/1.1
 ```
 
 ## Namespacing and Versioning URLs
 
-You can add a namespace to the URL by specifying it in ConfigureServices
+You can add a namespace to all URLs by specifying it in ConfigureServices
 
 ```c#
-public IServiceProvider ConfigureServices(IServiceCollection services) {
+public void ConfigureServices(IServiceCollection services)
+{
   services.AddJsonApi<AppDbContext>(
-      opt => opt.Namespace = "api/v1");
+      options => options.Namespace = "api/v1");
 }
 ```
+Which results in URLs like: https://yourdomain.com/api/v1/people
 
 ## Disable Convention
 
-You can disable the dasherized convention and specify your own template by using the `DisableRoutingConvention` Attribute.
+You can disable the default casing convention and specify your own template by using the `DisableRoutingConvention` attribute.
 
 ```c#
 [Route("[controller]")]
 [DisableRoutingConvention]
-public class CamelCasedModelsController : JsonApiController<CamelCasedModel> {
+public class CamelCasedModelsController : JsonApiController<CamelCasedModel>
+{
     public CamelCasedModelsController(
-        IJsonApiContext jsonApiContext,
-        IResourceService<CamelCasedModel> resourceService) 
-        : base(jsonApiContext, resourceService)
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
+        IResourceService<CamelCasedModel> resourceService)
+        : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 }
 ```
 
-It is important to note that your routes must still end with the model name in the same format as the resource name. This is so that we can build accurate resource links in the json:api document. For example, if you define a resource as MyModels the controller route must match.
+It is important to note that your routes must still end with the model name in the same format as the resource name. This is so that we can build accurate resource links in the json:api document. For example, if you define a resource as MyModels, the controller route must match.
 
 ```c#
-public IServiceProvider ConfigureServices(IServiceCollection services) {
-  services.AddJsonApi(options => {
-      options.BuildContextGraph((builder) => {
-          builder.AddResource<TodoItem>("myModels"); // camelCased
-      });
-  });
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddJsonApi(resources: builder =>
+        builder.AddResource<TodoItem>("my-models")); // kebab-cased
 }
 
 // controller definition
-[Route("api/myModels"), DisableRoutingConvention]
-public class MyModelsController : JsonApiController<TodoItem> { 
+[Route("api/my-models"), DisableRoutingConvention]
+public class MyModelsController : JsonApiController<TodoItem>
+{
   //...
 }
 ```
 
-See [this](~/usage/resource-graph.html#public-resource-type-name) for 
+See [this](~/usage/resource-graph.html#public-resource-type-name) for
 more information on how the resource name is determined.

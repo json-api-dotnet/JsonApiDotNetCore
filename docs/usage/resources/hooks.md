@@ -6,7 +6,7 @@ This section covers the usage of **Resource Hooks**, which is a feature of`Resou
 By implementing resource hooks on a `ResourceDefintion<T>`, it is possible to intercept the execution of the **Resource Service Layer** (RSL) in various ways. This enables the developer to conveniently define business logic without having to override the RSL. It can be used to implement e.g.
 * Authorization
 * [Event-based synchronisation between microservices](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/multi-container-microservice-net-applications/integration-event-based-microservice-communications)
-* Logging 
+* Logging
 * Transformation of the served data
 
 This usage guide covers the following sections
@@ -33,16 +33,16 @@ Understanding the semantics will be helpful in identifying which hooks on `Resou
 The different execution flows within the RSL that may be intercepted can be identified as **pipelines**. Examples of such pipelines are
 * **Post**: creation of a resource (triggered by the endpoint `POST /my-resource`).
 * **PostBulk**: creation of multiple resources (triggered by the endpoint `POST /bulk/my-resource`).
-  * *NB: hooks are not yet supported with bulk operations.* 
+  * *NB: hooks are not yet supported with bulk operations.*
 * **Get**: reading a resource (triggered by the endpoint `GET /my-resource`).
 * **GetSingle**: reading a single resource (triggered by the endpoint `GET /my-resource/1`).
 
 See the [ResourcePipeline](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/feat/%23477/src/JsonApiDotNetCore/Hooks/Execution/ResourcePipelineEnum.cs) enum for a full list of available pipelines.
 
 ## Actions
-Each pipeline is associated with a set of **actions** that work on resources and their relationships. These actions reflect the associated database operations that is performed by JsonApiDotNetCore (in the Repository Layer). Typically, the RSL will execute some service-layer-related code, then invoke the Repository Layer which will perform these actions, after which the execution returns to the RSL. 
+Each pipeline is associated with a set of **actions** that work on resources and their relationships. These actions reflect the associated database operations that is performed by JsonApiDotNetCore (in the Repository Layer). Typically, the RSL will execute some service-layer-related code, then invoke the Repository Layer which will perform these actions, after which the execution returns to the RSL.
 
-Note that some actions are shared across different pipelines, and note that most pipelines perform multiple actions.  There are two types of actions: **main resource actions** and **nested resource actions**. 
+Note that some actions are shared across different pipelines, and note that most pipelines perform multiple actions.  There are two types of actions: **main resource actions** and **nested resource actions**.
 
 ### Main resource actions
 Most actions are trivial in the context of the pipeline where they're executed from. They may be recognised as the familiar *CRUD* operations of an API. These actions are:
@@ -66,7 +66,7 @@ These actions are called **nested resource actions** of a particular pipeline be
 **The `update relationship` action**
 [As per the Json:Api specification](https://jsonapi.org/format/#crud-creating](https://jsonapi.org/format/#crud-creating), the **Post** pipeline also allows for an `update relationship` action on an already existing resource. For example, when creating an `Article` it is possible to simultaneously relate it to an existing `Person` by setting its author. In this case, the `update relationship` action is a nested action that will work on that `Person`.
 
-**The `implicit update relationship` action** 
+**The `implicit update relationship` action**
 the **Delete**  pipeline also allows for an `implicit update relationship` action on an already existing resource. For example, for an  `Article` that its author property assigned to a particular `Person`,  the relationship between them is destroyed when this article is deleted. This update is "implicit" in the sense that no explicit information about that `Person` was provided in the request that triggered this pipeline. An `implicit update relationship` action is therefore performed on that `Person`.  See [this section](#advanced-authorization-implicitly-affected-resources) for a more detailed.
 
 ### Shared actions
@@ -127,7 +127,7 @@ public class ArticleResource : ResourceDefinition<Article>
 }
 ```
 ## Logging
-This example shows how some actions can be logged on the level of API users. 
+This example shows how some actions can be logged on the level of API users.
 
 First consider the following scoped service which creates a logger bound to a particular user and request.
 ```c#
@@ -140,7 +140,7 @@ public class UserActionsLogger : IUserActionsLogger
                              IUserService userService)
     {
         var userId = userService.GetUser().Id;
-        Instance = loggerFactory.CreateLogger($"[request: {Guid.NewGuid()}" 
+        Instance = loggerFactory.CreateLogger($"[request: {Guid.NewGuid()}"
         + "user: {userId}]");
     }
 }
@@ -191,7 +191,7 @@ public class PersonResource : ResourceDefinition<Person>
             {
                 if (pipeline == ResourcePipeline.Delete)
                 {
-                    _userLogger.Log(LogLevel.Information, $"Deleted the {relationship.PublicRelationshipName}" + 
+                    _userLogger.Log(LogLevel.Information, $"Deleted the {relationship.PublicRelationshipName}" +
                     "relationship to Article for person '{p.FirstName + p.LastName}' with {p.Id}");
                 }
             }
@@ -240,14 +240,14 @@ public class PersonResource : ResourceDefinition<Person>
 Note that not only anonymous people will be excluded when directly performing a `GET /people`, but also when included through relationships, like `GET /articles?include=author,reviewers`. Simultaneously, `if` condition that checks for `ResourcePipeline.Get` in the `PersonResource` ensures we still get expected responses from the API when eg. creating a person with `WantsPrivacy` set to true.
 
 ## Loading database values
-When a hook is executed for a particular resource, JsonApiDotNetCore can load the corresponding database values and provide them in the hooks. This can be useful for eg. 
+When a hook is executed for a particular resource, JsonApiDotNetCore can load the corresponding database values and provide them in the hooks. This can be useful for eg.
  * having a diff between a previous and new state of a resource (for example when updating a resource)
  * performing authorization rules based on the property of a resource.
- 
-For example, consider a scenario in with the following two requirements: 
+
+For example, consider a scenario in with the following two requirements:
 * We need to log all updates on resources revealing their old and new value.
 * We need to check if the property `IsLocked` is set is `true`, and if so, cancel the operation.
-  
+
  Consider an `Article` with title *Hello there* and API user trying to update the the title of this article to *Bye bye*.  The above requirements could be implemented as follows
 ```c#
 public class ArticleResource : ResourceDefinition<Article>
@@ -257,14 +257,14 @@ public class ArticleResource : ResourceDefinition<Article>
     public constructor ArticleResource(ILogger logger, IJsonApiContext context)
     {
         _logger = logger;
-        _context = context;  
-    } 
+        _context = context;
+    }
 
     public override IEnumerable<Article> BeforeUpdate(IResourceDiff<Article> entityDiff, ResourcePipeline pipeline)
     {
         // PropertyGetter is a helper class that takes care of accessing the values on an instance of Article using reflection.
         var getter = new PropertyGetter<Article>();
-        
+
         // ResourceDiff<T> is a class that is like a list that contains ResourceDiffPair<T> elements
         foreach (ResourceDiffPair<Article> affected in entityDiff)
         {
@@ -282,7 +282,7 @@ public class ArticleResource : ResourceDefinition<Article>
             }
         }
         // You must return IEnumerable<Article> from this hook.
-        // This means that you could reduce the set of entities that is 
+        // This means that you could reduce the set of entities that is
         // affected by this request, eg. by entityDiff.Entities.Where( ... );
         entityDiff.Entities;
     }
@@ -314,11 +314,11 @@ public class ArticleResource : ResourceDefinition<Article>
     {
       ....
     }
-  
-  [LoadDatabaseValues(false)] 
+
+  [LoadDatabaseValues(false)]
     public override IEnumerable<string> BeforeUpdateRelationships(HashSet<string>  ids,  IAffectedRelationships<Article>  resourcesByRelationship,  ResourcePipeline  pipeline)
     {
-      // the entities stored in the IAffectedRelationships<Article> instance 
+      // the entities stored in the IAffectedRelationships<Article> instance
       // are plain resource identifier objects when LoadDatabaseValues is turned off,
       // or objects loaded from the database when LoadDatabaseValues is turned on.
      ....
@@ -344,7 +344,7 @@ Resource hooks can be used to easily implement authorization in your application
 This can be achieved as follows:
 ```c#
 public class PersonResource : ResourceDefinition<Person>
-{ 
+{
   private readonly _IAuthorizationHelper _auth;
     public constructor PersonResource(IAuthorizationHelper auth)
     {
@@ -354,12 +354,12 @@ public class PersonResource : ResourceDefinition<Person>
 
     public override IEnumerable<Person> OnReturn(HashSet<Person> entities, ResourcePipeline pipeline)
     {
-    if (!_auth.CanSeeSecretPeople()) 
+    if (!_auth.CanSeeSecretPeople())
     {
-       if (pipeline == ResourcePipeline.GetSingle) 
+       if (pipeline == ResourcePipeline.GetSingle)
        {
          throw new JsonApiException(403, "Forbidden to view this person", new  UnauthorizedAccessException());
-       } 
+       }
        entities = entities.Where( p => !p.IsSecret)
     }
     return entities;
@@ -385,7 +385,7 @@ Apart from this, we also wish to verify permissions for the resources that are *
 3. Is the API user allowed to update `Bob`?
 4. Is the API user allowed to update `Old Article`?
 
-This authorization requirement can be fulfilled as follows. 
+This authorization requirement can be fulfilled as follows.
 
 For checking the permissions for the explicitly affected resources, `New Article` and `Alice`, we may implement the `BeforeUpdate` hook for `Article`:
 ```c#
@@ -409,7 +409,7 @@ public override IEnumerable<Article> BeforeUpdate(IResourceDiff<Article> entityD
 
  and the `BeforeUpdateRelationship` hook for `Person`:
 ```c#
-public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IAffectedRelationships<Person> resourcesByRelationship, ResourcePipeline pipeline) 
+public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IAffectedRelationships<Person> resourcesByRelationship, ResourcePipeline pipeline)
 {
     var updatedOwnerships = resourcesByRelationship.GetByRelationship<Article>();
     if (updatedOwnerships.Any())
@@ -420,7 +420,7 @@ public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids
             throw new JsonApiException(403, "Forbidden to update relationship of this person", new UnauthorizedAccessException());
         }
     }
-    return ids; 
+    return ids;
 }
 ```
 
@@ -439,7 +439,7 @@ public override void BeforeImplicitUpdateRelationship(IAffectedRelationships<Art
     }
 }
 ```
-and similarly for `Person`: 
+and similarly for `Person`:
 ```c#
 public override void BeforeImplicitUpdateRelationship(IAffectedRelationships<Person> resourcesByRelationship, ResourcePipeline pipeline)
 {
@@ -455,10 +455,10 @@ public override void BeforeImplicitUpdateRelationship(IAffectedRelationships<Per
 }
 ```
 
-## Using Resource Hooks without EF Core
+## Using Resource Hooks without Entity Framework Core
 
-If you want to use Resource Hooks without EF Core, there are several things that you need to consider that need to be met. For any resource that you want to use hooks for:
-1. The corresponding resource repository must fully implement `IEntityReadRepository<TEntity, TId>`
+If you want to use Resource Hooks without Entity Framework Core, there are several things that you need to consider that need to be met. For any resource that you want to use hooks for:
+1. The corresponding resource repository must fully implement `IResourceReadRepository<TEntity, TId>`
 2. If you are using custom services, you will be responsible for injecting the `IResourceHookExecutor` service into your services and call the appropriate methods. See the [hook execution overview](#hook-execution-overview) to determine which hook should be fired in which scenario.
 
 If you are required to use the `BeforeImplicitUpdateRelationship` hook (see previous example), there is an additional requirement. For this hook, given a particular relationship, JsonApiDotNetCore needs to be able to resolve the inverse relationship. For example: if `Article` has one  author (a `Person`), then it needs to be able to resolve the `RelationshipAttribute` that corresponds to the inverse relationship for the `author` property. There are two approaches :
@@ -469,14 +469,14 @@ public class Article : Identifiable
 {
     ...
     [HasOne("author", inverseNavigationProperty: "OwnerOfArticle")]
-    public virtual Person Author { get; set; }
+    public Person Author { get; set; }
     ...
 }
 public class Person : Identifiable
 {
     ...
     [HasOne("article")]
-    public virtual Article OwnerOfArticle { get; set; }
+    public Article OwnerOfArticle { get; set; }
     ...
 }
 ```
@@ -488,10 +488,10 @@ public class CustomInverseRelationshipsResolver : IInverseRelationships
     {
         // the implementation of this method depends completely
         // the data access layer you're using.
-        // It should set the RelationshipAttribute.InverseRelationship property 
+        // It should set the RelationshipAttribute.InverseRelationship property
         // for all (relevant) relationships.
         // To have an idea of how to implement this method, see the InverseRelationships class
-        // in the source code of JADNC:
+        // in the source code of JsonApiDotNetCore:
         // https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/59a93590ac4f05c9c246eca9459b49e331250805/src/JsonApiDotNetCore/Internal/InverseRelationships.cs
     }
 }
@@ -561,7 +561,7 @@ public class ArticleTag
 If we then eg. implement the `AfterRead` and `OnReturn` hook for `Article` and `Tag`, and perform a `GET /articles?include=tags` request, we may expect the following order of execution:
 
 1. Article AfterRead
-2. Tag AfterRead 
+2. Tag AfterRead
 3. Article OnReturn
 4. Tag OnReturn
 
@@ -594,7 +594,7 @@ public class ArticleTagWithLinkDateResource : ResourceDefinition<ArticleTagWithL
 ```
 Then, for the same request `GET /articles?include=tags`, the order of execution of the hooks will look like:
 1. Article AfterRead
-2. Tag AfterRead 
+2. Tag AfterRead
 3. Article OnReturn
 4. ArticleTagWithLinkDate OnReturn
 5. Tag OnReturn
@@ -606,7 +606,7 @@ Note that the introduced inheritance and added relationship attributes does not 
 # 4. Hook execution overview
 
 
-This table below shows the involved hooks per pipeline. 
+This table below shows the involved hooks per pipeline.
 <table>
   <tr>
     <th rowspan="2">Pipeline</th>
@@ -623,47 +623,47 @@ This table below shows the involved hooks per pipeline.
     <td align="center">BeforeRead</td>
     <td align="center" colspan="2" rowspan="3">read</td>
     <td align="center">AfterRead</td>
-    <td align="center">✅</td>
+    <td align="center">[x]</td>
   </tr>
   <tr>
     <td>GetSingle</td>
     <td align="center">BeforeRead</td>
     <td align="center">AfterRead</td>
-    <td align="center">✅</td>
+    <td align="center">[x]</td>
   </tr>
   <tr>
     <td>GetRelationship</td>
     <td align="center">BeforeRead</td>
     <td align="center">AfterRead</td>
-    <td align="center">✅</td>
+    <td align="center">[x]</td>
   </tr>
   <tr>
     <td>Post</td>
     <td align="center">BeforeCreate</td>
     <td align="center" colspan="2">create<br>update relationship</td>
     <td align="center">AfterCreate</td>
-    <td align="center">✅</td>
+    <td align="center">[x]</td>
   </tr>
   <tr>
     <td>Patch</td>
     <td align="center">BeforeUpdate<br>BeforeUpdateRelationship<br>BeforeImplicitUpdateRelationship</td>
     <td align="center" colspan="2">update<br>update relationship<br>implicit update relationship</td>
     <td align="center">AfterUpdate<br>AfterUpdateRelationship</td>
-    <td align="center">✅</td>
+    <td align="center">[x]</td>
   </tr>
   <tr>
     <td>PatchRelationship</td>
     <td align="center">BeforeUpdate<br>BeforeUpdateRelationship</td>
     <td align="center" colspan="2">update<br>update relationship<br>implicit update relationship</td>
     <td align="center">AfterUpdate<br>AfterUpdateRelationship</td>
-    <td align="center">❌</td>
+    <td align="center">[ ]</td>
   </tr>
   <tr>
     <td>Delete</td>
     <td align="center">BeforeDelete</td>
     <td align="center" colspan="2">delete<br>implicit update relationship</td>
     <td align="center">AfterDelete</td>
-    <td align="center">❌</td>
+    <td align="center">[ ]</td>
   </tr>
   <tr>
     <td>BulkPost</td>

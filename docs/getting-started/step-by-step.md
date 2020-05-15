@@ -1,6 +1,6 @@
 # Step-By-Step Guide to a Running API
 
-The most basic use case leverages Entity Framework. 
+The most basic use case leverages Entity Framework Core.
 The shortest path to a running API looks like:
 
 - Create a new web app
@@ -33,20 +33,20 @@ Install-Package JsonApiDotnetCore
 ```
 
 ### Define Models
-        
+
 Define your domain models such that they implement `IIdentifiable<TId>`.
-The easiest way to do this is to inherit `Identifiable`
+The easiest way to do this is to inherit from `Identifiable`
 
 ```c#
 public class Person : Identifiable
-{ 
+{
     [Attr("name")]
     public string Name { get; set; }
 }
 ```
 
 ### Define DbContext
-        
+
 Nothing special here, just an ordinary `DbContext`
 
 ```
@@ -54,24 +54,24 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }
-        
+
     public DbSet<Person> People { get; set; }
 }
 ```
 
 ### Define Controllers
-        
-You need to create controllers that inherit from `JsonApiController<TEntity>` or `JsonApiController<TEntity, TId>`
-where `TEntity` is the model that inherits from `Identifiable<TId>`
+
+You need to create controllers that inherit from `JsonApiController<T>` or `JsonApiController<T, TId>`
+where `T` is the model that inherits from `Identifiable<TId>`
 
 ```c#
 public class PeopleController : JsonApiController<Person>
 {
     public PeopleController(
-        IJsonApiContext jsonApiContext,
-        IResourceService<Person> resourceService,
-        ILoggerFactory loggerFactory) 
-    : base(jsonApiContext, resourceService, loggerFactory)
+        IJsonApiOptions jsonApiOptions,
+        ILoggerFactory loggerFactory,
+        IResourceService<Person> resourceService)
+    : base(jsonApiOptions, loggerFactory, resourceService)
     { }
 }
 ```
@@ -81,24 +81,26 @@ public class PeopleController : JsonApiController<Person>
 Finally, add the services by adding the following to your Startup.ConfigureServices:
 
 ```c#
-public IServiceProvider ConfigureServices(IServiceCollection services)
+// This method gets called by the runtime. Use this method to add services to the container.
+public void ConfigureServices(IServiceCollection services)
 {
-    // add the db context like you normally would
+    // Add the Entity Framework Core DbContext like you normally would
     services.AddDbContext<AppDbContext>(options =>
-    { // use whatever provider you want, this is just an example
+    {
+        // Use whatever provider you want, this is just an example
         options.UseNpgsql(GetDbConnectionString());
-    }, ServiceLifetime.Transient);
+    });
 
-    // add jsonapi dotnet core
+    // Add JsonApiDotNetCore
     services.AddJsonApi<AppDbContext>();
-    // ...
 }
 ```
 
-Add the middleware to the Startup.Configure method. Note that under the hood, 
-this will call `app.UseMvc()` so there is no need to add that as well.
+Add the middleware to the Startup.Configure method. Note that under the hood,
+this will call `app.UseRouting()` and `app.UseEndpoints(...)` so there is no need to add that as well.
 
 ```c#
+// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 public void Configure(IApplicationBuilder app)
 {
     app.UseJsonApi();
@@ -110,19 +112,19 @@ public void Configure(IApplicationBuilder app)
 One way to seed the database is in your Configure method:
 
 ```c#
-public void Configure(
-    IApplicationBuilder app,
-    AppDbContext context)
+public void Configure(IApplicationBuilder app, AppDbContext context)
 {
     context.Database.EnsureCreated();
-    if(context.People.Any() == false) 
+
+    if (!context.People.Any())
     {
-        context.People.Add(new Person {
+        context.People.Add(new Person
+        {
             Name = "John Doe"
         });
         context.SaveChanges();
     }
-    // ...
+
     app.UseJsonApi();
 }
 ```
