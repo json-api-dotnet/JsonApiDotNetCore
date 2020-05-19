@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -36,16 +37,18 @@ namespace JsonApiDotNetCore.Serialization.Server
         {
             if (field is AttrAttribute attr)
             {
-                if (attr.Capabilities.HasFlag(AttrCapabilities.AllowMutate))
-                {
-                    _targetedFields.Attributes.Add(attr);
-                }
-                else
-                {
+                if (!attr.Capabilities.HasFlag(AttrCapabilities.AllowMutate))
                     throw new InvalidRequestBodyException(
-                        "Changing the value of the requested attribute is not allowed.",
-                        $"Changing the value of '{attr.PublicAttributeName}' is not allowed.", null);
-                }
+                           "Changing the value of the requested attribute is not allowed.",
+                           $"Changing the value of '{attr.PublicAttributeName}' is not allowed.", null);
+
+                var property = attr.PropertyInfo;
+                var requiredOnPost = property.GetCustomAttributes(typeof(RequiredOnPostAttribute), false);
+                if (requiredOnPost?.FirstOrDefault() != null && attr.GetValue(entity) == null)
+                    throw new InvalidOperationException($"Attribute {attr.PublicAttributeName} is required and therefore cannot be updated to null.");
+
+                _targetedFields.Attributes.Add(attr);
+
             }
             else if (field is RelationshipAttribute relationship)
                 _targetedFields.Relationships.Add(relationship);
