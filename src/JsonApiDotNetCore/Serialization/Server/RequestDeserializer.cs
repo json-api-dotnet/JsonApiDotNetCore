@@ -45,7 +45,8 @@ namespace JsonApiDotNetCore.Serialization.Server
                 var property = attr.PropertyInfo;
                 var requiredOnPost = property.GetCustomAttributes(typeof(RequiredOnPostAttribute), false);
                 if (requiredOnPost?.FirstOrDefault() != null && attr.GetValue(entity) == null)
-                    throw new InvalidOperationException($"Attribute {attr.PublicAttributeName} is required and therefore cannot be updated to null.");
+                    throw new InvalidRequestBodyException("Changing the value of a required attribute to null is not allowed.", 
+                        $"Attribute '{attr.PublicAttributeName}' is required and therefore cannot be updated to null.", null);
 
                 _targetedFields.Attributes.Add(attr);
 

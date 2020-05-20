@@ -7,6 +7,7 @@ namespace UnitTests.TestModels
     public sealed class TestResource : Identifiable
     {
         [Attr] public string StringField { get; set; }
+        [Attr] [RequiredOnPost] public string RequiredOnPostField { get; set; }
         [Attr] public DateTime DateTimeField { get; set; }
         [Attr] public DateTime? NullableDateTimeField { get; set; }
         [Attr] public int IntField { get; set; }
