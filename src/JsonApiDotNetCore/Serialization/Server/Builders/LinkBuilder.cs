@@ -226,7 +226,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         {
             if (_options.RelativeLinks)
             {
-                return string.Empty;
+                return $"/{_currentRequest.BasePath}";
             }
 
             return _currentRequest.BasePath;

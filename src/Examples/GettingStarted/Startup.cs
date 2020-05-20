@@ -15,8 +15,11 @@ namespace GettingStarted
             services.AddDbContext<SampleDbContext>(
                 options => options.UseSqlite("Data Source=sample.db"));
 
-            services.AddJsonApi<SampleDbContext>(
-                options => options.Namespace = "api");
+            services.AddJsonApi<SampleDbContext>(options =>
+            {
+                options.Namespace = "api";
+                //options.RelativeLinks = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
