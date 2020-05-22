@@ -144,6 +144,7 @@ namespace UnitTests.Middleware
                 feature.RouteValues["id"] = id;
             }
             context.Features.Set<IRouteValuesFeature>(feature);
+            context.SetEndpoint(new Endpoint(null, new EndpointMetadataCollection(), null));
             return context;
         }
 
