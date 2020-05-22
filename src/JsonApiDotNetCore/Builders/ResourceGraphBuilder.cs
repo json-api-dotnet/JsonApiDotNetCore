@@ -92,9 +92,9 @@ namespace JsonApiDotNetCore.Builders
             {
                 var attribute = (AttrAttribute)property.GetCustomAttribute(typeof(AttrAttribute));
 
-                // TODO: investigate why this is added in the exposed attributes list
-                // because it is not really defined attribute considered from the json:api
-                // spec point of view.
+                // Although strictly not correct, 'id' is added to the list of attributes for convenience.
+                // For example, it enables to filter on id, without the need to special-case existing logic.
+                // And when using sparse fields, it silently adds 'id' to the set of attributes to retrieve.
                 if (property.Name == nameof(Identifiable.Id) && attribute == null)
                 {
                     var idAttr = new AttrAttribute

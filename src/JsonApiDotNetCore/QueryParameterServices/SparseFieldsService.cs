@@ -130,11 +130,9 @@ namespace JsonApiDotNetCore.Query
                 var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
                 if (attr == null)
                 {
-                    // TODO: Add unit test for this error, once the nesting limitation is removed and this code becomes reachable again.
-
                     throw new InvalidQueryStringParameterException(parameterName,
-                        "Sparse field navigation path refers to an invalid related field.",
-                        $"Related resource '{relationship.RightType.Name}' does not contain an attribute named '{field}'.");
+                        "The specified field does not exist on the requested related resource.",
+                        $"The field '{field}' does not exist on related resource '{relationship.PublicRelationshipName}' of type '{relationProperty.ResourceName}'.");
                 }
 
                 if (attr.PropertyInfo.SetMethod == null)

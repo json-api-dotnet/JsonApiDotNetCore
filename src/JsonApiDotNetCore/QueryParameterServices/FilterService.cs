@@ -81,7 +81,6 @@ namespace JsonApiDotNetCore.Query
             return queryContext;
         }
 
-        /// todo: this could be simplified a bunch 
         private List<FilterQuery> GetFilterQueries(string parameterName, StringValues parameterValue)
         {
             // expected input = filter[id]=1
@@ -107,7 +106,6 @@ namespace JsonApiDotNetCore.Query
             return queries;
         }
 
-        /// todo: this could be simplified a bunch 
         private (string operation, string value) ParseFilterOperation(string value)
         {
             if (value.Length < 3)
@@ -124,7 +122,6 @@ namespace JsonApiDotNetCore.Query
             return (operation, value);
         }
 
-        /// todo: this could be simplified a bunch 
         private string GetFilterOperation(string value)
         {
             var values = value.Split(QueryConstants.COLON);

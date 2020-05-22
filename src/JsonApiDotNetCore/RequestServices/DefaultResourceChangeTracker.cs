@@ -80,8 +80,7 @@ namespace JsonApiDotNetCore.RequestServices
             foreach (var attribute in attributes)
             {
                 object value = attribute.GetValue(resource);
-                // TODO: Remove explicit cast to JsonApiOptions after https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/687 has been fixed.
-                var json = JsonConvert.SerializeObject(value, ((JsonApiOptions) _options).SerializerSettings);
+                var json = JsonConvert.SerializeObject(value, _options.SerializerSettings);
                 result.Add(attribute.PublicAttributeName, json);
             }
 

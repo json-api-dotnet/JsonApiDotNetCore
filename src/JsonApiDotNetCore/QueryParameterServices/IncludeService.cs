@@ -12,7 +12,6 @@ namespace JsonApiDotNetCore.Query
 {
     public class IncludeService : QueryParameterService, IIncludeService
     {
-        /// todo: use read-only lists.
         private readonly List<List<RelationshipAttribute>> _includedChains;
 
         public IncludeService(IResourceGraph resourceGraph, ICurrentRequest currentRequest) : base(resourceGraph, currentRequest)

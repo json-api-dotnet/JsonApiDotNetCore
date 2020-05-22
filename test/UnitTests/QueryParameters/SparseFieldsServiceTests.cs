@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Query;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Primitives;
 using Xunit;
+using Person = UnitTests.TestModels.Person;
 
 namespace UnitTests.QueryParameters
 {
@@ -160,6 +161,40 @@ namespace UnitTests.QueryParameters
             Assert.Equal("The specified field does not exist on the requested resource.", exception.Error.Title);
             Assert.Equal($"The field '{attrName}' does not exist on resource '{type}'.", exception.Error.Detail);
             Assert.Equal("fields", exception.Error.Source.Parameter);
+        }
+
+        [Fact]
+        public void Parse_InvalidRelatedField_ThrowsJsonApiException()
+        {
+            // Arrange
+            var idAttribute = new AttrAttribute("id") {PropertyInfo = typeof(Article).GetProperty(nameof(Article.Id))};
+
+            var query = new KeyValuePair<string, StringValues>("fields[author]", "invalid");
+
+            var resourceContext = new ResourceContext
+            {
+                ResourceName = "articles",
+                Attributes = new List<AttrAttribute> {idAttribute},
+                Relationships = new List<RelationshipAttribute>
+                {
+                    new HasOneAttribute("author")
+                    {
+                        PropertyInfo = typeof(Article).GetProperty(nameof(Article.Author)),
+                        RightType = typeof(Person)
+                    }
+                }
+            };
+
+            var service = GetService(resourceContext);
+
+            // Act, assert
+            var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
+            
+            Assert.Equal("fields[author]", exception.QueryParameterName);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
+            Assert.Equal("The specified field does not exist on the requested related resource.", exception.Error.Title);
+            Assert.Equal("The field 'invalid' does not exist on related resource 'author' of type 'people'.", exception.Error.Detail);
+            Assert.Equal("fields[author]", exception.Error.Source.Parameter);
         }
 
         [Fact]
