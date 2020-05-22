@@ -1,6 +1,6 @@
 # Sparse Field Selection
 
-As an alternative to returning all attributes from a resource, the fields query parameter can be used to select only a subset.
+As an alternative to returning all attributes from a resource, the fields query string parameter can be used to select only a subset.
 This can be used on the resource being requested (top-level), as well as on single-depth related resources that are being included.
 
 Top-level example:

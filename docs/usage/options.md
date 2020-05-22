@@ -16,7 +16,7 @@ public class Startup
 }
 ```
 
-## Client Generated Ids
+## Client Generated IDs
 
 By default, the server will respond with a 403 Forbidden HTTP Status Code if a POST request is received with a client-generated ID.
 
@@ -36,6 +36,7 @@ You can also include the total number of records in each request. Note that when
 options.DefaultPageSize = 25;
 options.MaximumPageSize = 100;
 options.MaximumPageNumber = 50;
+options.IncludeTotalRecordCount = true;
 ```
 
 ## Relative Links

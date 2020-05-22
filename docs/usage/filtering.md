@@ -1,6 +1,6 @@
 # Filtering
 
-Resources can be filtered by attributes using the `filter` query parameter.
+Resources can be filtered by attributes using the `filter` query string parameter.
 By default, all attributes are filterable.
 The filtering strategy we have selected, uses the following form.
 
