@@ -96,14 +96,15 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-Add the middleware to the Startup.Configure method. Note that under the hood,
-this will call `app.UseRouting()` and `app.UseEndpoints(...)` so there is no need to add that as well.
+Add the middleware to the Startup.Configure method.
 
 ```c#
 // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 public void Configure(IApplicationBuilder app)
 {
+    app.UseRouting();
     app.UseJsonApi();
+    app.UseEndpoints(endpoints => endpoints.MapControllers());
 }
 ```
 
@@ -125,7 +126,9 @@ public void Configure(IApplicationBuilder app, AppDbContext context)
         context.SaveChanges();
     }
 
+    app.UseRouting();
     app.UseJsonApi();
+    app.UseEndpoints(endpoints => endpoints.MapControllers());
 }
 ```
 
@@ -135,4 +138,3 @@ public void Configure(IApplicationBuilder app, AppDbContext context)
 dotnet run
 curl http://localhost:5000/people
 ```
-
