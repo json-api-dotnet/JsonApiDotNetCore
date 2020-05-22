@@ -1677,7 +1677,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html",
-          "hash": "FOmL8OFJYRjlYjqkTxHkOQ=="
+          "hash": "BlK2e94pJQAfdXTIFlEYKA=="
         }
       },
       "is_incremental": false,
@@ -2649,7 +2649,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.html",
-          "hash": "LRFeBQiv/Uhbb8JEftbsiQ=="
+          "hash": "eLZqxptj5POoQdu5qHbfcQ=="
         }
       },
       "is_incremental": false,

@@ -10375,19 +10375,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.LinkBuilder
   nameWithType: LinkBuilder.LinkBuilder
-- uid: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetBasePath
-  name: GetBasePath()
-  href: api/JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.html#JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetBasePath
-  commentId: M:JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetBasePath
-  fullName: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetBasePath()
-  nameWithType: LinkBuilder.GetBasePath()
-- uid: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetBasePath*
-  name: GetBasePath
-  href: api/JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.html#JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetBasePath_
-  commentId: Overload:JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetBasePath
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetBasePath
-  nameWithType: LinkBuilder.GetBasePath
 - uid: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Models.RelationshipAttribute,JsonApiDotNetCore.Models.IIdentifiable)
   name: GetRelationshipLinks(RelationshipAttribute, IIdentifiable)
   href: api/JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.html#JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetRelationshipLinks_JsonApiDotNetCore_Models_RelationshipAttribute_JsonApiDotNetCore_Models_IIdentifiable_
