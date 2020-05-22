@@ -9,9 +9,9 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
-    public sealed class LinkTestsWithoutNamespaceTests : FunctionalTestCollection<NoNamespaceApplicationFactory>
+    public sealed class LinksWithoutNamespaceTests : FunctionalTestCollection<NoNamespaceApplicationFactory>
     {
-        public LinkTestsWithoutNamespaceTests(NoNamespaceApplicationFactory factory) : base(factory)
+        public LinksWithoutNamespaceTests(NoNamespaceApplicationFactory factory) : base(factory)
         {
         }
 

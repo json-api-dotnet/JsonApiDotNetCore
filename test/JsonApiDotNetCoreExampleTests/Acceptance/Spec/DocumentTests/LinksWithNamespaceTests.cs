@@ -9,9 +9,9 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
-    public sealed class LinkTestsWithNamespaceTests : FunctionalTestCollection<StandardApplicationFactory>
+    public sealed class LinksWithNamespaceTests : FunctionalTestCollection<StandardApplicationFactory>
     {
-        public LinkTestsWithNamespaceTests(StandardApplicationFactory factory) : base(factory)
+        public LinksWithNamespaceTests(StandardApplicationFactory factory) : base(factory)
         {
         }
 
