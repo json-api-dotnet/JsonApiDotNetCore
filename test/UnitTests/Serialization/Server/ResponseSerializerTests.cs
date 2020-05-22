@@ -16,7 +16,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingle_ResourceWithDefaultTargetFields_CanSerialize()
         {
             // Arrange
-            var entity = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
+            var entity = new TestResource { Id = 1, StringField = "value", RequiredOnPostField = "value", NullableIntField = 123 };
             var serializer = GetResponseSerializer<TestResource>();
 
             // Act
@@ -30,6 +30,7 @@ namespace UnitTests.Serialization.Server
                   ""id"":""1"",
                   ""attributes"":{
                      ""stringField"":""value"",
+                     ""requiredOnPostField"":""value"",
                      ""dateTimeField"":""0001-01-01T00:00:00"",
                      ""nullableDateTimeField"":null,
                      ""intField"":0,
@@ -50,7 +51,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeMany_ResourceWithDefaultTargetFields_CanSerialize()
         {
             // Arrange
-            var entity = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
+            var entity = new TestResource { Id = 1, StringField = "value", RequiredOnPostField = "value", NullableIntField = 123 };
             var serializer = GetResponseSerializer<TestResource>();
 
             // Act
@@ -64,6 +65,7 @@ namespace UnitTests.Serialization.Server
                   ""id"":""1"",
                   ""attributes"":{
                      ""stringField"":""value"",
+                     ""requiredOnPostField"":""value"",
                      ""dateTimeField"":""0001-01-01T00:00:00"",
                      ""nullableDateTimeField"":null,
                      ""intField"":0,
