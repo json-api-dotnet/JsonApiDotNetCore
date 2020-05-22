@@ -92,7 +92,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         private string GetSelfTopLevelLink(ResourceContext resourceContext)
         {
             var builder = new StringBuilder();
-            builder.Append(GetBasePath());
+            builder.Append(_currentRequest.BasePath);
             builder.Append("/");
             builder.Append(resourceContext.ResourceName);
 
@@ -127,7 +127,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
                 parameters["page[number]"] = pageOffset.ToString();
             });
 
-            return $"{GetBasePath()}/{resourceContext.ResourceName}" + queryString;
+            return $"{_currentRequest.BasePath}/{resourceContext.ResourceName}" + queryString;
         }
 
         private string BuildQueryString(Action<Dictionary<string, string>> updateAction)
@@ -175,17 +175,17 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
         private string GetSelfRelationshipLink(string parent, string parentId, string navigation)
         {
-            return $"{GetBasePath()}/{parent}/{parentId}/relationships/{navigation}";
+            return $"{_currentRequest.BasePath}/{parent}/{parentId}/relationships/{navigation}";
         }
 
         private string GetSelfResourceLink(string resource, string resourceId)
         {
-            return $"{GetBasePath()}/{resource}/{resourceId}";
+            return $"{_currentRequest.BasePath}/{resource}/{resourceId}";
         }
 
         private string GetRelatedRelationshipLink(string parent, string parentId, string navigation)
         {
-            return $"{GetBasePath()}/{parent}/{parentId}/{navigation}";
+            return $"{_currentRequest.BasePath}/{parent}/{parentId}/{navigation}";
         }
 
         /// <summary>
@@ -220,16 +220,6 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             }
 
             return _options.RelationshipLinks.HasFlag(link);
-        }
-
-        protected string GetBasePath()
-        {
-            if (_options.RelativeLinks)
-            {
-                return string.Empty;
-            }
-
-            return _currentRequest.BasePath;
         }
     }
 }
