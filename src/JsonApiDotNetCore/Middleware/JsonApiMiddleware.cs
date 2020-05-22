@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
@@ -29,11 +30,11 @@ namespace JsonApiDotNetCore.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext,
-                                 IControllerResourceMapping controllerResourceMapping,
-                                 IJsonApiOptions options,
-                                 ICurrentRequest currentRequest,
-                                 IResourceGraph resourceGraph)
+        public async Task Invoke(HttpContext httpContext, 
+            IControllerResourceMapping controllerResourceMapping, 
+            IJsonApiOptions options, 
+            ICurrentRequest currentRequest, 
+            IResourceGraph resourceGraph)
         {
             var routeValues = httpContext.GetRouteData().Values;
 
@@ -171,18 +172,28 @@ namespace JsonApiDotNetCore.Middleware
 
         private static string GetBasePath(string resourceName, IJsonApiOptions options, HttpRequest httpRequest)
         {
-            if (options.RelativeLinks)
+            var builder = new StringBuilder();
+
+            if (!options.RelativeLinks)
             {
-                return options.Namespace;
+                builder.Append(httpRequest.Scheme);
+                builder.Append("://");
+                builder.Append(httpRequest.Host);
             }
 
-            var customRoute = GetCustomRoute(httpRequest.Path.Value, resourceName, options.Namespace);
-            var toReturn = $"{httpRequest.Scheme}://{httpRequest.Host}/{options.Namespace}";
-            if (customRoute != null)
+            string customRoute = GetCustomRoute(httpRequest.Path.Value, resourceName, options.Namespace);
+            if (!string.IsNullOrEmpty(customRoute))
             {
-                toReturn += $"/{customRoute}";
+                builder.Append('/');
+                builder.Append(customRoute);
             }
-            return toReturn;
+            else if (!string.IsNullOrEmpty(options.Namespace))
+            {
+                builder.Append('/');
+                builder.Append(options.Namespace);
+            }
+
+            return builder.ToString();
         }
 
         private static string GetCustomRoute(string path, string resourceName, string apiNamespace)
