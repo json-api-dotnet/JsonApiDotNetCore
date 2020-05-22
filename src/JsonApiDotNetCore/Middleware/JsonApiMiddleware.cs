@@ -12,6 +12,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
@@ -181,7 +182,7 @@ namespace JsonApiDotNetCore.Middleware
                 builder.Append(httpRequest.Host);
             }
 
-            string customRoute = GetCustomRoute(httpRequest.Path.Value, resourceName, options.Namespace);
+            string customRoute = GetCustomRoute(resourceName, options.Namespace, httpRequest.HttpContext);
             if (!string.IsNullOrEmpty(customRoute))
             {
                 builder.Append('/');
@@ -196,13 +197,20 @@ namespace JsonApiDotNetCore.Middleware
             return builder.ToString();
         }
 
-        private static string GetCustomRoute(string path, string resourceName, string apiNamespace)
+        private static string GetCustomRoute(string resourceName, string apiNamespace, HttpContext httpContext)
         {
-            var trimmedComponents = path.Trim('/').Split('/').ToList();
-            var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
-            var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
-            var customRoute = string.Join('/', newComponents);
-            return customRoute == apiNamespace ? null : customRoute;
+            var endpoint = httpContext.GetEndpoint();
+            var routeAttribute = endpoint.Metadata.GetMetadata<RouteAttribute>();
+            if (routeAttribute != null)
+            {
+                var trimmedComponents = httpContext.Request.Path.Value.Trim('/').Split('/').ToList();
+                var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
+                var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
+                var customRoute = string.Join('/', newComponents);
+                return customRoute == apiNamespace ? null : customRoute;
+            }
+
+            return null;
         }
 
         private static bool GetIsRelationshipPath(RouteValueDictionary routeValues)
