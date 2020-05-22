@@ -136,12 +136,13 @@ public void ConfigureServices(IServiceCollection services)
     // Add JsonApiDotNetCore
     services.AddJsonApi&lt;AppDbContext&gt;();
 }
-</code></pre><p>Add the middleware to the Startup.Configure method. Note that under the hood,
-this will call <code>app.UseRouting()</code> and <code>app.UseEndpoints(...)</code> so there is no need to add that as well.</p>
+</code></pre><p>Add the middleware to the Startup.Configure method.</p>
 <pre><code class="lang-c#">// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 public void Configure(IApplicationBuilder app)
 {
+    app.UseRouting();
     app.UseJsonApi();
+    app.UseEndpoints(endpoints =&gt; endpoints.MapControllers());
 }
 </code></pre><h3 id="seeding-the-database">Seeding the Database</h3>
 <p>One way to seed the database is in your Configure method:</p>
@@ -158,7 +159,9 @@ public void Configure(IApplicationBuilder app)
         context.SaveChanges();
     }
 
+    app.UseRouting();
     app.UseJsonApi();
+    app.UseEndpoints(endpoints =&gt; endpoints.MapControllers());
 }
 </code></pre><h3 id="start-the-app">Start the App</h3>
 <pre><code>dotnet run

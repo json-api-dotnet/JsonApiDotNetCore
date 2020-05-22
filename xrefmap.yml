@@ -13,12 +13,12 @@ references:
   commentId: T:JsonApiDotNetCore.ApplicationBuilderExtensions
   fullName: JsonApiDotNetCore.ApplicationBuilderExtensions
   nameWithType: ApplicationBuilderExtensions
-- uid: JsonApiDotNetCore.ApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder,System.Boolean,System.Boolean,System.Boolean)
-  name: UseJsonApi(IApplicationBuilder, Boolean, Boolean, Boolean)
-  href: api/JsonApiDotNetCore.ApplicationBuilderExtensions.html#JsonApiDotNetCore_ApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_System_Boolean_System_Boolean_System_Boolean_
-  commentId: M:JsonApiDotNetCore.ApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder,System.Boolean,System.Boolean,System.Boolean)
-  fullName: JsonApiDotNetCore.ApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder, System.Boolean, System.Boolean, System.Boolean)
-  nameWithType: ApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder, Boolean, Boolean, Boolean)
+- uid: JsonApiDotNetCore.ApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder)
+  name: UseJsonApi(IApplicationBuilder)
+  href: api/JsonApiDotNetCore.ApplicationBuilderExtensions.html#JsonApiDotNetCore_ApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_
+  commentId: M:JsonApiDotNetCore.ApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder)
+  fullName: JsonApiDotNetCore.ApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder)
+  nameWithType: ApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder)
 - uid: JsonApiDotNetCore.ApplicationBuilderExtensions.UseJsonApi*
   name: UseJsonApi
   href: api/JsonApiDotNetCore.ApplicationBuilderExtensions.html#JsonApiDotNetCore_ApplicationBuilderExtensions_UseJsonApi_

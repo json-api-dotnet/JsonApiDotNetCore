@@ -71,9 +71,10 @@
 
 <p>Add the following to your Startup.ConfigureServices method. Replace AppDbContext with your DbContext.</p>
 <pre><code class="lang-c3">services.AddJsonApi&lt;AppDbContext&gt;();
-</code></pre><p>Add the middleware to the Startup.Configure method. Note that under the hood,
-this will call <code>app.UseRouting()</code> and <code>app.UseEndpoints(...)</code> so there is no need to add that as well.</p>
-<pre><code class="lang-c3">app.UseJsonApi();
+</code></pre><p>Add the middleware to the Startup.Configure method.</p>
+<pre><code class="lang-c3">app.UseRouting();
+app.UseJsonApi();
+app.UseEndpoints(endpoints =&gt; endpoints.MapControllers());
 </code></pre></article>
           </div>
           
