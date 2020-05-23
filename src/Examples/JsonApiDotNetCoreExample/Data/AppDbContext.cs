@@ -20,6 +20,8 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<PersonRole> PersonRoles { get; set; }
         public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options, ISystemClock systemClock) : base(options)
         {
@@ -85,6 +87,19 @@ namespace JsonApiDotNetCoreExample.Data
                 .HasOne(p => p.OneToOneTodoItem)
                 .WithOne(p => p.OneToOnePerson)
                 .HasForeignKey<TodoItem>(p => p.OneToOnePersonId);
+
+            var ownedBuilder = modelBuilder.Entity<Product>()
+                                           .OwnsOne(p => p.Price);
+
+            ownedBuilder.Property(p => p.Value)
+                .HasColumnName("Money_Value");
+
+            ownedBuilder.Property(p => p.Currency)
+                .HasColumnName("Money_Currency");
+
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.Categories)
+                .WithOne();
         }
     }
 }
