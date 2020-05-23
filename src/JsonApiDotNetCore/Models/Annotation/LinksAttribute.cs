@@ -26,18 +26,18 @@ namespace JsonApiDotNetCore.Models.Links
         /// Configures which links to show in the <see cref="TopLevelLinks"/>
         /// object for this resource.   
         /// </summary>
-        public Link TopLevelLinks { get; }
+        public Link TopLevelLinks { get; internal set; }
 
         /// <summary>
         /// Configures which links to show in the <see cref="ResourceLinks"/>
         /// object for this resource.
         /// </summary>
-        public Link ResourceLinks { get; }
+        public Link ResourceLinks { get; internal set; }
 
         /// <summary>
         /// Configures which links to show in the <see cref="RelationshipLinks"/>
         /// for all relationships of the resource for which this attribute was instantiated.
         /// </summary>
-        public Link RelationshipLinks { get; }
+        public Link RelationshipLinks { get; internal set; }
     }
 }

@@ -1,20 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Fluent;
 using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Reflection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace JsonApiDotNetCore.Builders
 {
-    public class ResourceGraphBuilder : IResourceGraphBuilder
+    public class ResourceGraphBuilder: IResourceGraphBuilder
     {
         private readonly IJsonApiOptions _options;
         private readonly ILogger<ResourceGraphBuilder> _logger;
@@ -35,13 +36,49 @@ namespace JsonApiDotNetCore.Builders
 
         private void SetResourceLinksOptions(ResourceContext resourceContext)
         {
-            var attribute = (LinksAttribute)resourceContext.ResourceType.GetCustomAttribute(typeof(LinksAttribute));
+            LinksAttribute attribute = GetResourceLinksOptionsWithPrecedenceToMappingOverAnnotation(resourceContext);
+
             if (attribute != null)
             {
                 resourceContext.RelationshipLinks = attribute.RelationshipLinks;
                 resourceContext.ResourceLinks = attribute.ResourceLinks;
                 resourceContext.TopLevelLinks = attribute.TopLevelLinks;
             }
+        }
+
+        private LinksAttribute GetResourceLinksOptionsWithPrecedenceToMappingOverAnnotation(ResourceContext resourceContext)
+        {
+            LinksAttribute annotation = GetResourceLinksOptionsFromAnnotations(resourceContext);
+
+            LinksAttribute mapping = GetResourceLinksOptionsFromMappings(resourceContext);
+
+            LinksAttribute attribute = mapping != null ? mapping : annotation;
+
+            return attribute;
+        }
+
+        private LinksAttribute GetResourceLinksOptionsFromAnnotations(ResourceContext resourceContext)
+        {
+            LinksAttribute attribute = (LinksAttribute)resourceContext.ResourceType.GetCustomAttribute(typeof(LinksAttribute));
+
+            return attribute;
+        }
+
+        private LinksAttribute GetResourceLinksOptionsFromMappings(ResourceContext resourceContext)
+        {
+            LinksAttribute attribute = null;
+
+            IResourceMapping mapping = null;
+
+            if (resourceContext.ResourceType.TryGetResouceMapping(out mapping))
+            {
+                if (mapping != null)
+                {
+                    attribute = mapping.Links;
+                }
+            }
+
+            return attribute;
         }
 
         /// <inheritdoc />
@@ -86,15 +123,28 @@ namespace JsonApiDotNetCore.Builders
 
         protected virtual List<AttrAttribute> GetAttributes(Type entityType)
         {
+            List<AttrAttribute> attributes = new List<AttrAttribute>();
+
+            List<AttrAttribute> annotations = GetAttributesFromAnnotations(entityType);
+
+            List<AttrAttribute> mappings = GetAttributesFromMapping(entityType);
+
+            attributes = CombineWithPrecedenceToMappingOverAnnotation(mappings, annotations, AttrAttributeComparer.Instance);
+
+            return attributes;
+        }
+
+        protected virtual List<AttrAttribute> GetAttributesFromAnnotations(Type entityType)
+        {
             var attributes = new List<AttrAttribute>();
 
             foreach (var property in entityType.GetProperties())
             {
                 var attribute = (AttrAttribute)property.GetCustomAttribute(typeof(AttrAttribute));
 
-                // Although strictly not correct, 'id' is added to the list of attributes for convenience.
-                // For example, it enables to filter on id, without the need to special-case existing logic.
-                // And when using sparse fields, it silently adds 'id' to the set of attributes to retrieve.
+                // TODO: investigate why this is added in the exposed attributes list
+                // because it is not really defined attribute considered from the json:api
+                // spec point of view.
                 if (property.Name == nameof(Identifiable.Id) && attribute == null)
                 {
                     var idAttr = new AttrAttribute
@@ -123,10 +173,49 @@ namespace JsonApiDotNetCore.Builders
             return attributes;
         }
 
+        protected virtual List<AttrAttribute> GetAttributesFromMapping(Type entityType)
+        {
+            var attributes = new List<AttrAttribute>();
+
+            IResourceMapping mapping;
+
+            if (entityType.TryGetResouceMapping(out mapping))
+            {
+                foreach (var attribute in mapping.Attributes)
+                {
+                    attribute.PublicAttributeName ??= FormatPropertyName(attribute.PropertyInfo);
+                    attribute.PropertyInfo = attribute.PropertyInfo;
+
+                    if (!attribute.HasExplicitCapabilities)
+                    {
+                        attribute.Capabilities = _options.DefaultAttrCapabilities;
+                    }
+
+                    attributes.Add(attribute);
+                }
+            }
+
+            return attributes;
+        }
+
         protected virtual List<RelationshipAttribute> GetRelationships(Type entityType)
+        {
+            List<RelationshipAttribute> attributes = new List<RelationshipAttribute>();
+
+            List<RelationshipAttribute> annotations = GetRelationshipsFromAnnotations(entityType);
+
+            List<RelationshipAttribute> mappings = GetRelationshipsFromMapping(entityType);
+
+            attributes = CombineWithPrecedenceToMappingOverAnnotation(mappings, annotations, RelationshipAttributeComparer.Instance);
+
+            return attributes;
+        }
+
+        protected List<RelationshipAttribute> GetRelationshipsFromAnnotations(Type entityType)
         {
             var attributes = new List<RelationshipAttribute>();
             var properties = entityType.GetProperties();
+
             foreach (var prop in properties)
             {
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
@@ -179,6 +268,68 @@ namespace JsonApiDotNetCore.Builders
             return attributes;
         }
 
+        protected List<RelationshipAttribute> GetRelationshipsFromMapping(Type entityType)
+        {
+            var attributes = new List<RelationshipAttribute>();
+
+            IResourceMapping mapping;
+
+            if (entityType.TryGetResouceMapping(out mapping))
+            {
+                foreach (var relationship in mapping.Relationships)
+                {
+                    var attribute = relationship;
+                    if (attribute == null) continue;
+
+                    attribute.PropertyInfo = relationship.PropertyInfo;
+                    attribute.PublicRelationshipName ??= FormatPropertyName(relationship.PropertyInfo);
+                    attribute.RightType = GetRelationshipType(attribute, relationship.PropertyInfo);
+                    attribute.LeftType = entityType;
+                    attributes.Add(attribute);
+
+                    if (attribute is HasManyThroughAttribute hasManyThroughAttribute)
+                    {
+                        var throughProperty = hasManyThroughAttribute.ThroughProperty;
+
+                        if (throughProperty == null)
+                            throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.PropertyInfo.Name}': Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
+
+                        var throughType = TryGetThroughType(throughProperty);
+                        if (throughType == null)
+                            throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.PropertyInfo.Name}': Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
+
+                        // ICollection<ArticleTag>
+                        hasManyThroughAttribute.ThroughProperty = throughProperty;
+
+                        // ArticleTag
+                        hasManyThroughAttribute.ThroughType = throughType;
+
+                        var throughProperties = throughType.GetProperties();
+
+                        // ArticleTag.Article
+                        hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType == entityType)
+                            ?? throw new JsonApiSetupException($"{throughType} does not contain a navigation property to type {entityType}");
+
+                        // ArticleTag.ArticleId
+                        var leftIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.LeftProperty.Name);
+                        hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(x => x.Name == leftIdPropertyName)
+                            ?? throw new JsonApiSetupException($"{throughType} does not contain a relationship id property to type {entityType} with name {leftIdPropertyName}");
+
+                        // ArticleTag.Tag
+                        hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.RightType)
+                            ?? throw new JsonApiSetupException($"{throughType} does not contain a navigation property to type {hasManyThroughAttribute.RightType}");
+
+                        // ArticleTag.TagId
+                        var rightIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.RightProperty.Name);
+                        hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName)
+                            ?? throw new JsonApiSetupException($"{throughType} does not contain a relationship id property to type {hasManyThroughAttribute.RightType} with name {rightIdPropertyName}");
+                    }
+                }
+            }
+
+            return attributes;
+        }
+
         private static Type TryGetThroughType(PropertyInfo throughProperty)
         {
             if (throughProperty.PropertyType.IsGenericType)
@@ -207,12 +358,25 @@ namespace JsonApiDotNetCore.Builders
                 throw new InvalidOperationException("Infinite recursion detected in eager-load chain.");
             }
 
+            List<EagerLoadAttribute> attributes = new List<EagerLoadAttribute>();
+
+            List<EagerLoadAttribute> annotations = GetEagerLoadsFromAnnotations(entityType, recursionDepth);
+
+            List<EagerLoadAttribute> mappings = GetEagerLoadsFromMapping(entityType, recursionDepth);
+
+            attributes = CombineWithPrecedenceToMappingOverAnnotation(mappings, annotations, EagerLoadAttributeComparer.Instance);
+
+            return attributes;
+        }
+
+        private List<EagerLoadAttribute> GetEagerLoadsFromAnnotations(Type entityType, int recursionDepth = 0)
+        {
             var attributes = new List<EagerLoadAttribute>();
             var properties = entityType.GetProperties();
 
             foreach (var property in properties)
             {
-                var attribute = (EagerLoadAttribute) property.GetCustomAttribute(typeof(EagerLoadAttribute));
+                var attribute = (EagerLoadAttribute)property.GetCustomAttribute(typeof(EagerLoadAttribute));
                 if (attribute == null) continue;
 
                 Type innerType = TypeOrElementType(property.PropertyType);
@@ -220,6 +384,27 @@ namespace JsonApiDotNetCore.Builders
                 attribute.Property = property;
 
                 attributes.Add(attribute);
+            }
+
+            return attributes;
+        }
+
+        private List<EagerLoadAttribute> GetEagerLoadsFromMapping(Type entityType, int recursionDepth = 0)
+        {
+            var attributes = new List<EagerLoadAttribute>();
+
+            IResourceMapping mapping;
+
+            if (entityType.TryGetResouceMapping(out mapping))
+            {
+                foreach (var eagerLoad in mapping.EagerLoads)
+                {
+                    Type innerType = TypeOrElementType(eagerLoad.Property.PropertyType);
+                    eagerLoad.Children = GetEagerLoads(innerType, recursionDepth + 1);
+                    eagerLoad.Property = eagerLoad.Property;
+
+                    attributes.Add(eagerLoad);
+                }
             }
 
             return attributes;
@@ -244,6 +429,12 @@ namespace JsonApiDotNetCore.Builders
         private string FormatPropertyName(PropertyInfo resourceProperty)
         {
             return _options.SerializerContractResolver.NamingStrategy.GetPropertyName(resourceProperty.Name, false);
+        }
+
+        private static List<T> CombineWithPrecedenceToMappingOverAnnotation<T>(List<T> mappings, List<T> annotations, IEqualityComparer<T> comparer)
+        {
+            return mappings.Union(annotations, comparer)
+                           .ToList();
         }
     }
 }

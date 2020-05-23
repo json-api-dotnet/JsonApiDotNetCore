@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         public string PublicAttributeName { get; internal set; }
 
-        internal bool HasExplicitCapabilities { get; }
+        internal bool HasExplicitCapabilities { get; set; }
         public AttrCapabilities Capabilities { get; internal set; }
 
         /// <summary>
