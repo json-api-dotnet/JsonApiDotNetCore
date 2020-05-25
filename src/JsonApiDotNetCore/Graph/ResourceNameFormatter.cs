@@ -1,21 +1,22 @@
-using System;
-using System.Reflection;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Fluent;
-using JsonApiDotNetCore.Reflection;
 using Newtonsoft.Json.Serialization;
+using System;
+using System.Reflection;
 
 namespace JsonApiDotNetCore.Graph
 {
     internal sealed class ResourceNameFormatter
     {
         private readonly NamingStrategy _namingStrategy;
+        private readonly IResourceMappingService _resourceMappingService;
 
-        public ResourceNameFormatter(IJsonApiOptions options)
+        public ResourceNameFormatter(IJsonApiOptions options, IResourceMappingService resourceMappingService = null)
         {
             _namingStrategy = options.SerializerContractResolver.NamingStrategy;
+            _resourceMappingService = resourceMappingService;
         }
 
         /// <summary>
@@ -28,8 +29,8 @@ namespace JsonApiDotNetCore.Graph
                 // Mapping
                 IResourceMapping mapping = null;
 
-                if (type.TryGetResouceMapping(out mapping))
-                {
+                if (_resourceMappingService != null && _resourceMappingService.TryGetResourceMapping(type, out mapping)) 
+                {                   
                     if (mapping.Resource != null)
                     {
                         return mapping.Resource.ResourceName;

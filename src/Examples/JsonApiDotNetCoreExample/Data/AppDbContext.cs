@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExample.Data
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        {            
             modelBuilder.Entity<ThrowingResource>();
 
             modelBuilder.Entity<SuperUser>().HasBaseType<User>();
@@ -88,6 +88,12 @@ namespace JsonApiDotNetCoreExample.Data
                 .WithOne(p => p.OneToOnePerson)
                 .HasForeignKey<TodoItem>(p => p.OneToOnePersonId);
 
+            modelBuilder.Entity<Category>()
+                .ToTable("Categories");
+
+            modelBuilder.Entity<Product>()
+                .ToTable("Products");
+
             var ownedBuilder = modelBuilder.Entity<Product>()
                                            .OwnsOne(p => p.Price);
 
@@ -100,6 +106,6 @@ namespace JsonApiDotNetCoreExample.Data
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.Categories)
                 .WithOne();
-        }
+        }        
     }
 }

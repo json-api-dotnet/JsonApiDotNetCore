@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Fluent;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Newtonsoft.Json.Serialization;
@@ -37,14 +38,14 @@ namespace JsonApiDotNetCore.Internal
     public class DefaultRoutingConvention : IJsonApiRoutingConvention
     {
         private readonly IJsonApiOptions _options;
-        private readonly ResourceNameFormatter _formatter;
+        private readonly ResourceNameFormatter _formatter;        
         private readonly HashSet<string> _registeredTemplates = new HashSet<string>();
         private readonly Dictionary<string, Type> _registeredResources = new Dictionary<string, Type>();
         
-        public DefaultRoutingConvention(IJsonApiOptions options)
+        public DefaultRoutingConvention(IJsonApiOptions options, IResourceMappingService resourceMappingService)
         {
             _options = options;
-            _formatter = new ResourceNameFormatter(options);
+            _formatter = new ResourceNameFormatter(options, resourceMappingService);            
         }
 
         /// <inheritdoc/>

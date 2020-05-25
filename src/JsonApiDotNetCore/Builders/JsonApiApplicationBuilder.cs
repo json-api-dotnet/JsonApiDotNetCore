@@ -22,6 +22,7 @@ using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using JsonApiDotNetCore.QueryParameterServices.Common;
 using JsonApiDotNetCore.RequestServices;
+using JsonApiDotNetCore.Models.Fluent;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -42,6 +43,9 @@ namespace JsonApiDotNetCore.Builders
         {
             _services = services;
             _mvcBuilder = mvcBuilder;
+
+            RegisterJsonApiStartupServices();
+            ResolveJsonApiStartupServices();
         }
 
         /// <summary>
@@ -58,22 +62,14 @@ namespace JsonApiDotNetCore.Builders
         /// <see cref="IResourceGraphBuilder"/>, <see cref="IServiceDiscoveryFacade"/>, <see cref="IJsonApiExceptionFilterProvider"/>,
         /// <see cref="IJsonApiTypeMatchFilterProvider"/> and <see cref="IJsonApiRoutingConvention"/>.
         /// </summary>
-        public void ConfigureMvc(Type dbContextType)
-        {
-            RegisterJsonApiStartupServices();
-
+        public void ConfigureMvc()
+        {            
             IJsonApiExceptionFilterProvider exceptionFilterProvider;
             IJsonApiTypeMatchFilterProvider typeMatchFilterProvider;
             IJsonApiRoutingConvention routingConvention;
 
             using (var intermediateProvider = _services.BuildServiceProvider())
-            {
-                _resourceGraphBuilder = intermediateProvider.GetRequiredService<IResourceGraphBuilder>();
-                _serviceDiscoveryFacade = intermediateProvider.GetRequiredService<IServiceDiscoveryFacade>();
-                _dbContextType = dbContextType;
-
-                AddResourceTypesFromDbContext(intermediateProvider);
-
+            {                                
                 exceptionFilterProvider = intermediateProvider.GetRequiredService<IJsonApiExceptionFilterProvider>();
                 typeMatchFilterProvider = intermediateProvider.GetRequiredService<IJsonApiTypeMatchFilterProvider>();
                 routingConvention = intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>();
@@ -115,7 +111,7 @@ namespace JsonApiDotNetCore.Builders
         /// Executes auto-discovery of JADNC services.
         /// </summary>
         public void AutoDiscover(Action<IServiceDiscoveryFacade> autoDiscover)
-        {
+        {            
             autoDiscover?.Invoke(_serviceDiscoveryFacade);
         }
 
@@ -248,11 +244,34 @@ namespace JsonApiDotNetCore.Builders
         private void RegisterJsonApiStartupServices()
         {
             _services.AddSingleton<IJsonApiOptions>(_options);
-            _services.TryAddSingleton<IJsonApiRoutingConvention, DefaultRoutingConvention>();
+            _services.TryAddSingleton<IJsonApiRoutingConvention, DefaultRoutingConvention>();            
             _services.TryAddSingleton<IResourceGraphBuilder, ResourceGraphBuilder>();
-            _services.TryAddSingleton<IServiceDiscoveryFacade>(sp => new ServiceDiscoveryFacade(_services, sp.GetRequiredService<IResourceGraphBuilder>()));
+            _services.TryAddSingleton<IResourceMappingService>(sp => new ResourceMappingService(_services));
+            _services.TryAddSingleton<IServiceDiscoveryFacade>(sp => new ServiceDiscoveryFacade(_services, 
+                                                                                                sp.GetRequiredService<IResourceGraphBuilder>(), 
+                                                                                                sp.GetRequiredService<IResourceMappingService>()));
             _services.TryAddScoped<IJsonApiExceptionFilterProvider, JsonApiExceptionFilterProvider>();
             _services.TryAddScoped<IJsonApiTypeMatchFilterProvider, JsonApiTypeMatchFilterProvider>();
+            
+        }
+
+        private void ResolveJsonApiStartupServices()
+        {
+            using (var intermediateProvider = _services.BuildServiceProvider())
+            {
+                _resourceGraphBuilder = intermediateProvider.GetRequiredService<IResourceGraphBuilder>();
+                _serviceDiscoveryFacade = intermediateProvider.GetRequiredService<IServiceDiscoveryFacade>();                                
+            }
+        }
+
+        public void ConfigureResources(Type dbContextType)
+        {
+            using (var intermediateProvider = _services.BuildServiceProvider())
+            {                
+                _dbContextType = dbContextType;
+
+                AddResourceTypesFromDbContext(intermediateProvider);
+            }
         }
     }
 }

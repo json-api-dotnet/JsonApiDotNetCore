@@ -1,16 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
-using Microsoft.Extensions.DependencyInjection;
-using JsonApiDotNetCore.Serialization.Client;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Client;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace JsonApiDotNetCore
 {
@@ -52,12 +52,13 @@ namespace JsonApiDotNetCore
             Action<IResourceGraphBuilder> resources, IMvcCoreBuilder mvcBuilder, Type dbContextType)
         {
             var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
-
-            applicationBuilder.ConfigureJsonApiOptions(options);
-            applicationBuilder.ConfigureMvc(dbContextType);
-            applicationBuilder.AutoDiscover(discovery);
-            applicationBuilder.ConfigureResources(resources);
-            applicationBuilder.ConfigureServices();
+            
+            applicationBuilder.ConfigureJsonApiOptions(options);            
+            applicationBuilder.AutoDiscover(discovery);            
+            applicationBuilder.ConfigureMvc();
+            applicationBuilder.ConfigureResources(dbContextType);
+            applicationBuilder.ConfigureResources(resources);            
+            applicationBuilder.ConfigureServices();            
         }
 
         private static void ResolveInverseRelationships(IServiceCollection services)

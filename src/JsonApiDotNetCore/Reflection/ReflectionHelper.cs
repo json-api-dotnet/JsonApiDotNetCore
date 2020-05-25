@@ -14,48 +14,6 @@ namespace JsonApiDotNetCore.Reflection
             return GetMember(expression.Body);
         }
 
-        public static bool TryGetResouceMapping(Type entityType, out IResourceMapping resouceMapping)
-        {
-            resouceMapping = null;
-
-            List<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies()
-                                                               .ToList();
-
-            Type resourceMapping = null;
-
-            try
-            {
-                foreach (Assembly assembly in assemblies)
-                {
-                    resourceMapping = assembly.GetTypes()
-                                              .Where(type => type.BaseType != null &&
-                                                             type.BaseType.IsGenericType &&
-                                                             type.BaseType.GetGenericTypeDefinition() == typeof(ResourceMapping<>) &&
-                                                             type.BaseType.GetGenericArguments()
-                                                                          .Contains(entityType) &&
-                                                             type.IsClass)
-                                              .Select(type => type)
-                                              .FirstOrDefault();
-
-                    if (resourceMapping != null)
-                    {
-                        break;
-                    }
-                }
-
-                if (resourceMapping != null)
-                {
-                    resouceMapping = (IResourceMapping)Activator.CreateInstance(resourceMapping);
-                }
-            }
-            catch 
-            {
-
-            }
-
-            return resouceMapping != null;
-        }
-
         private static bool IsMethodExpression(Expression expression)
         {
             return expression is MethodCallExpression || (expression is UnaryExpression && IsMethodExpression((expression as UnaryExpression).Operand));

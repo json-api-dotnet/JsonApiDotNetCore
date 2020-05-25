@@ -9,6 +9,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Fluent;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.RequestServices;
 using JsonApiDotNetCore.Serialization;
@@ -28,6 +29,7 @@ namespace DiscoveryTests
     {
         private readonly IServiceCollection _services = new ServiceCollection();
         private readonly ResourceGraphBuilder _resourceGraphBuilder;
+        private readonly ResourceMappingService _resourceMappingService;
 
         public ServiceDiscoveryFacadeTests()
         {
@@ -48,10 +50,14 @@ namespace DiscoveryTests
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(DefaultResourceChangeTracker<>));
             _services.AddScoped(_ => new Mock<IResourceFactory>().Object);
 
-            _resourceGraphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+            _resourceMappingService = new ResourceMappingService(_services);
+
+            _resourceGraphBuilder = new ResourceGraphBuilder(options, 
+                                                             NullLoggerFactory.Instance,
+                                                             _resourceMappingService);            
         }
 
-        private ServiceDiscoveryFacade Facade => new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+        private ServiceDiscoveryFacade Facade => new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _resourceMappingService);
 
         [Fact]
         public void AddAssembly_Adds_All_Resources_To_Graph()

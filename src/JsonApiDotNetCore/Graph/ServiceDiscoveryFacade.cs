@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Fluent;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,12 +49,21 @@ namespace JsonApiDotNetCore.Graph
 
         private readonly IServiceCollection _services;
         private readonly IResourceGraphBuilder _resourceGraphBuilder;
+        private readonly IResourceMappingService _resourceMappingService;
         private readonly IdentifiableTypeCache _typeCache = new IdentifiableTypeCache();
 
-        public ServiceDiscoveryFacade(IServiceCollection services, IResourceGraphBuilder resourceGraphBuilder)
+        public ServiceDiscoveryFacade(IServiceCollection services, IResourceGraphBuilder resourceGraphBuilder, IResourceMappingService resourceMappingService)
         {
             _services = services;
             _resourceGraphBuilder = resourceGraphBuilder;
+            _resourceMappingService = resourceMappingService;
+        }
+
+        public ServiceDiscoveryFacade AddResourceMapping<TResource>(ResourceMapping<TResource> resourceMapping) where TResource : class
+        {
+            _resourceMappingService.RegisterResourceMapping(resourceMapping);
+
+            return this;
         }
 
         /// <summary>
@@ -66,6 +76,8 @@ namespace JsonApiDotNetCore.Graph
         /// </summary>
         public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
         {
+            RegisterResourceMappings(assembly);
+
             AddDbContextResolvers(assembly);
 
             var resourceDescriptors = _typeCache.GetIdentifiableTypes(assembly);
@@ -141,5 +153,10 @@ namespace JsonApiDotNetCore.Graph
                 _services.AddScoped(service.registrationInterface, service.implementation);
             }
         }
+
+        private void RegisterResourceMappings(Assembly assembly)
+        {            
+            _resourceMappingService.RegisterResourceMappings(assembly);
+        }        
     }
 }

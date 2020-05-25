@@ -20,11 +20,13 @@ namespace JsonApiDotNetCore.Builders
         private readonly IJsonApiOptions _options;
         private readonly ILogger<ResourceGraphBuilder> _logger;
         private readonly List<ResourceContext> _resources = new List<ResourceContext>();
-
-        public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
+        private readonly IResourceMappingService _resourceMappingService;
+        
+        public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceMappingService resourceMappingService = null)
         {
             _options = options;
             _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
+            _resourceMappingService = resourceMappingService;
         }
 
         /// <inheritdoc />
@@ -70,12 +72,9 @@ namespace JsonApiDotNetCore.Builders
 
             IResourceMapping mapping = null;
 
-            if (resourceContext.ResourceType.TryGetResouceMapping(out mapping))
+            if (_resourceMappingService != null && _resourceMappingService.TryGetResourceMapping(resourceContext.ResourceType, out mapping))
             {
-                if (mapping != null)
-                {
-                    attribute = mapping.Links;
-                }
+                attribute = mapping.Links;
             }
 
             return attribute;
@@ -179,7 +178,7 @@ namespace JsonApiDotNetCore.Builders
 
             IResourceMapping mapping;
 
-            if (entityType.TryGetResouceMapping(out mapping))
+            if (_resourceMappingService != null && _resourceMappingService.TryGetResourceMapping(entityType, out mapping))                
             {
                 foreach (var attribute in mapping.Attributes)
                 {
@@ -274,7 +273,7 @@ namespace JsonApiDotNetCore.Builders
 
             IResourceMapping mapping;
 
-            if (entityType.TryGetResouceMapping(out mapping))
+            if (_resourceMappingService != null && _resourceMappingService.TryGetResourceMapping(entityType, out mapping))                
             {
                 foreach (var relationship in mapping.Relationships)
                 {
@@ -395,7 +394,7 @@ namespace JsonApiDotNetCore.Builders
 
             IResourceMapping mapping;
 
-            if (entityType.TryGetResouceMapping(out mapping))
+            if (_resourceMappingService != null && _resourceMappingService.TryGetResourceMapping(entityType, out mapping))
             {
                 foreach (var eagerLoad in mapping.EagerLoads)
                 {
@@ -422,7 +421,7 @@ namespace JsonApiDotNetCore.Builders
 
         private string FormatResourceName(Type resourceType)
         {
-            var formatter = new ResourceNameFormatter(_options);
+            var formatter = new ResourceNameFormatter(_options, _resourceMappingService);
             return formatter.FormatResourceName(resourceType);
         }
 

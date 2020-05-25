@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreExample.Resources
         public ProductResource()
         {
             Property(x => x.Name);
-
+                
             Property(x => x.Description);
 
             Property(x => x.Price);
@@ -16,13 +16,13 @@ namespace JsonApiDotNetCoreExample.Resources
             HasMany(x => x.Categories);
 
             TopLevelLinks()
-                .DisableAll();
+                .EnableAll();
 
             ResourceLinks()
-                .DisableAll();
+                .EnableAll();
 
             RelationshipLinks()
-                .DisableAll();
+                .EnableAll();
         }
     }
 }
