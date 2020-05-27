@@ -35,7 +35,7 @@ public void ConfigureServices(IServiceCollection services)
     services.AddResourceService<FooService>();
 
     // custom repository
-    services.AddResourceRepository<FooRepository>();
+    services.AddScoped<FooRepository>();
 }
 ```
 
