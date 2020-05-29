@@ -4,15 +4,15 @@
 ## [Resource Definitions](resources/resource-definitions.md)
 
 # [Resource Graph](resource-graph.md)
-# [Metadata](meta.md)
-# [Filtering](filtering.md)
 # [Options](options.md)
-# [Errors](errors.md)
-# [Including Relationships](including-relationships.md)
-# [Pagination](pagination.md)
-# [Routing](routing.md)
+# [Filtering](filtering.md)
 # [Sorting](sorting.md)
+# [Pagination](pagination.md)
 # [Sparse Field Selection](sparse-field-selection.md)
+# [Including Relationships](including-relationships.md)
+# [Routing](routing.md)
+# [Errors](errors.md)
+# [Metadata](meta.md)
 
 # Extensibility
 ## [Layer Overview](extensibility/layer-overview.md)

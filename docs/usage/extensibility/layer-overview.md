@@ -35,7 +35,7 @@ public void ConfigureServices(IServiceCollection services)
     services.AddResourceService<FooService>();
 
     // custom repository
-    services.AddScoped<AFooRepository>();
+    services.AddScoped<FooRepository>();
 }
 ```
 
@@ -46,11 +46,9 @@ Prior to v3.0.0 you could do it like so:
 public void ConfigureServices(IServiceCollection services)
 {
     // custom service
-    services.AddScoped<IResourceRepository<Foo>, FooService>();
+    services.AddScoped<IResourceService<Foo>, FooService>();
 
     // custom repository
-    services.AddScoped<IResourceRepository<Foo>, FooService>();
-
-    // ...
+    services.AddScoped<IResourceRepository<Foo>, FooRepository>();
 }
 ```

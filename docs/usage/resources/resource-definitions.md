@@ -92,7 +92,7 @@ public class AccountDefinition : ResourceDefinition<Account>
 
 _since v3.0.0_
 
-You can define additional query parameters and the query that should be used.
+You can define additional query string parameters and the query that should be used.
 If the key is present in a filter request, the supplied query will be used rather than the default behavior.
 
 ```c#
