@@ -70,9 +70,12 @@
 <h1 id="installation">Installation</h1>
 
 <p>Click <a href="https://www.nuget.org/packages/JsonApiDotnetCore/">here</a> for the latest NuGet version.</p>
+<h3 id="cli">CLI</h3>
 <pre><code>dotnet add package JsonApiDotnetCore
-</code></pre><pre><code class="lang-powershell">Install-Package JsonApiDotnetCore
-</code></pre><pre><code class="lang-xml">&lt;ItemGroup&gt;
+</code></pre><h3 id="visual-studio">Visual Studio</h3>
+<pre><code class="lang-powershell">Install-Package JsonApiDotnetCore
+</code></pre><h3 id="csproj">*.csproj</h3>
+<pre><code class="lang-xml">&lt;ItemGroup&gt;
   &lt;!-- Be sure to check NuGet for the latest version # --&gt;
   &lt;PackageReference Include=&quot;JsonApiDotNetCore&quot; Version=&quot;3.0.0&quot; /&gt;
 &lt;/ItemGroup&gt;

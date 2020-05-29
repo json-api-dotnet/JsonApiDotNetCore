@@ -69,7 +69,7 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="sparse-field-selection">Sparse Field Selection</h1>
 
-<p>As an alternative to returning all attributes from a resource, the fields query parameter can be used to select only a subset.
+<p>As an alternative to returning all attributes from a resource, the <code>fields</code> query string parameter can be used to select only a subset.
 This can be used on the resource being requested (top-level), as well as on single-depth related resources that are being included.</p>
 <p>Top-level example:</p>
 <pre><code class="lang-http">GET /articles?fields=title,body HTTP/1.1

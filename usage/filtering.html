@@ -69,7 +69,7 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="filtering">Filtering</h1>
 
-<p>Resources can be filtered by attributes using the <code>filter</code> query parameter.
+<p>Resources can be filtered by attributes using the <code>filter</code> query string parameter.
 By default, all attributes are filterable.
 The filtering strategy we have selected, uses the following form.</p>
 <pre><code>?filter[attribute]=value
@@ -145,7 +145,7 @@ Examples can be found in the table below.</p>
 The following are equivalent query forms to get articles whose ordinal values are between 1-100.</p>
 <pre><code class="lang-http">GET /api/articles?filter[ordinal]=gt:1,lt:100 HTTP/1.1
 </code></pre><pre><code class="lang-http">GET /api/articles?filter[ordinal]=gt:1&amp;filter[ordinal]=lt:100 HTTP/1.1
-</code></pre><p>Aside from filtering on the resource being requested (top-level), filtering on single-depth related resources that are being included can be done too.</p>
+</code></pre><p>Aside from filtering on the resource being requested (top-level), filtering on single-depth related resources can be done too.</p>
 <pre><code class="lang-http">GET /api/articles?include=author&amp;filter[title]=like:marketing&amp;filter[author.lastName]=Smith HTTP/1.1
 </code></pre><p>Due to a <a href="https://github.com/dotnet/efcore/issues/1833">limitation</a> in Entity Framework Core 3.x, filtering does <strong>not</strong> work on nested endpoints:</p>
 <pre><code class="lang-http">GET /api/blogs/1/articles?filter[title]=like:new HTTP/1.1

@@ -95,19 +95,17 @@ public void ConfigureServices(IServiceCollection services)
     services.AddResourceService&lt;FooService&gt;();
 
     // custom repository
-    services.AddScoped&lt;AFooRepository&gt;();
+    services.AddScoped&lt;FooRepository&gt;();
 }
 </code></pre><p>Prior to v3.0.0 you could do it like so:</p>
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
     // custom service
-    services.AddScoped&lt;IResourceRepository&lt;Foo&gt;, FooService&gt;();
+    services.AddScoped&lt;IResourceService&lt;Foo&gt;, FooService&gt;();
 
     // custom repository
-    services.AddScoped&lt;IResourceRepository&lt;Foo&gt;, FooService&gt;();
-
-    // ...
+    services.AddScoped&lt;IResourceRepository&lt;Foo&gt;, FooRepository&gt;();
 }
 </code></pre></article>
           </div>

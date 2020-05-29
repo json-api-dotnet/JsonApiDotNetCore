@@ -81,7 +81,7 @@
         });
     }
 }
-</code></pre><h2 id="client-generated-ids">Client Generated Ids</h2>
+</code></pre><h2 id="client-generated-ids">Client Generated IDs</h2>
 <p>By default, the server will respond with a 403 Forbidden HTTP Status Code if a POST request is received with a client-generated ID.</p>
 <p>However, this can be allowed by setting the AllowClientGeneratedIds flag in the options</p>
 <pre><code class="lang-c#">options.AllowClientGeneratedIds = true;
@@ -92,6 +92,7 @@ You can also include the total number of records in each request. Note that when
 <pre><code class="lang-c#">options.DefaultPageSize = 25;
 options.MaximumPageSize = 100;
 options.MaximumPageNumber = 50;
+options.IncludeTotalRecordCount = true;
 </code></pre><h2 id="relative-links">Relative Links</h2>
 <p>All links are absolute by default. However, you can configure relative links.</p>
 <pre><code class="lang-c#">options.RelativeLinks = true;
