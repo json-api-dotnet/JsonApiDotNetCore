@@ -14,47 +14,76 @@ namespace JsonApiDotNetCore.Internal
     {
         public static object ConvertType(object value, Type type)
         {
-            if (value == null && !CanBeNull(type))
-                throw new FormatException("Cannot convert null to a non-nullable type");
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             if (value == null)
+            {
+                if (!CanContainNull(type))
+                {
+                    throw new FormatException($"Failed to convert 'null' to type '{type.Name}'.");
+                }
+
                 return null;
+            }
 
             Type runtimeType = value.GetType();
+            if (type == runtimeType || type.IsAssignableFrom(runtimeType))
+            {
+                return value;
+            }
+
+            string stringValue = value.ToString();
+            if (string.IsNullOrEmpty(stringValue))
+            {
+                return GetDefaultValue(type);
+            }
+
+            bool isNullableTypeRequested = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+            Type nonNullableType = Nullable.GetUnderlyingType(type) ?? type;
 
             try
             {
-                if (runtimeType == type || type.IsAssignableFrom(runtimeType))
-                    return value;
+                if (nonNullableType == typeof(Guid))
+                {
+                    Guid convertedValue = Guid.Parse(stringValue);
+                    return isNullableTypeRequested ? (Guid?) convertedValue : convertedValue;
+                }
 
-                type = Nullable.GetUnderlyingType(type) ?? type;
+                if (nonNullableType == typeof(DateTimeOffset))
+                {
+                    DateTimeOffset convertedValue = DateTimeOffset.Parse(stringValue);
+                    return isNullableTypeRequested ? (DateTimeOffset?) convertedValue : convertedValue;
+                }
 
-                var stringValue = value.ToString();
+                if (nonNullableType == typeof(TimeSpan))
+                {
+                    TimeSpan convertedValue = TimeSpan.Parse(stringValue);
+                    return isNullableTypeRequested ? (TimeSpan?) convertedValue : convertedValue;
+                }
 
-                if (string.IsNullOrEmpty(stringValue))
-                    return GetDefaultValue(type);
+                if (nonNullableType.IsEnum)
+                {
+                    object convertedValue = Enum.Parse(nonNullableType, stringValue);
 
-                if (type == typeof(Guid))
-                    return Guid.Parse(stringValue);
+                    // https://bradwilson.typepad.com/blog/2008/07/creating-nullab.html
+                    return convertedValue;
+                }
 
-                if (type == typeof(DateTimeOffset))
-                    return DateTimeOffset.Parse(stringValue);
-
-                if (type == typeof(TimeSpan))
-                    return TimeSpan.Parse(stringValue);
-
-                if (type.IsEnum)
-                    return Enum.Parse(type, stringValue);
-
-                return Convert.ChangeType(stringValue, type);
+                // https://bradwilson.typepad.com/blog/2008/07/creating-nullab.html
+                return Convert.ChangeType(stringValue, nonNullableType);
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is FormatException || exception is OverflowException ||
+                                              exception is InvalidCastException || exception is ArgumentException)
             {
-                throw new FormatException($"Failed to convert '{value}' of type '{runtimeType}' to type '{type}'.", exception);
+                throw new FormatException(
+                    $"Failed to convert '{value}' of type '{runtimeType.Name}' to type '{type.Name}'.", exception);
             }
         }
 
-        private static bool CanBeNull(Type type)
+        public static bool CanContainNull(Type type)
         {
             return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
         }
@@ -137,10 +166,10 @@ namespace JsonApiDotNetCore.Internal
         /// Converts a dictionary of AttrAttributes to the underlying PropertyInfo that is referenced
         /// </summary>
         /// <param name="attributes"></param>
-        /// <param name="entities"></param>
-        public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributeDictionary<TValueOut>(List<AttrAttribute> attributes, HashSet<TValueOut> entities)
+        /// <param name="resources"></param>
+        public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributeDictionary<TValueOut>(List<AttrAttribute> attributes, HashSet<TValueOut> resources)
         {
-            return attributes?.ToDictionary(attr => attr.Property, attr => entities);
+            return attributes?.ToDictionary(attr => attr.Property, attr => resources);
         }
 
         /// <summary>
@@ -193,7 +222,7 @@ namespace JsonApiDotNetCore.Internal
         {
             if (collectionType.IsInterface && collectionType.IsGenericType)
             {
-                var genericTypeDefinition = collectionType.GetGenericTypeDefinition();
+                Type genericTypeDefinition = collectionType.GetGenericTypeDefinition();
 
                 if (genericTypeDefinition == typeof(ICollection<>) || genericTypeDefinition == typeof(ISet<>) ||
                     genericTypeDefinition == typeof(IEnumerable<>) || genericTypeDefinition == typeof(IReadOnlyCollection<>))
@@ -222,15 +251,19 @@ namespace JsonApiDotNetCore.Internal
 
         public static object CreateInstance(Type type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             try
             {
                 return Activator.CreateInstance(type);
             }
             catch (Exception exception)
             {
-                throw new InvalidOperationException($"Failed to create an instance of '{type.FullName}' using its default constructor.", exception);
+                throw new InvalidOperationException(
+                    $"Failed to create an instance of '{type.FullName}' using its default constructor.", exception);
             }
         }
 

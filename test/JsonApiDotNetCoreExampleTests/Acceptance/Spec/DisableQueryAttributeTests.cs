@@ -23,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var httpMethod = new HttpMethod("GET");
-            var route = "/api/v1/articles?sort=name";
+            var route = "/api/v1/countries?sort=name";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

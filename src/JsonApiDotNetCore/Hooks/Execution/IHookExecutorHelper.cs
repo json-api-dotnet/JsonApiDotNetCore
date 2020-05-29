@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Hooks
         /// Also caches the retrieves containers so we don't need to reflectively
         /// instantiate them multiple times.
         /// </summary>
-        IResourceHookContainer GetResourceHookContainer(Type targetEntity, ResourceHook hook = ResourceHook.None);
+        IResourceHookContainer GetResourceHookContainer(Type targetResource, ResourceHook hook = ResourceHook.None);
 
         /// <summary>
         /// For a particular ResourceHook and for a given model type, checks if 
@@ -35,28 +35,28 @@ namespace JsonApiDotNetCore.Hooks
         IResourceHookContainer<TResource> GetResourceHookContainer<TResource>(ResourceHook hook = ResourceHook.None) where TResource : class, IIdentifiable;
 
         /// <summary>
-        /// Load the implicitly affected entities from the database for a given set of target target entities and involved relationships
+        /// Load the implicitly affected resources from the database for a given set of target target resources and involved relationships
         /// </summary>
-        /// <returns>The implicitly affected entities by relationship</returns>
-        Dictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(Dictionary<RelationshipAttribute, IEnumerable> leftEntities, IEnumerable existingRightEntities = null);
+        /// <returns>The implicitly affected resources by relationship</returns>
+        Dictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(Dictionary<RelationshipAttribute, IEnumerable> leftResourcesByRelation, IEnumerable existingRightResources = null);
 
         /// <summary>
-        /// For a set of entities, loads current values from the database
+        /// For a set of resources, loads current values from the database
         /// </summary>
-        /// <param name="repositoryEntityType">type of the entities to be loaded</param>
-        /// <param name="entities">The set of entities to load the db values for</param>
+        /// <param name="resourceTypeForRepository">type of the resources to be loaded</param>
+        /// <param name="resources">The set of resources to load the db values for</param>
         /// <param name="hook">The hook in which the db values will be displayed.</param>
-        /// <param name="relationships">Relationships that need to be included on entities.</param>
-        IEnumerable LoadDbValues(Type repositoryEntityType, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] relationships);
+        /// <param name="relationships">Relationships that need to be included on resources.</param>
+        IEnumerable LoadDbValues(Type resourceTypeForRepository, IEnumerable resources, ResourceHook hook, params RelationshipAttribute[] relationships);
 
         /// <summary>
         /// Checks if the display database values option is allowed for the targeted hook, and for 
-        /// a given resource of type <paramref name="entityType"/> checks if this hook is implemented and if the
+        /// a given resource of type <paramref name="resourceType"/> checks if this hook is implemented and if the
         /// database values option is enabled.
         /// </summary>
         /// <returns><c>true</c>, if should load db values, <c>false</c> otherwise.</returns>
-        /// <param name="entityType">Container entity type.</param>
+        /// <param name="resourceType">Container resource type.</param>
         /// <param name="hook">Hook.</param>
-        bool ShouldLoadDbValues(Type entityType, ResourceHook hook);
+        bool ShouldLoadDbValues(Type resourceType, ResourceHook hook);
     }
 }

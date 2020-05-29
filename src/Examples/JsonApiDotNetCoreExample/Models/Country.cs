@@ -1,8 +1,11 @@
+using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
+
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class Country
+    public class Country : Identifiable
     {
-        public int Id { get; set; }
+        [Attr]
         public string Name { get; set; }
     }
 }

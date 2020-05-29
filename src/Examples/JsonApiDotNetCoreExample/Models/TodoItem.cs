@@ -39,7 +39,7 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public DateTime? UpdatedDate { get; set; }
 
-        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowMutate)]
+        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowChange)]
         public string CalculatedValue => "calculated";
 
         [Attr]

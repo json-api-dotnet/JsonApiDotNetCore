@@ -1,7 +1,6 @@
 using Xunit;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using UnitTests.TestModels;
@@ -155,7 +154,7 @@ namespace UnitTests.Serialization.Server
         {
             var parsedChain = new List<RelationshipAttribute>();
             var resourceContext = _resourceGraph.GetResourceContext<Article>();
-            var splitPath = chain.Split(QueryConstants.DOT);
+            var splitPath = chain.Split('.');
             foreach (var requestedRelationship in splitPath)
             {
                 var relationship = resourceContext.Relationships.Single(r => r.PublicName == requestedRelationship);

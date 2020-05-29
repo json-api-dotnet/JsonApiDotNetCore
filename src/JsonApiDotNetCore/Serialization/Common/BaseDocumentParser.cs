@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <summary>
-        /// This method is called each time an <paramref name="entity"/> is constructed
+        /// This method is called each time an <paramref name="resource"/> is constructed
         /// from the serialized content, which is used to do additional processing
         /// depending on the type of deserializers.
         /// </summary>
@@ -41,10 +41,10 @@ namespace JsonApiDotNetCore.Serialization
         /// See the implementation of this method in <see cref="ResponseDeserializer"/>
         /// and <see cref="RequestDeserializer"/> for examples.
         /// </remarks>
-        /// <param name="entity">The entity that was constructed from the document's body</param>
+        /// <param name="resource">The resource that was constructed from the document's body</param>
         /// <param name="field">The metadata for the exposed field</param>
-        /// <param name="data">Relationship data for <paramref name="entity"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
-        protected abstract void AfterProcessField(IIdentifiable entity, ResourceFieldAttribute field, RelationshipEntry data = null);
+        /// <param name="data">Relationship data for <paramref name="resource"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
+        protected abstract void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null);
 
         /// <inheritdoc/>
         protected object Deserialize(string body)
@@ -64,54 +64,54 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <summary>
-        /// Sets the attributes on a parsed entity.
+        /// Sets the attributes on a parsed resource.
         /// </summary>
-        /// <param name="entity">The parsed entity</param>
+        /// <param name="resource">The parsed resource</param>
         /// <param name="attributeValues">Attributes and their values, as in the serialized content</param>
-        /// <param name="attributes">Exposed attributes for <paramref name="entity"/></param>
+        /// <param name="attributes">Exposed attributes for <paramref name="resource"/></param>
         /// <returns></returns>
-        protected virtual IIdentifiable SetAttributes(IIdentifiable entity, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
+        protected virtual IIdentifiable SetAttributes(IIdentifiable resource, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
         {
             if (attributeValues == null || attributeValues.Count == 0)
-                return entity;
+                return resource;
 
             foreach (var attr in attributes)
             {
                 if (attributeValues.TryGetValue(attr.PublicName, out object newValue))
                 {
                     var convertedValue = ConvertAttrValue(newValue, attr.Property.PropertyType);
-                    attr.SetValue(entity, convertedValue);
-                    AfterProcessField(entity, attr);
+                    attr.SetValue(resource, convertedValue);
+                    AfterProcessField(resource, attr);
                 }
             }
 
-            return entity;
+            return resource;
         }
 
         /// <summary>
-        /// Sets the relationships on a parsed entity
+        /// Sets the relationships on a parsed resource
         /// </summary>
-        /// <param name="entity">The parsed entity</param>
+        /// <param name="resource">The parsed resource</param>
         /// <param name="relationshipsValues">Relationships and their values, as in the serialized content</param>
-        /// <param name="relationshipAttributes">Exposed relationships for <paramref name="entity"/></param>
+        /// <param name="relationshipAttributes">Exposed relationships for <paramref name="resource"/></param>
         /// <returns></returns>
-        protected virtual IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
+        protected virtual IIdentifiable SetRelationships(IIdentifiable resource, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
         {
             if (relationshipsValues == null || relationshipsValues.Count == 0)
-                return entity;
+                return resource;
 
-            var entityProperties = entity.GetType().GetProperties();
+            var resourceProperties = resource.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
                 if (!relationshipsValues.TryGetValue(attr.PublicName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
                     continue;
 
                 if (attr is HasOneAttribute hasOneAttribute)
-                    SetHasOneRelationship(entity, entityProperties, hasOneAttribute, relationshipData);
+                    SetHasOneRelationship(resource, resourceProperties, hasOneAttribute, relationshipData);
                 else
-                    SetHasManyRelationship(entity, (HasManyAttribute)attr, relationshipData);
+                    SetHasManyRelationship(resource, (HasManyAttribute)attr, relationshipData);
             }
-            return entity;
+            return resource;
         }
 
         private JToken LoadJToken(string body)
@@ -131,7 +131,7 @@ namespace JsonApiDotNetCore.Serialization
         /// and sets its attributes and relationships
         /// </summary>
         /// <param name="data"></param>
-        /// <returns>The parsed entity</returns>
+        /// <returns>The parsed resource</returns>
         private IIdentifiable ParseResourceObject(ResourceObject data)
         {
             var resourceContext = _contextProvider.GetResourceContext(data.Type);
@@ -139,31 +139,31 @@ namespace JsonApiDotNetCore.Serialization
             {
                 throw new InvalidRequestBodyException("Payload includes unknown resource type.",
                     $"The resource '{data.Type}' is not registered on the resource graph. " +
-                    "If you are using Entity Framework, make sure the DbSet matches the expected resource name. " +
+                    "If you are using Entity Framework Core, make sure the DbSet matches the expected resource name. " +
                     "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.", null);
             }
 
-            var entity = (IIdentifiable)_resourceFactory.CreateInstance(resourceContext.ResourceType);
+            var resource = (IIdentifiable)_resourceFactory.CreateInstance(resourceContext.ResourceType);
 
-            entity = SetAttributes(entity, data.Attributes, resourceContext.Attributes);
-            entity = SetRelationships(entity, data.Relationships, resourceContext.Relationships);
+            resource = SetAttributes(resource, data.Attributes, resourceContext.Attributes);
+            resource = SetRelationships(resource, data.Relationships, resourceContext.Relationships);
 
             if (data.Id != null)
-                entity.StringId = data.Id;
+                resource.StringId = data.Id;
 
-            return entity;
+            return resource;
         }
 
         /// <summary>
-        /// Sets a HasOne relationship on a parsed entity. If present, also
+        /// Sets a HasOne relationship on a parsed resource. If present, also
         /// populates the foreign key.
         /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="entityProperties"></param>
+        /// <param name="resource"></param>
+        /// <param name="resourceProperties"></param>
         /// <param name="attr"></param>
         /// <param name="relationshipData"></param>
-        private void SetHasOneRelationship(IIdentifiable entity,
-            PropertyInfo[] entityProperties,
+        private void SetHasOneRelationship(IIdentifiable resource,
+            PropertyInfo[] resourceProperties,
             HasOneAttribute attr,
             RelationshipEntry relationshipData)
         {
@@ -171,25 +171,25 @@ namespace JsonApiDotNetCore.Serialization
             var relatedId = rio?.Id;
 
             // this does not make sense in the following case: if we're setting the dependent of a one-to-one relationship, IdentifiablePropertyName should be null.
-            var foreignKeyProperty = entityProperties.FirstOrDefault(p => p.Name == attr.IdentifiablePropertyName);
+            var foreignKeyProperty = resourceProperties.FirstOrDefault(p => p.Name == attr.IdentifiablePropertyName);
 
             if (foreignKeyProperty != null)
-                // there is a FK from the current entity pointing to the related object,
+                // there is a FK from the current resource pointing to the related object,
                 // i.e. we're populating the relationship from the dependent side.
-                SetForeignKey(entity, foreignKeyProperty, attr, relatedId);
+                SetForeignKey(resource, foreignKeyProperty, attr, relatedId);
 
-            SetNavigation(entity, attr, relatedId);
+            SetNavigation(resource, attr, relatedId);
 
             // depending on if this base parser is used client-side or server-side,
             // different additional processing per field needs to be executed.
-            AfterProcessField(entity, attr, relationshipData);
+            AfterProcessField(resource, attr, relationshipData);
         }
 
         /// <summary>
         /// Sets the dependent side of a HasOne relationship, which means that a
         /// foreign key also will to be populated.
         /// </summary>
-        private void SetForeignKey(IIdentifiable entity, PropertyInfo foreignKey, HasOneAttribute attr, string id)
+        private void SetForeignKey(IIdentifiable resource, PropertyInfo foreignKey, HasOneAttribute attr, string id)
         {
             bool foreignKeyPropertyIsNullableType = Nullable.GetUnderlyingType(foreignKey.PropertyType) != null
                 || foreignKey.PropertyType == typeof(string);
@@ -201,24 +201,24 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             var typedId = TypeHelper.ConvertStringIdToTypedId(attr.Property.PropertyType, id, _resourceFactory);
-            foreignKey.SetValue(entity, typedId);
+            foreignKey.SetValue(resource, typedId);
         }
 
         /// <summary>
         /// Sets the principal side of a HasOne relationship, which means no
         /// foreign key is involved
         /// </summary>
-        private void SetNavigation(IIdentifiable entity, HasOneAttribute attr, string relatedId)
+        private void SetNavigation(IIdentifiable resource, HasOneAttribute attr, string relatedId)
         {
             if (relatedId == null)
             {
-                attr.SetValue(entity, null, _resourceFactory);
+                attr.SetValue(resource, null, _resourceFactory);
             }
             else
             {
                 var relatedInstance = (IIdentifiable)_resourceFactory.CreateInstance(attr.RightType);
                 relatedInstance.StringId = relatedId;
-                attr.SetValue(entity, relatedInstance, _resourceFactory);
+                attr.SetValue(resource, relatedInstance, _resourceFactory);
             }
         }
 
@@ -226,7 +226,7 @@ namespace JsonApiDotNetCore.Serialization
         /// Sets a HasMany relationship.
         /// </summary>
         private void SetHasManyRelationship(
-            IIdentifiable entity,
+            IIdentifiable resource,
             HasManyAttribute attr,
             RelationshipEntry relationshipData)
         {
@@ -240,10 +240,10 @@ namespace JsonApiDotNetCore.Serialization
                 });
 
                 var convertedCollection = relatedResources.CopyToTypedCollection(attr.Property.PropertyType);
-                attr.SetValue(entity, convertedCollection, _resourceFactory);
+                attr.SetValue(resource, convertedCollection, _resourceFactory);
             }
 
-            AfterProcessField(entity, attr, relationshipData);
+            AfterProcessField(resource, attr, relationshipData);
         }
 
         private object ConvertAttrValue(object newValue, Type targetType)

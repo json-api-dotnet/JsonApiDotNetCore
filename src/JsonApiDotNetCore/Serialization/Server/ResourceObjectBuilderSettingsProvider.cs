@@ -1,5 +1,5 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Internal.QueryStrings;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -9,19 +9,19 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// </summary>
     public sealed class ResourceObjectBuilderSettingsProvider : IResourceObjectBuilderSettingsProvider
     {
-        private readonly IDefaultsService _defaultsService;
-        private readonly INullsService _nullsService;
+        private readonly IDefaultsQueryStringParameterReader _defaultsReader;
+        private readonly INullsQueryStringParameterReader _nullsReader;
 
-        public ResourceObjectBuilderSettingsProvider(IDefaultsService defaultsService, INullsService nullsService)
+        public ResourceObjectBuilderSettingsProvider(IDefaultsQueryStringParameterReader defaultsReader, INullsQueryStringParameterReader nullsReader)
         {
-            _defaultsService = defaultsService;
-            _nullsService = nullsService;
+            _defaultsReader = defaultsReader;
+            _nullsReader = nullsReader;
         }
 
         /// <inheritdoc/>
         public ResourceObjectBuilderSettings Get()
         {
-            return new ResourceObjectBuilderSettings(_nullsService.SerializerNullValueHandling, _defaultsService.SerializerDefaultValueHandling);
+            return new ResourceObjectBuilderSettings(_nullsReader.SerializerNullValueHandling, _defaultsReader.SerializerDefaultValueHandling);
         }
     }
 }

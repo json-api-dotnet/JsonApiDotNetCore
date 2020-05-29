@@ -45,7 +45,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeDelete(new List<Person> { person }, ResourcePipeline.Delete);
 
             // Assert
-            personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IEntityHashSet<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());
+            personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IResourceHashSet<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<TodoItem>>(rh => CheckImplicitTodos(rh)), ResourcePipeline.Delete), Times.Once());
             passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Passport>>(rh => CheckImplicitPassports(rh)), ResourcePipeline.Delete), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
@@ -82,7 +82,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeDelete(new List<Person> { person }, ResourcePipeline.Delete);
 
             // Assert
-            personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IEntityHashSet<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());
+            personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IResourceHashSet<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
 

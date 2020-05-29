@@ -71,11 +71,11 @@ namespace JsonApiDotNetCore.Models.Annotation
         /// Returns null if the attribute does not belong to the
         /// provided object.
         /// </summary>
-        public object GetValue(object entity)
+        public object GetValue(object resource)
         {
-            if (entity == null)
+            if (resource == null)
             {
-                throw new ArgumentNullException(nameof(entity));
+                throw new ArgumentNullException(nameof(resource));
             }
 
             if (Property.GetMethod == null)
@@ -83,17 +83,17 @@ namespace JsonApiDotNetCore.Models.Annotation
                 throw new InvalidOperationException($"Property '{Property.DeclaringType?.Name}.{Property.Name}' is write-only.");
             }
 
-            return Property.GetValue(entity);
+            return Property.GetValue(resource);
         }
 
         /// <summary>
         /// Sets the value of the attribute on the given object.
         /// </summary>
-        public void SetValue(object entity, object newValue)
+        public void SetValue(object resource, object newValue)
         {
-            if (entity == null)
+            if (resource == null)
             {
-                throw new ArgumentNullException(nameof(entity));
+                throw new ArgumentNullException(nameof(resource));
             }
 
             if (Property.SetMethod == null)
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.Models.Annotation
             }
 
             var convertedValue = TypeHelper.ConvertType(newValue, Property.PropertyType);
-            Property.SetValue(entity, convertedValue);
+            Property.SetValue(resource, convertedValue);
         }
     }
 }

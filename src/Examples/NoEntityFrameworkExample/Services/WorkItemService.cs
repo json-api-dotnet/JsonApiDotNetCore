@@ -21,10 +21,10 @@ namespace NoEntityFrameworkExample.Services
             _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
         }
 
-        public async Task<IEnumerable<WorkItem>> GetAsync()
+        public async Task<IReadOnlyCollection<WorkItem>> GetAsync()
         {
-            return await QueryAsync(async connection =>
-                await connection.QueryAsync<WorkItem>(@"select * from ""WorkItems"""));
+            return (await QueryAsync(async connection =>
+                await connection.QueryAsync<WorkItem>(@"select * from ""WorkItems"""))).ToList();
         }
 
         public async Task<WorkItem> GetAsync(int id)
@@ -35,22 +35,22 @@ namespace NoEntityFrameworkExample.Services
             return query.Single();
         }
 
-        public Task<object> GetRelationshipAsync(int id, string relationshipName)
+        public Task<object> GetSecondaryAsync(int id, string relationshipName)
         {
             throw new NotImplementedException();
         }
 
-        public Task<WorkItem> GetRelationshipsAsync(int id, string relationshipName)
+        public Task<WorkItem> GetRelationshipAsync(int id, string relationshipName)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<WorkItem> CreateAsync(WorkItem entity)
+        public async Task<WorkItem> CreateAsync(WorkItem resource)
         {
             return (await QueryAsync(async connection =>
             {
                 var query = @"insert into ""WorkItems"" (""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId"") values (@description, @isLocked, @ordinal, @uniqueId) returning ""Id"", ""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId""";
-                var result = await connection.QueryAsync<WorkItem>(query, new { description = entity.Title, ordinal = entity.DurationInHours, uniqueId = entity.ProjectId, isLocked = entity.IsBlocked });
+                var result = await connection.QueryAsync<WorkItem>(query, new { description = resource.Title, ordinal = resource.DurationInHours, uniqueId = resource.ProjectId, isLocked = resource.IsBlocked });
                 return result;
             })).SingleOrDefault();
         }
@@ -61,12 +61,12 @@ namespace NoEntityFrameworkExample.Services
                 await connection.QueryAsync<WorkItem>(@"delete from ""WorkItems"" where ""Id""=@id", new { id }));
         }
 
-        public Task<WorkItem> UpdateAsync(int id, WorkItem entity)
+        public Task<WorkItem> UpdateAsync(int id, WorkItem requestResource)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateRelationshipsAsync(int id, string relationshipName, object relationships)
+        public Task UpdateRelationshipAsync(int id, string relationshipName, object relationships)
         {
             throw new NotImplementedException();
         }

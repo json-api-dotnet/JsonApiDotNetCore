@@ -1,18 +1,15 @@
-﻿using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Hooks
 {
-
     /// <summary>
     /// A singleton service for a particular TResource that stores a field of 
     /// enums that represents which resource hooks have been implemented for that
-    /// particular entity.
+    /// particular resource.
     /// </summary>
     public interface IHooksDiscovery<TResource> : IHooksDiscovery where TResource : class, IIdentifiable
     {
-
     }
-
 
     public interface IHooksDiscovery
     {
@@ -24,5 +21,4 @@ namespace JsonApiDotNetCore.Hooks
         ResourceHook[] DatabaseValuesEnabledHooks { get; }
         ResourceHook[] DatabaseValuesDisabledHooks { get; }
     }
-
 }

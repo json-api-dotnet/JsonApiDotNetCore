@@ -33,11 +33,11 @@ namespace JsonApiDotNetCore.Controllers
         public override async Task<IActionResult> GetAsync(TId id) => await base.GetAsync(id);
 
         [HttpGet("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
-            => await base.GetRelationshipsAsync(id, relationshipName);
-
-        [HttpGet("{id}/{relationshipName}")]
         public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
             => await base.GetRelationshipAsync(id, relationshipName);
+
+        [HttpGet("{id}/{relationshipName}")]
+        public override async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName)
+            => await base.GetSecondaryAsync(id, relationshipName);
     }
 }

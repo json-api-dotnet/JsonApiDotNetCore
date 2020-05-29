@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    [DisableQuery(StandardQueryStringParameters.Sort | StandardQueryStringParameters.Page)]
     public sealed class ArticlesController : JsonApiController<Article>
     {
         public ArticlesController(

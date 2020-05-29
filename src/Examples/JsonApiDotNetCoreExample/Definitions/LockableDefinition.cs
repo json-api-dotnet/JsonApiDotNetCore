@@ -13,9 +13,9 @@ namespace JsonApiDotNetCoreExample.Definitions
     {
         protected LockableDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
-        protected void DisallowLocked(IEnumerable<T> entities)
+        protected void DisallowLocked(IEnumerable<T> resources)
         {
-            foreach (var e in entities ?? Enumerable.Empty<T>())
+            foreach (var e in resources ?? Enumerable.Empty<T>())
             {
                 if (e.IsLocked)
                 {

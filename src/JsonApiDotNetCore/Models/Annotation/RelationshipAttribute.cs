@@ -1,6 +1,6 @@
 using System;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCore.Models.Annotation
 {
@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Models.Annotation
         public string InverseNavigation { get; internal set; }
 
         /// <summary>
-        /// The internal navigation property path to the related entity.
+        /// The internal navigation property path to the related resource.
         /// </summary>
         /// <remarks>
         /// In all cases except the HasManyThrough relationships, this will just be the property name.
@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Models.Annotation
         public virtual string RelationshipPath => Property.Name;
 
         /// <summary>
-        /// The related entity type. This does not necessarily match the navigation property type.
+        /// The related resource type. This does not necessarily match the navigation property type.
         /// In the case of a HasMany relationship, this value will be the generic argument type.
         /// </summary>
         /// <example>
@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Models.Annotation
         public Type RightType { get; internal set; }
 
         /// <summary>
-        /// The parent entity type. This is the type of the class in which this attribute was used.
+        /// The parent resource type. This is the type of the class in which this attribute was used.
         /// </summary>
         public Type LeftType { get; internal set; }
 
@@ -36,15 +36,15 @@ namespace JsonApiDotNetCore.Models.Annotation
         /// Configures which links to show in the <see cref="RelationshipLinks"/>
         /// object for this relationship.
         /// </summary>
-        public Link RelationshipLinks { get; }
+        public Links RelationshipLinks { get; }
 
         public bool CanInclude { get; }
 
-        protected RelationshipAttribute(string publicName, Link relationshipLinks, bool canInclude)
+        protected RelationshipAttribute(string publicName, Links relationshipLinks, bool canInclude)
             : base(publicName)
         {
-            if (relationshipLinks == Link.Paging)
-                throw new JsonApiSetupException($"{Link.Paging:g} not allowed for argument {nameof(relationshipLinks)}");
+            if (relationshipLinks == Links.Paging)
+                throw new JsonApiSetupException($"{Links.Paging:g} not allowed for argument {nameof(relationshipLinks)}");
 
             RelationshipLinks = relationshipLinks;
             CanInclude = canInclude;
@@ -53,22 +53,17 @@ namespace JsonApiDotNetCore.Models.Annotation
         /// <summary>
         /// Gets the value of the resource property this attributes was declared on.
         /// </summary>
-        public virtual object GetValue(object entity)
+        public virtual object GetValue(object resource)
         {
-            return Property.GetValue(entity);
+            return Property.GetValue(resource);
         }
 
         /// <summary>
         /// Sets the value of the resource property this attributes was declared on.
         /// </summary>
-        public virtual void SetValue(object entity, object newValue, IResourceFactory resourceFactory)
+        public virtual void SetValue(object resource, object newValue, IResourceFactory resourceFactory)
         {
-            Property.SetValue(entity, newValue);
-        }
-
-        public override string ToString()
-        {
-            return base.ToString() + ":" + PublicName;
+            Property.SetValue(resource, newValue);
         }
 
         public override bool Equals(object obj)

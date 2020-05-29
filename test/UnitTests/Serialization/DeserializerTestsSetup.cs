@@ -27,24 +27,24 @@ namespace UnitTests.Serialization
                 return base.Deserialize(body);
             }
 
-            protected override void AfterProcessField(IIdentifiable entity, ResourceFieldAttribute field, RelationshipEntry data = null) { }
+            protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null) { }
         }
 
-        protected Document CreateDocumentWithRelationships(string mainType, string relationshipMemberName, string relatedType = null, bool isToManyData = false)
+        protected Document CreateDocumentWithRelationships(string primaryType, string relationshipMemberName, string relatedType = null, bool isToManyData = false)
         {
-            var content = CreateDocumentWithRelationships(mainType);
+            var content = CreateDocumentWithRelationships(primaryType);
             content.SingleData.Relationships.Add(relationshipMemberName, CreateRelationshipData(relatedType, isToManyData));
             return content;
         }
 
-        protected Document CreateDocumentWithRelationships(string mainType)
+        protected Document CreateDocumentWithRelationships(string primaryType)
         {
             return new Document
             {
                 Data = new ResourceObject
                 {
                     Id = "1",
-                    Type = mainType,
+                    Type = primaryType,
                     Relationships = new Dictionary<string, RelationshipEntry>()
                 }
             };

@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Xunit;
 
 namespace UnitTests.Builders
@@ -6,31 +6,31 @@ namespace UnitTests.Builders
     public sealed class LinkTests
     {
         [Theory]
-        [InlineData(Link.All, Link.Self, true)]
-        [InlineData(Link.All, Link.Related, true)]
-        [InlineData(Link.All, Link.Paging, true)]
-        [InlineData(Link.None, Link.Self, false)]
-        [InlineData(Link.None, Link.Related, false)]
-        [InlineData(Link.None, Link.Paging, false)]
-        [InlineData(Link.NotConfigured, Link.Self, false)]
-        [InlineData(Link.NotConfigured, Link.Related, false)]
-        [InlineData(Link.NotConfigured, Link.Paging, false)]
-        [InlineData(Link.Self, Link.Self, true)]
-        [InlineData(Link.Self, Link.Related, false)]
-        [InlineData(Link.Self, Link.Paging, false)]
-        [InlineData(Link.Self, Link.None, false)]
-        [InlineData(Link.Self, Link.NotConfigured, false)]
-        [InlineData(Link.Related, Link.Self, false)]
-        [InlineData(Link.Related, Link.Related, true)]
-        [InlineData(Link.Related, Link.Paging, false)]
-        [InlineData(Link.Related, Link.None, false)]
-        [InlineData(Link.Related, Link.NotConfigured, false)]
-        [InlineData(Link.Paging, Link.Self, false)]
-        [InlineData(Link.Paging, Link.Related, false)]
-        [InlineData(Link.Paging, Link.Paging, true)]
-        [InlineData(Link.Paging, Link.None, false)]
-        [InlineData(Link.Paging, Link.NotConfigured, false)]
-        public void LinkHasFlag_BaseLinkAndCheckLink_ExpectedResult(Link baseLink, Link checkLink, bool equal)
+        [InlineData(Links.All, Links.Self, true)]
+        [InlineData(Links.All, Links.Related, true)]
+        [InlineData(Links.All, Links.Paging, true)]
+        [InlineData(Links.None, Links.Self, false)]
+        [InlineData(Links.None, Links.Related, false)]
+        [InlineData(Links.None, Links.Paging, false)]
+        [InlineData(Links.NotConfigured, Links.Self, false)]
+        [InlineData(Links.NotConfigured, Links.Related, false)]
+        [InlineData(Links.NotConfigured, Links.Paging, false)]
+        [InlineData(Links.Self, Links.Self, true)]
+        [InlineData(Links.Self, Links.Related, false)]
+        [InlineData(Links.Self, Links.Paging, false)]
+        [InlineData(Links.Self, Links.None, false)]
+        [InlineData(Links.Self, Links.NotConfigured, false)]
+        [InlineData(Links.Related, Links.Self, false)]
+        [InlineData(Links.Related, Links.Related, true)]
+        [InlineData(Links.Related, Links.Paging, false)]
+        [InlineData(Links.Related, Links.None, false)]
+        [InlineData(Links.Related, Links.NotConfigured, false)]
+        [InlineData(Links.Paging, Links.Self, false)]
+        [InlineData(Links.Paging, Links.Related, false)]
+        [InlineData(Links.Paging, Links.Paging, true)]
+        [InlineData(Links.Paging, Links.None, false)]
+        [InlineData(Links.Paging, Links.NotConfigured, false)]
+        public void LinkHasFlag_BaseLinkAndCheckLink_ExpectedResult(Links baseLink, Links checkLink, bool equal)
         {
             Assert.Equal(equal, baseLink.HasFlag(checkLink));
         }

@@ -12,15 +12,15 @@ namespace JsonApiDotNetCore.Hooks
    internal interface IRelationshipsFromPreviousLayer
     {
         /// <summary>
-        /// Grouped by relationship to the previous layer, gets all the entities of the current layer
+        /// Grouped by relationship to the previous layer, gets all the resources of the current layer
         /// </summary>
-        /// <returns>The right side entities.</returns>
-        Dictionary<RelationshipAttribute, IEnumerable> GetRightEntities();
+        /// <returns>The right side resources.</returns>
+        Dictionary<RelationshipAttribute, IEnumerable> GetRightResources();
         /// <summary>
-        /// Grouped by relationship to the previous layer, gets all the entities of the previous layer
+        /// Grouped by relationship to the previous layer, gets all the resources of the previous layer
         /// </summary>
-        /// <returns>The right side entities.</returns>
-        Dictionary<RelationshipAttribute, IEnumerable> GetLeftEntities();
+        /// <returns>The right side resources.</returns>
+        Dictionary<RelationshipAttribute, IEnumerable> GetLeftResources();
     }
 
     internal sealed class RelationshipsFromPreviousLayer<TRightResource> : IRelationshipsFromPreviousLayer, IEnumerable<RelationshipGroup<TRightResource>> where TRightResource : class, IIdentifiable
@@ -33,15 +33,15 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public Dictionary<RelationshipAttribute, IEnumerable> GetRightEntities()
+        public Dictionary<RelationshipAttribute, IEnumerable> GetRightResources()
         {
-            return _collection.ToDictionary(rg => rg.Proxy.Attribute, rg => (IEnumerable)rg.RightEntities);
+            return _collection.ToDictionary(rg => rg.Proxy.Attribute, rg => (IEnumerable)rg.RightResources);
         }
 
         /// <inheritdoc/>
-        public Dictionary<RelationshipAttribute, IEnumerable> GetLeftEntities()
+        public Dictionary<RelationshipAttribute, IEnumerable> GetLeftResources()
         {
-            return _collection.ToDictionary(rg => rg.Proxy.Attribute, rg => (IEnumerable)rg.LeftEntities);
+            return _collection.ToDictionary(rg => rg.Proxy.Attribute, rg => (IEnumerable)rg.LeftResources);
         }
 
         public IEnumerator<RelationshipGroup<TRightResource>> GetEnumerator()

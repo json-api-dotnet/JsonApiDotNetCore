@@ -40,7 +40,7 @@ public class Person : Identifiable<int>
 
 Currently, Entity Framework Core [does not support](https://github.com/aspnet/EntityFrameworkCore/issues/1368) many-to-many relationships without a join entity.
 For this reason, we have decided to fill this gap by allowing applications to declare a relationship as `HasManyThrough`.
-JsonApiDotNetCore will expose this attribute to the client the same way as any other `HasMany` attribute.
+JsonApiDotNetCore will expose this relationship to the client the same way as any other `HasMany` attribute.
 However, under the covers it will use the join type and Entity Framework Core's APIs to get and set the relationship.
 
 ```c#
@@ -59,7 +59,7 @@ public class Article : Identifiable
 
 _since v4.0_
 
-Your entity may contain a calculated property, whose value depends on a navigation property that is not exposed as a json:api resource.
+Your resource may expose a calculated property, whose value depends on a related entity that is not exposed as a json:api resource.
 So for the calculated property to be evaluated correctly, the related entity must always be retrieved. You can achieve that using `EagerLoad`, for example:
 
 ```c#

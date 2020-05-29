@@ -1,13 +1,13 @@
 # Layer Overview
 
-By default, data retrieval is distributed across 3 layers:
+By default, data retrieval is distributed across three layers:
 
 ```
 JsonApiController (required)
 
-+-- DefaultResourceService: IResourceService
++-- JsonApiResourceService : IResourceService
 
-     +-- DefaultResourceRepository: IResourceRepository
+     +-- EntityFrameworkCoreRepository : IResourceRepository
 ```
 
 Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible to keep the controllers free of unnecessary logic.
@@ -15,7 +15,7 @@ You can use the following as a general rule of thumb for where to put business l
 
 - `Controller`: simple validation logic that should result in the return of specific HTTP status codes, such as model validation
 - `IResourceService`: advanced business logic and replacement of data access mechanisms
-- `IResourceRepository`: custom logic that builds on the Entity Framework Core APIs, such as Authorization of data
+- `IResourceRepository`: custom logic that builds on the Entity Framework Core APIs
 
 ## Replacing Services
 

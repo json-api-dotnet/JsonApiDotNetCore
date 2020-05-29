@@ -40,15 +40,15 @@ namespace JsonApiDotNetCoreExample.Controllers
         public override async Task<IActionResult> GetAsync(int id) => await base.GetAsync(id);
 
         [HttpGet("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> GetRelationshipsAsync(int id, string relationshipName)
-            => await base.GetRelationshipsAsync(id, relationshipName);
-
-        [HttpGet("{id}/{relationshipName}")]
         public override async Task<IActionResult> GetRelationshipAsync(int id, string relationshipName)
             => await base.GetRelationshipAsync(id, relationshipName);
 
+        [HttpGet("{id}/{relationshipName}")]
+        public override async Task<IActionResult> GetSecondaryAsync(int id, string relationshipName)
+            => await base.GetSecondaryAsync(id, relationshipName);
+
         [HttpPost]
-        public override async Task<IActionResult> PostAsync(TodoItem entity)
+        public override async Task<IActionResult> PostAsync(TodoItem resource)
         {
             await Task.Yield();
 
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpPatch("{id}")]
-        public override async Task<IActionResult> PatchAsync(int id, [FromBody] TodoItem entity)
+        public override async Task<IActionResult> PatchAsync(int id, [FromBody] TodoItem resource)
         {
             await Task.Yield();
 
@@ -67,9 +67,9 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> PatchRelationshipsAsync(
+        public override async Task<IActionResult> PatchRelationshipAsync(
             int id, string relationshipName, [FromBody] object relationships)
-            => await base.PatchRelationshipsAsync(id, relationshipName, relationships);
+            => await base.PatchRelationshipAsync(id, relationshipName, relationships);
 
         [HttpDelete("{id}")]
         public override async Task<IActionResult> DeleteAsync(int id)

@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Internal
         /// <inheritdoc />
         public void Resolve()
         {
-            if (EntityFrameworkCoreIsEnabled())
+            if (IsEntityFrameworkCoreEnabled())
             {
                 DbContext context = _resolver.GetContext();
 
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// If EF Core is not being used, we're expecting the resolver to not be registered.
         /// </summary>
-        /// <returns><c>true</c>, if entity framework core was enabled, <c>false</c> otherwise.</returns>
-        private bool EntityFrameworkCoreIsEnabled() => _resolver != null;
+        /// <returns><c>true</c>, if Entity Framework Core was enabled, <c>false</c> otherwise.</returns>
+        private bool IsEntityFrameworkCoreEnabled() => _resolver != null;
     }
 }

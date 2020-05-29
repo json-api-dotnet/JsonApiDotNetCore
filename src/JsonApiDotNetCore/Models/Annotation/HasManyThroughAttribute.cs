@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCore.Models.Annotation
 {
@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Models.Annotation
     /// <example>
     /// In the following example, we expose a relationship named "tags"
     /// through the navigation property `ArticleTags`.
-    /// The `Tags` property is decorated as `NotMapped` so that EF does not try
+    /// The `Tags` property is decorated with `NotMapped` so that EF does not try
     /// to map this to a database relationship.
     /// <code><![CDATA[
     /// [NotMapped]
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Models.Annotation
         public Type ThroughType { get; internal set; }
 
         /// <summary>
-        /// The navigation property back to the parent resource from the join type.
+        /// The navigation property back to the parent resource from the through type.
         /// </summary>
         /// 
         /// <example>
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Models.Annotation
         public PropertyInfo LeftProperty { get; internal set; }
 
         /// <summary>
-        /// The id property back to the parent resource from the join type.
+        /// The id property back to the parent resource from the through type.
         /// </summary>
         /// 
         /// <example>
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCore.Models.Annotation
         public PropertyInfo LeftIdProperty { get; internal set; }
 
         /// <summary>
-        /// The navigation property to the related resource from the join type.
+        /// The navigation property to the related resource from the through type.
         /// </summary>
         /// 
         /// <example>
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Models.Annotation
         public PropertyInfo RightProperty { get; internal set; }
 
         /// <summary>
-        /// The id property to the related resource from the join type.
+        /// The id property to the related resource from the through type.
         /// </summary>
         /// 
         /// <example>
@@ -108,7 +108,7 @@ namespace JsonApiDotNetCore.Models.Annotation
         public PropertyInfo RightIdProperty { get; internal set; }
 
         /// <summary>
-        /// The join entity property on the parent resource.
+        /// The join resource property on the parent resource.
         /// </summary>
         /// 
         /// <example>
@@ -134,15 +134,15 @@ namespace JsonApiDotNetCore.Models.Annotation
         /// </summary>
         /// 
         /// <param name="throughPropertyName">The name of the navigation property that will be used to get the HasMany relationship</param>
-        /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
+        /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Links.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// 
         /// <example>
         /// <code>
-        /// [HasManyThrough(nameof(ArticleTags), relationshipLinks: Link.All, canInclude: true)]
+        /// [HasManyThrough(nameof(ArticleTags), relationshipLinks: Links.All, canInclude: true)]
         /// </code>
         /// </example>
-        public HasManyThroughAttribute(string throughPropertyName, Link relationshipLinks = Link.All, bool canInclude = true)
+        public HasManyThroughAttribute(string throughPropertyName, Links relationshipLinks = Links.All, bool canInclude = true)
         : base(null, relationshipLinks, canInclude)
         {
             ThroughPropertyName = throughPropertyName;
@@ -154,58 +154,58 @@ namespace JsonApiDotNetCore.Models.Annotation
         /// 
         /// <param name="publicName">The relationship name as exposed by the API</param>
         /// <param name="throughPropertyName">The name of the navigation property that will be used to get the HasMany relationship</param>
-        /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
+        /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Links.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// 
         /// <example>
         /// <code>
-        /// [HasManyThrough("tags", nameof(ArticleTags), relationshipLinks: Link.All, canInclude: true)]
+        /// [HasManyThrough("tags", nameof(ArticleTags), relationshipLinks: Links.All, canInclude: true)]
         /// </code>
         /// </example>
-        public HasManyThroughAttribute(string publicName, string throughPropertyName, Link relationshipLinks = Link.All, bool canInclude = true)
+        public HasManyThroughAttribute(string publicName, string throughPropertyName, Links relationshipLinks = Links.All, bool canInclude = true)
         : base(publicName, relationshipLinks, canInclude)
         {
             ThroughPropertyName = throughPropertyName;
         }
 
         /// <summary>
-        /// Traverses through the provided entity and returns the 
-        /// value of the relationship on the other side of a join entity
+        /// Traverses through the provided resource and returns the 
+        /// value of the relationship on the other side of a through type
         /// (e.g. Articles.ArticleTags.Tag).
         /// </summary>
-        public override object GetValue(object entity)
+        public override object GetValue(object resource)
         {
-            IEnumerable joinEntities = (IEnumerable)ThroughProperty.GetValue(entity) ?? Array.Empty<object>();
+            IEnumerable throughResources = (IEnumerable)ThroughProperty.GetValue(resource) ?? Array.Empty<object>();
 
-            IEnumerable<object> rightEntities = joinEntities
+            IEnumerable<object> rightResources = throughResources
                 .Cast<object>()
-                .Select(rightEntity =>  RightProperty.GetValue(rightEntity));
+                .Select(rightResource =>  RightProperty.GetValue(rightResource));
 
-            return rightEntities.CopyToTypedCollection(Property.PropertyType);
+            return rightResources.CopyToTypedCollection(Property.PropertyType);
         }
 
         /// <inheritdoc />
-        public override void SetValue(object entity, object newValue, IResourceFactory resourceFactory)
+        public override void SetValue(object resource, object newValue, IResourceFactory resourceFactory)
         {
-            base.SetValue(entity, newValue, resourceFactory);
+            base.SetValue(resource, newValue, resourceFactory);
 
             if (newValue == null)
             {
-                ThroughProperty.SetValue(entity, null);
+                ThroughProperty.SetValue(resource, null);
             }
             else
             {
-                List<object> joinEntities = new List<object>();
-                foreach (IIdentifiable resource in (IEnumerable)newValue)
+                List<object> throughResources = new List<object>();
+                foreach (IIdentifiable identifiable in (IEnumerable)newValue)
                 {
-                    object joinEntity = resourceFactory.CreateInstance(ThroughType);
-                    LeftProperty.SetValue(joinEntity, entity);
-                    RightProperty.SetValue(joinEntity, resource);
-                    joinEntities.Add(joinEntity);
+                    object throughResource = resourceFactory.CreateInstance(ThroughType);
+                    LeftProperty.SetValue(throughResource, resource);
+                    RightProperty.SetValue(throughResource, identifiable);
+                    throughResources.Add(throughResource);
                 }
 
-                var typedCollection = joinEntities.CopyToTypedCollection(ThroughProperty.PropertyType);
-                ThroughProperty.SetValue(entity, typedCollection);
+                var typedCollection = throughResources.CopyToTypedCollection(ThroughProperty.PropertyType);
+                ThroughProperty.SetValue(resource, typedCollection);
             }
         }
     }

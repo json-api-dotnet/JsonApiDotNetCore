@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Annotation;
@@ -15,16 +15,15 @@ namespace JsonApiDotNetCore.Serialization.Server
     public interface IFieldsToSerialize
     {
         /// <summary>
-        /// Gets the list of attributes that are allowed to be serialized for
-        /// resource of type <paramref name="type"/>
-        /// if <paramref name="relationship"/>, it will consider the allowed list of attributes
-        /// as an included relationship
+        /// Gets the list of attributes that are to be serialized for resource of type <paramref name="type"/>.
+        /// If <paramref name="relationship"/> is non-null, it will consider the allowed list of attributes
+        /// as an included relationship.
         /// </summary>
-        List<AttrAttribute> GetAllowedAttributes(Type type, RelationshipAttribute relationship = null);
+        IReadOnlyCollection<AttrAttribute> GetAttributes(Type type, RelationshipAttribute relationship = null);
+
         /// <summary>
-        /// Gets the list of relationships that are allowed to be serialized for
-        /// resource of type <paramref name="type"/>
+        /// Gets the list of relationships that are to be serialized for resource of type <paramref name="type"/>.
         /// </summary>
-        List<RelationshipAttribute> GetAllowedRelationships(Type type);
+        IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type);
     }
 }

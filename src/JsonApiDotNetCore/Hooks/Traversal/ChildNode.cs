@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Hooks
     /// Child node in the tree
     /// </summary>
     /// <typeparam name="TResource"></typeparam>
-    internal sealed class ChildNode<TResource> : INode where TResource : class, IIdentifiable
+    internal sealed class ChildNode<TResource> : IResourceNode where TResource : class, IIdentifiable
     {
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         /// <inheritdoc />
@@ -20,11 +20,11 @@ namespace JsonApiDotNetCore.Hooks
         /// <inheritdoc />
         public RelationshipProxy[] RelationshipsToNextLayer { get; }
         /// <inheritdoc />
-        public IEnumerable UniqueEntities
+        public IEnumerable UniqueResources
         {
             get
             {
-                return new HashSet<TResource>(_relationshipsFromPreviousLayer.SelectMany(rfpl => rfpl.RightEntities));
+                return new HashSet<TResource>(_relationshipsFromPreviousLayer.SelectMany(rfpl => rfpl.RightResources));
             }
         }
 
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Hooks
             List<TResource> cast = updated.Cast<TResource>().ToList();
             foreach (var group in _relationshipsFromPreviousLayer)
             {
-                group.RightEntities = new HashSet<TResource>(group.RightEntities.Intersect(cast, _comparer).Cast<TResource>());
+                group.RightResources = new HashSet<TResource>(group.RightResources.Intersect(cast, _comparer).Cast<TResource>());
             }
         }
 
@@ -55,13 +55,13 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         public void Reassign(IResourceFactory resourceFactory, IEnumerable updated = null)
         {
-            var unique = (HashSet<TResource>)UniqueEntities;
+            var unique = (HashSet<TResource>)UniqueResources;
             foreach (var group in _relationshipsFromPreviousLayer)
             {
                 var proxy = group.Proxy;
-                var leftEntities = group.LeftEntities;
+                var leftResources = group.LeftResources;
 
-                foreach (IIdentifiable left in leftEntities)
+                foreach (IIdentifiable left in leftResources)
                 {
                     var currentValue = proxy.GetValue(left);
 

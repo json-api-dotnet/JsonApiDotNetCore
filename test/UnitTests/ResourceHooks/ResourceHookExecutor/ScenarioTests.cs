@@ -6,17 +6,17 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public sealed class SameEntityTypeTests : HooksTestsSetup
+    public sealed class SameResourceTypeTests : HooksTestsSetup
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.OnReturn };
 
         [Fact]
-        public void Entity_Has_Multiple_Relations_To_Same_Type()
+        public void Resource_Has_Multiple_Relations_To_Same_Type()
         {
             // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
-var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+            var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var person1 = new Person();
             var todo = new TodoItem { Owner = person1 };
             var person2 = new Person { AssignedTodoItems = new HashSet<TodoItem> { todo } };
@@ -35,7 +35,7 @@ var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObject
         }
 
         [Fact]
-        public void Entity_Has_Cyclic_Relations()
+        public void Resource_Has_Cyclic_Relations()
         {
             // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
@@ -54,7 +54,7 @@ var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObject
         }
 
         [Fact]
-        public void Entity_Has_Nested_Cyclic_Relations()
+        public void Resource_Has_Nested_Cyclic_Relations()
         {
             // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);

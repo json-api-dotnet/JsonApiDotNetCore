@@ -30,9 +30,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 Category = "Family"
             };
 
-            _dbContext.People.RemoveRange(_dbContext.People);
+            await _dbContext.ClearTableAsync<Person>();
             _dbContext.People.Add(person);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/people/" + person.Id);
 

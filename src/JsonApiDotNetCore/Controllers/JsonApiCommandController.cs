@@ -27,17 +27,17 @@ namespace JsonApiDotNetCore.Controllers
         { }
 
         [HttpPost]
-        public override async Task<IActionResult> PostAsync([FromBody] T entity)
-            => await base.PostAsync(entity);
+        public override async Task<IActionResult> PostAsync([FromBody] T resource)
+            => await base.PostAsync(resource);
 
         [HttpPatch("{id}")]
-        public override async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
-            => await base.PatchAsync(id, entity);
+        public override async Task<IActionResult> PatchAsync(TId id, [FromBody] T resource)
+            => await base.PatchAsync(id, resource);
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> PatchRelationshipsAsync(
+        public override async Task<IActionResult> PatchRelationshipAsync(
             TId id, string relationshipName, [FromBody] object relationships)
-            => await base.PatchRelationshipsAsync(id, relationshipName, relationships);
+            => await base.PatchRelationshipAsync(id, relationshipName, relationships);
 
         [HttpDelete("{id}")]
         public override async Task<IActionResult> DeleteAsync(TId id) => await base.DeleteAsync(id);

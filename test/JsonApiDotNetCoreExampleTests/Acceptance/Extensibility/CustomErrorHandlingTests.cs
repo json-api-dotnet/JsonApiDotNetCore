@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             Assert.Contains("Access is denied.", loggerFactory.Logger.Messages[0].Text);
         }
 
-        public class CustomExceptionHandler : DefaultExceptionHandler
+        public class CustomExceptionHandler : ExceptionHandler
         {
             public CustomExceptionHandler(ILoggerFactory loggerFactory, IJsonApiOptions options)
                 : base(loggerFactory, options)

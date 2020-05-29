@@ -55,5 +55,5 @@ public class MyModelsController : JsonApiController<TodoItem>
 }
 ```
 
-See [this](~/usage/resource-graph.html#public-resource-type-name) for
+See [this](~/usage/resource-graph.md#public-resource-type-name) for
 more information on how the resource name is determined.

@@ -5,8 +5,8 @@ namespace JsonApiDotNetCore.Services
     public interface IResourceQueryService<T> : 
         IGetAllService<T>,
         IGetByIdService<T>,
-        IGetRelationshipsService<T>,
         IGetRelationshipService<T>,
+        IGetSecondaryService<T>,
         IResourceQueryService<T, int>
         where T : class, IIdentifiable<int>
     { }
@@ -14,8 +14,8 @@ namespace JsonApiDotNetCore.Services
     public interface IResourceQueryService<T, in TId> :
         IGetAllService<T, TId>,
         IGetByIdService<T, TId>,
-        IGetRelationshipsService<T, TId>,
-        IGetRelationshipService<T, TId>
+        IGetRelationshipService<T, TId>,
+        IGetSecondaryService<T, TId>
         where T : class, IIdentifiable<TId>
     { }
 }

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using BenchmarkDotNet.Attributes;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers;
-using JsonApiDotNetCore.Query;
-using JsonApiDotNetCore.QueryParameterServices.Common;
-using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.RequestServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -17,56 +17,59 @@ namespace Benchmarks.Query
     public class QueryParserBenchmarks
     {
         private readonly FakeRequestQueryStringAccessor _queryStringAccessor = new FakeRequestQueryStringAccessor();
-        private readonly QueryParameterParser _queryParameterParserForSort;
-        private readonly QueryParameterParser _queryParameterParserForAll;
+        private readonly QueryStringReader _queryStringReaderForSort;
+        private readonly QueryStringReader _queryStringReaderForAll;
 
         public QueryParserBenchmarks()
         {
-            IJsonApiOptions options = new JsonApiOptions();
+            IJsonApiOptions options = new JsonApiOptions
+            {
+                EnableLegacyFilterNotation = true
+            };
+
             IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
+
+            var currentRequest = new CurrentRequest
+            {
+                PrimaryResource = resourceGraph.GetResourceContext(typeof(BenchmarkResource))
+            };
+
+            _queryStringReaderForSort = CreateQueryParameterDiscoveryForSort(resourceGraph, currentRequest, options, _queryStringAccessor);
+            _queryStringReaderForAll = CreateQueryParameterDiscoveryForAll(resourceGraph, currentRequest, options, _queryStringAccessor);
+        }
+
+        private static QueryStringReader CreateQueryParameterDiscoveryForSort(IResourceGraph resourceGraph,
+            CurrentRequest currentRequest,
+            IJsonApiOptions options, FakeRequestQueryStringAccessor queryStringAccessor)
+        {
+            var sortReader = new SortQueryStringParameterReader(currentRequest, resourceGraph);
             
-            var currentRequest = new CurrentRequest();
-            currentRequest.SetRequestResource(resourceGraph.GetResourceContext(typeof(BenchmarkResource)));
-
-            IResourceDefinitionProvider resourceDefinitionProvider = DependencyFactory.CreateResourceDefinitionProvider(resourceGraph);
-
-            _queryParameterParserForSort = CreateQueryParameterDiscoveryForSort(resourceGraph, currentRequest, resourceDefinitionProvider, options, _queryStringAccessor);
-            _queryParameterParserForAll = CreateQueryParameterDiscoveryForAll(resourceGraph, currentRequest, resourceDefinitionProvider, options, _queryStringAccessor);
-        }
-
-        private static QueryParameterParser CreateQueryParameterDiscoveryForSort(IResourceGraph resourceGraph,
-            CurrentRequest currentRequest, IResourceDefinitionProvider resourceDefinitionProvider,
-            IJsonApiOptions options, FakeRequestQueryStringAccessor queryStringAccessor)
-        {
-            ISortService sortService = new SortService(resourceDefinitionProvider, resourceGraph, currentRequest);
-
-            var queryServices = new List<IQueryParameterService>
+            var readers = new List<IQueryStringParameterReader>
             {
-                sortService
+                sortReader
             };
 
-            return new QueryParameterParser(options, queryStringAccessor, queryServices, NullLoggerFactory.Instance);
+            return new QueryStringReader(options, queryStringAccessor, readers, NullLoggerFactory.Instance);
         }
 
-        private static QueryParameterParser CreateQueryParameterDiscoveryForAll(IResourceGraph resourceGraph,
-            CurrentRequest currentRequest, IResourceDefinitionProvider resourceDefinitionProvider,
-            IJsonApiOptions options, FakeRequestQueryStringAccessor queryStringAccessor)
+        private static QueryStringReader CreateQueryParameterDiscoveryForAll(IResourceGraph resourceGraph,
+            CurrentRequest currentRequest, IJsonApiOptions options, FakeRequestQueryStringAccessor queryStringAccessor)
         {
-            IIncludeService includeService = new IncludeService(resourceGraph, currentRequest);
-            IFilterService filterService = new FilterService(resourceDefinitionProvider, resourceGraph, currentRequest);
-            ISortService sortService = new SortService(resourceDefinitionProvider, resourceGraph, currentRequest);
-            ISparseFieldsService sparseFieldsService = new SparseFieldsService(resourceGraph, currentRequest);
-            IPageService pageService = new PageService(options, resourceGraph, currentRequest);
-            IDefaultsService defaultsService = new DefaultsService(options);
-            INullsService nullsService = new NullsService(options);
+            var resourceFactory = new ResourceFactory(new ServiceContainer());
 
-            var queryServices = new List<IQueryParameterService>
+            var filterReader = new FilterQueryStringParameterReader(currentRequest, resourceGraph, resourceFactory, options);
+            var sortReader = new SortQueryStringParameterReader(currentRequest, resourceGraph);
+            var sparseFieldSetReader = new SparseFieldSetQueryStringParameterReader(currentRequest, resourceGraph);
+            var paginationReader = new PaginationQueryStringParameterReader(currentRequest, resourceGraph, options);
+            var defaultsReader = new DefaultsQueryStringParameterReader(options);
+            var nullsReader = new NullsQueryStringParameterReader(options);
+
+            var readers = new List<IQueryStringParameterReader>
             {
-                includeService, filterService, sortService, sparseFieldsService, pageService, defaultsService,
-                nullsService
+                filterReader, sortReader, sparseFieldSetReader, paginationReader, defaultsReader, nullsReader
             };
 
-            return new QueryParameterParser(options, queryStringAccessor, queryServices, NullLoggerFactory.Instance);
+            return new QueryStringReader(options, queryStringAccessor, readers, NullLoggerFactory.Instance);
         }
 
         [Benchmark]
@@ -75,7 +78,7 @@ namespace Benchmarks.Query
             var queryString = $"?sort={BenchmarkResourcePublicNames.NameAttr}";
 
             _queryStringAccessor.SetQueryString(queryString);
-            _queryParameterParserForSort.Parse(null);
+            _queryStringReaderForSort.ReadAll(null);
         }
 
         [Benchmark]
@@ -84,7 +87,7 @@ namespace Benchmarks.Query
             var queryString = $"?sort=-{BenchmarkResourcePublicNames.NameAttr}";
 
             _queryStringAccessor.SetQueryString(queryString);
-            _queryParameterParserForSort.Parse(null);
+            _queryStringReaderForSort.ReadAll(null);
         }
 
         [Benchmark]
@@ -93,7 +96,7 @@ namespace Benchmarks.Query
             var queryString = $"?filter[{BenchmarkResourcePublicNames.NameAttr}]=abc,eq:abc&sort=-{BenchmarkResourcePublicNames.NameAttr}&include=child&page[size]=1&fields={BenchmarkResourcePublicNames.NameAttr}";
 
             _queryStringAccessor.SetQueryString(queryString);
-            _queryParameterParserForAll.Parse(null);
+            _queryStringReaderForAll.ReadAll(null);
         });
 
         private void Run(int iterations, Action action) { 

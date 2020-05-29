@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
@@ -78,7 +79,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         private async Task<HttpResponseMessage> MakeRequestAsync(string route, string method)
         {
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod(method);
             var server = new TestServer(builder);

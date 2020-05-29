@@ -88,7 +88,8 @@ namespace JsonApiDotNetCore.Internal
             var selectorBody = RemoveConvert(selector.Body);
 
             if (selectorBody is MemberExpression memberExpression)
-            {   // model => model.Field1
+            {   
+                // model => model.Field1
                 try
                 {
                     targeted.Add(available.Single(f => f.Property.Name == memberExpression.Member.Name));
@@ -101,7 +102,8 @@ namespace JsonApiDotNetCore.Internal
             }
 
             if (selectorBody is NewExpression newExpression)
-            {   // model => new { model.Field1, model.Field2 }
+            {   
+                // model => new { model.Field1, model.Field2 }
                 string memberName = null;
                 try
                 {
@@ -123,7 +125,7 @@ namespace JsonApiDotNetCore.Internal
 
             throw new ArgumentException(
                 $"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " + 
-                $"For example: 'article => article.Title' or 'article => new {{ article.Title, article.PageCount }}'.");
+                "For example: 'article => article.Title' or 'article => new { article.Title, article.PageCount }'.");
         }
 
         private static Expression RemoveConvert(Expression expression)

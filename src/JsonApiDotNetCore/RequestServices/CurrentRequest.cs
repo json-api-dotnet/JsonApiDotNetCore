@@ -1,30 +1,18 @@
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.RequestServices.Contracts;
 
-namespace JsonApiDotNetCore.Managers
+namespace JsonApiDotNetCore.RequestServices
 {
-    internal sealed class CurrentRequest : ICurrentRequest
+    public sealed class CurrentRequest : ICurrentRequest
     {
-        private ResourceContext _resourceContext;
+        public EndpointKind Kind { get; set; }
         public string BasePath { get; set; }
-        public bool IsRelationshipPath { get; set; }
-        public RelationshipAttribute RequestRelationship { get; set; }
-        public string BaseId { get; set; }
-        public string RelationshipId { get; set; }
-
-        /// <summary>
-        /// The main resource of the request.
-        /// </summary>
-        /// <returns></returns>
-        public ResourceContext GetRequestResource()
-        {
-            return _resourceContext;
-        }
-
-        public void SetRequestResource(ResourceContext primaryResource)
-        {
-            _resourceContext = primaryResource;
-        }
+        public string PrimaryId { get; set; }
+        public ResourceContext PrimaryResource { get; set; }
+        public ResourceContext SecondaryResource { get; set; }
+        public RelationshipAttribute Relationship { get; set; }
+        public bool IsCollection { get; set; }
+        public bool IsReadOnly { get; set; }
     }
 }

@@ -25,41 +25,41 @@ namespace JsonApiDotNetCore.Serialization.Client
         }
 
         /// <inheritdoc/>
-        public string Serialize(IIdentifiable entity)
+        public string Serialize(IIdentifiable resource)
         {
-            if (entity == null)
+            if (resource == null)
             {
                 var empty = Build((IIdentifiable) null, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
                 return SerializeObject(empty, _jsonSerializerSettings);
             }
 
-            _currentTargetedResource = entity.GetType();
-            var document = Build(entity, GetAttributesToSerialize(entity), GetRelationshipsToSerialize(entity));
+            _currentTargetedResource = resource.GetType();
+            var document = Build(resource, GetAttributesToSerialize(resource), GetRelationshipsToSerialize(resource));
             _currentTargetedResource = null;
 
             return SerializeObject(document, _jsonSerializerSettings);
         }
 
         /// <inheritdoc/>
-        public string Serialize(IEnumerable<IIdentifiable> entities)
+        public string Serialize(IEnumerable<IIdentifiable> resources)
         {
-            IIdentifiable entity = null;
-            foreach (IIdentifiable item in entities)
+            IIdentifiable resource = null;
+            foreach (IIdentifiable item in resources)
             {
-                entity = item;
+                resource = item;
                 break;
             }
 
-            if (entity == null)
+            if (resource == null)
             {
-                var result = Build(entities, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
+                var result = Build(resources, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
                 return SerializeObject(result, _jsonSerializerSettings);
             }
 
-            _currentTargetedResource = entity.GetType();
-            var attributes = GetAttributesToSerialize(entity);
-            var relationships = GetRelationshipsToSerialize(entity);
-            var document = Build(entities, attributes, relationships);
+            _currentTargetedResource = resource.GetType();
+            var attributes = GetAttributesToSerialize(resource);
+            var relationships = GetRelationshipsToSerialize(resource);
+            var document = Build(resources, attributes, relationships);
             _currentTargetedResource = null;
             return SerializeObject(document, _jsonSerializerSettings);
         }
@@ -75,9 +75,9 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// unless a list of allowed attributes was supplied using the <see cref="AttributesToSerialize"/>
         /// method. For any related resources, attributes are never exposed.
         /// </summary>
-        private List<AttrAttribute> GetAttributesToSerialize(IIdentifiable entity)
+        private List<AttrAttribute> GetAttributesToSerialize(IIdentifiable resource)
         {
-            var currentResourceType = entity.GetType();
+            var currentResourceType = resource.GetType();
             if (_currentTargetedResource != currentResourceType)
                 // We're dealing with a relationship that is being serialized, for which
                 // we never want to include any attributes in the payload.
@@ -91,15 +91,15 @@ namespace JsonApiDotNetCore.Serialization.Client
 
         /// <summary>
         /// By default, the client serializer does not include any relationships
-        /// for entities in the primary data unless explicitly included using
+        /// for resources in the primary data unless explicitly included using
         /// <see cref="RelationshipsToSerialize"/>.
         /// </summary>
-        private List<RelationshipAttribute> GetRelationshipsToSerialize(IIdentifiable entity)
+        private List<RelationshipAttribute> GetRelationshipsToSerialize(IIdentifiable resource)
         {
-            var currentResourceType = entity.GetType();
+            var currentResourceType = resource.GetType();
             // only allow relationship attributes to be serialized if they were set using
             // <see cref="RelationshipsToInclude{T}(Expression{Func{T, dynamic}})"/>
-            // and the current <paramref name="entity"/> is a main entry in the primary data.
+            // and the current <paramref name="resource"/> is a primary entry.
             if (RelationshipsToSerialize == null)
                 return _resourceGraph.GetRelationships(currentResourceType);
 

@@ -5,22 +5,22 @@ using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Data
 {
-    public interface IResourceWriteRepository<TResource>
+    public interface IResourceWriteRepository<in TResource>
         : IResourceWriteRepository<TResource, int>
         where TResource : class, IIdentifiable<int>
     { }
 
-    public interface IResourceWriteRepository<TResource, in TId>
+    public interface IResourceWriteRepository<in TResource, in TId>
         where TResource : class, IIdentifiable<TId>
     {
-        Task CreateAsync(TResource entity);
+        Task CreateAsync(TResource resource);
 
-        Task UpdateAsync(TResource requestEntity, TResource databaseEntity);
+        Task UpdateAsync(TResource requestResource, TResource databaseResource);
 
         Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
 
         Task<bool> DeleteAsync(TId id);
 
-        void FlushFromCache(TResource entity);
+        void FlushFromCache(TResource resource);
     }
 }

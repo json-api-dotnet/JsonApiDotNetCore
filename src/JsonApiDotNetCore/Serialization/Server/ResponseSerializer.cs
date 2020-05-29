@@ -4,10 +4,10 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using Newtonsoft.Json;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.RequestServices.Contracts;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// </summary>
     /// <remarks>
     /// Because in JsonApiDotNetCore every json:api request is associated with exactly one
-    /// resource (the request resource, see <see cref="ICurrentRequest.GetRequestResource"/>),
+    /// resource (the primary resource, see <see cref="ICurrentRequest.PrimaryResource"/>),
     /// the serializer can leverage this information using generics.
     /// See <see cref="ResponseSerializerFactory"/> for how this is instantiated.
     /// </remarks>
@@ -26,8 +26,6 @@ namespace JsonApiDotNetCore.Serialization.Server
         where TResource : class, IIdentifiable
     {
         public RelationshipAttribute RequestRelationship { get; set; }
-        private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
-        private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IJsonApiOptions _options;
         private readonly IMetaBuilder<TResource> _metaBuilder;
@@ -78,21 +76,21 @@ namespace JsonApiDotNetCore.Serialization.Server
         }
 
         /// <summary>
-        /// Convert a single entity into a serialized <see cref="Document"/>
+        /// Convert a single resource into a serialized <see cref="Document"/>
         /// </summary>
         /// <remarks>
         /// This method is set internal instead of private for easier testability.
         /// </remarks>
-        internal string SerializeSingle(IIdentifiable entity)
+        internal string SerializeSingle(IIdentifiable resource)
         {
-            if (RequestRelationship != null && entity != null)
+            if (RequestRelationship != null && resource != null)
             {
-                var relationship = ((ResponseResourceObjectBuilder)_resourceObjectBuilder).Build(entity, RequestRelationship);
+                var relationship = ((ResponseResourceObjectBuilder)_resourceObjectBuilder).Build(resource, RequestRelationship);
                 return SerializeObject(relationship, _options.SerializerSettings, serializer => { serializer.NullValueHandling = NullValueHandling.Include; });
             }
 
             var (attributes, relationships) = GetFieldsToSerialize();
-            var document = Build(entity, attributes, relationships);
+            var document = Build(resource, attributes, relationships);
             var resourceObject = document.SingleData;
             if (resourceObject != null)
                 resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
@@ -102,21 +100,21 @@ namespace JsonApiDotNetCore.Serialization.Server
             return SerializeObject(document, _options.SerializerSettings, serializer => { serializer.NullValueHandling = NullValueHandling.Include; });
         }
 
-        private (List<AttrAttribute>, List<RelationshipAttribute>) GetFieldsToSerialize()
+        private (IReadOnlyCollection<AttrAttribute>, IReadOnlyCollection<RelationshipAttribute>) GetFieldsToSerialize()
         {
-            return (GetAttributesToSerialize(_primaryResourceType), GetRelationshipsToSerialize(_primaryResourceType));
+            return (_fieldsToSerialize.GetAttributes(_primaryResourceType), _fieldsToSerialize.GetRelationships(_primaryResourceType));
         }
 
         /// <summary>
-        /// Convert a list of entities into a serialized <see cref="Document"/>
+        /// Convert a list of resources into a serialized <see cref="Document"/>
         /// </summary>
         /// <remarks>
         /// This method is set internal instead of private for easier testability.
         /// </remarks>
-        internal string SerializeMany(IEnumerable<IIdentifiable> entities)
+        internal string SerializeMany(IEnumerable<IIdentifiable> resources)
         {
             var (attributes, relationships) = GetFieldsToSerialize();
-            var document = Build(entities, attributes, relationships);
+            var document = Build(resources, attributes, relationships);
             foreach (ResourceObject resourceObject in document.ManyData)
             {
                 var links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
@@ -129,47 +127,6 @@ namespace JsonApiDotNetCore.Serialization.Server
             AddTopLevelObjects(document);
 
             return SerializeObject(document, _options.SerializerSettings, serializer => { serializer.NullValueHandling = NullValueHandling.Include; });
-        }
-
-        /// <summary>
-        /// Gets the list of attributes to serialize for the given <paramref name="resourceType"/>.
-        /// Note that the choice of omitting null/default-values is not handled here,
-        /// but in <see cref="IResourceObjectBuilderSettingsProvider"/>.
-        /// </summary>
-        /// <param name="resourceType">Type of entity to be serialized</param>
-        /// <returns>List of allowed attributes in the serialized result</returns>
-        private List<AttrAttribute> GetAttributesToSerialize(Type resourceType)
-        {
-            // Check the attributes cache to see if the allowed attrs for this resource type were determined before.
-            if (_attributesToSerializeCache.TryGetValue(resourceType, out List<AttrAttribute> allowedAttributes))
-                return allowedAttributes;
-
-            // Get the list of attributes to be exposed for this type
-            allowedAttributes = _fieldsToSerialize.GetAllowedAttributes(resourceType);
-
-            // add to cache so we we don't have to look this up next time.
-            _attributesToSerializeCache.Add(resourceType, allowedAttributes);
-            return allowedAttributes;
-        }
-
-        /// <summary>
-        /// By default, the server serializer exposes all defined relationships, unless
-        /// in the <see cref="ResourceDefinition{T}"/> a subset to hide was defined explicitly.
-        /// </summary>
-        /// <param name="resourceType">Type of entity to be serialized</param>
-        /// <returns>List of allowed relationships in the serialized result</returns>
-        private List<RelationshipAttribute> GetRelationshipsToSerialize(Type resourceType)
-        {
-            // Check the relationships cache to see if the allowed attrs for this resource type were determined before.
-            if (_relationshipsToSerializeCache.TryGetValue(resourceType, out List<RelationshipAttribute> allowedRelations))
-                return allowedRelations;
-
-            // Get the list of relationships to be exposed for this type
-            allowedRelations = _fieldsToSerialize.GetAllowedRelationships(resourceType);
-            // add to cache so we we don't have to look this up next time.
-            _relationshipsToSerializeCache.Add(resourceType, allowedRelations);
-            return allowedRelations;
-
         }
 
         /// <summary>

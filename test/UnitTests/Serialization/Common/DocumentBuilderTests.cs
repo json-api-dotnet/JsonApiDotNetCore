@@ -21,7 +21,7 @@ namespace UnitTests.Serialization.Serializer
 
 
         [Fact]
-        public void EntityToDocument_NullEntity_CanBuild()
+        public void ResourceToDocument_NullResource_CanBuild()
         {
             // Act
             var document = _builder.Build((TestResource) null);
@@ -33,13 +33,13 @@ namespace UnitTests.Serialization.Serializer
 
 
         [Fact]
-        public void EntityToDocument_EmptyList_CanBuild()
+        public void ResourceToDocument_EmptyList_CanBuild()
         {
             // Arrange
-            var entities = new List<TestResource>();
+            var resources = new List<TestResource>();
 
             // Act
-            var document = _builder.Build(entities);
+            var document = _builder.Build(resources);
 
             // Assert
             Assert.NotNull(document.Data);
@@ -48,7 +48,7 @@ namespace UnitTests.Serialization.Serializer
 
 
         [Fact]
-        public void EntityToDocument_SingleEntity_CanBuild()
+        public void ResourceToDocument_SingleResource_CanBuild()
         {
             // Arrange
             IIdentifiable dummy = new DummyResource();
@@ -62,13 +62,13 @@ namespace UnitTests.Serialization.Serializer
         }
 
         [Fact]
-        public void EntityToDocument_EntityList_CanBuild()
+        public void ResourceToDocument_ResourceList_CanBuild()
         {
             // Arrange
-            var entities = new List<IIdentifiable> { new DummyResource(), new DummyResource() };
+            var resources = new List<IIdentifiable> { new DummyResource(), new DummyResource() };
 
             // Act
-            var document = _builder.Build(entities);
+            var document = _builder.Build(resources);
             var data = (List<ResourceObject>)document.Data;
 
             // Assert

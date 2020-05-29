@@ -18,9 +18,16 @@ namespace JsonApiDotNetCore.Controllers
         /// </summary>
         public DisableQueryAttribute(StandardQueryStringParameters parameters)
         {
-            _parameterNames = parameters != StandardQueryStringParameters.None
-                ? ParseList(parameters.ToString())
-                : new List<string>();
+            _parameterNames = new List<string>();
+
+            foreach (StandardQueryStringParameters value in Enum.GetValues(typeof(StandardQueryStringParameters)))
+            {
+                if (value != StandardQueryStringParameters.None && value != StandardQueryStringParameters.All &&
+                    parameters.HasFlag(value))
+                {
+                    _parameterNames.Add(value.ToString().ToLowerInvariant());
+                }
+            }
         }
 
         /// <summary>
@@ -30,12 +37,7 @@ namespace JsonApiDotNetCore.Controllers
         /// </summary>
         public DisableQueryAttribute(string parameterNames)
         {
-            _parameterNames = ParseList(parameterNames);
-        }
-
-        private static List<string> ParseList(string parameterNames)
-        {
-            return parameterNames.Split(",").Select(x => x.Trim().ToLowerInvariant()).ToList();
+            _parameterNames = parameterNames.Split(",").Select(x => x.Trim().ToLowerInvariant()).ToList();
         }
 
         public bool ContainsParameter(StandardQueryStringParameters parameter)

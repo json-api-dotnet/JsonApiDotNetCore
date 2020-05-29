@@ -6,19 +6,19 @@ namespace JsonApiDotNetCore.Hooks
     internal interface IRelationshipGroup
     {
         RelationshipProxy Proxy { get; }
-        HashSet<IIdentifiable> LeftEntities { get; }
+        HashSet<IIdentifiable> LeftResources { get; }
     }
 
     internal sealed class RelationshipGroup<TRight> : IRelationshipGroup where TRight : class, IIdentifiable
     {
         public RelationshipProxy Proxy { get; }
-        public HashSet<IIdentifiable> LeftEntities { get; }
-        public HashSet<TRight> RightEntities { get; internal set; }
-        public RelationshipGroup(RelationshipProxy proxy, HashSet<IIdentifiable> leftEntities, HashSet<TRight> rightEntities)
+        public HashSet<IIdentifiable> LeftResources { get; }
+        public HashSet<TRight> RightResources { get; internal set; }
+        public RelationshipGroup(RelationshipProxy proxy, HashSet<IIdentifiable> leftResources, HashSet<TRight> rightResources)
         {
             Proxy = proxy;
-            LeftEntities = leftEntities;
-            RightEntities = rightEntities;
+            LeftResources = leftResources;
+            RightResources = rightResources;
         }
     }
 }

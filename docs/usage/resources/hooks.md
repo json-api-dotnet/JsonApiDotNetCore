@@ -10,21 +10,21 @@ By implementing resource hooks on a `ResourceDefintion<T>`, it is possible to in
 * Transformation of the served data
 
 This usage guide covers the following sections
-1.  [**Semantics: pipelines, actions and hooks**](#semantics-pipelines-actions-and-hooks)
+1.  [**Semantics: pipelines, actions and hooks**](#1-semantics-pipelines-actions-and-hooks)
 Understanding the semantics will be helpful in identifying which hooks on `ResourceDefinition<T>` you need to implement for your use-case.
-2.  [**Basic usage**](#basic-usage)
+2.  [**Basic usage**](#2-basic-usage)
         Some examples to get you started.
       * [**Getting started: most minimal example**](#getting-started-most-minimal-example)
       * [**Logging**](#logging)
       * [**Transforming data with OnReturn**](#transforming-data-with-onreturn)
       * [**Loading database values**](#loading-database-values)
-3.  [**Advanced usage**](#advanced-usage)
+3.  [**Advanced usage**](#3-advanced-usage)
     Complicated examples that show the advanced features of hooks.
       * [**Simple authorization: explicitly affected resources**](#simple-authorization-explicitly-affected-resources)
       * [**Advanced authorization: implicitly affected resources**](#advanced-authorization-implicitly-affected-resources)
       * [**Synchronizing data across microservices**](#synchronizing-data-across-microservices)
       * [**Hooks for many-to-many join tables**](#hooks-for-many-to-many-join-tables)
-5.  [**Hook execution overview**](#hook-execution-overview)
+5.  [**Hook execution overview**](#4-hook-execution-overview)
   A table overview of all pipelines and involved hooks
 
 # 1. Semantics: pipelines, actions and hooks
@@ -72,7 +72,7 @@ the **Delete**  pipeline also allows for an `implicit update relationship` actio
 ### Shared actions
 Note that **some actions are shared across pipelines**. For example, both the **Post** and **Patch** pipeline can perform the `update relationship`  action on an (already existing) involved resource. Similarly, the **Get** and **GetSingle** pipelines perform the same `read` action.
 <br><br>
-For a complete list of actions associated with each pipeline, see the [overview table](#hook-execution-overview).
+For a complete list of actions associated with each pipeline, see the [overview table](#4-hook-execution-overview).
 
 ## Hooks
 For all actions it is possible to implement **at least one hook** to intercept its execution. These hooks can be implemented by overriding the corresponding virtual  implementation on `ResourceDefintion<T>`. (Note that the base implementation is a dummy implementation, which is ignored when firing hooks.)
@@ -459,7 +459,7 @@ public override void BeforeImplicitUpdateRelationship(IAffectedRelationships<Per
 
 If you want to use Resource Hooks without Entity Framework Core, there are several things that you need to consider that need to be met. For any resource that you want to use hooks for:
 1. The corresponding resource repository must fully implement `IResourceReadRepository<TEntity, TId>`
-2. If you are using custom services, you will be responsible for injecting the `IResourceHookExecutor` service into your services and call the appropriate methods. See the [hook execution overview](#hook-execution-overview) to determine which hook should be fired in which scenario.
+2. If you are using custom services, you will be responsible for injecting the `IResourceHookExecutor` service into your services and call the appropriate methods. See the [hook execution overview](#4-hook-execution-overview) to determine which hook should be fired in which scenario.
 
 If you are required to use the `BeforeImplicitUpdateRelationship` hook (see previous example), there is an additional requirement. For this hook, given a particular relationship, JsonApiDotNetCore needs to be able to resolve the inverse relationship. For example: if `Article` has one  author (a `Person`), then it needs to be able to resolve the `RelationshipAttribute` that corresponds to the inverse relationship for the `author` property. There are two approaches :
 

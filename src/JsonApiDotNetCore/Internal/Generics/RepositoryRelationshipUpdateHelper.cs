@@ -105,7 +105,7 @@ namespace JsonApiDotNetCore.Internal.Generics
         private async Task UpdateManyToManyAsync(IIdentifiable parent, HasManyThroughAttribute relationship, IEnumerable<string> relationshipIds)
         {
             // we need to create a transaction for the HasManyThrough case so we can get and remove any existing
-            // join entities and only commit if all operations are successful
+            // through resources and only commit if all operations are successful
             var transaction = await _context.GetCurrentOrCreateTransactionAsync();
             // ArticleTag
             ParameterExpression parameter = Expression.Parameter(relationship.ThroughType);

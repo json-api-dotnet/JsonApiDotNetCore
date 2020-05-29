@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Hooks
     /// <see cref="IReadHookExecutor"/>, <see cref="IUpdateHookExecutor"/> and 
     /// <see cref="IOnReturnHookExecutor"/> for more information.
     /// 
-    /// Uses <see cref="TraversalHelper"/> for traversal of nested entity data structures.
+    /// Uses <see cref="TraversalHelper"/> for traversal of nested resource data structures.
     /// Uses <see cref="HookExecutorHelper"/> for retrieving meta data about hooks, 
     /// fetching database values and performing other recurring internal operations.
     /// </summary>
@@ -20,65 +20,65 @@ namespace JsonApiDotNetCore.Hooks
     {
         /// <summary>
         /// Executes the Before Cycle by firing the appropriate hooks if they are implemented. 
-        /// The returned set will be used in the actual operation in <see cref="DefaultResourceService{T}"/>.
+        /// The returned set will be used in the actual operation in <see cref="JsonApiResourceService{TResource}"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.BeforeCreate"/>
-        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="entities"/>.
+        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="resources"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{U}.BeforeUpdateRelationship"/>
-        /// hook for any related (nested) entity for values within parameter <paramref name="entities"/>
+        /// hook for any secondary (nested) resource for values within parameter <paramref name="resources"/>
         /// </summary>
         /// <returns>The transformed set</returns>
-        /// <param name="entities">Target entities for the Before cycle.</param>
+        /// <param name="resources">Target resources for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        /// <typeparam name="TResource">The type of the root entities</typeparam>
-        IEnumerable<TResource> BeforeCreate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
+        /// <typeparam name="TResource">The type of the root resources</typeparam>
+        IEnumerable<TResource> BeforeCreate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
         /// <summary>
         /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.AfterCreate"/>
-        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="entities"/>.
+        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="resources"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{U}.AfterUpdateRelationship"/>
-        /// hook for any related (nested) entity for values within parameter <paramref name="entities"/>
+        /// hook for any secondary (nested) resource for values within parameter <paramref name="resources"/>
         /// </summary>
-        /// <param name="entities">Target entities for the Before cycle.</param>
+        /// <param name="resources">Target resources for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        /// <typeparam name="TResource">The type of the root entities</typeparam>
-        void AfterCreate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
+        /// <typeparam name="TResource">The type of the root resources</typeparam>
+        void AfterCreate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
     }
 
     public interface IDeleteHookExecutor
     {
         /// <summary>
         /// Executes the Before Cycle by firing the appropriate hooks if they are implemented. 
-        /// The returned set will be used in the actual operation in <see cref="DefaultResourceService{T}"/>.
+        /// The returned set will be used in the actual operation in <see cref="JsonApiResourceService{TResource}"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.BeforeDelete"/>
-        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="entities"/>.
+        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="resources"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{U}.BeforeImplicitUpdateRelationship"/>
-        /// hook for any entities that are indirectly (implicitly) affected by this operation.
-        /// Eg: when deleting an entity that has relationships set to other entities, 
-        /// these other entities are implicitly affected by the delete operation.
+        /// hook for any resources that are indirectly (implicitly) affected by this operation.
+        /// Eg: when deleting a resource that has relationships set to other resources, 
+        /// these other resources are implicitly affected by the delete operation.
         /// </summary>
         /// <returns>The transformed set</returns>
-        /// <param name="entities">Target entities for the Before cycle.</param>
+        /// <param name="resources">Target resources for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        /// <typeparam name="TResource">The type of the root entities</typeparam>
-        IEnumerable<TResource> BeforeDelete<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
+        /// <typeparam name="TResource">The type of the root resources</typeparam>
+        IEnumerable<TResource> BeforeDelete<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
 
         /// <summary>
         /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.AfterDelete"/>
-        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="entities"/>.
+        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="resources"/>.
         /// </summary>
-        /// <param name="entities">Target entities for the Before cycle.</param>
+        /// <param name="resources">Target resources for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <param name="succeeded">If set to <c>true</c> the deletion succeeded.</param>
-        /// <typeparam name="TResource">The type of the root entities</typeparam>
-        void AfterDelete<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline, bool succeeded) where TResource : class, IIdentifiable;
+        /// <typeparam name="TResource">The type of the root resources</typeparam>
+        void AfterDelete<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline, bool succeeded) where TResource : class, IIdentifiable;
     }
 
     /// <summary>
@@ -91,23 +91,23 @@ namespace JsonApiDotNetCore.Hooks
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.BeforeRead"/>
         /// hook where T = <typeparamref name="TResource"/> for the requested 
-        /// entities as well as any related relationship.
+        /// resources as well as any related relationship.
         /// </summary>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        /// <param name="stringId">StringId of the requested entity in the case of
-        /// <see cref="DefaultResourceService{TResource,TId}.GetAsync(TId)"/>.</param>
-        /// <typeparam name="TResource">The type of the request entity</typeparam>
+        /// <param name="stringId">StringId of the requested resource in the case of
+        /// <see cref="JsonApiResourceService{TResource,TId}.GetAsync(TId)"/>.</param>
+        /// <typeparam name="TResource">The type of the request resource</typeparam>
         void BeforeRead<TResource>(ResourcePipeline pipeline, string stringId = null) where TResource : class, IIdentifiable;
         /// <summary>
         /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.AfterRead"/> for every unique
-        /// entity type occuring in parameter <paramref name="entities"/>.
+        /// resource type occuring in parameter <paramref name="resources"/>.
         /// </summary>
-        /// <param name="entities">Target entities for the Before cycle.</param>
+        /// <param name="resources">Target resources for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        /// <typeparam name="TResource">The type of the root entities</typeparam>
-        void AfterRead<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
+        /// <typeparam name="TResource">The type of the root resources</typeparam>
+        void AfterRead<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
     }
 
     /// <summary>
@@ -117,38 +117,38 @@ namespace JsonApiDotNetCore.Hooks
     {
         /// <summary>
         /// Executes the Before Cycle by firing the appropriate hooks if they are implemented. 
-        /// The returned set will be used in the actual operation in <see cref="DefaultResourceService{T}"/>.
+        /// The returned set will be used in the actual operation in <see cref="JsonApiResourceService{TResource}"/>.
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{T}.BeforeUpdate(IDiffableEntityHashSet{T}, ResourcePipeline)"/>
-        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="entities"/>.
+        /// Fires the <see cref="ResourceDefinition{TResource}.BeforeUpdate(IDiffableResourceHashSet{TResource}, ResourcePipeline)"/>
+        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="resources"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{U}.BeforeUpdateRelationship"/>
-        /// hook for any related (nested) entity for values within parameter <paramref name="entities"/>
+        /// hook for any secondary (nested) resource for values within parameter <paramref name="resources"/>
         /// <para />
         /// Fires the <see cref="ResourceDefinition{U}.BeforeImplicitUpdateRelationship"/>
-        /// hook for any entities that are indirectly (implicitly) affected by this operation.
-        /// Eg: when updating a one-to-one relationship of an entity which already 
+        /// hook for any resources that are indirectly (implicitly) affected by this operation.
+        /// Eg: when updating a one-to-one relationship of a resource which already 
         /// had this relationship populated, then this update will indirectly affect 
         /// the existing relationship value.
         /// </summary>
         /// <returns>The transformed set</returns>
-        /// <param name="entities">Target entities for the Before cycle.</param>
+        /// <param name="resources">Target resources for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        /// <typeparam name="TResource">The type of the root entities</typeparam>
-        IEnumerable<TResource> BeforeUpdate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
+        /// <typeparam name="TResource">The type of the root resources</typeparam>
+        IEnumerable<TResource> BeforeUpdate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
         /// <summary>
         /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.AfterUpdate"/>
-        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="entities"/>.
+        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="resources"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{U}.AfterUpdateRelationship"/>
-        /// hook for any related (nested) entity for values within parameter <paramref name="entities"/>
+        /// hook for any secondary (nested) resource for values within parameter <paramref name="resources"/>
         /// </summary>
-        /// <param name="entities">Target entities for the Before cycle.</param>
+        /// <param name="resources">Target resources for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        /// <typeparam name="TResource">The type of the root entities</typeparam>
-        void AfterUpdate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
+        /// <typeparam name="TResource">The type of the root resources</typeparam>
+        void AfterUpdate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
     }
 
     /// <summary>
@@ -160,12 +160,12 @@ namespace JsonApiDotNetCore.Hooks
         /// Executes the On Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.OnReturn"/> for every unique
-        /// entity type occuring in parameter <paramref name="entities"/>.
+        /// resource type occuring in parameter <paramref name="resources"/>.
         /// </summary>
         /// <returns>The transformed set</returns>
-        /// <param name="entities">Target entities for the Before cycle.</param>
+        /// <param name="resources">Target resources for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        /// <typeparam name="TResource">The type of the root entities</typeparam>
-        IEnumerable<TResource> OnReturn<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
+        /// <typeparam name="TResource">The type of the root resources</typeparam>
+        IEnumerable<TResource> OnReturn<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
     }
 }

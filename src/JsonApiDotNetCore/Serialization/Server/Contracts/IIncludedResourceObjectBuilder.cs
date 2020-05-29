@@ -7,13 +7,13 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
     public interface IIncludedResourceObjectBuilder
     {
         /// <summary>
-        /// Gets the list of resource objects representing the included entities
+        /// Gets the list of resource objects representing the included resources
         /// </summary>
         List<ResourceObject> Build();
         /// <summary>
-        /// Extracts the included entities from <paramref name="rootEntity"/> using the
+        /// Extracts the included resources from <paramref name="rootResource"/> using the
         /// (arbitrarily deeply nested) included relationships in <paramref name="inclusionChain"/>.
         /// </summary>
-        void IncludeRelationshipChain(List<RelationshipAttribute> inclusionChain, IIdentifiable rootEntity);
+        void IncludeRelationshipChain(List<RelationshipAttribute> inclusionChain, IIdentifiable rootResource);
     }
 }

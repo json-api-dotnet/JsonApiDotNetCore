@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -49,10 +50,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var strayTodoItem = _todoItemFaker.Generate();
             _context.TodoItems.Add(todoItem);
             _context.TodoItems.Add(strayTodoItem);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -107,10 +107,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange 
             var todoItem = _todoItemFaker.Generate();
             _context.TodoItems.Add(todoItem);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -162,10 +161,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var strayTodoItem = _todoItemFaker.Generate();
             _context.TodoItems.Add(todoItem);
             _context.TodoItems.Add(strayTodoItem);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -228,14 +226,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todoCollection.Owner = person;
             todoCollection.TodoItems.Add(todoItem);
             _context.TodoItemCollections.Add(todoCollection);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var newTodoItem1 = _todoItemFaker.Generate();
             var newTodoItem2 = _todoItemFaker.Generate();
             _context.AddRange(newTodoItem1, newTodoItem2);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -258,7 +256,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                                 }
 
                             }
-                        },
+                        }
                     }
                 }
             };
@@ -288,7 +286,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource_When_Targets_Already_Attached()
         {
-            // It is possible that entities we're creating relationships to
+            // It is possible that resources we're creating relationships to
             // have already been included in dbContext the application beyond control
             // of JANDC. For example: a user may have been loaded when checking permissions
             // in business logic in controllers. In this case,
@@ -302,14 +300,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todoCollection.Name = "PRE-ATTACH-TEST";
             todoCollection.TodoItems.Add(todoItem);
             _context.TodoItemCollections.Add(todoCollection);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var newTodoItem1 = _todoItemFaker.Generate();
             var newTodoItem2 = _todoItemFaker.Generate();
             _context.AddRange(newTodoItem1, newTodoItem2);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -336,7 +334,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                                 }
 
                             }
-                        },
+                        }
                     }
                 }
             };
@@ -375,14 +373,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todoCollection.TodoItems.Add(todoItem1);
             todoCollection.TodoItems.Add(todoItem2);
             _context.TodoItemCollections.Add(todoCollection);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
-
 
             var content = new
             {
@@ -401,7 +398,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                                 }
 
                             }
-                        },
+                        }
                     }
                 }
             };
@@ -438,9 +435,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = _todoItemFaker.Generate();
             _context.TodoItems.Add(todoItem);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -489,9 +486,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = _todoItemFaker.Generate();
             _context.TodoItems.Add(todoItem);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -525,9 +522,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             _context.People.Add(person);
             _context.TodoItems.Add(todoItem);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -578,7 +575,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = _todoItemFaker.Generate();
             person.TodoItems = new HashSet<TodoItem> { todoItem };
             _context.People.Add(person);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var content = new
             {
@@ -628,9 +625,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             _context.People.Add(person);
             _context.TodoItems.Add(todoItem);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -783,9 +780,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = _todoItemFaker.Generate();
             _context.TodoItems.Add(todoItem);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -820,9 +817,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var person = _personFaker.Generate();
             _context.People.Add(person);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -832,7 +829,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var content = serializer.Serialize(person);
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todoItems/99999999/relationships/owner";
+            var route = "/api/v1/todoItems/99999999/relationships/owner";
             var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(content)};
 
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);

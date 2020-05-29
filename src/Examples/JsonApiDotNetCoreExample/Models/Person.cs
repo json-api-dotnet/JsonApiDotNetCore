@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCoreExample.Models
 {
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCoreExample.Models
         public ISet<TodoItem> AssignedTodoItems { get; set; }
 
         [HasMany]
-        public HashSet<TodoItemCollection> todoCollections { get; set; }
+        public HashSet<TodoItemCollection> TodoCollections { get; set; }
 
         [HasOne]
         public PersonRole Role { get; set; }
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreExample.Models
         public TodoItem StakeHolderTodoItem { get; set; }
         public int? StakeHolderTodoItemId { get; set; }
 
-        [HasOne(links: Link.All, canInclude: false)]
+        [HasOne(links: Links.All, canInclude: false)]
         public TodoItem UnIncludeableItem { get; set; }
 
         [HasOne]

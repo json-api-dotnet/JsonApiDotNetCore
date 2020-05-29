@@ -28,16 +28,16 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchAsync(string id, [FromBody] Passport entity)
+        public async Task<IActionResult> PatchAsync(string id, [FromBody] Passport resource)
         {
             int idValue = HexadecimalObfuscationCodec.Decode(id);
-            return await base.PatchAsync(idValue, entity);
+            return await base.PatchAsync(idValue, resource);
         }
 
         [HttpPost]
-        public override async Task<IActionResult> PostAsync([FromBody] Passport entity)
+        public override async Task<IActionResult> PostAsync([FromBody] Passport resource)
         {
-            return await base.PostAsync(entity);
+            return await base.PostAsync(resource);
         }
 
         [HttpDelete("{id}")]

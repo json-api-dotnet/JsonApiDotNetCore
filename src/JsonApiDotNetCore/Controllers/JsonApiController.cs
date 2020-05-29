@@ -21,13 +21,13 @@ namespace JsonApiDotNetCore.Controllers
             ILoggerFactory loggerFactory,
             IGetAllService<T, TId> getAll = null,
             IGetByIdService<T, TId> getById = null,
+            IGetSecondaryService<T, TId> getSecondary = null,
             IGetRelationshipService<T, TId> getRelationship = null,
-            IGetRelationshipsService<T, TId> getRelationships = null,
             ICreateService<T, TId> create = null,
             IUpdateService<T, TId> update = null,
             IUpdateRelationshipService<T, TId> updateRelationships = null,
             IDeleteService<T, TId> delete = null)
-            : base(jsonApiOptions, loggerFactory, getAll, getById, getRelationship, getRelationships, create, update,
+            : base(jsonApiOptions, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
                 updateRelationships, delete)
         { }
 
@@ -38,27 +38,27 @@ namespace JsonApiDotNetCore.Controllers
         public override async Task<IActionResult> GetAsync(TId id) => await base.GetAsync(id);
 
         [HttpGet("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
-            => await base.GetRelationshipsAsync(id, relationshipName);
-
-        [HttpGet("{id}/{relationshipName}")]
         public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
             => await base.GetRelationshipAsync(id, relationshipName);
 
+        [HttpGet("{id}/{relationshipName}")]
+        public override async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName)
+            => await base.GetSecondaryAsync(id, relationshipName);
+
         [HttpPost]
-        public override async Task<IActionResult> PostAsync([FromBody] T entity)
-            => await base.PostAsync(entity);
+        public override async Task<IActionResult> PostAsync([FromBody] T resource)
+            => await base.PostAsync(resource);
 
         [HttpPatch("{id}")]
-        public override async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
+        public override async Task<IActionResult> PatchAsync(TId id, [FromBody] T resource)
         {
-            return await base.PatchAsync(id, entity);
+            return await base.PatchAsync(id, resource);
         }
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> PatchRelationshipsAsync(
+        public override async Task<IActionResult> PatchRelationshipAsync(
             TId id, string relationshipName, [FromBody] object relationships)
-            => await base.PatchRelationshipsAsync(id, relationshipName, relationships);
+            => await base.PatchRelationshipAsync(id, relationshipName, relationships);
 
         [HttpDelete("{id}")]
         public override async Task<IActionResult> DeleteAsync(TId id) => await base.DeleteAsync(id);
@@ -78,13 +78,13 @@ namespace JsonApiDotNetCore.Controllers
             ILoggerFactory loggerFactory,
             IGetAllService<T, int> getAll = null,
             IGetByIdService<T, int> getById = null,
+            IGetSecondaryService<T, int> getSecondary = null,
             IGetRelationshipService<T, int> getRelationship = null,
-            IGetRelationshipsService<T, int> getRelationships = null,
             ICreateService<T, int> create = null,
             IUpdateService<T, int> update = null,
             IUpdateRelationshipService<T, int> updateRelationships = null,
             IDeleteService<T, int> delete = null)
-            : base(jsonApiOptions, loggerFactory, getAll, getById, getRelationship, getRelationships, create, update,
+            : base(jsonApiOptions, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
                 updateRelationships, delete)
         { }
     }

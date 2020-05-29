@@ -9,13 +9,13 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public abstract class BaseJsonApiController<T, TId> : JsonApiControllerMixin where T : class, IIdentifiable<TId>
+    public abstract class BaseJsonApiController<T, TId> : CoreJsonApiController where T : class, IIdentifiable<TId>
     {
         private readonly IJsonApiOptions _jsonApiOptions;
         private readonly IGetAllService<T, TId> _getAll;
         private readonly IGetByIdService<T, TId> _getById;
+        private readonly IGetSecondaryService<T, TId> _getSecondary;
         private readonly IGetRelationshipService<T, TId> _getRelationship;
-        private readonly IGetRelationshipsService<T, TId> _getRelationships;
         private readonly ICreateService<T, TId> _create;
         private readonly IUpdateService<T, TId> _update;
         private readonly IUpdateRelationshipService<T, TId> _updateRelationships;
@@ -44,8 +44,8 @@ namespace JsonApiDotNetCore.Controllers
             ILoggerFactory loggerFactory,
             IGetAllService<T, TId> getAll = null,
             IGetByIdService<T, TId> getById = null,
+            IGetSecondaryService<T, TId> getSecondary = null,
             IGetRelationshipService<T, TId> getRelationship = null,
-            IGetRelationshipsService<T, TId> getRelationships = null,
             ICreateService<T, TId> create = null,
             IUpdateService<T, TId> update = null,
             IUpdateRelationshipService<T, TId> updateRelationships = null,
@@ -55,8 +55,8 @@ namespace JsonApiDotNetCore.Controllers
             _logger = loggerFactory.CreateLogger<BaseJsonApiController<T, TId>>();
             _getAll = getAll;
             _getById = getById;
+            _getSecondary = getSecondary;
             _getRelationship = getRelationship;
-            _getRelationships = getRelationships;
             _create = create;
             _update = update;
             _updateRelationships = updateRelationships;
@@ -68,8 +68,8 @@ namespace JsonApiDotNetCore.Controllers
             _logger.LogTrace($"Entering {nameof(GetAsync)}().");
 
             if (_getAll == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
-            var entities = await _getAll.GetAsync();
-            return Ok(entities);
+            var resources = await _getAll.GetAsync();
+            return Ok(resources);
         }
 
         public virtual async Task<IActionResult> GetAsync(TId id)
@@ -77,18 +77,8 @@ namespace JsonApiDotNetCore.Controllers
             _logger.LogTrace($"Entering {nameof(GetAsync)}('{id}').");
 
             if (_getById == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
-            var entity = await _getById.GetAsync(id);
-            return Ok(entity);
-        }
-
-        public virtual async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
-        {
-            _logger.LogTrace($"Entering {nameof(GetRelationshipsAsync)}('{id}', '{relationshipName}').");
-
-            if (_getRelationships == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
-            var relationship = await _getRelationships.GetRelationshipsAsync(id, relationshipName);
-
-            return Ok(relationship);
+            var resource = await _getById.GetAsync(id);
+            return Ok(resource);
         }
 
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
@@ -97,20 +87,30 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
+
             return Ok(relationship);
         }
 
-        public virtual async Task<IActionResult> PostAsync([FromBody] T entity)
+        public virtual async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName)
         {
-            _logger.LogTrace($"Entering {nameof(PostAsync)}({(entity == null ? "null" : "object")}).");
+            _logger.LogTrace($"Entering {nameof(GetSecondaryAsync)}('{id}', '{relationshipName}').");
+
+            if (_getSecondary == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
+            var relationship = await _getSecondary.GetSecondaryAsync(id, relationshipName);
+            return Ok(relationship);
+        }
+
+        public virtual async Task<IActionResult> PostAsync([FromBody] T resource)
+        {
+            _logger.LogTrace($"Entering {nameof(PostAsync)}({(resource == null ? "null" : "object")}).");
 
             if (_create == null)
                 throw new RequestMethodNotAllowedException(HttpMethod.Post);
 
-            if (entity == null)
+            if (resource == null)
                 throw new InvalidRequestBodyException(null, null, null);
 
-            if (!_jsonApiOptions.AllowClientGeneratedIds && !string.IsNullOrEmpty(entity.StringId))
+            if (!_jsonApiOptions.AllowClientGeneratedIds && !string.IsNullOrEmpty(resource.StringId))
                 throw new ResourceIdInPostRequestNotAllowedException();
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
@@ -119,17 +119,17 @@ namespace JsonApiDotNetCore.Controllers
                 throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions.IncludeExceptionStackTraceInErrors, namingStrategy);
             }
 
-            entity = await _create.CreateAsync(entity);
+            resource = await _create.CreateAsync(resource);
 
-            return Created($"{HttpContext.Request.Path}/{entity.StringId}", entity);
+            return Created($"{HttpContext.Request.Path}/{resource.StringId}", resource);
         }
 
-        public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
+        public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] T resource)
         {
-            _logger.LogTrace($"Entering {nameof(PatchAsync)}('{id}', {(entity == null ? "null" : "object")}).");
+            _logger.LogTrace($"Entering {nameof(PatchAsync)}('{id}', {(resource == null ? "null" : "object")}).");
 
             if (_update == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
-            if (entity == null)
+            if (resource == null)
                 throw new InvalidRequestBodyException(null, null, null);
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
@@ -138,16 +138,16 @@ namespace JsonApiDotNetCore.Controllers
                 throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions.IncludeExceptionStackTraceInErrors, namingStrategy);
             }
 
-            var updatedEntity = await _update.UpdateAsync(id, entity);
-            return updatedEntity == null ? Ok(null) : Ok(updatedEntity);
+            var updated = await _update.UpdateAsync(id, resource);
+            return updated == null ? Ok(null) : Ok(updated);
         }
 
-        public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] object relationships)
+        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object relationships)
         {
-            _logger.LogTrace($"Entering {nameof(PatchRelationshipsAsync)}('{id}', '{relationshipName}', {(relationships == null ? "null" : "object")}).");
+            _logger.LogTrace($"Entering {nameof(PatchRelationshipAsync)}('{id}', '{relationshipName}', {(relationships == null ? "null" : "object")}).");
 
             if (_updateRelationships == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
-            await _updateRelationships.UpdateRelationshipsAsync(id, relationshipName, relationships);
+            await _updateRelationships.UpdateRelationshipAsync(id, relationshipName, relationships);
             return Ok();
         }
 
@@ -184,13 +184,13 @@ namespace JsonApiDotNetCore.Controllers
             ILoggerFactory loggerFactory,
             IGetAllService<T, int> getAll = null,
             IGetByIdService<T, int> getById = null,
+            IGetSecondaryService<T, int> getSecondary = null,
             IGetRelationshipService<T, int> getRelationship = null,
-            IGetRelationshipsService<T, int> getRelationships = null,
             ICreateService<T, int> create = null,
             IUpdateService<T, int> update = null,
             IUpdateRelationshipService<T, int> updateRelationships = null,
             IDeleteService<T, int> delete = null)
-            : base(jsonApiOptions, loggerFactory, getAll, getById, getRelationship, getRelationships, create, update,
+            : base(jsonApiOptions, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
                 updateRelationships, delete)
         { }
     }

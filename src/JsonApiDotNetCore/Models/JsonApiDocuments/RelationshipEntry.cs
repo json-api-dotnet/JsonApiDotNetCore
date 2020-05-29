@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models

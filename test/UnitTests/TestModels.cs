@@ -14,7 +14,7 @@ namespace UnitTests.TestModels
         [Attr] public int? NullableIntField { get; set; }
         [Attr] public Guid GuidField { get; set; }
         [Attr] public ComplexType ComplexField { get; set; }
-        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowMutate)] public string Immutable { get; set; }
+        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowChange)] public string Immutable { get; set; }
     }
 
     public class TestResourceWithList : Identifiable

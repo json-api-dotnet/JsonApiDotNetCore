@@ -54,7 +54,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             passport.BirthCountry = _countryFaker.Generate();
             
             _context.Passports.Add(passport);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/passports/" + passport.StringId);
 
@@ -75,8 +75,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Get_Passports()
         {
             // Arrange
-            _context.Passports.RemoveRange(_context.Passports);
-            _context.SaveChanges();
+            await _context.ClearTableAsync<Passport>();
+            await _context.SaveChangesAsync();
 
             var passports = _passportFaker.Generate(3);
             foreach (var passport in passports)
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             }
             
             _context.Passports.AddRange(passports);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/passports");
 
@@ -108,12 +108,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Requires fix for https://github.com/dotnet/efcore/issues/20502")]
         public async Task Can_Get_Passports_With_Filter()
         {
             // Arrange
-            _context.Passports.RemoveRange(_context.Passports);
-            _context.SaveChanges();
+            await _context.ClearTableAsync<Passport>();
+            await _context.SaveChangesAsync();
 
             var passports = _passportFaker.Generate(3);
             foreach (var passport in passports)
@@ -128,9 +128,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             passports[2].Person.FirstName= "Joe";
             
             _context.Passports.AddRange(passports);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/passports?include=person&filter[socialSecurityNumber]=12345&filter[person.firstName]=Joe");
+            var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/passports?include=person&filter=and(equals(socialSecurityNumber,'12345'),equals(person.firstName,'Joe'))");
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -152,8 +152,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Get_Passports_With_Sparse_Fieldset()
         {
             // Arrange
-            _context.Passports.RemoveRange(_context.Passports);
-            _context.SaveChanges();
+            await _context.ClearTableAsync<Passport>();
+            await _context.SaveChangesAsync();
 
             var passports = _passportFaker.Generate(2);
             foreach (var passport in passports)
@@ -163,7 +163,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             }
             
             _context.Passports.AddRange(passports);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/passports?include=person&fields=socialSecurityNumber&fields[person]=firstName");
 

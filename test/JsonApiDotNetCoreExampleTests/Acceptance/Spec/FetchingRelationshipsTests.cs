@@ -8,10 +8,13 @@ using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xunit;
+using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
@@ -31,19 +34,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task When_getting_related_missing_to_one_resource_it_should_succeed_with_null_data()
+        public async Task When_getting_existing_ToOne_relationship_it_should_succeed()
         {
             // Arrange
             var todoItem = _todoItemFaker.Generate();
-            todoItem.Owner = null;
+            todoItem.Owner = new Person();
 
             var context = _fixture.GetService<AppDbContext>();
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            var route = $"/api/v1/todoItems/{todoItem.Id}/owner";
+            var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/owner";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -55,11 +58,118 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var doc = JsonConvert.DeserializeObject<Document>(body);
-            Assert.False(doc.IsManyData);
-            Assert.Null(doc.Data);
+            var json = JsonConvert.DeserializeObject<JObject>(body).ToString();
 
-            Assert.Equal("{\"meta\":{\"copyright\":\"Copyright 2015 Example Corp.\",\"authors\":[\"Jared Nance\",\"Maurits Moeys\",\"Harro van der Kroft\"]},\"links\":{\"self\":\"http://localhost" + route + "\"},\"data\":null}", body);
+            Assert.Equal(@"{
+  ""links"": {
+    ""self"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/relationships/owner"",
+    ""related"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/owner""
+  },
+  ""data"": {
+    ""type"": ""people"",
+    ""id"": """ + todoItem.Owner.StringId + @"""
+  }
+}", json);
+        }
+
+        [Fact]
+        public async Task When_getting_existing_ToMany_relationship_it_should_succeed()
+        {
+            // Arrange
+            var author = new Author
+            {
+                LastName = "X",
+                Articles = new List<Article>
+                {
+                    new Article
+                    {
+                        Caption = "Y"
+                    },
+                    new Article
+                    {
+                        Caption = "Z"
+                    }
+                }
+            };
+
+            var context = _fixture.GetService<AppDbContext>();
+            context.AuthorDifferentDbContextName.Add(author);
+            await context.SaveChangesAsync();
+
+            var route = $"/api/v1/authors/{author.Id}/relationships/articles";
+
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, route);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var json = JsonConvert.DeserializeObject<JObject>(body).ToString();
+
+            Assert.Equal(@"{
+  ""links"": {
+    ""self"": ""http://localhost/api/v1/authors/" + author.StringId + @"/relationships/articles"",
+    ""related"": ""http://localhost/api/v1/authors/" + author.StringId + @"/articles""
+  },
+  ""data"": [
+    {
+      ""type"": ""articles"",
+      ""id"": """ + author.Articles[0].StringId + @"""
+    },
+    {
+      ""type"": ""articles"",
+      ""id"": """ + author.Articles[1].StringId + @"""
+    }
+  ]
+}", json);
+        }
+
+        [Fact]
+        public async Task When_getting_related_missing_to_one_resource_it_should_succeed_with_null_data()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = null;
+
+            var context = _fixture.GetService<AppDbContext>();
+            context.TodoItems.Add(todoItem);
+            await context.SaveChangesAsync();
+
+            var route = $"/api/v1/todoItems/{todoItem.StringId}/owner";
+
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, route);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var json = JsonConvert.DeserializeObject<JObject>(body).ToString();
+            Assert.Equal(@"{
+  ""meta"": {
+    ""copyright"": ""Copyright 2015 Example Corp."",
+    ""authors"": [
+      ""Jared Nance"",
+      ""Maurits Moeys"",
+      ""Harro van der Kroft""
+    ]
+  },
+  ""links"": {
+    ""self"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/owner""
+  },
+  ""data"": null
+}", json);
         }
 
         [Fact]
@@ -75,7 +185,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/owner";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -105,7 +215,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var route = $"/api/v1/todoItems/{todoItem.Id}/childrenTodos";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -135,7 +245,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/childrenTodos";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -158,7 +268,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var route = "/api/v1/todoItems/99999999/owner";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -182,7 +292,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var route = "/api/v1/todoItems/99999999/relationships/owner";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -212,7 +322,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var route = $"/api/v1/todoItems/{todoItem.Id}/invalid";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -242,7 +352,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/invalid";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);

@@ -1,9 +1,12 @@
 using JsonApiDotNetCore.Internal.Contracts;
 using System;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Query;
 using System.Linq;
+using JsonApiDotNetCore.Internal.Queries;
+using JsonApiDotNetCore.Internal.Queries.Expressions;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Query;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -11,34 +14,49 @@ namespace JsonApiDotNetCore.Serialization.Server
     public class FieldsToSerialize : IFieldsToSerialize
     {
         private readonly IResourceGraph _resourceGraph;
-        private readonly ISparseFieldsService _sparseFieldsService ;
-        private readonly IResourceDefinitionProvider _provider;
+        private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
+        private readonly IResourceDefinitionProvider _resourceDefinitionProvider;
 
-        public FieldsToSerialize(IResourceGraph resourceGraph,
-                                 ISparseFieldsService sparseFieldsService,
-                                 IResourceDefinitionProvider provider)
+        public FieldsToSerialize(
+            IResourceGraph resourceGraph,
+            IEnumerable<IQueryConstraintProvider> constraintProviders,
+            IResourceDefinitionProvider resourceDefinitionProvider)
         {
             _resourceGraph = resourceGraph;
-            _sparseFieldsService  = sparseFieldsService;
-            _provider = provider;
+            _constraintProviders = constraintProviders;
+            _resourceDefinitionProvider = resourceDefinitionProvider;
         }
 
         /// <inheritdoc/>
-        public List<AttrAttribute> GetAllowedAttributes(Type type, RelationshipAttribute relationship = null)
-        {   // get the list of all exposed attributes for the given type.
-            var allowed = _resourceGraph.GetAttributes(type);
+        public IReadOnlyCollection<AttrAttribute> GetAttributes(Type type, RelationshipAttribute relationship = null)
+        {   
+            var sparseFieldSetAttributes = _constraintProviders
+                .SelectMany(p => p.GetConstraints())
+                .Where(expressionInScope => relationship == null
+                    ? expressionInScope.Scope == null
+                    : expressionInScope.Scope != null && expressionInScope.Scope.Fields.Last().Equals(relationship))
+                .Select(expressionInScope => expressionInScope.Expression)
+                .OfType<SparseFieldSetExpression>()
+                .SelectMany(sparseFieldSet => sparseFieldSet.Attributes)
+                .ToHashSet();
 
-            var resourceDefinition = _provider.Get(type);
+            if (!sparseFieldSetAttributes.Any())
+            {
+                sparseFieldSetAttributes = _resourceGraph.GetAttributes(type).ToHashSet();
+            }
+
+            sparseFieldSetAttributes.RemoveWhere(attr => !attr.Capabilities.HasFlag(AttrCapabilities.AllowView));
+
+            var resourceDefinition = _resourceDefinitionProvider.Get(type);
             if (resourceDefinition != null)
-                // The set of allowed attributes to be exposed was defined on the resource definition
-                allowed = allowed.Intersect(resourceDefinition.GetAllowedAttributes()).ToList();
+            {
+                var tempExpression = sparseFieldSetAttributes.Any() ? new SparseFieldSetExpression(sparseFieldSetAttributes) : null;
+                tempExpression = resourceDefinition.OnApplySparseFieldSet(tempExpression);
 
-            var sparseFieldsSelection = _sparseFieldsService.Get(relationship);
-            if (sparseFieldsSelection.Any())
-                // from the allowed attributes, select the ones flagged by sparse field selection.
-                allowed = allowed.Intersect(sparseFieldsSelection).ToList();
+                sparseFieldSetAttributes = tempExpression == null ? new HashSet<AttrAttribute>() : tempExpression.Attributes.ToHashSet();
+            }
 
-            return allowed;
+            return sparseFieldSetAttributes;
         }
 
         /// <inheritdoc/>
@@ -48,14 +66,8 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// is not the same as not including. In the case of the latter,
         /// we may still want to add the relationship to expose the navigation link to the client.
         /// </remarks>
-        public List<RelationshipAttribute> GetAllowedRelationships(Type type)
+        public IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type)
         {
-            var resourceDefinition = _provider.Get(type);
-            if (resourceDefinition != null)
-                // The set of allowed attributes to be exposed was defined on the resource definition
-                return resourceDefinition.GetAllowedRelationships();
-
-            // The set of allowed attributes to be exposed was NOT defined on the resource definition: return all
             return _resourceGraph.GetRelationships(type);
         }
     }

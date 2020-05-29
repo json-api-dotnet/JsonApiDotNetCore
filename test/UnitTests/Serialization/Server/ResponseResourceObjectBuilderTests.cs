@@ -20,11 +20,11 @@ namespace UnitTests.Serialization.Server
         public void Build_RelationshipNotIncludedAndLinksEnabled_RelationshipEntryWithLinks()
         {
             // Arrange
-            var entity = new OneToManyPrincipal { Id = 10 };
+            var resource = new OneToManyPrincipal { Id = 10 };
             var builder = GetResponseResourceObjectBuilder(relationshipLinks: _dummyRelationshipLinks);
 
             // Act
-            var resourceObject = builder.Build(entity, relationships: _relationshipsForBuild);
+            var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
             Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));
@@ -37,11 +37,11 @@ namespace UnitTests.Serialization.Server
         public void Build_RelationshipNotIncludedAndLinksDisabled_NoRelationshipObject()
         {
             // Arrange
-            var entity = new OneToManyPrincipal { Id = 10 };
+            var resource = new OneToManyPrincipal { Id = 10 };
             var builder = GetResponseResourceObjectBuilder();
 
             // Act
-            var resourceObject = builder.Build(entity, relationships: _relationshipsForBuild);
+            var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
             Assert.Null(resourceObject.Relationships);
@@ -51,11 +51,11 @@ namespace UnitTests.Serialization.Server
         public void Build_RelationshipIncludedAndLinksDisabled_RelationshipEntryWithData()
         {
             // Arrange
-            var entity = new OneToManyPrincipal { Id = 10, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
+            var resource = new OneToManyPrincipal { Id = 10, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
             var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild } );
 
             // Act
-            var resourceObject = builder.Build(entity, relationships: _relationshipsForBuild);
+            var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
             Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));
@@ -68,11 +68,11 @@ namespace UnitTests.Serialization.Server
         public void Build_RelationshipIncludedAndLinksEnabled_RelationshipEntryWithDataAndLinks()
         {
             // Arrange
-            var entity = new OneToManyPrincipal { Id = 10, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
+            var resource = new OneToManyPrincipal { Id = 10, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
             var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild }, relationshipLinks: _dummyRelationshipLinks);
 
             // Act
-            var resourceObject = builder.Build(entity, relationships: _relationshipsForBuild);
+            var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
             Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));

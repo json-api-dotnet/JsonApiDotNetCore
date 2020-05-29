@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
     public interface IResourceContextProvider
     {
         /// <summary>
-        /// Gets all registered context entities
+        /// Gets all registered resource contexts.
         /// </summary>
         IEnumerable<ResourceContext> GetResourceContexts();
 

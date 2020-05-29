@@ -32,5 +32,10 @@ namespace JsonApiDotNetCore.Models.Annotation
 
             PublicName = publicName;
         }
+
+        public override string ToString()
+        {
+            return PublicName ?? (Property != null ? Property.Name : base.ToString());
+        }
     }
 }

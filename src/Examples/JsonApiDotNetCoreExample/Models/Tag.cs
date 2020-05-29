@@ -1,8 +1,6 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCoreExample.Data;
 
 namespace JsonApiDotNetCoreExample.Models
 {
@@ -12,9 +10,14 @@ namespace JsonApiDotNetCoreExample.Models
         [RegularExpression(@"^\W$")]
         public string Name { get; set; }
 
-        public Tag(AppDbContext appDbContext)
-        {
-            if (appDbContext == null) throw new ArgumentNullException(nameof(appDbContext));
-        }
+        [Attr]
+        public TagColor Color { get; set; }
+    }
+
+    public enum TagColor
+    {
+        Red,
+        Green,
+        Blue
     }
 }

@@ -12,6 +12,7 @@ using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -28,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public readonly IServiceProvider ServiceProvider;
         public TestFixture()
         {
-            var builder = new WebHostBuilder().UseStartup<TStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TStartup>();
             _server = new TestServer(builder);
             ServiceProvider = _server.Host.Services;
 
@@ -73,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .AddResource<Passport>()
                 .AddResource<TodoItemClient>("todoItems")
                 .AddResource<TodoItemCollectionClient, Guid>().Build();
-            return new ResponseDeserializer(resourceGraph, new DefaultResourceFactory(ServiceProvider));
+            return new ResponseDeserializer(resourceGraph, new ResourceFactory(ServiceProvider));
         }
 
         public T GetService<T>() => (T)ServiceProvider.GetService(typeof(T));

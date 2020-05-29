@@ -39,7 +39,7 @@ namespace Benchmarks.Serialization
             var options = new JsonApiOptions();
             IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
             var targetedFields = new TargetedFields();
-            _jsonApiDeserializer = new RequestDeserializer(resourceGraph, new DefaultResourceFactory(new ServiceContainer()), targetedFields, new HttpContextAccessor());
+            _jsonApiDeserializer = new RequestDeserializer(resourceGraph, new ResourceFactory(new ServiceContainer()), targetedFields, new HttpContextAccessor());
         }
 
         [Benchmark]

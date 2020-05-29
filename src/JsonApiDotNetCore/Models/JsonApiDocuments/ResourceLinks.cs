@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace JsonApiDotNetCore.Models.Links
+namespace JsonApiDotNetCore.Models.JsonApiDocuments
 {
     public sealed class ResourceLinks
     {

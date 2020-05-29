@@ -48,14 +48,14 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         }
 
         /// <inheritdoc/>
-        public void IncludeRelationshipChain(List<RelationshipAttribute> inclusionChain, IIdentifiable rootEntity)
+        public void IncludeRelationshipChain(List<RelationshipAttribute> inclusionChain, IIdentifiable rootResource)
         {
-            // We dont have to build a resource object for the root entity because
+            // We don't have to build a resource object for the root resource because
             // this one is already encoded in the documents primary data, so we process the chain
-            // starting from the first related entity.
+            // starting from the first related resource.
             var relationship = inclusionChain.First();
             var chainRemainder = ShiftChain(inclusionChain);
-            var related = relationship.GetValue(rootEntity);
+            var related = relationship.GetValue(rootResource);
             ProcessChain(relationship, related, chainRemainder);
         }
 
@@ -105,11 +105,11 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// ProcessRelationships method.
         /// </summary>
         /// <param name="relationship"></param>
-        /// <param name="entity"></param>
+        /// <param name="resource"></param>
         /// <returns></returns>
-        protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
+        protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
-            return new RelationshipEntry { Links = _linkBuilder.GetRelationshipLinks(relationship, entity) };
+            return new RelationshipEntry { Links = _linkBuilder.GetRelationshipLinks(relationship, resource) };
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             var entry = _included.SingleOrDefault(ro => ro.Type == resourceName && ro.Id == parent.StringId);
             if (entry == null)
             {
-                entry = Build(parent, _fieldsToSerialize.GetAllowedAttributes(type, relationship), _fieldsToSerialize.GetAllowedRelationships(type));
+                entry = Build(parent, _fieldsToSerialize.GetAttributes(type, relationship), _fieldsToSerialize.GetRelationships(type));
                 _included.Add(entry);
             }
             return entry;

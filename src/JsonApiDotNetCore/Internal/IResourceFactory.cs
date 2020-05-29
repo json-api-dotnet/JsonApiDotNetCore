@@ -14,11 +14,11 @@ namespace JsonApiDotNetCore.Internal
         public NewExpression CreateNewExpression(Type resourceType);
     }
 
-    internal sealed class DefaultResourceFactory : IResourceFactory
+    internal sealed class ResourceFactory : IResourceFactory
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public DefaultResourceFactory(IServiceProvider serviceProvider)
+        public ResourceFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -53,28 +53,32 @@ namespace JsonApiDotNetCore.Internal
 
         /// <summary>
         /// Configures which links to show in the <see cref="TopLevelLinks"/>
-        /// object for this resource. If set to <see cref="Link.NotConfigured"/>,
-        /// the configuration will be read from <see cref="ILinksConfiguration"/>.
-        ///  Defaults to <see cref="Link.NotConfigured"/>.
+        /// object for this resource. If set to <see cref="Links.NotConfigured"/>,
+        /// the configuration will be read from <see cref="IJsonApiOptions"/>.
+        /// Defaults to <see cref="Links.NotConfigured"/>.
         /// </summary>
-        public Link TopLevelLinks { get; internal set; } = Link.NotConfigured;
+        public Links TopLevelLinks { get; internal set; } = Links.NotConfigured;
 
         /// <summary>
         /// Configures which links to show in the <see cref="ResourceLinks"/>
-        /// object for this resource. If set to <see cref="Link.NotConfigured"/>,
-        /// the configuration will be read from <see cref="ILinksConfiguration"/>.
-        /// Defaults to <see cref="Link.NotConfigured"/>.
+        /// object for this resource. If set to <see cref="Links.NotConfigured"/>,
+        /// the configuration will be read from <see cref="IJsonApiOptions"/>.
+        /// Defaults to <see cref="Links.NotConfigured"/>.
         /// </summary>
-        public Link ResourceLinks { get; internal set; } = Link.NotConfigured;
+        public Links ResourceLinks { get; internal set; } = Links.NotConfigured;
 
         /// <summary>
         /// Configures which links to show in the <see cref="RelationshipLinks"/>
         /// for all relationships of the resource for which this attribute was instantiated.
-        /// If set to <see cref="Link.NotConfigured"/>, the configuration will
+        /// If set to <see cref="Links.NotConfigured"/>, the configuration will
         /// be read from <see cref="RelationshipAttribute.RelationshipLinks"/>  or
-        /// <see cref="ILinksConfiguration"/>. Defaults to <see cref="Link.NotConfigured"/>.
+        /// <see cref="IJsonApiOptions"/>. Defaults to <see cref="Links.NotConfigured"/>.
         /// </summary>
-        public Link RelationshipLinks { get; internal set; } = Link.NotConfigured;
+        public Links RelationshipLinks { get; internal set; } = Links.NotConfigured;
 
+        public override string ToString()
+        {
+            return ResourceName;
+        }
     }
 }

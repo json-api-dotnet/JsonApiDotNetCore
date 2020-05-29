@@ -14,10 +14,10 @@ Eliminate CRUD boilerplate and provide the following features across your resour
 - Filtering
 - Sorting
 - Pagination
-- Sparse field selection
+- Sparse fieldset selection
 - Relationship inclusion and navigation
 
-Checkout the [example requests](request-examples) to see the kind of features you will get out of the box.
+Checkout the [example requests](request-examples/index.md) to see the kind of features you will get out of the box.
 
 ### 2. Extensibility
 

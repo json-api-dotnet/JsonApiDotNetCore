@@ -1,4 +1,4 @@
-﻿namespace JsonApiDotNetCore.Serialization.Server
+namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <summary>
     /// Serializer used internally in JsonApiDotNetCore to serialize responses.
@@ -6,7 +6,7 @@
     public interface IJsonApiSerializer
     {
         /// <summary>
-        /// Serializes a single entity or a list of entities.
+        /// Serializes a single resource or a list of resources.
         /// </summary>
         string Serialize(object content);
     }

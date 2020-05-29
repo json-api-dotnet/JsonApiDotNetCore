@@ -1,7 +1,5 @@
-using System;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCoreExample.Data;
 
 namespace JsonApiDotNetCoreExample.Models
 {
@@ -12,11 +10,6 @@ namespace JsonApiDotNetCoreExample.Models
 
         public int TagId { get; set; }
         public Tag Tag { get; set; }
-
-        public ArticleTag(AppDbContext appDbContext)
-        {
-            if (appDbContext == null) throw new ArgumentNullException(nameof(appDbContext));
-        }
     }
 
     public class IdentifiableArticleTag : Identifiable

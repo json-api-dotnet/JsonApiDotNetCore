@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
@@ -15,11 +16,11 @@ namespace ReportsExample.Services
             _logger = loggerFactory.CreateLogger<ReportService>();
         }
 
-        public Task<IEnumerable<Report>> GetAsync()
+        public Task<IReadOnlyCollection<Report>> GetAsync()
         {
             _logger.LogInformation("GetAsync");
 
-            IEnumerable<Report> reports = GetReports();
+            IReadOnlyCollection<Report> reports = GetReports().ToList();
 
             return Task.FromResult(reports);
         }
