@@ -36,7 +36,7 @@ See the [examples](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/mas
 
 ## Installation And Usage
 
-See [the documentation](https://json-api-dotnet.github.io/#/) for detailed usage.
+See [our documentation](https://json-api-dotnet.github.io/JsonApiDotNetCore/) for detailed usage.
 
 ### Models
 
@@ -110,8 +110,8 @@ dotnet clean
 ```
 
 #### Compiler warnings
-The `Release` build configuration is set to fail on warnings. That means when submitting a PR there shouldn't be any compiler warnings because the CI build it set to `Release`.
 
+The `Release` build configuration is set to fail on warnings. That means when submitting a PR there shouldn't be any compiler warnings because the CI build it set to `Release`.
 
 ## Compatibility
 
@@ -121,5 +121,3 @@ A lot of changes were introduced in v4.0.0, the following chart should help you 
 | ----------------- | ------------- |
 | 2.*               | v3.*          |
 | 3.*               | v4.*          |
-
-
