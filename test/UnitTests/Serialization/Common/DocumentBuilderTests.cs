@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Serialization;
 using Moq;
 using Xunit;

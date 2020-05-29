@@ -9,6 +9,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
@@ -166,7 +167,7 @@ namespace JsonApiDotNetCore.Data
 
         private bool IsHasOneRelationship(string internalRelationshipName, Type type)
         {
-            var relationshipAttr = _resourceGraph.GetRelationships(type).FirstOrDefault(r => r.PropertyInfo.Name == internalRelationshipName);
+            var relationshipAttr = _resourceGraph.GetRelationships(type).FirstOrDefault(r => r.Property.Name == internalRelationshipName);
             if (relationshipAttr != null)
             {
                 if (relationshipAttr is HasOneAttribute)
@@ -268,7 +269,7 @@ namespace JsonApiDotNetCore.Data
                     if (tracked != null) newWasAlreadyAttached = true;
                     return Convert.ChangeType(tracked ?? pointer, relationshipAttr.RightType);
                 })
-                .CopyToTypedCollection(relationshipAttr.PropertyInfo.PropertyType);
+                .CopyToTypedCollection(relationshipAttr.Property.PropertyType);
 
             if (newWasAlreadyAttached) wasAlreadyAttached = true;
             return trackedPointerCollection;
@@ -439,7 +440,7 @@ namespace JsonApiDotNetCore.Data
             }
             else if (relationshipAttribute is HasManyAttribute hasManyAttribute)
             {
-                _context.Entry(oldEntity).Collection(hasManyAttribute.PropertyInfo.Name).Load();
+                _context.Entry(oldEntity).Collection(hasManyAttribute.Property.Name).Load();
             }
         }
 

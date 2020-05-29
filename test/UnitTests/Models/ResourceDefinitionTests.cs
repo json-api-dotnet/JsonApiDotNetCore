@@ -1,10 +1,10 @@
 using System;
-using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -24,10 +24,10 @@ namespace UnitTests.Models
             // Assert
             Assert.Equal(2, sorts.Count);
 
-            Assert.Equal(nameof(Model.CreatedAt), sorts[0].Attribute.PropertyInfo.Name);
+            Assert.Equal(nameof(Model.CreatedAt), sorts[0].Attribute.Property.Name);
             Assert.Equal(SortDirection.Ascending, sorts[0].SortDirection);
 
-            Assert.Equal(nameof(Model.Password), sorts[1].Attribute.PropertyInfo.Name);
+            Assert.Equal(nameof(Model.Password), sorts[1].Attribute.Property.Name);
             Assert.Equal(SortDirection.Descending, sorts[1].SortDirection);
         }
 
@@ -41,7 +41,7 @@ namespace UnitTests.Models
             var attrs = resource.GetAllowedAttributes();
 
             // Assert
-            Assert.DoesNotContain(attrs, a => a.PropertyInfo.Name == nameof(Model.AlwaysExcluded));
+            Assert.DoesNotContain(attrs, a => a.Property.Name == nameof(Model.AlwaysExcluded));
         }
 
         [Fact]
@@ -54,8 +54,8 @@ namespace UnitTests.Models
             var attrs = resource.GetAllowedAttributes();
 
             // Assert
-            Assert.DoesNotContain(attrs, a => a.PropertyInfo.Name == nameof(Model.AlwaysExcluded));
-            Assert.DoesNotContain(attrs, a => a.PropertyInfo.Name == nameof(Model.Password));
+            Assert.DoesNotContain(attrs, a => a.Property.Name == nameof(Model.AlwaysExcluded));
+            Assert.DoesNotContain(attrs, a => a.Property.Name == nameof(Model.Password));
         }
     }
 

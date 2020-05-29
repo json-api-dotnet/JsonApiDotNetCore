@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Query;
 using System.Linq;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {

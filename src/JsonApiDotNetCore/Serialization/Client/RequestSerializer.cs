@@ -1,9 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Client

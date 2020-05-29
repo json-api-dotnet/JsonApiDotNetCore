@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Authentication;
 

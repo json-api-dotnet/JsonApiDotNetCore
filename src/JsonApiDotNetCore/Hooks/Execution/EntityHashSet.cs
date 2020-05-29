@@ -4,6 +4,7 @@ using System.Collections;
 using JsonApiDotNetCore.Internal;
 using System;
 using System.Linq.Expressions;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Hooks
 {

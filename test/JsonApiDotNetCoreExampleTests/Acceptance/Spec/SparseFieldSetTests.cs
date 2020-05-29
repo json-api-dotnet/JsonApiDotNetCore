@@ -63,7 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var properties = _resourceGraph
                 .GetAttributes<TodoItem>(e => new {e.Id, e.Description, e.CreatedDate, e.AchievedDate})
-                .Select(x => x.PropertyInfo.Name);
+                .Select(x => x.Property.Name);
 
             var resourceFactory = new DefaultResourceFactory(new ServiceContainer());
 

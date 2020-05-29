@@ -1,7 +1,7 @@
 using System;
 using JsonApiDotNetCore.Models.Links;
 
-namespace JsonApiDotNetCore.Models
+namespace JsonApiDotNetCore.Models.Annotation
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class HasManyAttribute : RelationshipAttribute
@@ -15,15 +15,13 @@ namespace JsonApiDotNetCore.Models
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// <param name="inverseNavigationProperty"></param>
         /// <example>
-        /// 
-        /// <code>
+        /// <code><![CDATA[
         /// public class Author : Identifiable 
         /// {
         ///     [HasMany("articles"]
-        ///     public List&lt;Article&gt; Articles { get; set; }
+        ///     public List<Article> Articles { get; set; }
         /// }
-        /// </code>
-        /// 
+        /// ]]></code>
         /// </example>
         public HasManyAttribute(string publicName = null, Link relationshipLinks = Link.All, bool canInclude = true, string inverseNavigationProperty = null)
         : base(publicName, relationshipLinks, canInclude)

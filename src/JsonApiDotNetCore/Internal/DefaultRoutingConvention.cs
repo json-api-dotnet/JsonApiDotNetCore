@@ -9,7 +9,6 @@ using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Internal
 {

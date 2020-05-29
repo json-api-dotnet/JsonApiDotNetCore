@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Query
 {
@@ -33,8 +33,8 @@ namespace JsonApiDotNetCore.Query
         protected AttrAttribute GetAttribute(string queryParameterName, string target, RelationshipAttribute relationship = null)
         {
             var attribute = relationship != null
-                ? _resourceGraph.GetAttributes(relationship.RightType).FirstOrDefault(a => a.Is(target))
-                : _requestResource.Attributes.FirstOrDefault(attr => attr.Is(target));
+                ? _resourceGraph.GetAttributes(relationship.RightType).FirstOrDefault(a => target == a.PublicName)
+                : _requestResource.Attributes.FirstOrDefault(attr => target == attr.PublicName);
 
             if (attribute == null)
             {
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Query
         protected RelationshipAttribute GetRelationship(string queryParameterName, string propertyName)
         {
             if (propertyName == null) return null;
-            var relationship = _requestResource.Relationships.FirstOrDefault(r => r.Is(propertyName));
+            var relationship = _requestResource.Relationships.FirstOrDefault(r => propertyName == r.PublicName);
             if (relationship == null)
             {
                 throw new InvalidQueryStringParameterException(queryParameterName,

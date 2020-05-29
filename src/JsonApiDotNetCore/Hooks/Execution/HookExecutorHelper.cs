@@ -11,6 +11,7 @@ using LeftType = System.Type;
 using RightType = System.Type;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Hooks
 {

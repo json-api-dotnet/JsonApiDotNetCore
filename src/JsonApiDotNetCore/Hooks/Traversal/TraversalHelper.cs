@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Serialization;
 using RightType = System.Type;
 using LeftType = System.Type;

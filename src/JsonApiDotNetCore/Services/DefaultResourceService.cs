@@ -12,6 +12,7 @@ using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.RequestServices;
 using Microsoft.EntityFrameworkCore;
 
@@ -359,8 +360,8 @@ namespace JsonApiDotNetCore.Services
             if (!hasTopLevelSparseFieldSet)
             {
                 var topPropertyNames = _currentRequestResource.Attributes
-                    .Where(x => x.PropertyInfo.SetMethod != null)
-                    .Select(x => x.PropertyInfo.Name);
+                    .Where(x => x.Property.SetMethod != null)
+                    .Select(x => x.Property.Name);
                 propertyNames.AddRange(topPropertyNames);
             }
 
@@ -410,7 +411,7 @@ namespace JsonApiDotNetCore.Services
 
         private RelationshipAttribute GetRelationship(string relationshipName)
         {
-            var relationship = _currentRequestResource.Relationships.SingleOrDefault(r => r.Is(relationshipName));
+            var relationship = _currentRequestResource.Relationships.SingleOrDefault(r => relationshipName == r.PublicName);
             if (relationship == null)
             {
                 throw new RelationshipNotFoundException(relationshipName, _currentRequestResource.ResourceName);

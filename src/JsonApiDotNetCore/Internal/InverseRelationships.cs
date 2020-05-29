@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Internal
                     foreach (var attr in ce.Relationships)
                     {
                         if (attr is HasManyThroughAttribute) continue;
-                        INavigation inverseNavigation = meta.FindNavigation(attr.PropertyInfo.Name)?.FindInverse();
+                        INavigation inverseNavigation = meta.FindNavigation(attr.Property.Name)?.FindInverse();
                         attr.InverseNavigation = inverseNavigation?.Name;
                     }
                 }

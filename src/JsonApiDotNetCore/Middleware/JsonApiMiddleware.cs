@@ -162,7 +162,7 @@ namespace JsonApiDotNetCore.Middleware
             {
                 currentRequest.RequestRelationship =
                     resourceContext.Relationships.SingleOrDefault(relationship =>
-                        relationship.PublicRelationshipName == (string) relationshipName);
+                        relationship.PublicName == (string) relationshipName);
             }
         }
 

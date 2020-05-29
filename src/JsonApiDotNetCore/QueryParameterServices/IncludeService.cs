@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
@@ -53,7 +53,7 @@ namespace JsonApiDotNetCore.Query
             var resourceContext = _requestResource;
             foreach (var relationshipName in chainParts)
             {
-                var relationship = resourceContext.Relationships.SingleOrDefault(r => r.PublicRelationshipName == relationshipName);
+                var relationship = resourceContext.Relationships.SingleOrDefault(r => r.PublicName == relationshipName);
                 if (relationship == null)
                 {
                     throw new InvalidQueryStringParameterException(parameterName, "The requested relationship to include does not exist.",

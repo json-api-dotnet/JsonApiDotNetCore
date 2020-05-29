@@ -1,7 +1,8 @@
 using System;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models.Links;
 
-namespace JsonApiDotNetCore.Models.Links
+namespace JsonApiDotNetCore.Models.Annotation
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public sealed class LinksAttribute : Attribute

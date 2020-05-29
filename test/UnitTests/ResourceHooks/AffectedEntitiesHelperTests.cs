@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Xunit;
 using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace UnitTests.ResourceHooks.AffectedEntities
 {
@@ -42,19 +43,19 @@ namespace UnitTests.ResourceHooks.AffectedEntities
             {
                 LeftType = typeof(Dummy),
                 RightType = typeof(ToOne),
-                PropertyInfo = typeof(Dummy).GetProperty(nameof(Dummy.FirstToOne))
+                Property = typeof(Dummy).GetProperty(nameof(Dummy.FirstToOne))
             };
             SecondToOneAttr = new HasOneAttribute("secondToOne")
             {
                 LeftType = typeof(Dummy),
                 RightType = typeof(ToOne),
-                PropertyInfo = typeof(Dummy).GetProperty(nameof(Dummy.SecondToOne))
+                Property = typeof(Dummy).GetProperty(nameof(Dummy.SecondToOne))
             };
             ToManyAttr = new HasManyAttribute("toManies")
             {
                 LeftType = typeof(Dummy),
                 RightType = typeof(ToMany),
-                PropertyInfo = typeof(Dummy).GetProperty(nameof(Dummy.ToManies))
+                Property = typeof(Dummy).GetProperty(nameof(Dummy.ToManies))
             };
             Relationships.Add(FirstToOneAttr, FirstToOnesEntities);
             Relationships.Add(SecondToOneAttr, SecondToOnesEntities);

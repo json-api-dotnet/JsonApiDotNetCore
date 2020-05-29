@@ -1,41 +1,29 @@
 using System;
-using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.Links;
 
-namespace JsonApiDotNetCore.Models
+namespace JsonApiDotNetCore.Models.Annotation
 {
-    public abstract class RelationshipAttribute : Attribute, IResourceField
+    public abstract class RelationshipAttribute : ResourceFieldAttribute
     {
-        protected RelationshipAttribute(string publicName, Link relationshipLinks, bool canInclude)
-        {
-            if (relationshipLinks == Link.Paging)
-                throw new JsonApiSetupException($"{Link.Paging:g} not allowed for argument {nameof(relationshipLinks)}");
-
-            PublicRelationshipName = publicName;
-            RelationshipLinks = relationshipLinks;
-            CanInclude = canInclude;
-        }
-
-        string IResourceField.PropertyName => PropertyInfo.Name;
-
-        public string PublicRelationshipName { get; internal set; }
         public string InverseNavigation { get; internal set; }
 
         /// <summary>
-        /// The resource property that this attribute is declared on.
+        /// The internal navigation property path to the related entity.
         /// </summary>
-        public PropertyInfo PropertyInfo { get; internal set; }
+        /// <remarks>
+        /// In all cases except the HasManyThrough relationships, this will just be the property name.
+        /// </remarks>
+        public virtual string RelationshipPath => Property.Name;
 
         /// <summary>
         /// The related entity type. This does not necessarily match the navigation property type.
         /// In the case of a HasMany relationship, this value will be the generic argument type.
         /// </summary>
-        /// 
         /// <example>
-        /// <code>
-        /// public List&lt;Tag&gt; Tags { get; set; } // Type => Tag
-        /// </code>
+        /// <code><![CDATA[
+        /// public List<Tag> Tags { get; set; } // Type => Tag
+        /// ]]></code>
         /// </example>
         public Type RightType { get; internal set; }
 
@@ -49,14 +37,25 @@ namespace JsonApiDotNetCore.Models
         /// object for this relationship.
         /// </summary>
         public Link RelationshipLinks { get; }
+
         public bool CanInclude { get; }
+
+        protected RelationshipAttribute(string publicName, Link relationshipLinks, bool canInclude)
+            : base(publicName)
+        {
+            if (relationshipLinks == Link.Paging)
+                throw new JsonApiSetupException($"{Link.Paging:g} not allowed for argument {nameof(relationshipLinks)}");
+
+            RelationshipLinks = relationshipLinks;
+            CanInclude = canInclude;
+        }
 
         /// <summary>
         /// Gets the value of the resource property this attributes was declared on.
         /// </summary>
         public virtual object GetValue(object entity)
         {
-            return PropertyInfo.GetValue(entity);
+            return Property.GetValue(entity);
         }
 
         /// <summary>
@@ -64,12 +63,12 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         public virtual void SetValue(object entity, object newValue, IResourceFactory resourceFactory)
         {
-            PropertyInfo.SetValue(entity, newValue);
+            Property.SetValue(entity, newValue);
         }
 
         public override string ToString()
         {
-            return base.ToString() + ":" + PublicRelationshipName;
+            return base.ToString() + ":" + PublicName;
         }
 
         public override bool Equals(object obj)
@@ -81,26 +80,13 @@ namespace JsonApiDotNetCore.Models
 
             var other = (RelationshipAttribute) obj;
 
-            return PublicRelationshipName == other.PublicRelationshipName && LeftType == other.LeftType &&
+            return PublicName == other.PublicName && LeftType == other.LeftType &&
                    RightType == other.RightType;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(PublicRelationshipName, LeftType, RightType);
+            return HashCode.Combine(PublicName, LeftType, RightType);
         }
-
-        /// <summary>
-        /// Whether or not the provided exposed name is equivalent to the one defined in the model
-        /// </summary>
-        public virtual bool Is(string publicRelationshipName) => publicRelationshipName == PublicRelationshipName;
-
-        /// <summary>
-        /// The internal navigation property path to the related entity.
-        /// </summary>
-        /// <remarks>
-        /// In all cases except the HasManyThrough relationships, this will just be the property name.
-        /// </remarks>
-        public virtual string RelationshipPath => PropertyInfo.Name;
     }
 }

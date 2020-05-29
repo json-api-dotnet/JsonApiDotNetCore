@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Serialization.Server;
 using Newtonsoft.Json;
@@ -43,7 +44,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="entity">The entity that was constructed from the document's body</param>
         /// <param name="field">The metadata for the exposed field</param>
         /// <param name="data">Relationship data for <paramref name="entity"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
-        protected abstract void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipEntry data = null);
+        protected abstract void AfterProcessField(IIdentifiable entity, ResourceFieldAttribute field, RelationshipEntry data = null);
 
         /// <inheritdoc/>
         protected object Deserialize(string body)
@@ -76,9 +77,9 @@ namespace JsonApiDotNetCore.Serialization
 
             foreach (var attr in attributes)
             {
-                if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
+                if (attributeValues.TryGetValue(attr.PublicName, out object newValue))
                 {
-                    var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
+                    var convertedValue = ConvertAttrValue(newValue, attr.Property.PropertyType);
                     attr.SetValue(entity, convertedValue);
                     AfterProcessField(entity, attr);
                 }
@@ -102,7 +103,7 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperties = entity.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
-                if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
+                if (!relationshipsValues.TryGetValue(attr.PublicName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
                     continue;
 
                 if (attr is HasOneAttribute hasOneAttribute)
@@ -199,7 +200,7 @@ namespace JsonApiDotNetCore.Serialization
                 throw new FormatException($"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
             }
 
-            var typedId = TypeHelper.ConvertStringIdToTypedId(attr.PropertyInfo.PropertyType, id, _resourceFactory);
+            var typedId = TypeHelper.ConvertStringIdToTypedId(attr.Property.PropertyType, id, _resourceFactory);
             foreignKey.SetValue(entity, typedId);
         }
 
@@ -238,7 +239,7 @@ namespace JsonApiDotNetCore.Serialization
                     return relatedInstance;
                 });
 
-                var convertedCollection = relatedResources.CopyToTypedCollection(attr.PropertyInfo.PropertyType);
+                var convertedCollection = relatedResources.CopyToTypedCollection(attr.Property.PropertyType);
                 attr.SetValue(entity, convertedCollection, _resourceFactory);
             }
 

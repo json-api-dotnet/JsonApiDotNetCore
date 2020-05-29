@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Serialization.Client
 {
@@ -51,7 +52,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <param name="entity">The entity that was constructed from the document's body</param>
         /// <param name="field">The metadata for the exposed field</param>
         /// <param name="data">Relationship data for <paramref name="entity"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
-        protected override void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipEntry data = null)
+        protected override void AfterProcessField(IIdentifiable entity, ResourceFieldAttribute field, RelationshipEntry data = null)
         {
             // Client deserializers do not need additional processing for attributes.
             if (field is AttrAttribute)
@@ -70,7 +71,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             else if (field is HasManyAttribute hasManyAttr)
             {  // add attributes and relationships of a parsed HasMany relationship
                 var items = data.ManyData.Select(rio => ParseIncludedRelationship(hasManyAttr, rio));
-                var values = items.CopyToTypedCollection(hasManyAttr.PropertyInfo.PropertyType);
+                var values = items.CopyToTypedCollection(hasManyAttr.Property.PropertyType);
                 hasManyAttr.SetValue(entity, values, _resourceFactory);
             }
         }

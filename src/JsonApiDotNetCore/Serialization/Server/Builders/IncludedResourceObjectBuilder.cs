@@ -4,6 +4,7 @@ using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Serialization.Server.Builders
 {
@@ -77,7 +78,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             var chainRemainder = inclusionChain.ToList();
             chainRemainder.RemoveAt(0);
 
-            var nextRelationshipName = nextRelationship.PublicRelationshipName;
+            var nextRelationshipName = nextRelationship.PublicName;
             var relationshipsObject = resourceObject.Relationships;
             // add the relationship entry in the relationship object.
             if (!relationshipsObject.TryGetValue(nextRelationshipName, out var relationshipEntry))

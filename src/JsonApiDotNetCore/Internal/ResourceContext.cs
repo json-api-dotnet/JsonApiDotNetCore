@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Internal
@@ -47,8 +48,8 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         public List<EagerLoadAttribute> EagerLoads { get; set; }
 
-        private List<IResourceField> _fields;
-        public List<IResourceField> Fields { get { return _fields ??= Attributes.Cast<IResourceField>().Concat(Relationships).ToList();  } }
+        private List<ResourceFieldAttribute> _fields;
+        public List<ResourceFieldAttribute> Fields { get { return _fields ??= Attributes.Cast<ResourceFieldAttribute>().Concat(Relationships).ToList();  } }
 
         /// <summary>
         /// Configures which links to show in the <see cref="TopLevelLinks"/>

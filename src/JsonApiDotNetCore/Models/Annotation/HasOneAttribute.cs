@@ -3,11 +3,21 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.Links;
 
-namespace JsonApiDotNetCore.Models
+namespace JsonApiDotNetCore.Models.Annotation
 {
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class HasOneAttribute : RelationshipAttribute
     {
+        private readonly string _explicitIdentifiablePropertyName;
+
+        /// <summary>
+        /// The independent resource identifier.
+        /// </summary>
+        public string IdentifiablePropertyName =>
+            string.IsNullOrWhiteSpace(_explicitIdentifiablePropertyName)
+                ? JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(Property.Name)
+                : _explicitIdentifiablePropertyName;
+
         /// <summary>
         /// Create a HasOne relational link to another entity
         /// </summary>
@@ -37,30 +47,23 @@ namespace JsonApiDotNetCore.Models
             InverseNavigation = inverseNavigationProperty;
         }
 
-        private readonly string _explicitIdentifiablePropertyName;
-
-        /// <summary>
-        /// The independent resource identifier.
-        /// </summary>
-        public string IdentifiablePropertyName => string.IsNullOrWhiteSpace(_explicitIdentifiablePropertyName)
-            ? JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(PropertyInfo.Name)
-            : _explicitIdentifiablePropertyName;
-
         /// <inheritdoc />
         public override void SetValue(object entity, object newValue, IResourceFactory resourceFactory)
         {
-            string propertyName = PropertyInfo.Name;
-            // if we're deleting the relationship (setting it to null),
-            // we set the foreignKey to null. We could also set the actual property to null,
-            // but then we would first need to load the current relationship, which requires an extra query.
-            if (newValue == null) propertyName = IdentifiablePropertyName;
+            // If we're deleting the relationship (setting it to null), we set the foreignKey to null.
+            // We could also set the actual property to null, but then we would first need to load the
+            // current relationship, which requires an extra query.
+
+            var propertyName = newValue == null ? IdentifiablePropertyName : Property.Name;
             var resourceType = entity.GetType();
+
             var propertyInfo = resourceType.GetProperty(propertyName);
             if (propertyInfo == null)
             {
                 // we can't set the FK to null because there isn't any.
                 propertyInfo = resourceType.GetProperty(RelationshipPath);
             }
+
             propertyInfo.SetValue(entity, newValue);
         }
     }

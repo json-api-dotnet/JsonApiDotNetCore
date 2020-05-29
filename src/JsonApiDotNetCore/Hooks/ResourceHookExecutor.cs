@@ -9,6 +9,7 @@ using LeftType = System.Type;
 using RightType = System.Type;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Query;
 

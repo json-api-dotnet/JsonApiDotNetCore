@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Query
             if (defaultSort != null)
             {
                 return defaultSort
-                    .Select(d => BuildQueryContext(new SortQuery(d.Attribute.PublicAttributeName, d.SortDirection)))
+                    .Select(d => BuildQueryContext(new SortQuery(d.Attribute.PublicName, d.SortDirection)))
                     .ToList();
             }
 
@@ -102,7 +102,7 @@ namespace JsonApiDotNetCore.Query
             if (!attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
             {
                 throw new InvalidQueryStringParameterException("sort", "Sorting on the requested attribute is not allowed.",
-                    $"Sorting on attribute '{attribute.PublicAttributeName}' is not allowed.");
+                    $"Sorting on attribute '{attribute.PublicName}' is not allowed.");
             }
 
             return new SortQueryContext(query)

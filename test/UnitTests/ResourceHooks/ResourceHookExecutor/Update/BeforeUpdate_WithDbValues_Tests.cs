@@ -206,7 +206,7 @@ namespace UnitTests.ResourceHooks
             var reqCheck = diffPair.Entity.Description == null;
 
             var updatedRelationship = entities.GetByRelationship<Person>().Single();
-            var diffCheck = updatedRelationship.Key.PublicRelationshipName == "oneToOnePerson";
+            var diffCheck = updatedRelationship.Key.PublicName == "oneToOnePerson";
 
             var getAffectedCheck = entities.GetAffected(e => e.OneToOnePerson).Any();
 

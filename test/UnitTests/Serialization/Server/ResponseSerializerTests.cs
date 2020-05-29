@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Newtonsoft.Json;
 using Xunit;
@@ -156,7 +156,7 @@ namespace UnitTests.Serialization.Server
                                 .Select(r =>
                                 {
                                     var chain = new List<RelationshipAttribute> { r };
-                                    if (r.PublicRelationshipName != "populatedToManies")
+                                    if (r.PublicName != "populatedToManies")
                                         return new List<RelationshipAttribute> { r };
                                     chain.AddRange(_resourceGraph.GetRelationships<OneToManyDependent>());
                                     return chain;

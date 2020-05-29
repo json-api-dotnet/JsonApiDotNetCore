@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization;

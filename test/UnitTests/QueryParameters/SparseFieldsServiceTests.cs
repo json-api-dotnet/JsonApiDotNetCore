@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Net;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Primitives;
@@ -50,8 +50,8 @@ namespace UnitTests.QueryParameters
             // Arrange
             const string type = "articles";
             const string attrName = "name";
-            var attribute = new AttrAttribute(attrName) {PropertyInfo = typeof(Article).GetProperty(nameof(Article.Name))};
-            var idAttribute = new AttrAttribute("id") {PropertyInfo = typeof(Article).GetProperty(nameof(Article.Id))};
+            var attribute = new AttrAttribute(attrName) {Property = typeof(Article).GetProperty(nameof(Article.Name))};
+            var idAttribute = new AttrAttribute("id") {Property = typeof(Article).GetProperty(nameof(Article.Id))};
 
             var query = new KeyValuePair<string, StringValues>("fields", attrName);
 
@@ -140,7 +140,7 @@ namespace UnitTests.QueryParameters
             // Arrange
             const string type = "articles";
             const string attrName = "dne";
-            var idAttribute = new AttrAttribute("id") {PropertyInfo = typeof(Article).GetProperty(nameof(Article.Id))};
+            var idAttribute = new AttrAttribute("id") {Property = typeof(Article).GetProperty(nameof(Article.Id))};
 
             var query = new KeyValuePair<string, StringValues>("fields", attrName);
 
@@ -167,7 +167,7 @@ namespace UnitTests.QueryParameters
         public void Parse_InvalidRelatedField_ThrowsJsonApiException()
         {
             // Arrange
-            var idAttribute = new AttrAttribute("id") {PropertyInfo = typeof(Article).GetProperty(nameof(Article.Id))};
+            var idAttribute = new AttrAttribute("id") {Property = typeof(Article).GetProperty(nameof(Article.Id))};
 
             var query = new KeyValuePair<string, StringValues>("fields[author]", "invalid");
 
@@ -179,7 +179,7 @@ namespace UnitTests.QueryParameters
                 {
                     new HasOneAttribute("author")
                     {
-                        PropertyInfo = typeof(Article).GetProperty(nameof(Article.Author)),
+                        Property = typeof(Article).GetProperty(nameof(Article.Author)),
                         RightType = typeof(Person)
                     }
                 }

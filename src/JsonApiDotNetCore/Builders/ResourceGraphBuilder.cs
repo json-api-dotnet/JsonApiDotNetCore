@@ -8,9 +8,8 @@ using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -99,8 +98,8 @@ namespace JsonApiDotNetCore.Builders
                 {
                     var idAttr = new AttrAttribute
                     {
-                        PublicAttributeName = FormatPropertyName(property),
-                        PropertyInfo = property,
+                        PublicName = FormatPropertyName(property),
+                        Property = property,
                         Capabilities = _options.DefaultAttrCapabilities
                     };
                     attributes.Add(idAttr);
@@ -110,8 +109,8 @@ namespace JsonApiDotNetCore.Builders
                 if (attribute == null)
                     continue;
 
-                attribute.PublicAttributeName ??= FormatPropertyName(property);
-                attribute.PropertyInfo = property;
+                attribute.PublicName ??= FormatPropertyName(property);
+                attribute.Property = property;
 
                 if (!attribute.HasExplicitCapabilities)
                 {
@@ -132,8 +131,8 @@ namespace JsonApiDotNetCore.Builders
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
                 if (attribute == null) continue;
 
-                attribute.PropertyInfo = prop;
-                attribute.PublicRelationshipName ??= FormatPropertyName(prop);
+                attribute.Property = prop;
+                attribute.PublicName ??= FormatPropertyName(prop);
                 attribute.RightType = GetRelationshipType(attribute, prop);
                 attribute.LeftType = entityType;
                 attributes.Add(attribute);
@@ -142,11 +141,11 @@ namespace JsonApiDotNetCore.Builders
                 {
                     var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.ThroughPropertyName);
                     if (throughProperty == null)
-                        throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.PropertyInfo.Name}': Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
+                        throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.Property.Name}': Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
 
                     var throughType = TryGetThroughType(throughProperty);
                     if (throughType == null)
-                        throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.PropertyInfo.Name}': Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
+                        throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.Property.Name}': Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
 
                     // ICollection<ArticleTag>
                     hasManyThroughAttribute.ThroughProperty = throughProperty;

@@ -5,6 +5,7 @@ using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization
@@ -32,7 +33,7 @@ namespace JsonApiDotNetCore.Serialization
             var ro = new ResourceObject { Type = resourceContext.ResourceName, Id = entity.StringId == string.Empty ? null : entity.StringId };
 
             // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
-            if (attributes != null && (attributes = attributes.Where(attr => attr.PropertyInfo.Name != _identifiablePropertyName)).Any())
+            if (attributes != null && (attributes = attributes.Where(attr => attr.Property.Name != _identifiablePropertyName)).Any())
                 ProcessAttributes(entity, attributes, ro);
 
             // populating the top-level "relationship" member of a resource object.
@@ -128,7 +129,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 var relData = GetRelationshipData(rel, entity);
                 if (relData != null)
-                    (ro.Relationships ??= new Dictionary<string, RelationshipEntry>()).Add(rel.PublicRelationshipName, relData);
+                    (ro.Relationships ??= new Dictionary<string, RelationshipEntry>()).Add(rel.PublicName, relData);
             }
         }
 
@@ -147,12 +148,12 @@ namespace JsonApiDotNetCore.Serialization
                     return;
                 }
 
-                if (_settings.SerializerDefaultValueHandling == DefaultValueHandling.Ignore && value == attr.PropertyInfo.PropertyType.GetDefaultValue())
+                if (_settings.SerializerDefaultValueHandling == DefaultValueHandling.Ignore && value == attr.Property.PropertyType.GetDefaultValue())
                 {
                     return;
                 }
 
-                ro.Attributes.Add(attr.PublicAttributeName, value);
+                ro.Attributes.Add(attr.PublicName, value);
             }
         }
     }

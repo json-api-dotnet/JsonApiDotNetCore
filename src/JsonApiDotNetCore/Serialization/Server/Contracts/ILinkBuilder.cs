@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Serialization.Server.Builders

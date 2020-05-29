@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 

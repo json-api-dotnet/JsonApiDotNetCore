@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json.Serialization;
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Exceptions
                 PropertyInfo property = resourceType.GetProperty(propertyName);
 
                 string attributeName =
-                    property.GetCustomAttribute<AttrAttribute>().PublicAttributeName ?? namingStrategy.GetPropertyName(property.Name, false);
+                    property.GetCustomAttribute<AttrAttribute>().PublicName ?? namingStrategy.GetPropertyName(property.Name, false);
 
                 foreach (var modelError in pair.Value.Errors)
                 {

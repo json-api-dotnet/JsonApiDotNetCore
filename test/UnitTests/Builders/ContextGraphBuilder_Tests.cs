@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -78,7 +79,7 @@ namespace UnitTests
 
             // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compoundAttribute");
+            Assert.Contains(resource.Attributes, (i) => i.PublicName == "compoundAttribute");
         }
 
         [Fact]
@@ -93,8 +94,8 @@ namespace UnitTests
 
             // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("relatedResource", resource.Relationships.Single(r => r is HasOneAttribute).PublicRelationshipName);
-            Assert.Equal("relatedResources", resource.Relationships.Single(r => !(r is HasOneAttribute)).PublicRelationshipName);
+            Assert.Equal("relatedResource", resource.Relationships.Single(r => r is HasOneAttribute).PublicName);
+            Assert.Equal("relatedResources", resource.Relationships.Single(r => !(r is HasOneAttribute)).PublicName);
         }
 
         public sealed class TestResource : Identifiable

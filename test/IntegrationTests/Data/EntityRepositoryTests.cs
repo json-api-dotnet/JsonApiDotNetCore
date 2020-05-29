@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using IntegrationTests;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -48,7 +49,7 @@ namespace JADNC.IntegrationTests.Data
 
                 var descAttr = new AttrAttribute("description")
                 {
-                    PropertyInfo = typeof(TodoItem).GetProperty(nameof(TodoItem.Description))
+                    Property = typeof(TodoItem).GetProperty(nameof(TodoItem.Description))
                 };
                 targetedFields.Setup(m => m.Attributes).Returns(new List<AttrAttribute> { descAttr });
                 targetedFields.Setup(m => m.Relationships).Returns(new List<RelationshipAttribute>());

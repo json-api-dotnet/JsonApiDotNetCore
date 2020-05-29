@@ -17,6 +17,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Query;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -406,7 +407,7 @@ namespace UnitTests.ResourceHooks
             var splitPath = chain.Split(QueryConstants.DOT);
             foreach (var requestedRelationship in splitPath)
             {
-                var relationship = resourceContext.Relationships.Single(r => r.PublicRelationshipName == requestedRelationship);
+                var relationship = resourceContext.Relationships.Single(r => r.PublicName == requestedRelationship);
                 parsedChain.Add(relationship);
                 resourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
             }

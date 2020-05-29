@@ -1,12 +1,15 @@
 using System;
-using System.Reflection;
 using JsonApiDotNetCore.Internal;
 
-namespace JsonApiDotNetCore.Models
+namespace JsonApiDotNetCore.Models.Annotation
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class AttrAttribute : Attribute, IResourceField
+    public sealed class AttrAttribute : ResourceFieldAttribute
     {
+        internal bool HasExplicitCapabilities { get; }
+
+        public AttrCapabilities Capabilities { get; internal set; }
+
         /// <summary>
         /// Exposes a resource property as a json:api attribute using the configured casing convention and capabilities.
         /// </summary>
@@ -26,19 +29,13 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// Exposes a resource property as a json:api attribute with an explicit name, using configured capabilities.
         /// </summary>
-        public AttrAttribute(string publicName)
+        public AttrAttribute(string publicName) 
+            : base(publicName)
         {
             if (publicName == null)
             {
                 throw new ArgumentNullException(nameof(publicName));
             }
-
-            if (string.IsNullOrWhiteSpace(publicName))
-            {
-                throw new ArgumentException("Exposed name cannot be empty or contain only whitespace.", nameof(publicName));
-            }
-
-            PublicAttributeName = publicName;
         }
 
         /// <summary>
@@ -62,26 +59,12 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// Exposes a resource property as a json:api attribute with an explicit name and capabilities.
         /// </summary>
-        public AttrAttribute(string publicName, AttrCapabilities capabilities) : this(publicName)
+        public AttrAttribute(string publicName, AttrCapabilities capabilities) 
+            : this(publicName)
         {
             HasExplicitCapabilities = true;
             Capabilities = capabilities;
         }
-
-        string IResourceField.PropertyName => PropertyInfo.Name;
-
-        /// <summary>
-        /// The publicly exposed name of this json:api attribute.
-        /// </summary>
-        public string PublicAttributeName { get; internal set; }
-
-        internal bool HasExplicitCapabilities { get; }
-        public AttrCapabilities Capabilities { get; internal set; }
-
-        /// <summary>
-        /// The resource property that this attribute is declared on.
-        /// </summary>
-        public PropertyInfo PropertyInfo { get; internal set; }
 
         /// <summary>
         /// Get the value of the attribute for the given object.
@@ -95,12 +78,12 @@ namespace JsonApiDotNetCore.Models
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            if (PropertyInfo.GetMethod == null)
+            if (Property.GetMethod == null)
             {
-                throw new InvalidOperationException($"Property '{PropertyInfo.DeclaringType?.Name}.{PropertyInfo.Name}' is write-only.");
+                throw new InvalidOperationException($"Property '{Property.DeclaringType?.Name}.{Property.Name}' is write-only.");
             }
 
-            return PropertyInfo.GetValue(entity);
+            return Property.GetValue(entity);
         }
 
         /// <summary>
@@ -113,19 +96,14 @@ namespace JsonApiDotNetCore.Models
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            if (PropertyInfo.SetMethod == null)
+            if (Property.SetMethod == null)
             {
                 throw new InvalidOperationException(
-                    $"Property '{PropertyInfo.DeclaringType?.Name}.{PropertyInfo.Name}' is read-only.");
+                    $"Property '{Property.DeclaringType?.Name}.{Property.Name}' is read-only.");
             }
 
-            var convertedValue = TypeHelper.ConvertType(newValue, PropertyInfo.PropertyType);
-            PropertyInfo.SetValue(entity, convertedValue);
+            var convertedValue = TypeHelper.ConvertType(newValue, Property.PropertyType);
+            Property.SetValue(entity, convertedValue);
         }
-
-        /// <summary>
-        /// Whether or not the provided exposed name is equivalent to the one defined in on the model
-        /// </summary>
-        public bool Is(string publicRelationshipName) => publicRelationshipName == PublicAttributeName;
     }
 }

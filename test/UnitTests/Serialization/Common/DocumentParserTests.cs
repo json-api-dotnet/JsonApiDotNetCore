@@ -5,6 +5,7 @@ using System.ComponentModel.Design;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using Newtonsoft.Json;
 using Xunit;
 using UnitTests.TestModels;
@@ -133,7 +134,7 @@ namespace UnitTests.Serialization.Deserializer
             var entity = (TestResource)_deserializer.Deserialize(body);
 
             // Assert
-            var pi = _resourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicAttributeName == member).PropertyInfo;
+            var pi = _resourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicName == member).Property;
             var deserializedValue = pi.GetValue(entity);
 
             if (member == "intField")

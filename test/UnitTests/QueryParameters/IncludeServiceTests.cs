@@ -58,11 +58,11 @@ namespace UnitTests.QueryParameters
             var chains = service.Get();
             Assert.Equal(2, chains.Count);
             var firstChain = chains[0];
-            Assert.Equal("author", firstChain.First().PublicRelationshipName);
-            Assert.Equal("favoriteFood", firstChain.Last().PublicRelationshipName);
+            Assert.Equal("author", firstChain.First().PublicName);
+            Assert.Equal("favoriteFood", firstChain.Last().PublicName);
             var secondChain = chains[1];
-            Assert.Equal("reviewer", secondChain.First().PublicRelationshipName);
-            Assert.Equal("favoriteSong", secondChain.Last().PublicRelationshipName);
+            Assert.Equal("reviewer", secondChain.First().PublicName);
+            Assert.Equal("favoriteSong", secondChain.Last().PublicName);
         }
 
         [Fact]

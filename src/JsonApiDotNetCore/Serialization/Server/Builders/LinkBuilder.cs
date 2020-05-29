@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.QueryParameterServices.Common;
@@ -106,7 +107,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             if (_currentRequest.RequestRelationship != null)
             {
                 builder.Append("/");
-                builder.Append(_currentRequest.RequestRelationship.PublicRelationshipName);
+                builder.Append(_currentRequest.RequestRelationship.PublicName);
             }
 
             builder.Append(_queryStringAccessor.QueryString.Value);
@@ -156,7 +157,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable parent)
         {
             var parentResourceContext = _provider.GetResourceContext(parent.GetType());
-            var childNavigation = relationship.PublicRelationshipName;
+            var childNavigation = relationship.PublicName;
             RelationshipLinks links = null;
             if (ShouldAddRelationshipLink(parentResourceContext, relationship, Link.Related))
             {

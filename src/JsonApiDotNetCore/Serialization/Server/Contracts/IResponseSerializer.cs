@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Models;
+﻿using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {

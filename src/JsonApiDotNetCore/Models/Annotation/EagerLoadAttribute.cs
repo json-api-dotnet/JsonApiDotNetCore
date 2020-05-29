@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace JsonApiDotNetCore.Models
+namespace JsonApiDotNetCore.Models.Annotation
 {
     /// <summary>
     /// Used to unconditionally load a related entity that is not exposed as a json:api relationship.

@@ -2,7 +2,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
@@ -100,7 +100,7 @@ namespace UnitTests
             var primaryResource = GetArticleResourceContext(relationshipLinks: resource);
             _provider.Setup(m => m.GetResourceContext(typeof(Article))).Returns(primaryResource);
             var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object, _queryStringAccessor);
-            var attr = new HasOneAttribute(links: relationship) { RightType = typeof(Author), PublicRelationshipName = "author" };
+            var attr = new HasOneAttribute(links: relationship) { RightType = typeof(Author), PublicName = "author" };
 
             // Act
             var links = builder.GetRelationshipLinks(attr, new Article { Id = _baseId });

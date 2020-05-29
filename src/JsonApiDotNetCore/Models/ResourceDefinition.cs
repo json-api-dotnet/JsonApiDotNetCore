@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -73,18 +74,18 @@ namespace JsonApiDotNetCore.Models
         /// 
         /// If the logic is simply too complex for an in-line expression, you can
         /// delegate to a private method:
-        /// <code>
+        /// <code><![CDATA[
         /// protected override QueryFilters GetQueryFilters()
         ///     => new QueryFilters {
         ///         { "is-active", FilterIsActive }
         ///     };
         /// 
-        /// private IQueryable&lt;Model&gt; FilterIsActive(IQueryable&lt;Model&gt; query, string value)
+        /// private IQueryable<Model> FilterIsActive(IQueryable<Model> query, string value)
         /// {
         ///     // some complex logic goes here...
         ///     return query.Where(x => x.IsActive == computedValue);
         /// }
-        /// </code>
+        /// ]]></code>
         /// </example>
         public virtual QueryFilters GetQueryFilters() => null;
 

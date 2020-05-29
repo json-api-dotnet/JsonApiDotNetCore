@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
@@ -67,13 +68,13 @@ namespace JsonApiDotNetCore.Query
             {
                 throw new InvalidQueryStringParameterException(parameterName,
                     "Filtering on one-to-many and many-to-many relationships is currently not supported.",
-                    $"Filtering on the relationship '{queryContext.Relationship.PublicRelationshipName}.{attribute.PublicAttributeName}' is currently not supported.");
+                    $"Filtering on the relationship '{queryContext.Relationship.PublicName}.{attribute.PublicName}' is currently not supported.");
             }
 
             if (!attribute.Capabilities.HasFlag(AttrCapabilities.AllowFilter))
             {
                 throw new InvalidQueryStringParameterException(parameterName, "Filtering on the requested attribute is not allowed.",
-                    $"Filtering on attribute '{attribute.PublicAttributeName}' is not allowed.");
+                    $"Filtering on attribute '{attribute.PublicName}' is not allowed.");
             }
 
             queryContext.Attribute = attribute;

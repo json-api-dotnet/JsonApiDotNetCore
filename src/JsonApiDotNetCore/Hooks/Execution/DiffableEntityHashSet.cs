@@ -7,6 +7,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Serialization;
 
 namespace JsonApiDotNetCore.Hooks

@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Reflection;
@@ -38,7 +39,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <param name="entity">The entity that was constructed from the document's body</param>
         /// <param name="field">The metadata for the exposed field</param>
         /// <param name="data">Relationship data for <paramref name="entity"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
-        protected override void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipEntry data = null)
+        protected override void AfterProcessField(IIdentifiable entity, ResourceFieldAttribute field, RelationshipEntry data = null)
         {
             if (field is AttrAttribute attr)
             {
@@ -50,7 +51,7 @@ namespace JsonApiDotNetCore.Serialization.Server
                 {
                     throw new InvalidRequestBodyException(
                         "Changing the value of the requested attribute is not allowed.",
-                        $"Changing the value of '{attr.PublicAttributeName}' is not allowed.", null);
+                        $"Changing the value of '{attr.PublicName}' is not allowed.", null);
                 }
             }
             else if (field is RelationshipAttribute relationship)

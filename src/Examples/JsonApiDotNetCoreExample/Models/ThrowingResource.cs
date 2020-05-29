@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCoreExample.Models
 {

@@ -1,5 +1,5 @@
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Managers.Contracts
 {

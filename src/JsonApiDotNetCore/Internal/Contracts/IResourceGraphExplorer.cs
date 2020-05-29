@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Internal.Contracts
 {
@@ -18,7 +19,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// </summary>
         /// <typeparam name="TResource">The resource for which to retrieve fields</typeparam>
         /// <param name="selector">Should be of the form: (TResource e) => new { e.Field1, e.Field2 }</param>
-        List<IResourceField> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : IIdentifiable;
+        List<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : IIdentifiable;
         /// <summary>
         /// Gets all attributes for <typeparamref name="TResource"/>
         /// that are targeted by the selector. If no selector is provided, all
@@ -39,7 +40,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// Gets all exposed fields (attributes and relationships) for type <paramref name="type"/>
         /// </summary>
         /// <param name="type">The resource type. Must extend IIdentifiable.</param>
-        List<IResourceField> GetFields(Type type);
+        List<ResourceFieldAttribute> GetFields(Type type);
         /// <summary>
         /// Gets all exposed attributes for type <paramref name="type"/>
         /// </summary>

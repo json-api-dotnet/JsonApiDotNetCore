@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -139,7 +140,7 @@ namespace JsonApiDotNetCore.Internal
         /// <param name="entities"></param>
         public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributeDictionary<TValueOut>(List<AttrAttribute> attributes, HashSet<TValueOut> entities)
         {
-            return attributes?.ToDictionary(attr => attr.PropertyInfo, attr => entities);
+            return attributes?.ToDictionary(attr => attr.Property, attr => entities);
         }
 
         /// <summary>

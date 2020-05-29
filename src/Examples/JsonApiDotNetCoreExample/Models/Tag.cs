@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCoreExample.Data;
 
 namespace JsonApiDotNetCoreExample.Models

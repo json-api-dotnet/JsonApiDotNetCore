@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
@@ -43,12 +44,12 @@ namespace JsonApiDotNetCore.Query
         public ISet<string> GetAll()
         {
             var properties = new HashSet<string>();
-            properties.AddRange(_selectedFields.Select(x => x.PropertyInfo.Name));
+            properties.AddRange(_selectedFields.Select(x => x.Property.Name));
 
             foreach (var pair in _selectedRelationshipFields)
             {
                 string pathPrefix = pair.Key.RelationshipPath + ".";
-                properties.AddRange(pair.Value.Select(x => pathPrefix + x.PropertyInfo.Name));
+                properties.AddRange(pair.Value.Select(x => pathPrefix + x.Property.Name));
             }
 
             return properties;
@@ -92,7 +93,7 @@ namespace JsonApiDotNetCore.Query
                 // it is possible that the request resource has a relationship
                 // that is equal to the resource name, like with self-referencing data types (eg directory structures)
                 // if not, no longer support this type of sparse field selection.
-                if (navigation == _requestResource.ResourceName && !_requestResource.Relationships.Any(a => a.Is(navigation)))
+                if (navigation == _requestResource.ResourceName && !_requestResource.Relationships.Any(a => navigation == a.PublicName))
                 {
                     throw new InvalidQueryStringParameterException(parameterName,
                         "Square bracket notation in 'filter' is now reserved for relationships only. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/555#issuecomment-543100865 for details.",
@@ -106,7 +107,7 @@ namespace JsonApiDotNetCore.Query
                         $"Parameter fields[{navigation}] is currently not supported.");
                 }
 
-                var relationship = _requestResource.Relationships.SingleOrDefault(a => a.Is(navigation));
+                var relationship = _requestResource.Relationships.SingleOrDefault(a => navigation == a.PublicName);
                 if (relationship == null)
                 {
                     throw new InvalidQueryStringParameterException(parameterName, "Sparse field navigation path refers to an invalid relationship.",
@@ -127,15 +128,15 @@ namespace JsonApiDotNetCore.Query
             foreach (var field in fields)
             {
                 var relationProperty = _resourceGraph.GetResourceContext(relationship.RightType);
-                var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
+                var attr = relationProperty.Attributes.SingleOrDefault(a => field == a.PublicName);
                 if (attr == null)
                 {
                     throw new InvalidQueryStringParameterException(parameterName,
                         "The specified field does not exist on the requested related resource.",
-                        $"The field '{field}' does not exist on related resource '{relationship.PublicRelationshipName}' of type '{relationProperty.ResourceName}'.");
+                        $"The field '{field}' does not exist on related resource '{relationship.PublicName}' of type '{relationProperty.ResourceName}'.");
                 }
 
-                if (attr.PropertyInfo.SetMethod == null)
+                if (attr.Property.SetMethod == null)
                 {
                     // A read-only property was selected. Its value likely depends on another property, so include all related fields.
                     return;
@@ -160,7 +161,7 @@ namespace JsonApiDotNetCore.Query
 
             foreach (var field in fields)
             {
-                var attr = _requestResource.Attributes.SingleOrDefault(a => a.Is(field));
+                var attr = _requestResource.Attributes.SingleOrDefault(a => field == a.PublicName);
                 if (attr == null)
                 {
                     throw new InvalidQueryStringParameterException(parameterName,
@@ -168,7 +169,7 @@ namespace JsonApiDotNetCore.Query
                         $"The field '{field}' does not exist on resource '{_requestResource.ResourceName}'.");
                 }
 
-                if (attr.PropertyInfo.SetMethod == null)
+                if (attr.Property.SetMethod == null)
                 {
                     // A read-only property was selected. Its value likely depends on another property, so include all resource fields.
                     return;

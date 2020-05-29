@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Controllers
 {

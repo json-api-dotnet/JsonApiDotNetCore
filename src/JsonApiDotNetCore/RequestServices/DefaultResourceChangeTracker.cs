@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Serialization;
 using Newtonsoft.Json;
 
@@ -81,7 +82,7 @@ namespace JsonApiDotNetCore.RequestServices
             {
                 object value = attribute.GetValue(resource);
                 var json = JsonConvert.SerializeObject(value, _options.SerializerSettings);
-                result.Add(attribute.PublicAttributeName, json);
+                result.Add(attribute.PublicName, json);
             }
 
             return result;

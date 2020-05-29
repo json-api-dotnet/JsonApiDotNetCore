@@ -1,5 +1,5 @@
 using System;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCoreExample.Models
 {

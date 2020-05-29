@@ -191,18 +191,18 @@ namespace JsonApiDotNetCore.Extensions
         private static IQueryable<TSource> CallGenericWhereContainsMethod<TSource>(IQueryable<TSource> source, FilterQueryContext filter)
         {
             var concreteType = typeof(TSource);
-            var property = concreteType.GetProperty(filter.Attribute.PropertyInfo.Name);
+            var property = concreteType.GetProperty(filter.Attribute.Property.Name);
 
             var propertyValues = filter.Value.Split(QueryConstants.COMMA);
             ParameterExpression entity = Expression.Parameter(concreteType, "entity");
             MemberExpression member;
             if (filter.IsAttributeOfRelationship)
             {
-                var relation = Expression.PropertyOrField(entity, filter.Relationship.PropertyInfo.Name);
-                member = Expression.Property(relation, filter.Attribute.PropertyInfo.Name);
+                var relation = Expression.PropertyOrField(entity, filter.Relationship.Property.Name);
+                member = Expression.Property(relation, filter.Attribute.Property.Name);
             }
             else
-                member = Expression.Property(entity, filter.Attribute.PropertyInfo.Name);
+                member = Expression.Property(entity, filter.Attribute.Property.Name);
 
             var method = ContainsMethod.MakeGenericMethod(member.Type);
             var list = TypeHelper.CreateListFor(member.Type);
@@ -262,25 +262,25 @@ namespace JsonApiDotNetCore.Extensions
             // Is relationship attribute
             if (filter.IsAttributeOfRelationship)
             {
-                var relationProperty = concreteType.GetProperty(filter.Relationship.PropertyInfo.Name);
+                var relationProperty = concreteType.GetProperty(filter.Relationship.Property.Name);
                 if (relationProperty == null)
-                    throw new ArgumentException($"'{filter.Relationship.PropertyInfo.Name}' is not a valid relationship of '{concreteType}'");
+                    throw new ArgumentException($"'{filter.Relationship.Property.Name}' is not a valid relationship of '{concreteType}'");
 
                 var relatedType = filter.Relationship.RightType;
-                property = relatedType.GetProperty(filter.Attribute.PropertyInfo.Name);
+                property = relatedType.GetProperty(filter.Attribute.Property.Name);
                 if (property == null)
-                    throw new ArgumentException($"'{filter.Attribute.PropertyInfo.Name}' is not a valid attribute of '{filter.Relationship.PropertyInfo.Name}'");
+                    throw new ArgumentException($"'{filter.Attribute.Property.Name}' is not a valid attribute of '{filter.Relationship.Property.Name}'");
 
-                var leftRelationship = Expression.PropertyOrField(parameter, filter.Relationship.PropertyInfo.Name);
+                var leftRelationship = Expression.PropertyOrField(parameter, filter.Relationship.Property.Name);
                 // {model.Relationship}
                 left = Expression.PropertyOrField(leftRelationship, property.Name);
             }
             // Is standalone attribute
             else
             {
-                property = concreteType.GetProperty(filter.Attribute.PropertyInfo.Name);
+                property = concreteType.GetProperty(filter.Attribute.Property.Name);
                 if (property == null)
-                    throw new ArgumentException($"'{filter.Attribute.PropertyInfo.Name}' is not a valid property of '{concreteType}'");
+                    throw new ArgumentException($"'{filter.Attribute.Property.Name}' is not a valid property of '{concreteType}'");
 
                 // {model.Id}
                 left = Expression.PropertyOrField(parameter, property.Name);

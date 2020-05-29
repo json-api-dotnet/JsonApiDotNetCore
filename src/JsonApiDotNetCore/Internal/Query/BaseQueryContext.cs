@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
@@ -23,9 +23,9 @@ namespace JsonApiDotNetCore.Internal.Query
         public string GetPropertyPath()
         {
             if (IsAttributeOfRelationship)
-                return $"{Relationship.PropertyInfo.Name}.{Attribute.PropertyInfo.Name}";
+                return $"{Relationship.Property.Name}.{Attribute.Property.Name}";
 
-            return Attribute.PropertyInfo.Name;
+            return Attribute.Property.Name;
         }
     }
 }

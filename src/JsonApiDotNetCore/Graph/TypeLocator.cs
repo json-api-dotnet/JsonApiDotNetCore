@@ -44,9 +44,9 @@ namespace JsonApiDotNetCore.Graph
         /// <param name="openGenericInterfaceType">The open generic type, e.g. `typeof(IResourceService&lt;&gt;)`</param>
         /// <param name="genericInterfaceArguments">Parameters to the generic type</param>
         /// <example>
-        /// <code>
-        /// GetGenericInterfaceImplementation(assembly, typeof(IResourceService&lt;&gt;), typeof(Article), typeof(Guid));
-        /// </code>
+        /// <code><![CDATA[
+        /// GetGenericInterfaceImplementation(assembly, typeof(IResourceService<>), typeof(Article), typeof(Guid));
+        /// ]]></code>
         /// </example>
         public static (Type implementation, Type registrationInterface) GetGenericInterfaceImplementation(Assembly assembly, Type openGenericInterfaceType, params Type[] genericInterfaceArguments)
         {

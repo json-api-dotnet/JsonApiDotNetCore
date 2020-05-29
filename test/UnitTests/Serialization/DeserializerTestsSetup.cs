@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.AspNetCore.Http;
 using Moq;
 
@@ -26,7 +27,7 @@ namespace UnitTests.Serialization
                 return base.Deserialize(body);
             }
 
-            protected override void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipEntry data = null) { }
+            protected override void AfterProcessField(IIdentifiable entity, ResourceFieldAttribute field, RelationshipEntry data = null) { }
         }
 
         protected Document CreateDocumentWithRelationships(string mainType, string relationshipMemberName, string relatedType = null, bool isToManyData = false)
