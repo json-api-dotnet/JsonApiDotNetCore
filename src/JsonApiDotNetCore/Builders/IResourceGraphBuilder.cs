@@ -2,6 +2,7 @@ using System;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Fluent;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -40,5 +41,9 @@ namespace JsonApiDotNetCore.Builders
         /// If nothing is specified, the configured name formatter will be used.
         /// </param>
         IResourceGraphBuilder AddResource(Type resourceType, Type idType = null, string pluralizedTypeName = null);
+
+        ResourceTypeBuilder<TResource> Resource<TResource>();
+        IResourceGraphBuilder ApplyResourceConfiguration<TResource>(Action<ResourceTypeBuilder<TResource>> configurationAction) where TResource : class, IIdentifiable;
+        ResourceContext GetResourceContext(Type resourceType);        
     }
 }

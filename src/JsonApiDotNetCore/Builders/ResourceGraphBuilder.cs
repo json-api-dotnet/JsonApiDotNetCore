@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Fluent;
 using JsonApiDotNetCore.Models.Links;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
@@ -17,13 +18,13 @@ namespace JsonApiDotNetCore.Builders
     public class ResourceGraphBuilder : IResourceGraphBuilder
     {
         private readonly IJsonApiOptions _options;
-        private readonly ILogger<ResourceGraphBuilder> _logger;
+        private readonly ILogger<ResourceGraphBuilder> _logger;        
         private readonly List<ResourceContext> _resources = new List<ResourceContext>();
 
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
             _options = options;
-            _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
+            _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();            
         }
 
         /// <inheritdoc />
@@ -36,11 +37,23 @@ namespace JsonApiDotNetCore.Builders
         private void SetResourceLinksOptions(ResourceContext resourceContext)
         {
             var attribute = (LinksAttribute)resourceContext.ResourceType.GetCustomAttribute(typeof(LinksAttribute));
+            
             if (attribute != null)
             {
-                resourceContext.RelationshipLinks = attribute.RelationshipLinks;
-                resourceContext.ResourceLinks = attribute.ResourceLinks;
-                resourceContext.TopLevelLinks = attribute.TopLevelLinks;
+                if (resourceContext.RelationshipLinks == Link.NotConfigured)
+                {
+                    resourceContext.RelationshipLinks = attribute.RelationshipLinks;
+                }
+
+                if (resourceContext.ResourceLinks == Link.NotConfigured)
+                {
+                    resourceContext.ResourceLinks = attribute.ResourceLinks;
+                }
+
+                if (resourceContext.TopLevelLinks == Link.NotConfigured)
+                {
+                    resourceContext.TopLevelLinks = attribute.TopLevelLinks;
+                }                
             }
         }
 
@@ -71,6 +84,30 @@ namespace JsonApiDotNetCore.Builders
             }
 
             return this;
+        }
+
+        public ResourceTypeBuilder<TResource> Resource<TResource>() 
+        {
+            ResourceTypeBuilder<TResource> builder = new ResourceTypeBuilder<TResource>(this, _options);
+
+            return builder;
+        }
+
+        public IResourceGraphBuilder ApplyResourceConfiguration<TResource>(Action<ResourceTypeBuilder<TResource>> configurationAction)
+            where TResource: class, IIdentifiable
+        {
+            ResourceTypeBuilder<TResource> builder = new ResourceTypeBuilder<TResource>(this, _options);
+            configurationAction(builder);
+
+            return this;
+        }
+        
+        public ResourceContext GetResourceContext(Type resourceType)
+        {
+            ResourceContext resourceContext = _resources.Where(e => e.ResourceType == resourceType)
+                                                        .FirstOrDefault();
+
+            return resourceContext;
         }
 
         private ResourceContext CreateResourceContext(string pluralizedTypeName, Type entityType, Type idType) => new ResourceContext
@@ -179,7 +216,7 @@ namespace JsonApiDotNetCore.Builders
             return attributes;
         }
 
-        private static Type TryGetThroughType(PropertyInfo throughProperty)
+        internal static Type TryGetThroughType(PropertyInfo throughProperty)
         {
             if (throughProperty.PropertyType.IsGenericType)
             {
@@ -238,7 +275,7 @@ namespace JsonApiDotNetCore.Builders
         private string FormatResourceName(Type resourceType)
         {
             var formatter = new ResourceNameFormatter(_options);
-            return formatter.FormatResourceName(resourceType);
+            return formatter.FormatResourceName(resourceType);            
         }
 
         private string FormatPropertyName(PropertyInfo resourceProperty)

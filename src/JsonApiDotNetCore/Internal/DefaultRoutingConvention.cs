@@ -1,15 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Graph;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Newtonsoft.Json.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -37,13 +38,15 @@ namespace JsonApiDotNetCore.Internal
     public class DefaultRoutingConvention : IJsonApiRoutingConvention
     {
         private readonly IJsonApiOptions _options;
+        private readonly IResourceGraphBuilder _resourceGraphBuilder;
         private readonly ResourceNameFormatter _formatter;
         private readonly HashSet<string> _registeredTemplates = new HashSet<string>();
         private readonly Dictionary<string, Type> _registeredResources = new Dictionary<string, Type>();
         
-        public DefaultRoutingConvention(IJsonApiOptions options)
+        public DefaultRoutingConvention(IJsonApiOptions options, IResourceGraphBuilder resourceGraphBuilder)
         {
             _options = options;
+            _resourceGraphBuilder = resourceGraphBuilder;
             _formatter = new ResourceNameFormatter(options);
         }
 
@@ -92,7 +95,24 @@ namespace JsonApiDotNetCore.Internal
         {
             if (_registeredResources.TryGetValue(model.ControllerName, out Type resourceType))
             {
-                var template = $"{_options.Namespace}/{_formatter.FormatResourceName(resourceType)}";
+                ResourceContext resourceContext = _resourceGraphBuilder.GetResourceContext(resourceType);
+
+                string resourceName = null;
+
+                if (resourceContext != null)
+                {
+                    if (!string.IsNullOrEmpty(resourceContext.ResourceName))
+                    {
+                        resourceName = resourceContext.ResourceName;
+                    }
+                }
+                else
+                {
+                    resourceName = _formatter.FormatResourceName(resourceType);
+                }
+
+                var template = $"{_options.Namespace}/{resourceName}";
+
                 if (_registeredTemplates.Add(template))
                 {
                     return template;

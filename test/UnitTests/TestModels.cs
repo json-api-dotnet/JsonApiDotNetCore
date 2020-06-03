@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Links;
 
 namespace UnitTests.TestModels
 {
@@ -120,4 +121,86 @@ namespace UnitTests.TestModels
         [Attr] public string Title { get; set; }
     }
 
+    [Resource("catalog-product")]
+    [Links(Link.None, Link.None, Link.None)]
+    public class AnnotatedProduct : Identifiable
+    {
+        [Attr("product-name", AttrCapabilities.None)]
+        public string Name { get; set; }
+
+        [EagerLoad]
+        public Money UnitPrice { get; set; }
+
+        [HasOne("associated-image")]
+        public Image Image { get; set; }
+
+        public int ImageIdentifier { get; set; }
+
+        [HasMany("associated-tags", Link.All, true)]
+        public List<Tag> Tags { get; set; }
+
+        [HasManyThrough("associated-categories", nameof(ProductCategories))]
+        public List<Category> Categories { get; set; }
+
+        public ISet<AnnotatedProductCategories> ProductCategories { get; set; }
+    }
+
+    public class UnAnnotatedProduct: Identifiable
+    {        
+        public string Name { get; set; }
+
+        public Money UnitPrice { get; set; }
+
+        public Image Image { get; set; }
+
+        public int ImageIdentifier { get; set; }
+
+        public List<Tag> Tags { get; set; }
+
+        public List<Category> Categories { get; set; }
+
+        public ISet<UnAnnotatedProductCategories> ProductCategories { get; set; }
+    }
+
+    public class Money : Identifiable
+    {
+        public decimal Amount { get; set; }
+
+        public string Currency { get; set; }
+    }
+
+    public class Category : Identifiable
+    {
+        public string Name { get; set; }
+
+        public string Description { get; set; }        
+    }
+
+    public class Tag : Identifiable
+    {
+        public string Title { get; set; }  
+        
+        public AnnotatedProduct Product { get; set; }
+    }
+
+    public class Image : Identifiable
+    {
+        public Uri Url { get; set; }        
+    }
+
+    public class UnAnnotatedProductCategories
+    {
+        public int ProductId { get; set; }
+        public int CategoryId { get; set; }
+        public UnAnnotatedProduct Product { get; set; }
+        public Category Category { get; set; }
+    }
+
+    public class AnnotatedProductCategories
+    {
+        public int ProductId { get; set; }
+        public int CategoryId { get; set; }
+        public AnnotatedProduct Product { get; set; }
+        public Category Category { get; set; }
+    }
 }
