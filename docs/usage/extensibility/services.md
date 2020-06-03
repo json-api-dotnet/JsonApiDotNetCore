@@ -91,16 +91,16 @@ IResourceService
 |
 +-- IResourceQueryService
 |   |
-¦   +-- IGetAllService
-¦   ¦   GET /
+|   +-- IGetAllService
+|   |   GET /
 |   |
-¦   +-- IGetByIdService
+|   +-- IGetByIdService
 |   |   GET /{id}
 |   |
-¦   +-- IGetRelationshipService
+|   +-- IGetRelationshipService
 |   |   GET /{id}/{relationship}
 |   |
-¦   +-- IGetRelationshipsService
+|   +-- IGetRelationshipsService
 |       GET /{id}/relationships/{relationship}
 |
 +-- IResourceCommandService

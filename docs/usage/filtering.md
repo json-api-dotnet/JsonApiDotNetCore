@@ -1,6 +1,6 @@
 # Filtering
 
-Resources can be filtered by attributes using the `filter` query parameter.
+Resources can be filtered by attributes using the `filter` query string parameter.
 By default, all attributes are filterable.
 The filtering strategy we have selected, uses the following form.
 
@@ -35,7 +35,7 @@ GET /api/articles?filter[ordinal]=gt:1,lt:100 HTTP/1.1
 GET /api/articles?filter[ordinal]=gt:1&filter[ordinal]=lt:100 HTTP/1.1
 ```
 
-Aside from filtering on the resource being requested (top-level), filtering on single-depth related resources that are being included can be done too.
+Aside from filtering on the resource being requested (top-level), filtering on single-depth related resources can be done too.
 
 ```http
 GET /api/articles?include=author&filter[title]=like:marketing&filter[author.lastName]=Smith HTTP/1.1

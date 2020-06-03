@@ -146,7 +146,7 @@ namespace JsonApiDotNetCore.Middleware
                 await stream.CopyToAsync(httpResponse.Body);
             }
 
-            httpResponse.Body.Flush();
+            await httpResponse.Body.FlushAsync();
         }
 
         private static void SetupCurrentRequest(ICurrentRequest currentRequest, ResourceContext resourceContext,
