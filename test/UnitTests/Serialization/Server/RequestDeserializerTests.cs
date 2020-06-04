@@ -105,7 +105,6 @@ namespace UnitTests.Serialization.Server
             Assert.Empty(attributesToUpdate);
         }
 
-
         private void SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate)
         {
             attributesToUpdate = new List<AttrAttribute>();

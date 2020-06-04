@@ -33,7 +33,7 @@ namespace UnitTests.Serialization.Client
                ""data"":{
                   ""type"":""testResource"",
                   ""id"":""1"",
-                  ""attributes"":{    
+                  ""attributes"":{
                      ""stringField"":""value"",
                      ""dateTimeField"":""0001-01-01T00:00:00"",
                      ""nullableDateTimeField"":null,
