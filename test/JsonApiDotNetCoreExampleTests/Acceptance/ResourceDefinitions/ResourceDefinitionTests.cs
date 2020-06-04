@@ -82,7 +82,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var serializer = _fixture.GetSerializer<User>(p => new { p.Password, p.Username });
 
-            
+
             var httpMethod = new HttpMethod("POST");
             var route = "/api/v1/users";
 
@@ -633,13 +633,69 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     },
                     relationships = new Dictionary<string, dynamic>
                     {
-                        {  "author",  new {
-                            data = new
+                        {  "author",  new
                             {
-                                type = "authors",
-                                id = author.StringId
-                            }
-                        } }
+                                data = new
+                                {
+                                    type = "authors",
+                                    id = author.StringId
+                                }
+                             }
+                        }
+                    }
+                }
+            };
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+            var articleResponse = _fixture.GetDeserializer().DeserializeSingle<Article>(body).Data;
+            Assert.NotNull(articleResponse);
+
+            var persistedArticle = await _fixture.Context.Articles
+                .SingleAsync(a => a.Id == articleResponse.Id);
+
+            Assert.Equal(name, persistedArticle.Name);
+        }
+
+        [Fact]
+        public async Task Create_Article_With_RequiredOnPost_Name_Attribute_Empty_Succeeds()
+        {
+            // Arrange
+            string name = string.Empty;
+            var context = _fixture.GetService<AppDbContext>();
+            var author = new Author();
+            context.AuthorDifferentDbContextName.Add(author);
+            await context.SaveChangesAsync();
+
+            var route = "/api/v1/articles";
+            var request = new HttpRequestMessage(new HttpMethod("POST"), route);
+            var content = new
+            {
+                data = new
+                {
+                    type = "articles",
+                    attributes = new Dictionary<string, object>
+                    {
+                        {"name", name}
+                    },
+                    relationships = new Dictionary<string, dynamic>
+                    {
+                        {  "author",  new
+                            {
+                                data = new
+                                {
+                                    type = "authors",
+                                    id = author.StringId
+                                }
+                             }
+                        }
                     }
                 }
             };
@@ -684,13 +740,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     },
                     relationships = new Dictionary<string, dynamic>
                     {
-                        {  "author",  new {
-                            data = new
+                        {  "author",  new 
                             {
-                                type = "authors",
-                                id = author.StringId
-                            }
-                        } }
+                                data = new
+                                {
+                                    type = "authors",
+                                    id = author.StringId
+                                }
+                            } 
+                        }
                     }
                 }
             };
@@ -701,7 +759,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var response = await _fixture.Client.SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);         
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal("Input validation failed.", errorDocument.Errors[0].Title);
+            Assert.Equal("422", errorDocument.Errors[0].Status);
+            Assert.Equal("The field Name is required and cannot be null.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -722,13 +786,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     type = "articles",
                     relationships = new Dictionary<string, dynamic>
                     {
-                        {  "author",  new {
-                            data = new
+                        {  "author",  new 
                             {
-                                type = "authors",
-                                id = author.StringId
-                            }
-                        } }
+                                data = new
+                                {
+                                    type = "authors",
+                                    id = author.StringId
+                                }
+                            } 
+                        }
                     }
                 }
             };
@@ -740,6 +806,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal("Input validation failed.", errorDocument.Errors[0].Title);
+            Assert.Equal("422", errorDocument.Errors[0].Status);
+            Assert.Equal("The field Name is required and cannot be null.", errorDocument.Errors[0].Detail);
         }
 
 
@@ -762,7 +834,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     type = "articles",
                     id = article.StringId,
                     attributes = new Dictionary<string, object>
-                    {  
+                    {
                         {"name", name}
                     }
                 }
@@ -806,13 +878,18 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     id = article.StringId,
                     relationships = new Dictionary<string, dynamic>
                     {
-                        {  "tags",  new {
-                            data = new [] { new
+                        {  "tags",  new 
                             {
-                                type = "tags",
-                                id = tag.StringId
-                            } }
-                        } }
+                                data = new [] 
+                                { 
+                                    new
+                                    {
+                                        type = "tags",
+                                        id = tag.StringId
+                                    } 
+                                }
+                            } 
+                        }
                     }
                 }
             };
@@ -859,6 +936,54 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal("Input validation failed.", errorDocument.Errors[0].Title);
+            Assert.Equal("422", errorDocument.Errors[0].Status);
+            Assert.Equal("The field Name is required and cannot be null.", errorDocument.Errors[0].Detail);
         }
+
+        [Fact]
+        public async Task Update_Article_With_RequiredOnPost_AllowEmptyString_True_Name_Attribute_Empty_Succeeds()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var article = _articleFaker.Generate();
+            context.Articles.Add(article);
+            await context.SaveChangesAsync();
+
+            var route = $"/api/v1/articles/{article.Id}";
+            var request = new HttpRequestMessage(new HttpMethod("PATCH"), route);
+            var content = new
+            {
+                data = new
+                {
+                    type = "articles",
+                    id = article.StringId,
+                    attributes = new Dictionary<string, object>
+                    {
+                        {"name", ""}
+                    }
+                }
+            };
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+             _fixture.ReloadDbContext();
+            var persistedArticle = await _fixture.Context.Articles
+                .SingleOrDefaultAsync(a => a.Id == article.Id);
+
+            var updatedName = persistedArticle.Name;
+            Assert.Equal("", updatedName);
+        }
+
     }
 }

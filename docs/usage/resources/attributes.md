@@ -112,3 +112,23 @@ public class Foo : Identifiable
     }
 }
 ```
+
+# Custom Validators
+
+Attributes can be marked with custom validators.
+
+## RequiredOnPost Validator Attribute
+
+The 'RequiredOnPost' custom validator attribute can be marked on properties to specify if a value is required on POST requests. This allows the property to be excluded on PATCH requests, making partial patching possible. 
+
+The 'RequiredOnPost' custom validator attribute accepts a bool to specify if empty strings are allowed on that property. The default for 'AllowEmptyStrings' is false.
+
+If a PATCH request contains a property assigned the 'RequiredOnPost'custom validator attribute, the requirements of the validator are verified against the patched value, which include that the value is not null and not empty if 'AllowEmptyStrings' is set to false. 
+
+```c#
+public class Person : Identifiable<int>
+{
+    [RequiredOnPost]
+    public string FirstName { get; set; }
+}
+```

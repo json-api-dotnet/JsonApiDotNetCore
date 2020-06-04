@@ -1,48 +1,53 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Models
 {
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class RequiredOnPostAttribute : ValidationAttribute
-    {
-        private string Error { get; set; }
+    {     
+        public bool AllowEmptyStrings { get; set; }
 
         /// <summary>
         /// Validates that the value is not null or empty on POST operations. 
         /// </summary>
-        /// <param name="error"></param>
-        public RequiredOnPostAttribute(string error = null)
+        /// <param name="allowEmptyStrings">Allow empty strings</param>
+        public RequiredOnPostAttribute(bool allowEmptyStrings = false)
         {
-            Error = error;
+            AllowEmptyStrings = allowEmptyStrings;
         }
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var httpContextAccessor = (IHttpContextAccessor)validationContext.GetService(typeof(IHttpContextAccessor));
-            var request = httpContextAccessor.HttpContext.Request;
-            if (request.Method == "POST")
+            var httpContextAccessor = (IHttpContextAccessor)validationContext.GetRequiredService(typeof(IHttpContextAccessor));
+            if (httpContextAccessor.HttpContext.Request.Method == "POST")
             {
-                if (Error == null)
+                var additionaError = string.Empty;
+                if (!AllowEmptyStrings)
                 {
-                    Error = string.Format("{0} is required.", validationContext.MemberName);
+                    additionaError = " or empty";
+                }
+
+                if (ErrorMessage == null)
+                {
+                    ErrorMessage = $"The field {validationContext.MemberName} is required and cannot be null{additionaError}.";
                 }
 
                 if (value == null)
                 {
-                    return new ValidationResult(Error);
+                    return new ValidationResult(ErrorMessage);
                 }
 
-                var propertyType = value.GetType();
-                if (propertyType.Equals(typeof(System.String)))
+                if (!AllowEmptyStrings)
                 {
-                    if (string.IsNullOrEmpty(Convert.ToString(value)))
+                    if (value is string stringValue && string.IsNullOrEmpty(stringValue))
                     {
-                        return new ValidationResult(Error);
+                        return new ValidationResult(ErrorMessage);
                     }
                 }
             }
-            return ValidationResult.Success;
+            return ValidationResult.Success;     
         }
     }
 }

@@ -22,7 +22,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_ResourceWithDefaultTargetFields_CanBuild()
         {
             // Arrange
-            var entity = new TestResource { Id = 1, StringField = "value", RequiredOnPostField = "value", NullableIntField = 123 };
+            var entity = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
 
             // Act
             string serialized = _serializer.Serialize(entity);
@@ -35,7 +35,6 @@ namespace UnitTests.Serialization.Client
                   ""id"":""1"",
                   ""attributes"":{    
                      ""stringField"":""value"",
-                     ""requiredOnPostField"":""value"",
                      ""dateTimeField"":""0001-01-01T00:00:00"",
                      ""nullableDateTimeField"":null,
                      ""intField"":0,

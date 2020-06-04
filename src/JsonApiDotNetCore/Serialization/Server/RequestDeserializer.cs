@@ -1,9 +1,9 @@
-using System;
-using System.Linq;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using System;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -13,6 +13,8 @@ namespace JsonApiDotNetCore.Serialization.Server
     public class RequestDeserializer : BaseDocumentParser, IJsonApiDeserializer
     {
         private readonly ITargetedFields  _targetedFields;
+
+        public ModelStateDictionary ModelState { get; set; }
 
         public RequestDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory, ITargetedFields  targetedFields) 
             : base(contextProvider, resourceFactory)
@@ -38,15 +40,43 @@ namespace JsonApiDotNetCore.Serialization.Server
             if (field is AttrAttribute attr)
             {
                 if (!attr.Capabilities.HasFlag(AttrCapabilities.AllowMutate))
+                {
                     throw new InvalidRequestBodyException(
                            "Changing the value of the requested attribute is not allowed.",
                            $"Changing the value of '{attr.PublicAttributeName}' is not allowed.", null);
+                }
 
-                var property = attr.PropertyInfo;
-                var requiredOnPost = property.GetCustomAttributes(typeof(RequiredOnPostAttribute), false);
-                if (requiredOnPost?.FirstOrDefault() != null && attr.GetValue(entity) == null)
-                    throw new InvalidRequestBodyException("Changing the value of a required attribute to null is not allowed.", 
-                        $"Attribute '{attr.PublicAttributeName}' is required and therefore cannot be updated to null.", null);
+
+                var requiredOnPost = Attribute.GetCustomAttribute(attr.PropertyInfo, typeof(RequiredOnPostAttribute));
+                if (requiredOnPost != null)
+                {
+                    var requiredOnPostAttribute = (RequiredOnPostAttribute)requiredOnPost;
+                    var errorMessage = requiredOnPostAttribute.ErrorMessage;
+                    if (errorMessage == null)
+                    {
+                        errorMessage = $"The field {attr.PropertyInfo.Name} is required and cannot be null.";
+                    }
+
+                    if (attr.GetValue(entity) == null)
+                    {
+                        if (ModelState != null)
+                        {
+                            ModelState.AddModelError(attr.PropertyInfo.Name, errorMessage);
+                        }
+                    }
+
+                    if (attr.GetValue(entity) is string stringValue && string.IsNullOrEmpty(stringValue))
+                    {
+                        if (!requiredOnPostAttribute.AllowEmptyStrings)
+                        {
+                            errorMessage = $"The field {attr.PropertyInfo.Name} is required and cannot be null.";
+                            if (ModelState != null)
+                            {
+                                ModelState.AddModelError(attr.PropertyInfo.Name, errorMessage);
+                            }
+                        }
+                    }
+                }
 
                 _targetedFields.Attributes.Add(attr);
 

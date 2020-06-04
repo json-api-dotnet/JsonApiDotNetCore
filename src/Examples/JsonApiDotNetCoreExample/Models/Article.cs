@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using JsonApiDotNetCore.Models;
 
@@ -7,7 +8,7 @@ namespace JsonApiDotNetCoreExample.Models
     public sealed class Article : Identifiable
     {
         [Attr]
-        [RequiredOnPost]
+        [RequiredOnPost(true)]
         public string Name { get; set; }
 
         [HasOne]

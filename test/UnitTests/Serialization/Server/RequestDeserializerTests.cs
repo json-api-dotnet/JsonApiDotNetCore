@@ -106,33 +106,6 @@ namespace UnitTests.Serialization.Server
         }
 
 
-        [Fact]
-        public void DeserializeAttributes_PatchNullRequiredOnPostAttribute_ThrowsInvalidOperationException()
-        {
-            // Arrange
-            SetupFieldsManager(out _, out _);
-            var content = new Document
-            {
-                Data = new ResourceObject
-                {
-                    Type = "testResource",
-                    Id = "1",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        { "requiredOnPostField", null },
-                    }
-                }
-            };
-            var body = JsonConvert.SerializeObject(content);
-
-            // Act, assert
-            var exception = Assert.Throws<InvalidRequestBodyException>(() => _deserializer.Deserialize(body));
-
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, exception.Error.StatusCode);
-            Assert.Equal("Failed to deserialize request body: Changing the value of a required attribute to null is not allowed.", exception.Error.Title);
-            Assert.Equal("Attribute 'requiredOnPostField' is required and therefore cannot be updated to null.", exception.Error.Detail); 
-        }
-
         private void SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate)
         {
             attributesToUpdate = new List<AttrAttribute>();
