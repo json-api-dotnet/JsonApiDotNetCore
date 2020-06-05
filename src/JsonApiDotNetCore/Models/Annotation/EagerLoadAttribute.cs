@@ -12,10 +12,11 @@ namespace JsonApiDotNetCore.Models
     /// <example><![CDATA[
     /// public class User : Identifiable
     /// {
-    ///     [Attr(isImmutable: true)] 
+    ///     [Attr(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)] 
     ///     [NotMapped]
     ///     public string DisplayName => Name.First + " " + Name.Last;
     /// 
+    ///     [EagerLoad]
     ///     public Name Name { get; set; }
     /// }
     /// 
