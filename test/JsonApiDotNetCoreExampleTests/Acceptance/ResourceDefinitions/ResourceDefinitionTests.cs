@@ -611,7 +611,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Create_Article_With_RequiredOnPost_Name_Attribute_Succeeds()
+        public async Task Create_Article_With_Required_Name_Attribute_Succeeds()
         {
             // Arrange
             string name = "Article Title";
@@ -665,7 +665,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Create_Article_With_RequiredOnPost_Name_Attribute_Empty_Succeeds()
+        public async Task Create_Article_With_Required_Name_Attribute_Empty_Succeeds()
         {
             // Arrange
             string name = string.Empty;
@@ -769,7 +769,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Create_Article_With_RequiredOnPost_Name_Attribute_Missing_Fails()
+        public async Task Create_Article_With_Required_Name_Attribute_Missing_Fails()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();

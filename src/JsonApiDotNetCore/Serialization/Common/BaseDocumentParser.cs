@@ -1,5 +1,4 @@
 using System;
-using System.Web.Http.Validation.Validators;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,8 +12,8 @@ using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Serialization.Server;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using JsonApiDotNetCore.Models.CustomValidators;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Required = JsonApiDotNetCore.Models.CustomValidators.Required;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -80,17 +79,10 @@ namespace JsonApiDotNetCore.Serialization
             {
                 if (attributeValues == null || attributeValues.Count == 0)
                 {
-                    if (Context.HttpContext.Request.Method == "PATCH")
+                    if (Context == null || Context.HttpContext.Request.Method != "PATCH") continue;
+                    if (attr.PropertyInfo.GetCustomAttribute<Required>() != null)
                     {
-                        var requiredAttribute = attr.PropertyInfo.GetCustomAttribute<RequiredIfEnabled>();
-                        if (requiredAttribute != null)
-                        {
-                            var itemKey = this.CreateKey(attr.PropertyInfo.ReflectedType.Name, attr.PropertyInfo.Name);
-                            if (!Context.HttpContext.Items.ContainsKey(itemKey))
-                            {
-                                Context.HttpContext.Items.Add(itemKey, true);
-                            }
-                        }
+                        DisableValidator(attr.PropertyInfo.ReflectedType?.Name, attr.PropertyInfo.Name);
                     }
                 }
                 else
@@ -103,28 +95,16 @@ namespace JsonApiDotNetCore.Serialization
                     }
                     else
                     {
-                        if (Context.HttpContext.Request.Method == "PATCH")
+                        if (Context == null || Context.HttpContext.Request.Method != "PATCH") continue;
+                        if (attr.PropertyInfo.GetCustomAttribute<Required>() != null)
                         {
-                            var requiredAttribute = attr.PropertyInfo.GetCustomAttribute<RequiredIfEnabled>();
-                            if (requiredAttribute != null)
-                            {
-                                var itemKey = this.CreateKey(attr.PropertyInfo.ReflectedType.Name, attr.PropertyInfo.Name);
-                                if (!Context.HttpContext.Items.ContainsKey(itemKey))
-                                {
-                                    Context.HttpContext.Items.Add(itemKey, true);
-                                }
-                            }
+                            DisableValidator(attr.PropertyInfo.ReflectedType?.Name, attr.PropertyInfo.Name);
                         }
                     }
                 }
             }
 
             return entity;
-        }
-
-        private string CreateKey(string model, string propertyName)
-        {
-            return string.Format("DisableValidation_{0}_{1}", model, propertyName);
         }
 
         /// <summary>
@@ -142,6 +122,8 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperties = entity.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
+                DisableValidator(attr.PropertyInfo.Name, "Relation");
+
                 if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
                     continue;
 
@@ -149,7 +131,6 @@ namespace JsonApiDotNetCore.Serialization
                     SetHasOneRelationship(entity, entityProperties, hasOneAttribute, relationshipData);
                 else
                     SetHasManyRelationship(entity, (HasManyAttribute)attr, relationshipData);
-
             }
             return entity;
         }
@@ -300,6 +281,16 @@ namespace JsonApiDotNetCore.Serialization
         private object DeserializeComplexType(JContainer obj, Type targetType)
         {
             return obj.ToObject(targetType);
+        }
+
+        private void DisableValidator(string model, string name)
+        {
+            if (Context == null) return;
+            var itemKey = $"DisableValidation_{model}_{name}";
+            if (!Context.HttpContext.Items.ContainsKey(itemKey))
+            {
+                Context.HttpContext.Items.Add(itemKey, true);
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreExample.Models
     public sealed class Article : Identifiable
     {
         [Attr]
-        [RequiredIfEnabled(AllowEmptyStrings = true)]
+        [Required(AllowEmptyStrings = true)]
         public string Name { get; set; }
 
         [HasOne]      
