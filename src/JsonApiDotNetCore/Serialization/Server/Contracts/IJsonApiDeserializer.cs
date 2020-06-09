@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Models;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -7,6 +8,7 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// </summary>
     public interface IJsonApiDeserializer
     {
+        public InputFormatterContext Context { get; set; }
         /// <summary>
         /// Deserializes JSON in to a <see cref="Document"/> and constructs entities
         /// from <see cref="ExposableData{T}.Data"/>.

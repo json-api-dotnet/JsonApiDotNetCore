@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -9,7 +8,7 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// <summary>
     /// Server deserializer implementation of the <see cref="BaseDocumentParser"/>
     /// </summary>
-    public class RequestDeserializer : BaseDocumentParser, IJsonApiDeserializer
+    public class RequestDeserializer : BaseDocumentParser
     {
         private readonly ITargetedFields  _targetedFields;
 

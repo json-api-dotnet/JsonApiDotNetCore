@@ -132,7 +132,7 @@ namespace JsonApiDotNetCore.Controllers
             if (_update == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
             if (entity == null)
                 throw new InvalidRequestBodyException(null, null, null);
-
+           
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
             {
                 var namingStrategy = _jsonApiOptions.SerializerContractResolver.NamingStrategy;

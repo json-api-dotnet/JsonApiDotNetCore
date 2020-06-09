@@ -1,15 +1,17 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.CustomValidators;
 
 namespace JsonApiDotNetCoreExample.Models
 {
     public sealed class Article : Identifiable
     {
         [Attr]
+        [RequiredIfEnabled(AllowEmptyStrings = true)]
         public string Name { get; set; }
 
-        [HasOne]
+        [HasOne]      
         public Author Author { get; set; }
         public int AuthorId { get; set; }
 

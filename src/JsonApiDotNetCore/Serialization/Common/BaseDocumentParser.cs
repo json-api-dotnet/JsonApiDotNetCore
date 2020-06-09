@@ -1,4 +1,5 @@
 using System;
+using System.Web.Http.Validation.Validators;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +13,8 @@ using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Serialization.Server;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using JsonApiDotNetCore.Models.CustomValidators;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -19,10 +22,12 @@ namespace JsonApiDotNetCore.Serialization
     /// Abstract base class for deserialization. Deserializes JSON content into <see cref="Document"/>s
     /// And constructs instances of the resource(s) in the document body.
     /// </summary>
-    public abstract class BaseDocumentParser
+    public abstract class BaseDocumentParser : IJsonApiDeserializer
     {
+        public InputFormatterContext Context { get; set; }
+
         protected readonly IResourceContextProvider _contextProvider;
-        protected readonly IResourceFactory _resourceFactory;
+        protected readonly IResourceFactory _resourceFactory;    
         protected Document _document;
 
         protected BaseDocumentParser(IResourceContextProvider contextProvider, IResourceFactory resourceFactory)
@@ -46,7 +51,7 @@ namespace JsonApiDotNetCore.Serialization
         protected abstract void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipEntry data = null);
 
         /// <inheritdoc/>
-        protected object Deserialize(string body)
+        public object Deserialize(string body)
         {
             var bodyJToken = LoadJToken(body);
             _document = bodyJToken.ToObject<Document>();
@@ -71,21 +76,57 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns></returns>
         protected IIdentifiable SetAttributes(IIdentifiable entity, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
         {
-            if (attributeValues == null || attributeValues.Count == 0)
-                return entity;
-
             foreach (var attr in attributes)
             {
-                if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
+                if (attributeValues == null || attributeValues.Count == 0)
                 {
-                    var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
-                    attr.SetValue(entity, convertedValue);
-                    AfterProcessField(entity, attr);
+                    if (Context.HttpContext.Request.Method == "PATCH")
+                    {
+                        var requiredAttribute = attr.PropertyInfo.GetCustomAttribute<RequiredIfEnabled>();
+                        if (requiredAttribute != null)
+                        {
+                            var itemKey = this.CreateKey(attr.PropertyInfo.ReflectedType.Name, attr.PropertyInfo.Name);
+                            if (!Context.HttpContext.Items.ContainsKey(itemKey))
+                            {
+                                Context.HttpContext.Items.Add(itemKey, true);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
+                    {
+                        var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
+                        attr.SetValue(entity, convertedValue);
+                        AfterProcessField(entity, attr);
+                    }
+                    else
+                    {
+                        if (Context.HttpContext.Request.Method == "PATCH")
+                        {
+                            var requiredAttribute = attr.PropertyInfo.GetCustomAttribute<RequiredIfEnabled>();
+                            if (requiredAttribute != null)
+                            {
+                                var itemKey = this.CreateKey(attr.PropertyInfo.ReflectedType.Name, attr.PropertyInfo.Name);
+                                if (!Context.HttpContext.Items.ContainsKey(itemKey))
+                                {
+                                    Context.HttpContext.Items.Add(itemKey, true);
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
             return entity;
         }
+
+        private string CreateKey(string model, string propertyName)
+        {
+            return string.Format("DisableValidation_{0}_{1}", model, propertyName);
+        }
+
         /// <summary>
         /// Sets the relationships on a parsed entity
         /// </summary>

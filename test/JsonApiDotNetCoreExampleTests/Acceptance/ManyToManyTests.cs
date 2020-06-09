@@ -294,6 +294,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 data = new
                 {
                     type = "articles",
+                    attributes = new Dictionary<string, object>
+                    {
+                        {"name", "An article with relationships"}
+                    },
                     relationships = new Dictionary<string, dynamic>
                     {
                         {  "author",  new {
