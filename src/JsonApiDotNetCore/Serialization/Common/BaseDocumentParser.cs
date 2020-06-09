@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Serialization
         public InputFormatterContext Context { get; set; }
 
         protected readonly IResourceContextProvider _contextProvider;
-        protected readonly IResourceFactory _resourceFactory;    
+        protected readonly IResourceFactory _resourceFactory;
         protected Document _document;
 
         protected BaseDocumentParser(IResourceContextProvider contextProvider, IResourceFactory resourceFactory)

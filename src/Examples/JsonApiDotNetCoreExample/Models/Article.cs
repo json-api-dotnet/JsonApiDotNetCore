@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExample.Models
         [Required(AllowEmptyStrings = true)]
         public string Name { get; set; }
 
-        [HasOne]      
+        [HasOne]
         public Author Author { get; set; }
         public int AuthorId { get; set; }
 
