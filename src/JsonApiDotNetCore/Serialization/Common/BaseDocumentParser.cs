@@ -78,13 +78,10 @@ namespace JsonApiDotNetCore.Serialization
         {
             foreach (var attr in attributes)
             {
+                var disableValidator = false;
                 if (attributeValues == null || attributeValues.Count == 0)
                 {
-                    if (_httpContextAccessor?.HttpContext?.Request.Method != "PATCH") continue; 
-                    if (attr.PropertyInfo.GetCustomAttribute<IsRequiredAttribute>() != null)
-                    {
-                        _httpContextAccessor.HttpContext.DisableValidator(attr.PropertyInfo.ReflectedType?.Name, attr.PropertyInfo.Name);
-                    }
+                    disableValidator = true;
                 }
                 else
                 {
@@ -96,12 +93,15 @@ namespace JsonApiDotNetCore.Serialization
                     }
                     else
                     {
-                        if (_httpContextAccessor?.HttpContext?.Request.Method != "PATCH") continue;
-                        if (attr.PropertyInfo.GetCustomAttribute<IsRequiredAttribute>() != null)
-                        {
-                            _httpContextAccessor.HttpContext.DisableValidator(attr.PropertyInfo.ReflectedType?.Name, attr.PropertyInfo.Name);
-                        }
+                        disableValidator = true;
                     }
+                }
+
+                if (!disableValidator) continue;
+                if (_httpContextAccessor?.HttpContext?.Request.Method != "PATCH") continue;
+                if (attr.PropertyInfo.GetCustomAttribute<IsRequiredAttribute>() != null)
+                {
+                    _httpContextAccessor.HttpContext.DisableValidator(attr.PropertyInfo.Name, attr.PropertyInfo.ReflectedType?.Name);
                 }
             }
 
@@ -123,7 +123,7 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperties = entity.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
-                _httpContextAccessor?.HttpContext?.DisableValidator(attr.PropertyInfo.Name, "Relation");
+                _httpContextAccessor?.HttpContext?.DisableValidator( "Relation", attr.PropertyInfo.Name);
 
                 if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
                     continue;
