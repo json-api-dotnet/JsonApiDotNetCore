@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Serialization.Server
 
         protected override IIdentifiable SetAttributes(IIdentifiable entity, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
         {
-            foreach (var attr in attributes)
+            foreach (AttrAttribute attr in attributes)
             {
                 var disableValidator = false;
                 if (attributeValues == null || attributeValues.Count == 0)
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Serialization.Server
                 {
                     if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
                     {
-                        var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
+                        object convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
                         attr.SetValue(entity, convertedValue);
                         AfterProcessField(entity, attr);
                     }
@@ -84,10 +84,8 @@ namespace JsonApiDotNetCore.Serialization.Server
                 if (!disableValidator) continue;
                 if (_httpContextAccessor?.HttpContext?.Request.Method != HttpMethod.Patch.Method) continue;
                 if (attr.PropertyInfo.GetCustomAttribute<IsRequiredAttribute>() != null)
-                {
                     _httpContextAccessor?.HttpContext.DisableValidator(attr.PropertyInfo.Name,
                         entity.GetType().Name);
-                }
             }
 
             return entity;
@@ -99,7 +97,7 @@ namespace JsonApiDotNetCore.Serialization.Server
                 return entity;
 
             var entityProperties = entity.GetType().GetProperties();
-            foreach (var attr in relationshipAttributes)
+            foreach (RelationshipAttribute attr in relationshipAttributes)
             {
                 _httpContextAccessor?.HttpContext?.DisableValidator("Relation", attr.PropertyInfo.Name);
 

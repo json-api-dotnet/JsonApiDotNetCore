@@ -31,6 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var builder = new WebHostBuilder().UseStartup<TStartup>();
             _server = new TestServer(builder);
             ServiceProvider = _server.Host.Services;
+
             Client = _server.CreateClient();
             Context = GetService<IDbContextResolver>().GetContext() as AppDbContext;
         }
@@ -59,6 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public IResponseDeserializer GetDeserializer()
         {
             var options = GetService<IJsonApiOptions>();
+
             var resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
                 .AddResource<PersonRole>()
                 .AddResource<Article>()

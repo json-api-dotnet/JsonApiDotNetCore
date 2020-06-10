@@ -17,7 +17,6 @@ using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -72,7 +71,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
         protected IResponseDeserializer GetDeserializer()
         {
-            var httpContextAccessor = GetService<IHttpContextAccessor>();
             var options = GetService<IJsonApiOptions>();
             var formatter = new ResourceNameFormatter(options);
             var resourcesContexts = GetService<IResourceGraph>().GetResourceContexts();

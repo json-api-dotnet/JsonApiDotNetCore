@@ -75,15 +75,13 @@ namespace JsonApiDotNetCore.Serialization
             if (attributeValues == null || attributeValues.Count == 0)
                 return entity; 
             
-            foreach (var attr in attributes)
-            { 
+            foreach (AttrAttribute attr in attributes)
                 if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
                 {
-                        var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
-                        attr.SetValue(entity, convertedValue);
-                        AfterProcessField(entity, attr);
+                    object convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
+                    attr.SetValue(entity, convertedValue);
+                    AfterProcessField(entity, attr);
                 }
-            }
 
             return entity;
         }
