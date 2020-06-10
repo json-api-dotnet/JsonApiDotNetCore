@@ -125,7 +125,7 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperties = entity.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
-                _httpContextAccessor.HttpContext.DisableValidator( "Relation", attr.PropertyInfo.Name);
+                _httpContextAccessor?.HttpContext?.DisableValidator( "Relation", attr.PropertyInfo.Name);
 
                 if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
                     continue;
