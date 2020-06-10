@@ -11,7 +11,7 @@ namespace UnitTests.Serialization
     {
         protected sealed class TestDocumentParser : BaseDocumentParser
         {
-            public TestDocumentParser(IResourceGraph resourceGraph, IResourceFactory resourceFactory, IHttpContextAccessor httpContextAccessor) : base(resourceGraph, resourceFactory, httpContextAccessor) { }
+            public TestDocumentParser(IResourceGraph resourceGraph, IResourceFactory resourceFactory) : base(resourceGraph, resourceFactory) { }
 
             public new object Deserialize(string body)
             {

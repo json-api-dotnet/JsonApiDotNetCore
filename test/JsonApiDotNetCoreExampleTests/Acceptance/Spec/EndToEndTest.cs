@@ -87,7 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             }
             builder.AddResource<TodoItemClient>(formatter.FormatResourceName(typeof(TodoItem)));
             builder.AddResource<TodoItemCollectionClient, Guid>(formatter.FormatResourceName(typeof(TodoItemCollection)));
-            return new ResponseDeserializer(builder.Build(), new DefaultResourceFactory(_factory.ServiceProvider), httpContextAccessor);
+            return new ResponseDeserializer(builder.Build(), new DefaultResourceFactory(_factory.ServiceProvider));
         }
 
         protected AppDbContext GetDbContext() => GetService<AppDbContext>();

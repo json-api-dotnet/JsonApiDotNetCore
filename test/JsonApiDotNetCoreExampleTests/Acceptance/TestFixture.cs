@@ -32,14 +32,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var builder = new WebHostBuilder().UseStartup<TStartup>();
             _server = new TestServer(builder);
             ServiceProvider = _server.Host.Services;
-            HttpContextAccessor = GetService<HttpContextAccessor>();
             Client = _server.CreateClient();
             Context = GetService<IDbContextResolver>().GetContext() as AppDbContext;
         }
 
         public HttpClient Client { get; set; }
         public AppDbContext Context { get; private set; }
-        public HttpContextAccessor HttpContextAccessor { get; set; }
 
         public static IRequestSerializer GetSerializer<TResource>(IServiceProvider serviceProvider, Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
         {
@@ -74,7 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .AddResource<Passport>()
                 .AddResource<TodoItemClient>("todoItems")
                 .AddResource<TodoItemCollectionClient, Guid>().Build();
-            return new ResponseDeserializer(resourceGraph, new DefaultResourceFactory(ServiceProvider), HttpContextAccessor);
+            return new ResponseDeserializer(resourceGraph, new DefaultResourceFactory(ServiceProvider));
         }
 
         public T GetService<T>() => (T)ServiceProvider.GetService(typeof(T));

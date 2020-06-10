@@ -2,17 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.CustomValidators;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Serialization.Server;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -26,15 +23,13 @@ namespace JsonApiDotNetCore.Serialization
     {
         protected readonly IResourceContextProvider _contextProvider;
         protected readonly IResourceFactory _resourceFactory;
-        protected readonly IHttpContextAccessor _httpContextAccessor;
 
         protected Document _document;
 
-        protected BaseDocumentParser(IResourceContextProvider contextProvider, IResourceFactory resourceFactory, IHttpContextAccessor httpContextAccessor)
+        protected BaseDocumentParser(IResourceContextProvider contextProvider, IResourceFactory resourceFactory)
         {
             _contextProvider = contextProvider;
             _resourceFactory = resourceFactory;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -75,35 +70,18 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="attributeValues">Attributes and their values, as in the serialized content</param>
         /// <param name="attributes">Exposed attributes for <paramref name="entity"/></param>
         /// <returns></returns>
-        protected IIdentifiable SetAttributes(IIdentifiable entity, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
+        protected virtual IIdentifiable SetAttributes(IIdentifiable entity, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
         {
+            if (attributeValues == null || attributeValues.Count == 0)
+                return entity; 
+            
             foreach (var attr in attributes)
-            {
-                var disableValidator = false;
-                if (attributeValues == null || attributeValues.Count == 0)
+            { 
+                if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
                 {
-                    disableValidator = true;
-                }
-                else
-                {
-                    if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
-                    {
                         var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
                         attr.SetValue(entity, convertedValue);
                         AfterProcessField(entity, attr);
-                    }
-                    else
-                    {
-                        disableValidator = true;
-                    }
-                }
-
-                if (!disableValidator) continue;
-                if (_httpContextAccessor?.HttpContext?.Request.Method != HttpMethod.Patch.Method) continue;
-                if (attr.PropertyInfo.GetCustomAttribute<IsRequiredAttribute>() != null)
-                {
-                    _httpContextAccessor?.HttpContext.DisableValidator(attr.PropertyInfo.Name,
-                        entity.GetType().Name);
                 }
             }
 
@@ -117,7 +95,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="relationshipsValues">Relationships and their values, as in the serialized content</param>
         /// <param name="relationshipAttributes">Exposed relationships for <paramref name="entity"/></param>
         /// <returns></returns>
-        protected IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
+        protected virtual IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
         {
             if (relationshipsValues == null || relationshipsValues.Count == 0)
                 return entity;
@@ -125,8 +103,6 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperties = entity.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
-                _httpContextAccessor?.HttpContext?.DisableValidator( "Relation", attr.PropertyInfo.Name);
-
                 if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
                     continue;
 
@@ -186,7 +162,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="entityProperties"></param>
         /// <param name="attr"></param>
         /// <param name="relationshipData"></param>
-        private void SetHasOneRelationship(IIdentifiable entity,
+        protected void SetHasOneRelationship(IIdentifiable entity,
             PropertyInfo[] entityProperties,
             HasOneAttribute attr,
             RelationshipEntry relationshipData)
@@ -249,7 +225,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Sets a HasMany relationship.
         /// </summary>
-        private void SetHasManyRelationship(
+        protected void SetHasManyRelationship(
             IIdentifiable entity,
             HasManyAttribute attr,
             RelationshipEntry relationshipData)
@@ -270,7 +246,7 @@ namespace JsonApiDotNetCore.Serialization
             AfterProcessField(entity, attr, relationshipData);
         }
 
-        private object ConvertAttrValue(object newValue, Type targetType)
+        protected object ConvertAttrValue(object newValue, Type targetType)
         {
             if (newValue is JContainer jObject)
                 // the attribute value is a complex type that needs additional deserialization

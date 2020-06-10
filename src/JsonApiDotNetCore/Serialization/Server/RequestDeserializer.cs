@@ -3,6 +3,11 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.Reflection;
+using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Models.CustomValidators;
+using System.Net.Http;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -12,11 +17,13 @@ namespace JsonApiDotNetCore.Serialization.Server
     public class RequestDeserializer : BaseDocumentParser, IJsonApiDeserializer
     {
         private readonly ITargetedFields  _targetedFields;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public RequestDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory, ITargetedFields  targetedFields, IHttpContextAccessor httpContextAccessor) 
-            : base(contextProvider, resourceFactory, httpContextAccessor)
+            : base(contextProvider, resourceFactory)
         {
             _targetedFields = targetedFields;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <inheritdoc/>
@@ -49,6 +56,62 @@ namespace JsonApiDotNetCore.Serialization.Server
             }
             else if (field is RelationshipAttribute relationship)
                 _targetedFields.Relationships.Add(relationship);
+        }
+
+        protected override IIdentifiable SetAttributes(IIdentifiable entity, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
+        {
+            foreach (var attr in attributes)
+            {
+                var disableValidator = false;
+                if (attributeValues == null || attributeValues.Count == 0)
+                {
+                    disableValidator = true;
+                }
+                else
+                {
+                    if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
+                    {
+                        var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
+                        attr.SetValue(entity, convertedValue);
+                        AfterProcessField(entity, attr);
+                    }
+                    else
+                    {
+                        disableValidator = true;
+                    }
+                }
+
+                if (!disableValidator) continue;
+                if (_httpContextAccessor?.HttpContext?.Request.Method != HttpMethod.Patch.Method) continue;
+                if (attr.PropertyInfo.GetCustomAttribute<IsRequiredAttribute>() != null)
+                {
+                    _httpContextAccessor?.HttpContext.DisableValidator(attr.PropertyInfo.Name,
+                        entity.GetType().Name);
+                }
+            }
+
+            return entity;
+        }
+
+        protected override IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
+        {
+            if (relationshipsValues == null || relationshipsValues.Count == 0)
+                return entity;
+
+            var entityProperties = entity.GetType().GetProperties();
+            foreach (var attr in relationshipAttributes)
+            {
+                _httpContextAccessor?.HttpContext?.DisableValidator("Relation", attr.PropertyInfo.Name);
+
+                if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
+                    continue;
+
+                if (attr is HasOneAttribute hasOneAttribute)
+                    SetHasOneRelationship(entity, entityProperties, hasOneAttribute, relationshipData);
+                else
+                    SetHasManyRelationship(entity, (HasManyAttribute)attr, relationshipData);
+            }
+            return entity;
         }
     }
 }

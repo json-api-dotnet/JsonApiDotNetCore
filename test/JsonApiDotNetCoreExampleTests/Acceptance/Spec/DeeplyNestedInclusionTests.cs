@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .AddResource<TodoItemCollection, Guid>()
                 .AddResource<Person>()
                 .Build();
-            var deserializer = new ResponseDeserializer(resourceGraph, new DefaultResourceFactory(_fixture.ServiceProvider), _fixture.HttpContextAccessor);
+            var deserializer = new ResponseDeserializer(resourceGraph, new DefaultResourceFactory(_fixture.ServiceProvider));
             var todoItem = new TodoItem
             {
                 Collection = new TodoItemCollection

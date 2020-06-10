@@ -18,7 +18,7 @@ namespace UnitTests.Serialization.Deserializer
 
         public BaseDocumentParserTests()
         {
-            _deserializer = new TestDocumentParser(_resourceGraph, new DefaultResourceFactory(new ServiceContainer()), new HttpContextAccessor());
+            _deserializer = new TestDocumentParser(_resourceGraph, new DefaultResourceFactory(new ServiceContainer()));
         }
 
         [Fact]
