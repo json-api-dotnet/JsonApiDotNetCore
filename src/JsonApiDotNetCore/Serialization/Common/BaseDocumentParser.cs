@@ -8,12 +8,12 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.CustomValidators;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Serialization.Server;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Required = JsonApiDotNetCore.Models.CustomValidators.Required;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -21,18 +21,19 @@ namespace JsonApiDotNetCore.Serialization
     /// Abstract base class for deserialization. Deserializes JSON content into <see cref="Document"/>s
     /// And constructs instances of the resource(s) in the document body.
     /// </summary>
-    public abstract class BaseDocumentParser : IJsonApiDeserializer
+    public abstract class BaseDocumentParser
     {
-        public InputFormatterContext Context { get; set; }
-
         protected readonly IResourceContextProvider _contextProvider;
         protected readonly IResourceFactory _resourceFactory;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+
         protected Document _document;
 
-        protected BaseDocumentParser(IResourceContextProvider contextProvider, IResourceFactory resourceFactory)
+        protected BaseDocumentParser(IResourceContextProvider contextProvider, IResourceFactory resourceFactory, IHttpContextAccessor httpContextAccessor)
         {
             _contextProvider = contextProvider;
             _resourceFactory = resourceFactory;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace JsonApiDotNetCore.Serialization
         protected abstract void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipEntry data = null);
 
         /// <inheritdoc/>
-        public object Deserialize(string body)
+        protected object Deserialize(string body)
         {
             var bodyJToken = LoadJToken(body);
             _document = bodyJToken.ToObject<Document>();
@@ -79,10 +80,10 @@ namespace JsonApiDotNetCore.Serialization
             {
                 if (attributeValues == null || attributeValues.Count == 0)
                 {
-                    if (Context == null || Context.HttpContext.Request.Method != "PATCH") continue;
-                    if (attr.PropertyInfo.GetCustomAttribute<Required>() != null)
+                    if (_httpContextAccessor?.HttpContext?.Request.Method != "PATCH") continue; 
+                    if (attr.PropertyInfo.GetCustomAttribute<IsRequiredAttribute>() != null)
                     {
-                        DisableValidator(attr.PropertyInfo.ReflectedType?.Name, attr.PropertyInfo.Name);
+                        _httpContextAccessor.HttpContext.DisableValidator(attr.PropertyInfo.ReflectedType?.Name, attr.PropertyInfo.Name);
                     }
                 }
                 else
@@ -95,10 +96,10 @@ namespace JsonApiDotNetCore.Serialization
                     }
                     else
                     {
-                        if (Context == null || Context.HttpContext.Request.Method != "PATCH") continue;
-                        if (attr.PropertyInfo.GetCustomAttribute<Required>() != null)
+                        if (_httpContextAccessor?.HttpContext?.Request.Method != "PATCH") continue;
+                        if (attr.PropertyInfo.GetCustomAttribute<IsRequiredAttribute>() != null)
                         {
-                            DisableValidator(attr.PropertyInfo.ReflectedType?.Name, attr.PropertyInfo.Name);
+                            _httpContextAccessor.HttpContext.DisableValidator(attr.PropertyInfo.ReflectedType?.Name, attr.PropertyInfo.Name);
                         }
                     }
                 }
@@ -122,7 +123,7 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperties = entity.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
-                DisableValidator(attr.PropertyInfo.Name, "Relation");
+                _httpContextAccessor?.HttpContext?.DisableValidator(attr.PropertyInfo.Name, "Relation");
 
                 if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
                     continue;
@@ -281,16 +282,6 @@ namespace JsonApiDotNetCore.Serialization
         private object DeserializeComplexType(JContainer obj, Type targetType)
         {
             return obj.ToObject(targetType);
-        }
-
-        private void DisableValidator(string model, string name)
-        {
-            if (Context == null) return;
-            var itemKey = $"DisableValidation_{model}_{name}";
-            if (!Context.HttpContext.Items.ContainsKey(itemKey))
-            {
-                Context.HttpContext.Items.Add(itemKey, true);
-            }
         }
     }
 }

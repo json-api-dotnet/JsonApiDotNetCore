@@ -21,9 +21,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public sealed class ManyToManyTests
     {
+        private readonly Faker<Author> _authorFaker = new Faker<Author>()
+            .RuleFor(a => a.Name, f => f.Random.Words(2));
+
         private readonly Faker<Article> _articleFaker = new Faker<Article>()
             .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
-            .RuleFor(a => a.Author, f => new Author());
+            .RuleFor(a => a.Author, f => new Author() { Name = "John Doe"});
 
         private readonly Faker<Tag> _tagFaker;
 
@@ -282,7 +285,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var tag = _tagFaker.Generate();
-            var author = new Author();
+            var author = _authorFaker.Generate();
             context.Tags.Add(tag);
             context.AuthorDifferentDbContextName.Add(author);
             await context.SaveChangesAsync();

@@ -1,9 +1,9 @@
-using System;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Internal;
+using Microsoft.AspNetCore.Http;
 
 namespace UnitTests.Serialization
 {
@@ -11,7 +11,7 @@ namespace UnitTests.Serialization
     {
         protected sealed class TestDocumentParser : BaseDocumentParser
         {
-            public TestDocumentParser(IResourceGraph resourceGraph, IResourceFactory resourceFactory) : base(resourceGraph, resourceFactory) { }
+            public TestDocumentParser(IResourceGraph resourceGraph, IResourceFactory resourceFactory, IHttpContextAccessor httpContextAccessor) : base(resourceGraph, resourceFactory, httpContextAccessor) { }
 
             public new object Deserialize(string body)
             {

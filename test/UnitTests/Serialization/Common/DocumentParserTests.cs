@@ -5,6 +5,7 @@ using System.ComponentModel.Design;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Xunit;
 using UnitTests.TestModels;
@@ -17,7 +18,7 @@ namespace UnitTests.Serialization.Deserializer
 
         public BaseDocumentParserTests()
         {
-            _deserializer = new TestDocumentParser(_resourceGraph, new DefaultResourceFactory(new ServiceContainer()));
+            _deserializer = new TestDocumentParser(_resourceGraph, new DefaultResourceFactory(new ServiceContainer()), new HttpContextAccessor());
         }
 
         [Fact]

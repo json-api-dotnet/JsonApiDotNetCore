@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
 namespace Benchmarks.Serialization
@@ -38,8 +39,8 @@ namespace Benchmarks.Serialization
             var options = new JsonApiOptions();
             IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
             var targetedFields = new TargetedFields();
-
-            _jsonApiDeserializer = new RequestDeserializer(resourceGraph, new DefaultResourceFactory(new ServiceContainer()), targetedFields);
+            
+            _jsonApiDeserializer = new RequestDeserializer(resourceGraph, new DefaultResourceFactory(new ServiceContainer()), targetedFields, new HttpContextAccessor());
         }
 
         [Benchmark]

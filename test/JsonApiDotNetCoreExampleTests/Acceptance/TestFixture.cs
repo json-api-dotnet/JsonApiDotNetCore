@@ -14,6 +14,7 @@ using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,13 +32,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var builder = new WebHostBuilder().UseStartup<TStartup>();
             _server = new TestServer(builder);
             ServiceProvider = _server.Host.Services;
-
+            HttpContextAccessor = GetService<HttpContextAccessor>();
             Client = _server.CreateClient();
             Context = GetService<IDbContextResolver>().GetContext() as AppDbContext;
         }
 
         public HttpClient Client { get; set; }
         public AppDbContext Context { get; private set; }
+        public HttpContextAccessor HttpContextAccessor { get; set; }
 
         public static IRequestSerializer GetSerializer<TResource>(IServiceProvider serviceProvider, Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
         {
@@ -60,7 +62,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public IResponseDeserializer GetDeserializer()
         {
             var options = GetService<IJsonApiOptions>();
-
             var resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
                 .AddResource<PersonRole>()
                 .AddResource<Article>()
@@ -73,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .AddResource<Passport>()
                 .AddResource<TodoItemClient>("todoItems")
                 .AddResource<TodoItemCollectionClient, Guid>().Build();
-            return new ResponseDeserializer(resourceGraph, new DefaultResourceFactory(ServiceProvider));
+            return new ResponseDeserializer(resourceGraph, new DefaultResourceFactory(ServiceProvider), HttpContextAccessor);
         }
 
         public T GetService<T>() => (T)ServiceProvider.GetService(typeof(T));

@@ -28,7 +28,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         private readonly Faker<Person> _personFaker;
         private readonly Faker<Article> _articleFaker = new Faker<Article>()
             .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
-            .RuleFor(a => a.Author, f => new Author());
+            .RuleFor(a => a.Author, f => new Author() { Name = "John Doe"});
+
+        private readonly Faker<Author> _authorFaker = new Faker<Author>()
+            .RuleFor(a => a.Name, f => f.Random.Words(2));
 
         private readonly Faker<Tag> _tagFaker;
 
@@ -611,12 +614,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Create_Article_With_Required_Name_Attribute_Succeeds()
+        public async Task Create_Article_With_IsRequired_Name_Attribute_Succeeds()
         {
             // Arrange
             string name = "Article Title";
             var context = _fixture.GetService<AppDbContext>();
-            var author = new Author();
+            var author = _authorFaker.Generate();
             context.AuthorDifferentDbContextName.Add(author);
             await context.SaveChangesAsync();
 
@@ -665,12 +668,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Create_Article_With_Required_Name_Attribute_Empty_Succeeds()
+        public async Task Create_Article_With_IsRequired_Name_Attribute_Empty_Succeeds()
         {
             // Arrange
             string name = string.Empty;
             var context = _fixture.GetService<AppDbContext>();
-            var author = new Author();
+            var author = _authorFaker.Generate();
             context.AuthorDifferentDbContextName.Add(author);
             await context.SaveChangesAsync();
 
@@ -719,11 +722,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Create_Article_With_Required_Name_Attribute_Explicitly_Null_Fails()
+        public async Task Create_Article_With_IsRequired_Name_Attribute_Explicitly_Null_Fails()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            var author = new Author();
+            var author = _authorFaker.Generate();
             context.AuthorDifferentDbContextName.Add(author);
             await context.SaveChangesAsync();
 
@@ -769,11 +772,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Create_Article_With_Required_Name_Attribute_Missing_Fails()
+        public async Task Create_Article_With_IsRequired_Name_Attribute_Missing_Fails()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            var author = new Author();
+            var author = _authorFaker.Generate();
             context.AuthorDifferentDbContextName.Add(author);
             await context.SaveChangesAsync();
 
@@ -815,7 +818,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         } 
 
         [Fact]
-        public async Task Update_Article_With_Required_Name_Attribute_Succeeds()
+        public async Task Update_Article_With_IsRequired_Name_Attribute_Succeeds()
         {
             // Arrange
             var name = "Article Name";
@@ -857,7 +860,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Update_Article_With_Required_Name_Attribute_Missing_Succeeds()
+        public async Task Update_Article_With_IsRequired_Name_Attribute_Missing_Succeeds()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
@@ -904,7 +907,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Update_Article_With_Required_Name_Attribute_Explicitly_Null_Fails()
+        public async Task Update_Article_With_IsRequired_Name_Attribute_Explicitly_Null_Fails()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
@@ -945,7 +948,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Update_Article_With_Required_AllowEmptyString_True_Name_Attribute_Empty_Succeeds()
+        public async Task Update_Article_With_IsRequired_Name_Attribute_Empty_Succeeds()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();

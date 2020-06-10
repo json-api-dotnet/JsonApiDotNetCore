@@ -17,6 +17,7 @@ using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -71,6 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
         protected IResponseDeserializer GetDeserializer()
         {
+            var httpContextAccessor = GetService<IHttpContextAccessor>();
             var options = GetService<IJsonApiOptions>();
             var formatter = new ResourceNameFormatter(options);
             var resourcesContexts = GetService<IResourceGraph>().GetResourceContexts();
@@ -85,7 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             }
             builder.AddResource<TodoItemClient>(formatter.FormatResourceName(typeof(TodoItem)));
             builder.AddResource<TodoItemCollectionClient, Guid>(formatter.FormatResourceName(typeof(TodoItemCollection)));
-            return new ResponseDeserializer(builder.Build(), new DefaultResourceFactory(_factory.ServiceProvider));
+            return new ResponseDeserializer(builder.Build(), new DefaultResourceFactory(_factory.ServiceProvider), httpContextAccessor);
         }
 
         protected AppDbContext GetDbContext() => GetService<AppDbContext>();

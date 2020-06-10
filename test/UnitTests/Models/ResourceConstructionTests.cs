@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server;
 using JsonApiDotNetCoreExample.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
@@ -24,7 +25,7 @@ namespace UnitTests.Models
                 .AddResource<ResourceWithoutConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(new ServiceContainer()), new TargetedFields());
+            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(new ServiceContainer()), new TargetedFields(), new HttpContextAccessor());
 
             var body = new
             {
@@ -53,7 +54,7 @@ namespace UnitTests.Models
                 .AddResource<ResourceWithThrowingConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(new ServiceContainer()), new TargetedFields());
+            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(new ServiceContainer()), new TargetedFields(), new HttpContextAccessor());
 
             var body = new
             {
@@ -89,7 +90,7 @@ namespace UnitTests.Models
             var serviceContainer = new ServiceContainer();
             serviceContainer.AddService(typeof(AppDbContext), appDbContext);
 
-            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(serviceContainer), new TargetedFields());
+            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(serviceContainer), new TargetedFields(), new HttpContextAccessor());
 
             var body = new
             {
@@ -119,7 +120,7 @@ namespace UnitTests.Models
                 .AddResource<ResourceWithStringConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(new ServiceContainer()), new TargetedFields());
+            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(new ServiceContainer()), new TargetedFields(), new HttpContextAccessor());
 
             var body = new
             {

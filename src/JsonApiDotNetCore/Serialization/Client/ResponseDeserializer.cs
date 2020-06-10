@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Serialization.Client
 {
@@ -13,7 +14,7 @@ namespace JsonApiDotNetCore.Serialization.Client
     /// </summary>
     public class ResponseDeserializer : BaseDocumentParser, IResponseDeserializer
     {
-        public ResponseDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory) : base(contextProvider, resourceFactory) { }
+        public ResponseDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory, IHttpContextAccessor httpContextAccessor) : base(contextProvider, resourceFactory, httpContextAccessor) { }
 
         /// <inheritdoc/>
         public DeserializedSingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable

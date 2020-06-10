@@ -2,18 +2,19 @@ using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <summary>
     /// Server deserializer implementation of the <see cref="BaseDocumentParser"/>
     /// </summary>
-    public class RequestDeserializer : BaseDocumentParser
+    public class RequestDeserializer : BaseDocumentParser, IJsonApiDeserializer
     {
         private readonly ITargetedFields  _targetedFields;
 
-        public RequestDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory, ITargetedFields  targetedFields) 
-            : base(contextProvider, resourceFactory)
+        public RequestDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory, ITargetedFields  targetedFields, IHttpContextAccessor httpContextAccessor) 
+            : base(contextProvider, resourceFactory, httpContextAccessor)
         {
             _targetedFields = targetedFields;
         }

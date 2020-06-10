@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreExample.Models
     public sealed class Author : Identifiable
     {
         [Attr]
-        [Required(AllowEmptyStrings = true)]
+        [IsRequired(AllowEmptyStrings = true)]
         public string Name { get; set; }
 
         [HasMany]
