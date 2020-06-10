@@ -22,23 +22,24 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     public sealed class ResourceDefinitionTests
     {
         private readonly TestFixture<TestStartup> _fixture;
+
         private readonly AppDbContext _context;
         private readonly Faker<User> _userFaker;
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
-        private readonly Faker<Article> _articleFaker = new Faker<Article>()
-            .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
-            .RuleFor(a => a.Author, f => new Author() { Name = "John Doe"});
-
-        private readonly Faker<Author> _authorFaker = new Faker<Author>()
-            .RuleFor(a => a.Name, f => f.Random.Words(2));
-
+        private readonly Faker<Article> _articleFaker;
+        private readonly Faker<Author> _authorFaker;
         private readonly Faker<Tag> _tagFaker;
 
         public ResourceDefinitionTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
+            _authorFaker = new Faker<Author>()
+                .RuleFor(a => a.Name, f => f.Random.Words(2));
+            _articleFaker = new Faker<Article>()
+                .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
+                .RuleFor(a => a.Author, f => _authorFaker.Generate());
             _userFaker = new Faker<User>()
                 .CustomInstantiator(f => new User(_context))
                 .RuleFor(u => u.Username, f => f.Internet.UserName())
