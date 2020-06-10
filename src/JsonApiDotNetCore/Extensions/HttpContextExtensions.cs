@@ -15,15 +15,12 @@ namespace JsonApiDotNetCore.Extensions
             httpContext.Items["IsJsonApiRequest"] = bool.TrueString;
         }
 
-        internal static void DisableValidator(this HttpContext httpContext, string propertyName, string model = null)
+        internal static void DisableValidator(this HttpContext httpContext, string propertyName, string model)
         {
-            if (httpContext == null) return;
             var itemKey = $"JsonApiDotNetCore_DisableValidation_{model}_{propertyName}";
-            if (!httpContext.Items.ContainsKey(itemKey) && model != null)
-            {
-                httpContext.Items.Add(itemKey, true);
-            }
+            httpContext.Items[itemKey] = true;
         }
+
         internal static bool IsValidatorDisabled(this HttpContext httpContext, string propertyName, string model)
         {
             return httpContext.Items.ContainsKey($"JsonApiDotNetCore_DisableValidation_{model}_{propertyName}") ||

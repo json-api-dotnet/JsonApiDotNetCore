@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Extensions;
@@ -98,10 +99,11 @@ namespace JsonApiDotNetCore.Serialization
                 }
 
                 if (!disableValidator) continue;
-                if (_httpContextAccessor?.HttpContext?.Request.Method != "PATCH") continue;
+                if (_httpContextAccessor?.HttpContext?.Request.Method != HttpMethod.Patch.Method) continue;
                 if (attr.PropertyInfo.GetCustomAttribute<IsRequiredAttribute>() != null)
                 {
-                    _httpContextAccessor.HttpContext.DisableValidator(attr.PropertyInfo.Name, attr.PropertyInfo.ReflectedType?.Name);
+                    _httpContextAccessor?.HttpContext.DisableValidator(attr.PropertyInfo.Name,
+                        entity.GetType().Name);
                 }
             }
 

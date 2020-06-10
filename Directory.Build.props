@@ -5,7 +5,6 @@
     <AspNetCoreVersion>3.1.*</AspNetCoreVersion>
     <EFCoreVersion>3.1.*</EFCoreVersion>
     <NpgsqlPostgreSQLVersion>3.1.*</NpgsqlPostgreSQLVersion>
-    <DependencyInjectionVersion>3.1.*</DependencyInjectionVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
