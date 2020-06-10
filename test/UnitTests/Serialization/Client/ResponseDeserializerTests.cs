@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCore.Serialization.Client;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Xunit;
 using UnitTests.TestModels;

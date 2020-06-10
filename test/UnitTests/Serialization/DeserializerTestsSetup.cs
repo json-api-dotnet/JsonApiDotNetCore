@@ -3,7 +3,6 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Internal;
-using Microsoft.AspNetCore.Http;
 
 namespace UnitTests.Serialization
 {

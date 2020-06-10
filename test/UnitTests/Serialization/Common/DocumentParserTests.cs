@@ -5,7 +5,6 @@ using System.ComponentModel.Design;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Xunit;
 using UnitTests.TestModels;

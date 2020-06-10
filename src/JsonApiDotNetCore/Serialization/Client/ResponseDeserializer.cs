@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Serialization.Client
 {
