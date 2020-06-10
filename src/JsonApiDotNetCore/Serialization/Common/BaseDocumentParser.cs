@@ -23,7 +23,6 @@ namespace JsonApiDotNetCore.Serialization
     {
         protected readonly IResourceContextProvider _contextProvider;
         protected readonly IResourceFactory _resourceFactory;
-
         protected Document _document;
 
         protected BaseDocumentParser(IResourceContextProvider contextProvider, IResourceFactory resourceFactory)
@@ -78,7 +77,7 @@ namespace JsonApiDotNetCore.Serialization
             foreach (AttrAttribute attr in attributes)
                 if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
                 {
-                    object convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
+                    var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
                     attr.SetValue(entity, convertedValue);
                     AfterProcessField(entity, attr);
                 }
