@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Models.CustomValidators
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var httpContextAccessor = (IHttpContextAccessor)validationContext.GetRequiredService(typeof(IHttpContextAccessor));
-            _isDisabled = httpContextAccessor.HttpContext.IsValidatorDisabled(validationContext.ObjectType.Name, validationContext.MemberName);
+            _isDisabled = httpContextAccessor.HttpContext.IsValidatorDisabled(validationContext.MemberName, validationContext.ObjectType.Name);
             return _isDisabled ? ValidationResult.Success : base.IsValid(value, validationContext);
         }
     }
