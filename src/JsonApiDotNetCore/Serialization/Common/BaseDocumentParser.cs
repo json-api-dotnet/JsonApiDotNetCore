@@ -74,7 +74,7 @@ namespace JsonApiDotNetCore.Serialization
             if (attributeValues == null || attributeValues.Count == 0)
                 return entity;
 
-            foreach (AttrAttribute attr in attributes)
+            foreach (var attr in attributes)
             {
                 if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
                 {
