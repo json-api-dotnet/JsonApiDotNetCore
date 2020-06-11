@@ -161,7 +161,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="entityProperties"></param>
         /// <param name="attr"></param>
         /// <param name="relationshipData"></param>
-        protected void SetHasOneRelationship(IIdentifiable entity,
+        private void SetHasOneRelationship(IIdentifiable entity,
             PropertyInfo[] entityProperties,
             HasOneAttribute attr,
             RelationshipEntry relationshipData)
@@ -224,7 +224,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Sets a HasMany relationship.
         /// </summary>
-        protected void SetHasManyRelationship(
+        private void SetHasManyRelationship(
             IIdentifiable entity,
             HasManyAttribute attr,
             RelationshipEntry relationshipData)
@@ -245,7 +245,7 @@ namespace JsonApiDotNetCore.Serialization
             AfterProcessField(entity, attr, relationshipData);
         }
 
-        protected object ConvertAttrValue(object newValue, Type targetType)
+        private object ConvertAttrValue(object newValue, Type targetType)
         {
             if (newValue is JContainer jObject)
                 // the attribute value is a complex type that needs additional deserialization
