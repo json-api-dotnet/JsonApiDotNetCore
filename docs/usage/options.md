@@ -88,3 +88,22 @@ If you would like to use ASP.NET Core ModelState validation into your controller
 options.ValidateModelState = true;
 ```
 
+# Custom Validators
+
+Attributes can be marked with custom validators which work with ModelState validation.
+
+## IsRequired Attribute
+
+The 'IsRequired' attribute is derived from the 'Required' validator attribute. It accepts a bool to specify if empty strings are allowed on that property. The default for 'AllowEmptyStrings' is false.
+
+The 'IsRequired' attribute can be used to decorate properties allowing the property to be disabled on PATCH requests, making partial patching possible. 
+
+If a PATCH request contains a property assigned the 'IsRequired' attribute, the requirements of the validator are verified against the patched value. When the validator is enabled, that properties value cannot be null and cannot be empty if 'AllowEmptyStrings' is set to false. 
+
+```c#
+public class Person : Identifiable<int>
+{
+    [IsRequired]
+    public string FirstName { get; set; }
+}
+```

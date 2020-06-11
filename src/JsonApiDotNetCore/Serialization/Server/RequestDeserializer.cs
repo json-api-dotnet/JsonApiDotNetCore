@@ -69,47 +69,30 @@ namespace JsonApiDotNetCore.Serialization.Server
                 }
                 else
                 {
-                    if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
-                    {
-                        object convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
-                        attr.SetValue(entity, convertedValue);
-                        AfterProcessField(entity, attr);
-                    }
-                    else
+                    if (!attributeValues.TryGetValue(attr.PublicAttributeName, out object _))
                     {
                         disableValidator = true;
                     }
                 }
 
                 if (!disableValidator) continue;
-                if (_httpContextAccessor?.HttpContext?.Request.Method != HttpMethod.Patch.Method) continue;
+                if (_httpContextAccessor.HttpContext.Request.Method != HttpMethod.Patch.Method) continue;
                 if (attr.PropertyInfo.GetCustomAttribute<IsRequiredAttribute>() != null)
-                    _httpContextAccessor?.HttpContext.DisableValidator(attr.PropertyInfo.Name,
+                    _httpContextAccessor.HttpContext.DisableValidator(attr.PropertyInfo.Name,
                         entity.GetType().Name);
             }
 
-            return entity;
+            return base.SetAttributes(entity, attributeValues, attributes);
         }
 
         protected override IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
         {
-            if (relationshipsValues == null || relationshipsValues.Count == 0)
-                return entity;
-
-            var entityProperties = entity.GetType().GetProperties();
             foreach (RelationshipAttribute attr in relationshipAttributes)
             {
-                _httpContextAccessor?.HttpContext?.DisableValidator("Relation", attr.PropertyInfo.Name);
-
-                if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
-                    continue;
-
-                if (attr is HasOneAttribute hasOneAttribute)
-                    SetHasOneRelationship(entity, entityProperties, hasOneAttribute, relationshipData);
-                else
-                    SetHasManyRelationship(entity, (HasManyAttribute)attr, relationshipData);
+                _httpContextAccessor.HttpContext.DisableValidator("Relation", attr.PropertyInfo.Name);
             }
-            return entity;
+
+            return base.SetRelationships(entity, relationshipsValues, relationshipAttributes);
         }
     }
 }
