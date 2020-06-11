@@ -72,15 +72,17 @@ namespace JsonApiDotNetCore.Serialization
         protected virtual IIdentifiable SetAttributes(IIdentifiable entity, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
         {
             if (attributeValues == null || attributeValues.Count == 0)
-                return entity; 
-            
+                return entity;
+
             foreach (AttrAttribute attr in attributes)
+            {
                 if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
                 {
                     var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
                     attr.SetValue(entity, convertedValue);
                     AfterProcessField(entity, attr);
                 }
+            }
 
             return entity;
         }
