@@ -19,6 +19,7 @@ namespace UnitTests.Models
     public sealed class ResourceConstructionTests
     {
         public Mock<IHttpContextAccessor> _mockHttpContextAccessor;
+
         public ResourceConstructionTests()
         {
             _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();

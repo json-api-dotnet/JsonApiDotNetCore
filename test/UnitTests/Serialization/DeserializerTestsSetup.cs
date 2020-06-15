@@ -11,6 +11,7 @@ namespace UnitTests.Serialization
     public class DeserializerTestsSetup : SerializationTestsSetupBase
     {
         public Mock<IHttpContextAccessor> _mockHttpContextAccessor;
+
         public DeserializerTestsSetup()
         {
             _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();

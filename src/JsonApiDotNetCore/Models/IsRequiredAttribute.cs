@@ -1,11 +1,11 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel.DataAnnotations;
 using JsonApiDotNetCore.Extensions;
 
-namespace JsonApiDotNetCore.Models.CustomValidators
+namespace JsonApiDotNetCore.Models
 {
-    public class IsRequiredAttribute : RequiredAttribute
+    public sealed class IsRequiredAttribute : RequiredAttribute
     {
         private bool _isDisabled;
 

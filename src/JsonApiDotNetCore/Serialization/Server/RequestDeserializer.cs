@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Models.CustomValidators;
 using System.Net.Http;
 
 namespace JsonApiDotNetCore.Serialization.Server
@@ -87,6 +86,9 @@ namespace JsonApiDotNetCore.Serialization.Server
 
         protected override IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
         {
+            // If there is a relationship included in the data of the POST or PATCH, then the 'IsRequired' attribute will be disabled for any
+            // property within that object. For instance, a new article is posted and has a relationship included to an author. In this case,
+            // the author name (which has the 'IsRequired' attribute) will not be included in the POST. Unless disabled, the POST will fail.
             foreach (RelationshipAttribute attr in relationshipAttributes)
             {
                 _httpContextAccessor.HttpContext.DisableValidator("Relation", attr.PropertyInfo.Name);
