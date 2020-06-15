@@ -87,22 +87,9 @@ namespace JsonApiDotNetCore.Query
             // expected input = filter[id]=eq:1
             var propertyName = parameterName.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
             var queries = new List<FilterQuery>();
-            // InArray case
             string op = GetFilterOperation(parameterValue);
-            if (op == FilterOperation.@in.ToString() || op == FilterOperation.nin.ToString())
-            {
-                var (_, filterValue) = ParseFilterOperation(parameterValue);
-                queries.Add(new FilterQuery(propertyName, filterValue, op));
-            }
-            else
-            {
-                var values = ((string)parameterValue).Split(QueryConstants.COMMA);
-                foreach (var val in values)
-                {
-                    var (operation, filterValue) = ParseFilterOperation(val);
-                    queries.Add(new FilterQuery(propertyName, filterValue, operation));
-                }
-            }
+            var (_, filterValue) = ParseFilterOperation(parameterValue);
+            queries.Add(new FilterQuery(propertyName, filterValue, op));
             return queries;
         }
 

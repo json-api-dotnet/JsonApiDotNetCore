@@ -43,6 +43,7 @@ namespace UnitTests.QueryParameters
         [Theory]
         [InlineData("title", "", "value")]
         [InlineData("title", "eq:", "value")]
+        [InlineData("title", "eq:", "val,ue")]
         [InlineData("title", "lt:", "value")]
         [InlineData("title", "gt:", "value")]
         [InlineData("title", "le:", "value")]
