@@ -59,26 +59,21 @@ namespace JsonApiDotNetCore.Serialization.Server
 
         protected override IIdentifiable SetAttributes(IIdentifiable entity, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
         {
-            foreach (AttrAttribute attr in attributes)
+            if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Patch.Method)
             {
-                var disableValidator = false;
-                if (attributeValues == null || attributeValues.Count == 0)
+                foreach (AttrAttribute attr in attributes)
                 {
-                    disableValidator = true;
-                }
-                else
-                {
-                    if (!attributeValues.TryGetValue(attr.PublicAttributeName, out object _))
+                    if (attr.PropertyInfo.GetCustomAttribute<IsRequiredAttribute>() != null)
                     {
-                        disableValidator = true;
+                        bool disableValidator = attributeValues == null || attributeValues.Count == 0 ||
+                                                !attributeValues.TryGetValue(attr.PublicAttributeName, out _);
+
+                        if (disableValidator)
+                        {
+                            _httpContextAccessor.HttpContext.DisableValidator(attr.PropertyInfo.Name, entity.GetType().Name);
+                        }
                     }
                 }
-
-                if (!disableValidator) continue;
-                if (_httpContextAccessor.HttpContext.Request.Method != HttpMethod.Patch.Method) continue;
-                if (attr.PropertyInfo.GetCustomAttribute<IsRequiredAttribute>() != null)
-                    _httpContextAccessor.HttpContext.DisableValidator(attr.PropertyInfo.Name,
-                        entity.GetType().Name);
             }
 
             return base.SetAttributes(entity, attributeValues, attributes);
