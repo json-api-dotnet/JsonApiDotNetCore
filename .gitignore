@@ -97,6 +97,9 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+# MacOS file systems
+**/.DS_STORE
+
 # Chutzpah Test files
 _Chutzpah*
 
