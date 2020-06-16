@@ -91,9 +91,9 @@ options.ValidateModelState = true;
 You will need to use the JsonApiDotNetCore 'IsRequiredAttribute' instead of the built-in 'RequiredAttribute' because it contains modifications to enable partial patching.
 
 ```c#
-public class Person : Identifiable<int>
+public class Person : Identifiable
 {
-    [IsRequired]
+    [IsRequired(AllowEmptyStrings = true)]
     public string FirstName { get; set; }
 }
 ```

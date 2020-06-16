@@ -7,7 +7,6 @@ using Bogus;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
-using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Acceptance.Spec;
@@ -19,25 +18,28 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     public sealed class ModelStateValidationTests : FunctionalTestCollection<StandardApplicationFactory>
     {
-        private readonly AppDbContext _context;
         private readonly Faker<Article> _articleFaker;
         private readonly Faker<Author> _authorFaker;
         private readonly Faker<Tag> _tagFaker;
+
         public ModelStateValidationTests(StandardApplicationFactory factory)
             : base(factory)
         {
-            var options = (JsonApiOptions)_factory.GetService<IJsonApiOptions>();
+            var options = (JsonApiOptions) _factory.GetService<IJsonApiOptions>();
             options.ValidateModelState = true;
 
-            _context = _factory.GetService<AppDbContext>();
+            var context = _factory.GetService<AppDbContext>();
+
             _authorFaker = new Faker<Author>()
                 .RuleFor(a => a.Name, f => f.Random.Words(2));
+
             _articleFaker = new Faker<Article>()
                 .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
                 .RuleFor(a => a.Author, f => _authorFaker.Generate());
+
             _tagFaker = new Faker<Tag>()
-           .CustomInstantiator(f => new Tag(_context))
-           .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
+                .CustomInstantiator(f => new Tag(context))
+                .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
         }
 
         [Fact]
@@ -199,7 +201,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             await context.SaveChangesAsync();
 
             var route = "/api/v1/articles";
-            var request = new HttpRequestMessage(new HttpMethod("POST"), route);
+            var request = new HttpRequestMessage(HttpMethod.Post, route);
             var content = new
             {
                 data = new
@@ -253,7 +255,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             await context.SaveChangesAsync();
 
             var route = "/api/v1/articles";
-            var request = new HttpRequestMessage(new HttpMethod("POST"), route);
+            var request = new HttpRequestMessage(HttpMethod.Post, route);
             var content = new
             {
                 data = new
@@ -306,7 +308,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             await context.SaveChangesAsync();
 
             var route = "/api/v1/articles";
-            var request = new HttpRequestMessage(new HttpMethod("POST"), route);
+            var request = new HttpRequestMessage(HttpMethod.Post, route);
             var content = new
             {
                 data = new
@@ -356,7 +358,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             await context.SaveChangesAsync();
 
             var route = "/api/v1/articles";
-            var request = new HttpRequestMessage(new HttpMethod("POST"), route);
+            var request = new HttpRequestMessage(HttpMethod.Post, route);
             var content = new
             {
                 data = new
@@ -403,7 +405,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             await context.SaveChangesAsync();
 
             var route = $"/api/v1/articles/{article.Id}";
-            var request = new HttpRequestMessage(new HttpMethod("PATCH"), route);
+            var request = new HttpRequestMessage(HttpMethod.Patch, route);
             var content = new
             {
                 data = new
@@ -445,7 +447,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             await context.SaveChangesAsync();
 
             var route = $"/api/v1/articles/{article.Id}";
-            var request = new HttpRequestMessage(new HttpMethod("PATCH"), route);
+            var request = new HttpRequestMessage(HttpMethod.Patch, route);
             var content = new
             {
                 data = new
@@ -490,7 +492,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             await context.SaveChangesAsync();
 
             var route = $"/api/v1/articles/{article.Id}";
-            var request = new HttpRequestMessage(new HttpMethod("PATCH"), route);
+            var request = new HttpRequestMessage(HttpMethod.Patch, route);
             var content = new
             {
                 data = new
@@ -531,7 +533,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             await context.SaveChangesAsync();
 
             var route = $"/api/v1/articles/{article.Id}";
-            var request = new HttpRequestMessage(new HttpMethod("PATCH"), route);
+            var request = new HttpRequestMessage(HttpMethod.Patch, route);
             var content = new
             {
                 data = new
