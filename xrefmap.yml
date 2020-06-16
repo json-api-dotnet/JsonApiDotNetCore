@@ -6932,6 +6932,31 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Models.IResourceField.PropertyName
   nameWithType: IResourceField.PropertyName
+- uid: JsonApiDotNetCore.Models.IsRequiredAttribute
+  name: IsRequiredAttribute
+  href: api/JsonApiDotNetCore.Models.IsRequiredAttribute.html
+  commentId: T:JsonApiDotNetCore.Models.IsRequiredAttribute
+  fullName: JsonApiDotNetCore.Models.IsRequiredAttribute
+  nameWithType: IsRequiredAttribute
+- uid: JsonApiDotNetCore.Models.IsRequiredAttribute.IsValid(System.Object)
+  name: IsValid(Object)
+  href: api/JsonApiDotNetCore.Models.IsRequiredAttribute.html#JsonApiDotNetCore_Models_IsRequiredAttribute_IsValid_System_Object_
+  commentId: M:JsonApiDotNetCore.Models.IsRequiredAttribute.IsValid(System.Object)
+  fullName: JsonApiDotNetCore.Models.IsRequiredAttribute.IsValid(System.Object)
+  nameWithType: IsRequiredAttribute.IsValid(Object)
+- uid: JsonApiDotNetCore.Models.IsRequiredAttribute.IsValid(System.Object,ValidationContext)
+  name: IsValid(Object, ValidationContext)
+  href: api/JsonApiDotNetCore.Models.IsRequiredAttribute.html#JsonApiDotNetCore_Models_IsRequiredAttribute_IsValid_System_Object_ValidationContext_
+  commentId: M:JsonApiDotNetCore.Models.IsRequiredAttribute.IsValid(System.Object,ValidationContext)
+  fullName: JsonApiDotNetCore.Models.IsRequiredAttribute.IsValid(System.Object, ValidationContext)
+  nameWithType: IsRequiredAttribute.IsValid(Object, ValidationContext)
+- uid: JsonApiDotNetCore.Models.IsRequiredAttribute.IsValid*
+  name: IsValid
+  href: api/JsonApiDotNetCore.Models.IsRequiredAttribute.html#JsonApiDotNetCore_Models_IsRequiredAttribute_IsValid_
+  commentId: Overload:JsonApiDotNetCore.Models.IsRequiredAttribute.IsValid
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Models.IsRequiredAttribute.IsValid
+  nameWithType: IsRequiredAttribute.IsValid
 - uid: JsonApiDotNetCore.Models.JsonApiDocuments
   name: JsonApiDotNetCore.Models.JsonApiDocuments
   href: api/JsonApiDotNetCore.Models.JsonApiDocuments.html
@@ -10643,12 +10668,12 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Server.RequestDeserializer
   fullName: JsonApiDotNetCore.Serialization.Server.RequestDeserializer
   nameWithType: RequestDeserializer
-- uid: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.#ctor(JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.Internal.IResourceFactory,JsonApiDotNetCore.Serialization.ITargetedFields)
-  name: RequestDeserializer(IResourceContextProvider, IResourceFactory, ITargetedFields)
-  href: api/JsonApiDotNetCore.Serialization.Server.RequestDeserializer.html#JsonApiDotNetCore_Serialization_Server_RequestDeserializer__ctor_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_Internal_IResourceFactory_JsonApiDotNetCore_Serialization_ITargetedFields_
-  commentId: M:JsonApiDotNetCore.Serialization.Server.RequestDeserializer.#ctor(JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.Internal.IResourceFactory,JsonApiDotNetCore.Serialization.ITargetedFields)
-  fullName: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.RequestDeserializer(JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider, JsonApiDotNetCore.Internal.IResourceFactory, JsonApiDotNetCore.Serialization.ITargetedFields)
-  nameWithType: RequestDeserializer.RequestDeserializer(IResourceContextProvider, IResourceFactory, ITargetedFields)
+- uid: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.#ctor(JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.Internal.IResourceFactory,JsonApiDotNetCore.Serialization.ITargetedFields,IHttpContextAccessor)
+  name: RequestDeserializer(IResourceContextProvider, IResourceFactory, ITargetedFields, IHttpContextAccessor)
+  href: api/JsonApiDotNetCore.Serialization.Server.RequestDeserializer.html#JsonApiDotNetCore_Serialization_Server_RequestDeserializer__ctor_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_Internal_IResourceFactory_JsonApiDotNetCore_Serialization_ITargetedFields_IHttpContextAccessor_
+  commentId: M:JsonApiDotNetCore.Serialization.Server.RequestDeserializer.#ctor(JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.Internal.IResourceFactory,JsonApiDotNetCore.Serialization.ITargetedFields,IHttpContextAccessor)
+  fullName: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.RequestDeserializer(JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider, JsonApiDotNetCore.Internal.IResourceFactory, JsonApiDotNetCore.Serialization.ITargetedFields, IHttpContextAccessor)
+  nameWithType: RequestDeserializer.RequestDeserializer(IResourceContextProvider, IResourceFactory, ITargetedFields, IHttpContextAccessor)
 - uid: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.#ctor*
   name: RequestDeserializer
   href: api/JsonApiDotNetCore.Serialization.Server.RequestDeserializer.html#JsonApiDotNetCore_Serialization_Server_RequestDeserializer__ctor_
@@ -10682,6 +10707,38 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.Deserialize
   nameWithType: RequestDeserializer.Deserialize
+- uid: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetAttributes(JsonApiDotNetCore.Models.IIdentifiable,Dictionary{System.String,System.Object},List{JsonApiDotNetCore.Models.AttrAttribute})
+  name: SetAttributes(IIdentifiable, Dictionary<String, Object>, List<AttrAttribute>)
+  href: api/JsonApiDotNetCore.Serialization.Server.RequestDeserializer.html#JsonApiDotNetCore_Serialization_Server_RequestDeserializer_SetAttributes_JsonApiDotNetCore_Models_IIdentifiable_Dictionary_System_String_System_Object__List_JsonApiDotNetCore_Models_AttrAttribute__
+  commentId: M:JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetAttributes(JsonApiDotNetCore.Models.IIdentifiable,Dictionary{System.String,System.Object},List{JsonApiDotNetCore.Models.AttrAttribute})
+  name.vb: SetAttributes(IIdentifiable, Dictionary(Of String, Object), List(Of AttrAttribute))
+  fullName: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetAttributes(JsonApiDotNetCore.Models.IIdentifiable, Dictionary<System.String, System.Object>, List<JsonApiDotNetCore.Models.AttrAttribute>)
+  fullName.vb: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetAttributes(JsonApiDotNetCore.Models.IIdentifiable, Dictionary(Of System.String, System.Object), List(Of JsonApiDotNetCore.Models.AttrAttribute))
+  nameWithType: RequestDeserializer.SetAttributes(IIdentifiable, Dictionary<String, Object>, List<AttrAttribute>)
+  nameWithType.vb: RequestDeserializer.SetAttributes(IIdentifiable, Dictionary(Of String, Object), List(Of AttrAttribute))
+- uid: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetAttributes*
+  name: SetAttributes
+  href: api/JsonApiDotNetCore.Serialization.Server.RequestDeserializer.html#JsonApiDotNetCore_Serialization_Server_RequestDeserializer_SetAttributes_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetAttributes
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetAttributes
+  nameWithType: RequestDeserializer.SetAttributes
+- uid: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetRelationships(JsonApiDotNetCore.Models.IIdentifiable,Dictionary{System.String,JsonApiDotNetCore.Models.RelationshipEntry},List{JsonApiDotNetCore.Models.RelationshipAttribute})
+  name: SetRelationships(IIdentifiable, Dictionary<String, RelationshipEntry>, List<RelationshipAttribute>)
+  href: api/JsonApiDotNetCore.Serialization.Server.RequestDeserializer.html#JsonApiDotNetCore_Serialization_Server_RequestDeserializer_SetRelationships_JsonApiDotNetCore_Models_IIdentifiable_Dictionary_System_String_JsonApiDotNetCore_Models_RelationshipEntry__List_JsonApiDotNetCore_Models_RelationshipAttribute__
+  commentId: M:JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetRelationships(JsonApiDotNetCore.Models.IIdentifiable,Dictionary{System.String,JsonApiDotNetCore.Models.RelationshipEntry},List{JsonApiDotNetCore.Models.RelationshipAttribute})
+  name.vb: SetRelationships(IIdentifiable, Dictionary(Of String, RelationshipEntry), List(Of RelationshipAttribute))
+  fullName: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetRelationships(JsonApiDotNetCore.Models.IIdentifiable, Dictionary<System.String, JsonApiDotNetCore.Models.RelationshipEntry>, List<JsonApiDotNetCore.Models.RelationshipAttribute>)
+  fullName.vb: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetRelationships(JsonApiDotNetCore.Models.IIdentifiable, Dictionary(Of System.String, JsonApiDotNetCore.Models.RelationshipEntry), List(Of JsonApiDotNetCore.Models.RelationshipAttribute))
+  nameWithType: RequestDeserializer.SetRelationships(IIdentifiable, Dictionary<String, RelationshipEntry>, List<RelationshipAttribute>)
+  nameWithType.vb: RequestDeserializer.SetRelationships(IIdentifiable, Dictionary(Of String, RelationshipEntry), List(Of RelationshipAttribute))
+- uid: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetRelationships*
+  name: SetRelationships
+  href: api/JsonApiDotNetCore.Serialization.Server.RequestDeserializer.html#JsonApiDotNetCore_Serialization_Server_RequestDeserializer_SetRelationships_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetRelationships
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Server.RequestDeserializer.SetRelationships
+  nameWithType: RequestDeserializer.SetRelationships
 - uid: JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider
   name: ResourceObjectBuilderSettingsProvider
   href: api/JsonApiDotNetCore.Serialization.Server.ResourceObjectBuilderSettingsProvider.html

@@ -8,7 +8,7 @@
     <title>Global Options </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Global Options ">
-    <meta name="generator" content="docfx 2.54.0.0">
+    <meta name="generator" content="docfx 2.55.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -120,6 +120,12 @@ options.SerializerSettings.Formatting = Formatting.Indented;
 </code></pre><h2 id="enable-modelstate-validation">Enable ModelState Validation</h2>
 <p>If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set <code>ValidateModelState = true</code>. By default, no model validation is performed.</p>
 <pre><code class="lang-c#">options.ValidateModelState = true;
+</code></pre><p>You will need to use the JsonApiDotNetCore &#39;IsRequiredAttribute&#39; instead of the built-in &#39;RequiredAttribute&#39; because it contains modifications to enable partial patching.</p>
+<pre><code class="lang-c#">public class Person : Identifiable
+{
+    [IsRequired(AllowEmptyStrings = true)]
+    public string FirstName { get; set; }
+}
 </code></pre></article>
           </div>
           
