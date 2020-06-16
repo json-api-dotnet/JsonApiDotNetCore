@@ -1,7 +1,7 @@
 # Routing
 
 By default the library will configure routes for each controller.
-Based on the recommendations outlined in the json:api spec, routes are camel-cased.
+Based on the [recommendations](https://jsonapi.org/recommendations/) outlined in the json:api spec, routes are camel-cased.
 
 ```http
 GET /api/compoundModels HTTP/1.1

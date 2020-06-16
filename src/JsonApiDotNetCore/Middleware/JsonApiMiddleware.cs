@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
@@ -11,6 +12,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
@@ -29,11 +31,11 @@ namespace JsonApiDotNetCore.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext,
-                                 IControllerResourceMapping controllerResourceMapping,
-                                 IJsonApiOptions options,
-                                 ICurrentRequest currentRequest,
-                                 IResourceGraph resourceGraph)
+        public async Task Invoke(HttpContext httpContext, 
+            IControllerResourceMapping controllerResourceMapping, 
+            IJsonApiOptions options, 
+            ICurrentRequest currentRequest, 
+            IResourceGraph resourceGraph)
         {
             var routeValues = httpContext.GetRouteData().Values;
 
@@ -144,7 +146,7 @@ namespace JsonApiDotNetCore.Middleware
                 await stream.CopyToAsync(httpResponse.Body);
             }
 
-            httpResponse.Body.Flush();
+            await httpResponse.Body.FlushAsync();
         }
 
         private static void SetupCurrentRequest(ICurrentRequest currentRequest, ResourceContext resourceContext,
@@ -171,27 +173,44 @@ namespace JsonApiDotNetCore.Middleware
 
         private static string GetBasePath(string resourceName, IJsonApiOptions options, HttpRequest httpRequest)
         {
-            if (options.RelativeLinks)
+            var builder = new StringBuilder();
+
+            if (!options.RelativeLinks)
             {
-                return options.Namespace;
+                builder.Append(httpRequest.Scheme);
+                builder.Append("://");
+                builder.Append(httpRequest.Host);
             }
 
-            var customRoute = GetCustomRoute(httpRequest.Path.Value, resourceName, options.Namespace);
-            var toReturn = $"{httpRequest.Scheme}://{httpRequest.Host}/{options.Namespace}";
-            if (customRoute != null)
+            string customRoute = GetCustomRoute(resourceName, options.Namespace, httpRequest.HttpContext);
+            if (!string.IsNullOrEmpty(customRoute))
             {
-                toReturn += $"/{customRoute}";
+                builder.Append('/');
+                builder.Append(customRoute);
             }
-            return toReturn;
+            else if (!string.IsNullOrEmpty(options.Namespace))
+            {
+                builder.Append('/');
+                builder.Append(options.Namespace);
+            }
+
+            return builder.ToString();
         }
 
-        private static string GetCustomRoute(string path, string resourceName, string apiNamespace)
+        private static string GetCustomRoute(string resourceName, string apiNamespace, HttpContext httpContext)
         {
-            var trimmedComponents = path.Trim('/').Split('/').ToList();
-            var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
-            var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
-            var customRoute = string.Join('/', newComponents);
-            return customRoute == apiNamespace ? null : customRoute;
+            var endpoint = httpContext.GetEndpoint();
+            var routeAttribute = endpoint.Metadata.GetMetadata<RouteAttribute>();
+            if (routeAttribute != null)
+            {
+                var trimmedComponents = httpContext.Request.Path.Value.Trim('/').Split('/').ToList();
+                var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
+                var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
+                var customRoute = string.Join('/', newComponents);
+                return customRoute == apiNamespace ? null : customRoute;
+            }
+
+            return null;
         }
 
         private static bool GetIsRelationshipPath(RouteValueDictionary routeValues)

@@ -62,16 +62,22 @@ namespace JsonApiDotNetCore.Builders
         {
             RegisterJsonApiStartupServices();
 
-            var intermediateProvider = _services.BuildServiceProvider();
-            _resourceGraphBuilder = intermediateProvider.GetRequiredService<IResourceGraphBuilder>();
-            _serviceDiscoveryFacade = intermediateProvider.GetRequiredService<IServiceDiscoveryFacade>();
-            _dbContextType = dbContextType;
+            IJsonApiExceptionFilterProvider exceptionFilterProvider;
+            IJsonApiTypeMatchFilterProvider typeMatchFilterProvider;
+            IJsonApiRoutingConvention routingConvention;
 
-            AddResourceTypesFromDbContext(intermediateProvider);
+            using (var intermediateProvider = _services.BuildServiceProvider())
+            {
+                _resourceGraphBuilder = intermediateProvider.GetRequiredService<IResourceGraphBuilder>();
+                _serviceDiscoveryFacade = intermediateProvider.GetRequiredService<IServiceDiscoveryFacade>();
+                _dbContextType = dbContextType;
 
-            var exceptionFilterProvider = intermediateProvider.GetRequiredService<IJsonApiExceptionFilterProvider>();
-            var typeMatchFilterProvider = intermediateProvider.GetRequiredService<IJsonApiTypeMatchFilterProvider>();
-            var routingConvention = intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>();
+                AddResourceTypesFromDbContext(intermediateProvider);
+
+                exceptionFilterProvider = intermediateProvider.GetRequiredService<IJsonApiExceptionFilterProvider>();
+                typeMatchFilterProvider = intermediateProvider.GetRequiredService<IJsonApiTypeMatchFilterProvider>();
+                routingConvention = intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>();
+            }
 
             _mvcBuilder.AddMvcOptions(options =>
             {

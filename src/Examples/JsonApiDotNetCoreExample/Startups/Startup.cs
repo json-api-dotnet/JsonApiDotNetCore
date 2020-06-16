@@ -73,7 +73,10 @@ namespace JsonApiDotNetCoreExample
             AppDbContext context)
         {
             context.Database.EnsureCreated();
+            
+            app.UseRouting();
             app.UseJsonApi();
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }

@@ -77,9 +77,19 @@ namespace JsonApiDotNetCore.Formatters
                 throw new UnsuccessfulActionResultException(problemDetails);
             }
 
-            if (contextObject == null && !IsSuccessStatusCode(statusCode))
+            if (contextObject == null)
             {
-                throw new UnsuccessfulActionResultException(statusCode);
+                if (!IsSuccessStatusCode(statusCode))
+                {
+                    throw new UnsuccessfulActionResultException(statusCode);
+                }
+
+                if (statusCode == HttpStatusCode.NoContent || statusCode == HttpStatusCode.ResetContent ||
+                    statusCode == HttpStatusCode.NotModified)
+                {
+                    // Prevent exception from Kestrel server, caused by writing data:null json response.
+                    return null;
+                }
             }
 
             contextObject = WrapErrors(contextObject);

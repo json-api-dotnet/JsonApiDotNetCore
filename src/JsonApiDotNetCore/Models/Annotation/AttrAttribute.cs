@@ -95,13 +95,12 @@ namespace JsonApiDotNetCore.Models
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            var property = GetResourceProperty(entity);
-            if (property.GetMethod == null)
+            if (PropertyInfo.GetMethod == null)
             {
-                throw new InvalidOperationException($"Property '{property.DeclaringType?.Name}.{property.Name}' is write-only.");
+                throw new InvalidOperationException($"Property '{PropertyInfo.DeclaringType?.Name}.{PropertyInfo.Name}' is write-only.");
             }
 
-            return property.GetValue(entity);
+            return PropertyInfo.GetValue(entity);
         }
 
         /// <summary>
@@ -114,40 +113,14 @@ namespace JsonApiDotNetCore.Models
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            var property = GetResourceProperty(entity);
-            if (property.SetMethod == null)
+            if (PropertyInfo.SetMethod == null)
             {
                 throw new InvalidOperationException(
-                    $"Property '{property.DeclaringType?.Name}.{property.Name}' is read-only.");
+                    $"Property '{PropertyInfo.DeclaringType?.Name}.{PropertyInfo.Name}' is read-only.");
             }
 
-            var convertedValue = TypeHelper.ConvertType(newValue, property.PropertyType);
-            property.SetValue(entity, convertedValue);
-        }
-
-        private PropertyInfo GetResourceProperty(object resource)
-        {
-            // There are some scenarios, especially ones where users are using a different
-            // data model than view model, where they may use a repository implementation
-            // that does not match the deserialized type. For now, we will continue to support
-            // this use case.
-            var targetType = resource.GetType();
-            if (targetType != PropertyInfo.DeclaringType)
-            {
-                var propertyInfo = resource
-                    .GetType()
-                    .GetProperty(PropertyInfo.Name);
-
-                return propertyInfo;
-
-                // TODO: this should throw but will be a breaking change in some cases
-                //if (propertyInfo == null)
-                //    throw new InvalidOperationException(
-                //        $"'{targetType}' does not contain a member named '{InternalAttributeName}'." +
-                //        $"There is also a mismatch in target types. Expected '{PropertyInfo.DeclaringType}' but instead received '{targetType}'.");
-            }
-
-            return PropertyInfo;
+            var convertedValue = TypeHelper.ConvertType(newValue, PropertyInfo.PropertyType);
+            PropertyInfo.SetValue(entity, convertedValue);
         }
 
         /// <summary>

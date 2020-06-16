@@ -9,7 +9,7 @@ using ReportsExample.Models;
 namespace ReportsExample.Controllers
 {
     [Route("api/[controller]")]
-    public class ReportsController : BaseJsonApiController<Report, int> 
+    public class ReportsController : BaseJsonApiController<Report> 
     {
         public ReportsController(
             IJsonApiOptions jsonApiOptions,

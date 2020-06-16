@@ -26,6 +26,8 @@ namespace JsonApiDotNetCore
             IMvcCoreBuilder mvcBuilder = null)
         {
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, null);
+            ResolveInverseRelationships(services);
+
             return services;
         }
 
@@ -40,6 +42,8 @@ namespace JsonApiDotNetCore
             where TDbContext : DbContext
         {
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, typeof(TDbContext));
+            ResolveInverseRelationships(services);
+
             return services;
         }
 
@@ -54,6 +58,15 @@ namespace JsonApiDotNetCore
             applicationBuilder.AutoDiscover(discovery);
             applicationBuilder.ConfigureResources(resources);
             applicationBuilder.ConfigureServices();
+        }
+
+        private static void ResolveInverseRelationships(IServiceCollection services)
+        {
+            using var intermediateProvider = services.BuildServiceProvider();
+            using var scope = intermediateProvider.CreateScope();
+
+            var inverseRelationshipResolver = scope.ServiceProvider.GetService<IInverseRelationships>();
+            inverseRelationshipResolver?.Resolve();
         }
 
         /// <summary>

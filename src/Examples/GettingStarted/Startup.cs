@@ -26,7 +26,9 @@ namespace GettingStarted
             context.Database.EnsureCreated();
             CreateSampleData(context);
 
+            app.UseRouting();
             app.UseJsonApi();
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
 
         private static void CreateSampleData(SampleDbContext context)
