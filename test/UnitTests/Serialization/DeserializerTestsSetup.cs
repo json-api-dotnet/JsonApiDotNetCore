@@ -1,14 +1,22 @@
-using System;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Internal;
+using Microsoft.AspNetCore.Http;
+using Moq;
 
 namespace UnitTests.Serialization
 {
     public class DeserializerTestsSetup : SerializationTestsSetupBase
     {
+        public Mock<IHttpContextAccessor> _mockHttpContextAccessor;
+
+        public DeserializerTestsSetup()
+        {
+            _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            _mockHttpContextAccessor.Setup(mock => mock.HttpContext).Returns(new DefaultHttpContext());
+        }
         protected sealed class TestDocumentParser : BaseDocumentParser
         {
             public TestDocumentParser(IResourceGraph resourceGraph, IResourceFactory resourceFactory) : base(resourceGraph, resourceFactory) { }

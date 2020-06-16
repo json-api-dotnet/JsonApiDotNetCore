@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="attributeValues">Attributes and their values, as in the serialized content</param>
         /// <param name="attributes">Exposed attributes for <paramref name="entity"/></param>
         /// <returns></returns>
-        protected IIdentifiable SetAttributes(IIdentifiable entity, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
+        protected virtual IIdentifiable SetAttributes(IIdentifiable entity, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
         {
             if (attributeValues == null || attributeValues.Count == 0)
                 return entity;
@@ -86,6 +86,7 @@ namespace JsonApiDotNetCore.Serialization
 
             return entity;
         }
+
         /// <summary>
         /// Sets the relationships on a parsed entity
         /// </summary>
@@ -93,7 +94,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="relationshipsValues">Relationships and their values, as in the serialized content</param>
         /// <param name="relationshipAttributes">Exposed relationships for <paramref name="entity"/></param>
         /// <returns></returns>
-        protected IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
+        protected virtual IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
         {
             if (relationshipsValues == null || relationshipsValues.Count == 0)
                 return entity;
@@ -108,7 +109,6 @@ namespace JsonApiDotNetCore.Serialization
                     SetHasOneRelationship(entity, entityProperties, hasOneAttribute, relationshipData);
                 else
                     SetHasManyRelationship(entity, (HasManyAttribute)attr, relationshipData);
-
             }
             return entity;
         }

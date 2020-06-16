@@ -88,4 +88,12 @@ If you would like to use ASP.NET Core ModelState validation into your controller
 ```c#
 options.ValidateModelState = true;
 ```
+You will need to use the JsonApiDotNetCore 'IsRequiredAttribute' instead of the built-in 'RequiredAttribute' because it contains modifications to enable partial patching.
 
+```c#
+public class Person : Identifiable
+{
+    [IsRequired(AllowEmptyStrings = true)]
+    public string FirstName { get; set; }
+}
+```

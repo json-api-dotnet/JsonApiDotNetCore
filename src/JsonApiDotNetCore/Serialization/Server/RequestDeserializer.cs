@@ -1,8 +1,12 @@
-using System;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.Reflection;
+using JsonApiDotNetCore.Extensions;
+using System.Net.Http;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -12,11 +16,13 @@ namespace JsonApiDotNetCore.Serialization.Server
     public class RequestDeserializer : BaseDocumentParser, IJsonApiDeserializer
     {
         private readonly ITargetedFields  _targetedFields;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RequestDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory, ITargetedFields  targetedFields) 
+        public RequestDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory, ITargetedFields  targetedFields, IHttpContextAccessor httpContextAccessor) 
             : base(contextProvider, resourceFactory)
         {
             _targetedFields = targetedFields;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <inheritdoc/>
@@ -49,6 +55,41 @@ namespace JsonApiDotNetCore.Serialization.Server
             }
             else if (field is RelationshipAttribute relationship)
                 _targetedFields.Relationships.Add(relationship);
+        }
+
+        protected override IIdentifiable SetAttributes(IIdentifiable entity, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
+        {
+            if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Patch.Method)
+            {
+                foreach (AttrAttribute attr in attributes)
+                {
+                    if (attr.PropertyInfo.GetCustomAttribute<IsRequiredAttribute>() != null)
+                    {
+                        bool disableValidator = attributeValues == null || attributeValues.Count == 0 ||
+                                                !attributeValues.TryGetValue(attr.PublicAttributeName, out _);
+
+                        if (disableValidator)
+                        {
+                            _httpContextAccessor.HttpContext.DisableValidator(attr.PropertyInfo.Name, entity.GetType().Name);
+                        }
+                    }
+                }
+            }
+
+            return base.SetAttributes(entity, attributeValues, attributes);
+        }
+
+        protected override IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
+        {
+            // If there is a relationship included in the data of the POST or PATCH, then the 'IsRequired' attribute will be disabled for any
+            // property within that object. For instance, a new article is posted and has a relationship included to an author. In this case,
+            // the author name (which has the 'IsRequired' attribute) will not be included in the POST. Unless disabled, the POST will fail.
+            foreach (RelationshipAttribute attr in relationshipAttributes)
+            {
+                _httpContextAccessor.HttpContext.DisableValidator("Relation", attr.PropertyInfo.Name);
+            }
+
+            return base.SetRelationships(entity, relationshipsValues, relationshipAttributes);
         }
     }
 }
