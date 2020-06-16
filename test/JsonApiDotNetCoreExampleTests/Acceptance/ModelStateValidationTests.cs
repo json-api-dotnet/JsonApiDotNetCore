@@ -60,9 +60,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
-            var options = (JsonApiOptions)_factory.GetService<IJsonApiOptions>();
-            options.ValidateModelState = true;
-
             // Act
             var response = await _factory.Client.SendAsync(request);
 
@@ -133,9 +130,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 Content = new StringContent(content)
             };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            var options = (JsonApiOptions)_factory.GetService<IJsonApiOptions>();
-            options.ValidateModelState = true;
 
             // Act
             var response = await _factory.Client.SendAsync(request);
