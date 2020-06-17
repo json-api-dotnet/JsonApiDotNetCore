@@ -144,12 +144,12 @@ namespace JsonApiDotNetCore.Serialization
 
                 if (_settings.SerializerNullValueHandling == NullValueHandling.Ignore && value == null)
                 {
-                    return;
+                    continue;
                 }
 
                 if (_settings.SerializerDefaultValueHandling == DefaultValueHandling.Ignore && value == attr.PropertyInfo.PropertyType.GetDefaultValue())
                 {
-                    return;
+                    continue;
                 }
 
                 ro.Attributes.Add(attr.PublicAttributeName, value);
