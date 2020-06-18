@@ -76,8 +76,8 @@ namespace JsonApiDotNetCore
         /// </summary>
         public static IServiceCollection AddClientSerialization(this IServiceCollection services)
         {
-            services.AddSingleton<IResponseDeserializer, ResponseDeserializer>();
-            services.AddSingleton<IRequestSerializer>(sp =>
+            services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
+            services.AddScoped<IRequestSerializer>(sp =>
             {
                 var graph = sp.GetService<IResourceGraph>();
                 return new RequestSerializer(graph, new ResourceObjectBuilder(graph, new ResourceObjectBuilderSettings()));
