@@ -30,6 +30,11 @@ namespace NoEntityFrameworkExample
         // This method gets called by the runtime. Use this method to add services to the container.
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddLogging(b =>
+            {
+                b.AddConfiguration(Configuration.GetSection("Logging"));
+            });
+
             // Add framework services.
             var mvcBuilder = services.AddMvcCore();
 
@@ -42,8 +47,8 @@ namespace NoEntityFrameworkExample
 
             services.AddScoped<IResourceService<TodoItem>, TodoItemService>();
 
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>(); 
-            optionsBuilder.UseNpgsql(Configuration.GetValue<string>("Data:DefaultConnection")); 
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseNpgsql(Configuration.GetValue<string>("Data:DefaultConnection"));
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<DbContextOptions<AppDbContext>>(optionsBuilder.Options);
             services.AddScoped<AppDbContext>();
@@ -54,8 +59,6 @@ namespace NoEntityFrameworkExample
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, AppDbContext context)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-
             context.Database.EnsureCreated();
 
             app.UseMvc();

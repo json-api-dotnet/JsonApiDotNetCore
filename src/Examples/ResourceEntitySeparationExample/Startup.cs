@@ -34,9 +34,12 @@ namespace ResourceEntitySeparationExample
 
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var loggerFactory = new LoggerFactory();
-            loggerFactory.AddConsole(LogLevel.Warning);
-            services.AddSingleton<ILoggerFactory>(loggerFactory);
+            services.AddLogging(b =>
+            {
+                b.SetMinimumLevel(LogLevel.Warning);
+                b.AddConsole();
+                b.AddConfiguration(Config.GetSection("Logging"));
+            });
 
             services.AddDbContext<AppDbContext>(options => options
                 .UseNpgsql(GetDbConnectionString()),
@@ -78,7 +81,6 @@ namespace ResourceEntitySeparationExample
             AppDbContext context)
         {
             context.Database.EnsureCreated();
-            loggerFactory.AddConsole(Config.GetSection("Logging"));
             app.UseJsonApi();
         }
 

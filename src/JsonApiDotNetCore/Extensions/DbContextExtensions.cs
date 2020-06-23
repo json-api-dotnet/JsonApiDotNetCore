@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ namespace JsonApiDotNetCore.Extensions
     public static class DbContextExtensions
     {
         [Obsolete("This is no longer required since the introduction of context.Set<T>", error: false)]
-        public static DbSet<T> GetDbSet<T>(this DbContext context) where T : class 
+        public static DbSet<T> GetDbSet<T>(this DbContext context) where T : class
             => context.Set<T>();
 
         /// <summary>
@@ -31,11 +32,11 @@ namespace JsonApiDotNetCore.Extensions
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-            
+
             var trackedEntries = context.ChangeTracker
                 .Entries()
-                .FirstOrDefault(entry => 
-                    entry.Entity.GetType() == entity.GetType() 
+                .FirstOrDefault(entry =>
+                    entry.Entity.GetType() == entity.GetType()
                     && ((IIdentifiable)entry.Entity).StringId == entity.StringId
                 );
 
@@ -58,7 +59,7 @@ namespace JsonApiDotNetCore.Extensions
         /// }
         /// </code>
         /// </example>
-        public static async Task<IDbContextTransaction> GetCurrentOrCreateTransactionAsync(this DbContext context) 
+        public static async Task<IDbContextTransaction> GetCurrentOrCreateTransactionAsync(this DbContext context)
             => await SafeTransactionProxy.GetOrCreateAsync(context.Database);
     }
 
@@ -89,17 +90,32 @@ namespace JsonApiDotNetCore.Extensions
 
         /// <inheritdoc />
         public void Commit() => Proxy(t => t.Commit());
-        
+
         /// <inheritdoc />
         public void Rollback() => Proxy(t => t.Rollback());
-        
+
         /// <inheritdoc />
         public void Dispose() => Proxy(t => t.Dispose());
 
         private void Proxy(Action<IDbContextTransaction> func)
         {
-            if(_shouldExecute) 
+            if(_shouldExecute)
                 func(_transaction);
+        }
+
+        public Task CommitAsync(CancellationToken cancellationToken = default)
+        {
+            return _transaction.CommitAsync(cancellationToken);
+        }
+
+        public Task RollbackAsync(CancellationToken cancellationToken = default)
+        {
+            return _transaction.RollbackAsync(cancellationToken);
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return _transaction.DisposeAsync();
         }
     }
 }

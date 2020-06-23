@@ -20,11 +20,16 @@ namespace JsonApiDotNetCoreExampleTests.Startups
         public override IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
-            loggerFactory.AddConsole(LogLevel.Warning);
+
+            services.AddLogging(b =>
+            {
+                b.SetMinimumLevel(LogLevel.Warning);
+                b.AddConsole();
+            });
 
             services
                 .AddSingleton<ILoggerFactory>(loggerFactory)
-                .AddDbContext<AppDbContext>(options => 
+                .AddDbContext<AppDbContext>(options =>
                     options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient)
                 .AddJsonApi<AppDbContext>(options => {
                     options.Namespace = "api/v1";
