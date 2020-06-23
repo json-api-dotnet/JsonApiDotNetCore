@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -155,6 +156,8 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IControllerContext, Services.ControllerContext>();
             services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
 
+            services.AddScoped<ILoggerFactory, LoggerFactory>();
+
             // services.AddScoped<IActionFilter, TypeMatchFilter>();
         }
 
@@ -190,7 +193,7 @@ namespace JsonApiDotNetCore.Extensions
         /// Adds all required registrations for the service to the container
         /// </summary>
         /// <exception cref="JsonApiSetupException"/>
-        public static IServiceCollection AddResourceService<T>(this IServiceCollection services) 
+        public static IServiceCollection AddResourceService<T>(this IServiceCollection services)
         {
             var typeImplementsAnExpectedInterface = false;
 

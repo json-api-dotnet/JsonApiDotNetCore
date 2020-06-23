@@ -34,6 +34,9 @@ namespace ResourceEntitySeparationExample
 
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            var loggerFactory = new LoggerFactory();
+            services.AddSingleton<ILoggerFactory>(loggerFactory);
+
             services.AddLogging(b =>
             {
                 b.SetMinimumLevel(LogLevel.Warning);

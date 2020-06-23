@@ -13,8 +13,8 @@
     <EFCoreVersion>3.1.5</EFCoreVersion>
     <EFCoreToolsVersion>3.1.5</EFCoreToolsVersion>
 
-    <NpgsqlVersion>4.0.0</NpgsqlVersion>
-    <NpgsqlPostgreSQLVersion>2.1.0</NpgsqlPostgreSQLVersion>
+    <NpgsqlVersion>4.1.3.1</NpgsqlVersion>
+    <NpgsqlPostgreSQLVersion>3.1.4</NpgsqlPostgreSQLVersion>
 
     <TuplesVersion>4.5.0</TuplesVersion>
   </PropertyGroup>
