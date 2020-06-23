@@ -194,7 +194,7 @@ namespace JsonApiDotNetCore.Data
                         _context.Entry(pointer).State = EntityState.Detached;
                     }
                 }
-                
+
                 // HACK: detaching has many relationships doesn't appear to be sufficient
                 // the navigation property actually needs to be nulled out, otherwise
                 // EF adds duplicate instances to the collection
@@ -234,7 +234,7 @@ namespace JsonApiDotNetCore.Data
                 {
                     _context.Entry(pointer).State = EntityState.Unchanged;
                 }
-            }  
+            }
         }
 
         private void AttachHasManyThrough(TEntity entity, HasManyThroughAttribute hasManyThrough, IList pointers)

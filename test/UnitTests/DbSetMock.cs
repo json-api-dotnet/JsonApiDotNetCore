@@ -26,7 +26,11 @@ public static class ListExtensions
         dbSetMock.As<IQueryable<T>>().Setup(x => x.ElementType).Returns(queryableList.ElementType);
         dbSetMock.As<IQueryable<T>>().Setup(x => x.GetEnumerator()).Returns(queryableList.GetEnumerator());
 
-        dbSetMock.As<IAsyncEnumerable<T>>().Setup(m => m.GetAsyncEnumerator(default(CancellationToken))).Returns(new TestAsyncEnumerator<T>(queryableList.GetEnumerator()));
+        var toReturn = new TestAsyncEnumerator<T>(queryableList.GetEnumerator());
+
+        dbSetMock.As<IAsyncEnumerable<T>>()
+            .Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
+            .Returns(toReturn);
         dbSetMock.As<IQueryable<T>>().Setup(m => m.Provider).Returns(new TestAsyncQueryProvider<T>(queryableList.Provider));
         return dbSetMock;
     }
