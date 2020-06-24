@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -77,7 +79,20 @@ internal class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
 
     TResult IAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
     {
-        return Execute<TResult>(expression);
+        if (typeof(TResult) == expression.Type) { return _inner.Execute<TResult>(expression); }
+
+        var ms = typeof(IQueryProvider).GetMethods();
+        var m = ms.First(m => m.IsGenericMethod && m.Name == "Execute");
+        var gm = m.MakeGenericMethod(expression.Type);
+
+        var tms = typeof(Task).GetMethods();
+        var tm = tms.First(m => m.IsGenericMethod && m.Name == "FromResult");
+        var gtm = tm.MakeGenericMethod(expression.Type);
+
+        var ir = gm.Invoke(_inner, new [] { expression });
+        var r = gtm.Invoke(null, new[] { ir });
+
+        return (TResult) r;
     }
 }
 
