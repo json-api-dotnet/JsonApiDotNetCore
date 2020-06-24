@@ -1,5 +1,5 @@
 version: '{build}'
-os: Visual Studio 2017
+os: Visual Studio 2019
 
 environment:
   POSTGRES_PORT: tcp://localhost:5432
@@ -26,7 +26,7 @@ nuget:
 init:
   - SET PATH=C:\Program Files\PostgreSQL\9.6\bin\;%PATH%
 
-services:  
+services:
   - postgresql
 
 build_script:
