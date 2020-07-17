@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -60,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var json = JsonConvert.DeserializeObject<JObject>(body).ToString();
 
-            Assert.Equal(@"{
+            string expected = @"{
   ""links"": {
     ""self"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/relationships/owner"",
     ""related"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/owner""
@@ -69,7 +70,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     ""type"": ""people"",
     ""id"": """ + todoItem.Owner.StringId + @"""
   }
-}", json);
+}";
+            Assert.Equal(expected.NormalizeLineEndings(), json.NormalizeLineEndings());
         }
 
         [Fact]
@@ -112,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var json = JsonConvert.DeserializeObject<JObject>(body).ToString();
 
-            Assert.Equal(@"{
+            var expected = @"{
   ""links"": {
     ""self"": ""http://localhost/api/v1/authors/" + author.StringId + @"/relationships/articles"",
     ""related"": ""http://localhost/api/v1/authors/" + author.StringId + @"/articles""
@@ -127,7 +129,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
       ""id"": """ + author.Articles[1].StringId + @"""
     }
   ]
-}", json);
+}";
+
+            Assert.Equal(expected.NormalizeLineEndings(), json.NormalizeLineEndings());
         }
 
         [Fact]
@@ -156,7 +160,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var json = JsonConvert.DeserializeObject<JObject>(body).ToString();
-            Assert.Equal(@"{
+
+            var expected = @"{
   ""meta"": {
     ""copyright"": ""Copyright 2015 Example Corp."",
     ""authors"": [
@@ -169,7 +174,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     ""self"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/owner""
   },
   ""data"": null
-}", json);
+}";
+
+            Assert.Equal(expected.NormalizeLineEndings(), json.NormalizeLineEndings());
         }
 
         [Fact]
