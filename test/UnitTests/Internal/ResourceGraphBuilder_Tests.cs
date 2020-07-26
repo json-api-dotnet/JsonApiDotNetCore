@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
@@ -6,6 +5,7 @@ using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Castle.DynamicProxy;
 using Xunit;
 
 namespace UnitTests.Internal
@@ -50,16 +50,18 @@ namespace UnitTests.Internal
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
             resourceGraphBuilder.AddResource<Bar>();
             var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
+            var proxyGenerator = new ProxyGenerator();
 
             // Act
-            var result = resourceGraph.GetResourceContext(typeof(DummyProxy));
+            var proxy = proxyGenerator.CreateClassProxy<Bar>();
+            var result = resourceGraph.GetResourceContext(proxy.GetType());
 
             // Assert
             Assert.Equal(typeof(Bar), result.ResourceType);
         }
 
         [Fact]
-        public void GetResourceContext_Yields_Right_Type_For_IIdentifiable()
+        public void GetResourceContext_Yields_Right_Type_For_Identifiable()
         {
             // Arrange
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
@@ -80,10 +82,7 @@ namespace UnitTests.Internal
             public DbSet<Foo> Foos { get; set; }
         }
 
-        private class Bar : Identifiable { }
-
-        // Used to simulate a lazy loading proxy
-        private class DummyProxy : Bar { }
+        public class Bar : Identifiable { }
 
     }
 

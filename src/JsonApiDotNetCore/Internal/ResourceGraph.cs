@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using Castle.DynamicProxy;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -26,7 +27,9 @@ namespace JsonApiDotNetCore.Internal
             => Resources.SingleOrDefault(e => e.ResourceName == resourceName);
         /// <inheritdoc />
         public ResourceContext GetResourceContext(Type resourceType)
-            => Resources.SingleOrDefault(e => e.ResourceType == resourceType) ?? Resources.SingleOrDefault(e => e.ResourceType.IsAssignableFrom(resourceType));
+            => IsDynamicProxy(resourceType) ?
+                Resources.SingleOrDefault(e => e.ResourceType == resourceType.BaseType) :
+                Resources.SingleOrDefault(e => e.ResourceType == resourceType);
         /// <inheritdoc />
         public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
             => GetResourceContext(typeof(TResource));
@@ -123,6 +126,11 @@ namespace JsonApiDotNetCore.Internal
             throw new ArgumentException(
                 $"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " + 
                 $"For example: 'article => article.Title' or 'article => new {{ article.Title, article.PageCount }}'.");
+        }
+
+        private bool IsDynamicProxy(Type resourceType)
+        {
+            return typeof(IProxyTargetAccessor).IsAssignableFrom(resourceType);
         }
 
         private static Expression RemoveConvert(Expression expression)
