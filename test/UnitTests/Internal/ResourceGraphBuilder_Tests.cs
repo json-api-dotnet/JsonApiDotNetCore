@@ -1,6 +1,8 @@
+using System;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -41,12 +43,48 @@ namespace UnitTests.Internal
             Assert.Equal("Entity 'UnitTests.Internal.ResourceGraphBuilder_Tests+TestContext' does not implement 'IIdentifiable'.", loggerFactory.Logger.Messages[0].Text);
         }
 
+        [Fact]
+        public void GetResourceContext_Yields_Right_Type_For_Proxy()
+        {
+            // Arrange
+            var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
+            resourceGraphBuilder.AddResource<Bar>();
+            var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
+
+            // Act
+            var result = resourceGraph.GetResourceContext(typeof(DummyProxy));
+
+            // Assert
+            Assert.Equal(typeof(Bar), result.ResourceType);
+        }
+
+        [Fact]
+        public void GetResourceContext_Yields_Right_Type_For_IIdentifiable()
+        {
+            // Arrange
+            var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
+            resourceGraphBuilder.AddResource<Bar>();
+            var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
+
+            // Act
+            var result = resourceGraph.GetResourceContext(typeof(Bar));
+
+            // Assert
+            Assert.Equal(typeof(Bar), result.ResourceType);
+        }
+
         private class Foo { }
 
         private class TestContext : DbContext
         {
             public DbSet<Foo> Foos { get; set; }
         }
+
+        private class Bar : Identifiable { }
+
+        // Used to simulate a lazy loading proxy
+        private class DummyProxy : Bar { }
+
     }
 
 }

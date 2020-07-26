@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Internal
             => Resources.SingleOrDefault(e => e.ResourceName == resourceName);
         /// <inheritdoc />
         public ResourceContext GetResourceContext(Type resourceType)
-            => Resources.SingleOrDefault(e => e.ResourceType == resourceType);
+            => Resources.SingleOrDefault(e => e.ResourceType == resourceType) ?? Resources.SingleOrDefault(e => e.ResourceType.IsAssignableFrom(resourceType));
         /// <inheritdoc />
         public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
             => GetResourceContext(typeof(TResource));
