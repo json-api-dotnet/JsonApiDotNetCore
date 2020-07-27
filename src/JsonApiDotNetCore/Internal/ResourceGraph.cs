@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using Castle.DynamicProxy;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -14,10 +13,12 @@ namespace JsonApiDotNetCore.Internal
     public class ResourceGraph : IResourceGraph
     {
         private List<ResourceContext> Resources { get; }
+        private Type ProxyInterface { get; }
 
         public ResourceGraph(List<ResourceContext> resources)
         {
             Resources = resources;
+            ProxyInterface = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
         }
 
         /// <inheritdoc />
@@ -128,10 +129,7 @@ namespace JsonApiDotNetCore.Internal
                 $"For example: 'article => article.Title' or 'article => new {{ article.Title, article.PageCount }}'.");
         }
 
-        private bool IsDynamicProxy(Type resourceType)
-        {
-            return typeof(IProxyTargetAccessor).IsAssignableFrom(resourceType);
-        }
+        private bool IsDynamicProxy(Type resourceType) => ProxyInterface?.IsAssignableFrom(resourceType) ?? false;
 
         private static Expression RemoveConvert(Expression expression)
             => expression is UnaryExpression unaryExpression
