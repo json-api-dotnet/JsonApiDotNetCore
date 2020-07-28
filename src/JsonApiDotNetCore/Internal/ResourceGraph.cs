@@ -13,6 +13,7 @@ namespace JsonApiDotNetCore.Internal
     public class ResourceGraph : IResourceGraph
     {
         private List<ResourceContext> Resources { get; }
+        private static readonly Type proxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
 
         public ResourceGraph(List<ResourceContext> resources)
         {
@@ -26,7 +27,9 @@ namespace JsonApiDotNetCore.Internal
             => Resources.SingleOrDefault(e => e.ResourceName == resourceName);
         /// <inheritdoc />
         public ResourceContext GetResourceContext(Type resourceType)
-            => Resources.SingleOrDefault(e => e.ResourceType == resourceType);
+            => IsLazyLoadingProxyForResourceType(resourceType) ?
+                Resources.SingleOrDefault(e => e.ResourceType == resourceType.BaseType) :
+                Resources.SingleOrDefault(e => e.ResourceType == resourceType);
         /// <inheritdoc />
         public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
             => GetResourceContext(typeof(TResource));
@@ -121,9 +124,12 @@ namespace JsonApiDotNetCore.Internal
             }
 
             throw new ArgumentException(
-                $"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " + 
+                $"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " +
                 $"For example: 'article => article.Title' or 'article => new {{ article.Title, article.PageCount }}'.");
         }
+
+        private bool IsLazyLoadingProxyForResourceType(Type resourceType) =>
+            proxyTargetAccessorType?.IsAssignableFrom(resourceType) ?? false;
 
         private static Expression RemoveConvert(Expression expression)
             => expression is UnaryExpression unaryExpression
