@@ -44,7 +44,7 @@ namespace UnitTests.Internal
         }
 
         [Fact]
-        public void GetResourceContext_Yields_Right_Type_For_Proxy()
+        public void GetResourceContext_Yields_Right_Type_For_LazyLoadingProxy()
         {
             // Arrange
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);

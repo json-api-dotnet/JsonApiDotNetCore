@@ -13,12 +13,11 @@ namespace JsonApiDotNetCore.Internal
     public class ResourceGraph : IResourceGraph
     {
         private List<ResourceContext> Resources { get; }
-        private Type ProxyInterface { get; }
+        private static readonly Type proxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
 
         public ResourceGraph(List<ResourceContext> resources)
         {
             Resources = resources;
-            ProxyInterface = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
         }
 
         /// <inheritdoc />
@@ -28,7 +27,7 @@ namespace JsonApiDotNetCore.Internal
             => Resources.SingleOrDefault(e => e.ResourceName == resourceName);
         /// <inheritdoc />
         public ResourceContext GetResourceContext(Type resourceType)
-            => IsDynamicProxy(resourceType) ?
+            => IsLazyLoadingProxyForResourceType(resourceType) ?
                 Resources.SingleOrDefault(e => e.ResourceType == resourceType.BaseType) :
                 Resources.SingleOrDefault(e => e.ResourceType == resourceType);
         /// <inheritdoc />
@@ -125,11 +124,12 @@ namespace JsonApiDotNetCore.Internal
             }
 
             throw new ArgumentException(
-                $"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " + 
+                $"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " +
                 $"For example: 'article => article.Title' or 'article => new {{ article.Title, article.PageCount }}'.");
         }
 
-        private bool IsDynamicProxy(Type resourceType) => ProxyInterface?.IsAssignableFrom(resourceType) ?? false;
+        private bool IsLazyLoadingProxyForResourceType(Type resourceType) =>
+            proxyTargetAccessorType?.IsAssignableFrom(resourceType) ?? false;
 
         private static Expression RemoveConvert(Expression expression)
             => expression is UnaryExpression unaryExpression
