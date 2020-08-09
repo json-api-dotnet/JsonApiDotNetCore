@@ -72,18 +72,23 @@ namespace JsonApiDotNetCore.Builders
             return this;
         }
 
-        private ResourceContext CreateResourceContext(string pluralizedTypeName, Type resourceType, Type idType) => new ResourceContext
+        private ResourceContext CreateResourceContext(string pluralizedTypeName, Type resourceType, Type idType)
         {
-            ResourceName = pluralizedTypeName,
-            ResourceType = resourceType,
-            IdentityType = idType,
-            Attributes = GetAttributes(resourceType),
-            Relationships = GetRelationships(resourceType),
-            EagerLoads = GetEagerLoads(resourceType),
-            ResourceDefinitionType = GetResourceDefinitionType(resourceType)
-        };
-
-        protected virtual List<AttrAttribute> GetAttributes(Type resourceType)
+            var idPropertyName = GetIdPropertyName(resourceType);
+            return new ResourceContext
+            {
+                ResourceName = pluralizedTypeName,
+                ResourceType = resourceType,
+                IdentityType = idType,
+                IdPropertyName = idPropertyName,
+                Attributes = GetAttributes(resourceType, idPropertyName),
+                Relationships = GetRelationships(resourceType),
+                EagerLoads = GetEagerLoads(resourceType),
+                ResourceDefinitionType = GetResourceDefinitionType(resourceType)
+            };
+        }
+        
+        protected virtual List<AttrAttribute> GetAttributes(Type resourceType, string idPropertyName)
         {
             var attributes = new List<AttrAttribute>();
 
@@ -94,7 +99,7 @@ namespace JsonApiDotNetCore.Builders
                 // Although strictly not correct, 'id' is added to the list of attributes for convenience.
                 // For example, it enables to filter on id, without the need to special-case existing logic.
                 // And when using sparse fields, it silently adds 'id' to the set of attributes to retrieve.
-                if (property.Name == nameof(Identifiable.Id) && attribute == null)
+                if (property.Name == idPropertyName && attribute == null)
                 {
                     var idAttr = new AttrAttribute
                     {
@@ -120,6 +125,37 @@ namespace JsonApiDotNetCore.Builders
                 attributes.Add(attribute);
             }
             return attributes;
+        }
+
+        private string GetIdPropertyName(Type resourceType)
+        {
+            // By convention, we use an Id field, if [Id] is not specified
+            const string DefaultIdPropertyName = "Id";
+            bool defaultIdPropertyExists = false;
+            string idPropertyName = null;
+            foreach (var property in resourceType.GetProperties())
+            {
+                var idAttribute = (IdAttribute)property.GetCustomAttribute(typeof(IdAttribute));
+                if (idAttribute != null)
+                {
+                    if (idPropertyName != null)
+                        throw new Exceptions.DuplicateIdPropertyException(resourceType.Name, idPropertyName, property.Name);
+                    idPropertyName = property.Name;
+                }
+
+                if (property.Name == DefaultIdPropertyName)
+                    defaultIdPropertyExists = true;
+            }
+
+            if (idPropertyName == null)
+            {
+                if (defaultIdPropertyExists)
+                    idPropertyName = DefaultIdPropertyName;
+                else
+                    throw new Exceptions.IdPropertyNotFoundException(resourceType.Name);
+            }
+
+            return idPropertyName;
         }
 
         protected virtual List<RelationshipAttribute> GetRelationships(Type resourceType)
@@ -160,7 +196,7 @@ namespace JsonApiDotNetCore.Builders
                         ?? throw new JsonApiSetupException($"{throughType} does not contain a navigation property to type {resourceType}");
 
                     // ArticleTag.ArticleId
-                    var leftIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.LeftProperty.Name);
+                    var leftIdPropertyName = hasManyThroughAttribute.LeftIdPropertyName ?? JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.LeftProperty.Name);
                     hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(x => x.Name == leftIdPropertyName)
                         ?? throw new JsonApiSetupException($"{throughType} does not contain a relationship id property to type {resourceType} with name {leftIdPropertyName}");
 
@@ -169,7 +205,7 @@ namespace JsonApiDotNetCore.Builders
                         ?? throw new JsonApiSetupException($"{throughType} does not contain a navigation property to type {hasManyThroughAttribute.RightType}");
 
                     // ArticleTag.TagId
-                    var rightIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.RightProperty.Name);
+                    var rightIdPropertyName = hasManyThroughAttribute.RightIdPropertyName ?? JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.RightProperty.Name);
                     hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName)
                         ?? throw new JsonApiSetupException($"{throughType} does not contain a relationship id property to type {hasManyThroughAttribute.RightType} with name {rightIdPropertyName}");
                 }

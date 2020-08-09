@@ -171,7 +171,7 @@ namespace JsonApiDotNetCore.Services
 
         private FilterExpression CreateFilterById(TId id)
         {
-            var primaryIdAttribute = _currentRequest.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+            var primaryIdAttribute = _currentRequest.PrimaryResource.Attributes.Single(a => a.Property.Name == _currentRequest.PrimaryResource.IdPropertyName);
 
             return new ComparisonExpression(ComparisonOperator.Equals,
                 new ResourceFieldChainExpression(primaryIdAttribute), new LiteralConstantExpression(id.ToString()));
@@ -188,7 +188,7 @@ namespace JsonApiDotNetCore.Services
 
             var secondaryLayer = _queryLayerComposer.Compose(_currentRequest.SecondaryResource);
 
-            var secondaryIdAttribute = _currentRequest.SecondaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+            var secondaryIdAttribute = _currentRequest.SecondaryResource.Attributes.Single(a => a.Property.Name == _currentRequest.SecondaryResource.IdPropertyName);
 
             secondaryLayer.Include = null;
             secondaryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
@@ -244,7 +244,7 @@ namespace JsonApiDotNetCore.Services
             secondaryLayer.Include = null;
 
             var primaryIdAttribute =
-                _currentRequest.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+                _currentRequest.PrimaryResource.Attributes.Single(a => a.Property.Name == _currentRequest.PrimaryResource.IdPropertyName);
 
             return new QueryLayer(_currentRequest.PrimaryResource)
             {

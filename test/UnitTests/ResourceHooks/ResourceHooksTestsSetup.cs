@@ -348,7 +348,8 @@ namespace UnitTests.ResourceHooks
 
             if (dbContext != null)
             {
-                var idType = TypeHelper.GetIdType(typeof(TModel));
+                var idPropertyName = _resourceGraph.GetResourceContext(typeof(TModel)).IdPropertyName;
+                var idType = TypeHelper.GetIdType(typeof(TModel), idPropertyName);
                 if (idType == typeof(int))
                 {
                     IResourceReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext, resourceGraph);

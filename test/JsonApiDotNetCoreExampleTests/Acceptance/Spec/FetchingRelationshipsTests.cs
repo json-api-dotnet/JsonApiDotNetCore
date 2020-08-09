@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
@@ -24,6 +26,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     {
         private readonly TestFixture<TestStartup> _fixture;
         private readonly Faker<TodoItem> _todoItemFaker;
+        private readonly Faker<Team> _teamFaker;
+        private readonly Faker<Player> _playerFaker;
+        private readonly Faker<Championship> _championshipFaker;
+        private readonly Faker<Award> _awardFaker;
 
         public FetchingRelationshipsTests(TestFixture<TestStartup> fixture)
         {
@@ -32,6 +38,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
                 .RuleFor(t => t.CreatedDate, f => f.Date.Past());
+            _teamFaker = new Faker<Team>()
+                .RuleFor(t => t.TeamName, t => t.Company.CompanyName());
+            _playerFaker = new Faker<Player>()
+                .RuleFor(p => p.PlayerName, p => p.Name.FullName());
+            _championshipFaker = new Faker<Championship>()
+                .RuleFor(c => c.ChampionShipName, c => c.Name.JobTitle());
+            _awardFaker = new Faker<Award>()
+                .RuleFor(a => a.AwardName, a => a.Name.JobType());
         }
 
         [Fact]
@@ -70,6 +84,106 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     ""type"": ""people"",
     ""id"": """ + todoItem.Owner.StringId + @"""
   }
+}";
+            Assert.Equal(expected.NormalizeLineEndings(), json.NormalizeLineEndings());
+        }
+
+        [Fact]
+        public async Task When_getting_existing_ToOne_relationship_with_unconventional_key_property_it_should_succeed()
+        {
+            // Arrange
+            var championship = _championshipFaker.Generate();
+            var team = _teamFaker.Generate();
+            championship.Winner = team;
+            
+            var context = _fixture.GetService<AppDbContext>();
+            context.Championships.Add(championship);
+            await context.SaveChangesAsync();
+
+            var route = $"/api/v1/championships/{championship.ChampionShipKey}/relationships/winner";
+
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, route);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var json = JsonConvert.DeserializeObject<JObject>(body).ToString();
+
+            string championshipStringId = ((IIdentifiable<Guid>)championship).StringId;
+            string expected = @"{
+  ""links"": {
+    ""self"": ""http://localhost/api/v1/championships/" + championshipStringId + @"/relationships/winner"",
+    ""related"": ""http://localhost/api/v1/championships/" + championshipStringId + @"/winner""
+  },
+  ""data"": {
+    ""type"": ""teams"",
+    ""id"": """ + ((IIdentifiable<Guid>)team).StringId + @"""
+  }
+}";
+
+            Assert.Equal(expected.NormalizeLineEndings(), json.NormalizeLineEndings());
+        }
+
+        [Fact]
+        public async Task When_getting_existing_ToMany_relationship_with_unconventional_key_property_it_should_succeed()
+        {
+            // Arrange
+            var player1 = _playerFaker.Generate();
+            var player2 = _playerFaker.Generate();
+            var award1 = _awardFaker.Generate();
+            var award2 = _awardFaker.Generate();
+            var awardRecipient1 = new PlayerAward() { Recipient = player1, Award = award1 };
+            var awardRecipient2 = new PlayerAward() { Recipient = player2, Award = award1 };
+            var awardRecipient3 = new PlayerAward() { Recipient = player2, Award = award2 };
+
+            var context = _fixture.GetService<AppDbContext>();
+            context.Players.Add(player1);
+            context.Players.Add(player2);
+            context.Awards.Add(award1);
+            context.Awards.Add(award2);
+            context.PlayerAwards.Add(awardRecipient1);
+            context.PlayerAwards.Add(awardRecipient2);
+            context.PlayerAwards.Add(awardRecipient3);
+            await context.SaveChangesAsync();            
+
+            var route = $"/api/v1/awards/{award1.AwardNo}/relationships/recipients";
+
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, route);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var json = JsonConvert.DeserializeObject<JObject>(body).ToString();
+
+            string expected = @"{
+  ""links"": {
+    ""self"": ""http://localhost/api/v1/awards/" + award1.AwardNo + @"/relationships/recipients"",
+    ""related"": ""http://localhost/api/v1/awards/" + award1.AwardNo + @"/recipients""
+  },
+  ""data"": [
+    {
+      ""type"": ""players"",
+      ""id"": """ + player1.PlayerId + @"""
+    },
+    {
+      ""type"": ""players"",
+      ""id"": """ + player2.PlayerId + @"""
+    }
+  ]
 }";
             Assert.Equal(expected.NormalizeLineEndings(), json.NormalizeLineEndings());
         }

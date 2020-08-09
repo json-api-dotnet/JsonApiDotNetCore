@@ -242,10 +242,10 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// Gets the type (Guid or int) of the Id of a type that implements IIdentifiable
         /// </summary>
-        public static Type GetIdType(Type resourceType)
+        public static Type GetIdType(Type resourceType, string idPropertyName)
         {
-            var property = resourceType.GetProperty(nameof(Identifiable.Id));
-            if (property == null) throw new ArgumentException("Type does not have 'Id' property.");
+            var property = resourceType.GetProperty(idPropertyName);
+            if (property == null) throw new ArgumentException($"Type does not have '{idPropertyName}' property.");
             return property.PropertyType;
         }
 
@@ -267,16 +267,16 @@ namespace JsonApiDotNetCore.Internal
             }
         }
 
-        public static object ConvertStringIdToTypedId(Type resourceType, string stringId, IResourceFactory resourceFactory)
+        public static object ConvertStringIdToTypedId(Type resourceType, string stringId, string idPropertyName, IResourceFactory resourceFactory)
         {
             var tempResource = (IIdentifiable)resourceFactory.CreateInstance(resourceType);
             tempResource.StringId = stringId;
-            return GetResourceTypedId(tempResource);
+            return GetResourceTypedId(tempResource, idPropertyName);
         }
 
-        public static object GetResourceTypedId(IIdentifiable resource)
+        public static object GetResourceTypedId(IIdentifiable resource, string idPropertyName)
         {
-            PropertyInfo property = resource.GetType().GetProperty(nameof(Identifiable.Id));
+            PropertyInfo property = resource.GetType().GetProperty(idPropertyName);
             return property.GetValue(resource);
         }
 

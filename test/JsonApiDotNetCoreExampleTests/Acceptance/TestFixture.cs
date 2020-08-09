@@ -73,7 +73,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .AddResource<Author>()
                 .AddResource<Passport>()
                 .AddResource<TodoItemClient>("todoItems")
-                .AddResource<TodoItemCollectionClient, Guid>().Build();
+                .AddResource<TodoItemCollectionClient, Guid>()
+                .AddResource<Player, Guid>()
+                .AddResource<Team, Guid>()
+                .AddResource<Championship, Guid>()
+                .AddResource<Award, short>()
+                .Build();
             return new ResponseDeserializer(resourceGraph, new ResourceFactory(ServiceProvider));
         }
 

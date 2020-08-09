@@ -13,10 +13,13 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
     {
         private readonly ResolveFieldChainCallback _resolveFieldChainCallback;
         private readonly Func<Type, string, string> _resolveStringId;
+        private readonly string _idPropertyName;
 
-        public FilterParser(string source, ResolveFieldChainCallback resolveFieldChainCallback, Func<Type, string, string> resolveStringId)
+
+        public FilterParser(string source, string idPropertyName, ResolveFieldChainCallback resolveFieldChainCallback, Func<Type, string, string> resolveStringId)
             : base(source, resolveFieldChainCallback)
         {
+            _idPropertyName = idPropertyName;
             _resolveFieldChainCallback = resolveFieldChainCallback;
             _resolveStringId = resolveStringId ?? throw new ArgumentNullException(nameof(resolveStringId));
         }
@@ -143,7 +146,7 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
                 }
 
                 PropertyInfo leftProperty = leftChain.Fields.Last().Property;
-                if (leftProperty.Name == nameof(Identifiable.Id) && rightTerm is LiteralConstantExpression rightConstant)
+                if (leftProperty.Name == nameof(IIdentifiable<int>.Id) && rightTerm is LiteralConstantExpression rightConstant)
                 {
                     string id = _resolveStringId(leftProperty.ReflectedType, rightConstant.Value);
                     rightTerm = new LiteralConstantExpression(id);
@@ -200,7 +203,7 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
             EatSingleCharacterToken(TokenKind.CloseParen);
 
             PropertyInfo targetAttributeProperty = targetAttribute.Fields.Last().Property;
-            if (targetAttributeProperty.Name == nameof(Identifiable.Id))
+            if (targetAttributeProperty.Name == _idPropertyName)
             {
                 for (int index = 0; index < constants.Count; index++)
                 {

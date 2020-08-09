@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.EntityFrameworkCore;
@@ -36,12 +37,14 @@ namespace JsonApiDotNetCore.Internal.Generics
     {
         private readonly IResourceFactory _resourceFactory;
         private readonly DbContext _context;
+        private readonly IResourceContextProvider _resourceContextProvider;
 
-        public RepositoryRelationshipUpdateHelper(IDbContextResolver contextResolver, IResourceFactory resourceFactory)
+        public RepositoryRelationshipUpdateHelper(IDbContextResolver contextResolver, IResourceFactory resourceFactory, IResourceContextProvider resourceContextProvider)
         {
             _resourceFactory = resourceFactory;
             _context = contextResolver.GetContext();
-        }
+            _resourceContextProvider = resourceContextProvider;
+        }   
 
         /// <inheritdoc/>
         public virtual async Task UpdateRelationshipAsync(IIdentifiable parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
@@ -58,12 +61,16 @@ namespace JsonApiDotNetCore.Internal.Generics
         {
             TRelatedResource value = null;
             if (relationshipIds.Any())
-            {   // newOwner.id
-                var target = Expression.Constant(TypeHelper.ConvertType(relationshipIds.First(), TypeHelper.GetIdType(relationship.RightType)));
+            {
+                // We need the Id property name
+                var rightIdPropertyName = RightIdPropertyName(relationship);
+                var idType = TypeHelper.GetIdType(relationship.RightType, rightIdPropertyName);
+                // newOwner.id
+                var target = Expression.Constant(TypeHelper.ConvertType(relationshipIds.First(), idType));
                 // (Person p) => ...
                 ParameterExpression parameter = Expression.Parameter(typeof(TRelatedResource));
                 // (Person p) => p.Id
-                Expression idMember = Expression.Property(parameter, nameof(Identifiable.Id));
+                Expression idMember = Expression.Property(parameter, rightIdPropertyName);
                 // newOwner.Id.Equals(p.Id)
                 Expression callEquals = Expression.Call(idMember, nameof(object.Equals), null, target);
                 var equalsLambda = Expression.Lambda<Func<TRelatedResource, bool>>(callEquals, parameter);
@@ -82,15 +89,16 @@ namespace JsonApiDotNetCore.Internal.Generics
             }
             else
             {
-                var idType = TypeHelper.GetIdType(relationship.RightType);
+                // We need the Id property name
+                var rightIdPropertyName = RightIdPropertyName(relationship);
+                var idType = TypeHelper.GetIdType(relationship.RightType, rightIdPropertyName);
                 var typedIds = relationshipIds.CopyToList(idType, stringId => TypeHelper.ConvertType(stringId, idType));
-
                 // [1, 2, 3]
                 var target = Expression.Constant(typedIds);
                 // (Person p) => ...
                 ParameterExpression parameter = Expression.Parameter(typeof(TRelatedResource));
                 // (Person p) => p.Id
-                Expression idMember = Expression.Property(parameter, nameof(Identifiable.Id));
+				Expression idMember = Expression.Property(parameter, rightIdPropertyName);
                 // [1,2,3].Contains(p.Id)
                 var callContains = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), new[] { idMember.Type }, target, idMember);
                 var containsLambda = Expression.Lambda<Func<TRelatedResource, bool>>(callContains, parameter);
@@ -138,6 +146,20 @@ namespace JsonApiDotNetCore.Internal.Generics
             _context.AddRange(newLinks);
             await _context.SaveChangesAsync();
             transaction.Commit();
+        }
+
+        private string RightIdPropertyName(RelationshipAttribute relationship)
+        {
+            if (relationship is HasManyThroughAttribute hasManyThrough)
+                return hasManyThrough.RightIdPropertyName;
+            else
+            {
+                var resourceContext = _resourceContextProvider.GetResourceContext(typeof(TRelatedResource).Name);
+                if (resourceContext != null)
+                    return resourceContext.IdPropertyName;
+                else
+                    return nameof(Identifiable.Id);
+            }
         }
     }
 }

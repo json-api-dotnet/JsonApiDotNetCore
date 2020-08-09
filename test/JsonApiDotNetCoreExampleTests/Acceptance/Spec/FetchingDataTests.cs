@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -25,6 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         private readonly TestFixture<TestStartup> _fixture;
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
+        private readonly Faker<Player> _playerFaker;
 
         public FetchingDataTests(TestFixture<TestStartup> fixture)
         {
@@ -36,6 +39,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _personFaker = new Faker<Person>()
                 .RuleFor(p => p.FirstName, f => f.Name.FirstName())
                 .RuleFor(p => p.LastName, f => f.Name.LastName());
+            _playerFaker = new Faker<Player>()
+                .RuleFor(p => p.PlayerName, f => f.Name.FindName());
         }
 
         [Fact]
@@ -163,6 +168,40 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
             Assert.Equal("Resource of type 'todoItems' with id '123' does not exist.", errorDocument.Errors[0].Detail);
+        }
+
+        [Fact]
+        public async Task GetSingleResource_Using_Id_Attribute_To_Designate_Unconventional_Key_Property_Name()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            await context.ClearTableAsync<Player>();
+            await context.SaveChangesAsync();
+
+            var players = _playerFaker.Generate(3);
+            context.Players.AddRange(players);
+            await context.SaveChangesAsync();
+
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
+            var httpMethod = new HttpMethod("GET");
+            var route = "/api/v1/players";
+            var server = new TestServer(builder);
+
+            var options = (JsonApiOptions)server.Services.GetRequiredService<IJsonApiOptions>();
+            options.DefaultPageSize = null;
+
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            var result = _fixture.GetDeserializer().DeserializeList<Player>(body);
+
+            // Assert
+            Assert.True(result.Data.Count == 3);
+            Assert.True(result.Data.Join(players, r => r.PlayerId, p => p.PlayerId, (r, p) => r).Count() == 3);            
         }
     }
 }

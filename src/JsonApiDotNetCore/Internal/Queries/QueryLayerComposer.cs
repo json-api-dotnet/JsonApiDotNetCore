@@ -174,7 +174,7 @@ namespace JsonApiDotNetCore.Internal.Queries
 
             if (sort == null)
             {
-                var idAttribute = resourceContext.Attributes.Single(x => x.Property.Name == nameof(Identifiable.Id));
+                var idAttribute = resourceContext.Attributes.Single(x => x.Property.Name == resourceContext.IdPropertyName);
                 sort = new SortExpression(new[] {new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true)});
             }
 
@@ -211,7 +211,7 @@ namespace JsonApiDotNetCore.Internal.Queries
 
             if (attributes.Any())
             {
-                var idAttribute = resourceContext.Attributes.Single(x => x.Property.Name == nameof(Identifiable.Id));
+                var idAttribute = resourceContext.Attributes.Single(x => x.Property.Name == resourceContext.IdPropertyName);
                 attributes.Add(idAttribute);
             }
 

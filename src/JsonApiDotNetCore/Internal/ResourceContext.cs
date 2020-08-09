@@ -32,6 +32,11 @@ namespace JsonApiDotNetCore.Internal
         public Type ResourceDefinitionType { get; set; }
 
         /// <summary>
+        /// The field name of the 'id' property
+        /// </summary>
+        public string IdPropertyName { get; set; }
+
+        /// <summary>
         /// Exposed resource attributes.
         /// See https://jsonapi.org/format/#document-resource-object-attributes.
         /// </summary>

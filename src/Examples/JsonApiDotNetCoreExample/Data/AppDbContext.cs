@@ -22,6 +22,12 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Blog> Blogs { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<Player> Players { get; set; }
+        public DbSet<Award> Awards { get; set; }
+        public DbSet<Championship> Championships { get; set; }
+        public DbSet<TeamPlayer> TeamPlayers { get; set; }
+        public DbSet<PlayerAward> PlayerAwards { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options, ISystemClock systemClock) : base(options)
         {
@@ -92,6 +98,17 @@ namespace JsonApiDotNetCoreExample.Data
                 .HasOne(p => p.OneToOneTodoItem)
                 .WithOne(p => p.OneToOnePerson)
                 .HasForeignKey<TodoItem>(p => p.OneToOnePersonId);
+
+            modelBuilder.Entity<PlayerAward>()
+                .HasKey(pa => new { pa.AwardNo, pa.RecipientNo });
+
+            modelBuilder.Entity<TeamPlayer>()
+                .HasKey(pa => new { pa.TeamId, pa.PlayerId });
+
+            modelBuilder.Entity<Player>()
+                 .HasMany(p => p.PlayerAwards)
+                 .WithOne(pa => pa.Recipient)
+                 .HasForeignKey(pa => pa.RecipientNo);
         }
     }
 }

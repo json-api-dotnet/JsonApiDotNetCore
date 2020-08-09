@@ -81,12 +81,13 @@ namespace JsonApiDotNetCore.Hooks
 
         public IEnumerable LoadDbValues(LeftType resourceTypeForRepository, IEnumerable resources, ResourceHook hook, params RelationshipAttribute[] relationshipsToNextLayer)
         {
-            var idType = TypeHelper.GetIdType(resourceTypeForRepository);
+            var idPropertyName = _resourceContextProvider.GetResourceContext(resourceTypeForRepository).IdPropertyName;
+            var idType = TypeHelper.GetIdType(resourceTypeForRepository, idPropertyName);
             var parameterizedGetWhere = GetType()
                     .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
                     .MakeGenericMethod(resourceTypeForRepository, idType);
             var cast = ((IEnumerable<object>)resources).Cast<IIdentifiable>();
-            var ids = cast.Select(TypeHelper.GetResourceTypedId).CopyToList(idType);
+            var ids = cast.Select(r => TypeHelper.GetResourceTypedId(r, idPropertyName)).CopyToList(idType);
             var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, relationshipsToNextLayer });
             if (values == null) return null;
             return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(resourceTypeForRepository), values.CopyToList(resourceTypeForRepository));
@@ -94,7 +95,7 @@ namespace JsonApiDotNetCore.Hooks
 
         public HashSet<TResource> LoadDbValues<TResource>(IEnumerable<TResource> resources, ResourceHook hook, params RelationshipAttribute[] relationships) where TResource : class, IIdentifiable
         {
-            var resourceType = typeof(TResource);
+            var resourceType = typeof(TResource);       
             var dbValues = LoadDbValues(resourceType, resources, hook, relationships)?.Cast<TResource>();
             if (dbValues == null) return null;
             return new HashSet<TResource>(dbValues);
@@ -136,7 +137,7 @@ namespace JsonApiDotNetCore.Hooks
         private IEnumerable<TResource> GetWhereAndInclude<TResource, TId>(IEnumerable<TId> ids, RelationshipAttribute[] relationshipsToNextLayer) where TResource : class, IIdentifiable<TId>
         {
             var resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
-            var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
+            var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == resourceContext.IdPropertyName);
 
             var queryLayer = new QueryLayer(resourceContext)
             {

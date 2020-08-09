@@ -200,7 +200,9 @@ namespace JsonApiDotNetCore.Serialization
                 throw new FormatException($"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
             }
 
-            var typedId = TypeHelper.ConvertStringIdToTypedId(attr.Property.PropertyType, id, _resourceFactory);
+            var resourceContext = _contextProvider.GetResourceContext(attr.Property.PropertyType);
+
+            var typedId = TypeHelper.ConvertStringIdToTypedId(attr.Property.PropertyType, id, resourceContext.IdPropertyName, _resourceFactory);
             foreignKey.SetValue(resource, typedId);
         }
 

@@ -100,9 +100,9 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
         {
             ResourceContext resourceContextInScope = GetResourceContextForScope(scope);
 
-            var parser = new FilterParser(parameterValue,
+            var parser = new FilterParser(parameterValue, resourceContextInScope.IdPropertyName,
                 (path, chainRequirements) => ResolveChainInFilter(chainRequirements, resourceContextInScope, path),
-                (resourceType, stringId) => TypeHelper.ConvertStringIdToTypedId(resourceType, stringId, _resourceFactory).ToString());
+                (resourceType, stringId) => TypeHelper.ConvertStringIdToTypedId(resourceType, stringId, resourceContextInScope.IdPropertyName, _resourceFactory).ToString());
 
             return parser.Parse();
         }
