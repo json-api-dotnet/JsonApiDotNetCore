@@ -295,7 +295,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/callableResources/{resource.StringId}?fields=label";
+            var route = $"/callableResources/{resource.StringId}?fields=label,status";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -306,7 +306,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(resource.StringId);
             responseDocument.SingleData.Attributes["label"].Should().Be(resource.Label);
-            responseDocument.SingleData.Attributes["percentageComplete"].Should().Be(resource.PercentageComplete);
+            responseDocument.SingleData.Attributes.Should().NotContainKey("percentageComplete");
+            responseDocument.SingleData.Attributes["status"].Should().Be("5% completed.");
         }
         
         [Fact]

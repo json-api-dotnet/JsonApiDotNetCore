@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         }
 
         /// <inheritdoc/>
-        public IReadOnlyCollection<AttrAttribute> GetAttributes(Type type, RelationshipAttribute relationship = null)
+        public IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType, RelationshipAttribute relationship = null)
         {   
             var sparseFieldSetAttributes = _constraintProviders
                 .SelectMany(p => p.GetConstraints())
@@ -42,21 +42,33 @@ namespace JsonApiDotNetCore.Serialization.Server
 
             if (!sparseFieldSetAttributes.Any())
             {
-                sparseFieldSetAttributes = _resourceGraph.GetAttributes(type).ToHashSet();
+                sparseFieldSetAttributes = GetViewableAttributes(resourceType);
             }
 
-            sparseFieldSetAttributes.RemoveWhere(attr => !attr.Capabilities.HasFlag(AttrCapabilities.AllowView));
-
-            var resourceDefinition = _resourceDefinitionProvider.Get(type);
+            var resourceDefinition = _resourceDefinitionProvider.Get(resourceType);
             if (resourceDefinition != null)
             {
-                var tempExpression = sparseFieldSetAttributes.Any() ? new SparseFieldSetExpression(sparseFieldSetAttributes) : null;
-                tempExpression = resourceDefinition.OnApplySparseFieldSet(tempExpression);
+                var inputExpression = sparseFieldSetAttributes.Any() ? new SparseFieldSetExpression(sparseFieldSetAttributes) : null;
+                var outputExpression = resourceDefinition.OnApplySparseFieldSet(inputExpression);
 
-                sparseFieldSetAttributes = tempExpression == null ? new HashSet<AttrAttribute>() : tempExpression.Attributes.ToHashSet();
+                if (outputExpression == null)
+                {
+                    sparseFieldSetAttributes = GetViewableAttributes(resourceType);
+                }
+                else
+                {
+                    sparseFieldSetAttributes.IntersectWith(outputExpression.Attributes);
+                }
             }
 
             return sparseFieldSetAttributes;
+        }
+
+        private HashSet<AttrAttribute> GetViewableAttributes(Type resourceType)
+        {
+            return _resourceGraph.GetAttributes(resourceType)
+                .Where(attr => attr.Capabilities.HasFlag(AttrCapabilities.AllowView))
+                .ToHashSet();
         }
 
         /// <inheritdoc/>

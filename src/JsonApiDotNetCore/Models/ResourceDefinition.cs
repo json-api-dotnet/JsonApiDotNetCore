@@ -142,11 +142,17 @@ namespace JsonApiDotNetCore.Models
         /// Tip: Use <see cref="SparseFieldSetExtensions.Including{TResource}"/> and <see cref="SparseFieldSetExtensions.Excluding{TResource}"/>
         /// to safely change the fieldset without worrying about nulls.
         /// </summary>
-        /// <param name="existingSparseFieldSet">
-        /// An optional existing sparse fieldset, coming from query string. Can be <c>null</c>.
+        /// <remarks>
+        /// This method executes twice for a single request: first to select which fields to retrieve from the data store and then to
+        /// select which fields to serialize. Including extra fields from this method will retrieve them, but not include them in the json output.
+        /// This enables you to expose calculated properties whose value depends on a field that is not in the sparse fieldset.
+        /// </remarks>
+        /// <param name="existingSparseFieldSet">The incoming sparse fieldset from query string.
+        /// At query execution time, this is <c>null</c> if the query string contains no sparse fieldset.
+        /// At serialization time, this contains all viewable fields if the query string contains no sparse fieldset.
         /// </param>
         /// <returns>
-        /// The new sparse fieldset, or <c>null</c> to disable the existing sparse fieldset and select all fields.
+        /// The new sparse fieldset, or <c>null</c> to discard the existing sparse fieldset and select all viewable fields.
         /// </returns>
         public virtual SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
         {

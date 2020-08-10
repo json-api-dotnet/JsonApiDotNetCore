@@ -68,7 +68,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
         public override SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
         {
-            // Use case: always include percentageComplete and never include riskLevel in responses.
+            // Use case: always retrieve percentageComplete and never include riskLevel in responses.
 
             return existingSparseFieldSet
                 .Including<CallableResource>(resource => resource.PercentageComplete, ResourceGraph)

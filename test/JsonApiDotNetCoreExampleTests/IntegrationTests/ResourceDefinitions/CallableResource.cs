@@ -14,6 +14,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         public int PercentageComplete { get; set; }
 
         [Attr]
+        public string Status => $"{PercentageComplete}% completed.";
+
+        [Attr]
         public int RiskLevel { get; set; }
 
         [Attr(AttrCapabilities.AllowView | AttrCapabilities.AllowSort)]

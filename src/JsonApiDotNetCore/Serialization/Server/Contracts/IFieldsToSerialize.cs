@@ -15,11 +15,11 @@ namespace JsonApiDotNetCore.Serialization.Server
     public interface IFieldsToSerialize
     {
         /// <summary>
-        /// Gets the list of attributes that are to be serialized for resource of type <paramref name="type"/>.
+        /// Gets the list of attributes that are to be serialized for resource of type <paramref name="resourceType"/>.
         /// If <paramref name="relationship"/> is non-null, it will consider the allowed list of attributes
         /// as an included relationship.
         /// </summary>
-        IReadOnlyCollection<AttrAttribute> GetAttributes(Type type, RelationshipAttribute relationship = null);
+        IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType, RelationshipAttribute relationship = null);
 
         /// <summary>
         /// Gets the list of relationships that are to be serialized for resource of type <paramref name="type"/>.
