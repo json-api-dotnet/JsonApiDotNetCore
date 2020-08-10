@@ -63,6 +63,15 @@ namespace JsonApiDotNetCore.Models.Annotation
         public PropertyInfo LeftProperty { get; internal set; }
 
         /// <summary>
+        /// If supplied, this overrides the default left property name.
+        /// </summary>
+        /// <example>
+        /// In the `[HasManyThrough("tags", nameof(ArticleTags), "ArticalNo")]` example
+        /// this could allow an unconventional foreign key property
+        /// </example>
+        public string LeftIdPropertyName { get; }
+
+        /// <summary>
         /// The id property back to the parent resource from the through type.
         /// </summary>
         /// 
@@ -91,6 +100,15 @@ namespace JsonApiDotNetCore.Models.Annotation
         ///
         /// </example>
         public PropertyInfo RightProperty { get; internal set; }
+
+        /// <summary>
+        /// If supplied, this overrides the default right property name.
+        /// </summary>
+        /// <example>
+        /// In the `[HasManyThrough("tags", nameof(ArticleTags), rightIdPrperty: "articleNo")]` example
+        /// this could allow an unconventional foreign key property
+        /// </example>
+        public string RightIdPropertyName { get; }
 
         /// <summary>
         /// The id property to the related resource from the through type.
@@ -134,6 +152,8 @@ namespace JsonApiDotNetCore.Models.Annotation
         /// </summary>
         /// 
         /// <param name="throughPropertyName">The name of the navigation property that will be used to get the HasMany relationship</param>
+        /// <param name="leftPropertyName">The name of the left property on the throughPropertyName for the HasMany relationship</param>
+        /// <param name="rightPropertyName">The name of the right property on the throughPropertyName for the HasMany relationship</param>
         /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Links.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// 
@@ -142,10 +162,13 @@ namespace JsonApiDotNetCore.Models.Annotation
         /// [HasManyThrough(nameof(ArticleTags), relationshipLinks: Links.All, canInclude: true)]
         /// </code>
         /// </example>
-        public HasManyThroughAttribute(string throughPropertyName, Links relationshipLinks = Links.All, bool canInclude = true)
+        public HasManyThroughAttribute(string throughPropertyName, string leftPropertyName = null, string rightPropertyName = null,
+            Links relationshipLinks = Links.All, bool canInclude = true)
         : base(null, relationshipLinks, canInclude)
         {
             ThroughPropertyName = throughPropertyName;
+            LeftIdPropertyName = leftPropertyName;
+            RightIdPropertyName = rightPropertyName;
         }
 
         /// <summary>

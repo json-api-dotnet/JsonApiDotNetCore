@@ -169,6 +169,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var json = JsonConvert.DeserializeObject<JObject>(body).ToString();
 
+            Guid playerIdAlphabetical1;
+            Guid playerIdAlphabetical2;
+            if (player1.PlayerId.CompareTo(player2.PlayerId) < 0)
+            {
+                playerIdAlphabetical1 = player1.PlayerId;
+                playerIdAlphabetical2 = player2.PlayerId;
+            }
+            else
+            {
+                playerIdAlphabetical1 = player2.PlayerId;
+                playerIdAlphabetical2 = player1.PlayerId;
+            }
+
             string expected = @"{
   ""links"": {
     ""self"": ""http://localhost/api/v1/awards/" + award1.AwardNo + @"/relationships/recipients"",
@@ -177,11 +190,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
   ""data"": [
     {
       ""type"": ""players"",
-      ""id"": """ + player1.PlayerId + @"""
+      ""id"": """ + playerIdAlphabetical1 + @"""
     },
     {
       ""type"": ""players"",
-      ""id"": """ + player2.PlayerId + @"""
+      ""id"": """ + playerIdAlphabetical2 + @"""
     }
   ]
 }";
