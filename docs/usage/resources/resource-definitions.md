@@ -144,6 +144,26 @@ public class AccountDefinition : ResourceDefinition<Account>
 }
 ```
 
+## Block including related resources
+
+```c#
+public class EmployeeDefinition : ResourceDefinition<Employee>
+{
+    public override IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+    {
+        if (existingIncludes.Any(include => include.Relationship.Property.Name == nameof(Employee.Manager)))
+        {
+            throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+            {
+                Title = "Including the manager of employees is not permitted."
+            });
+        }
+
+        return existingIncludes;
+    }
+}
+```
+
 ## Custom query string parameters
 
 _since v3.0.0_

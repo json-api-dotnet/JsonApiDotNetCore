@@ -147,7 +147,7 @@ namespace JsonApiDotNetCore.Hooks
             var chains = relationshipsToNextLayer.Select(relationship => new ResourceFieldChainExpression(relationship)).ToList();
             if (chains.Any())
             {
-                queryLayer.Include = new IncludeExpression(chains);
+                queryLayer.Include = IncludeChainConverter.FromRelationshipChains(chains);
             }
 
             var repository = GetRepository<TResource, TId>();

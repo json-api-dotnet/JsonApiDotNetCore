@@ -21,7 +21,35 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddScoped<ResourceDefinition<CallableResource>, CallableResourceDefinition>();
+                services.AddSingleton<IUserRolesService, FakeUserRolesService>();
             });
+        }
+
+        [Fact]
+        public async Task Include_from_resource_definition_is_blocked()
+        {
+            // Arrange
+            var userRolesService = (FakeUserRolesService) _testContext.Factory.Services.GetRequiredService<IUserRolesService>();
+            userRolesService.AllowIncludeOwner = false;
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.RemoveRange(dbContext.CallableResources);
+
+                await dbContext.SaveChangesAsync();
+            });
+
+            var route = "/callableResources?include=owner";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            responseDocument.Errors[0].Title.Should().Be("Including owner is not permitted.");
         }
 
         [Fact]
@@ -509,6 +537,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             responseDocument.Errors[0].Title.Should().Be("Custom query string parameters cannot be used on nested resource endpoints.");
             responseDocument.Errors[0].Detail.Should().Be("Query string parameter 'isHighRisk' cannot be used on a nested resource endpoint.");
             responseDocument.Errors[0].Source.Parameter.Should().Be("isHighRisk");
+        }
+
+        private sealed class FakeUserRolesService : IUserRolesService
+        {
+            public bool AllowIncludeOwner { get; set; } = true;
         }
     }
 }

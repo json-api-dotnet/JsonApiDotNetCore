@@ -102,7 +102,7 @@ namespace UnitTests.Serialization
             if (inclusionChains != null)
             {
                 var chains = inclusionChains.Select(relationships => new ResourceFieldChainExpression(relationships)).ToList();
-                var includeExpression = new IncludeExpression(chains);
+                var includeExpression = IncludeChainConverter.FromRelationshipChains(chains);
                 expressionsInScope.Add(new ExpressionInScope(null, includeExpression));
             }
 

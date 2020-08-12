@@ -12,6 +12,7 @@ namespace JsonApiDotNetCore.Models
 {
     public interface IResourceDefinition
     {
+        IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes);
         FilterExpression OnApplyFilter(FilterExpression existingFilter);
         SortExpression OnApplySort(SortExpression existingSort);
         PaginationExpression OnApplyPagination(PaginationExpression existingPagination);
@@ -20,7 +21,7 @@ namespace JsonApiDotNetCore.Models
     }
 
     /// <summary>
-    /// exposes developer friendly hooks into how their resources are exposed. 
+    /// Exposes developer friendly hooks into how their resources are exposed. 
     /// It is intended to improve the experience and reduce boilerplate for commonly required features.
     /// The goal of this class is to reduce the frequency with which developers have to override the
     /// service and repository layers.
@@ -59,6 +60,20 @@ namespace JsonApiDotNetCore.Models
         public virtual void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<TResource> resourcesByRelationship, ResourcePipeline pipeline) { }
         /// <inheritdoc/>
         public virtual IEnumerable<TResource> OnReturn(HashSet<TResource> resources, ResourcePipeline pipeline) { return resources; }
+
+        /// <summary>
+        /// Enables to extend, replace or remove includes that are being applied on this resource type.
+        /// </summary>
+        /// <param name="existingIncludes">
+        /// An optional existing set of includes, coming from query string. Never <c>null</c>, but may be empty.
+        /// </param>
+        /// <returns>
+        /// The new set of includes. Return an empty collection to remove all inclusions (never return <c>null</c>).
+        /// </returns>
+        public virtual IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+        {
+            return existingIncludes;
+        }
 
         /// <summary>
         /// Enables to extend, replace or remove a filter that is being applied on a set of this resource type.

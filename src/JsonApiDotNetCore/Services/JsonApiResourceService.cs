@@ -260,22 +260,11 @@ namespace JsonApiDotNetCore.Services
 
         private IncludeExpression RewriteIncludeForSecondaryEndpoint(IncludeExpression relativeInclude)
         {
-            if (relativeInclude != null && relativeInclude.Chains.Any())
-            {
-                var absoluteChains = new List<ResourceFieldChainExpression>();
-                foreach (ResourceFieldChainExpression relativeChain in relativeInclude.Chains)
-                {
-                    var absoluteFieldsInChain = new List<ResourceFieldAttribute>(relativeChain.Fields);
-                    absoluteFieldsInChain.Insert(0, _currentRequest.Relationship);
+            var parentElement = relativeInclude != null
+                ? new IncludeElementExpression(_currentRequest.Relationship, relativeInclude.Elements)
+                : new IncludeElementExpression(_currentRequest.Relationship);
 
-                    var absoluteChain = new ResourceFieldChainExpression(absoluteFieldsInChain);
-                    absoluteChains.Add(absoluteChain);
-                }
-
-                return new IncludeExpression(absoluteChains);
-            }
-
-            return new IncludeExpression(new[] {new ResourceFieldChainExpression(_currentRequest.Relationship)});
+            return new IncludeExpression(new[] {parentElement});
         }
 
         public virtual async Task<TResource> UpdateAsync(TId id, TResource requestResource)

@@ -102,6 +102,11 @@ namespace JsonApiDotNetCore.Internal.Queries.Expressions
             return DefaultVisit(expression, argument);
         }
 
+        public virtual TResult VisitIncludeElement(IncludeElementExpression expression, TArgument argument)
+        {
+            return DefaultVisit(expression, argument);
+        }
+
         public virtual TResult VisitQueryableHandler(QueryableHandlerExpression expression, TArgument argument)
         {
             return DefaultVisit(expression, argument);

@@ -79,7 +79,7 @@ namespace JsonApiDotNetCore.Serialization.Server
 
             inclusionChain = new List<List<RelationshipAttribute>>();
 
-            foreach (var chain in includes.SelectMany(x => x.Chains))
+            foreach (var chain in includes.SelectMany(IncludeChainConverter.GetRelationshipChains))
             {
                 if (chain.Fields.First().Equals(relationship))
                 {

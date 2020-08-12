@@ -74,8 +74,8 @@ namespace UnitTests.QueryStringParameters
         [InlineData("includes", "owner.articles", "owner.articles")]
         [InlineData("includes", "articles.author", "articles.author")]
         [InlineData("includes", "articles.revisions", "articles.revisions")]
-        [InlineData("includes", "articles,articles.revisions", "articles,articles.revisions")]
-        [InlineData("includes", "articles,articles.revisions,articles.tags", "articles,articles.revisions,articles.tags")]
+        [InlineData("includes", "articles,articles.revisions", "articles.revisions")]
+        [InlineData("includes", "articles,articles.revisions,articles.tags", "articles.revisions,articles.tags")]
         public void Reader_Read_Succeeds(string parameterName, string parameterValue, string valueExpected)
         {
             // Act

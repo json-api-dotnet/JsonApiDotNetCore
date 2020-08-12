@@ -1,25 +1,49 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Net;
 using JsonApiDotNetCore;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 {
+    public interface IUserRolesService
+    {
+        bool AllowIncludeOwner { get; }
+    }
+
     public sealed class CallableResourceDefinition : ResourceDefinition<CallableResource>
     {
+        private readonly IUserRolesService _userRolesService;
         private static readonly PageSize _maxPageSize = new PageSize(5);
 
-        public CallableResourceDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+        public CallableResourceDefinition(IResourceGraph resourceGraph, IUserRolesService userRolesService) : base(resourceGraph)
         {
             // This constructor will be resolved from the container, which means
             // you can take on any dependency that is also defined in the container.
+
+            _userRolesService = userRolesService;
+        }
+
+        public override IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+        {
+            // Use case: prevent including owner if user has insufficient permissions.
+
+            if (!_userRolesService.AllowIncludeOwner && 
+                existingIncludes.Any(x => x.Relationship.Property.Name == nameof(CallableResource.Owner)))
+            {
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "Including owner is not permitted."
+                });
+            }
+
+            return existingIncludes;
         }
 
         public override FilterExpression OnApplyFilter(FilterExpression existingFilter)

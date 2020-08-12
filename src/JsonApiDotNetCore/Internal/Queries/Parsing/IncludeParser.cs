@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
                 chains.Add(nextChain);
             }
 
-            return new IncludeExpression(chains);
+            return IncludeChainConverter.FromRelationshipChains(chains);
         }
     }
 }

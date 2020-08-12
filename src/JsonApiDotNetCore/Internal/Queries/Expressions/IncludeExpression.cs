@@ -6,24 +6,22 @@ namespace JsonApiDotNetCore.Internal.Queries.Expressions
 {
     public class IncludeExpression : QueryExpression
     {
-        // TODO: Unfold into a tree of child relationships, so it can be used from ResourceDefinitions.
-
-        public IReadOnlyCollection<ResourceFieldChainExpression> Chains { get; }
+        public IReadOnlyCollection<IncludeElementExpression> Elements { get; }
 
         public static readonly IncludeExpression Empty = new IncludeExpression();
 
         private IncludeExpression()
         {
-            Chains = Array.Empty<ResourceFieldChainExpression>();
+            Elements = Array.Empty<IncludeElementExpression>();
         }
 
-        public IncludeExpression(IReadOnlyCollection<ResourceFieldChainExpression> chains)
+        public IncludeExpression(IReadOnlyCollection<IncludeElementExpression> elements)
         {
-            Chains = chains ?? throw new ArgumentNullException(nameof(chains));
+            Elements = elements ?? throw new ArgumentNullException(nameof(elements));
 
-            if (!chains.Any())
+            if (!elements.Any())
             {
-                throw new ArgumentException("Must have one or more chains.", nameof(chains));
+                throw new ArgumentException("Must have one or more elements.", nameof(elements));
             }
         }
 
@@ -34,7 +32,8 @@ namespace JsonApiDotNetCore.Internal.Queries.Expressions
 
         public override string ToString()
         {
-            return string.Join(",", Chains.Select(child => child.ToString()));
+            var chains = IncludeChainConverter.GetRelationshipChains(this);
+            return string.Join(",", chains.Select(child => child.ToString()));
         }
     }
 }

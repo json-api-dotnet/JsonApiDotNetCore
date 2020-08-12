@@ -71,8 +71,7 @@ namespace JsonApiDotNetCore.Internal.Queries
             var constraints = _constraintProviders.SelectMany(p => p.GetConstraints()).ToArray();
 
             var topLayer = ComposeTopLayer(constraints, requestResource);
-
-            ComposeChildren(topLayer, constraints);
+            topLayer.Include = ComposeChildren(topLayer, constraints);
 
             return topLayer;
         }
@@ -93,7 +92,6 @@ namespace JsonApiDotNetCore.Internal.Queries
 
             return new QueryLayer(resourceContext)
             {
-                Include = GetIncludes(expressionsInTopScope),
                 Filter = GetFilter(expressionsInTopScope, resourceContext),
                 Sort = GetSort(expressionsInTopScope, resourceContext),
                 Pagination = ((JsonApiOptions)_options).DisableTopPagination ? null : topPagination,
@@ -101,51 +99,97 @@ namespace JsonApiDotNetCore.Internal.Queries
             };
         }
 
-        private void ComposeChildren(QueryLayer topLayer, ExpressionInScope[] constraints)
+        private IncludeExpression ComposeChildren(QueryLayer topLayer, ExpressionInScope[] constraints)
         {
-            if (topLayer.Include == null)
-            {
-                return;
-            }
+            var include = constraints
+                .Where(c => c.Scope == null)
+                .Select(expressionInScope => expressionInScope.Expression).OfType<IncludeExpression>()
+                .FirstOrDefault() ?? IncludeExpression.Empty;
 
-            foreach (var includeChain in topLayer.Include.Chains)
-            {
-                var currentLayer = topLayer;
-                List<RelationshipAttribute> currentScope = new List<RelationshipAttribute>();
+            var includeElements =
+                ProcessIncludeSet(include.Elements, topLayer, new List<RelationshipAttribute>(), constraints);
 
-                foreach (var relationship in includeChain.Fields.OfType<RelationshipAttribute>())
-                {
-                    currentScope.Add(relationship);
-                    var currentResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
-
-                    currentLayer.Projection ??= new Dictionary<ResourceFieldAttribute, QueryLayer>();
-
-                    if (!currentLayer.Projection.ContainsKey(relationship))
-                    {
-                        var expressionsInCurrentScope = constraints
-                            .Where(c => c.Scope != null && c.Scope.Fields.SequenceEqual(currentScope))
-                            .Select(expressionInScope => expressionInScope.Expression)
-                            .ToArray();
-
-                        var child = new QueryLayer(currentResourceContext)
-                        {
-                            Filter = GetFilter(expressionsInCurrentScope, currentResourceContext),
-                            Sort = GetSort(expressionsInCurrentScope, currentResourceContext),
-                            Pagination = ((JsonApiOptions)_options).DisableChildrenPagination ? null : GetPagination(expressionsInCurrentScope, currentResourceContext),
-                            Projection = GetSparseFieldSetProjection(expressionsInCurrentScope, currentResourceContext)
-                        };
-
-                        currentLayer.Projection.Add(relationship, child);
-                    }
-
-                    currentLayer = currentLayer.Projection[relationship];
-                }
-            }
+            return !ReferenceEquals(includeElements, include.Elements)
+                ? includeElements.Any() ? new IncludeExpression(includeElements) : IncludeExpression.Empty
+                : include;
         }
 
-        protected virtual IncludeExpression GetIncludes(IEnumerable<QueryExpression> expressionsInScope)
+        private IReadOnlyCollection<IncludeElementExpression> ProcessIncludeSet(IReadOnlyCollection<IncludeElementExpression> includeElements, 
+            QueryLayer parentLayer, IList<RelationshipAttribute> parentRelationshipChain, ExpressionInScope[] constraints)
         {
-            return expressionsInScope.OfType<IncludeExpression>().FirstOrDefault();
+            includeElements = GetIncludeElements(includeElements, parentLayer.ResourceContext) ?? Array.Empty<IncludeElementExpression>();
+
+            var updatesInChildren = new Dictionary<IncludeElementExpression, IReadOnlyCollection<IncludeElementExpression>>();
+
+            foreach (var includeElement in includeElements)
+            {
+                parentLayer.Projection ??= new Dictionary<ResourceFieldAttribute, QueryLayer>();
+
+                if (!parentLayer.Projection.ContainsKey(includeElement.Relationship))
+                {
+                    var relationshipChain = new List<RelationshipAttribute>(parentRelationshipChain)
+                    {
+                        includeElement.Relationship
+                    };
+
+                    var expressionsInCurrentScope = constraints
+                        .Where(c => c.Scope != null && c.Scope.Fields.SequenceEqual(relationshipChain))
+                        .Select(expressionInScope => expressionInScope.Expression)
+                        .ToArray();
+
+                    var resourceContext =
+                        _resourceContextProvider.GetResourceContext(includeElement.Relationship.RightType);
+
+                    var child = new QueryLayer(resourceContext)
+                    {
+                        Filter = GetFilter(expressionsInCurrentScope, resourceContext),
+                        Sort = GetSort(expressionsInCurrentScope, resourceContext),
+                        Pagination = ((JsonApiOptions) _options).DisableChildrenPagination
+                            ? null
+                            : GetPagination(expressionsInCurrentScope, resourceContext),
+                        Projection = GetSparseFieldSetProjection(expressionsInCurrentScope, resourceContext)
+                    };
+
+                    parentLayer.Projection.Add(includeElement.Relationship, child);
+
+                    if (includeElement.Children.Any())
+                    {
+                        var updatedChildren = ProcessIncludeSet(includeElement.Children, child, relationshipChain, constraints);
+
+                        if (!ReferenceEquals(includeElement.Children, updatedChildren))
+                        {
+                            updatesInChildren.Add(includeElement, updatedChildren);
+                        }
+                    }
+                }
+            }
+
+            return !updatesInChildren.Any() ? includeElements : ApplyIncludeElementUpdates(includeElements, updatesInChildren);
+        }
+
+        private static IReadOnlyCollection<IncludeElementExpression> ApplyIncludeElementUpdates(IReadOnlyCollection<IncludeElementExpression> includeElements,
+            IDictionary<IncludeElementExpression, IReadOnlyCollection<IncludeElementExpression>> updatesInChildren)
+        {
+            var newIncludeElements = new List<IncludeElementExpression>(includeElements);
+
+            foreach (var (existingElement, updatedChildren) in updatesInChildren)
+            {
+                var existingIndex = newIncludeElements.IndexOf(existingElement);
+                newIncludeElements[existingIndex] = new IncludeElementExpression(existingElement.Relationship, updatedChildren);
+            }
+
+            return newIncludeElements;
+        }
+
+        protected virtual IReadOnlyCollection<IncludeElementExpression> GetIncludeElements(IReadOnlyCollection<IncludeElementExpression> includeElements, ResourceContext resourceContext)
+        {
+            var resourceDefinition = _resourceDefinitionProvider.Get(resourceContext.ResourceType);
+            if (resourceDefinition != null)
+            {
+                includeElements = resourceDefinition.OnApplyIncludes(includeElements);
+            }
+
+            return includeElements;
         }
 
         protected virtual FilterExpression GetFilter(IEnumerable<QueryExpression> expressionsInScope, ResourceContext resourceContext)
@@ -209,11 +253,13 @@ namespace JsonApiDotNetCore.Internal.Queries
                 attributes = tempExpression == null ? new HashSet<AttrAttribute>() : tempExpression.Attributes.ToHashSet();
             }
 
-            if (attributes.Any())
+            if (!attributes.Any())
             {
-                var idAttribute = resourceContext.Attributes.Single(x => x.Property.Name == nameof(Identifiable.Id));
-                attributes.Add(idAttribute);
+                return null;
             }
+
+            var idAttribute = resourceContext.Attributes.Single(x => x.Property.Name == nameof(Identifiable.Id));
+            attributes.Add(idAttribute);
 
             return attributes.Cast<ResourceFieldAttribute>().ToDictionary(key => key, value => (QueryLayer) null);
         }

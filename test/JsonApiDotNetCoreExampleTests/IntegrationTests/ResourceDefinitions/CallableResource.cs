@@ -30,5 +30,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
         [HasMany]
         public ICollection<CallableResource> Children { get; set; }
+
+        [HasOne]
+        public CallableResource Owner { get; set; }
     }
 }

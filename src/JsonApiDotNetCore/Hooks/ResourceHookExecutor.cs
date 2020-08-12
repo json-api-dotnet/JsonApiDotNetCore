@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Hooks
                 .OfType<IncludeExpression>()
                 .ToArray();
 
-            foreach (var chain in includes.SelectMany(include => include.Chains))
+            foreach (var chain in includes.SelectMany(IncludeChainConverter.GetRelationshipChains))
             {
                 RecursiveBeforeRead(chain.Fields.Cast<RelationshipAttribute>().ToList(), pipeline, calledContainers);
             }

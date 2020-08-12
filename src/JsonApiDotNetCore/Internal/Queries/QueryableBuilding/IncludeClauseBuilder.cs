@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
         {
             var source = ApplyEagerLoads(_source, _resourceContext.EagerLoads, null);
 
-            foreach (ResourceFieldChainExpression chain in expression.Chains)
+            foreach (ResourceFieldChainExpression chain in IncludeChainConverter.GetRelationshipChains(expression))
             {
                 string path = null;
 
