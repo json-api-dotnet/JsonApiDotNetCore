@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.QueryStrings;
@@ -15,7 +16,7 @@ namespace UnitTests.QueryStringParameters
 
         public IncludeParseTests()
         {
-            _reader = new IncludeQueryStringParameterReader(CurrentRequest, ResourceGraph);
+            _reader = new IncludeQueryStringParameterReader(CurrentRequest, ResourceGraph, new JsonApiOptions());
         }
 
         [Theory]

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -20,12 +22,14 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
 
     public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIncludeQueryStringParameterReader
     {
+        private readonly IJsonApiOptions _options;
         private IncludeExpression _includeExpression;
         private string _lastParameterName;
 
-        public IncludeQueryStringParameterReader(ICurrentRequest currentRequest, IResourceContextProvider resourceContextProvider)
+        public IncludeQueryStringParameterReader(ICurrentRequest currentRequest, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
             : base(currentRequest, resourceContextProvider)
         {
+            _options = options;
         }
 
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
@@ -58,7 +62,31 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             var parser = new IncludeParser(parameterValue,
                 (path, _) => ChainResolver.ResolveRelationshipChain(RequestResource, path, ValidateInclude));
 
-            return parser.Parse();
+            IncludeExpression include = parser.Parse();
+
+            ValidateMaximumIncludeDepth(include);
+
+            return include;
+        }
+
+        private void ValidateMaximumIncludeDepth(IncludeExpression include)
+        {
+            if (_options.MaximumIncludeDepth != null)
+            {
+                var chains = IncludeChainConverter.GetRelationshipChains(include);
+
+                foreach (var chain in chains)
+                {
+                    if (chain.Fields.Count > _options.MaximumIncludeDepth)
+                    {
+                        var path = string.Join('.', chain.Fields.Select(field => field.PublicName));
+
+                        throw new InvalidQueryStringParameterException(_lastParameterName,
+                            "Including at the requested depth is not allowed.",
+                            $"Including '{path}' exceeds the maximum inclusion depth of {_options.MaximumIncludeDepth}.");
+                    }
+                }
+            }
         }
 
         private void ValidateInclude(RelationshipAttribute relationship, ResourceContext resourceContext, string path)

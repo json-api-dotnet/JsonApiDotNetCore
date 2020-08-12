@@ -4,6 +4,8 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using JsonApiDotNetCore;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCore.Services;
@@ -27,6 +29,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Includes
             {
                 services.AddScoped<IResourceService<Article>, JsonApiResourceService<Article>>();
             });
+
+            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.MaximumIncludeDepth = null;
         }
 
         [Fact]
@@ -785,6 +790,53 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Includes
             responseDocument.Included[0].Type.Should().Be("people");
             responseDocument.Included[0].Id.Should().Be(todoItems[0].Owner.StringId);
             responseDocument.Included[0].Attributes["firstName"].Should().Be(todoItems[0].Owner.FirstName);
+        }
+
+        [Fact]
+        public async Task Can_include_at_configured_maximum_inclusion_depth()
+        {
+            // Arrange
+            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.MaximumIncludeDepth = 1;
+
+            var blog = new Blog();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Blogs.Add(blog);
+
+                await dbContext.SaveChangesAsync();
+            });
+
+            var route = $"/api/v1/blogs/{blog.StringId}/articles?include=author,revisions";
+
+            // Act
+            var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task Cannot_exceed_configured_maximum_inclusion_depth()
+        {
+            // Arrange
+            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.MaximumIncludeDepth = 1;
+
+            var route = "/api/v1/blogs/123/owner?include=articles.revisions";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+            
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            responseDocument.Errors[0].Title.Should().Be("Including at the requested depth is not allowed.");
+            responseDocument.Errors[0].Detail.Should().Be("Including 'articles.revisions' exceeds the maximum inclusion depth of 1.");
+            responseDocument.Errors[0].Source.Parameter.Should().Be("include");
         }
     }
 }

@@ -163,7 +163,12 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         bool AllowQueryStringOverrideForSerializerDefaultValueHandling { get; }
 
-        // TODO: Add MaximumIncludeDepth
+        /// <summary>
+        /// Controls how many levels deep includes are allowed to be nested.
+        /// For example, MaximumIncludeDepth=1 would allow ?include=articles but not ?include=articles.revisions.
+        /// <c>null</c> by default, which means unconstrained.
+        /// </summary>
+        int? MaximumIncludeDepth { get; }
 
         /// <summary>
         /// Specifies the settings that are used by the <see cref="JsonSerializer"/>.

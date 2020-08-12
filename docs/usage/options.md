@@ -65,10 +65,18 @@ options.UseRelativeLinks = true;
 ## Unknown Query String Parameters
 
 If you would like to use unknown query string parameters (parameters not reserved by the json:api specification or registered using ResourceDefinitions), you can set `AllowUnknownQueryStringParameters = true`.
-When set, an HTTP 400 Bad Request for unknown query string parameters.
+When set, an HTTP 400 Bad Request is returned for unknown query string parameters.
 
 ```c#
 options.AllowUnknownQueryStringParameters = true;
+```
+
+## Maximum include depth
+
+To limit the maximum depth of nested includes, use `MaximumIncludeDepth`. This is null by default, which means unconstrained. If set and a request exceeds the limit, an HTTP 400 Bad Request is returned.
+
+```c#
+options.MaximumIncludeDepth = 1;
 ```
 
 ## Custom Serializer Settings
@@ -81,6 +89,8 @@ options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 options.SerializerSettings.Converters.Add(new StringEnumConverter());
 options.SerializerSettings.Formatting = Formatting.Indented;
 ```
+
+Because we copy resource properties into an intermediate object before serialization, Newtonsoft.Json annotations on properties are ignored.
 
 ## Enable ModelState Validation
 

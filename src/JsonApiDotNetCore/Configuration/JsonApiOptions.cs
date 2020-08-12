@@ -68,6 +68,8 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc/>
         public bool AllowQueryStringOverrideForSerializerDefaultValueHandling { get; set; }
 
+        public int? MaximumIncludeDepth { get; set; }
+
         /// <inheritdoc/>
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings
         {
