@@ -6,9 +6,9 @@ using System.Web;
 using FluentAssertions;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Queries.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 

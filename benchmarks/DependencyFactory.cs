@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Services.Contract;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 

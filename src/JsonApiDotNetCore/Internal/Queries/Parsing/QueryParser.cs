@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
-using JsonApiDotNetCore.Internal.QueryStrings;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
+    /// <summary>
+    /// Base class for parsing query string parameters.
+    /// </summary>
     public abstract class QueryParser
     {
         private protected ResourceFieldChainResolver ChainResolver { get; }
@@ -18,6 +20,9 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
             ChainResolver = new ResourceFieldChainResolver(resourceContextProvider);
         }
 
+        /// <summary>
+        /// Takes a dotted path and walks the resource graph to produce a chain of fields.
+        /// </summary>
         protected abstract IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements);
 
         protected virtual void Tokenize(string source)

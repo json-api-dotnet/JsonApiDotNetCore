@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCoreExample.Services;
 using Microsoft.AspNetCore.Authentication;
 using Newtonsoft.Json;

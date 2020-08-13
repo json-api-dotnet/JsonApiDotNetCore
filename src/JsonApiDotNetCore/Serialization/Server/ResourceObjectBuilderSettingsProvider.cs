@@ -1,5 +1,5 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.QueryStrings;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {

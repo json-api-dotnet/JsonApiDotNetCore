@@ -5,23 +5,17 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Queries;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Internal.Queries.Parsing;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.RequestServices.Contracts;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Internal.QueryStrings
 {
-    /// <summary>
-    /// Reads the 'filter' query string parameter and produces a set of query constraints from it.
-    /// </summary>
-    public interface IFilterQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider
-    {
-    }
-
     public class FilterQueryStringParameterReader : QueryStringParameterReader, IFilterQueryStringParameterReader
     {
         private static readonly LegacyFilterNotationConverter _legacyConverter = new LegacyFilterNotationConverter();
@@ -52,17 +46,20 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             }
         }
 
+        /// <inheritdoc/>
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
             return !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Filter);
         }
 
+        /// <inheritdoc/>
         public bool CanRead(string parameterName)
         {
             var isNested = parameterName.StartsWith("filter[") && parameterName.EndsWith("]");
             return parameterName == "filter" || isNested;
         }
 
+        /// <inheritdoc/>
         public void Read(string parameterName, StringValues parameterValues)
         {
             _lastParameterName = parameterName;
@@ -128,6 +125,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             }
         }
 
+        /// <inheritdoc/>
         public IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             return EnumerateFiltersInScopes().ToList().AsReadOnly();

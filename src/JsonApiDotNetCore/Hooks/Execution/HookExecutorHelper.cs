@@ -12,9 +12,9 @@ using RightType = System.Type;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Queries;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Hooks
 {

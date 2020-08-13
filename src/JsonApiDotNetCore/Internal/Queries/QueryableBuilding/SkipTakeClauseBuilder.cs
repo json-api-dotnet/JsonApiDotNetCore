@@ -1,9 +1,13 @@
 using System;
+using System.Linq;
 using System.Linq.Expressions;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
+using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
 {
+    /// <summary>
+    /// Transforms <see cref="PaginationExpression"/> into <see cref="Queryable.Skip{TSource}"/> and <see cref="Queryable.Take{TSource}"/> calls.
+    /// </summary>
     public class SkipTakeClauseBuilder : QueryClauseBuilder<object>
     {
         private readonly Expression _source;

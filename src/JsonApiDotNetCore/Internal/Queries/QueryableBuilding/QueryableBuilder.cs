@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
 {
+    /// <summary>
+    /// Drives conversion from <see cref="QueryLayer"/> into system <see cref="Expression"/> trees.
+    /// </summary>
     public sealed class QueryableBuilder
     {
         private readonly Expression _source;

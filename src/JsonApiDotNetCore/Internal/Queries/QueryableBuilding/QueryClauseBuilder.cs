@@ -4,11 +4,14 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
 {
+    /// <summary>
+    /// Base class for transforming <see cref="QueryExpression"/> trees into system <see cref="Expression"/> trees.
+    /// </summary>
     public abstract class QueryClauseBuilder<TArgument> : QueryExpressionVisitor<TArgument, Expression>
     {
         protected LambdaScope LambdaScope { get; }

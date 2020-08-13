@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.QueryStrings;
 using Newtonsoft.Json;
 using Xunit;
 

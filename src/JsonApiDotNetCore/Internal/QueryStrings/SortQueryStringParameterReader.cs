@@ -2,23 +2,17 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Queries;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Internal.Queries.Parsing;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.RequestServices.Contracts;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Internal.QueryStrings
 {
-    /// <summary>
-    /// Reads the 'sort' query string parameter and produces a set of query constraints from it.
-    /// </summary>
-    public interface ISortQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider
-    {
-    }
-
     public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQueryStringParameterReader
     {
         private readonly QueryStringParameterScopeParser _scopeParser;
@@ -42,17 +36,20 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             }
         }
 
+        /// <inheritdoc/>
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
             return !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Sort);
         }
 
+        /// <inheritdoc/>
         public bool CanRead(string parameterName)
         {
             var isNested = parameterName.StartsWith("sort[") && parameterName.EndsWith("]");
             return parameterName == "sort" || isNested;
         }
 
+        /// <inheritdoc/>
         public void Read(string parameterName, StringValues parameterValue)
         {
             _lastParameterName = parameterName;
@@ -89,6 +86,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             return _sortParser.Parse(parameterValue, resourceContextInScope);
         }
 
+        /// <inheritdoc/>
         public IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             return _constraints.AsReadOnly();

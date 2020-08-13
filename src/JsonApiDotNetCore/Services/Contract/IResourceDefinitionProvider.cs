@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Query
+namespace JsonApiDotNetCore.Services.Contract
 {
     /// <summary>
     /// Retrieves a <see cref="ResourceDefinition{TResource}"/> from the DI container.

@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Services.Contract;
 
 namespace JsonApiDotNetCore.Internal.Queries
 {
-    public interface IQueryLayerComposer
-    {
-        FilterExpression GetTopFilter();
-        QueryLayer Compose(ResourceContext requestResource);
-    }
-
+    /// <inheritdoc/>
     public class QueryLayerComposer : IQueryLayerComposer
     {
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
@@ -38,6 +34,7 @@ namespace JsonApiDotNetCore.Internal.Queries
             _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
         }
 
+        /// <inheritdoc/>
         public FilterExpression GetTopFilter()
         {
             var constraints = _constraintProviders.SelectMany(p => p.GetConstraints()).ToArray();
@@ -61,6 +58,7 @@ namespace JsonApiDotNetCore.Internal.Queries
             return new LogicalExpression(LogicalOperator.And, topFilters);
         }
 
+        /// <inheritdoc/>
         public QueryLayer Compose(ResourceContext requestResource)
         {
             if (requestResource == null)

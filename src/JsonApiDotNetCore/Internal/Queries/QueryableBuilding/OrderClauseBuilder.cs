@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
 {
+    /// <summary>
+    /// Transforms <see cref="SortExpression"/> into <see cref="Queryable.OrderBy{TSource, TKey}(IQueryable{TSource}, Expression{Func{TSource, TKey}})"/> calls.
+    /// </summary>
     public class OrderClauseBuilder : QueryClauseBuilder<Expression>
     {
         private readonly Expression _source;

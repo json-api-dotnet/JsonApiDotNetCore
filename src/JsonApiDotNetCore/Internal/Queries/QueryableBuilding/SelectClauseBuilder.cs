@@ -5,14 +5,19 @@ using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
 {
+    /// <summary>
+    /// Transforms <see cref="SparseFieldSetExpression"/> into <see cref="Queryable.Select{TSource, TKey}(IQueryable{TSource}, Expression{Func{TSource, TKey}})"/> calls.
+    /// </summary>
     public class SelectClauseBuilder : QueryClauseBuilder<object>
     {
-        private static readonly ConstantExpression NullConstant = Expression.Constant(null);
+        private static readonly ConstantExpression _nullConstant = Expression.Constant(null);
 
         private readonly Expression _source;
         private readonly IModel _entityModel;
@@ -187,8 +192,8 @@ namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
 
         private static Expression TestForNull(Expression expressionToTest, Expression ifFalseExpression)
         {
-            BinaryExpression equalsNull = Expression.Equal(expressionToTest, NullConstant);
-            return Expression.Condition(equalsNull, Expression.Convert(NullConstant, expressionToTest.Type), ifFalseExpression);
+            BinaryExpression equalsNull = Expression.Equal(expressionToTest, _nullConstant);
+            return Expression.Condition(equalsNull, Expression.Convert(_nullConstant, expressionToTest.Type), ifFalseExpression);
         }
 
         private Expression SelectExtensionMethodCall(Expression source, Type elementType, Expression selectorBody)

@@ -5,9 +5,9 @@ using System.Net;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Queries.Expressions;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions

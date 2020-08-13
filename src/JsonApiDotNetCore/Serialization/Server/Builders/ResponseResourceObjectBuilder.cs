@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Queries;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
-using JsonApiDotNetCore.Internal.QueryStrings;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 
 namespace JsonApiDotNetCore.Serialization.Server

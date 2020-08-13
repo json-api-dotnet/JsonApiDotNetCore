@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Internal.Queries.Parsing;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.RequestServices.Contracts;
 
 namespace JsonApiDotNetCore.Internal.QueryStrings
@@ -14,7 +14,6 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
         private readonly bool _isCollectionRequest;
 
         protected ResourceContext RequestResource { get; }
-        private protected ResourceFieldChainResolver ChainResolver { get; }
 
         protected QueryStringParameterReader(ICurrentRequest currentRequest, IResourceContextProvider resourceContextProvider)
         {
@@ -26,7 +25,6 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _isCollectionRequest = currentRequest.IsCollection;
             RequestResource = currentRequest.SecondaryResource ?? currentRequest.PrimaryResource;
-            ChainResolver = new ResourceFieldChainResolver(resourceContextProvider);
         }
 
         protected ResourceContext GetResourceContextForScope(ResourceFieldChainExpression scope)

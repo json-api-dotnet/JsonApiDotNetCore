@@ -6,7 +6,7 @@ using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Queries;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.RequestServices;
 using JsonApiDotNetCore.RequestServices.Contracts;
 

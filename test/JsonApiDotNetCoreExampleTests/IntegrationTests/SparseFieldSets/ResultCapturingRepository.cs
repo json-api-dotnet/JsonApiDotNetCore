@@ -4,8 +4,8 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
-using JsonApiDotNetCore.Internal.Queries;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.Extensions.Logging;
 

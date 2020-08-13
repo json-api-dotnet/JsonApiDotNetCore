@@ -1,7 +1,7 @@
 using System;
 using System.Net;
-using JsonApiDotNetCore.Internal.Queries;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Queries;
 
 namespace JsonApiDotNetCore.Exceptions
 {

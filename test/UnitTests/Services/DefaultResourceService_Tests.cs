@@ -9,7 +9,7 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Queries;
-using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.RequestServices;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;

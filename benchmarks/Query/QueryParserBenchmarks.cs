@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.RequestServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;

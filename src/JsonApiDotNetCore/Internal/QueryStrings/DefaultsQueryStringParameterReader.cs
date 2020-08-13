@@ -1,19 +1,13 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
+using JsonApiDotNetCore.QueryStrings;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Internal.QueryStrings
 {
-    public interface IDefaultsQueryStringParameterReader : IQueryStringParameterReader
-    {
-        /// <summary>
-        /// Contains the effective value of default configuration and query string override, after parsing has occured.
-        /// </summary>
-        DefaultValueHandling SerializerDefaultValueHandling { get; }
-    }
-
+    /// <inheritdoc/>
     public class DefaultsQueryStringParameterReader : IDefaultsQueryStringParameterReader
     {
         private readonly IJsonApiOptions _options;
@@ -27,17 +21,20 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             _options = options;
         }
 
+        /// <inheritdoc/>
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
             return _options.AllowQueryStringOverrideForSerializerDefaultValueHandling &&
                    !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Defaults);
         }
 
+        /// <inheritdoc/>
         public bool CanRead(string parameterName)
         {
             return parameterName == "defaults";
         }
 
+        /// <inheritdoc/>
         public void Read(string parameterName, StringValues parameterValue)
         {
             if (!bool.TryParse(parameterValue, out var result))

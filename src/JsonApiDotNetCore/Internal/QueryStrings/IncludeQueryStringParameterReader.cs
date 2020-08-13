@@ -4,22 +4,16 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Queries;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Internal.Queries.Parsing;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.RequestServices.Contracts;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Internal.QueryStrings
 {
-    /// <summary>
-    /// Reads the 'include' query string parameter and produces a set of query constraints from it.
-    /// </summary>
-    public interface IIncludeQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider
-    {
-    }
-
     public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIncludeQueryStringParameterReader
     {
         private readonly IJsonApiOptions _options;
@@ -47,16 +41,19 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             }
         }
 
+        /// <inheritdoc/>
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
             return !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Include);
         }
 
+        /// <inheritdoc/>
         public bool CanRead(string parameterName)
         {
             return parameterName == "include";
         }
 
+        /// <inheritdoc/>
         public void Read(string parameterName, StringValues parameterValue)
         {
             _lastParameterName = parameterName;
@@ -77,6 +74,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             return _includeParser.Parse(parameterValue, RequestResource, _options.MaximumIncludeDepth);
         }
 
+        /// <inheritdoc/>
         public IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             var expressionInScope = _includeExpression != null

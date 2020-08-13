@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries.Expressions;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
 {
+    /// <summary>
+    /// Transforms <see cref="IncludeExpression"/> into <see cref="EntityFrameworkQueryableExtensions.Include{TEntity, TProperty}"/> calls.
+    /// </summary>
     public class IncludeClauseBuilder : QueryClauseBuilder<object>
     {
         private readonly Expression _source;

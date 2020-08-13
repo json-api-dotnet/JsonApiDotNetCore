@@ -6,6 +6,7 @@ using JsonApiDotNetCore;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.QueryStrings;
 using Xunit;
 
 namespace UnitTests.QueryStringParameters

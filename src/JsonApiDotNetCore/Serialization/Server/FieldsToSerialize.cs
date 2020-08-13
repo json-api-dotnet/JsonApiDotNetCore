@@ -2,11 +2,11 @@ using JsonApiDotNetCore.Internal.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Internal.Queries;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Services.Contract;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {

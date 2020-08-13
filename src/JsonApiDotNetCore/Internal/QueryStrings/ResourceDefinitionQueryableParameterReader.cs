@@ -1,23 +1,16 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal.Queries;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.RequestServices.Contracts;
+using JsonApiDotNetCore.Services.Contract;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Internal.QueryStrings
 {
-    /// <summary>
-    /// Reads custom query string parameters for which handlers on <see cref="ResourceDefinition{TResource}"/> are registered
-    /// and produces a set of query constraints from it.
-    /// </summary>
-    public interface IResourceDefinitionQueryableParameterReader : IQueryStringParameterReader, IQueryConstraintProvider
-    {
-    }
-
+    /// <inheritdoc/>
     public class ResourceDefinitionQueryableParameterReader : IResourceDefinitionQueryableParameterReader
     {
         private readonly ICurrentRequest _currentRequest;
@@ -30,17 +23,20 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             _resourceDefinitionProvider = resourceDefinitionProvider;
         }
 
+        /// <inheritdoc/>
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
             return true;
         }
 
+        /// <inheritdoc/>
         public bool CanRead(string parameterName)
         {
             var queryableHandler = GetQueryableHandler(parameterName);
             return queryableHandler != null;
         }
 
+        /// <inheritdoc/>
         public void Read(string parameterName, StringValues parameterValue)
         {
             var queryableHandler = GetQueryableHandler(parameterName);
@@ -62,6 +58,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             return resourceDefinition?.GetQueryableHandlerForQueryStringParameter(parameterName);
         }
 
+        /// <inheritdoc/>
         public IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             return _constraints.AsReadOnly();

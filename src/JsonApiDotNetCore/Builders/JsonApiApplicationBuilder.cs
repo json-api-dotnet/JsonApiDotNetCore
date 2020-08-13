@@ -16,12 +16,14 @@ using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Queries;
 using JsonApiDotNetCore.Internal.QueryStrings;
-using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using JsonApiDotNetCore.RequestServices;
 using JsonApiDotNetCore.RequestServices.Contracts;
+using JsonApiDotNetCore.Services.Contract;
 
 namespace JsonApiDotNetCore.Builders
 {

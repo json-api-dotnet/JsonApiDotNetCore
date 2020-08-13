@@ -3,6 +3,7 @@ using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
+using JsonApiDotNetCore.QueryStrings;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Internal.QueryStrings

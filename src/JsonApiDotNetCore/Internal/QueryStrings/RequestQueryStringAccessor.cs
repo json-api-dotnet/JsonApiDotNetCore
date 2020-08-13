@@ -1,7 +1,9 @@
+using JsonApiDotNetCore.QueryStrings;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Internal.QueryStrings
 {
+    /// <inheritdoc/>
     internal sealed class RequestQueryStringAccessor : IRequestQueryStringAccessor
     {
         private readonly IHttpContextAccessor _httpContextAccessor;

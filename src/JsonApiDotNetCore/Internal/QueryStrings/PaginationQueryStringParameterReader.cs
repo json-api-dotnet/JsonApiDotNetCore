@@ -5,21 +5,15 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Queries;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Internal.Queries.Parsing;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.RequestServices.Contracts;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Internal.QueryStrings
 {
-    /// <summary>
-    /// Reads the 'page' query string parameter and produces a set of query constraints from it.
-    /// </summary>
-    public interface IPaginationQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider
-    {
-    }
-
     public class PaginationQueryStringParameterReader : QueryStringParameterReader, IPaginationQueryStringParameterReader
     {
         private const string _pageSizeParameterName = "page[size]";
@@ -38,16 +32,19 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             _paginationParser = new PaginationParser(resourceContextProvider);
         }
 
+        /// <inheritdoc/>
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
             return !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Page);
         }
 
+        /// <inheritdoc/>
         public bool CanRead(string parameterName)
         {
             return parameterName == _pageSizeParameterName || parameterName == _pageNumberParameterName;
         }
 
+        /// <inheritdoc/>
         public void Read(string parameterName, StringValues parameterValue)
         {
             try
@@ -116,6 +113,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             }
         }
 
+        /// <inheritdoc/>
         public IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             var context = new PaginationContext();

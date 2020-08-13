@@ -4,6 +4,9 @@ using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
 {
+    /// <summary>
+    /// Contains details on a lambda expression, such as the name of the selector "x" in "x => x.Name".
+    /// </summary>
     public sealed class LambdaScope : IDisposable
     {
         private readonly LambdaParameterNameScope _parameterNameScope;

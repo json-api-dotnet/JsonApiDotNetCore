@@ -5,10 +5,10 @@ using System.Text;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.QueryStrings;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.RequestServices.Contracts;
 using Microsoft.AspNetCore.Http;
 

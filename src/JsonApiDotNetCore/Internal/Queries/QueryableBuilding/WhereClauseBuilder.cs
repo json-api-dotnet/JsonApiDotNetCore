@@ -4,14 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
 {
+    /// <summary>
+    /// Transforms <see cref="FilterExpression"/> into <see cref="Queryable.Where{TSource}(IQueryable{TSource}, Expression{Func{TSource, bool}})"/> calls.
+    /// </summary>
     public class WhereClauseBuilder : QueryClauseBuilder<Type>
     {
-        private static readonly ConstantExpression NullConstant = Expression.Constant(null);
+        private static readonly ConstantExpression _nullConstant = Expression.Constant(null);
 
         private readonly Expression _source;
         private readonly Type _extensionType;
@@ -249,7 +252,7 @@ namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
 
         public override Expression VisitNullConstant(NullConstantExpression expression, Type expressionType)
         {
-            return NullConstant;
+            return _nullConstant;
         }
 
         public override Expression VisitLiteralConstant(LiteralConstantExpression expression, Type expressionType)

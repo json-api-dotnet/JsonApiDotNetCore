@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
-using JsonApiDotNetCore.Internal.Queries.Expressions;
+using JsonApiDotNetCore.Queries.Expressions;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Models
@@ -154,7 +154,7 @@ namespace JsonApiDotNetCore.Models
 
         /// <summary>
         /// Enables to extend, replace or remove a sparse fieldset that is being applied on a set of this resource type.
-        /// Tip: Use <see cref="SparseFieldSetExtensions.Including{TResource}"/> and <see cref="SparseFieldSetExtensions.Excluding{TResource}"/>
+        /// Tip: Use <see cref="SparseFieldSetExpressionExtensions.Including{TResource}"/> and <see cref="SparseFieldSetExpressionExtensions.Excluding{TResource}"/>
         /// to safely change the fieldset without worrying about nulls.
         /// </summary>
         /// <remarks>
