@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
@@ -75,31 +74,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
 
         private IncludeExpression GetInclude(string parameterValue)
         {
-            IncludeExpression include = _includeParser.Parse(parameterValue, RequestResource);
-
-            ValidateMaximumIncludeDepth(include);
-
-            return include;
-        }
-
-        private void ValidateMaximumIncludeDepth(IncludeExpression include)
-        {
-            if (_options.MaximumIncludeDepth != null)
-            {
-                var chains = IncludeChainConverter.GetRelationshipChains(include);
-
-                foreach (var chain in chains)
-                {
-                    if (chain.Fields.Count > _options.MaximumIncludeDepth)
-                    {
-                        var path = string.Join('.', chain.Fields.Select(field => field.PublicName));
-
-                        throw new InvalidQueryStringParameterException(_lastParameterName,
-                            "Including at the requested depth is not allowed.",
-                            $"Including '{path}' exceeds the maximum inclusion depth of {_options.MaximumIncludeDepth}.");
-                    }
-                }
-            }
+            return _includeParser.Parse(parameterValue, RequestResource, _options.MaximumIncludeDepth);
         }
 
         public IReadOnlyCollection<ExpressionInScope> GetConstraints()

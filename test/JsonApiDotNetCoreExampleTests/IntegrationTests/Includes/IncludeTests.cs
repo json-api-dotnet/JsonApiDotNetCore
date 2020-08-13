@@ -833,7 +833,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Includes
             
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Including at the requested depth is not allowed.");
+            responseDocument.Errors[0].Title.Should().Be("The specified include is invalid.");
             responseDocument.Errors[0].Detail.Should().Be("Including 'articles.revisions' exceeds the maximum inclusion depth of 1.");
             responseDocument.Errors[0].Source.Parameter.Should().Be("include");
         }
