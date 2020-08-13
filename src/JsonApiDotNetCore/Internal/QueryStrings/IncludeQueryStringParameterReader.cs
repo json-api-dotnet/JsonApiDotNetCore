@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
@@ -23,13 +24,28 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
     public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIncludeQueryStringParameterReader
     {
         private readonly IJsonApiOptions _options;
+        private readonly IncludeParser _includeParser;
+
         private IncludeExpression _includeExpression;
         private string _lastParameterName;
 
         public IncludeQueryStringParameterReader(ICurrentRequest currentRequest, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
             : base(currentRequest, resourceContextProvider)
         {
-            _options = options;
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _includeParser = new IncludeParser(resourceContextProvider, ValidateSingleRelationship);
+        }
+
+        private void ValidateSingleRelationship(RelationshipAttribute relationship, ResourceContext resourceContext, string path)
+        {
+            if (!relationship.CanInclude)
+            {
+                throw new InvalidQueryStringParameterException(_lastParameterName,
+                    "Including the requested relationship is not allowed.",
+                    path == relationship.PublicName
+                        ? $"Including the relationship '{relationship.PublicName}' on '{resourceContext.ResourceName}' is not allowed."
+                        : $"Including the relationship '{relationship.PublicName}' in '{path}' on '{resourceContext.ResourceName}' is not allowed.");
+            }
         }
 
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
@@ -59,10 +75,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
 
         private IncludeExpression GetInclude(string parameterValue)
         {
-            var parser = new IncludeParser(parameterValue,
-                (path, _) => ChainResolver.ResolveRelationshipChain(RequestResource, path, ValidateInclude));
-
-            IncludeExpression include = parser.Parse();
+            IncludeExpression include = _includeParser.Parse(parameterValue, RequestResource);
 
             ValidateMaximumIncludeDepth(include);
 
@@ -86,18 +99,6 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
                             $"Including '{path}' exceeds the maximum inclusion depth of {_options.MaximumIncludeDepth}.");
                     }
                 }
-            }
-        }
-
-        private void ValidateInclude(RelationshipAttribute relationship, ResourceContext resourceContext, string path)
-        {
-            if (!relationship.CanInclude)
-            {
-                throw new InvalidQueryStringParameterException(_lastParameterName,
-                    "Including the requested relationship is not allowed.",
-                    path == relationship.PublicName
-                        ? $"Including the relationship '{relationship.PublicName}' on '{resourceContext.ResourceName}' is not allowed."
-                        : $"Including the relationship '{relationship.PublicName}' in '{path}' on '{resourceContext.ResourceName}' is not allowed.");
             }
         }
 

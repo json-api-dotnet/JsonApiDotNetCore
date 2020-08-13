@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Internal.QueryStrings
 {
-    public class ResourceFieldChainResolver
+    internal class ResourceFieldChainResolver
     {
         private readonly IResourceContextProvider _resourceContextProvider;
 

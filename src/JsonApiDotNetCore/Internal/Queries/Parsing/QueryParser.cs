@@ -1,20 +1,27 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Queries.Expressions;
+using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
     public abstract class QueryParser
     {
-        private readonly ResolveFieldChainCallback _resolveFieldChainCallback;
+        private protected ResourceFieldChainResolver ChainResolver { get; }
 
-        protected Stack<Token> TokenStack { get; }
+        protected Stack<Token> TokenStack { get; private set; }
 
-        protected QueryParser(string source, ResolveFieldChainCallback resolveFieldChainCallback)
+        protected QueryParser(IResourceContextProvider resourceContextProvider)
         {
-            _resolveFieldChainCallback = resolveFieldChainCallback ?? throw new ArgumentNullException(nameof(resolveFieldChainCallback));
+            ChainResolver = new ResourceFieldChainResolver(resourceContextProvider);
+        }
 
+        protected abstract IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements);
+
+        protected virtual void Tokenize(string source)
+        {
             var tokenizer = new QueryTokenizer(source);
             TokenStack = new Stack<Token>(tokenizer.EnumerateTokens().Reverse());
         }
@@ -23,7 +30,7 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
         {
             if (TokenStack.TryPop(out Token token) && token.Kind == TokenKind.Text)
             {
-                var chain = _resolveFieldChainCallback(token.Value, chainRequirements);
+                var chain = OnResolveFieldChain(token.Value, chainRequirements);
                 if (chain.Any())
                 {
                     return new ResourceFieldChainExpression(chain);

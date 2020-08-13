@@ -26,6 +26,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
         private const string _pageNumberParameterName = "page[number]";
 
         private readonly IJsonApiOptions _options;
+        private readonly PaginationParser _paginationParser;
 
         private PaginationQueryStringValueExpression _pageSizeConstraint;
         private PaginationQueryStringValueExpression _pageNumberConstraint;
@@ -33,7 +34,8 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
         public PaginationQueryStringParameterReader(ICurrentRequest currentRequest, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
             : base(currentRequest, resourceContextProvider)
         {
-            _options = options;
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _paginationParser = new PaginationParser(resourceContextProvider);
         }
 
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
@@ -76,10 +78,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
 
         private PaginationQueryStringValueExpression GetPageConstraint(string parameterValue)
         {
-            var parser = new PaginationParser(parameterValue,
-                (path, _) => ChainResolver.ResolveToManyChain(RequestResource, path));
-
-            return parser.Parse();
+            return _paginationParser.Parse(parameterValue, RequestResource);
         }
 
         private void ValidatePageSize(PaginationQueryStringValueExpression constraint)

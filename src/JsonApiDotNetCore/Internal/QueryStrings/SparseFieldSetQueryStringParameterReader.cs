@@ -21,13 +21,25 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
 
     public class SparseFieldSetQueryStringParameterReader : QueryStringParameterReader, ISparseFieldSetQueryStringParameterReader
     {
+        private readonly QueryStringParameterScopeParser _scopeParser;
+        private readonly SparseFieldSetParser _sparseFieldSetParser;
         private readonly List<ExpressionInScope> _constraints = new List<ExpressionInScope>();
-
         private string _lastParameterName;
 
         public SparseFieldSetQueryStringParameterReader(ICurrentRequest currentRequest, IResourceContextProvider resourceContextProvider)
             : base(currentRequest, resourceContextProvider)
         {
+            _sparseFieldSetParser = new SparseFieldSetParser(resourceContextProvider, ValidateSingleAttribute);
+            _scopeParser = new QueryStringParameterScopeParser(resourceContextProvider, FieldChainRequirements.IsRelationship);
+        }
+
+        private void ValidateSingleAttribute(AttrAttribute attribute, ResourceContext resourceContext, string path)
+        {
+            if (!attribute.Capabilities.HasFlag(AttrCapabilities.AllowView))
+            {
+                throw new InvalidQueryStringParameterException(_lastParameterName, "Retrieving the requested attribute is not allowed.",
+                    $"Retrieving the attribute '{attribute.PublicName}' is not allowed.");
+            }
         }
 
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
@@ -62,39 +74,14 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
 
         private ResourceFieldChainExpression GetScope(string parameterName)
         {
-            var parser = new QueryStringParameterScopeParser(parameterName,
-                (path, _) => ChainResolver.ResolveRelationshipChain(RequestResource, path));
-
-            var parameterScope = parser.Parse(FieldChainRequirements.IsRelationship);
+            var parameterScope = _scopeParser.Parse(parameterName, RequestResource);
             return parameterScope.Scope;
         }
 
         private SparseFieldSetExpression GetSparseFieldSet(string parameterValue, ResourceFieldChainExpression scope)
         {
             ResourceContext resourceContextInScope = GetResourceContextForScope(scope);
-
-            var parser = new SparseFieldSetParser(parameterValue, 
-                (path, _) => ResolveSingleAttribute(path, resourceContextInScope));
-
-            return parser.Parse();
-        }
-
-        protected IReadOnlyCollection<ResourceFieldAttribute> ResolveSingleAttribute(string path, ResourceContext resourceContext)
-        {
-            var attribute = ChainResolver.GetAttribute(path, resourceContext, path);
-
-            ValidateAttribute(attribute);
-
-            return new[] {attribute};
-        }
-
-        private void ValidateAttribute(AttrAttribute attribute)
-        {
-            if (!attribute.Capabilities.HasFlag(AttrCapabilities.AllowView))
-            {
-                throw new InvalidQueryStringParameterException(_lastParameterName, "Retrieving the requested attribute is not allowed.",
-                    $"Retrieving the attribute '{attribute.PublicName}' is not allowed.");
-            }
+            return _sparseFieldSetParser.Parse(parameterValue, resourceContextInScope);
         }
 
         public IReadOnlyCollection<ExpressionInScope> GetConstraints()

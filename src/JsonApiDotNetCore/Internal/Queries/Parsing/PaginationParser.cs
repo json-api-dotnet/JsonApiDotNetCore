@@ -1,18 +1,29 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Queries.Expressions;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
     public class PaginationParser : QueryParser
     {
-        public PaginationParser(string source, ResolveFieldChainCallback resolveFieldChainCallback)
-            : base(source, resolveFieldChainCallback)
+        private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
+        private ResourceContext _resourceContextInScope;
+
+        public PaginationParser(IResourceContextProvider resourceContextProvider,
+            Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
+            : base(resourceContextProvider)
         {
+            _validateSingleFieldCallback = validateSingleFieldCallback;
         }
 
-        public PaginationQueryStringValueExpression Parse()
+        public PaginationQueryStringValueExpression Parse(string source, ResourceContext resourceContextInScope)
         {
+            _resourceContextInScope = resourceContextInScope ?? throw new ArgumentNullException(nameof(resourceContextInScope));
+            Tokenize(source);
+
             var expression = ParsePagination();
 
             AssertTokenStackIsEmpty();
@@ -86,6 +97,11 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
             }
 
             return null;
+        }
+
+        protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+        {
+            return ChainResolver.ResolveToManyChain(_resourceContextInScope, path, _validateSingleFieldCallback);
         }
     }
 }

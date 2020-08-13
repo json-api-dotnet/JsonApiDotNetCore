@@ -26,8 +26,10 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
     {
         private static readonly LegacyFilterNotationConverter _legacyConverter = new LegacyFilterNotationConverter();
 
-        private readonly IResourceFactory _resourceFactory;
         private readonly IJsonApiOptions _options;
+        private readonly QueryStringParameterScopeParser _scopeParser;
+        private readonly FilterParser _filterParser;
+
         private readonly List<FilterExpression> _filtersInGlobalScope = new List<FilterExpression>();
         private readonly Dictionary<ResourceFieldChainExpression, List<FilterExpression>> _filtersPerScope = new Dictionary<ResourceFieldChainExpression, List<FilterExpression>>();
         private string _lastParameterName;
@@ -36,8 +38,18 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory, IJsonApiOptions options)
             : base(currentRequest, resourceContextProvider)
         {
-            _resourceFactory = resourceFactory;
-            _options = options;
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _scopeParser = new QueryStringParameterScopeParser(resourceContextProvider, FieldChainRequirements.EndsInToMany);
+            _filterParser = new FilterParser(resourceContextProvider, resourceFactory, ValidateSingleField);
+        }
+
+        private void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)
+        {
+            if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowFilter))
+            {
+                throw new InvalidQueryStringParameterException(_lastParameterName, "Filtering on the requested attribute is not allowed.",
+                    $"Filtering on attribute '{attribute.PublicName}' is not allowed.");
+            }
         }
 
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
@@ -83,10 +95,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
 
         private ResourceFieldChainExpression GetScope(string parameterName)
         {
-            var parser = new QueryStringParameterScopeParser(parameterName,
-                (path, _) => ChainResolver.ResolveToManyChain(RequestResource, path));
-
-            var parameterScope = parser.Parse(FieldChainRequirements.EndsInToMany);
+            var parameterScope = _scopeParser.Parse(parameterName, RequestResource);
 
             if (parameterScope.Scope == null)
             {
@@ -99,43 +108,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
         private FilterExpression GetFilter(string parameterValue, ResourceFieldChainExpression scope)
         {
             ResourceContext resourceContextInScope = GetResourceContextForScope(scope);
-
-            var parser = new FilterParser(parameterValue,
-                (path, chainRequirements) => ResolveChainInFilter(chainRequirements, resourceContextInScope, path),
-                (resourceType, stringId) => TypeHelper.ConvertStringIdToTypedId(resourceType, stringId, _resourceFactory).ToString());
-
-            return parser.Parse();
-        }
-
-        private IReadOnlyCollection<ResourceFieldAttribute> ResolveChainInFilter(FieldChainRequirements chainRequirements,
-            ResourceContext resourceContextInScope, string path)
-        {
-            if (chainRequirements == FieldChainRequirements.EndsInToMany)
-            {
-                return ChainResolver.ResolveToOneChainEndingInToMany(resourceContextInScope, path);
-            }
-
-            if (chainRequirements == FieldChainRequirements.EndsInAttribute)
-            {
-                return ChainResolver.ResolveToOneChainEndingInAttribute(resourceContextInScope, path, ValidateFilter);
-            }
-
-            if (chainRequirements.HasFlag(FieldChainRequirements.EndsInAttribute) &&
-                chainRequirements.HasFlag(FieldChainRequirements.EndsInToOne))
-            {
-                return ChainResolver.ResolveToOneChainEndingInAttributeOrToOne(resourceContextInScope, path, ValidateFilter);
-            }
-
-            throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");
-        }
-
-        private void ValidateFilter(ResourceFieldAttribute field, ResourceContext resourceContext, string path)
-        {
-            if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowFilter))
-            {
-                throw new InvalidQueryStringParameterException(_lastParameterName, "Filtering on the requested attribute is not allowed.",
-                    $"Filtering on attribute '{attribute.PublicName}' is not allowed.");
-            }
+            return _filterParser.Parse(parameterValue, resourceContextInScope);
         }
 
         private void StoreFilterInScope(FilterExpression filter, ResourceFieldChainExpression scope)

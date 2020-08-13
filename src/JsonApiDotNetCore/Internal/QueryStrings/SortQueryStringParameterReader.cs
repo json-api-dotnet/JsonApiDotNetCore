@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
@@ -22,12 +21,25 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
 
     public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQueryStringParameterReader
     {
+        private readonly QueryStringParameterScopeParser _scopeParser;
+        private readonly SortParser _sortParser;
         private readonly List<ExpressionInScope> _constraints = new List<ExpressionInScope>();
         private string _lastParameterName;
 
         public SortQueryStringParameterReader(ICurrentRequest currentRequest, IResourceContextProvider resourceContextProvider)
             : base(currentRequest, resourceContextProvider)
         {
+            _scopeParser = new QueryStringParameterScopeParser(resourceContextProvider, FieldChainRequirements.EndsInToMany);
+            _sortParser = new SortParser(resourceContextProvider, ValidateSingleField);
+        }
+
+        private void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)
+        {
+            if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
+            {
+                throw new InvalidQueryStringParameterException(_lastParameterName, "Sorting on the requested attribute is not allowed.",
+                    $"Sorting on attribute '{attribute.PublicName}' is not allowed.");
+            }
         }
 
         public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
@@ -61,10 +73,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
 
         private ResourceFieldChainExpression GetScope(string parameterName)
         {
-            var parser = new QueryStringParameterScopeParser(parameterName,
-                (path, _) => ChainResolver.ResolveToManyChain(RequestResource, path));
-
-            var parameterScope = parser.Parse(FieldChainRequirements.EndsInToMany);
+            var parameterScope = _scopeParser.Parse(parameterName, RequestResource);
 
             if (parameterScope.Scope == null)
             {
@@ -77,36 +86,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
         private SortExpression GetSort(string parameterValue, ResourceFieldChainExpression scope)
         {
             ResourceContext resourceContextInScope = GetResourceContextForScope(scope);
-
-            var parser = new SortParser(parameterValue,
-                (path, chainRequirements) => ResolveChainInSort(chainRequirements, resourceContextInScope, path));
-
-            return parser.Parse();
-        }
-
-        private IReadOnlyCollection<ResourceFieldAttribute> ResolveChainInSort(FieldChainRequirements chainRequirements,
-            ResourceContext resourceContextInScope, string path)
-        {
-            if (chainRequirements == FieldChainRequirements.EndsInToMany)
-            {
-                return ChainResolver.ResolveToOneChainEndingInToMany(resourceContextInScope, path);
-            }
-
-            if (chainRequirements == FieldChainRequirements.EndsInAttribute)
-            {
-                return ChainResolver.ResolveToOneChainEndingInAttribute(resourceContextInScope, path, ValidateSort);
-            }
-
-            throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");
-        }
-
-        private void ValidateSort(ResourceFieldAttribute field, ResourceContext resourceContext, string path)
-        {
-            if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
-            {
-                throw new InvalidQueryStringParameterException(_lastParameterName, "Sorting on the requested attribute is not allowed.",
-                    $"Sorting on attribute '{attribute.PublicName}' is not allowed.");
-            }
+            return _sortParser.Parse(parameterValue, resourceContextInScope);
         }
 
         public IReadOnlyCollection<ExpressionInScope> GetConstraints()

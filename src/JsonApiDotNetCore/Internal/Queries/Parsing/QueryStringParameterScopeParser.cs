@@ -1,24 +1,38 @@
+using System;
+using System.Collections.Generic;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Queries.Expressions;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
     public class QueryStringParameterScopeParser : QueryParser
     {
-        public QueryStringParameterScopeParser(string source, ResolveFieldChainCallback resolveFieldChainCallback)
-            : base(source, resolveFieldChainCallback)
+        private readonly FieldChainRequirements _chainRequirements;
+        private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
+        private ResourceContext _resourceContextInScope;
+
+        public QueryStringParameterScopeParser(IResourceContextProvider resourceContextProvider, FieldChainRequirements chainRequirements, 
+            Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
+            : base(resourceContextProvider)
         {
+            _chainRequirements = chainRequirements;
+            _validateSingleFieldCallback = validateSingleFieldCallback;
         }
 
-        public QueryStringParameterScopeExpression Parse(FieldChainRequirements chainRequirements)
+        public QueryStringParameterScopeExpression Parse(string source, ResourceContext resourceContextInScope)
         {
-            var expression = ParseQueryStringParameterScope(chainRequirements);
+            _resourceContextInScope = resourceContextInScope ?? throw new ArgumentNullException(nameof(resourceContextInScope));
+            Tokenize(source);
+
+            var expression = ParseQueryStringParameterScope();
 
             AssertTokenStackIsEmpty();
 
             return expression;
         }
 
-        protected QueryStringParameterScopeExpression ParseQueryStringParameterScope(FieldChainRequirements chainRequirements)
+        protected QueryStringParameterScopeExpression ParseQueryStringParameterScope()
         {
             if (!TokenStack.TryPop(out Token token) || token.Kind != TokenKind.Text)
             {
@@ -33,12 +47,27 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
             {
                 TokenStack.Pop();
 
-                scope = ParseFieldChain(chainRequirements, null);
+                scope = ParseFieldChain(_chainRequirements, null);
 
                 EatSingleCharacterToken(TokenKind.CloseBracket);
             }
 
             return new QueryStringParameterScopeExpression(name, scope);
+        }
+
+        protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+        {
+            if (chainRequirements == FieldChainRequirements.EndsInToMany)
+            {
+                return ChainResolver.ResolveToManyChain(_resourceContextInScope, path, _validateSingleFieldCallback);
+            }
+
+            if (chainRequirements == FieldChainRequirements.IsRelationship)
+            {
+                return ChainResolver.ResolveRelationshipChain(_resourceContextInScope, path, _validateSingleFieldCallback);
+            }
+
+            throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");
         }
     }
 }

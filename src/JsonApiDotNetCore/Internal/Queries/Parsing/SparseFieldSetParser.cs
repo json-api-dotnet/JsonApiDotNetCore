@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Models.Annotation;
 
@@ -7,13 +9,20 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
     public class SparseFieldSetParser : QueryParser
     {
-        public SparseFieldSetParser(string source, ResolveFieldChainCallback resolveFieldChainCallback)
-            : base(source, resolveFieldChainCallback)
+        private readonly Action<AttrAttribute, ResourceContext, string> _validateSingleAttributeCallback;
+        private ResourceContext _resourceContextInScope;
+
+        public SparseFieldSetParser(IResourceContextProvider resourceContextProvider, Action<AttrAttribute, ResourceContext, string> validateSingleAttributeCallback = null)
+            : base(resourceContextProvider)
         {
+            _validateSingleAttributeCallback = validateSingleAttributeCallback;
         }
 
-        public SparseFieldSetExpression Parse()
+        public SparseFieldSetExpression Parse(string source, ResourceContext resourceContextInScope)
         {
+            _resourceContextInScope = resourceContextInScope ?? throw new ArgumentNullException(nameof(resourceContextInScope));
+            Tokenize(source);
+
             var expression = ParseSparseFieldSet();
 
             AssertTokenStackIsEmpty();
@@ -39,6 +48,15 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
             }
 
             return new SparseFieldSetExpression(attributes.Values);
+        }
+
+        protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+        {
+            var attribute = ChainResolver.GetAttribute(path, _resourceContextInScope, path);
+
+            _validateSingleAttributeCallback?.Invoke(attribute, _resourceContextInScope, path);
+
+            return new[] {attribute};
         }
     }
 }

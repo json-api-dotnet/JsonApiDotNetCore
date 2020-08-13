@@ -3,26 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Humanizer;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Queries.Expressions;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
-    // TODO: Combine callbacks into parsers to make them reusable from ResourceDefinitions.
     public class FilterParser : QueryParser
     {
-        private readonly ResolveFieldChainCallback _resolveFieldChainCallback;
-        private readonly Func<Type, string, string> _resolveStringId;
+        private readonly IResourceFactory _resourceFactory;
+        private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
+        private ResourceContext _resourceContextInScope;
 
-        public FilterParser(string source, ResolveFieldChainCallback resolveFieldChainCallback, Func<Type, string, string> resolveStringId)
-            : base(source, resolveFieldChainCallback)
+        public FilterParser(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory,
+            Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
+            : base(resourceContextProvider)
         {
-            _resolveFieldChainCallback = resolveFieldChainCallback;
-            _resolveStringId = resolveStringId ?? throw new ArgumentNullException(nameof(resolveStringId));
+            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
+            _validateSingleFieldCallback = validateSingleFieldCallback;
         }
 
-        public FilterExpression Parse()
+        public FilterExpression Parse(string source, ResourceContext resourceContextInScope)
         {
+            Tokenize(source);
+            _resourceContextInScope = resourceContextInScope ?? throw new ArgumentNullException(nameof(resourceContextInScope));
+
             var expression = ParseFilter();
 
             AssertTokenStackIsEmpty();
@@ -139,13 +145,13 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
                     !(rightTerm is NullConstantExpression))
                 {
                     // Run another pass over left chain to have it fail when chain ends in relationship.
-                    _resolveFieldChainCallback(leftChain.ToString(), FieldChainRequirements.EndsInAttribute);
+                    OnResolveFieldChain(leftChain.ToString(), FieldChainRequirements.EndsInAttribute);
                 }
 
                 PropertyInfo leftProperty = leftChain.Fields.Last().Property;
                 if (leftProperty.Name == nameof(Identifiable.Id) && rightTerm is LiteralConstantExpression rightConstant)
                 {
-                    string id = _resolveStringId(leftProperty.ReflectedType, rightConstant.Value);
+                    string id = DeObfuscateStringId(leftProperty.ReflectedType, rightConstant.Value);
                     rightTerm = new LiteralConstantExpression(id);
                 }
             }
@@ -205,7 +211,7 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
                 for (int index = 0; index < constants.Count; index++)
                 {
                     string stringId = constants[index].Value;
-                    string id = _resolveStringId(targetAttributeProperty.ReflectedType, stringId);
+                    string id = DeObfuscateStringId(targetAttributeProperty.ReflectedType, stringId);
                     constants[index] = new LiteralConstantExpression(id);
                 }
             }
@@ -284,6 +290,32 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
             }
 
             throw new QueryParseException("Value between quotes expected.");
+        }
+
+        private string DeObfuscateStringId(Type resourceType, string stringId)
+        {
+            return TypeHelper.ConvertStringIdToTypedId(resourceType, stringId, _resourceFactory).ToString();
+        }
+
+        protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+        {
+            if (chainRequirements == FieldChainRequirements.EndsInToMany)
+            {
+                return ChainResolver.ResolveToOneChainEndingInToMany(_resourceContextInScope, path, _validateSingleFieldCallback);
+            }
+
+            if (chainRequirements == FieldChainRequirements.EndsInAttribute)
+            {
+                return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceContextInScope, path, _validateSingleFieldCallback);
+            }
+
+            if (chainRequirements.HasFlag(FieldChainRequirements.EndsInAttribute) &&
+                chainRequirements.HasFlag(FieldChainRequirements.EndsInToOne))
+            {
+                return ChainResolver.ResolveToOneChainEndingInAttributeOrToOne(_resourceContextInScope, path, _validateSingleFieldCallback);
+            }
+
+            throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");
         }
     }
 }

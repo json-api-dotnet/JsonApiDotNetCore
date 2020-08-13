@@ -10,11 +10,11 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
 {
     public abstract class QueryStringParameterReader
     {
+        private readonly IResourceContextProvider _resourceContextProvider;
         private readonly bool _isCollectionRequest;
 
-        protected IResourceContextProvider ResourceContextProvider { get; }
-        protected ResourceFieldChainResolver ChainResolver { get; }
         protected ResourceContext RequestResource { get; }
+        private protected ResourceFieldChainResolver ChainResolver { get; }
 
         protected QueryStringParameterReader(ICurrentRequest currentRequest, IResourceContextProvider resourceContextProvider)
         {
@@ -23,10 +23,10 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
                 throw new ArgumentNullException(nameof(currentRequest));
             }
 
-            ResourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            ChainResolver = new ResourceFieldChainResolver(resourceContextProvider);
-            RequestResource = currentRequest.SecondaryResource ?? currentRequest.PrimaryResource;
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _isCollectionRequest = currentRequest.IsCollection;
+            RequestResource = currentRequest.SecondaryResource ?? currentRequest.PrimaryResource;
+            ChainResolver = new ResourceFieldChainResolver(resourceContextProvider);
         }
 
         protected ResourceContext GetResourceContextForScope(ResourceFieldChainExpression scope)
@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
             var lastField = scope.Fields.Last();
             var type = lastField is RelationshipAttribute relationship ? relationship.RightType : lastField.Property.PropertyType;
 
-            return ResourceContextProvider.GetResourceContext(type);
+            return _resourceContextProvider.GetResourceContext(type);
         }
 
         protected void AssertIsCollectionRequest()
