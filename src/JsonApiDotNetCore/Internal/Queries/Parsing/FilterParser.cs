@@ -127,6 +127,7 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
             EatText(operatorName);
             EatSingleCharacterToken(TokenKind.OpenParen);
 
+            // Allow equality comparison of a HasOne relationship with null.
             var leftChainRequirements = comparisonOperator == ComparisonOperator.Equals
                 ? FieldChainRequirements.EndsInAttribute | FieldChainRequirements.EndsInToOne
                 : FieldChainRequirements.EndsInAttribute;

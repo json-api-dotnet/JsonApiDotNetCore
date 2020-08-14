@@ -59,6 +59,7 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
         {
             if (chainRequirements == FieldChainRequirements.EndsInToMany)
             {
+                // The mismatch here (ends-in-to-many being interpreted as entire-chain-must-be-to-many) is intentional.
                 return ChainResolver.ResolveToManyChain(_resourceContextInScope, path, _validateSingleFieldCallback);
             }
 
