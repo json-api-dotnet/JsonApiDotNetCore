@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
 
                         _isInQuotedSection = false;
 
-                        Token literalToken = FlushTextBuffer(true);
+                        Token literalToken = ProduceTokenFromTextBuffer(true);
                         yield return literalToken;
                     }
                     else
@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
 
                     if (singleCharacterTokenKind != null && !IsMinusInsideText(singleCharacterTokenKind.Value))
                     {
-                        Token identifierToken = FlushTextBuffer(false);
+                        Token identifierToken = ProduceTokenFromTextBuffer(false);
 
                         if (identifierToken != null)
                         {
@@ -101,7 +101,7 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
                 throw new QueryParseException("' expected.");
             }
 
-            Token lastToken = FlushTextBuffer(false);
+            Token lastToken = ProduceTokenFromTextBuffer(false);
 
             if (lastToken != null)
             {
@@ -124,7 +124,7 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
             return SingleCharacterToTokenKinds.ContainsKey(ch) ? (TokenKind?)SingleCharacterToTokenKinds[ch] : null;
         }
 
-        private Token FlushTextBuffer(bool isQuotedText)
+        private Token ProduceTokenFromTextBuffer(bool isQuotedText)
         {
             if (isQuotedText || _textBuffer.Length > 0)
             {
