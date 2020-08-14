@@ -25,6 +25,7 @@
                     "getting-started/**/toc.yml",
                     "usage/**.md",
                     "request-examples/**.md",
+                    "internals/**.md",
                     "toc.yml",
                     "*.md"
                 ]
