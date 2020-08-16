@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
-    public class QueryStringParameterScopeParser : QueryParser
+    public class QueryStringParameterScopeParser : QueryExpressionParser
     {
         private readonly FieldChainRequirements _chainRequirements;
         private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;

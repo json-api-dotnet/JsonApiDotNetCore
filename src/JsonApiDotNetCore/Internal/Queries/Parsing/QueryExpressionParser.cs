@@ -7,15 +7,19 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
     /// <summary>
-    /// Base class for parsing query string parameters.
+    /// The base class for parsing query string parameters, using the Recursive Descent algorithm.
     /// </summary>
-    public abstract class QueryParser
+    /// <remarks>
+    /// Uses a tokenizer to populate a stack of tokens, which is then manipulated from the various parsing routines for subexpressions.
+    /// Implementations should throw <see cref="QueryParseException"/> on invalid input.
+    /// </remarks>
+    public abstract class QueryExpressionParser
     {
         private protected ResourceFieldChainResolver ChainResolver { get; }
 
         protected Stack<Token> TokenStack { get; private set; }
 
-        protected QueryParser(IResourceContextProvider resourceContextProvider)
+        protected QueryExpressionParser(IResourceContextProvider resourceContextProvider)
         {
             ChainResolver = new ResourceFieldChainResolver(resourceContextProvider);
         }

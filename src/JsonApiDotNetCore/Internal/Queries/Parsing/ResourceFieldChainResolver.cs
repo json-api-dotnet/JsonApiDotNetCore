@@ -6,6 +6,9 @@ using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
+    /// <summary>
+    /// Provides helper methods to resolve a chain of fields (relationships and attributes) from the resource graph.
+    /// </summary>
     internal sealed class ResourceFieldChainResolver
     {
         private readonly IResourceContextProvider _resourceContextProvider;

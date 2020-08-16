@@ -10,7 +10,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
-    public class FilterParser : QueryParser
+    public class FilterParser : QueryExpressionParser
     {
         private readonly IResourceFactory _resourceFactory;
         private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;

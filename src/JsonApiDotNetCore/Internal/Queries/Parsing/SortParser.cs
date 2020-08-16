@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
-    public class SortParser : QueryParser
+    public class SortParser : QueryExpressionParser
     {
         private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
         private ResourceContext _resourceContextInScope;

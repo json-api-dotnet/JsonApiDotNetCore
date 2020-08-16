@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
-    public class IncludeParser : QueryParser
+    public class IncludeParser : QueryExpressionParser
     {
         private readonly Action<RelationshipAttribute, ResourceContext, string> _validateSingleRelationshipCallback;
         private ResourceContext _resourceContextInScope;

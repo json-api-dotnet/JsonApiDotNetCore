@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
-    public class SparseFieldSetParser : QueryParser
+    public class SparseFieldSetParser : QueryExpressionParser
     {
         private readonly Action<AttrAttribute, ResourceContext, string> _validateSingleAttributeCallback;
         private ResourceContext _resourceContextInScope;

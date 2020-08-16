@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Internal.Queries.Parsing
 {
-    public class PaginationParser : QueryParser
+    public class PaginationParser : QueryExpressionParser
     {
         private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
         private ResourceContext _resourceContextInScope;
