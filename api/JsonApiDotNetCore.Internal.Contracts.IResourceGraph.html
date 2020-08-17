@@ -105,7 +105,7 @@ relationships) of registered resources in the resource resourceGraph.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetAttributes_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetAttributes(Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraphExplorer.cs/#L47">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraph.cs/#L48">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetAttributes_" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetAttributes*"></a>
   <h4 id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetAttributes_Type_" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetAttributes(Type)">GetAttributes(Type)</h4>
@@ -144,7 +144,7 @@ relationships) of registered resources in the resource resourceGraph.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.Annotation.AttrAttribute.html">AttrAttribute</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -154,7 +154,7 @@ relationships) of registered resources in the resource resourceGraph.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetAttributes__1_Expression_Func___0_System_Object___.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetAttributes%60%601(Expression%7BFunc%7B%60%600%2CSystem.Object%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraphExplorer.cs/#L29">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraph.cs/#L30">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetAttributes_" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetAttributes*"></a>
   <h4 id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetAttributes__1_Expression_Func___0_System_Object___" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetAttributes``1(Expression{Func{``0,System.Object}})">GetAttributes&lt;TResource&gt;(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</h4>
@@ -196,7 +196,7 @@ exposed fields are returned.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.Annotation.AttrAttribute.html">AttrAttribute</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -222,7 +222,7 @@ exposed fields are returned.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetFields_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetFields(Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraphExplorer.cs/#L42">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraph.cs/#L43">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetFields_" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetFields*"></a>
   <h4 id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetFields_Type_" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetFields(Type)">GetFields(Type)</h4>
@@ -231,7 +231,7 @@ exposed fields are returned.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">List&lt;IResourceField&gt; GetFields(Type type)</code></pre>
+    <pre><code class="lang-csharp hljs">List&lt;ResourceFieldAttribute&gt; GetFields(Type type)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -261,7 +261,7 @@ exposed fields are returned.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.IResourceField.html">IResourceField</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.Annotation.ResourceFieldAttribute.html">ResourceFieldAttribute</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -271,7 +271,7 @@ exposed fields are returned.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetFields__1_Expression_Func___0_System_Object___.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetFields%60%601(Expression%7BFunc%7B%60%600%2CSystem.Object%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraphExplorer.cs/#L21">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraph.cs/#L22">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetFields_" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetFields*"></a>
   <h4 id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetFields__1_Expression_Func___0_System_Object___" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetFields``1(Expression{Func{``0,System.Object}})">GetFields&lt;TResource&gt;(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</h4>
@@ -282,7 +282,7 @@ exposed fields are returned.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">List&lt;IResourceField&gt; GetFields&lt;TResource&gt;(Expression&lt;Func&lt;TResource, dynamic&gt;&gt; selector = null)
+    <pre><code class="lang-csharp hljs">List&lt;ResourceFieldAttribute&gt; GetFields&lt;TResource&gt;(Expression&lt;Func&lt;TResource, dynamic&gt;&gt; selector = null)
     where TResource : IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -313,7 +313,7 @@ exposed fields are returned.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.IResourceField.html">IResourceField</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.Annotation.ResourceFieldAttribute.html">ResourceFieldAttribute</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -336,13 +336,13 @@ exposed fields are returned.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetInverse_JsonApiDotNetCore_Models_RelationshipAttribute_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetInverse(JsonApiDotNetCore.Models.RelationshipAttribute)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetInverse_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetInverse(JsonApiDotNetCore.Models.Annotation.RelationshipAttribute)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraphExplorer.cs/#L58">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraph.cs/#L59">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetInverse_" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetInverse*"></a>
-  <h4 id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetInverse_JsonApiDotNetCore_Models_RelationshipAttribute_" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetInverse(JsonApiDotNetCore.Models.RelationshipAttribute)">GetInverse(RelationshipAttribute)</h4>
+  <h4 id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetInverse_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute_" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetInverse(JsonApiDotNetCore.Models.Annotation.RelationshipAttribute)">GetInverse(RelationshipAttribute)</h4>
   <div class="markdown level1 summary"><p>Traverses the resource resourceGraph for the inverse relationship of the provided
 <code data-dev-comment-type="paramref" class="paramref">relationship</code>;</p>
 </div>
@@ -362,7 +362,7 @@ exposed fields are returned.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.Annotation.RelationshipAttribute.html">RelationshipAttribute</a></td>
         <td><span class="parametername">relationship</span></td>
         <td></td>
       </tr>
@@ -378,7 +378,7 @@ exposed fields are returned.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.Annotation.RelationshipAttribute.html">RelationshipAttribute</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -388,7 +388,7 @@ exposed fields are returned.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetRelationships_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetRelationships(Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraphExplorer.cs/#L52">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraph.cs/#L53">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetRelationships_" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetRelationships*"></a>
   <h4 id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetRelationships_Type_" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetRelationships(Type)">GetRelationships(Type)</h4>
@@ -427,7 +427,7 @@ exposed fields are returned.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.Annotation.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -437,7 +437,7 @@ exposed fields are returned.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetRelationships__1_Expression_Func___0_System_Object___.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetRelationships%60%601(Expression%7BFunc%7B%60%600%2CSystem.Object%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraphExplorer.cs/#L37">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraph.cs/#L38">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetRelationships_" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetRelationships*"></a>
   <h4 id="JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetRelationships__1_Expression_Func___0_System_Object___" data-uid="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.GetRelationships``1(Expression{Func{``0,System.Object}})">GetRelationships&lt;TResource&gt;(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</h4>
@@ -479,7 +479,7 @@ exposed fields are returned.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.Annotation.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -511,7 +511,7 @@ exposed fields are returned.</p>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Contracts_IResourceGraph.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Contracts.IResourceGraph%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraphExplorer.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Contracts/IResourceGraph.cs/#L13" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

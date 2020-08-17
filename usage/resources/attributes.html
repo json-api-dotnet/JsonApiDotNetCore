@@ -78,33 +78,40 @@
 </code></pre><h2 id="public-name">Public name</h2>
 <p>There are two ways the public attribute name is determined:</p>
 <ol>
-<li>By convention, specified by <a class="xref" href="../../api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_SerializerSettings">JsonApiOptions</a>
-<code>c#
-options.SerializerSettings.ContractResolver = new DefaultContractResolver
+<li><p>By convention, specified in <a class="xref" href="../../api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_SerializerSettings">JsonApiOptions</a></p>
+<pre><code class="lang-c#">options.SerializerSettings.ContractResolver = new DefaultContractResolver
 {
- NamingStrategy = new CamelCaseNamingStrategy()
-};</code></li>
-<li>Individually using the attribute&#39;s constructor
-<code>c#
-public class Person : Identifiable
+ NamingStrategy = new KebabCaseNamingStrategy() // default: CamelCaseNamingStrategy
+};
+</code></pre></li>
+<li><p>Individually using the attribute&#39;s constructor</p>
+<pre><code class="lang-c#">public class Person : Identifiable
 {
  [Attr(&quot;first-name&quot;)]
  public string FirstName { get; set; }
-}</code></li>
+}
+</code></pre></li>
 </ol>
 <h2 id="capabilities">Capabilities</h2>
 <p><em>since v4.0</em></p>
-<p>Default json:api attribute capabilities are specified by @JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities:</p>
+<p>Default json:api attribute capabilities are specified in <a class="xref" href="../../api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities">JsonApiOptions</a>:</p>
 <pre><code class="lang-c#">options.DefaultAttrCapabilities = AttrCapabilities.None; // default: All
 </code></pre><p>This can be overridden per attribute.</p>
-<h1 id="mutability">Mutability</h1>
+<h3 id="viewability">Viewability</h3>
+<p>Attributes can be marked to allow returning their value in responses. When not allowed and requested using <code>?fields=</code>, it results in an HTTP 400 response.</p>
+<pre><code class="lang-c#">public class User : Identifiable&lt;int&gt;
+{
+    [Attr(~AttrCapabilities.AllowView)]
+    public string Password { get; set; }
+}
+</code></pre><h3 id="mutability">Mutability</h3>
 <p>Attributes can be marked as mutable, which will allow <code>PATCH</code> requests to update them. When immutable, an HTTP 422 response is returned.</p>
 <pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
     [Attr(AttrCapabilities.AllowMutate)]
     public string FirstName { get; set; }
 }
-</code></pre><h1 id="filtersort-ability">Filter/Sort-ability</h1>
+</code></pre><h3 id="filtersort-ability">Filter/Sort-ability</h3>
 <p>Attributes can be marked to allow filtering and/or sorting. When not allowed, it results in an HTTP 400 response.</p>
 <pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
@@ -113,7 +120,7 @@ public class Person : Identifiable
 }
 </code></pre><h2 id="complex-attributes">Complex Attributes</h2>
 <p>Models may contain complex attributes.
-Serialization of these types is done by Newtonsoft.Json,
+Serialization of these types is done by <a href="https://www.newtonsoft.com/json">Newtonsoft.Json</a>,
 so you should use their APIs to specify serialization formats.
 You can also use global options to specify <code>JsonSerializer</code> configuration.</p>
 <pre><code class="lang-c#">public class Foo : Identifiable

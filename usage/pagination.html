@@ -69,10 +69,13 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="pagination">Pagination</h1>
 
-<p>Resources can be paginated. This query would fetch the second page of 10 articles (articles 11 - 21).</p>
+<p>Resources can be paginated. This request would fetch the second page of 10 articles (articles 11 - 21).</p>
 <pre><code class="lang-http">GET /articles?page[size]=10&amp;page[number]=2 HTTP/1.1
-</code></pre><p>Due to a <a href="https://github.com/dotnet/efcore/issues/1833">limitation</a> in Entity Framework Core 3.x, paging does <strong>not</strong> work on nested endpoints:</p>
+</code></pre><h2 id="nesting">Nesting</h2>
+<p>Pagination can be used on nested endpoints, such as:</p>
 <pre><code class="lang-http">GET /blogs/1/articles?page[number]=2 HTTP/1.1
+</code></pre><p>and on included resources, for example:</p>
+<pre><code class="lang-http">GET /api/blogs/1/articles?include=revisions&amp;page[size]=10,revisions:5&amp;page[number]=2,revisions:3 HTTP/1.1
 </code></pre><h2 id="configuring-default-behavior">Configuring Default Behavior</h2>
 <p>You can configure the global default behavior as <a href="options.html#pagination">described previously</a>.</p>
 </article>

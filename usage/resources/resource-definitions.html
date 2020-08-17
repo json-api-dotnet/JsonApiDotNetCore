@@ -71,12 +71,37 @@
 
 <p>In order to improve the developer experience, we have introduced a type that makes
 common modifications to the default API behavior easier. <code>ResourceDefinition</code> was first introduced in v2.3.4.</p>
-<h2 id="runtime-attribute-filtering">Runtime Attribute Filtering</h2>
-<p><em>since v2.3.4</em></p>
-<p>There are some cases where you want attributes excluded from your resource response.
-For example, you may accept some form data that shouldn&#39;t be exposed after creation.
-This kind of data may get hashed in the database and should never be exposed to the client.</p>
-<p>Using the techniques described below, you can achieve the following request/response behavior:</p>
+<p>Resource definitions are resolved from the D/I container, so you can inject dependencies in their constructor.</p>
+<h2 id="customizing-query-clauses">Customizing query clauses</h2>
+<p><em>since v4.0</em></p>
+<p>For various reasons (see examples below) you may need to change parts of the query, depending on resource type.
+<code>ResourceDefinition&lt;TResource&gt;</code> provides overridable methods that pass you the result of query string parameter parsing.
+The value returned by you determines what will be used to execute the query.</p>
+<p>An intermediate format (<code>QueryExpression</code> and derived types) is used, which enables us to separate json:api implementation 
+from Entity Framework Core <code>IQueryable</code> execution.</p>
+<h3 id="excluding-fields">Excluding fields</h3>
+<p>There are some cases where you want attributes conditionally excluded from your resource response.
+For example, you may accept some sensitive data that should only be exposed to administrators after creation.</p>
+<p>Note: to exclude attributes unconditionally, use <code>Attr[~AttrCapabilities.AllowView]</code>.</p>
+<pre><code class="lang-c#">public class UserDefinition : ResourceDefinition&lt;User&gt;
+{
+    public UserDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    { }
+
+    public override SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+    {
+        if (IsAdministrator)
+        {
+            return existingSparseFieldSet;
+        }
+
+        var resourceContext = ResourceGraph.GetResourceContext&lt;User&gt;(); 
+        var passwordAttribute = resourceContext.Attributes.Single(a =&gt; a.Property.Name == nameof(User.Password));
+
+        return existingSparseFieldSet.Excluding(passwordAttribute);
+    }
+}
+</code></pre><p>Using this technique, you can achieve the following request/response behavior:</p>
 <pre><code class="lang-http">POST /users HTTP/1.1
 Content-Type: application/vnd.api+json
 
@@ -84,7 +109,7 @@ Content-Type: application/vnd.api+json
   &quot;data&quot;: {
     &quot;type&quot;: &quot;users&quot;,
     &quot;attributes&quot;: {
-      &quot;account-number&quot;: &quot;1234567890&quot;,
+      &quot;password&quot;: &quot;secret&quot;,
       &quot;name&quot;: &quot;John Doe&quot;
     }
   }
@@ -102,63 +127,100 @@ Content-Type: application/vnd.api+json
     }
   }
 }
-</code></pre><h3 id="single-attribute">Single Attribute</h3>
-<pre><code class="lang-c#">public class UserDefinition : ResourceDefinition&lt;User&gt;
-{
-    public UserDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
-    {
-        HideFields(user =&gt; user.AccountNumber);
-    }
-}
-</code></pre><h3 id="multiple-attributes">Multiple Attributes</h3>
-<pre><code class="lang-c#">public class UserDefinition : ResourceDefinition&lt;User&gt;
-{
-    public UserDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
-    {
-        HideFields(user =&gt; new {user.AccountNumber, user.Password});
-    }
-}
-</code></pre><h2 id="default-sort">Default Sort</h2>
-<p><em>since v3.0.0</em></p>
-<p>You can define the default sort behavior if no <code>sort</code> query is provided.</p>
+</code></pre><h2 id="default-sort-order">Default sort order</h2>
+<p>You can define the default sort order if no <code>sort</code> query string parameter is provided.</p>
 <pre><code class="lang-c#">public class AccountDefinition : ResourceDefinition&lt;Account&gt;
 {
-    public override PropertySortOrder GetDefaultSortOrder()
+    public override SortExpression OnApplySort(SortExpression existingSort)
     {
-        return new PropertySortOrder
+        if (existingSort != null)
         {
-            (account =&gt; account.LastLoginTime, SortDirection.Descending),
-            (account =&gt; account.UserName, SortDirection.Ascending)
-        };
+            return existingSort;
+        }
+
+        return CreateSortExpressionFromLambda(new PropertySortOrder
+        {
+            (account =&gt; account.Name, ListSortDirection.Ascending),
+            (account =&gt; account.ModifiedAt, ListSortDirection.Descending)
+        });
     }
 }
-</code></pre><h2 id="custom-query-filters">Custom Query Filters</h2>
+</code></pre><h2 id="enforce-page-size">Enforce page size</h2>
+<p>You may want to enforce paging on large database tables.</p>
+<pre><code class="lang-c#">public class AccessLogDefinition : ResourceDefinition&lt;AccessLog&gt;
+{
+    public override PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
+    {
+        var maxPageSize = new PageSize(10);
+
+        if (existingPagination != null)
+        {
+            var pageSize = existingPagination.PageSize?.Value &lt;= maxPageSize.Value ? existingPagination.PageSize : maxPageSize;
+            return new PaginationExpression(existingPagination.PageNumber, pageSize);
+        }
+
+        return new PaginationExpression(PageNumber.ValueOne, _maxPageSize);
+    }
+}
+</code></pre><h2 id="exclude-soft-deleted-resources">Exclude soft-deleted resources</h2>
+<p>Soft-deletion sets <code>IsSoftDeleted</code> to <code>true</code> instead of actually deleting the record, so you may want to always filter them out.</p>
+<pre><code class="lang-c#">public class AccountDefinition : ResourceDefinition&lt;Account&gt;
+{
+    public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
+    {
+        var resourceContext = ResourceGraph.GetResourceContext&lt;Account&gt;();
+        var isSoftDeletedAttribute = resourceContext.Attributes.Single(a =&gt; a.Property.Name == nameof(Account.IsSoftDeleted));
+
+        var isNotSoftDeleted = new ComparisonExpression(ComparisonOperator.Equals,
+            new ResourceFieldChainExpression(isSoftDeletedAttribute), new LiteralConstantExpression(bool.FalseString));
+
+        return existingFilter == null
+            ? (FilterExpression) isNotSoftDeleted
+            : new LogicalExpression(LogicalOperator.And, new[] {isNotSoftDeleted, existingFilter});
+    }
+}
+</code></pre><h2 id="block-including-related-resources">Block including related resources</h2>
+<pre><code class="lang-c#">public class EmployeeDefinition : ResourceDefinition&lt;Employee&gt;
+{
+    public override IReadOnlyCollection&lt;IncludeElementExpression&gt; OnApplyIncludes(IReadOnlyCollection&lt;IncludeElementExpression&gt; existingIncludes)
+    {
+        if (existingIncludes.Any(include =&gt; include.Relationship.Property.Name == nameof(Employee.Manager)))
+        {
+            throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+            {
+                Title = &quot;Including the manager of employees is not permitted.&quot;
+            });
+        }
+
+        return existingIncludes;
+    }
+}
+</code></pre><h2 id="custom-query-string-parameters">Custom query string parameters</h2>
 <p><em>since v3.0.0</em></p>
-<p>You can define additional query string parameters and the query that should be used.
-If the key is present in a filter request, the supplied query will be used rather than the default behavior.</p>
+<p>You can define additional query string parameters with the query expression that should be used.
+If the key is present in a query string, the supplied query will be executed before the default behavior.</p>
+<p>Note this directly influences the Entity Framework Core <code>IQueryable</code>. As opposed to using <code>OnApplyFilter</code>, this enables the full range of EF Core functionality. 
+But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).</p>
 <pre><code class="lang-c#">public class ItemDefinition : ResourceDefinition&lt;Item&gt;
 {
-    // handles queries like: ?filter[was-active-on]=2018-10-15T01:25:52Z
-    public override QueryFilters GetQueryFilters()
+    protected override QueryStringParameterHandlers OnRegisterQueryableHandlersForQueryStringParameters()
     {
-        return new QueryFilters
+        return new QueryStringParameterHandlers
         {
-            {
-                &quot;was-active-on&quot;, (items, filter) =&gt;
-                {
-                    return DateTime.TryParse(filter.Value, out DateTime timeValue)
-                        ? items.Where(item =&gt; item.ExpireTime == null || timeValue &lt; item.ExpireTime)
-                        : throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                        {
-                            Title = &quot;Invalid filter value&quot;,
-                            Detail = $&quot;&#39;{filter.Value}&#39; is not a valid date.&quot;
-                        });
-                }
-            }
+            [&quot;isActive&quot;] = (source, parameterValue) =&gt; source
+                .Include(item =&gt; item.Children)
+                .Where(item =&gt; item.LastUpdateTime &gt; DateTime.Now.AddMonths(-1)),
+            [&quot;isHighRisk&quot;] = FilterByHighRisk
         };
     }
+
+    private static IQueryable&lt;Item&gt; FilterByHighRisk(IQueryable&lt;Item&gt; source, StringValues parameterValue)
+    {
+        bool isFilterOnHighRisk = bool.Parse(parameterValue);
+        return isFilterOnHighRisk ? source.Where(item =&gt; item.RiskLevel &gt;= 5) : source.Where(item =&gt; item.RiskLevel &lt; 5);
+    }
 }
-</code></pre><h2 id="using-resourcedefinitions-prior-to-v3">Using ResourceDefinitions Prior to v3</h2>
+</code></pre><h2 id="using-resourcedefinitions-prior-to-v3">Using ResourceDefinitions prior to v3</h2>
 <p>Prior to the introduction of auto-discovery, you needed to register the
 <code>ResourceDefinition</code> on the container yourself:</p>
 <pre><code class="lang-c#">services.AddScoped&lt;ResourceDefinition&lt;Item&gt;, ItemResource&gt;();

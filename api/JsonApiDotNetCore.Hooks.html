@@ -77,17 +77,7 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.DiffableEntityHashSet-1.html">DiffableEntityHashSet&lt;TResource&gt;</a></h4>
-      <section><p>Implementation of IResourceHashSet{TResource}.</p>
-<p>Basically a enumerable of <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> of resources that were affected by the request. </p>
-<p>Also contains information about updated relationships through 
-implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.EntityDiffPair-1.html">EntityDiffPair&lt;TResource&gt;</a></h4>
-      <section><p>A wrapper that contains an entity that is affected by the request, 
-matched to its current database value</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.EntityHashSet-1.html">EntityHashSet&lt;TResource&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.DiffableResourceHashSet-1.html">DiffableResourceHashSet&lt;TResource&gt;</a></h4>
       <section><p>Implementation of IResourceHashSet{TResource}.</p>
 <p>Basically a enumerable of <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> of resources that were affected by the request. </p>
 <p>Also contains information about updated relationships through 
@@ -102,6 +92,16 @@ implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparam
       <section><p>Implementation of IAffectedRelationships{TRightResource}</p>
 <p>It is practically a ReadOnlyDictionary{RelationshipAttribute, HashSet{TRightResource}} dictionary
 with the two helper methods defined on IAffectedRelationships{TRightResource}.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.ResourceDiffPair-1.html">ResourceDiffPair&lt;TResource&gt;</a></h4>
+      <section><p>A wrapper that contains a resource that is affected by the request, 
+matched to its current database value</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.ResourceHashSet-1.html">ResourceHashSet&lt;TResource&gt;</a></h4>
+      <section><p>Implementation of IResourceHashSet{TResource}.</p>
+<p>Basically a enumerable of <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> of resources that were affected by the request. </p>
+<p>Also contains information about updated relationships through 
+implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
@@ -118,23 +118,18 @@ with the two helper methods defined on IAffectedRelationships{TRightResource}.</
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IDeleteHookExecutor.html">IDeleteHookExecutor</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IDiffableEntityHashSet-1.html">IDiffableEntityHashSet&lt;TResource&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IDiffableResourceHashSet-1.html">IDiffableResourceHashSet&lt;TResource&gt;</a></h4>
       <section><p>A wrapper class that contains information about the resources that are updated by the request.
 Contains the resources from the request and the corresponding database values.</p>
 <p>Also contains information about updated relationships through 
 implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IEntityHashSet-1.html">IEntityHashSet&lt;TResource&gt;</a></h4>
-      <section><p>Basically a enumerable of <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> of resources that were affected by the request. </p>
-<p>Also contains information about updated relationships through 
-implementation of IAffectedRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IHooksDiscovery.html">IHooksDiscovery</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IHooksDiscovery-1.html">IHooksDiscovery&lt;TResource&gt;</a></h4>
       <section><p>A singleton service for a particular TResource that stores a field of 
 enums that represents which resource hooks have been implemented for that
-particular entity.</p>
+particular resource.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IOnReturnHookContainer-1.html">IOnReturnHookContainer&lt;TResource&gt;</a></h4>
       <section><p>On return hook container</p>
@@ -149,13 +144,18 @@ particular entity.</p>
       <section><p>Wrapper interface for all Before execution methods.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html">IRelationshipGetters&lt;TLeftResource&gt;</a></h4>
-      <section><p>A helper class that provides insights in which relationships have been updated for which entities.</p>
+      <section><p>A helper class that provides insights in which relationships have been updated for which resources.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipsDictionary.html">IRelationshipsDictionary</a></h4>
       <section><p>A dummy interface used internally by the hook executor.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipsDictionary-1.html">IRelationshipsDictionary&lt;TRightResource&gt;</a></h4>
-      <section><p>A helper class that provides insights in which relationships have been updated for which entities.</p>
+      <section><p>A helper class that provides insights in which relationships have been updated for which resources.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHashSet-1.html">IResourceHashSet&lt;TResource&gt;</a></h4>
+      <section><p>Basically a enumerable of <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> of resources that were affected by the request. </p>
+<p>Also contains information about updated relationships through 
+implementation of IAffectedRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookContainer.html">IResourceHookContainer</a></h4>
       <section><p>Not meant for public usage. Used internally in the <span class="xref">JsonApiDotNetCore.Hooks.ResourceHookExecutor</span></p>
@@ -168,7 +168,7 @@ particular entity.</p>
 in <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition&lt;TResource&gt;</a>. see methods in 
 <a class="xref" href="JsonApiDotNetCore.Hooks.IReadHookExecutor.html">IReadHookExecutor</a>, <a class="xref" href="JsonApiDotNetCore.Hooks.IUpdateHookExecutor.html">IUpdateHookExecutor</a> and 
 <a class="xref" href="JsonApiDotNetCore.Hooks.IOnReturnHookExecutor.html">IOnReturnHookExecutor</a> for more information.</p>
-<p>Uses <span class="xref">JsonApiDotNetCore.Hooks.TraversalHelper</span> for traversal of nested entity data structures.
+<p>Uses <span class="xref">JsonApiDotNetCore.Hooks.TraversalHelper</span> for traversal of nested resource data structures.
 Uses <span class="xref">JsonApiDotNetCore.Hooks.HookExecutorHelper</span> for retrieving meta data about hooks, 
 fetching database values and performing other recurring internal operations.</p>
 </section>
@@ -185,7 +185,7 @@ fetching database values and performing other recurring internal operations.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></h4>
       <section><p>An enum that represents the initiator of a resource hook. Eg, when BeforeCreate()
-is called from EntityResourceService.GetAsync(TId id), it will be called
+is called from <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-2.html#JsonApiDotNetCore_Services_JsonApiResourceService_2_GetAsync__1_">GetAsync(TId)</a>, it will be called
 with parameter pipeline = ResourceAction.GetSingle.</p>
 </section>
 </article>

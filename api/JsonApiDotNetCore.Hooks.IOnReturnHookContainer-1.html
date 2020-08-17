@@ -110,18 +110,18 @@
   <a id="JsonApiDotNetCore_Hooks_IOnReturnHookContainer_1_OnReturn_" data-uid="JsonApiDotNetCore.Hooks.IOnReturnHookContainer`1.OnReturn*"></a>
   <h4 id="JsonApiDotNetCore_Hooks_IOnReturnHookContainer_1_OnReturn_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IOnReturnHookContainer`1.OnReturn(HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">OnReturn(HashSet&lt;TResource&gt;, ResourcePipeline)</h4>
   <div class="markdown level1 summary"><p>Implement this hook to transform the result data just before returning
-the entities of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> from the 
-<a class="xref" href="JsonApiDotNetCore.Services.DefaultResourceService-1.html">DefaultResourceService&lt;TResource&gt;</a> layer
+the resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> from the 
+<a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer
 <p>
 The returned <see cref="!:IEnumerable&lt;TResource>"></see> may be a subset 
-of <code data-dev-comment-type="paramref" class="paramref">entities</code> and may contain changes in properties
-of the encapsulated entities. 
+of <code data-dev-comment-type="paramref" class="paramref">resources</code> and may contain changes in properties
+of the encapsulated resources. 
 <p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IEnumerable&lt;TResource&gt; OnReturn(HashSet&lt;TResource&gt; entities, ResourcePipeline pipeline)</code></pre>
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;TResource&gt; OnReturn(HashSet&lt;TResource&gt; resources, ResourcePipeline pipeline)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -135,8 +135,8 @@ of the encapsulated entities.
     <tbody>
       <tr>
         <td><span class="xref">HashSet</span>&lt;TResource&gt;</td>
-        <td><span class="parametername">entities</span></td>
-        <td><p>The unique set of affected entities</p>
+        <td><span class="parametername">resources</span></td>
+        <td><p>The unique set of affected resources</p>
 </td>
       </tr>
       <tr>
@@ -158,7 +158,7 @@ of the encapsulated entities.
     <tbody>
       <tr>
         <td><span class="xref">IEnumerable</span>&lt;TResource&gt;</td>
-        <td><p>The transformed entity set</p>
+        <td><p>The transformed resource set</p>
 </td>
       </tr>
     </tbody>

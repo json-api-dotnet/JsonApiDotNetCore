@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Entity Repositories </title>
+    <title>Resource Repositories </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Entity Repositories ">
+    <meta name="title" content="Resource Repositories ">
     <meta name="generator" content="docfx 2.56.2.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -67,35 +67,37 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="entity-repositories">Entity Repositories</h1>
+<h1 id="resource-repositories">Resource Repositories</h1>
 
-<p>If you want to use Entity Framework Core, but need additional data access logic (such as authorization), you can implement custom methods for accessing the data by creating an implementation of IResourceRepository&lt;TResource, TId&gt;. If you only need minor changes you can override the methods defined in DefaultResourceRepository&lt;TResource, TId&gt;.</p>
+<p>If you want to use a data access technology other than Entity Framework Core, you can create an implementation of IResourceRepository&lt;TResource, TId&gt;.
+If you only need minor changes you can override the methods defined in EntityFrameworkCoreRepository&lt;TResource, TId&gt;.</p>
 <p>The repository should then be added to the service collection in Startup.cs.</p>
 <pre><code class="lang-c#">public void ConfigureServices(IServiceCollection services)
 {
-    services.AddScoped&lt;IResourceRepository&lt;Article&gt;, AuthorizedArticleRepository&gt;();
+    services.AddScoped&lt;IResourceRepository&lt;Article&gt;, ArticleRepository&gt;();
     // ...
 }
-</code></pre><p>A sample implementation that performs data authorization might look like this.</p>
-<p>All of the methods in the DefaultResourceRepository will use the Get() method to get the DbSet<tentity>, so this is a good method to apply scoped filters such as user or tenant authorization.<p>
-<pre><code class="lang-c#">public class AuthorizedArticleRepository : DefaultResourceRepository&lt;Article&gt;
+</code></pre><p>A sample implementation that performs authorization might look like this.</p>
+<p>All of the methods in EntityFrameworkCoreRepository will use the GetAll() method to get the DbSet<tresource>, so this is a good method to apply filters such as user or tenant authorization.<p>
+<pre><code class="lang-c#">public class ArticleRepository : EntityFrameworkCoreRepository&lt;Article&gt;
 {
     private readonly IAuthenticationService _authenticationService;
 
-    public AuthorizedArticleRepository(
+    public ArticleRepository(
         IAuthenticationService authenticationService,
         ITargetedFields targetedFields,
         IDbContextResolver contextResolver,
         IResourceGraph resourceGraph,
         IGenericServiceFactory genericServiceFactory,
         IResourceFactory resourceFactory,
+        IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders,
         ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory)
+        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory) 
     {
         _authenticationService = authenticationService;
     }
 
-    public override IQueryable&lt;Article&gt; Get()
+    public override IQueryable&lt;Article&gt; GetAll()
     {
         return base.Get().Where(article =&gt; article.UserId == _authenticationService.UserId);
     }
@@ -135,7 +137,7 @@ services.AddScoped&lt;DbContextAResolver&gt;();
 services.AddScoped&lt;DbContextBResolver&gt;();
 
 
-public class DbContextARepository&lt;TResource&gt; : DefaultResourceRepository&lt;TResource&gt;
+public class DbContextARepository&lt;TResource&gt; : EntityFrameworkCoreRepository&lt;TResource&gt;
     where TResource : class, IIdentifiable&lt;int&gt;
 {
     public DbContextARepository(
@@ -144,15 +146,16 @@ public class DbContextARepository&lt;TResource&gt; : DefaultResourceRepository&l
         IResourceGraph resourceGraph,
         IGenericServiceFactory genericServiceFactory,
         IResourceFactory resourceFactory,
+        IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders,
         ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory)
+        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory) 
     { }
 }
 
 
 // Startup.cs
 services.AddScoped&lt;IResourceRepository&lt;Foo&gt;, DbContextARepository&lt;Foo&gt;&gt;();
-</code></pre></tentity></article>
+</code></pre></tresource></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">

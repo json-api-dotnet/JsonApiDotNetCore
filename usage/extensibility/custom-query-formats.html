@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Custom Query Formats </title>
+    <title>Custom QueryString parameters </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Custom Query Formats ">
+    <meta name="title" content="Custom QueryString parameters ">
     <meta name="generator" content="docfx 2.56.2.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -67,11 +67,16 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="custom-query-formats">Custom Query Formats</h1>
+<h1 id="custom-querystring-parameters">Custom QueryString parameters</h1>
 
-<p>For information on the default query string parameter formats, see the documentation for each query method.</p>
-<p>In order to customize the query formats, you need to implement the <code>IQueryParameterParser</code> interface and inject it.</p>
-<pre><code class="lang-c#">services.AddScoped&lt;IQueryParameterParser, FooQueryParameterParser&gt;();
+<p>For information on the built-in query string parameters, see the documentation for them.
+In order to add parsing of custom query string parameters, you can implement the <code>IQueryStringParameterReader</code> interface and inject it.</p>
+<pre><code class="lang-c#">public class YourQueryStringParameterReader : IQueryStringParameterReader
+{
+    // ...
+}
+</code></pre><pre><code class="lang-c#">services.AddScoped&lt;YourQueryStringParameterReader&gt;();
+services.AddScoped&lt;IQueryStringParameterReader&gt;(sp =&gt; sp.GetService&lt;YourQueryStringParameterReader&gt;());
 </code></pre></article>
           </div>
           

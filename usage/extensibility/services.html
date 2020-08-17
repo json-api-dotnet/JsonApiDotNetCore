@@ -70,46 +70,45 @@
 <h1 id="resource-services">Resource Services</h1>
 
 <p>The <code>IResourceService</code> acts as a service layer between the controller and the data access layer.
-This allows you to customize it however you want and not be dependent upon Entity Framework Core.
-This is also a good place to implement custom business logic.</p>
+This allows you to customize it however you want. This is also a good place to implement custom business logic.</p>
 <h2 id="supplementing-default-behavior">Supplementing Default Behavior</h2>
-<p>If you don&#39;t need to alter the actual persistence mechanism, you can inherit from the DefaultResourceService<tmodel> and override the existing methods.
-In simple cases, you can also just wrap the base implementation with your custom logic.<p>
-<p>A simple example would be to send notifications when an entity gets created.</p>
-<pre><code class="lang-c#">public class TodoItemService : DefaultResourceService&lt;TodoItem&gt;
+<p>If you don&#39;t need to alter the underlying mechanisms, you can inherit from <code>JsonApiResourceService&lt;TResource&gt;</code> and override the existing methods.
+In simple cases, you can also just wrap the base implementation with your custom logic.</p>
+<p>A simple example would be to send notifications when a resource gets created.</p>
+<pre><code class="lang-c#">public class TodoItemService : JsonApiResourceService&lt;TodoItem&gt;
 {
     private readonly INotificationService _notificationService;
 
     public TodoItemService(
-        INotificationService notificationService,
-        IEnumerable&lt;IQueryParameterService&gt; queryParameters,
+        IResourceRepository&lt;TResource, int&gt; repository,
+        IQueryLayerComposer queryLayerComposer,
+        IPaginationContext paginationContext,
         IJsonApiOptions options,
         ILoggerFactory loggerFactory,
-        IResourceRepository&lt;TodoItem&gt; repository,
-        IResourceContextProvider provider,
-        IResourceChangeTracker&lt;TodoItem&gt; resourceChangeTracker,
+        ICurrentRequest currentRequest,
+        IResourceChangeTracker&lt;TResource&gt; resourceChangeTracker,
         IResourceFactory resourceFactory,
-        IResourceHookExecutor hookExecutor)
-        : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, resourceFactory, hookExecutor)
+        IResourceHookExecutor hookExecutor = null)
+        : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, currentRequest,
+            resourceChangeTracker, resourceFactory, hookExecutor)
     {
         _notificationService = notificationService;
     }
 
-    public override async Task&lt;TodoItem&gt; CreateAsync(TodoItem entity)
+    public override async Task&lt;TodoItem&gt; CreateAsync(TodoItem resource)
     {
-        // Call the base implementation which uses Entity Framework Core
-        var newEntity = await base.CreateAsync(entity);
+        // Call the base implementation
+        var newResource = await base.CreateAsync(resource);
 
         // Custom code
-        _notificationService.Notify($&quot;Entity created: {newEntity.Id}&quot;);
+        _notificationService.Notify($&quot;Resource created: {newResource.StringId}&quot;);
 
-        // Don&#39;t forget to return the new entity
-        return newEntity;
+        return newResource;
     }
 }
 </code></pre><h2 id="not-using-entity-framework-core">Not Using Entity Framework Core?</h2>
 <p>As previously discussed, this library uses Entity Framework Core by default.
-If you&#39;d like to use another ORM that does not implement <code>IQueryable</code>, you can use a custom <code>IResourceService&lt;TModel&gt;</code> implementation.</p>
+If you&#39;d like to use another ORM that does not provide what JsonApiResourceService depends upon, you can use a custom <code>IResourceService&lt;T&gt;</code> implementation.</p>
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
@@ -139,7 +138,7 @@ public class MyModelService : IResourceService&lt;MyModel&gt;
     // ...
 }
 </code></pre><h2 id="limited-requirements">Limited Requirements</h2>
-<p>In some cases it may be necessary to only expose a few methods on the resource. For this reason, we have created a hierarchy of service interfaces that can be used to get the exact implementation you require.</p>
+<p>In some cases it may be necessary to only expose a few methods on a resource. For this reason, we have created a hierarchy of service interfaces that can be used to get the exact implementation you require.</p>
 <p>This interface hierarchy is defined by this tree structure.</p>
 <pre><code>IResourceService
 |
@@ -151,10 +150,10 @@ public class MyModelService : IResourceService&lt;MyModel&gt;
 |   +-- IGetByIdService
 |   |   GET /{id}
 |   |
-|   +-- IGetRelationshipService
+|   +-- IGetSecondaryService
 |   |   GET /{id}/{relationship}
 |   |
-|   +-- IGetRelationshipsService
+|   +-- IGetRelationshipService
 |       GET /{id}/relationships/{relationship}
 |
 +-- IResourceCommandService
@@ -173,7 +172,7 @@ public class MyModelService : IResourceService&lt;MyModel&gt;
 </code></pre><p>In order to take advantage of these interfaces you first need to inject the service for each implemented interface.</p>
 <pre><code class="lang-c#">public class ArticleService : ICreateService&lt;Article&gt;, IDeleteService&lt;Article&gt;
 {
-  // ...
+    // ...
 }
 
 public class Startup
@@ -198,9 +197,9 @@ public class Startup
     { }
 
     [HttpPost]
-    public override async Task&lt;IActionResult&gt; PostAsync([FromBody] Article entity)
+    public override async Task&lt;IActionResult&gt; PostAsync([FromBody] Article resource)
     {
-        return await base.PostAsync(entity);
+        return await base.PostAsync(resource);
     }
 
     [HttpDelete(&quot;{id}&quot;)]
@@ -209,7 +208,7 @@ public class Startup
         return await base.DeleteAsync(id);
     }
 }
-</code></pre></tmodel></article>
+</code></pre></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">

@@ -94,18 +94,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder__ctor_JsonApiDotNetCore_Configuration_ILinksConfiguration_JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_JsonApiDotNetCore_Query_IPageService_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_QueryParameterServices_Common_IRequestQueryStringAccessor_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.%23ctor(JsonApiDotNetCore.Configuration.ILinksConfiguration%2CJsonApiDotNetCore.Managers.Contracts.ICurrentRequest%2CJsonApiDotNetCore.Query.IPageService%2CJsonApiDotNetCore.Internal.Contracts.IResourceContextProvider%2CJsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_RequestServices_Contracts_ICurrentRequest_JsonApiDotNetCore_Internal_IPaginationContext_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_QueryStrings_IRequestQueryStringAccessor_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CJsonApiDotNetCore.RequestServices.Contracts.ICurrentRequest%2CJsonApiDotNetCore.Internal.IPaginationContext%2CJsonApiDotNetCore.Internal.Contracts.IResourceContextProvider%2CJsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/Builders/LinkBuilder.cs/#L25">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder__ctor_" data-uid="JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder__ctor_JsonApiDotNetCore_Configuration_ILinksConfiguration_JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_JsonApiDotNetCore_Query_IPageService_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_QueryParameterServices_Common_IRequestQueryStringAccessor_" data-uid="JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.ILinksConfiguration,JsonApiDotNetCore.Managers.Contracts.ICurrentRequest,JsonApiDotNetCore.Query.IPageService,JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor)">LinkBuilder(ILinksConfiguration, ICurrentRequest, IPageService, IResourceContextProvider, IRequestQueryStringAccessor)</h4>
+  <h4 id="JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_RequestServices_Contracts_ICurrentRequest_JsonApiDotNetCore_Internal_IPaginationContext_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_QueryStrings_IRequestQueryStringAccessor_" data-uid="JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.RequestServices.Contracts.ICurrentRequest,JsonApiDotNetCore.Internal.IPaginationContext,JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor)">LinkBuilder(IJsonApiOptions, ICurrentRequest, IPaginationContext, IResourceContextProvider, IRequestQueryStringAccessor)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LinkBuilder(ILinksConfiguration options, ICurrentRequest currentRequest, IPageService pageService, IResourceContextProvider provider, IRequestQueryStringAccessor queryStringAccessor)</code></pre>
+    <pre><code class="lang-csharp hljs">public LinkBuilder(IJsonApiOptions options, ICurrentRequest currentRequest, IPaginationContext paginationContext, IResourceContextProvider provider, IRequestQueryStringAccessor queryStringAccessor)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -118,18 +118,18 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ILinksConfiguration.html">ILinksConfiguration</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></td>
         <td><span class="parametername">options</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.html">ICurrentRequest</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.RequestServices.Contracts.ICurrentRequest.html">ICurrentRequest</a></td>
         <td><span class="parametername">currentRequest</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Query.IPageService.html">IPageService</a></td>
-        <td><span class="parametername">pageService</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Internal.IPaginationContext.html">IPaginationContext</a></td>
+        <td><span class="parametername">paginationContext</span></td>
         <td></td>
       </tr>
       <tr>
@@ -138,7 +138,7 @@
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.html">IRequestQueryStringAccessor</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor.html">IRequestQueryStringAccessor</a></td>
         <td><span class="parametername">queryStringAccessor</span></td>
         <td></td>
       </tr>
@@ -148,13 +148,13 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetRelationshipLinks_JsonApiDotNetCore_Models_RelationshipAttribute_JsonApiDotNetCore_Models_IIdentifiable_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Models.RelationshipAttribute%2CJsonApiDotNetCore.Models.IIdentifiable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetRelationshipLinks_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute_JsonApiDotNetCore_Models_IIdentifiable_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Models.Annotation.RelationshipAttribute%2CJsonApiDotNetCore.Models.IIdentifiable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/Builders/LinkBuilder.cs/#L156">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/Builders/LinkBuilder.cs/#L155">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetRelationshipLinks_" data-uid="JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetRelationshipLinks*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetRelationshipLinks_JsonApiDotNetCore_Models_RelationshipAttribute_JsonApiDotNetCore_Models_IIdentifiable_" data-uid="JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Models.RelationshipAttribute,JsonApiDotNetCore.Models.IIdentifiable)">GetRelationshipLinks(RelationshipAttribute, IIdentifiable)</h4>
+  <h4 id="JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetRelationshipLinks_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute_JsonApiDotNetCore_Models_IIdentifiable_" data-uid="JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Models.Annotation.RelationshipAttribute,JsonApiDotNetCore.Models.IIdentifiable)">GetRelationshipLinks(RelationshipAttribute, IIdentifiable)</h4>
   <div class="markdown level1 summary"><p>Builds the links object that is included in the values of the <a class="xref" href="JsonApiDotNetCore.Models.RelationshipEntry.html">RelationshipEntry</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -173,7 +173,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.Annotation.RelationshipAttribute.html">RelationshipAttribute</a></td>
         <td><span class="parametername">relationship</span></td>
         <td></td>
       </tr>
@@ -194,7 +194,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.Links.RelationshipLinks.html">RelationshipLinks</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.JsonApiDocuments.RelationshipLinks.html">RelationshipLinks</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -204,7 +204,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetResourceLinks_System_String_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetResourceLinks(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/Builders/LinkBuilder.cs/#L144">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/Builders/LinkBuilder.cs/#L143">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetResourceLinks_" data-uid="JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetResourceLinks*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetResourceLinks_System_String_System_String_" data-uid="JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetResourceLinks(System.String,System.String)">GetResourceLinks(String, String)</h4>
@@ -247,7 +247,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.Links.ResourceLinks.html">ResourceLinks</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.JsonApiDocuments.ResourceLinks.html">ResourceLinks</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -278,7 +278,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.Links.TopLevelLinks.html">TopLevelLinks</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.JsonApiDocuments.TopLevelLinks.html">TopLevelLinks</a></td>
         <td></td>
       </tr>
     </tbody>

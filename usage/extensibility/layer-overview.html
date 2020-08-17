@@ -69,18 +69,18 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="layer-overview">Layer Overview</h1>
 
-<p>By default, data retrieval is distributed across 3 layers:</p>
+<p>By default, data retrieval is distributed across three layers:</p>
 <pre><code>JsonApiController (required)
 
-+-- DefaultResourceService: IResourceService
++-- JsonApiResourceService : IResourceService
 
-     +-- DefaultResourceRepository: IResourceRepository
+     +-- EntityFrameworkCoreRepository : IResourceRepository
 </code></pre><p>Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible to keep the controllers free of unnecessary logic.
 You can use the following as a general rule of thumb for where to put business logic:</p>
 <ul>
 <li><code>Controller</code>: simple validation logic that should result in the return of specific HTTP status codes, such as model validation</li>
 <li><code>IResourceService</code>: advanced business logic and replacement of data access mechanisms</li>
-<li><code>IResourceRepository</code>: custom logic that builds on the Entity Framework Core APIs, such as Authorization of data</li>
+<li><code>IResourceRepository</code>: custom logic that builds on the Entity Framework Core APIs</li>
 </ul>
 <h2 id="replacing-services">Replacing Services</h2>
 <p><strong>Note:</strong> If you are using auto-discovery, services will be automatically registered for you.</p>

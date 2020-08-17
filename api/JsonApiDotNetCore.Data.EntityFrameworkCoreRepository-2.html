@@ -1,0 +1,689 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class EntityFrameworkCoreRepository&lt;TResource, TId&gt;
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class EntityFrameworkCoreRepository&lt;TResource, TId&gt;
+   ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2">
+  
+  
+  <h1 id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2" class="text-break">Class EntityFrameworkCoreRepository&lt;TResource, TId&gt;
+  </h1>
+  <div class="markdown level0 summary"><p>Provides a repository implementation that uses Entity Framework Core.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">EntityFrameworkCoreRepository&lt;TResource, TId&gt;</span></div>
+      <div class="level2"><a class="xref" href="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository-1.html">EntityFrameworkCoreRepository&lt;TResource&gt;</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="JsonApiDotNetCore.Data.IResourceRepository-2.html">IResourceRepository</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Data.IResourceReadRepository-2.html">IResourceReadRepository</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Data.IResourceWriteRepository-2.html">IResourceWriteRepository</a>&lt;TResource, TId&gt;</div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Data.html">JsonApiDotNetCore.Data</a></h6>
+  <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
+  <h5 id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class EntityFrameworkCoreRepository&lt;TResource, TId&gt; : object, IResourceRepository&lt;TResource, TId&gt;, IResourceReadRepository&lt;TResource, TId&gt;, IResourceWriteRepository&lt;TResource, TId&gt; where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TResource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2__ctor_JsonApiDotNetCore_Serialization_ITargetedFields_JsonApiDotNetCore_Data_IDbContextResolver_JsonApiDotNetCore_Internal_Contracts_IResourceGraph_JsonApiDotNetCore_Internal_Generics_IGenericServiceFactory_JsonApiDotNetCore_Internal_IResourceFactory_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__ILoggerFactory_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.EntityFrameworkCoreRepository%602.%23ctor(JsonApiDotNetCore.Serialization.ITargetedFields%2CJsonApiDotNetCore.Data.IDbContextResolver%2CJsonApiDotNetCore.Internal.Contracts.IResourceGraph%2CJsonApiDotNetCore.Internal.Generics.IGenericServiceFactory%2CJsonApiDotNetCore.Internal.IResourceFactory%2CIEnumerable%7BJsonApiDotNetCore.Queries.IQueryConstraintProvider%7D%2CILoggerFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/EntityFrameworkCoreRepository.cs/#L35">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2__ctor_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.#ctor*"></a>
+  <h4 id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2__ctor_JsonApiDotNetCore_Serialization_ITargetedFields_JsonApiDotNetCore_Data_IDbContextResolver_JsonApiDotNetCore_Internal_Contracts_IResourceGraph_JsonApiDotNetCore_Internal_Generics_IGenericServiceFactory_JsonApiDotNetCore_Internal_IResourceFactory_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__ILoggerFactory_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.#ctor(JsonApiDotNetCore.Serialization.ITargetedFields,JsonApiDotNetCore.Data.IDbContextResolver,JsonApiDotNetCore.Internal.Contracts.IResourceGraph,JsonApiDotNetCore.Internal.Generics.IGenericServiceFactory,JsonApiDotNetCore.Internal.IResourceFactory,IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},ILoggerFactory)">EntityFrameworkCoreRepository(ITargetedFields, IDbContextResolver, IResourceGraph, IGenericServiceFactory, IResourceFactory, IEnumerable&lt;IQueryConstraintProvider&gt;, ILoggerFactory)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public EntityFrameworkCoreRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory, IResourceFactory resourceFactory, IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders, ILoggerFactory loggerFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Serialization.ITargetedFields.html">ITargetedFields</a></td>
+        <td><span class="parametername">targetedFields</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Data.IDbContextResolver.html">IDbContextResolver</a></td>
+        <td><span class="parametername">contextResolver</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.html">IResourceGraph</a></td>
+        <td><span class="parametername">resourceGraph</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Internal.Generics.IGenericServiceFactory.html">IGenericServiceFactory</a></td>
+        <td><span class="parametername">genericServiceFactory</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Internal.IResourceFactory.html">IResourceFactory</a></td>
+        <td><span class="parametername">resourceFactory</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Queries.IQueryConstraintProvider.html">IQueryConstraintProvider</a>&gt;</td>
+        <td><span class="parametername">constraintProviders</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">ILoggerFactory</span></td>
+        <td><span class="parametername">loggerFactory</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_ApplyQueryLayer_JsonApiDotNetCore_Queries_QueryLayer_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.EntityFrameworkCoreRepository%602.ApplyQueryLayer(JsonApiDotNetCore.Queries.QueryLayer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/EntityFrameworkCoreRepository.cs/#L82">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_ApplyQueryLayer_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.ApplyQueryLayer*"></a>
+  <h4 id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_ApplyQueryLayer_JsonApiDotNetCore_Queries_QueryLayer_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.ApplyQueryLayer(JsonApiDotNetCore.Queries.QueryLayer)">ApplyQueryLayer(QueryLayer)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual IQueryable&lt;TResource&gt; ApplyQueryLayer(QueryLayer layer)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a></td>
+        <td><span class="parametername">layer</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_CountAsync_JsonApiDotNetCore_Queries_Expressions_FilterExpression_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.EntityFrameworkCoreRepository%602.CountAsync(JsonApiDotNetCore.Queries.Expressions.FilterExpression)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/EntityFrameworkCoreRepository.cs/#L68">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_CountAsync_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.CountAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_CountAsync_JsonApiDotNetCore_Queries_Expressions_FilterExpression_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.CountAsync(JsonApiDotNetCore.Queries.Expressions.FilterExpression)">CountAsync(FilterExpression)</h4>
+  <div class="markdown level1 summary"><p>Executes a read query using the specified top-level filter and returns the top-level count of matching resources.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;int&gt; CountAsync(FilterExpression topFilter)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></td>
+        <td><span class="parametername">topFilter</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_CreateAsync__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.EntityFrameworkCoreRepository%602.CreateAsync(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/EntityFrameworkCoreRepository.cs/#L111">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_CreateAsync_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.CreateAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_CreateAsync__0_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.CreateAsync(`0)">CreateAsync(TResource)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task CreateAsync(TResource resource)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">resource</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_DeleteAsync__1_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.EntityFrameworkCoreRepository%602.DeleteAsync(%601)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/EntityFrameworkCoreRepository.cs/#L302">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_DeleteAsync_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.DeleteAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_DeleteAsync__1_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.DeleteAsync(`1)">DeleteAsync(TId)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;bool&gt; DeleteAsync(TId id)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_FlushFromCache__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.EntityFrameworkCoreRepository%602.FlushFromCache(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/EntityFrameworkCoreRepository.cs/#L332">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_FlushFromCache_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.FlushFromCache*"></a>
+  <h4 id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_FlushFromCache__0_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.FlushFromCache(`0)">FlushFromCache(TResource)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void FlushFromCache(TResource resource)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">resource</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_GetAll.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.EntityFrameworkCoreRepository%602.GetAll%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/EntityFrameworkCoreRepository.cs/#L105">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_GetAll_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.GetAll*"></a>
+  <h4 id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_GetAll" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.GetAll">GetAll()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual IQueryable&lt;TResource&gt; GetAll()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_GetAsync_JsonApiDotNetCore_Queries_QueryLayer_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.EntityFrameworkCoreRepository%602.GetAsync(JsonApiDotNetCore.Queries.QueryLayer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/EntityFrameworkCoreRepository.cs/#L54">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_GetAsync_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.GetAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_GetAsync_JsonApiDotNetCore_Queries_QueryLayer_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.GetAsync(JsonApiDotNetCore.Queries.QueryLayer)">GetAsync(QueryLayer)</h4>
+  <div class="markdown level1 summary"><p>Executes a read query using the specified constraints and returns the list of matching resources.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;IReadOnlyCollection&lt;TResource&gt;&gt; GetAsync(QueryLayer layer)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a></td>
+        <td><span class="parametername">layer</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">IReadOnlyCollection</span>&lt;TResource&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_LoadCurrentRelationships__0_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.EntityFrameworkCoreRepository%602.LoadCurrentRelationships(%600%2CJsonApiDotNetCore.Models.Annotation.RelationshipAttribute)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/EntityFrameworkCoreRepository.cs/#L352">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_LoadCurrentRelationships_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.LoadCurrentRelationships*"></a>
+  <h4 id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_LoadCurrentRelationships__0_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.LoadCurrentRelationships(`0,JsonApiDotNetCore.Models.Annotation.RelationshipAttribute)">LoadCurrentRelationships(TResource, RelationshipAttribute)</h4>
+  <div class="markdown level1 summary"><p>Before assigning new relationship values (UpdateAsync), we need to
+attach the current database values of the relationship to the dbContext, else 
+it will not perform a complete-replace which is required for 
+one-to-many and many-to-many.
+<p>
+For example: a person <code>p1</code> has 2 todo-items: <code>t1</code> and <code>t2</code>.
+If we want to update this todo-item set to <code>t3</code> and <code>t4</code>, simply assigning
+<code>p1.todoItems = [t3, t4]</code> will result in EF Core adding them to the set,
+resulting in <code>[t1 ... t4]</code>. Instead, we should first include <code>[t1, t2]</code>,
+after which the reassignment  <code>p1.todoItems = [t3, t4]</code> will actually 
+make EF Core perform a complete replace. This method does the loading of <code>[t1, t2]</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void LoadCurrentRelationships(TResource oldResource, RelationshipAttribute relationshipAttribute)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">oldResource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.Annotation.RelationshipAttribute.html">RelationshipAttribute</a></td>
+        <td><span class="parametername">relationshipAttribute</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_UpdateAsync__0__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.EntityFrameworkCoreRepository%602.UpdateAsync(%600%2C%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/EntityFrameworkCoreRepository.cs/#L209">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_UpdateAsync_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.UpdateAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_UpdateAsync__0__0_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.UpdateAsync(`0,`0)">UpdateAsync(TResource, TResource)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task UpdateAsync(TResource requestResource, TResource databaseResource)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">requestResource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">databaseResource</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_UpdateRelationshipsAsync_System_Object_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute_IEnumerable_System_String__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.EntityFrameworkCoreRepository%602.UpdateRelationshipsAsync(System.Object%2CJsonApiDotNetCore.Models.Annotation.RelationshipAttribute%2CIEnumerable%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/EntityFrameworkCoreRepository.cs/#L287">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_UpdateRelationshipsAsync_" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.UpdateRelationshipsAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2_UpdateRelationshipsAsync_System_Object_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute_IEnumerable_System_String__" data-uid="JsonApiDotNetCore.Data.EntityFrameworkCoreRepository`2.UpdateRelationshipsAsync(System.Object,JsonApiDotNetCore.Models.Annotation.RelationshipAttribute,IEnumerable{System.String})">UpdateRelationshipsAsync(Object, RelationshipAttribute, IEnumerable&lt;String&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable&lt;string&gt; relationshipIds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">parent</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.Annotation.RelationshipAttribute.html">RelationshipAttribute</a></td>
+        <td><span class="parametername">relationship</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">relationshipIds</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.IResourceRepository-2.html">IResourceRepository&lt;TResource, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.IResourceReadRepository-2.html">IResourceReadRepository&lt;TResource, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.IResourceWriteRepository-2.html">IResourceWriteRepository&lt;TResource, TId&gt;</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_EntityFrameworkCoreRepository_2.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.EntityFrameworkCoreRepository%602%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/EntityFrameworkCoreRepository.cs/#L24" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

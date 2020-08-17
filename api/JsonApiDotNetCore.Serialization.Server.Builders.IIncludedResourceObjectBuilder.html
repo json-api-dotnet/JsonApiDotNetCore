@@ -88,11 +88,11 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Server_Builders_IIncludedResourceObjectBuilder_Build.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder.Build%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/Contracts/IIncludedResourceObjectBuilder.cs/#L11">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/Contracts/IIncludedResourceObjectBuilder.cs/#L12">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Server_Builders_IIncludedResourceObjectBuilder_Build_" data-uid="JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder.Build*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Server_Builders_IIncludedResourceObjectBuilder_Build" data-uid="JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder.Build">Build()</h4>
-  <div class="markdown level1 summary"><p>Gets the list of resource objects representing the included entities</p>
+  <div class="markdown level1 summary"><p>Gets the list of resource objects representing the included resources</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -116,20 +116,20 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Server_Builders_IIncludedResourceObjectBuilder_IncludeRelationshipChain_List_JsonApiDotNetCore_Models_RelationshipAttribute__JsonApiDotNetCore_Models_IIdentifiable_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder.IncludeRelationshipChain(List%7BJsonApiDotNetCore.Models.RelationshipAttribute%7D%2CJsonApiDotNetCore.Models.IIdentifiable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Server_Builders_IIncludedResourceObjectBuilder_IncludeRelationshipChain_List_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute__JsonApiDotNetCore_Models_IIdentifiable_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder.IncludeRelationshipChain(List%7BJsonApiDotNetCore.Models.Annotation.RelationshipAttribute%7D%2CJsonApiDotNetCore.Models.IIdentifiable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/Contracts/IIncludedResourceObjectBuilder.cs/#L16">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/Contracts/IIncludedResourceObjectBuilder.cs/#L17">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Server_Builders_IIncludedResourceObjectBuilder_IncludeRelationshipChain_" data-uid="JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder.IncludeRelationshipChain*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_Server_Builders_IIncludedResourceObjectBuilder_IncludeRelationshipChain_List_JsonApiDotNetCore_Models_RelationshipAttribute__JsonApiDotNetCore_Models_IIdentifiable_" data-uid="JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder.IncludeRelationshipChain(List{JsonApiDotNetCore.Models.RelationshipAttribute},JsonApiDotNetCore.Models.IIdentifiable)">IncludeRelationshipChain(List&lt;RelationshipAttribute&gt;, IIdentifiable)</h4>
-  <div class="markdown level1 summary"><p>Extracts the included entities from <code data-dev-comment-type="paramref" class="paramref">rootEntity</code> using the
+  <h4 id="JsonApiDotNetCore_Serialization_Server_Builders_IIncludedResourceObjectBuilder_IncludeRelationshipChain_List_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute__JsonApiDotNetCore_Models_IIdentifiable_" data-uid="JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder.IncludeRelationshipChain(List{JsonApiDotNetCore.Models.Annotation.RelationshipAttribute},JsonApiDotNetCore.Models.IIdentifiable)">IncludeRelationshipChain(List&lt;RelationshipAttribute&gt;, IIdentifiable)</h4>
+  <div class="markdown level1 summary"><p>Extracts the included resources from <code data-dev-comment-type="paramref" class="paramref">rootResource</code> using the
 (arbitrarily deeply nested) included relationships in <code data-dev-comment-type="paramref" class="paramref">inclusionChain</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void IncludeRelationshipChain(List&lt;RelationshipAttribute&gt; inclusionChain, IIdentifiable rootEntity)</code></pre>
+    <pre><code class="lang-csharp hljs">void IncludeRelationshipChain(List&lt;RelationshipAttribute&gt; inclusionChain, IIdentifiable rootResource)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -142,13 +142,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.Annotation.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
         <td><span class="parametername">inclusionChain</span></td>
         <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Models.IIdentifiable.html">IIdentifiable</a></td>
-        <td><span class="parametername">rootEntity</span></td>
+        <td><span class="parametername">rootResource</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -164,7 +164,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Server_Builders_IIncludedResourceObjectBuilder.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/Contracts/IIncludedResourceObjectBuilder.cs/#L6" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Server/Contracts/IIncludedResourceObjectBuilder.cs/#L7" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

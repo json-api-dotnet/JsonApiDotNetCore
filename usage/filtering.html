@@ -69,9 +69,107 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="filtering">Filtering</h1>
 
+<p><em>since v4.0</em></p>
 <p>Resources can be filtered by attributes using the <code>filter</code> query string parameter.
 By default, all attributes are filterable.
 The filtering strategy we have selected, uses the following form.</p>
+<pre><code>?filter=expression
+</code></pre><p>Expressions are composed using the following functions:</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Function</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Equality</td>
+<td><code>equals</code></td>
+<td><code>?filter=equals(lastName,&#39;Smith&#39;)</code></td>
+</tr>
+<tr>
+<td>Less than</td>
+<td><code>lessThan</code></td>
+<td><code>?filter=lessThan(age,&#39;25&#39;)</code></td>
+</tr>
+<tr>
+<td>Less than or equal to</td>
+<td><code>lessOrEqual</code></td>
+<td><code>?filter=lessOrEqual(lastModified,&#39;2001-01-01&#39;)</code></td>
+</tr>
+<tr>
+<td>Greater than</td>
+<td><code>greaterThan</code></td>
+<td><code>?filter=greaterThan(duration,&#39;6:12:14&#39;)</code></td>
+</tr>
+<tr>
+<td>Greater than or equal to</td>
+<td><code>greaterOrEqual</code></td>
+<td><code>?filter=greaterOrEqual(percentage,&#39;33.33&#39;)</code></td>
+</tr>
+<tr>
+<td>Contains text</td>
+<td><code>contains</code></td>
+<td><code>?filter=contains(description,&#39;cooking&#39;)</code></td>
+</tr>
+<tr>
+<td>Starts with text</td>
+<td><code>startsWith</code></td>
+<td><code>?filter=startsWith(description,&#39;The&#39;)</code></td>
+</tr>
+<tr>
+<td>Ends with text</td>
+<td><code>endsWith</code></td>
+<td><code>?filter=endsWith(description,&#39;End&#39;)</code></td>
+</tr>
+<tr>
+<td>Equals one value from set</td>
+<td><code>any</code></td>
+<td><code>?filter=any(chapter,&#39;Intro&#39;,&#39;Summary&#39;,&#39;Conclusion&#39;)</code></td>
+</tr>
+<tr>
+<td>Collection contains items</td>
+<td><code>has</code></td>
+<td><code>?filter=has(articles)</code></td>
+</tr>
+<tr>
+<td>Negation</td>
+<td><code>not</code></td>
+<td><code>?filter=not(equals(lastName,null))</code></td>
+</tr>
+<tr>
+<td>Conditional logical OR</td>
+<td><code>or</code></td>
+<td><code>?filter=or(has(orders),has(invoices))</code></td>
+</tr>
+<tr>
+<td>Conditional logical AND</td>
+<td><code>and</code></td>
+<td><code>?filter=and(has(orders),has(invoices))</code></td>
+</tr>
+</tbody>
+</table>
+<p>Comparison operators compare an attribute against a constant value (between quotes), null or another attribute:</p>
+<pre><code class="lang-http">GET /users?filter=equals(displayName,&#39;Brian O&#39;&#39;Connor&#39;) HTTP/1.1
+</code></pre><pre><code class="lang-http">GET /users?filter=equals(displayName,null) HTTP/1.1
+</code></pre><pre><code class="lang-http">GET /users?filter=equals(displayName,lastName) HTTP/1.1
+</code></pre><p>Comparison operators can be combined with the <code>count</code> function, which acts on HasMany relationships:</p>
+<pre><code class="lang-http">GET /blogs?filter=lessThan(count(owner.articles),&#39;10&#39;) HTTP/1.1
+</code></pre><pre><code class="lang-http">GET /customers?filter=greaterThan(count(orders),count(invoices)) HTTP/1.1
+</code></pre><p>When filters are used multiple times on the same resource, they are combined using an OR operator.
+The next request returns all customers that have orders -or- whose last name is Smith.</p>
+<pre><code class="lang-http">GET /customers?filter=has(orders)&amp;filter=equals(lastName,&#39;Smith&#39;) HTTP/1.1
+</code></pre><p>Aside from filtering on the resource being requested (which would be blogs in /blogs and articles in /blogs/1/articles), 
+filtering on included collections can be done using bracket notation:</p>
+<pre><code class="lang-http">GET /articles?include=author,tags&amp;filter=equals(author.lastName,&#39;Smith&#39;)&amp;filter[tags]=contains(label,&#39;tech&#39;,&#39;design&#39;) HTTP/1.1
+</code></pre><p>In the above request, the first filter is applied on the collection of articles, while the second one is applied on the nested collection of tags.</p>
+<p>Putting it all together, you can build quite complex filters, such as:</p>
+<pre><code class="lang-http">GET /blogs?include=owner.articles.revisions&amp;filter=and(or(equals(title,&#39;Technology&#39;),has(owner.articles)),not(equals(owner.lastName,null)))&amp;filter[owner.articles]=equals(caption,&#39;Two&#39;)&amp;filter[owner.articles.revisions]=greaterThan(publishTime,&#39;2005-05-05&#39;) HTTP/1.1
+</code></pre><h1 id="legacy-filters">Legacy filters</h1>
+<p>The next section describes how filtering worked in versions prior to v4.0. They are always applied on the set of resources being requested (no nesting).
+Legacy filters use the following form.</p>
 <pre><code>?filter[attribute]=value
 </code></pre><p>For operations other than equality, the query can be prefixed with an operation identifier.
 Examples can be found in the table below.</p>
@@ -81,103 +179,94 @@ Examples can be found in the table below.</p>
 <th>Operation</th>
 <th>Prefix</th>
 <th>Example</th>
+<th>Equivalent form in v4.0</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Equals</td>
+<td>Equality</td>
 <td><code>eq</code></td>
-<td><code>?filter[attribute]=eq:value</code></td>
+<td><code>?filter[lastName]=eq:Smith</code></td>
+<td><code>?filter=equals(lastName,&#39;Smith&#39;)</code></td>
 </tr>
 <tr>
-<td>Not Equals</td>
+<td>Non-equality</td>
 <td><code>ne</code></td>
-<td><code>?filter[attribute]=ne:value</code></td>
+<td><code>?filter[lastName]=ne:Smith</code></td>
+<td><code>?filter=not(equals(lastName,&#39;Smith&#39;))</code></td>
 </tr>
 <tr>
-<td>Less Than</td>
+<td>Less than</td>
 <td><code>lt</code></td>
-<td><code>?filter[attribute]=lt:10</code></td>
+<td><code>?filter[age]=lt:25</code></td>
+<td><code>?filter=lessThan(age,&#39;25&#39;)</code></td>
 </tr>
 <tr>
-<td>Greater Than</td>
-<td><code>gt</code></td>
-<td><code>?filter[attribute]=gt:10</code></td>
-</tr>
-<tr>
-<td>Less Than Or Equal To</td>
+<td>Less than or equal to</td>
 <td><code>le</code></td>
-<td><code>?filter[attribute]=le:10</code></td>
+<td><code>?filter[lastModified]=le:2001-01-01</code></td>
+<td><code>?filter=lessOrEqual(lastModified,&#39;2001-01-01&#39;)</code></td>
 </tr>
 <tr>
-<td>Greater Than Or Equal To</td>
+<td>Greater than</td>
+<td><code>gt</code></td>
+<td><code>?filter[duration]=gt:6:12:14</code></td>
+<td><code>?filter=greaterThan(duration,&#39;6:12:14&#39;)</code></td>
+</tr>
+<tr>
+<td>Greater than or equal to</td>
 <td><code>ge</code></td>
-<td><code>?filter[attribute]=ge:10</code></td>
+<td><code>?filter[percentage]=ge:33.33</code></td>
+<td><code>?filter=greaterOrEqual(percentage,&#39;33.33&#39;)</code></td>
 </tr>
 <tr>
-<td>Like (string comparison)</td>
+<td>Contains text</td>
 <td><code>like</code></td>
-<td><code>?filter[attribute]=like:value</code></td>
+<td><code>?filter[description]=like:cooking</code></td>
+<td><code>?filter=contains(description,&#39;cooking&#39;)</code></td>
 </tr>
 <tr>
-<td>In Set</td>
+<td>Equals one value from set</td>
 <td><code>in</code></td>
-<td><code>?filter[attribute]=in:value1,value2</code></td>
+<td><code>?filter[chapter]=in:Intro,Summary,Conclusion</code></td>
+<td><code>?filter=any(chapter,&#39;Intro&#39;,&#39;Summary&#39;,&#39;Conclusion&#39;)</code></td>
 </tr>
 <tr>
-<td>Not In Set</td>
+<td>Equals none from set</td>
 <td><code>nin</code></td>
-<td><code>?filter[attribute]=nin:value1,value2</code></td>
+<td><code>?filter[chapter]=nin:one,two,three</code></td>
+<td><code>?filter=not(any(chapter,&#39;one&#39;,&#39;two&#39;,&#39;three&#39;))</code></td>
 </tr>
 <tr>
-<td>Is Null</td>
+<td>Equal to null</td>
 <td><code>isnull</code></td>
-<td><code>?filter[attribute]=isnull:</code></td>
+<td><code>?filter[lastName]=isnull:</code></td>
+<td><code>?filter=equals(lastName,null)</code></td>
 </tr>
 <tr>
-<td>Is Not Null</td>
+<td>Not equal to null</td>
 <td><code>isnotnull</code></td>
-<td><code>?filter[attribute]=isnotnull:</code></td>
+<td><code>?filter[lastName]=isnotnull:</code></td>
+<td><code>?filter=not(equals(lastName,null))</code></td>
 </tr>
 </tbody>
 </table>
-<p>Filters can be combined and will be applied using an AND operator.
-The following are equivalent query forms to get articles whose ordinal values are between 1-100.</p>
-<pre><code class="lang-http">GET /api/articles?filter[ordinal]=gt:1,lt:100 HTTP/1.1
-</code></pre><pre><code class="lang-http">GET /api/articles?filter[ordinal]=gt:1&amp;filter[ordinal]=lt:100 HTTP/1.1
-</code></pre><p>Aside from filtering on the resource being requested (top-level), filtering on single-depth related resources can be done too.</p>
-<pre><code class="lang-http">GET /api/articles?include=author&amp;filter[title]=like:marketing&amp;filter[author.lastName]=Smith HTTP/1.1
-</code></pre><p>Due to a <a href="https://github.com/dotnet/efcore/issues/1833">limitation</a> in Entity Framework Core 3.x, filtering does <strong>not</strong> work on nested endpoints:</p>
-<pre><code class="lang-http">GET /api/blogs/1/articles?filter[title]=like:new HTTP/1.1
+<p>Filters can be combined and will be applied using an OR operator. This used to be AND in versions prior to v4.0.</p>
+<p>Attributes to filter on can optionally be prefixed with a HasOne relationship, for example:</p>
+<pre><code class="lang-http">GET /api/articles?include=author&amp;filter[caption]=like:marketing&amp;filter[author.lastName]=Smith HTTP/1.1
+</code></pre><p>Legacy filter notation can still be used in v4.0 by setting <code>options.EnableLegacyFilterNotation</code> to <code>true</code>.
+If you want to use the new filter notation in that case, prefix the parameter value with <code>expr:</code>, for example:</p>
+<pre><code class="lang-http">GET /articles?filter[caption]=tech&amp;filter=expr:equals(caption,&#39;cooking&#39;)) HTTP/1.1
 </code></pre><h2 id="custom-filters">Custom Filters</h2>
-<p>There are two ways you can add custom filters:</p>
+<p>There are multiple ways you can add custom filters:</p>
 <ol>
-<li>Creating a <code>ResourceDefinition</code> as <a href="resources/resource-definitions.html#custom-query-filters">described previously</a></li>
-<li>Overriding the <code>DefaultResourceRepository</code> shown below</li>
+<li>Creating a <code>ResourceDefinition</code> using <code>OnApplyFilter</code> (see <a href="resources/resource-definitions.html#exclude-soft-deleted-resources">here</a>) and inject <code>IRequestQueryStringAccessor</code>, which works at all depths, but filter operations are constrained to what <code>FilterExpression</code> provides</li>
+<li>Creating a <code>ResourceDefinition</code> using <code>OnRegisterQueryableHandlersForQueryStringParameters</code> as <a href="resources/resource-definitions.html#custom-query-string-parameters">described previously</a>, which enables the full range of <code>IQueryable&lt;T&gt;</code> functionality, but only works on primary endpoints</li>
+<li>Add an implementation of <code>IQueryConstraintProvider</code> to supply additional <code>FilterExpression</code>s, which are combined with existing filters using AND operator</li>
+<li>Override <code>EntityFrameworkCoreRepository.ApplyQueryLayer</code> to adapt the <code>IQueryable&lt;T&gt;</code> expression just before execution</li>
+<li>Take a deep dive and plug into reader/parser/tokenizer/visitor/builder for adding additional general-purpose filter operators</li>
 </ol>
-<pre><code class="lang-c#">public class AuthorRepository : DefaultResourceRepository&lt;Author&gt;
-{
-    public AuthorRepository(
-        ITargetedFields targetedFields,
-        IDbContextResolver contextResolver,
-        IResourceGraph resourceGraph,
-        IGenericServiceFactory genericServiceFactory,
-        IResourceFactory resourceFactory,
-        ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory)
-    { }
-
-    public override IQueryable&lt;Author&gt; Filter(IQueryable&lt;Author&gt; authors, FilterQueryContext filterQueryContext)
-    {
-        // If the filter key is &quot;name&quot; (filter[name]), find authors with matching first or last names.
-        // For all other filter keys, use the base method.
-        return filterQueryContext.Attribute.Is(&quot;name&quot;)
-            ? authors.Where(author =&gt;
-                author.FirstName.Contains(filterQueryContext.Value) ||
-                author.LastName.Contains(filterQueryContext.Value))
-            : base.Filter(authors, filterQueryContext);
-    }
-</code></pre></article>
+</article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">

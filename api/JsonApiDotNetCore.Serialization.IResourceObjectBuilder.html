@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Serialization_IResourceObjectBuilder" data-uid="JsonApiDotNetCore.Serialization.IResourceObjectBuilder" class="text-break">Interface IResourceObjectBuilder
   </h1>
-  <div class="markdown level0 summary"><p>Responsible for converting entities in to <a class="xref" href="JsonApiDotNetCore.Models.ResourceObject.html">ResourceObject</a>s
+  <div class="markdown level0 summary"><p>Responsible for converting resources into <a class="xref" href="JsonApiDotNetCore.Models.ResourceObject.html">ResourceObject</a>s
 given a list of attributes and relationships.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
@@ -87,20 +87,20 @@ given a list of attributes and relationships.</p>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_IResourceObjectBuilder_Build_JsonApiDotNetCore_Models_IIdentifiable_IEnumerable_JsonApiDotNetCore_Models_AttrAttribute__IEnumerable_JsonApiDotNetCore_Models_RelationshipAttribute__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.IResourceObjectBuilder.Build(JsonApiDotNetCore.Models.IIdentifiable%2CIEnumerable%7BJsonApiDotNetCore.Models.AttrAttribute%7D%2CIEnumerable%7BJsonApiDotNetCore.Models.RelationshipAttribute%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_IResourceObjectBuilder_Build_JsonApiDotNetCore_Models_IIdentifiable_IEnumerable_JsonApiDotNetCore_Models_Annotation_AttrAttribute__IEnumerable_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.IResourceObjectBuilder.Build(JsonApiDotNetCore.Models.IIdentifiable%2CIEnumerable%7BJsonApiDotNetCore.Models.Annotation.AttrAttribute%7D%2CIEnumerable%7BJsonApiDotNetCore.Models.Annotation.RelationshipAttribute%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Common/IResourceObjectBuilder.cs/#L20">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Common/IResourceObjectBuilder.cs/#L21">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_IResourceObjectBuilder_Build_" data-uid="JsonApiDotNetCore.Serialization.IResourceObjectBuilder.Build*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_IResourceObjectBuilder_Build_JsonApiDotNetCore_Models_IIdentifiable_IEnumerable_JsonApiDotNetCore_Models_AttrAttribute__IEnumerable_JsonApiDotNetCore_Models_RelationshipAttribute__" data-uid="JsonApiDotNetCore.Serialization.IResourceObjectBuilder.Build(JsonApiDotNetCore.Models.IIdentifiable,IEnumerable{JsonApiDotNetCore.Models.AttrAttribute},IEnumerable{JsonApiDotNetCore.Models.RelationshipAttribute})">Build(IIdentifiable, IEnumerable&lt;AttrAttribute&gt;, IEnumerable&lt;RelationshipAttribute&gt;)</h4>
-  <div class="markdown level1 summary"><p>Converts <code data-dev-comment-type="paramref" class="paramref">entity</code> into a <a class="xref" href="JsonApiDotNetCore.Models.ResourceObject.html">ResourceObject</a>.
+  <h4 id="JsonApiDotNetCore_Serialization_IResourceObjectBuilder_Build_JsonApiDotNetCore_Models_IIdentifiable_IEnumerable_JsonApiDotNetCore_Models_Annotation_AttrAttribute__IEnumerable_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute__" data-uid="JsonApiDotNetCore.Serialization.IResourceObjectBuilder.Build(JsonApiDotNetCore.Models.IIdentifiable,IEnumerable{JsonApiDotNetCore.Models.Annotation.AttrAttribute},IEnumerable{JsonApiDotNetCore.Models.Annotation.RelationshipAttribute})">Build(IIdentifiable, IEnumerable&lt;AttrAttribute&gt;, IEnumerable&lt;RelationshipAttribute&gt;)</h4>
+  <div class="markdown level1 summary"><p>Converts <code data-dev-comment-type="paramref" class="paramref">resource</code> into a <a class="xref" href="JsonApiDotNetCore.Models.ResourceObject.html">ResourceObject</a>.
 Adds the attributes and relationships that are enlisted in <code data-dev-comment-type="paramref" class="paramref">attributes</code> and <code data-dev-comment-type="paramref" class="paramref">relationships</code></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">ResourceObject Build(IIdentifiable entity, IEnumerable&lt;AttrAttribute&gt; attributes, IEnumerable&lt;RelationshipAttribute&gt; relationships)</code></pre>
+    <pre><code class="lang-csharp hljs">ResourceObject Build(IIdentifiable resource, IEnumerable&lt;AttrAttribute&gt; attributes, IEnumerable&lt;RelationshipAttribute&gt; relationships)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -114,18 +114,18 @@ Adds the attributes and relationships that are enlisted in <code data-dev-commen
     <tbody>
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Models.IIdentifiable.html">IIdentifiable</a></td>
-        <td><span class="parametername">entity</span></td>
-        <td><p>Entity to build a Resource Object for</p>
+        <td><span class="parametername">resource</span></td>
+        <td><p>Resource to build a Resource Object for</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.Annotation.AttrAttribute.html">AttrAttribute</a>&gt;</td>
         <td><span class="parametername">attributes</span></td>
         <td><p>Attributes to include in the building process</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.Annotation.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
         <td><span class="parametername">relationships</span></td>
         <td><p>Relationships to include in the building process</p>
 </td>
@@ -159,7 +159,7 @@ Adds the attributes and relationships that are enlisted in <code data-dev-commen
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_IResourceObjectBuilder.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.IResourceObjectBuilder%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Common/IResourceObjectBuilder.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Common/IResourceObjectBuilder.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

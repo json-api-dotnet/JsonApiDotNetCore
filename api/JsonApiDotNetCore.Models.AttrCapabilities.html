@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Models_AttrCapabilities" data-uid="JsonApiDotNetCore.Models.AttrCapabilities" class="text-break">Enum AttrCapabilities
   </h1>
-  <div class="markdown level0 summary"><p>Indicates query string capabilities that can be performed on an <a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>.</p>
+  <div class="markdown level0 summary"><p>Indicates query string capabilities that can be performed on an <a class="xref" href="JsonApiDotNetCore.Models.Annotation.AttrAttribute.html">AttrAttribute</a>.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Models.html">JsonApiDotNetCore.Models</a></h6>
@@ -97,21 +97,27 @@
         <td></td>
       </tr>
       <tr>
+        <td id="JsonApiDotNetCore_Models_AttrCapabilities_AllowChange">AllowChange</td>
+        <td><p>Whether or not PATCH requests can update the attribute value.
+Attempts to update when disabled will return an HTTP 422 response.</p>
+</td>
+      </tr>
+      <tr>
         <td id="JsonApiDotNetCore_Models_AttrCapabilities_AllowFilter">AllowFilter</td>
         <td><p>Whether or not an attribute can be filtered on via a query string parameter.
 Attempts to sort when disabled will return an HTTP 400 response.</p>
 </td>
       </tr>
       <tr>
-        <td id="JsonApiDotNetCore_Models_AttrCapabilities_AllowMutate">AllowMutate</td>
-        <td><p>Whether or not PATCH requests can update the attribute value.
-Attempts to update when disabled will return an HTTP 422 response.</p>
-</td>
-      </tr>
-      <tr>
         <td id="JsonApiDotNetCore_Models_AttrCapabilities_AllowSort">AllowSort</td>
         <td><p>Whether or not an attribute can be sorted on via a query string parameter.
 Attempts to sort when disabled will return an HTTP 400 response.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="JsonApiDotNetCore_Models_AttrCapabilities_AllowView">AllowView</td>
+        <td><p>Whether or not GET requests can return the attribute.
+Attempts to retrieve when disabled will return an HTTP 422 response.</p>
 </td>
       </tr>
       <tr>
@@ -131,7 +137,7 @@ Attempts to sort when disabled will return an HTTP 400 response.</p>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_AttrCapabilities.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.AttrCapabilities%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/AttrCapabilities.cs/#L8" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/AttrCapabilities.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

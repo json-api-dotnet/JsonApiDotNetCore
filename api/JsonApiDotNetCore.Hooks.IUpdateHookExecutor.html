@@ -96,15 +96,15 @@
   <div class="markdown level1 summary"><p>Executes the After Cycle by firing the appropriate hooks if they are implemented. 
 <p>
 Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdate_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">AfterUpdate(HashSet&lt;TResource&gt;, ResourcePipeline)</a>
-hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.
+hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">resources</code>.
 <p>
 Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">AfterUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
-hook for any related (nested) entity for values within parameter <code data-dev-comment-type="paramref" class="paramref">entities</code></p>
+hook for any secondary (nested) resource for values within parameter <code data-dev-comment-type="paramref" class="paramref">resources</code></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AfterUpdate&lt;TResource&gt;(IEnumerable&lt;TResource&gt; entities, ResourcePipeline pipeline)
+    <pre><code class="lang-csharp hljs">void AfterUpdate&lt;TResource&gt;(IEnumerable&lt;TResource&gt; resources, ResourcePipeline pipeline)
     where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -119,8 +119,8 @@ hook for any related (nested) entity for values within parameter <code data-dev-
     <tbody>
       <tr>
         <td><span class="xref">IEnumerable</span>&lt;TResource&gt;</td>
-        <td><span class="parametername">entities</span></td>
-        <td><p>Target entities for the Before cycle.</p>
+        <td><span class="parametername">resources</span></td>
+        <td><p>Target resources for the Before cycle.</p>
 </td>
       </tr>
       <tr>
@@ -142,7 +142,7 @@ hook for any related (nested) entity for values within parameter <code data-dev-
     <tbody>
       <tr>
         <td><span class="parametername">TResource</span></td>
-        <td><p>The type of the root entities</p>
+        <td><p>The type of the root resources</p>
 </td>
       </tr>
     </tbody>
@@ -157,24 +157,24 @@ hook for any related (nested) entity for values within parameter <code data-dev-
   <a id="JsonApiDotNetCore_Hooks_IUpdateHookExecutor_BeforeUpdate_" data-uid="JsonApiDotNetCore.Hooks.IUpdateHookExecutor.BeforeUpdate*"></a>
   <h4 id="JsonApiDotNetCore_Hooks_IUpdateHookExecutor_BeforeUpdate__1_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IUpdateHookExecutor.BeforeUpdate``1(IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">BeforeUpdate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</h4>
   <div class="markdown level1 summary"><p>Executes the Before Cycle by firing the appropriate hooks if they are implemented. 
-The returned set will be used in the actual operation in <a class="xref" href="JsonApiDotNetCore.Services.DefaultResourceService-1.html">DefaultResourceService&lt;TResource&gt;</a>.
+The returned set will be used in the actual operation in <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a>.
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IDiffableEntityHashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeUpdate(IDiffableEntityHashSet&lt;TResource&gt;, ResourcePipeline)</a>
-hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.
+Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IDiffableResourceHashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeUpdate(IDiffableResourceHashSet&lt;TResource&gt;, ResourcePipeline)</a>
+hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">resources</code>.
 <p>
 Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdateRelationship_HashSet_System_String__JsonApiDotNetCore_Hooks_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeUpdateRelationship(HashSet&lt;String&gt;, IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
-hook for any related (nested) entity for values within parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>
+hook for any secondary (nested) resource for values within parameter <code data-dev-comment-type="paramref" class="paramref">resources</code>
 <p>
 Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeImplicitUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
-hook for any entities that are indirectly (implicitly) affected by this operation.
-Eg: when updating a one-to-one relationship of an entity which already 
+hook for any resources that are indirectly (implicitly) affected by this operation.
+Eg: when updating a one-to-one relationship of a resource which already 
 had this relationship populated, then this update will indirectly affect 
 the existing relationship value.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IEnumerable&lt;TResource&gt; BeforeUpdate&lt;TResource&gt;(IEnumerable&lt;TResource&gt; entities, ResourcePipeline pipeline)
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;TResource&gt; BeforeUpdate&lt;TResource&gt;(IEnumerable&lt;TResource&gt; resources, ResourcePipeline pipeline)
     where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -189,8 +189,8 @@ the existing relationship value.</p>
     <tbody>
       <tr>
         <td><span class="xref">IEnumerable</span>&lt;TResource&gt;</td>
-        <td><span class="parametername">entities</span></td>
-        <td><p>Target entities for the Before cycle.</p>
+        <td><span class="parametername">resources</span></td>
+        <td><p>Target resources for the Before cycle.</p>
 </td>
       </tr>
       <tr>
@@ -228,7 +228,7 @@ the existing relationship value.</p>
     <tbody>
       <tr>
         <td><span class="parametername">TResource</span></td>
-        <td><p>The type of the root entities</p>
+        <td><p>The type of the root resources</p>
 </td>
       </tr>
     </tbody>

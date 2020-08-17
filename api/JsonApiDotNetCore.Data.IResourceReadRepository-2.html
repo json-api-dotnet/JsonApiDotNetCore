@@ -105,19 +105,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_CountAsync_IQueryable__0__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.CountAsync(IQueryable%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_CountAsync_JsonApiDotNetCore_Queries_Expressions_FilterExpression_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.CountAsync(JsonApiDotNetCore.Queries.Expressions.FilterExpression)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceReadRepository.cs/#L54">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceReadRepository.cs/#L25">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Data_IResourceReadRepository_2_CountAsync_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.CountAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_CountAsync_IQueryable__0__" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.CountAsync(IQueryable{`0})">CountAsync(IQueryable&lt;TResource&gt;)</h4>
-  <div class="markdown level1 summary"><p>Count the total number of records</p>
+  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_CountAsync_JsonApiDotNetCore_Queries_Expressions_FilterExpression_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.CountAsync(JsonApiDotNetCore.Queries.Expressions.FilterExpression)">CountAsync(FilterExpression)</h4>
+  <div class="markdown level1 summary"><p>Executes a read query using the specified top-level filter and returns the top-level count of matching resources.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;int&gt; CountAsync(IQueryable&lt;TResource&gt; entities)</code></pre>
+    <pre><code class="lang-csharp hljs">Task&lt;int&gt; CountAsync(FilterExpression topFilter)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -130,8 +130,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td><span class="parametername">entities</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></td>
+        <td><span class="parametername">topFilter</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -153,19 +153,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_Filter_IQueryable__0__JsonApiDotNetCore_Internal_Query_FilterQueryContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.Filter(IQueryable%7B%600%7D%2CJsonApiDotNetCore.Internal.Query.FilterQueryContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_GetAsync_JsonApiDotNetCore_Queries_QueryLayer_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.GetAsync(JsonApiDotNetCore.Queries.QueryLayer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceReadRepository.cs/#L42">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceReadRepository.cs/#L20">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Filter_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Filter*"></a>
-  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Filter_IQueryable__0__JsonApiDotNetCore_Internal_Query_FilterQueryContext_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Filter(IQueryable{`0},JsonApiDotNetCore.Internal.Query.FilterQueryContext)">Filter(IQueryable&lt;TResource&gt;, FilterQueryContext)</h4>
-  <div class="markdown level1 summary"><p>Apply a filter to the provided queryable</p>
+  <a id="JsonApiDotNetCore_Data_IResourceReadRepository_2_GetAsync_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.GetAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_GetAsync_JsonApiDotNetCore_Queries_QueryLayer_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.GetAsync(JsonApiDotNetCore.Queries.QueryLayer)">GetAsync(QueryLayer)</h4>
+  <div class="markdown level1 summary"><p>Executes a read query using the specified constraints and returns the list of matching resources.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IQueryable&lt;TResource&gt; Filter(IQueryable&lt;TResource&gt; entities, FilterQueryContext filterQuery)</code></pre>
+    <pre><code class="lang-csharp hljs">Task&lt;IReadOnlyCollection&lt;TResource&gt;&gt; GetAsync(QueryLayer layer)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -178,13 +178,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td><span class="parametername">entities</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Internal.Query.FilterQueryContext.html">FilterQueryContext</a></td>
-        <td><span class="parametername">filterQuery</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a></td>
+        <td><span class="parametername">layer</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -199,403 +194,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_FirstOrDefaultAsync_IQueryable__0__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.FirstOrDefaultAsync(IQueryable%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceReadRepository.cs/#L58">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Data_IResourceReadRepository_2_FirstOrDefaultAsync_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.FirstOrDefaultAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_FirstOrDefaultAsync_IQueryable__0__" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.FirstOrDefaultAsync(IQueryable{`0})">FirstOrDefaultAsync(IQueryable&lt;TResource&gt;)</h4>
-  <div class="markdown level1 summary"><p>Get the first element in the collection, return the default value if collection is empty</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;TResource&gt; FirstOrDefaultAsync(IQueryable&lt;TResource&gt; entities)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td><span class="parametername">entities</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Task</span>&lt;TResource&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_Get.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.Get%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceReadRepository.cs/#L21">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Get_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Get*"></a>
-  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Get" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Get">Get()</h4>
-  <div class="markdown level1 summary"><p>The base GET query. This is a good place to apply rules that should affect all reads, 
-such as authorization of resources.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IQueryable&lt;TResource&gt; Get()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_Get__1_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.Get(%601)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceReadRepository.cs/#L25">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Get_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Get*"></a>
-  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Get__1_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Get(`1)">Get(TId)</h4>
-  <div class="markdown level1 summary"><p>Get the entity by id</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IQueryable&lt;TResource&gt; Get(TId id)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TId</span></td>
-        <td><span class="parametername">id</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_Include_IQueryable__0__IEnumerable_JsonApiDotNetCore_Models_RelationshipAttribute__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.Include(IQueryable%7B%600%7D%2CIEnumerable%7BJsonApiDotNetCore.Models.RelationshipAttribute%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceReadRepository.cs/#L38">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Include_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Include*"></a>
-  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Include_IQueryable__0__IEnumerable_JsonApiDotNetCore_Models_RelationshipAttribute__" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Include(IQueryable{`0},IEnumerable{JsonApiDotNetCore.Models.RelationshipAttribute})">Include(IQueryable&lt;TResource&gt;, IEnumerable&lt;RelationshipAttribute&gt;)</h4>
-  <div class="markdown level1 summary"><p>Include a relationship in the query</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IQueryable&lt;TResource&gt; Include(IQueryable&lt;TResource&gt; entities, IEnumerable&lt;RelationshipAttribute&gt; inclusionChain)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td><span class="parametername">entities</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
-        <td><span class="parametername">inclusionChain</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Include_IQueryable__0__IEnumerable_JsonApiDotNetCore_Models_RelationshipAttribute___examples">Examples</h5>
-  <pre><code>_todoItemsRepository.GetAndIncludeAsync(1, &quot;achievedDate&quot;);</code></pre>
-
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_PageAsync_IQueryable__0__System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.PageAsync(IQueryable%7B%600%7D%2CSystem.Int32%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceReadRepository.cs/#L50">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Data_IResourceReadRepository_2_PageAsync_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.PageAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_PageAsync_IQueryable__0__System_Int32_System_Int32_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.PageAsync(IQueryable{`0},System.Int32,System.Int32)">PageAsync(IQueryable&lt;TResource&gt;, Int32, Int32)</h4>
-  <div class="markdown level1 summary"><p>Paginate the provided queryable</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;IEnumerable&lt;TResource&gt;&gt; PageAsync(IQueryable&lt;TResource&gt; entities, int pageSize, int pageNumber)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td><span class="parametername">entities</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">pageSize</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">pageNumber</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Task</span>&lt;<span class="xref">IEnumerable</span>&lt;TResource&gt;&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_Select_IQueryable__0__IEnumerable_System_String__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.Select(IQueryable%7B%600%7D%2CIEnumerable%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceReadRepository.cs/#L29">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Select_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Select*"></a>
-  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Select_IQueryable__0__IEnumerable_System_String__" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Select(IQueryable{`0},IEnumerable{System.String})">Select(IQueryable&lt;TResource&gt;, IEnumerable&lt;String&gt;)</h4>
-  <div class="markdown level1 summary"><p>Apply fields to the provided queryable</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IQueryable&lt;TResource&gt; Select(IQueryable&lt;TResource&gt; entities, IEnumerable&lt;string&gt; propertyNames)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td><span class="parametername">entities</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;</td>
-        <td><span class="parametername">propertyNames</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_Sort_IQueryable__0__IReadOnlyCollection_JsonApiDotNetCore_Internal_Query_SortQueryContext__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.Sort(IQueryable%7B%600%7D%2CIReadOnlyCollection%7BJsonApiDotNetCore.Internal.Query.SortQueryContext%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceReadRepository.cs/#L46">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Sort_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Sort*"></a>
-  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_Sort_IQueryable__0__IReadOnlyCollection_JsonApiDotNetCore_Internal_Query_SortQueryContext__" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.Sort(IQueryable{`0},IReadOnlyCollection{JsonApiDotNetCore.Internal.Query.SortQueryContext})">Sort(IQueryable&lt;TResource&gt;, IReadOnlyCollection&lt;SortQueryContext&gt;)</h4>
-  <div class="markdown level1 summary"><p>Apply a sort to the provided queryable</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IQueryable&lt;TResource&gt; Sort(IQueryable&lt;TResource&gt; entities, IReadOnlyCollection&lt;SortQueryContext&gt; sortQueryContexts)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td><span class="parametername">entities</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">IReadOnlyCollection</span>&lt;<a class="xref" href="JsonApiDotNetCore.Internal.Query.SortQueryContext.html">SortQueryContext</a>&gt;</td>
-        <td><span class="parametername">sortQueryContexts</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IResourceReadRepository_2_ToListAsync_IQueryable__0__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IResourceReadRepository%602.ToListAsync(IQueryable%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IResourceReadRepository.cs/#L62">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Data_IResourceReadRepository_2_ToListAsync_" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.ToListAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Data_IResourceReadRepository_2_ToListAsync_IQueryable__0__" data-uid="JsonApiDotNetCore.Data.IResourceReadRepository`2.ToListAsync(IQueryable{`0})">ToListAsync(IQueryable&lt;TResource&gt;)</h4>
-  <div class="markdown level1 summary"><p>Convert the collection to a materialized list</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;IReadOnlyList&lt;TResource&gt;&gt; ToListAsync(IQueryable&lt;TResource&gt; entities)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
-        <td><span class="parametername">entities</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Task</span>&lt;<span class="xref">IReadOnlyList</span>&lt;TResource&gt;&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">IReadOnlyCollection</span>&lt;TResource&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>

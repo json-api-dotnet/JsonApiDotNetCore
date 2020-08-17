@@ -79,9 +79,9 @@
 </ul>
 <p>This usage guide covers the following sections</p>
 <ol>
-<li><a href="#semantics-pipelines-actions-and-hooks"><strong>Semantics: pipelines, actions and hooks</strong></a>
+<li><a href="#1-semantics-pipelines-actions-and-hooks"><strong>Semantics: pipelines, actions and hooks</strong></a>
 Understanding the semantics will be helpful in identifying which hooks on <code>ResourceDefinition&lt;T&gt;</code> you need to implement for your use-case.</li>
-<li><a href="#basic-usage"><strong>Basic usage</strong></a>
+<li><a href="#2-basic-usage"><strong>Basic usage</strong></a>
     Some examples to get you started.<ul>
 <li><a href="#getting-started-most-minimal-example"><strong>Getting started: most minimal example</strong></a></li>
 <li><a href="#logging"><strong>Logging</strong></a></li>
@@ -89,7 +89,7 @@ Understanding the semantics will be helpful in identifying which hooks on <code>
 <li><a href="#loading-database-values"><strong>Loading database values</strong></a></li>
 </ul>
 </li>
-<li><a href="#advanced-usage"><strong>Advanced usage</strong></a>
+<li><a href="#3-advanced-usage"><strong>Advanced usage</strong></a>
 Complicated examples that show the advanced features of hooks.<ul>
 <li><a href="#simple-authorization-explicitly-affected-resources"><strong>Simple authorization: explicitly affected resources</strong></a></li>
 <li><a href="#advanced-authorization-implicitly-affected-resources"><strong>Advanced authorization: implicitly affected resources</strong></a></li>
@@ -97,7 +97,7 @@ Complicated examples that show the advanced features of hooks.<ul>
 <li><a href="#hooks-for-many-to-many-join-tables"><strong>Hooks for many-to-many join tables</strong></a></li>
 </ul>
 </li>
-<li><a href="#hook-execution-overview"><strong>Hook execution overview</strong></a>
+<li><a href="#4-hook-execution-overview"><strong>Hook execution overview</strong></a>
 A table overview of all pipelines and involved hooks</li>
 </ol>
 <h1 id="1-semantics-pipelines-actions-and-hooks">1. Semantics: pipelines, actions and hooks</h1>
@@ -140,7 +140,7 @@ the <strong>Delete</strong>  pipeline also allows for an <code>implicit update r
 <h3 id="shared-actions">Shared actions</h3>
 <p>Note that <strong>some actions are shared across pipelines</strong>. For example, both the <strong>Post</strong> and <strong>Patch</strong> pipeline can perform the <code>update relationship</code>  action on an (already existing) involved resource. Similarly, the <strong>Get</strong> and <strong>GetSingle</strong> pipelines perform the same <code>read</code> action.
 <br><br>
-For a complete list of actions associated with each pipeline, see the <a href="#hook-execution-overview">overview table</a>.</p>
+For a complete list of actions associated with each pipeline, see the <a href="#4-hook-execution-overview">overview table</a>.</p>
 <h2 id="hooks">Hooks</h2>
 <p>For all actions it is possible to implement <strong>at least one hook</strong> to intercept its execution. These hooks can be implemented by overriding the corresponding virtual  implementation on <code>ResourceDefintion&lt;T&gt;</code>. (Note that the base implementation is a dummy implementation, which is ignored when firing hooks.)</p>
 <h3 id="action-related-hooks">Action related hooks</h3>
@@ -485,7 +485,7 @@ public class PersonResource : ResourceDefinition&lt;Person&gt;
 <p>If you want to use Resource Hooks without Entity Framework Core, there are several things that you need to consider that need to be met. For any resource that you want to use hooks for:</p>
 <ol>
 <li>The corresponding resource repository must fully implement <code>IResourceReadRepository&lt;TEntity, TId&gt;</code></li>
-<li>If you are using custom services, you will be responsible for injecting the <code>IResourceHookExecutor</code> service into your services and call the appropriate methods. See the <a href="#hook-execution-overview">hook execution overview</a> to determine which hook should be fired in which scenario.</li>
+<li>If you are using custom services, you will be responsible for injecting the <code>IResourceHookExecutor</code> service into your services and call the appropriate methods. See the <a href="#4-hook-execution-overview">hook execution overview</a> to determine which hook should be fired in which scenario.</li>
 </ol>
 <p>If you are required to use the <code>BeforeImplicitUpdateRelationship</code> hook (see previous example), there is an additional requirement. For this hook, given a particular relationship, JsonApiDotNetCore needs to be able to resolve the inverse relationship. For example: if <code>Article</code> has one  author (a <code>Person</code>), then it needs to be able to resolve the <code>RelationshipAttribute</code> that corresponds to the inverse relationship for the <code>author</code> property. There are two approaches :</p>
 <ol>

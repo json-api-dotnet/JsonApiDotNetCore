@@ -92,10 +92,10 @@
       <a class="xref" href="JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder__resourceObjectBuilder">BaseDocumentBuilder._resourceObjectBuilder</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_Build_JsonApiDotNetCore_Models_IIdentifiable_IReadOnlyCollection_JsonApiDotNetCore_Models_AttrAttribute__IReadOnlyCollection_JsonApiDotNetCore_Models_RelationshipAttribute__">BaseDocumentBuilder.Build(IIdentifiable, IReadOnlyCollection&lt;AttrAttribute&gt;, IReadOnlyCollection&lt;RelationshipAttribute&gt;)</a>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_Build_JsonApiDotNetCore_Models_IIdentifiable_IReadOnlyCollection_JsonApiDotNetCore_Models_Annotation_AttrAttribute__IReadOnlyCollection_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute__">BaseDocumentBuilder.Build(IIdentifiable, IReadOnlyCollection&lt;AttrAttribute&gt;, IReadOnlyCollection&lt;RelationshipAttribute&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_Build_IEnumerable_JsonApiDotNetCore_Models_IIdentifiable__IReadOnlyCollection_JsonApiDotNetCore_Models_AttrAttribute__IReadOnlyCollection_JsonApiDotNetCore_Models_RelationshipAttribute__">BaseDocumentBuilder.Build(IEnumerable&lt;IIdentifiable&gt;, IReadOnlyCollection&lt;AttrAttribute&gt;, IReadOnlyCollection&lt;RelationshipAttribute&gt;)</a>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_Build_IEnumerable_JsonApiDotNetCore_Models_IIdentifiable__IReadOnlyCollection_JsonApiDotNetCore_Models_Annotation_AttrAttribute__IReadOnlyCollection_JsonApiDotNetCore_Models_Annotation_RelationshipAttribute__">BaseDocumentBuilder.Build(IEnumerable&lt;IIdentifiable&gt;, IReadOnlyCollection&lt;AttrAttribute&gt;, IReadOnlyCollection&lt;RelationshipAttribute&gt;)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder_SerializeObject_System_Object_JsonSerializerSettings_Action_JsonSerializer__">BaseDocumentBuilder.SerializeObject(Object, JsonSerializerSettings, Action&lt;JsonSerializer&gt;)</a>
@@ -159,7 +159,7 @@
   <h4 id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_AttributesToSerialize" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.AttributesToSerialize">AttributesToSerialize</h4>
   <div class="markdown level1 summary"><p>Sets the attributes that will be included in the serialized payload.
 You can use <a class="xref" href="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.html#JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetAttributes__1_Expression_Func___0_System_Object___">GetAttributes&lt;TResource&gt;(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</a>
-to conveniently access the desired <a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a> instances</p>
+to conveniently access the desired <a class="xref" href="JsonApiDotNetCore.Models.Annotation.AttrAttribute.html">AttrAttribute</a> instances.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -176,7 +176,7 @@ to conveniently access the desired <a class="xref" href="JsonApiDotNetCore.Model
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.Annotation.AttrAttribute.html">AttrAttribute</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -192,7 +192,7 @@ to conveniently access the desired <a class="xref" href="JsonApiDotNetCore.Model
   <h4 id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_RelationshipsToSerialize" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.RelationshipsToSerialize">RelationshipsToSerialize</h4>
   <div class="markdown level1 summary"><p>Sets the relationships that will be included in the serialized payload.
 You can use <a class="xref" href="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.html#JsonApiDotNetCore_Internal_Contracts_IResourceGraph_GetRelationships_Type_">GetRelationships(Type)</a>
-to conveniently access the desired <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a> instances</p>
+to conveniently access the desired <a class="xref" href="JsonApiDotNetCore.Models.Annotation.RelationshipAttribute.html">RelationshipAttribute</a> instances.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -209,7 +209,7 @@ to conveniently access the desired <a class="xref" href="JsonApiDotNetCore.Model
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.Annotation.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -225,12 +225,12 @@ to conveniently access the desired <a class="xref" href="JsonApiDotNetCore.Model
   </span>
   <a id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_IEnumerable_JsonApiDotNetCore_Models_IIdentifiable__" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(IEnumerable{JsonApiDotNetCore.Models.IIdentifiable})">Serialize(IEnumerable&lt;IIdentifiable&gt;)</h4>
-  <div class="markdown level1 summary"><p>Creates and serializes a document for for a list of entities of one resource.</p>
+  <div class="markdown level1 summary"><p>Creates and serializes a document for a list of resources.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Serialize(IEnumerable&lt;IIdentifiable&gt; entities)</code></pre>
+    <pre><code class="lang-csharp hljs">public string Serialize(IEnumerable&lt;IIdentifiable&gt; resources)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -244,9 +244,8 @@ to conveniently access the desired <a class="xref" href="JsonApiDotNetCore.Model
     <tbody>
       <tr>
         <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.IIdentifiable.html">IIdentifiable</a>&gt;</td>
-        <td><span class="parametername">entities</span></td>
-        <td><p>Entities to serialize</p>
-</td>
+        <td><span class="parametername">resources</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -275,12 +274,12 @@ to conveniently access the desired <a class="xref" href="JsonApiDotNetCore.Model
   </span>
   <a id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_JsonApiDotNetCore_Models_IIdentifiable_" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(JsonApiDotNetCore.Models.IIdentifiable)">Serialize(IIdentifiable)</h4>
-  <div class="markdown level1 summary"><p>Creates and serializes a document for a single instance of a resource.</p>
+  <div class="markdown level1 summary"><p>Creates and serializes a document for a single resource.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Serialize(IIdentifiable entity)</code></pre>
+    <pre><code class="lang-csharp hljs">public string Serialize(IIdentifiable resource)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -294,9 +293,8 @@ to conveniently access the desired <a class="xref" href="JsonApiDotNetCore.Model
     <tbody>
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Models.IIdentifiable.html">IIdentifiable</a></td>
-        <td><span class="parametername">entity</span></td>
-        <td><p>Entity to serialize</p>
-</td>
+        <td><span class="parametername">resource</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

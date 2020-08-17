@@ -86,16 +86,16 @@
 <p>However, this can be allowed by setting the AllowClientGeneratedIds flag in the options</p>
 <pre><code class="lang-c#">options.AllowClientGeneratedIds = true;
 </code></pre><h2 id="pagination">Pagination</h2>
-<p>The default page size used for all resources can be overridden in options (10 by default). To disable paging, set it to 0.
-The maximum page size and maximum page number allowed from client requests can be set too (unconstrained by default).
-You can also include the total number of records in each request. Note that when using this feature, it does add some query overhead since we have to also request the total number of records.</p>
-<pre><code class="lang-c#">options.DefaultPageSize = 25;
-options.MaximumPageSize = 100;
-options.MaximumPageNumber = 50;
-options.IncludeTotalRecordCount = true;
+<p>The default page size used for all resources can be overridden in options (10 by default). To disable paging, set it to <code>null</code>.
+The maximum page size and number allowed from client requests can be set too (unconstrained by default).
+You can also include the total number of resources in each request. Note that when using this feature, it does add some query overhead since we have to also request the total number of resources.</p>
+<pre><code class="lang-c#">options.DefaultPageSize = new PageSize(25);
+options.MaximumPageSize = new PageSize(100);
+options.MaximumPageNumber = new PageNumber(50);
+options.IncludeTotalResourceCount = true;
 </code></pre><h2 id="relative-links">Relative Links</h2>
 <p>All links are absolute by default. However, you can configure relative links.</p>
-<pre><code class="lang-c#">options.RelativeLinks = true;
+<pre><code class="lang-c#">options.UseRelativeLinks = true;
 </code></pre><pre><code class="lang-json">{
   &quot;type&quot;: &quot;articles&quot;,
   &quot;id&quot;: &quot;4309&quot;,
@@ -108,16 +108,21 @@ options.IncludeTotalRecordCount = true;
      }
   }
 }
-</code></pre><h2 id="custom-query-string-parameters">Custom Query String Parameters</h2>
-<p>If you would like to use custom query string parameters (parameters not reserved by the json:api specification), you can set <code>AllowCustomQueryStringParameters = true</code>. The default behavior is to return an HTTP 400 Bad Request for unknown query string parameters.</p>
-<pre><code class="lang-c#">options.AllowCustomQueryStringParameters = true;
+</code></pre><h2 id="unknown-query-string-parameters">Unknown Query String Parameters</h2>
+<p>If you would like to use unknown query string parameters (parameters not reserved by the json:api specification or registered using ResourceDefinitions), you can set <code>AllowUnknownQueryStringParameters = true</code>.
+When set, an HTTP 400 Bad Request is returned for unknown query string parameters.</p>
+<pre><code class="lang-c#">options.AllowUnknownQueryStringParameters = true;
+</code></pre><h2 id="maximum-include-depth">Maximum include depth</h2>
+<p>To limit the maximum depth of nested includes, use <code>MaximumIncludeDepth</code>. This is null by default, which means unconstrained. If set and a request exceeds the limit, an HTTP 400 Bad Request is returned.</p>
+<pre><code class="lang-c#">options.MaximumIncludeDepth = 1;
 </code></pre><h2 id="custom-serializer-settings">Custom Serializer Settings</h2>
 <p>We use Newtonsoft.Json for all serialization needs.
 If you want to change the default serializer settings, you can:</p>
 <pre><code class="lang-c#">options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 options.SerializerSettings.Converters.Add(new StringEnumConverter());
 options.SerializerSettings.Formatting = Formatting.Indented;
-</code></pre><h2 id="enable-modelstate-validation">Enable ModelState Validation</h2>
+</code></pre><p>Because we copy resource properties into an intermediate object before serialization, Newtonsoft.Json annotations on properties are ignored.</p>
+<h2 id="enable-modelstate-validation">Enable ModelState Validation</h2>
 <p>If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set <code>ValidateModelState = true</code>. By default, no model validation is performed.</p>
 <pre><code class="lang-c#">options.ValidateModelState = true;
 </code></pre><p>You will need to use the JsonApiDotNetCore &#39;IsRequiredAttribute&#39; instead of the built-in &#39;RequiredAttribute&#39; because it contains modifications to enable partial patching.</p>

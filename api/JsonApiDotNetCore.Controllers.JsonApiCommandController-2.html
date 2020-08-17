@@ -78,7 +78,7 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiControllerMixin.html">JsonApiControllerMixin</a></div>
+    <div class="level1"><a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html">CoreJsonApiController</a></div>
     <div class="level2"><a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController</a>&lt;T, TId&gt;</div>
     <div class="level3"><span class="xref">JsonApiCommandController&lt;T, TId&gt;</span></div>
       <div class="level4"><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiCommandController-1.html">JsonApiCommandController&lt;T&gt;</a></div>
@@ -92,10 +92,10 @@
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetAsync__1_">BaseJsonApiController&lt;T, TId&gt;.GetAsync(TId)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetRelationshipsAsync__1_System_String_">BaseJsonApiController&lt;T, TId&gt;.GetRelationshipsAsync(TId, String)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetRelationshipAsync__1_System_String_">BaseJsonApiController&lt;T, TId&gt;.GetRelationshipAsync(TId, String)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetRelationshipAsync__1_System_String_">BaseJsonApiController&lt;T, TId&gt;.GetRelationshipAsync(TId, String)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetSecondaryAsync__1_System_String_">BaseJsonApiController&lt;T, TId&gt;.GetSecondaryAsync(TId, String)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PostAsync__0_">BaseJsonApiController&lt;T, TId&gt;.PostAsync(T)</a>
@@ -104,16 +104,16 @@
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PatchAsync__1__0_">BaseJsonApiController&lt;T, TId&gt;.PatchAsync(TId, T)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PatchRelationshipsAsync__1_System_String_System_Object_">BaseJsonApiController&lt;T, TId&gt;.PatchRelationshipsAsync(TId, String, Object)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PatchRelationshipAsync__1_System_String_System_Object_">BaseJsonApiController&lt;T, TId&gt;.PatchRelationshipAsync(TId, String, Object)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_DeleteAsync__1_">BaseJsonApiController&lt;T, TId&gt;.DeleteAsync(TId)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiControllerMixin.html#JsonApiDotNetCore_Controllers_JsonApiControllerMixin_Error_JsonApiDotNetCore_Models_JsonApiDocuments_Error_">JsonApiControllerMixin.Error(Error)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html#JsonApiDotNetCore_Controllers_CoreJsonApiController_Error_JsonApiDotNetCore_Models_JsonApiDocuments_Error_">CoreJsonApiController.Error(Error)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiControllerMixin.html#JsonApiDotNetCore_Controllers_JsonApiControllerMixin_Error_IEnumerable_JsonApiDotNetCore_Models_JsonApiDocuments_Error__">JsonApiControllerMixin.Error(IEnumerable&lt;Error&gt;)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html#JsonApiDotNetCore_Controllers_CoreJsonApiController_Error_IEnumerable_JsonApiDotNetCore_Models_JsonApiDocuments_Error__">CoreJsonApiController.Error(IEnumerable&lt;Error&gt;)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Controllers.html">JsonApiDotNetCore.Controllers</a></h6>
@@ -249,7 +249,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Task&lt;IActionResult&gt; PatchAsync(TId id, T entity)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Task&lt;IActionResult&gt; PatchAsync(TId id, T resource)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -268,7 +268,7 @@
       </tr>
       <tr>
         <td><span class="xref">T</span></td>
-        <td><span class="parametername">entity</span></td>
+        <td><span class="parametername">resource</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -292,18 +292,18 @@
   <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;T, TId&gt;.PatchAsync(TId, T)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PatchRelationshipsAsync__1_System_String_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiCommandController%602.PatchRelationshipsAsync(%601%2CSystem.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PatchRelationshipAsync__1_System_String_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiCommandController%602.PatchRelationshipAsync(%601%2CSystem.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiCommandController.cs/#L37">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PatchRelationshipsAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PatchRelationshipsAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PatchRelationshipsAsync__1_System_String_System_Object_" data-uid="JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PatchRelationshipsAsync(`1,System.String,System.Object)">PatchRelationshipsAsync(TId, String, Object)</h4>
+  <a id="JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PatchRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PatchRelationshipAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PatchRelationshipAsync__1_System_String_System_Object_" data-uid="JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PatchRelationshipAsync(`1,System.String,System.Object)">PatchRelationshipAsync(TId, String, Object)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Task&lt;IActionResult&gt; PatchRelationshipsAsync(TId id, string relationshipName, object relationships)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Task&lt;IActionResult&gt; PatchRelationshipAsync(TId id, string relationshipName, object relationships)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -348,7 +348,7 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;T, TId&gt;.PatchRelationshipsAsync(TId, System.String, System.Object)</span></div>
+  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;T, TId&gt;.PatchRelationshipAsync(TId, System.String, System.Object)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PostAsync__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiCommandController%602.PostAsync(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -362,7 +362,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Task&lt;IActionResult&gt; PostAsync(T entity)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Task&lt;IActionResult&gt; PostAsync(T resource)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -376,7 +376,7 @@
     <tbody>
       <tr>
         <td><span class="xref">T</span></td>
-        <td><span class="parametername">entity</span></td>
+        <td><span class="parametername">resource</span></td>
         <td></td>
       </tr>
     </tbody>
