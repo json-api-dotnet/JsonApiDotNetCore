@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Serialization.Client
 {
@@ -18,12 +19,12 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <inheritdoc/>
         public DeserializedSingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
         {
-            var entity = Deserialize(body);
+            var resource = Deserialize(body);
             return new DeserializedSingleResponse<TResource>
             {
                 Links = _document.Links,
                 Meta = _document.Meta,
-                Data = (TResource) entity,
+                Data = (TResource) resource,
                 JsonApi = null,
                 Errors = null
             };
@@ -32,12 +33,12 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <inheritdoc/>
         public DeserializedListResponse<TResource> DeserializeList<TResource>(string body) where TResource : class, IIdentifiable
         {
-            var entities = Deserialize(body);
+            var resources = Deserialize(body);
             return new DeserializedListResponse<TResource>
             {
                 Links = _document.Links,
                 Meta = _document.Meta,
-                Data = ((ICollection<IIdentifiable>) entities)?.Cast<TResource>().ToList(),
+                Data = ((ICollection<IIdentifiable>) resources)?.Cast<TResource>().ToList(),
                 JsonApi = null,
                 Errors = null
             };
@@ -48,10 +49,10 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// for parsing the <see cref="Document.Included"/> property. When a relationship value is parsed,
         /// it goes through the included list to set its attributes and relationships.
         /// </summary>
-        /// <param name="entity">The entity that was constructed from the document's body</param>
+        /// <param name="resource">The resource that was constructed from the document's body</param>
         /// <param name="field">The metadata for the exposed field</param>
-        /// <param name="data">Relationship data for <paramref name="entity"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
-        protected override void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipEntry data = null)
+        /// <param name="data">Relationship data for <paramref name="resource"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
+        protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null)
         {
             // Client deserializers do not need additional processing for attributes.
             if (field is AttrAttribute)
@@ -65,13 +66,13 @@ namespace JsonApiDotNetCore.Serialization.Client
             {
                 // add attributes and relationships of a parsed HasOne relationship
                 var rio = data.SingleData;
-                hasOneAttr.SetValue(entity, rio == null ? null : ParseIncludedRelationship(hasOneAttr, rio), _resourceFactory);
+                hasOneAttr.SetValue(resource, rio == null ? null : ParseIncludedRelationship(hasOneAttr, rio), _resourceFactory);
             }
             else if (field is HasManyAttribute hasManyAttr)
             {  // add attributes and relationships of a parsed HasMany relationship
                 var items = data.ManyData.Select(rio => ParseIncludedRelationship(hasManyAttr, rio));
-                var values = items.CopyToTypedCollection(hasManyAttr.PropertyInfo.PropertyType);
-                hasManyAttr.SetValue(entity, values, _resourceFactory);
+                var values = items.CopyToTypedCollection(hasManyAttr.Property.PropertyType);
+                hasManyAttr.SetValue(resource, values, _resourceFactory);
             }
         }
 

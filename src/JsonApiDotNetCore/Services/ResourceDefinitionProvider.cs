@@ -1,9 +1,9 @@
 using System;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Services.Contract;
 
-namespace JsonApiDotNetCore.Query
+namespace JsonApiDotNetCore.Services
 {
     /// <inheritdoc/>
     internal sealed class ResourceDefinitionProvider : IResourceDefinitionProvider

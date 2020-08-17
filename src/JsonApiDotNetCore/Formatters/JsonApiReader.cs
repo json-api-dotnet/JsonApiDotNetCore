@@ -3,8 +3,8 @@ using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.RequestServices.Contracts;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -67,9 +67,9 @@ namespace JsonApiDotNetCore.Formatters
                     throw new InvalidRequestBodyException("Payload must include id attribute.", null, body);
                 }
 
-                if (!_currentRequest.IsRelationshipPath && TryGetId(model, out var bodyId) && bodyId != _currentRequest.BaseId)
+                if (_currentRequest.Kind == EndpointKind.Primary && TryGetId(model, out var bodyId) && bodyId != _currentRequest.PrimaryId)
                 {
-                    throw new ResourceIdMismatchException(bodyId, _currentRequest.BaseId, context.HttpContext.Request.GetDisplayUrl());
+                    throw new ResourceIdMismatchException(bodyId, _currentRequest.PrimaryId, context.HttpContext.Request.GetDisplayUrl());
                 }
             }
 

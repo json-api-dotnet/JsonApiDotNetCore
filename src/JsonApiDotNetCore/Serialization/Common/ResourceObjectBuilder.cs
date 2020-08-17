@@ -5,6 +5,7 @@ using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization
@@ -24,20 +25,20 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <inheritdoc/> 
-        public ResourceObject Build(IIdentifiable entity, IEnumerable<AttrAttribute> attributes = null, IEnumerable<RelationshipAttribute> relationships = null)
+        public ResourceObject Build(IIdentifiable resource, IEnumerable<AttrAttribute> attributes = null, IEnumerable<RelationshipAttribute> relationships = null)
         {
-            var resourceContext = _provider.GetResourceContext(entity.GetType());
+            var resourceContext = _provider.GetResourceContext(resource.GetType());
 
             // populating the top-level "type" and "id" members.
-            var ro = new ResourceObject { Type = resourceContext.ResourceName, Id = entity.StringId == string.Empty ? null : entity.StringId };
+            var ro = new ResourceObject { Type = resourceContext.ResourceName, Id = resource.StringId == string.Empty ? null : resource.StringId };
 
             // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
-            if (attributes != null && (attributes = attributes.Where(attr => attr.PropertyInfo.Name != _identifiablePropertyName)).Any())
-                ProcessAttributes(entity, attributes, ro);
+            if (attributes != null && (attributes = attributes.Where(attr => attr.Property.Name != _identifiablePropertyName)).Any())
+                ProcessAttributes(resource, attributes, ro);
 
             // populating the top-level "relationship" member of a resource object.
             if (relationships != null)
-                ProcessRelationships(entity, relationships, ro);
+                ProcessRelationships(resource, relationships, ro);
 
             return ro;
         }
@@ -49,33 +50,33 @@ namespace JsonApiDotNetCore.Serialization
         /// Depending on the requirements of the implementation (server or client serializer),
         /// this may be overridden.
         /// </summary>
-        protected virtual RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
+        protected virtual RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
-            return new RelationshipEntry { Data = GetRelatedResourceLinkage(relationship, entity) };
+            return new RelationshipEntry { Data = GetRelatedResourceLinkage(relationship, resource) };
         }
 
         /// <summary>
         /// Gets the value for the <see cref="ExposableData{T}.Data"/> property.
         /// </summary>
-        protected object GetRelatedResourceLinkage(RelationshipAttribute relationship, IIdentifiable entity)
+        protected object GetRelatedResourceLinkage(RelationshipAttribute relationship, IIdentifiable resource)
         {
             if (relationship is HasOneAttribute hasOne)
-                return GetRelatedResourceLinkage(hasOne, entity);
+                return GetRelatedResourceLinkage(hasOne, resource);
 
-            return GetRelatedResourceLinkage((HasManyAttribute)relationship, entity);
+            return GetRelatedResourceLinkage((HasManyAttribute)relationship, resource);
         }
 
         /// <summary>
         /// Builds a <see cref="ResourceIdentifierObject"/> for a HasOne relationship
         /// </summary>
-        private ResourceIdentifierObject GetRelatedResourceLinkage(HasOneAttribute relationship, IIdentifiable entity)
+        private ResourceIdentifierObject GetRelatedResourceLinkage(HasOneAttribute relationship, IIdentifiable resource)
         {
-            var relatedEntity = (IIdentifiable)relationship.GetValue(entity);
-            if (relatedEntity == null && IsRequiredToOneRelationship(relationship, entity))
+            var relatedResource = (IIdentifiable)relationship.GetValue(resource);
+            if (relatedResource == null && IsRequiredToOneRelationship(relationship, resource))
                 throw new NotSupportedException("Cannot serialize a required to one relationship that is not populated but was included in the set of relationships to be serialized.");
 
-            if (relatedEntity != null)
-                return GetResourceIdentifier(relatedEntity);
+            if (relatedResource != null)
+                return GetResourceIdentifier(relatedResource);
 
             return null;
         }
@@ -83,36 +84,36 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Builds the <see cref="ResourceIdentifierObject"/>s for a HasMany relationship
         /// </summary>
-        private List<ResourceIdentifierObject> GetRelatedResourceLinkage(HasManyAttribute relationship, IIdentifiable entity)
+        private List<ResourceIdentifierObject> GetRelatedResourceLinkage(HasManyAttribute relationship, IIdentifiable resource)
         {
-            var relatedEntities = (IEnumerable)relationship.GetValue(entity);
+            var relatedResources = (IEnumerable)relationship.GetValue(resource);
             var manyData = new List<ResourceIdentifierObject>();
-            if (relatedEntities != null)
-                foreach (IIdentifiable relatedEntity in relatedEntities)
-                    manyData.Add(GetResourceIdentifier(relatedEntity));
+            if (relatedResources != null)
+                foreach (IIdentifiable relatedResource in relatedResources)
+                    manyData.Add(GetResourceIdentifier(relatedResource));
 
             return manyData;
         }
 
         /// <summary>
-        /// Creates a <see cref="ResourceIdentifierObject"/> from <paramref name="entity"/>.
+        /// Creates a <see cref="ResourceIdentifierObject"/> from <paramref name="resource"/>.
         /// </summary>
-        private ResourceIdentifierObject GetResourceIdentifier(IIdentifiable entity)
+        private ResourceIdentifierObject GetResourceIdentifier(IIdentifiable resource)
         {
-            var resourceName = _provider.GetResourceContext(entity.GetType()).ResourceName;
+            var resourceName = _provider.GetResourceContext(resource.GetType()).ResourceName;
             return new ResourceIdentifierObject
             {
                 Type = resourceName,
-                Id = entity.StringId
+                Id = resource.StringId
             };
         }
 
         /// <summary>
         /// Checks if the to-one relationship is required by checking if the foreign key is nullable.
         /// </summary>
-        private bool IsRequiredToOneRelationship(HasOneAttribute attr, IIdentifiable entity)
+        private bool IsRequiredToOneRelationship(HasOneAttribute attr, IIdentifiable resource)
         {
-            var foreignKey = entity.GetType().GetProperty(attr.IdentifiablePropertyName);
+            var foreignKey = resource.GetType().GetProperty(attr.IdentifiablePropertyName);
             if (foreignKey != null && Nullable.GetUnderlyingType(foreignKey.PropertyType) == null)
                 return true;
 
@@ -120,39 +121,39 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <summary>
-        /// Puts the relationships of the entity into the resource object.
+        /// Puts the relationships of the resource into the resource object.
         /// </summary>
-        private void ProcessRelationships(IIdentifiable entity, IEnumerable<RelationshipAttribute> relationships, ResourceObject ro)
+        private void ProcessRelationships(IIdentifiable resource, IEnumerable<RelationshipAttribute> relationships, ResourceObject ro)
         {
             foreach (var rel in relationships)
             {
-                var relData = GetRelationshipData(rel, entity);
+                var relData = GetRelationshipData(rel, resource);
                 if (relData != null)
-                    (ro.Relationships ??= new Dictionary<string, RelationshipEntry>()).Add(rel.PublicRelationshipName, relData);
+                    (ro.Relationships ??= new Dictionary<string, RelationshipEntry>()).Add(rel.PublicName, relData);
             }
         }
 
         /// <summary>
-        /// Puts the attributes of the entity into the resource object.
+        /// Puts the attributes of the resource into the resource object.
         /// </summary>
-        private void ProcessAttributes(IIdentifiable entity, IEnumerable<AttrAttribute> attributes, ResourceObject ro)
+        private void ProcessAttributes(IIdentifiable resource, IEnumerable<AttrAttribute> attributes, ResourceObject ro)
         {
             ro.Attributes = new Dictionary<string, object>();
             foreach (var attr in attributes)
             {
-                object value = attr.GetValue(entity);
+                object value = attr.GetValue(resource);
 
                 if (_settings.SerializerNullValueHandling == NullValueHandling.Ignore && value == null)
                 {
                     return;
                 }
 
-                if (_settings.SerializerDefaultValueHandling == DefaultValueHandling.Ignore && value == attr.PropertyInfo.PropertyType.GetDefaultValue())
+                if (_settings.SerializerDefaultValueHandling == DefaultValueHandling.Ignore && value == attr.Property.PropertyType.GetDefaultValue())
                 {
                     return;
                 }
 
-                ro.Attributes.Add(attr.PublicAttributeName, value);
+                ro.Attributes.Add(attr.PublicName, value);
             }
         }
     }

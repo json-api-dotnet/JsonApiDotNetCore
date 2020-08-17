@@ -11,15 +11,15 @@ namespace JsonApiDotNetCoreExample.Definitions
     {
         public PersonDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
-        public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<Person> entitiesByRelationship, ResourcePipeline pipeline)
+        public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<Person> resourcesByRelationship, ResourcePipeline pipeline)
         {
-            BeforeImplicitUpdateRelationship(entitiesByRelationship, pipeline);
+            BeforeImplicitUpdateRelationship(resourcesByRelationship, pipeline);
             return ids;
         }
 
-        public override void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<Person> entitiesByRelationship, ResourcePipeline pipeline)
+        public override void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<Person> resourcesByRelationship, ResourcePipeline pipeline)
         {
-            entitiesByRelationship.GetByRelationship<Passport>().ToList().ForEach(kvp => DisallowLocked(kvp.Value));
+            resourcesByRelationship.GetByRelationship<Passport>().ToList().ForEach(kvp => DisallowLocked(kvp.Value));
         }
 
         public Dictionary<string, object> GetMeta()

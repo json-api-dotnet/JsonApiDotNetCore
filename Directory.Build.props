@@ -15,6 +15,7 @@
   <!-- Test Project Dependencies -->
   <PropertyGroup>
     <XUnitVersion>2.4.1</XUnitVersion>
+    <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
     <BogusVersion>29.0.1</BogusVersion>
     <MoqVersion>4.13.1</MoqVersion>
   </PropertyGroup>

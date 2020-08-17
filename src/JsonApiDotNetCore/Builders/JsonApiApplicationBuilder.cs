@@ -5,8 +5,6 @@ using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
-using JsonApiDotNetCore.Managers;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
@@ -16,12 +14,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Internal.Queries;
+using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using JsonApiDotNetCore.QueryParameterServices.Common;
 using JsonApiDotNetCore.RequestServices;
+using JsonApiDotNetCore.RequestServices.Contracts;
+using JsonApiDotNetCore.Services.Contract;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -145,42 +147,43 @@ namespace JsonApiDotNetCore.Builders
                 _services.AddSingleton(new DbContextOptionsBuilder().Options);
             }
 
-            _services.AddScoped(typeof(IResourceRepository<>), typeof(DefaultResourceRepository<>));
-            _services.AddScoped(typeof(IResourceRepository<,>), typeof(DefaultResourceRepository<,>));
+            _services.AddScoped(typeof(IResourceRepository<>), typeof(EntityFrameworkCoreRepository<>));
+            _services.AddScoped(typeof(IResourceRepository<,>), typeof(EntityFrameworkCoreRepository<,>));
 
-            _services.AddScoped(typeof(IResourceReadRepository<,>), typeof(DefaultResourceRepository<,>));
-            _services.AddScoped(typeof(IResourceWriteRepository<,>), typeof(DefaultResourceRepository<,>));
+            _services.AddScoped(typeof(IResourceReadRepository<,>), typeof(EntityFrameworkCoreRepository<,>));
+            _services.AddScoped(typeof(IResourceWriteRepository<,>), typeof(EntityFrameworkCoreRepository<,>));
 
-            _services.AddScoped(typeof(ICreateService<>), typeof(DefaultResourceService<>));
-            _services.AddScoped(typeof(ICreateService<,>), typeof(DefaultResourceService<,>));
+            _services.AddScoped(typeof(ICreateService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(ICreateService<,>), typeof(JsonApiResourceService<,>));
 
-            _services.AddScoped(typeof(IGetAllService<>), typeof(DefaultResourceService<>));
-            _services.AddScoped(typeof(IGetAllService<,>), typeof(DefaultResourceService<,>));
+            _services.AddScoped(typeof(IGetAllService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(IGetAllService<,>), typeof(JsonApiResourceService<,>));
 
-            _services.AddScoped(typeof(IGetByIdService<>), typeof(DefaultResourceService<>));
-            _services.AddScoped(typeof(IGetByIdService<,>), typeof(DefaultResourceService<,>));
+            _services.AddScoped(typeof(IGetByIdService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(IGetByIdService<,>), typeof(JsonApiResourceService<,>));
 
-            _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(DefaultResourceService<>));
-            _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(DefaultResourceService<,>));
+            _services.AddScoped(typeof(IGetRelationshipService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(JsonApiResourceService<,>));
 
-            _services.AddScoped(typeof(IUpdateService<>), typeof(DefaultResourceService<>));
-            _services.AddScoped(typeof(IUpdateService<,>), typeof(DefaultResourceService<,>));
+            _services.AddScoped(typeof(IGetSecondaryService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(IGetSecondaryService<,>), typeof(JsonApiResourceService<,>));
 
-            _services.AddScoped(typeof(IDeleteService<>), typeof(DefaultResourceService<>));
-            _services.AddScoped(typeof(IDeleteService<,>), typeof(DefaultResourceService<,>));
+            _services.AddScoped(typeof(IUpdateService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(IUpdateService<,>), typeof(JsonApiResourceService<,>));
 
-            _services.AddScoped(typeof(IResourceService<>), typeof(DefaultResourceService<>));
-            _services.AddScoped(typeof(IResourceService<,>), typeof(DefaultResourceService<,>));
+            _services.AddScoped(typeof(IDeleteService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(IDeleteService<,>), typeof(JsonApiResourceService<,>));
 
-            _services.AddScoped(typeof(IResourceQueryService<,>), typeof(DefaultResourceService<,>));
-            _services.AddScoped(typeof(IResourceCommandService<,>), typeof(DefaultResourceService<,>));
+            _services.AddScoped(typeof(IResourceService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(IResourceService<,>), typeof(JsonApiResourceService<,>));
 
-            _services.AddSingleton<ILinksConfiguration>(_options);
+            _services.AddScoped(typeof(IResourceQueryService<,>), typeof(JsonApiResourceService<,>));
+            _services.AddScoped(typeof(IResourceCommandService<,>), typeof(JsonApiResourceService<,>));
+
             _services.AddSingleton(resourceGraph);
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             _services.AddSingleton<IResourceContextProvider>(resourceGraph);
-            _services.AddSingleton<IRequestQueryStringAccessor, RequestQueryStringAccessor>();
-            _services.AddSingleton<IExceptionHandler, DefaultExceptionHandler>();
+            _services.AddSingleton<IExceptionHandler, ExceptionHandler>();
 
             _services.AddScoped<ICurrentRequest, CurrentRequest>();
             _services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
@@ -188,39 +191,52 @@ namespace JsonApiDotNetCore.Builders
             _services.AddScoped<IJsonApiReader, JsonApiReader>();
             _services.AddScoped<IGenericServiceFactory, GenericServiceFactory>();
             _services.AddScoped(typeof(RepositoryRelationshipUpdateHelper<>));
-            _services.AddScoped<IQueryParameterParser, QueryParameterParser>();
             _services.AddScoped<ITargetedFields, TargetedFields>();
             _services.AddScoped<IResourceDefinitionProvider, ResourceDefinitionProvider>();
             _services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
-            _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(DefaultResourceChangeTracker<>));
-            _services.AddScoped<IQueryParameterActionFilter, QueryParameterActionFilter>();
-            _services.AddScoped<IResourceFactory, DefaultResourceFactory>();
+            _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
+            _services.AddScoped<IResourceFactory, ResourceFactory>();
+            _services.AddScoped<IPaginationContext, PaginationContext>();
+            _services.AddScoped<IQueryLayerComposer, QueryLayerComposer>();
 
             AddServerSerialization();
-            AddQueryParameterServices();
+            AddQueryStringParameterServices();
             if (_options.EnableResourceHooks)
                 AddResourceHooks();
 
             _services.AddScoped<IInverseRelationships, InverseRelationships>();
         }
 
-        private void AddQueryParameterServices()
+        private void AddQueryStringParameterServices()
         {
-            _services.AddScoped<IIncludeService, IncludeService>();
-            _services.AddScoped<IFilterService, FilterService>();
-            _services.AddScoped<ISortService, SortService>();
-            _services.AddScoped<ISparseFieldsService, SparseFieldsService>();
-            _services.AddScoped<IPageService, PageService>();
-            _services.AddScoped<IDefaultsService, DefaultsService>();
-            _services.AddScoped<INullsService, NullsService>();
+            _services.AddScoped<IIncludeQueryStringParameterReader, IncludeQueryStringParameterReader>();
+            _services.AddScoped<IFilterQueryStringParameterReader, FilterQueryStringParameterReader>();
+            _services.AddScoped<ISortQueryStringParameterReader, SortQueryStringParameterReader>();
+            _services.AddScoped<ISparseFieldSetQueryStringParameterReader, SparseFieldSetQueryStringParameterReader>();
+            _services.AddScoped<IPaginationQueryStringParameterReader, PaginationQueryStringParameterReader>();
+            _services.AddScoped<IDefaultsQueryStringParameterReader, DefaultsQueryStringParameterReader>();
+            _services.AddScoped<INullsQueryStringParameterReader, NullsQueryStringParameterReader>();
+            _services.AddScoped<IResourceDefinitionQueryableParameterReader, ResourceDefinitionQueryableParameterReader>();
 
-            _services.AddScoped<IQueryParameterService>(sp => sp.GetService<IIncludeService>());
-            _services.AddScoped<IQueryParameterService>(sp => sp.GetService<IFilterService>());
-            _services.AddScoped<IQueryParameterService>(sp => sp.GetService<ISortService>());
-            _services.AddScoped<IQueryParameterService>(sp => sp.GetService<ISparseFieldsService>());
-            _services.AddScoped<IQueryParameterService>(sp => sp.GetService<IPageService>());
-            _services.AddScoped<IQueryParameterService>(sp => sp.GetService<IDefaultsService>());
-            _services.AddScoped<IQueryParameterService>(sp => sp.GetService<INullsService>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IIncludeQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IFilterQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<ISortQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<ISparseFieldSetQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IPaginationQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IDefaultsQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<INullsQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IResourceDefinitionQueryableParameterReader>());
+
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<IIncludeQueryStringParameterReader>());
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<IFilterQueryStringParameterReader>());
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<ISortQueryStringParameterReader>());
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<ISparseFieldSetQueryStringParameterReader>());
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<IPaginationQueryStringParameterReader>());
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<IResourceDefinitionQueryableParameterReader>());
+
+            _services.AddScoped<IQueryStringActionFilter, QueryStringActionFilter>();
+            _services.AddScoped<IQueryStringReader, QueryStringReader>();
+            _services.AddSingleton<IRequestQueryStringAccessor, RequestQueryStringAccessor>();
         }
 
         private void AddResourceHooks()
@@ -248,7 +264,7 @@ namespace JsonApiDotNetCore.Builders
         private void RegisterJsonApiStartupServices()
         {
             _services.AddSingleton<IJsonApiOptions>(_options);
-            _services.TryAddSingleton<IJsonApiRoutingConvention, DefaultRoutingConvention>();
+            _services.TryAddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
             _services.TryAddSingleton<IResourceGraphBuilder, ResourceGraphBuilder>();
             _services.TryAddSingleton<IServiceDiscoveryFacade>(sp => new ServiceDiscoveryFacade(_services, sp.GetRequiredService<IResourceGraphBuilder>()));
             _services.TryAddScoped<IJsonApiExceptionFilterProvider, JsonApiExceptionFilterProvider>();

@@ -11,6 +11,6 @@ namespace JsonApiDotNetCore.Services
     public interface IGetAllService<T, in TId>
         where T : class, IIdentifiable<TId>
     {
-        Task<IEnumerable<T>> GetAsync();
+        Task<IReadOnlyCollection<T>> GetAsync();
     }
 }

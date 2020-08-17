@@ -15,19 +15,19 @@ namespace JsonApiDotNetCore.Extensions
         /// Determines whether or not EF is already tracking an entity of the same Type and Id
         /// and returns that entity.
         /// </summary>
-        internal static IIdentifiable GetTrackedEntity(this DbContext context, IIdentifiable entity)
+        internal static TEntity GetTrackedEntity<TEntity>(this DbContext context, TEntity entity)
+            where TEntity : IIdentifiable
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var trackedEntries = context.ChangeTracker
+            var entityEntry = context.ChangeTracker
                 .Entries()
                 .FirstOrDefault(entry =>
-                    entry.Entity.GetType() == entity.GetType()
-                    && ((IIdentifiable)entry.Entity).StringId == entity.StringId
-                );
+                    entry.Entity.GetType() == entity.GetType() &&
+                    ((IIdentifiable) entry.Entity).StringId == entity.StringId);
 
-            return (IIdentifiable)trackedEntries?.Entity;
+            return (TEntity) entityEntry?.Entity;
         }
 
         /// <summary>

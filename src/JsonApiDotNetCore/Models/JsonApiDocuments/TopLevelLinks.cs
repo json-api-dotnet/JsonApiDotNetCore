@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace JsonApiDotNetCore.Models.Links
+namespace JsonApiDotNetCore.Models.JsonApiDocuments
 {
     /// <summary>
     /// see links section in https://jsonapi.org/format/#document-top-level

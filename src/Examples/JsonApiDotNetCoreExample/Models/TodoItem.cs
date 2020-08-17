@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCoreExample.Models
 {
@@ -38,7 +39,7 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public DateTime? UpdatedDate { get; set; }
 
-        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowMutate)]
+        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowChange)]
         public string CalculatedValue => "calculated";
 
         [Attr]

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExampleTests.Helpers.Models

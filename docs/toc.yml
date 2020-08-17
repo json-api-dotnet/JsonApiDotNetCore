@@ -15,3 +15,7 @@
 # - name: Request Examples
 #   href: request-examples/
 #   homepage: request-examples/index.md
+
+- name: Internals
+  href: internals/
+  homepage: internals/index.md

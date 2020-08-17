@@ -1,9 +1,7 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Moq;
@@ -11,6 +9,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.RequestServices;
 using Xunit;
 
 namespace UnitTests.Middleware
@@ -29,11 +29,11 @@ namespace UnitTests.Middleware
             await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Equal(id, currentRequest.BaseId);
-
+            Assert.Equal(id, currentRequest.PrimaryId);
         }
+
         [Fact]
-        public async Task ParseUrlBase_UrlHasBaseIdSet_ShouldSetCurrentRequestWithSaidId()
+        public async Task ParseUrlBase_UrlHasPrimaryIdSet_ShouldSetCurrentRequestWithSaidId()
         {
             // Arrange
             var id = "123";
@@ -44,11 +44,11 @@ namespace UnitTests.Middleware
             await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Equal(id, currentRequest.BaseId);
+            Assert.Equal(id, currentRequest.PrimaryId);
         }
 
         [Fact]
-        public async Task ParseUrlBase_UrlHasNoBaseIdSet_ShouldHaveBaseIdSetToNull()
+        public async Task ParseUrlBase_UrlHasNoPrimaryIdSet_ShouldHaveBaseIdSetToNull()
         {
             // Arrange
             var configuration = GetConfiguration("/users");
@@ -58,11 +58,11 @@ namespace UnitTests.Middleware
             await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Null(currentRequest.BaseId);
+            Assert.Null(currentRequest.PrimaryId);
         }
 
         [Fact]
-        public async Task ParseUrlBase_UrlHasNegativeBaseIdAndTypeIsInt_ShouldNotThrowJAException()
+        public async Task ParseUrlBase_UrlHasNegativePrimaryIdAndTypeIsInt_ShouldNotThrowJAException()
         {
             // Arrange
             var configuration = GetConfiguration("/users/-5/");
@@ -106,7 +106,7 @@ namespace UnitTests.Middleware
             var currentRequest = new CurrentRequest();
             if (relType != null)
             {
-                currentRequest.RequestRelationship = new HasManyAttribute
+                currentRequest.Relationship = new HasManyAttribute
                 {
                     RightType = relType
                 };

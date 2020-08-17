@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Bogus" Version="$(BogusVersion)" />
+    <PackageReference Include="FluentAssertions" Version="$(FluentAssertionsVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(EFCoreVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(EFCoreVersion)" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />

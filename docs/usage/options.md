@@ -28,15 +28,15 @@ options.AllowClientGeneratedIds = true;
 
 ## Pagination
 
-The default page size used for all resources can be overridden in options (10 by default). To disable paging, set it to 0.
-The maximum page size and maximum page number allowed from client requests can be set too (unconstrained by default).
-You can also include the total number of records in each request. Note that when using this feature, it does add some query overhead since we have to also request the total number of records.
+The default page size used for all resources can be overridden in options (10 by default). To disable paging, set it to `null`.
+The maximum page size and number allowed from client requests can be set too (unconstrained by default).
+You can also include the total number of resources in each request. Note that when using this feature, it does add some query overhead since we have to also request the total number of resources.
 
 ```c#
-options.DefaultPageSize = 25;
-options.MaximumPageSize = 100;
-options.MaximumPageNumber = 50;
-options.IncludeTotalRecordCount = true;
+options.DefaultPageSize = new PageSize(25);
+options.MaximumPageSize = new PageSize(100);
+options.MaximumPageNumber = new PageNumber(50);
+options.IncludeTotalResourceCount = true;
 ```
 
 ## Relative Links
@@ -44,7 +44,7 @@ options.IncludeTotalRecordCount = true;
 All links are absolute by default. However, you can configure relative links.
 
 ```c#
-options.RelativeLinks = true;
+options.UseRelativeLinks = true;
 ```
 
 ```json
@@ -62,12 +62,21 @@ options.RelativeLinks = true;
 }
 ```
 
-## Custom Query String Parameters
+## Unknown Query String Parameters
 
-If you would like to use custom query string parameters (parameters not reserved by the json:api specification), you can set `AllowCustomQueryStringParameters = true`. The default behavior is to return an HTTP 400 Bad Request for unknown query string parameters.
+If you would like to use unknown query string parameters (parameters not reserved by the json:api specification or registered using ResourceDefinitions), you can set `AllowUnknownQueryStringParameters = true`.
+When set, an HTTP 400 Bad Request is returned for unknown query string parameters.
 
 ```c#
-options.AllowCustomQueryStringParameters = true;
+options.AllowUnknownQueryStringParameters = true;
+```
+
+## Maximum include depth
+
+To limit the maximum depth of nested includes, use `MaximumIncludeDepth`. This is null by default, which means unconstrained. If set and a request exceeds the limit, an HTTP 400 Bad Request is returned.
+
+```c#
+options.MaximumIncludeDepth = 1;
 ```
 
 ## Custom Serializer Settings
@@ -81,6 +90,8 @@ options.SerializerSettings.Converters.Add(new StringEnumConverter());
 options.SerializerSettings.Formatting = Formatting.Indented;
 ```
 
+Because we copy resource properties into an intermediate object before serialization, Newtonsoft.Json annotations on properties are ignored.
+
 ## Enable ModelState Validation
 
 If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set `ValidateModelState = true`. By default, no model validation is performed.
@@ -88,6 +99,7 @@ If you would like to use ASP.NET Core ModelState validation into your controller
 ```c#
 options.ValidateModelState = true;
 ```
+
 You will need to use the JsonApiDotNetCore 'IsRequiredAttribute' instead of the built-in 'RequiredAttribute' because it contains modifications to enable partial patching.
 
 ```c#

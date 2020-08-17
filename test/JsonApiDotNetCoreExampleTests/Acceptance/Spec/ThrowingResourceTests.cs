@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var throwingResource = new ThrowingResource();
             _dbContext.Add(throwingResource);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             // Act
             var (body, response) = await Get($"/api/v1/throwingResources/{throwingResource.Id}");

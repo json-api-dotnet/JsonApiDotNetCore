@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Graph

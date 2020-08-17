@@ -3,13 +3,16 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -40,10 +43,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            context.TodoItems.RemoveRange(context.TodoItems);
+            await context.ClearTableAsync<TodoItem>();
             await context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems";
@@ -62,12 +65,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(HeaderConstants.MediaType, response.Content.Headers.ContentType.ToString());
             Assert.Empty(items);
-            Assert.Equal(0, int.Parse(meta["total-records"].ToString()));
+            Assert.Equal(0, int.Parse(meta["totalResources"].ToString()));
             context.Dispose();
         }
 
         [Fact]
-        public async Task Included_Records_Contain_Relationship_Links()
+        public async Task Included_Resources_Contain_Relationship_Links()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
@@ -77,7 +80,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner";
@@ -104,18 +107,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            context.TodoItems.RemoveRange(context.TodoItems);
+            await context.ClearTableAsync<TodoItem>();
             await context.SaveChangesAsync();
 
             var todoItems = _todoItemFaker.Generate(20);
             context.TodoItems.AddRange(todoItems);
             await context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
-                .UseStartup<NoDefaultPageSizeStartup>();
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
+
+            var options = (JsonApiOptions)server.Services.GetRequiredService<IJsonApiOptions>();
+            options.DefaultPageSize = null;
+
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
@@ -133,11 +140,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            context.TodoItems.RemoveRange(context.TodoItems);
+            await context.ClearTableAsync<TodoItem>();
             await context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
-                .UseStartup<NoDefaultPageSizeStartup>();
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems/123";
             var server = new TestServer(builder);

@@ -1,7 +1,8 @@
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
-namespace JsonApiDotNetCore.Managers.Contracts
+namespace JsonApiDotNetCore.RequestServices.Contracts
 {
     /// <summary>
     /// Metadata associated to the current json:api request.
@@ -9,35 +10,53 @@ namespace JsonApiDotNetCore.Managers.Contracts
     public interface ICurrentRequest
     {
         /// <summary>
-        /// The request namespace. This may be an absolute or relative path
-        /// depending upon the configuration.
+        /// Routing information, based on the path of the request URL.
+        /// </summary>
+        public EndpointKind Kind { get; }
+
+        /// <summary>
+        /// The request URL prefix. This may be an absolute or relative path, depending on <see cref="IJsonApiOptions.UseRelativeLinks"/>.
         /// </summary>
         /// <example>
         /// Absolute: https://example.com/api/v1
-        /// 
         /// Relative: /api/v1
         /// </example>
-        string BasePath { get; set; }
+        string BasePath { get; }
 
         /// <summary>
-        /// If the request is on the `{id}/relationships/{relationshipName}` route
+        /// The ID of the primary (top-level) resource for this request.
+        /// This would be null in "/blogs", "123" in "/blogs/123" or "/blogs/123/author".
         /// </summary>
-        bool IsRelationshipPath { get; set; }
+        string PrimaryId { get; }
 
         /// <summary>
-        /// If <see cref="IsRelationshipPath"/> is true, this property
-        /// is the relationship attribute associated with the targeted relationship
+        /// The primary (top-level) resource for this request.
+        /// This would be "blogs" in "/blogs", "/blogs/123" or "/blogs/123/author".
         /// </summary>
-        RelationshipAttribute RequestRelationship { get; set; }
-        string BaseId { get; set; }
-        string RelationshipId { get; set; }
+        ResourceContext PrimaryResource { get; }
 
         /// <summary>
-        /// Sets the current context entity for this entire request
+        /// The secondary (nested) resource for this request.
+        /// This would be null in "/blogs", "/blogs/123" and "/blogs/123/unknownResource" or
+        /// "people" in "/blogs/123/author" and "/blogs/123/relationships/author".
         /// </summary>
-        /// <param name="currentResourceContext"></param>
-        void SetRequestResource(ResourceContext currentResourceContext);
+        ResourceContext SecondaryResource { get; }
 
-        ResourceContext GetRequestResource();
+        /// <summary>
+        /// The relationship for this nested request.
+        /// This would be null in "/blogs", "/blogs/123" and "/blogs/123/unknownResource" or
+        /// "author" in "/blogs/123/author" and "/blogs/123/relationships/author".
+        /// </summary>
+        RelationshipAttribute Relationship { get; }
+
+        /// <summary>
+        /// Indicates whether this request targets a single resource or a collection of resources.
+        /// </summary>
+        bool IsCollection { get; }
+
+        /// <summary>
+        /// Indicates whether this request targets only fetching of data (such as resources and relationships).
+        /// </summary>
+        bool IsReadOnly { get; }
     }
 }

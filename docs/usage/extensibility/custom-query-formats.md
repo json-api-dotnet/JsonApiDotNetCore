@@ -1,9 +1,16 @@
-# Custom Query Formats
+# Custom QueryString parameters
 
-For information on the default query string parameter formats, see the documentation for each query method.
-
-In order to customize the query formats, you need to implement the `IQueryParameterParser` interface and inject it.
+For information on the built-in query string parameters, see the documentation for them.
+In order to add parsing of custom query string parameters, you can implement the `IQueryStringParameterReader` interface and inject it.
 
 ```c#
-services.AddScoped<IQueryParameterParser, FooQueryParameterParser>();
+public class YourQueryStringParameterReader : IQueryStringParameterReader
+{
+    // ...
+}
+```
+
+```c#
+services.AddScoped<YourQueryStringParameterReader>();
+services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<YourQueryStringParameterReader>());
 ```

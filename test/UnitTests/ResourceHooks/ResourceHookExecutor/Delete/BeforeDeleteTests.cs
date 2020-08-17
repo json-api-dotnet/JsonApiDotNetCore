@@ -21,7 +21,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeDelete(todoList, ResourcePipeline.Delete);
 
             // Assert
-            resourceDefinitionMock.Verify(rd => rd.BeforeDelete(It.IsAny<IEntityHashSet<TodoItem>>(), It.IsAny<ResourcePipeline>()), Times.Once());
+            resourceDefinitionMock.Verify(rd => rd.BeforeDelete(It.IsAny<IResourceHashSet<TodoItem>>(), It.IsAny<ResourcePipeline>()), Times.Once());
             resourceDefinitionMock.VerifyNoOtherCalls();
         }
 

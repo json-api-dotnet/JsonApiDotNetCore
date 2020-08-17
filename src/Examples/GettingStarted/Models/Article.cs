@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace GettingStarted.Models
 {

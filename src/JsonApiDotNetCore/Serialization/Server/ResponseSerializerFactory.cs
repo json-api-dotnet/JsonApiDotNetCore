@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.RequestServices.Contracts;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Serialization.Server
@@ -26,24 +26,20 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// </summary>
         public IJsonApiSerializer GetSerializer()
         {
-            var targetType = GetDocumentPrimaryType();
-            if (targetType == null)
-                return null;
+            var targetType = GetDocumentType();
 
             var serializerType = typeof(ResponseSerializer<>).MakeGenericType(targetType);
             var serializer = (IResponseSerializer)_provider.GetService(serializerType);
-            if (_currentRequest.RequestRelationship != null && _currentRequest.IsRelationshipPath)
-                serializer.RequestRelationship = _currentRequest.RequestRelationship;
+            if (_currentRequest.Kind == EndpointKind.Relationship && _currentRequest.Relationship != null)
+                serializer.RequestRelationship = _currentRequest.Relationship;
 
             return (IJsonApiSerializer)serializer;
         }
 
-        private Type GetDocumentPrimaryType()
+        private Type GetDocumentType()
         {
-            if (_currentRequest.RequestRelationship != null && !_currentRequest.IsRelationshipPath)
-                return _currentRequest.RequestRelationship.RightType;
-
-            return _currentRequest.GetRequestResource()?.ResourceType;
+            var resourceContext = _currentRequest.SecondaryResource ?? _currentRequest.PrimaryResource;
+            return resourceContext.ResourceType;
         }
     }
 }

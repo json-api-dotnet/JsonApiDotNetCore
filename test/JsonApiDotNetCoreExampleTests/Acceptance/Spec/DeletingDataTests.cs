@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
@@ -22,13 +24,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Respond_404_If_EntityDoesNotExist()
+        public async Task Respond_404_If_ResourceDoesNotExist()
         {
             // Arrange
-            _context.TodoItems.RemoveRange(_context.TodoItems);
+            await _context.ClearTableAsync<TodoItem>();
             await _context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);

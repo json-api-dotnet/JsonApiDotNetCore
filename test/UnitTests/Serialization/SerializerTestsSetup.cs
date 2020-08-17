@@ -1,10 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Links;
-using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server;
 using JsonApiDotNetCore.Serialization.Server.Builders;
@@ -42,19 +44,19 @@ namespace UnitTests.Serialization
         {
             var meta = GetMetaBuilder<T>(metaDict);
             var link = GetLinkBuilder(topLinks, resourceLinks, relationshipLinks);
-            var included = GetIncludedRelationships(inclusionChains);
+            var includeConstraints = GetIncludeConstraints(inclusionChains);
             var includedBuilder = GetIncludedBuilder();
             var fieldsToSerialize = GetSerializableFields();
-            ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, GetSerializerSettingsProvider());
+            ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, _resourceGraph, GetSerializerSettingsProvider());
             return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, new JsonApiOptions());
         }
 
         protected ResponseResourceObjectBuilder GetResponseResourceObjectBuilder(List<List<RelationshipAttribute>> inclusionChains = null, ResourceLinks resourceLinks = null, RelationshipLinks relationshipLinks = null) 
         {
             var link = GetLinkBuilder(null, resourceLinks, relationshipLinks);
-            var included = GetIncludedRelationships(inclusionChains);
+            var includeConstraints = GetIncludeConstraints(inclusionChains);
             var includedBuilder = GetIncludedBuilder();
-            return new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, GetSerializerSettingsProvider());
+            return new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, _resourceGraph, GetSerializerSettingsProvider());
         }
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder()
@@ -88,18 +90,27 @@ namespace UnitTests.Serialization
         protected IFieldsToSerialize GetSerializableFields()
         {
             var mock = new Mock<IFieldsToSerialize>();
-            mock.Setup(m => m.GetAllowedAttributes(It.IsAny<Type>(), It.IsAny<RelationshipAttribute>())).Returns<Type, RelationshipAttribute>((t, r) => _resourceGraph.GetResourceContext(t).Attributes);
-            mock.Setup(m => m.GetAllowedRelationships(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetResourceContext(t).Relationships);
+            mock.Setup(m => m.GetAttributes(It.IsAny<Type>(), It.IsAny<RelationshipAttribute>())).Returns<Type, RelationshipAttribute>((t, r) => _resourceGraph.GetResourceContext(t).Attributes);
+            mock.Setup(m => m.GetRelationships(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetResourceContext(t).Relationships);
             return mock.Object;
         }
 
-        protected IIncludeService GetIncludedRelationships(List<List<RelationshipAttribute>> inclusionChains = null)
+        protected IEnumerable<IQueryConstraintProvider> GetIncludeConstraints(List<List<RelationshipAttribute>> inclusionChains = null)
         {
-            var mock = new Mock<IIncludeService>();
-            if (inclusionChains != null)
-                mock.Setup(m => m.Get()).Returns(inclusionChains);
+            var expressionsInScope = new List<ExpressionInScope>();
 
-            return mock.Object;
+            if (inclusionChains != null)
+            {
+                var chains = inclusionChains.Select(relationships => new ResourceFieldChainExpression(relationships)).ToList();
+                var includeExpression = IncludeChainConverter.FromRelationshipChains(chains);
+                expressionsInScope.Add(new ExpressionInScope(null, includeExpression));
+            }
+
+            var mock = new Mock<IQueryConstraintProvider>();
+            mock.Setup(x => x.GetConstraints()).Returns(expressionsInScope);
+
+            IQueryConstraintProvider includeConstraintProvider = mock.Object;
+            return new List<IQueryConstraintProvider> {includeConstraintProvider};
         }
 
         /// <summary>
@@ -110,14 +121,14 @@ namespace UnitTests.Serialization
         {
             public TestDocumentBuilder(IResourceObjectBuilder resourceObjectBuilder) : base(resourceObjectBuilder) { }
 
-            public new Document Build(IIdentifiable entity, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
+            public new Document Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
             {
-                return base.Build(entity, attributes, relationships);
+                return base.Build(resource, attributes, relationships);
             }
 
-            public new Document Build(IEnumerable<IIdentifiable> entities, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
+            public new Document Build(IEnumerable<IIdentifiable> resources, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
             {
-                return base.Build(entities, attributes, relationships);
+                return base.Build(resources, attributes, relationships);
             }
         }
     }

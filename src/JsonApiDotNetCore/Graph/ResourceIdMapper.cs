@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Graph
         ///
         /// <example>
         /// <code>
-        /// DefaultRelatedIdMapper.GetRelatedIdPropertyName("Article");
+        /// RelatedIdMapper.GetRelatedIdPropertyName("Article");
         /// // "ArticleId"
         /// </code>
         /// </example>
@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Graph
     }
 
     /// <inheritdoc />
-    public sealed class DefaultRelatedIdMapper : IRelatedIdMapper
+    public sealed class RelatedIdMapper : IRelatedIdMapper
     {
         /// <inheritdoc />
         public string GetRelatedIdPropertyName(string propertyName) => propertyName + "Id";

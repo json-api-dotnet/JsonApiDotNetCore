@@ -8,9 +8,8 @@ using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -73,22 +72,22 @@ namespace JsonApiDotNetCore.Builders
             return this;
         }
 
-        private ResourceContext CreateResourceContext(string pluralizedTypeName, Type entityType, Type idType) => new ResourceContext
+        private ResourceContext CreateResourceContext(string pluralizedTypeName, Type resourceType, Type idType) => new ResourceContext
         {
             ResourceName = pluralizedTypeName,
-            ResourceType = entityType,
+            ResourceType = resourceType,
             IdentityType = idType,
-            Attributes = GetAttributes(entityType),
-            Relationships = GetRelationships(entityType),
-            EagerLoads = GetEagerLoads(entityType),
-            ResourceDefinitionType = GetResourceDefinitionType(entityType)
+            Attributes = GetAttributes(resourceType),
+            Relationships = GetRelationships(resourceType),
+            EagerLoads = GetEagerLoads(resourceType),
+            ResourceDefinitionType = GetResourceDefinitionType(resourceType)
         };
 
-        protected virtual List<AttrAttribute> GetAttributes(Type entityType)
+        protected virtual List<AttrAttribute> GetAttributes(Type resourceType)
         {
             var attributes = new List<AttrAttribute>();
 
-            foreach (var property in entityType.GetProperties())
+            foreach (var property in resourceType.GetProperties())
             {
                 var attribute = (AttrAttribute)property.GetCustomAttribute(typeof(AttrAttribute));
 
@@ -99,8 +98,8 @@ namespace JsonApiDotNetCore.Builders
                 {
                     var idAttr = new AttrAttribute
                     {
-                        PublicAttributeName = FormatPropertyName(property),
-                        PropertyInfo = property,
+                        PublicName = FormatPropertyName(property),
+                        Property = property,
                         Capabilities = _options.DefaultAttrCapabilities
                     };
                     attributes.Add(idAttr);
@@ -110,8 +109,8 @@ namespace JsonApiDotNetCore.Builders
                 if (attribute == null)
                     continue;
 
-                attribute.PublicAttributeName ??= FormatPropertyName(property);
-                attribute.PropertyInfo = property;
+                attribute.PublicName ??= FormatPropertyName(property);
+                attribute.Property = property;
 
                 if (!attribute.HasExplicitCapabilities)
                 {
@@ -123,30 +122,30 @@ namespace JsonApiDotNetCore.Builders
             return attributes;
         }
 
-        protected virtual List<RelationshipAttribute> GetRelationships(Type entityType)
+        protected virtual List<RelationshipAttribute> GetRelationships(Type resourceType)
         {
             var attributes = new List<RelationshipAttribute>();
-            var properties = entityType.GetProperties();
+            var properties = resourceType.GetProperties();
             foreach (var prop in properties)
             {
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
                 if (attribute == null) continue;
 
-                attribute.PropertyInfo = prop;
-                attribute.PublicRelationshipName ??= FormatPropertyName(prop);
+                attribute.Property = prop;
+                attribute.PublicName ??= FormatPropertyName(prop);
                 attribute.RightType = GetRelationshipType(attribute, prop);
-                attribute.LeftType = entityType;
+                attribute.LeftType = resourceType;
                 attributes.Add(attribute);
 
                 if (attribute is HasManyThroughAttribute hasManyThroughAttribute)
                 {
                     var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.ThroughPropertyName);
                     if (throughProperty == null)
-                        throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.PropertyInfo.Name}': Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
+                        throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
 
                     var throughType = TryGetThroughType(throughProperty);
                     if (throughType == null)
-                        throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{entityType}.{attribute.PropertyInfo.Name}': Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
+                        throw new JsonApiSetupException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
 
                     // ICollection<ArticleTag>
                     hasManyThroughAttribute.ThroughProperty = throughProperty;
@@ -157,13 +156,13 @@ namespace JsonApiDotNetCore.Builders
                     var throughProperties = throughType.GetProperties();
 
                     // ArticleTag.Article
-                    hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType == entityType)
-                        ?? throw new JsonApiSetupException($"{throughType} does not contain a navigation property to type {entityType}");
+                    hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType == resourceType)
+                        ?? throw new JsonApiSetupException($"{throughType} does not contain a navigation property to type {resourceType}");
 
                     // ArticleTag.ArticleId
                     var leftIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.LeftProperty.Name);
                     hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(x => x.Name == leftIdPropertyName)
-                        ?? throw new JsonApiSetupException($"{throughType} does not contain a relationship id property to type {entityType} with name {leftIdPropertyName}");
+                        ?? throw new JsonApiSetupException($"{throughType} does not contain a relationship id property to type {resourceType} with name {leftIdPropertyName}");
 
                     // ArticleTag.Tag
                     hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.RightType)
@@ -200,7 +199,7 @@ namespace JsonApiDotNetCore.Builders
         protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop) =>
             relation is HasOneAttribute ? prop.PropertyType : prop.PropertyType.GetGenericArguments()[0];
 
-        private List<EagerLoadAttribute> GetEagerLoads(Type entityType, int recursionDepth = 0)
+        private List<EagerLoadAttribute> GetEagerLoads(Type resourceType, int recursionDepth = 0)
         {
             if (recursionDepth >= 500)
             {
@@ -208,7 +207,7 @@ namespace JsonApiDotNetCore.Builders
             }
 
             var attributes = new List<EagerLoadAttribute>();
-            var properties = entityType.GetProperties();
+            var properties = resourceType.GetProperties();
 
             foreach (var property in properties)
             {
@@ -233,7 +232,7 @@ namespace JsonApiDotNetCore.Builders
             return interfaces.Length == 1 ? interfaces.Single().GenericTypeArguments[0] : type;
         }
 
-        private Type GetResourceDefinitionType(Type entityType) => typeof(ResourceDefinition<>).MakeGenericType(entityType);
+        private Type GetResourceDefinitionType(Type resourceType) => typeof(ResourceDefinition<>).MakeGenericType(resourceType);
 
         private string FormatResourceName(Type resourceType)
         {

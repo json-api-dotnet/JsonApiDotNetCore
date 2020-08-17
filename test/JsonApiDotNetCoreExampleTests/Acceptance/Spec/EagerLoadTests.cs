@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             passport.GrantedVisas = new List<Visa> { visa1, visa2 };
 
             _dbContext.Add(passport);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             // Act
             var (body, response) = await Get($"/api/v1/passports/{passport.StringId}");
@@ -73,7 +73,29 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task GetMultiResource_Nested_AppliesEagerLoad()
+        public async Task GetSingleResource_TopLevel_with_SparseFieldSet_AppliesEagerLoad()
+        {
+            // Arrange
+            var visa = _visaFaker.Generate();
+            visa.TargetCountry = _countryFaker.Generate();
+
+            _dbContext.Visas.Add(visa);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            var (body, response) = await Get($"/api/v1/visas/{visa.StringId}?fields=expiresAt,countryName");
+
+            // Assert
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
+
+            var document = JsonConvert.DeserializeObject<Document>(body);
+            Assert.NotNull(document.SingleData);
+            Assert.Equal(visa.StringId, document.SingleData.Id);
+            Assert.Equal(visa.TargetCountry.Name, document.SingleData.Attributes["countryName"]);
+        }
+
+        [Fact]
+        public async Task GetMultiResource_Secondary_AppliesEagerLoad()
         {
             // Arrange
             var person = _personFaker.Generate();
@@ -84,12 +106,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             visa.TargetCountry = _countryFaker.Generate();
             person.Passport.GrantedVisas = new List<Visa> {visa};
 
-            _dbContext.People.RemoveRange(_dbContext.People);
+            await _dbContext.ClearTableAsync<Person>();
             _dbContext.Add(person);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             // Act
-            var (body, response) = await Get($"/api/v1/people?include=passport");
+            var (body, response) = await Get("/api/v1/people?include=passport");
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
@@ -119,7 +141,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todo.Owner.Passport.GrantedVisas = new List<Visa> {visa};
 
             _dbContext.Add(todo);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             // Act
             var (body, response) = await Get($"/api/v1/people/{todo.Assignee.Id}/assignedTodoItems?include=owner.passport");
@@ -149,7 +171,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var content = serializer.Serialize(passport);
 
             // Act
-            var (body, response) = await Post($"/api/v1/passports", content);
+            var (body, response) = await Post("/api/v1/passports", content);
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
@@ -173,7 +195,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             passport.GrantedVisas = new List<Visa> { visa };
 
             _dbContext.Add(passport);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             passport.SocialSecurityNumber = _passportFaker.Generate().SocialSecurityNumber;
             passport.BirthCountry.Name = _countryFaker.Generate().Name;

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Hooks
 {
@@ -26,7 +27,7 @@ namespace JsonApiDotNetCore.Hooks
     }
 
     /// <summary>
-    /// A helper class that provides insights in which relationships have been updated for which entities.
+    /// A helper class that provides insights in which relationships have been updated for which resources.
     /// </summary>
     public interface IRelationshipsDictionary<TRightResource> :
         IRelationshipGetters<TRightResource>,
@@ -35,20 +36,20 @@ namespace JsonApiDotNetCore.Hooks
     { }
 
     /// <summary>
-    /// A helper class that provides insights in which relationships have been updated for which entities.
+    /// A helper class that provides insights in which relationships have been updated for which resources.
     /// </summary>
     public interface IRelationshipGetters<TLeftResource> where TLeftResource : class, IIdentifiable
     {
         /// <summary>
-        /// Gets a dictionary of all entities that have an affected relationship to type <typeparamref name="TLeftResource"/>
+        /// Gets a dictionary of all resources that have an affected relationship to type <typeparamref name="TLeftResource"/>
         /// </summary>
         Dictionary<RelationshipAttribute, HashSet<TLeftResource>> GetByRelationship<TRightResource>() where TRightResource : class, IIdentifiable;
         /// <summary>
-        /// Gets a dictionary of all entities that have an affected relationship to type <paramref name="relatedResourceType"/>
+        /// Gets a dictionary of all resources that have an affected relationship to type <paramref name="relatedResourceType"/>
         /// </summary>
         Dictionary<RelationshipAttribute, HashSet<TLeftResource>> GetByRelationship(Type relatedResourceType);
         /// <summary>
-        /// Gets a collection of all the entities for the property within <paramref name="navigationAction"/>
+        /// Gets a collection of all the resources for the property within <paramref name="navigationAction"/>
         /// has been affected by the request
         /// </summary>
         /// <param name="navigationAction"></param>
@@ -94,7 +95,7 @@ namespace JsonApiDotNetCore.Hooks
         public HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
         {
             var property = TypeHelper.ParseNavigationExpression(navigationAction);
-            return this.Where(p => p.Key.PropertyInfo.Name == property.Name).Select(p => p.Value).SingleOrDefault();
+            return this.Where(p => p.Key.Property.Name == property.Name).Select(p => p.Value).SingleOrDefault();
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCoreExample.Models
 {
@@ -8,11 +9,13 @@ namespace JsonApiDotNetCoreExample.Models
     {
         [Attr]
         [IsRequired(AllowEmptyStrings = true)]
-        public string Name { get; set; }
+        public string Caption { get; set; }
+
+        [Attr]
+        public string Url { get; set; }
 
         [HasOne]
         public Author Author { get; set; }
-        public int AuthorId { get; set; }
 
         [NotMapped]
         [HasManyThrough(nameof(ArticleTags))]
@@ -23,5 +26,11 @@ namespace JsonApiDotNetCoreExample.Models
         [HasManyThrough(nameof(IdentifiableArticleTags))]
         public ICollection<Tag> IdentifiableTags { get; set; }
         public ICollection<IdentifiableArticleTag> IdentifiableArticleTags { get; set; }
+
+        [HasMany]
+        public ICollection<Revision> Revisions { get; set; }
+
+        [HasOne]
+        public Blog Blog { get; set; }
     }
 }

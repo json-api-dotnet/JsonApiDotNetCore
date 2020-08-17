@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Internal.Generics
@@ -76,7 +77,7 @@ namespace JsonApiDotNetCore.Internal.Generics
             IEnumerable value;
             if (!relationshipIds.Any())
             {
-                var collectionType = relationship.PropertyInfo.PropertyType.ToConcreteCollectionType();
+                var collectionType = relationship.Property.PropertyType.ToConcreteCollectionType();
                 value = (IEnumerable)TypeHelper.CreateInstance(collectionType);
             }
             else
@@ -95,7 +96,7 @@ namespace JsonApiDotNetCore.Internal.Generics
                 var containsLambda = Expression.Lambda<Func<TRelatedResource, bool>>(callContains, parameter);
 
                 var resultSet = await _context.Set<TRelatedResource>().Where(containsLambda).ToListAsync();
-                value = resultSet.CopyToTypedCollection(relationship.PropertyInfo.PropertyType);
+                value = resultSet.CopyToTypedCollection(relationship.Property.PropertyType);
             }
 
             relationship.SetValue(parent, value, _resourceFactory);
@@ -104,7 +105,7 @@ namespace JsonApiDotNetCore.Internal.Generics
         private async Task UpdateManyToManyAsync(IIdentifiable parent, HasManyThroughAttribute relationship, IEnumerable<string> relationshipIds)
         {
             // we need to create a transaction for the HasManyThrough case so we can get and remove any existing
-            // join entities and only commit if all operations are successful
+            // through resources and only commit if all operations are successful
             var transaction = await _context.GetCurrentOrCreateTransactionAsync();
             // ArticleTag
             ParameterExpression parameter = Expression.Parameter(relationship.ThroughType);

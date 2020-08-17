@@ -27,15 +27,15 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpPatch("{id}")]
-        public override async Task<IActionResult> PatchAsync(Guid id, [FromBody] TodoItemCollection entity)
+        public override async Task<IActionResult> PatchAsync(Guid id, [FromBody] TodoItemCollection resource)
         {
-            if (entity.Name == "PRE-ATTACH-TEST")
+            if (resource.Name == "PRE-ATTACH-TEST")
             {
-                var targetTodoId = entity.TodoItems.First().Id;
+                var targetTodoId = resource.TodoItems.First().Id;
                 var todoItemContext = _dbResolver.GetContext().Set<TodoItem>();
                 await todoItemContext.Where(ti => ti.Id == targetTodoId).FirstOrDefaultAsync();
             }
-            return await base.PatchAsync(id, entity);
+            return await base.PatchAsync(id, resource);
         }
 
     }

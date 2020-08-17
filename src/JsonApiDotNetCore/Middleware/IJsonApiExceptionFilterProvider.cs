@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Middleware
     /// <summary>
     /// Provides the type of the global exception filter that is configured in MVC during startup.
     /// This can be overridden to let JADNC use your own exception filter. The default exception filter used
-    /// is <see cref="DefaultExceptionFilter"/>
+    /// is <see cref="JsonApiExceptionFilter"/>
     /// </summary>
     public interface IJsonApiExceptionFilterProvider
     {
@@ -15,6 +15,6 @@ namespace JsonApiDotNetCore.Middleware
     /// <inheritdoc/>
     public class JsonApiExceptionFilterProvider : IJsonApiExceptionFilterProvider
     {
-        public Type Get() => typeof(DefaultExceptionFilter);
+        public Type Get() => typeof(JsonApiExceptionFilter);
     }
 }

@@ -34,7 +34,7 @@ namespace UnitTests.Models
                 .AddResource<ResourceWithoutConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object);
 
             var body = new
             {
@@ -63,7 +63,7 @@ namespace UnitTests.Models
                 .AddResource<ResourceWithThrowingConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object);
 
             var body = new
             {
@@ -99,7 +99,7 @@ namespace UnitTests.Models
             var serviceContainer = new ServiceContainer();
             serviceContainer.AddService(typeof(AppDbContext), appDbContext);
 
-            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object);
 
             var body = new
             {
@@ -129,7 +129,7 @@ namespace UnitTests.Models
                 .AddResource<ResourceWithStringConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new DefaultResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object);
 
             var body = new
             {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -34,7 +35,7 @@ namespace JsonApiDotNetCore.Internal
         public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
             => GetResourceContext(typeof(TResource));
         /// <inheritdoc/>
-        public List<IResourceField> GetFields<T>(Expression<Func<T, dynamic>> selector = null) where T : IIdentifiable
+        public List<ResourceFieldAttribute> GetFields<T>(Expression<Func<T, dynamic>> selector = null) where T : IIdentifiable
         {
             return Getter(selector).ToList();
         }
@@ -49,7 +50,7 @@ namespace JsonApiDotNetCore.Internal
             return Getter(selector, FieldFilterType.Relationship).Cast<RelationshipAttribute>().ToList();
         }
         /// <inheritdoc/>
-        public List<IResourceField> GetFields(Type type)
+        public List<ResourceFieldAttribute> GetFields(Type type)
         {
             return GetResourceContext(type).Fields.ToList();
         }
@@ -69,12 +70,12 @@ namespace JsonApiDotNetCore.Internal
             if (relationship.InverseNavigation == null) return null;
             return GetResourceContext(relationship.RightType)
                             .Relationships
-                            .SingleOrDefault(r => r.PropertyInfo.Name == relationship.InverseNavigation);
+                            .SingleOrDefault(r => r.Property.Name == relationship.InverseNavigation);
         }
 
-        private IEnumerable<IResourceField> Getter<T>(Expression<Func<T, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where T : IIdentifiable
+        private IEnumerable<ResourceFieldAttribute> Getter<T>(Expression<Func<T, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where T : IIdentifiable
         {
-            IEnumerable<IResourceField> available;
+            IEnumerable<ResourceFieldAttribute> available;
             if (type == FieldFilterType.Attribute)
                 available = GetResourceContext(typeof(T)).Attributes;
             else if (type == FieldFilterType.Relationship)
@@ -85,15 +86,16 @@ namespace JsonApiDotNetCore.Internal
             if (selector == null)
                 return available;
 
-            var targeted = new List<IResourceField>();
+            var targeted = new List<ResourceFieldAttribute>();
 
             var selectorBody = RemoveConvert(selector.Body);
 
             if (selectorBody is MemberExpression memberExpression)
-            {   // model => model.Field1
+            {   
+                // model => model.Field1
                 try
                 {
-                    targeted.Add(available.Single(f => f.PropertyName == memberExpression.Member.Name));
+                    targeted.Add(available.Single(f => f.Property.Name == memberExpression.Member.Name));
                     return targeted;
                 }
                 catch (InvalidOperationException)
@@ -103,7 +105,8 @@ namespace JsonApiDotNetCore.Internal
             }
 
             if (selectorBody is NewExpression newExpression)
-            {   // model => new { model.Field1, model.Field2 }
+            {   
+                // model => new { model.Field1, model.Field2 }
                 string memberName = null;
                 try
                 {
@@ -113,7 +116,7 @@ namespace JsonApiDotNetCore.Internal
                     foreach (var member in newExpression.Members)
                     {
                         memberName = member.Name;
-                        targeted.Add(available.Single(f => f.PropertyName == memberName));
+                        targeted.Add(available.Single(f => f.Property.Name == memberName));
                     }
                     return targeted;
                 }
@@ -125,7 +128,7 @@ namespace JsonApiDotNetCore.Internal
 
             throw new ArgumentException(
                 $"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " +
-                $"For example: 'article => article.Title' or 'article => new {{ article.Title, article.PageCount }}'.");
+                "For example: 'article => article.Title' or 'article => new { article.Title, article.PageCount }'.");
         }
 
         private bool IsLazyLoadingProxyForResourceType(Type resourceType) =>

@@ -3,7 +3,7 @@ using System.ComponentModel.Design;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCore.Serialization.Client;
 using Newtonsoft.Json;
 using Xunit;
@@ -18,10 +18,10 @@ namespace UnitTests.Serialization.Client
 
         public ResponseDeserializerTests()
         {
-            _deserializer = new ResponseDeserializer(_resourceGraph, new DefaultResourceFactory(new ServiceContainer()));
+            _deserializer = new ResponseDeserializer(_resourceGraph, new ResourceFactory(new ServiceContainer()));
             _linkValues.Add("self", "http://example.com/articles");
-            _linkValues.Add("next", "http://example.com/articles?page[offset]=2");
-            _linkValues.Add("last", "http://example.com/articles?page[offset]=10");
+            _linkValues.Add("next", "http://example.com/articles?page[number]=2");
+            _linkValues.Add("last", "http://example.com/articles?page[number]=10");
         }
 
         [Fact]
@@ -97,13 +97,13 @@ namespace UnitTests.Serialization.Client
 
             // Act
             var result = _deserializer.DeserializeSingle<TestResource>(body);
-            var entity = result.Data;
+            var resource = result.Data;
 
             // Assert
             Assert.Null(result.Links);
             Assert.Null(result.Meta);
-            Assert.Equal(1, entity.Id);
-            Assert.Equal(content.SingleData.Attributes["stringField"], entity.StringField);
+            Assert.Equal(1, resource.Id);
+            Assert.Equal(content.SingleData.Attributes["stringField"], resource.StringField);
         }
 
         [Fact]
@@ -136,17 +136,17 @@ namespace UnitTests.Serialization.Client
 
             // Act
             var result = _deserializer.DeserializeSingle<MultipleRelationshipsPrincipalPart>(body);
-            var entity = result.Data;
+            var resource = result.Data;
 
             // Assert
-            Assert.Equal(1, entity.Id);
-            Assert.NotNull(entity.PopulatedToOne);
-            Assert.Equal(toOneAttributeValue, entity.PopulatedToOne.AttributeMember);
-            Assert.Equal(toManyAttributeValue, entity.PopulatedToManies.First().AttributeMember);
-            Assert.NotNull(entity.PopulatedToManies);
-            Assert.NotNull(entity.EmptyToManies);
-            Assert.Empty(entity.EmptyToManies);
-            Assert.Null(entity.EmptyToOne);
+            Assert.Equal(1, resource.Id);
+            Assert.NotNull(resource.PopulatedToOne);
+            Assert.Equal(toOneAttributeValue, resource.PopulatedToOne.AttributeMember);
+            Assert.Equal(toManyAttributeValue, resource.PopulatedToManies.First().AttributeMember);
+            Assert.NotNull(resource.PopulatedToManies);
+            Assert.NotNull(resource.EmptyToManies);
+            Assert.Empty(resource.EmptyToManies);
+            Assert.Null(resource.EmptyToOne);
         }
 
         [Fact]
@@ -179,16 +179,16 @@ namespace UnitTests.Serialization.Client
 
             // Act
             var result = _deserializer.DeserializeSingle<MultipleRelationshipsDependentPart>(body);
-            var entity = result.Data;
+            var resource = result.Data;
 
             // Assert
-            Assert.Equal(1, entity.Id);
-            Assert.NotNull(entity.PopulatedToOne);
-            Assert.Equal(toOneAttributeValue, entity.PopulatedToOne.AttributeMember);
-            Assert.Equal(toManyAttributeValue, entity.PopulatedToMany.AttributeMember);
-            Assert.NotNull(entity.PopulatedToMany);
-            Assert.Null(entity.EmptyToMany);
-            Assert.Null(entity.EmptyToOne);
+            Assert.Equal(1, resource.Id);
+            Assert.NotNull(resource.PopulatedToOne);
+            Assert.Equal(toOneAttributeValue, resource.PopulatedToOne.AttributeMember);
+            Assert.Equal(toManyAttributeValue, resource.PopulatedToMany.AttributeMember);
+            Assert.NotNull(resource.PopulatedToMany);
+            Assert.Null(resource.EmptyToMany);
+            Assert.Null(resource.EmptyToOne);
         }
 
         [Fact]
@@ -219,18 +219,18 @@ namespace UnitTests.Serialization.Client
 
             // Act
             var result = _deserializer.DeserializeSingle<MultipleRelationshipsPrincipalPart>(body);
-            var entity = result.Data;
+            var resource = result.Data;
 
             // Assert
-            Assert.Equal(1, entity.Id);
-            Assert.Null(entity.PopulatedToOne);
-            Assert.Null(entity.EmptyToManies);
-            Assert.Null(entity.EmptyToOne);
-            Assert.NotNull(entity.PopulatedToManies);
-            var includedEntity = entity.PopulatedToManies.First();
-            Assert.Equal(toManyAttributeValue, includedEntity.AttributeMember);
-            var nestedIncludedEntity = includedEntity.Principal;
-            Assert.Equal(nestedIncludeAttributeValue, nestedIncludedEntity.AttributeMember);
+            Assert.Equal(1, resource.Id);
+            Assert.Null(resource.PopulatedToOne);
+            Assert.Null(resource.EmptyToManies);
+            Assert.Null(resource.EmptyToOne);
+            Assert.NotNull(resource.PopulatedToManies);
+            var includedResource = resource.PopulatedToManies.First();
+            Assert.Equal(toManyAttributeValue, includedResource.AttributeMember);
+            var nestedIncludedResource = includedResource.Principal;
+            Assert.Equal(nestedIncludeAttributeValue, nestedIncludedResource.AttributeMember);
         }
 
 
@@ -270,11 +270,11 @@ namespace UnitTests.Serialization.Client
 
             // Act
             var result = _deserializer.DeserializeSingle<MultipleRelationshipsPrincipalPart>(body);
-            var entity = result.Data;
+            var resource = result.Data;
 
             // Assert
-            Assert.Equal(1, entity.Id);
-            var included = entity.Multi;
+            Assert.Equal(1, resource.Id);
+            var included = resource.Multi;
             Assert.Equal(10, included.Id);
             Assert.Equal(includedAttributeValue, included.AttributeMember);
             var nestedIncluded = included.PopulatedToManies.First();
@@ -322,11 +322,11 @@ namespace UnitTests.Serialization.Client
 
             // Act
             var result = _deserializer.DeserializeList<MultipleRelationshipsPrincipalPart>(body);
-            var entity = result.Data.First();
+            var resource = result.Data.First();
 
             // Assert
-            Assert.Equal(1, entity.Id);
-            var included = entity.Multi;
+            Assert.Equal(1, resource.Id);
+            var included = resource.Multi;
             Assert.Equal(10, included.Id);
             Assert.Equal(includedAttributeValue, included.AttributeMember);
             var nestedIncluded = included.PopulatedToManies.First();

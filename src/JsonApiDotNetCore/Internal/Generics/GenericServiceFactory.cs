@@ -14,9 +14,9 @@ namespace JsonApiDotNetCore.Internal.Generics
         /// Constructs the generic type and locates the service, then casts to TInterface
         /// </summary>
         /// <example>
-        /// <code>
-        ///     Get&lt;IGenericProcessor&gt;(typeof(GenericProcessor&lt;&gt;), typeof(TResource));
-        /// </code>
+        /// <code><![CDATA[
+        ///     Get<IGenericProcessor>(typeof(GenericProcessor<>), typeof(TResource));
+        /// ]]></code>
         /// </example>
         TInterface Get<TInterface>(Type openGenericType, Type resourceType);
 
@@ -24,9 +24,9 @@ namespace JsonApiDotNetCore.Internal.Generics
         /// Constructs the generic type and locates the service, then casts to TInterface
         /// </summary>
         /// <example>
-        /// <code>
-        ///     Get&lt;IGenericProcessor&gt;(typeof(GenericProcessor&lt;,&gt;), typeof(TResource), typeof(TId));
-        /// </code>
+        /// <code><![CDATA[
+        ///     Get<IGenericProcessor>(typeof(GenericProcessor<>), typeof(TResource), typeof(TId));
+        /// ]]></code>
         /// </example>
         TInterface Get<TInterface>(Type openGenericType, Type resourceType, Type keyType);
     }

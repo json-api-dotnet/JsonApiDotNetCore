@@ -32,11 +32,11 @@ namespace JsonApiDotNetCoreExample.Definitions
             resourcesByRelationship.GetByRelationship<Person>().ToList().ForEach(kvp => DoesNotTouchLockedPassports(kvp.Value));
         }
 
-        private void DoesNotTouchLockedPassports(IEnumerable<Passport> entities)
+        private void DoesNotTouchLockedPassports(IEnumerable<Passport> resources)
         {
-            foreach (var entity in entities ?? Enumerable.Empty<Passport>())
+            foreach (var passport in resources ?? Enumerable.Empty<Passport>())
             {
-                if (entity.IsLocked)
+                if (passport.IsLocked)
                 {
                     throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
                     {

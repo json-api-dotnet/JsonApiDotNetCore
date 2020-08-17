@@ -1,22 +1,25 @@
 using System;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCoreExample
 {
     public class TestStartup : Startup
     {
-        public TestStartup(IWebHostEnvironment env) : base(env)
+        public TestStartup(IConfiguration configuration) : base(configuration)
         {
         }
 
         protected override void ConfigureClock(IServiceCollection services)
         {
-            services.AddSingleton<ISystemClock, AlwaysChangingSystemClock>();
+            services.AddSingleton<ISystemClock, TickingSystemClock>();
         }
 
-        private class AlwaysChangingSystemClock : ISystemClock
+        /// <summary>
+        /// Advances the clock one second each time the current time is requested.
+        /// </summary>
+        private class TickingSystemClock : ISystemClock
         {
             private DateTimeOffset _utcNow;
 
@@ -30,12 +33,12 @@ namespace JsonApiDotNetCoreExample
                 }
             }
 
-            public AlwaysChangingSystemClock()
+            public TickingSystemClock()
                 : this(new DateTimeOffset(new DateTime(2000, 1, 1)))
             {
             }
 
-            public AlwaysChangingSystemClock(DateTimeOffset utcNow)
+            public TickingSystemClock(DateTimeOffset utcNow)
             {
                 _utcNow = utcNow;
             }

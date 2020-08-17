@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCore.Serialization.Client
 {

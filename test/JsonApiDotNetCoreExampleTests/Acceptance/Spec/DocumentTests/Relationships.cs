@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Data;
 using Bogus;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
@@ -37,7 +38,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task Correct_RelationshipObjects_For_ManyToOne_Relationships()
         {
             // Arrange
-            _context.TodoItems.RemoveRange(_context.TodoItems);
+            await _context.ClearTableAsync<TodoItem>();
             await _context.SaveChangesAsync();
 
             var todoItem = _todoItemFaker.Generate();
@@ -47,7 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -76,7 +77,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todoItems/{todoItem.Id}";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -98,7 +99,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task Correct_RelationshipObjects_For_OneToMany_Relationships()
         {
             // Arrange
-            _context.People.RemoveRange(_context.People);
+            await _context.ClearTableAsync<Person>();
             await _context.SaveChangesAsync();
 
             var person = _personFaker.Generate();
@@ -108,7 +109,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/people";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -137,7 +138,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/people/{person.Id}";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);

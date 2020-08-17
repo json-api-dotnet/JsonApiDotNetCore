@@ -31,14 +31,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _factory.GetService<AppDbContext>();
 
             _authorFaker = new Faker<Author>()
-                .RuleFor(a => a.Name, f => f.Random.Words(2));
+                .RuleFor(a => a.LastName, f => f.Random.Words(2));
 
             _articleFaker = new Faker<Article>()
-                .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
+                .RuleFor(a => a.Caption, f => f.Random.AlphaNumeric(10))
                 .RuleFor(a => a.Author, f => _authorFaker.Generate());
 
             _tagFaker = new Faker<Tag>()
-                .CustomInstantiator(f => new Tag(context))
                 .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
         }
 
@@ -46,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task When_posting_tag_with_invalid_name_it_must_fail()
         {
             // Arrange
-            var tag = new Tag(_dbContext)
+            var tag = new Tag
             {
                 Name = "!@#$%^&*().-"
             };
@@ -79,7 +78,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task When_posting_tag_with_invalid_name_without_model_state_validation_it_must_succeed()
         {
             // Arrange
-            var tag = new Tag(_dbContext)
+            var tag = new Tag
             {
                 Name = "!@#$%^&*().-"
             };
@@ -107,16 +106,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task When_patching_tag_with_invalid_name_it_must_fail()
         {
             // Arrange
-            var existingTag = new Tag(_dbContext)
+            var existingTag = new Tag
             {
                 Name = "Technology"
             };
 
             var context = _factory.GetService<AppDbContext>();
             context.Tags.Add(existingTag);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
-            var updatedTag = new Tag(_dbContext)
+            var updatedTag = new Tag
             {
                 Id = existingTag.Id,
                 Name = "!@#$%^&*().-"
@@ -150,16 +149,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task When_patching_tag_with_invalid_name_without_model_state_validation_it_must_succeed()
         {
             // Arrange
-            var existingTag = new Tag(_dbContext)
+            var existingTag = new Tag
             {
                 Name = "Technology"
             };
 
             var context = _factory.GetService<AppDbContext>();
             context.Tags.Add(existingTag);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
-            var updatedTag = new Tag(_dbContext)
+            var updatedTag = new Tag
             {
                 Id = existingTag.Id,
                 Name = "!@#$%^&*().-"
@@ -203,7 +202,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     type = "articles",
                     attributes = new Dictionary<string, object>
                     {
-                        {"name", name}
+                        {"caption", name}
                     },
                     relationships = new Dictionary<string, dynamic>
                     {
@@ -235,7 +234,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var persistedArticle = await _dbContext.Articles
                 .SingleAsync(a => a.Id == articleResponse.Id);
 
-            Assert.Equal(name, persistedArticle.Name);
+            Assert.Equal(name, persistedArticle.Caption);
         }
 
         [Fact]
@@ -257,7 +256,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     type = "articles",
                     attributes = new Dictionary<string, object>
                     {
-                        {"name", name}
+                        {"caption", name}
                     },
                     relationships = new Dictionary<string, dynamic>
                     {
@@ -289,7 +288,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var persistedArticle = await _dbContext.Articles
                 .SingleAsync(a => a.Id == articleResponse.Id);
 
-            Assert.Equal(name, persistedArticle.Name);
+            Assert.Equal(name, persistedArticle.Caption);
         }
 
         [Fact]
@@ -310,7 +309,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     type = "articles",
                     attributes = new Dictionary<string, object>
                     {
-                        {"name", null}
+                        {"caption", null}
                     },
                     relationships = new Dictionary<string, dynamic>
                     {
@@ -339,7 +338,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Single(errorDocument.Errors);
             Assert.Equal("Input validation failed.", errorDocument.Errors[0].Title);
             Assert.Equal("422", errorDocument.Errors[0].Status);
-            Assert.Equal("The Name field is required.", errorDocument.Errors[0].Detail);
+            Assert.Equal("The Caption field is required.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -385,7 +384,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Single(errorDocument.Errors);
             Assert.Equal("Input validation failed.", errorDocument.Errors[0].Title);
             Assert.Equal("422", errorDocument.Errors[0].Status);
-            Assert.Equal("The Name field is required.", errorDocument.Errors[0].Detail);
+            Assert.Equal("The Caption field is required.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -408,7 +407,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     id = article.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        {"name", name}
+                        {"caption", name}
                     }
                 }
             };
@@ -425,7 +424,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var persistedArticle = await _dbContext.Articles
                 .SingleOrDefaultAsync(a => a.Id == article.Id);
 
-            var updatedName = persistedArticle.Name;
+            var updatedName = persistedArticle.Caption;
             Assert.Equal(name, updatedName);
         }
 
@@ -495,7 +494,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     id = article.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        {"name", null}
+                        {"caption", null}
                     }
                 }
             };
@@ -514,7 +513,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Single(errorDocument.Errors);
             Assert.Equal("Input validation failed.", errorDocument.Errors[0].Title);
             Assert.Equal("422", errorDocument.Errors[0].Status);
-            Assert.Equal("The Name field is required.", errorDocument.Errors[0].Detail);
+            Assert.Equal("The Caption field is required.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -536,7 +535,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     id = article.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        {"name", ""}
+                        {"caption", ""}
                     }
                 }
             };
@@ -553,7 +552,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var persistedArticle = await _dbContext.Articles
                 .SingleOrDefaultAsync(a => a.Id == article.Id);
 
-            var updatedName = persistedArticle.Name;
+            var updatedName = persistedArticle.Caption;
             Assert.Equal("", updatedName);
         }
     }

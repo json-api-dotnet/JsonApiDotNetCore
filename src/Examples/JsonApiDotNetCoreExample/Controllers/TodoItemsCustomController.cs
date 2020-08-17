@@ -61,8 +61,8 @@ namespace JsonApiDotNetCoreExample.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            var entities = await _resourceService.GetAsync();
-            return Ok(entities);
+            var resources = await _resourceService.GetAsync();
+            return Ok(resources);
         }
 
         [HttpGet("{id}")]
@@ -70,8 +70,8 @@ namespace JsonApiDotNetCoreExample.Controllers
         {
             try
             {
-                var entity = await _resourceService.GetAsync(id);
-                return Ok(entity);
+                var resource = await _resourceService.GetAsync(id);
+                return Ok(resource);
             }
             catch (ResourceNotFoundException)
             {
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreExample.Controllers
         {
             try
             {
-                var relationship = await _resourceService.GetRelationshipsAsync(id, relationshipName);
+                var relationship = await _resourceService.GetRelationshipAsync(id, relationshipName);
                 return Ok(relationship);
             }
             catch (ResourceNotFoundException)
@@ -96,34 +96,34 @@ namespace JsonApiDotNetCoreExample.Controllers
         [HttpGet("{id}/{relationshipName}")]
         public async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
-            var relationship = await _resourceService.GetRelationshipAsync(id, relationshipName);
+            var relationship = await _resourceService.GetSecondaryAsync(id, relationshipName);
             return Ok(relationship);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] T entity)
+        public async Task<IActionResult> PostAsync([FromBody] T resource)
         {
-            if (entity == null)
+            if (resource == null)
                 return UnprocessableEntity();
 
-            if (_options.AllowClientGeneratedIds && !string.IsNullOrEmpty(entity.StringId))
+            if (_options.AllowClientGeneratedIds && !string.IsNullOrEmpty(resource.StringId))
                 return Forbidden();
 
-            entity = await _resourceService.CreateAsync(entity);
+            resource = await _resourceService.CreateAsync(resource);
 
-            return Created($"{HttpContext.Request.Path}/{entity.Id}", entity);
+            return Created($"{HttpContext.Request.Path}/{resource.Id}", resource);
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
+        public async Task<IActionResult> PatchAsync(TId id, [FromBody] T resource)
         {
-            if (entity == null)
+            if (resource == null)
                 return UnprocessableEntity();
 
             try
             {
-                var updatedEntity = await _resourceService.UpdateAsync(id, entity);
-                return Ok(updatedEntity);
+                var updated = await _resourceService.UpdateAsync(id, resource);
+                return Ok(updated);
             }
             catch (ResourceNotFoundException)
             {
@@ -134,7 +134,7 @@ namespace JsonApiDotNetCoreExample.Controllers
         [HttpPatch("{id}/relationships/{relationshipName}")]
         public async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] List<ResourceObject> relationships)
         {
-            await _resourceService.UpdateRelationshipsAsync(id, relationshipName, relationships);
+            await _resourceService.UpdateRelationshipAsync(id, relationshipName, relationships);
             return Ok();
         }
 

@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Internal
         /// <inheritdoc />
         public void Resolve()
         {
-            if (EntityFrameworkCoreIsEnabled())
+            if (IsEntityFrameworkCoreEnabled())
             {
                 DbContext context = _resolver.GetContext();
 
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Internal
                     foreach (var attr in ce.Relationships)
                     {
                         if (attr is HasManyThroughAttribute) continue;
-                        INavigation inverseNavigation = meta.FindNavigation(attr.PropertyInfo.Name)?.FindInverse();
+                        INavigation inverseNavigation = meta.FindNavigation(attr.Property.Name)?.FindInverse();
                         attr.InverseNavigation = inverseNavigation?.Name;
                     }
                 }
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// If EF Core is not being used, we're expecting the resolver to not be registered.
         /// </summary>
-        /// <returns><c>true</c>, if entity framework core was enabled, <c>false</c> otherwise.</returns>
-        private bool EntityFrameworkCoreIsEnabled() => _resolver != null;
+        /// <returns><c>true</c>, if Entity Framework Core was enabled, <c>false</c> otherwise.</returns>
+        private bool IsEntityFrameworkCoreEnabled() => _resolver != null;
     }
 }

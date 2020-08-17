@@ -7,45 +7,38 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCoreExample.Services;
 using Microsoft.AspNetCore.Authentication;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace JsonApiDotNetCoreExample
 {
-    public class Startup
+    public class Startup : EmptyStartup
     {
         private readonly string _connectionString;
 
-        public Startup(IWebHostEnvironment env)
+        public Startup(IConfiguration configuration) : base(configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            var configuration = builder.Build();
-            
             string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
             _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
         }
 
-        public virtual void ConfigureServices(IServiceCollection services)
+        public override void ConfigureServices(IServiceCollection services)
         {
             ConfigureClock(services);
 
-            services.AddScoped<SkipCacheQueryParameterService>();
-            services.AddScoped<IQueryParameterService>(sp => sp.GetService<SkipCacheQueryParameterService>());
+            services.AddScoped<SkipCacheQueryStringParameterReader>();
+            services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<SkipCacheQueryStringParameterReader>());
 
-            services
-                .AddDbContext<AppDbContext>(options =>
-                {
-                    options
-                        .EnableSensitiveDataLogging()
-                        .UseNpgsql(_connectionString, innerOptions => innerOptions.SetPostgresVersion(new Version(9,6)));
-                }, ServiceLifetime.Transient)
-                .AddJsonApi<AppDbContext>(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.EnableSensitiveDataLogging();
+                options.UseNpgsql(_connectionString, innerOptions => innerOptions.SetPostgresVersion(new Version(9, 6)));
+            }, ServiceLifetime.Transient);
+
+            services.AddJsonApi<AppDbContext>(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
             
             // once all tests have been moved to WebApplicationFactory format we can get rid of this line below
             services.AddClientSerialization();
@@ -60,19 +53,20 @@ namespace JsonApiDotNetCoreExample
         {
             options.IncludeExceptionStackTraceInErrors = true;
             options.Namespace = "api/v1";
-            options.DefaultPageSize = 5;
-            options.IncludeTotalRecordCount = true;
-            options.LoadDatabaseValues = true;
+            options.DefaultPageSize = new PageSize(5);
+            options.IncludeTotalResourceCount = true;
             options.ValidateModelState = true;
-            options.EnableResourceHooks = true;
+            options.SerializerSettings.Formatting = Formatting.Indented;
             options.SerializerSettings.Converters.Add(new StringEnumConverter());
         }
 
-        public void Configure(
-            IApplicationBuilder app,
-            AppDbContext context)
+        public override void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
         {
-            context.Database.EnsureCreated();
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                appDbContext.Database.EnsureCreated();
+            }
             
             app.UseRouting();
             app.UseJsonApi();

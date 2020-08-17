@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Authentication;
 
@@ -53,11 +54,7 @@ namespace JsonApiDotNetCoreExample.Models
             get => BirthCountry.Name;
             set
             {
-                if (BirthCountry == null)
-                {
-                    BirthCountry = new Country();
-                }
-                
+                BirthCountry ??= new Country();
                 BirthCountry.Name = value;
             }
         }
@@ -65,7 +62,7 @@ namespace JsonApiDotNetCoreExample.Models
         [EagerLoad]
         public Country BirthCountry { get; set; }
 
-        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowMutate)]
+        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowChange)]
         [NotMapped]
         public string GrantedVisaCountries => GrantedVisas == null || !GrantedVisas.Any()
             ? null

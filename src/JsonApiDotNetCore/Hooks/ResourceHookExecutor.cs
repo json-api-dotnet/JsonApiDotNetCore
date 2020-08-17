@@ -9,8 +9,10 @@ using LeftType = System.Type;
 using RightType = System.Type;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Query;
 
 namespace JsonApiDotNetCore.Hooks
 {
@@ -19,7 +21,7 @@ namespace JsonApiDotNetCore.Hooks
     {
         private readonly IHookExecutorHelper _executorHelper;
         private readonly ITraversalHelper _traversalHelper;
-        private readonly IIncludeService _includeService;
+        private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceGraph _resourceGraph;
         private readonly IResourceFactory _resourceFactory;
@@ -28,14 +30,14 @@ namespace JsonApiDotNetCore.Hooks
             IHookExecutorHelper executorHelper,
             ITraversalHelper traversalHelper,
             ITargetedFields targetedFields,
-            IIncludeService includedRelationships,
+            IEnumerable<IQueryConstraintProvider> constraintProviders,
             IResourceGraph resourceGraph,
             IResourceFactory resourceFactory)
         {
             _executorHelper = executorHelper;
             _traversalHelper = traversalHelper;
             _targetedFields = targetedFields;
-            _includeService = includedRelationships;
+            _constraintProviders = constraintProviders;
             _resourceGraph = resourceGraph;
             _resourceFactory = resourceFactory;
         }
@@ -46,53 +48,62 @@ namespace JsonApiDotNetCore.Hooks
             var hookContainer = _executorHelper.GetResourceHookContainer<TResource>(ResourceHook.BeforeRead);
             hookContainer?.BeforeRead(pipeline, false, stringId);
             var calledContainers = new List<LeftType> { typeof(TResource) };
-            foreach (var chain in _includeService.Get())
-                RecursiveBeforeRead(chain, pipeline, calledContainers);
+
+            var includes = _constraintProviders
+                .SelectMany(p => p.GetConstraints())
+                .Select(expressionInScope => expressionInScope.Expression)
+                .OfType<IncludeExpression>()
+                .ToArray();
+
+            foreach (var chain in includes.SelectMany(IncludeChainConverter.GetRelationshipChains))
+            {
+                RecursiveBeforeRead(chain.Fields.Cast<RelationshipAttribute>().ToList(), pipeline, calledContainers);
+            }
         }
 
         /// <inheritdoc/>
-        public IEnumerable<TResource> BeforeUpdate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
+        public IEnumerable<TResource> BeforeUpdate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.BeforeUpdate, entities, out var container, out var node))
+            if (GetHook(ResourceHook.BeforeUpdate, resources, out var container, out var node))
             {
                 var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
-                var dbValues = LoadDbValues(typeof(TResource), (IEnumerable<TResource>)node.UniqueEntities, ResourceHook.BeforeUpdate, relationships);
-                var diff = new DiffableEntityHashSet<TResource>(node.UniqueEntities, dbValues, node.LeftsToNextLayer(), _targetedFields);
+                var dbValues = LoadDbValues(typeof(TResource), (IEnumerable<TResource>)node.UniqueResources, ResourceHook.BeforeUpdate, relationships);
+                var diff = new DiffableResourceHashSet<TResource>(node.UniqueResources, dbValues, node.LeftsToNextLayer(), _targetedFields);
                 IEnumerable<TResource> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
-                node.Reassign(_resourceFactory, entities);
+                node.Reassign(_resourceFactory, resources);
             }
 
             FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(node));
-            return entities;
+            return resources;
         }
 
         /// <inheritdoc/>
-        public IEnumerable<TResource> BeforeCreate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
+        public IEnumerable<TResource> BeforeCreate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.BeforeCreate, entities, out var container, out var node))
+            if (GetHook(ResourceHook.BeforeCreate, resources, out var container, out var node))
             {
-                var affected = new EntityHashSet<TResource>((HashSet<TResource>)node.UniqueEntities, node.LeftsToNextLayer());
+                var affected = new ResourceHashSet<TResource>((HashSet<TResource>)node.UniqueResources, node.LeftsToNextLayer());
                 IEnumerable<TResource> updated = container.BeforeCreate(affected, pipeline);
                 node.UpdateUnique(updated);
-                node.Reassign(_resourceFactory, entities);
+                node.Reassign(_resourceFactory, resources);
             }
             FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(node));
-            return entities;
+            return resources;
         }
 
         /// <inheritdoc/>
-        public IEnumerable<TResource> BeforeDelete<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
+        public IEnumerable<TResource> BeforeDelete<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.BeforeDelete, entities, out var container, out var node))
+            if (GetHook(ResourceHook.BeforeDelete, resources, out var container, out var node))
             {
                 var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
-                var targetEntities = LoadDbValues(typeof(TResource), (IEnumerable<TResource>)node.UniqueEntities, ResourceHook.BeforeDelete, relationships) ?? node.UniqueEntities;
-                var affected = new EntityHashSet<TResource>(targetEntities, node.LeftsToNextLayer());
+                var targetResources = LoadDbValues(typeof(TResource), (IEnumerable<TResource>)node.UniqueResources, ResourceHook.BeforeDelete, relationships) ?? node.UniqueResources;
+                var affected = new ResourceHashSet<TResource>(targetResources, node.LeftsToNextLayer());
 
                 IEnumerable<TResource> updated = container.BeforeDelete(affected, pipeline);
                 node.UpdateUnique(updated);
-                node.Reassign(_resourceFactory, entities);
+                node.Reassign(_resourceFactory, resources);
             }
 
             // If we're deleting an article, we're implicitly affected any owners related to it.
@@ -105,49 +116,49 @@ namespace JsonApiDotNetCore.Hooks
                 var implicitTargets = entry.Value;
                 FireForAffectedImplicits(rightType, implicitTargets, pipeline);
             }
-            return entities;
+            return resources;
         }
 
         /// <inheritdoc/>
-        public IEnumerable<TResource> OnReturn<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
+        public IEnumerable<TResource> OnReturn<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.OnReturn, entities, out var container, out var node) && pipeline != ResourcePipeline.GetRelationship)
+            if (GetHook(ResourceHook.OnReturn, resources, out var container, out var node) && pipeline != ResourcePipeline.GetRelationship)
             {
-                IEnumerable<TResource> updated = container.OnReturn((HashSet<TResource>)node.UniqueEntities, pipeline);
+                IEnumerable<TResource> updated = container.OnReturn((HashSet<TResource>)node.UniqueResources, pipeline);
                 ValidateHookResponse(updated);
                 node.UpdateUnique(updated);
-                node.Reassign(_resourceFactory, entities);
+                node.Reassign(_resourceFactory, resources);
             }
 
             Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.OnReturn, (nextContainer, nextNode) =>
             {
-                var filteredUniqueSet = CallHook(nextContainer, ResourceHook.OnReturn, new object[] { nextNode.UniqueEntities, pipeline });
+                var filteredUniqueSet = CallHook(nextContainer, ResourceHook.OnReturn, new object[] { nextNode.UniqueResources, pipeline });
                 nextNode.UpdateUnique(filteredUniqueSet);
                 nextNode.Reassign(_resourceFactory);
             });
-            return entities;
+            return resources;
         }
 
         /// <inheritdoc/>
-        public void AfterRead<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
+        public void AfterRead<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.AfterRead, entities, out var container, out var node))
+            if (GetHook(ResourceHook.AfterRead, resources, out var container, out var node))
             {
-                container.AfterRead((HashSet<TResource>)node.UniqueEntities, pipeline);
+                container.AfterRead((HashSet<TResource>)node.UniqueResources, pipeline);
             }
 
             Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.AfterRead, (nextContainer, nextNode) =>
             {
-                CallHook(nextContainer, ResourceHook.AfterRead, new object[] { nextNode.UniqueEntities, pipeline, true });
+                CallHook(nextContainer, ResourceHook.AfterRead, new object[] { nextNode.UniqueResources, pipeline, true });
             });
         }
 
         /// <inheritdoc/>
-        public void AfterCreate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
+        public void AfterCreate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.AfterCreate, entities, out var container, out var node))
+            if (GetHook(ResourceHook.AfterCreate, resources, out var container, out var node))
             {
-                container.AfterCreate((HashSet<TResource>)node.UniqueEntities, pipeline);
+                container.AfterCreate((HashSet<TResource>)node.UniqueResources, pipeline);
             }
 
             Traverse(_traversalHelper.CreateNextLayer(node),
@@ -156,11 +167,11 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public void AfterUpdate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
+        public void AfterUpdate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.AfterUpdate, entities, out var container, out var node))
+            if (GetHook(ResourceHook.AfterUpdate, resources, out var container, out var node))
             {
-                container.AfterUpdate((HashSet<TResource>)node.UniqueEntities, pipeline);
+                container.AfterUpdate((HashSet<TResource>)node.UniqueResources, pipeline);
             }
 
             Traverse(_traversalHelper.CreateNextLayer(node),
@@ -169,11 +180,11 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public void AfterDelete<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline, bool succeeded) where TResource : class, IIdentifiable
+        public void AfterDelete<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline, bool succeeded) where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.AfterDelete, entities, out var container, out var node))
+            if (GetHook(ResourceHook.AfterDelete, resources, out var container, out var node))
             {
-                container.AfterDelete((HashSet<TResource>)node.UniqueEntities, pipeline, succeeded);
+                container.AfterDelete((HashSet<TResource>)node.UniqueResources, pipeline, succeeded);
             }
         }
 
@@ -182,14 +193,14 @@ namespace JsonApiDotNetCore.Hooks
         /// <typeparamref name="TResource"/>, gets the hook container if the target
         /// hook was implemented and should be executed.
         /// <para />
-        /// Along the way, creates a traversable node from the root entity set.
+        /// Along the way, creates a traversable node from the root resource set.
         /// </summary>
         /// <returns><c>true</c>, if hook was implemented, <c>false</c> otherwise.</returns>
-        private bool GetHook<TResource>(ResourceHook target, IEnumerable<TResource> entities,
+        private bool GetHook<TResource>(ResourceHook target, IEnumerable<TResource> resources,
             out IResourceHookContainer<TResource> container,
             out RootNode<TResource> node) where TResource : class, IIdentifiable
         {
-            node = _traversalHelper.CreateRootNode(entities);
+            node = _traversalHelper.CreateRootNode(resources);
             container = _executorHelper.GetResourceHookContainer<TResource>(target);
             return container != null;
         }
@@ -197,13 +208,13 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Traverses the nodes in a <see cref="NodeLayer"/>.
         /// </summary>
-        private void Traverse(NodeLayer currentLayer, ResourceHook target, Action<IResourceHookContainer, INode> action)
+        private void Traverse(NodeLayer currentLayer, ResourceHook target, Action<IResourceHookContainer, IResourceNode> action)
         {
-            if (!currentLayer.AnyEntities()) return;
-            foreach (INode node in currentLayer)
+            if (!currentLayer.AnyResources()) return;
+            foreach (IResourceNode node in currentLayer)
             {
-                var entityType = node.ResourceType;
-                var hookContainer = _executorHelper.GetResourceHookContainer(entityType, target);
+                var resourceType = node.ResourceType;
+                var hookContainer = _executorHelper.GetResourceHookContainer(resourceType, target);
                 if (hookContainer == null) continue;
                 action(hookContainer, node);
             }
@@ -232,7 +243,7 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <summary>
-        /// Fires the nested before hooks for entities in the current <paramref name="layer"/>
+        /// Fires the nested before hooks for resources in the current <paramref name="layer"/>
         /// </summary>
         /// <remarks>
         /// For example: consider the case when the owner of article1 (one-to-one) 
@@ -243,35 +254,35 @@ namespace JsonApiDotNetCore.Hooks
         /// owner2, and lastly the BeforeImplicitUpdateRelationship for article2.</remarks>
         private void FireNestedBeforeUpdateHooks(ResourcePipeline pipeline, NodeLayer layer)
         {
-            foreach (INode node in layer)
+            foreach (IResourceNode node in layer)
             {
                 var nestedHookContainer = _executorHelper.GetResourceHookContainer(node.ResourceType, ResourceHook.BeforeUpdateRelationship);
-                IEnumerable uniqueEntities = node.UniqueEntities;
-                RightType entityType = node.ResourceType;
-                Dictionary<RelationshipAttribute, IEnumerable> currentEntitiesGrouped;
-                Dictionary<RelationshipAttribute, IEnumerable> currentEntitiesGroupedInverse;
+                IEnumerable uniqueResources = node.UniqueResources;
+                RightType resourceType = node.ResourceType;
+                Dictionary<RelationshipAttribute, IEnumerable> currentResourcesGrouped;
+                Dictionary<RelationshipAttribute, IEnumerable> currentResourcesGroupedInverse;
 
                 // fire the BeforeUpdateRelationship hook for owner_new
                 if (nestedHookContainer != null)
                 {
-                    if (uniqueEntities.Cast<IIdentifiable>().Any())
+                    if (uniqueResources.Cast<IIdentifiable>().Any())
                     {
                         var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
-                        var dbValues = LoadDbValues(entityType, uniqueEntities, ResourceHook.BeforeUpdateRelationship, relationships);
+                        var dbValues = LoadDbValues(resourceType, uniqueResources, ResourceHook.BeforeUpdateRelationship, relationships);
 
-                        // these are the entities of the current node grouped by 
+                        // these are the resources of the current node grouped by 
                         // RelationshipAttributes that occured in the previous layer
                         // so it looks like { HasOneAttribute:owner  =>  owner_new }.
                         // Note that in the BeforeUpdateRelationship hook of Person, 
                         // we want want inverse relationship attribute:
                         // we now have the one pointing from article -> person, ]
                         // but we require the the one that points from person -> article             
-                        currentEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetRightEntities();
-                        currentEntitiesGroupedInverse = ReplaceKeysWithInverseRelationships(currentEntitiesGrouped);
+                        currentResourcesGrouped = node.RelationshipsFromPreviousLayer.GetRightResources();
+                        currentResourcesGroupedInverse = ReplaceKeysWithInverseRelationships(currentResourcesGrouped);
 
-                        var resourcesByRelationship = CreateRelationshipHelper(entityType, currentEntitiesGroupedInverse, dbValues);
-                        var allowedIds = CallHook(nestedHookContainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueEntities), resourcesByRelationship, pipeline }).Cast<string>();
-                        var updated = GetAllowedEntities(uniqueEntities, allowedIds);
+                        var resourcesByRelationship = CreateRelationshipHelper(resourceType, currentResourcesGroupedInverse, dbValues);
+                        var allowedIds = CallHook(nestedHookContainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueResources), resourcesByRelationship, pipeline }).Cast<string>();
+                        var updated = GetAllowedResources(uniqueResources, allowedIds);
                         node.UpdateUnique(updated);
                         node.Reassign(_resourceFactory);
                     }
@@ -279,70 +290,70 @@ namespace JsonApiDotNetCore.Hooks
 
                 // Fire the BeforeImplicitUpdateRelationship hook for owner_old.
                 // Note: if the pipeline is Post it means we just created article1,
-                // which means we are sure that it isn't related to any other entities yet.
+                // which means we are sure that it isn't related to any other resources yet.
                 if (pipeline != ResourcePipeline.Post)
                 {
                     // To fire a hook for owner_old, we need to first get a reference to it.
                     // For this, we need to query the database for the  HasOneAttribute:owner 
                     // relationship of article1, which is referred to as the 
                     // left side of the HasOneAttribute:owner relationship.
-                    var leftEntities = node.RelationshipsFromPreviousLayer.GetLeftEntities();
-                    if (leftEntities.Any())
+                    var leftResources = node.RelationshipsFromPreviousLayer.GetLeftResources();
+                    if (leftResources.Any())
                     {
-                        // owner_old is loaded, which is an "implicitly affected entity"
-                        FireForAffectedImplicits(entityType, leftEntities, pipeline, uniqueEntities);
+                        // owner_old is loaded, which is an "implicitly affected resource"
+                        FireForAffectedImplicits(resourceType, leftResources, pipeline, uniqueResources);
                     }
                 }
 
                 // Fire the BeforeImplicitUpdateRelationship hook for article2
                 // For this, we need to query the database for the current owner 
                 // relationship value of owner_new.
-                currentEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetRightEntities();
-                if (currentEntitiesGrouped.Any())
+                currentResourcesGrouped = node.RelationshipsFromPreviousLayer.GetRightResources();
+                if (currentResourcesGrouped.Any())
                 {
-                    // rightEntities is grouped by relationships from previous 
+                    // rightResources is grouped by relationships from previous 
                     // layer, ie { HasOneAttribute:owner  =>  owner_new }. But 
                     // to load article2 onto owner_new, we need to have the 
                     // RelationshipAttribute from owner to article, which is the
                     // inverse of HasOneAttribute:owner
-                    currentEntitiesGroupedInverse = ReplaceKeysWithInverseRelationships(currentEntitiesGrouped);
+                    currentResourcesGroupedInverse = ReplaceKeysWithInverseRelationships(currentResourcesGrouped);
                     // Note that currently in the JADNC implementation of hooks, 
                     // the root layer is ALWAYS homogenous, so we safely assume 
                     // that for every relationship to the previous layer, the 
                     // left type is the same.
-                    LeftType leftType = currentEntitiesGrouped.First().Key.LeftType;
-                    FireForAffectedImplicits(leftType, currentEntitiesGroupedInverse, pipeline);
+                    LeftType leftType = currentResourcesGrouped.First().Key.LeftType;
+                    FireForAffectedImplicits(leftType, currentResourcesGroupedInverse, pipeline);
                 }
             }
         }
 
         /// <summary>
-        /// replaces the keys of the <paramref name="entitiesByRelationship"/> dictionary
+        /// replaces the keys of the <paramref name="resourcesByRelationship"/> dictionary
         /// with its inverse relationship attribute.
         /// </summary>
-        /// <param name="entitiesByRelationship">Entities grouped by relationship attribute</param>
-        private Dictionary<RelationshipAttribute, IEnumerable> ReplaceKeysWithInverseRelationships(Dictionary<RelationshipAttribute, IEnumerable> entitiesByRelationship)
+        /// <param name="resourcesByRelationship">Resources grouped by relationship attribute</param>
+        private Dictionary<RelationshipAttribute, IEnumerable> ReplaceKeysWithInverseRelationships(Dictionary<RelationshipAttribute, IEnumerable> resourcesByRelationship)
         {
             // when Article has one Owner (HasOneAttribute:owner) is set, there is no guarantee
             // that the inverse attribute was also set (Owner has one Article: HasOneAttr:article).
             // If it isn't, JADNC currently knows nothing about this relationship pointing back, and it 
-            // currently cannot fire hooks for entities resolved through inverse relationships.
-            var inversableRelationshipAttributes = entitiesByRelationship.Where(kvp => kvp.Key.InverseNavigation != null);
+            // currently cannot fire hooks for resources resolved through inverse relationships.
+            var inversableRelationshipAttributes = resourcesByRelationship.Where(kvp => kvp.Key.InverseNavigation != null);
             return inversableRelationshipAttributes.ToDictionary(kvp => _resourceGraph.GetInverse(kvp.Key), kvp => kvp.Value);
         }
 
         /// <summary>
-        /// Given a source of entities, gets the implicitly affected entities 
+        /// Given a source of resources, gets the implicitly affected resources 
         /// from the database and calls the BeforeImplicitUpdateRelationship hook.
         /// </summary>
-        private void FireForAffectedImplicits(Type entityTypeToInclude, Dictionary<RelationshipAttribute, IEnumerable> implicitsTarget, ResourcePipeline pipeline, IEnumerable existingImplicitEntities = null)
+        private void FireForAffectedImplicits(Type resourceTypeToInclude, Dictionary<RelationshipAttribute, IEnumerable> implicitsTarget, ResourcePipeline pipeline, IEnumerable existingImplicitResources = null)
         {
-            var container = _executorHelper.GetResourceHookContainer(entityTypeToInclude, ResourceHook.BeforeImplicitUpdateRelationship);
+            var container = _executorHelper.GetResourceHookContainer(resourceTypeToInclude, ResourceHook.BeforeImplicitUpdateRelationship);
             if (container == null) return;
-            var implicitAffected = _executorHelper.LoadImplicitlyAffected(implicitsTarget, existingImplicitEntities);
+            var implicitAffected = _executorHelper.LoadImplicitlyAffected(implicitsTarget, existingImplicitResources);
             if (!implicitAffected.Any()) return;
             var inverse = implicitAffected.ToDictionary(kvp => _resourceGraph.GetInverse(kvp.Key), kvp => kvp.Value);
-            var resourcesByRelationship = CreateRelationshipHelper(entityTypeToInclude, inverse);
+            var resourcesByRelationship = CreateRelationshipHelper(resourceTypeToInclude, inverse);
             CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { resourcesByRelationship, pipeline, });
         }
 
@@ -389,80 +400,80 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <summary>
-        /// Helper method to instantiate AffectedRelationships for a given <paramref name="entityType"/>
+        /// Helper method to instantiate AffectedRelationships for a given <paramref name="resourceType"/>
         /// If <paramref name="dbValues"/> are included, the values of the entries in <paramref name="prevLayerRelationships"/> need to be replaced with these values.
         /// </summary>
         /// <returns>The relationship helper.</returns>
-        private IRelationshipsDictionary CreateRelationshipHelper(RightType entityType, Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
+        private IRelationshipsDictionary CreateRelationshipHelper(RightType resourceType, Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
         {
             if (dbValues != null) prevLayerRelationships = ReplaceWithDbValues(prevLayerRelationships, dbValues.Cast<IIdentifiable>());
-            return (IRelationshipsDictionary)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsDictionary<>), entityType, true, prevLayerRelationships);
+            return (IRelationshipsDictionary)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsDictionary<>), resourceType, true, prevLayerRelationships);
         }
 
         /// <summary>
-        /// Replaces the entities in the values of the prevLayerRelationships dictionary 
-        /// with the corresponding entities loaded from the db.
+        /// Replaces the resources in the values of the prevLayerRelationships dictionary 
+        /// with the corresponding resources loaded from the db.
         /// </summary>
         private Dictionary<RelationshipAttribute, IEnumerable> ReplaceWithDbValues(Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationships, IEnumerable<IIdentifiable> dbValues)
         {
             foreach (var key in prevLayerRelationships.Keys.ToList())
             {
-                var replaced = prevLayerRelationships[key].Cast<IIdentifiable>().Select(entity => dbValues.Single(dbEntity => dbEntity.StringId == entity.StringId)).CopyToList(key.LeftType);
+                var replaced = prevLayerRelationships[key].Cast<IIdentifiable>().Select(resource => dbValues.Single(dbResource => dbResource.StringId == resource.StringId)).CopyToList(key.LeftType);
                 prevLayerRelationships[key] = TypeHelper.CreateHashSetFor(key.LeftType, replaced);
             }
             return prevLayerRelationships;
         }
 
         /// <summary>
-        /// Filter the source set by removing the entities with id that are not 
+        /// Filter the source set by removing the resources with id that are not 
         /// in <paramref name="allowedIds"/>.
         /// </summary>
-        private HashSet<IIdentifiable> GetAllowedEntities(IEnumerable source, IEnumerable<string> allowedIds)
+        private HashSet<IIdentifiable> GetAllowedResources(IEnumerable source, IEnumerable<string> allowedIds)
         {
             return new HashSet<IIdentifiable>(source.Cast<IIdentifiable>().Where(ue => allowedIds.Contains(ue.StringId)));
         }
 
         /// <summary>
-        /// given the set of <paramref name="uniqueEntities"/>, it will load all the 
-        /// values from the database of these entities.
+        /// given the set of <paramref name="uniqueResources"/>, it will load all the 
+        /// values from the database of these resources.
         /// </summary>
         /// <returns>The db values.</returns>
-        /// <param name="entityType">type of the entities to be loaded</param>
-        /// <param name="uniqueEntities">The set of entities to load the db values for</param>
+        /// <param name="resourceType">type of the resources to be loaded</param>
+        /// <param name="uniqueResources">The set of resources to load the db values for</param>
         /// <param name="targetHook">The hook in which the db values will be displayed.</param>
-        /// <param name="relationshipsToNextLayer">Relationships from <paramref name="entityType"/> to the next layer: 
-        /// this indicates which relationships will be included on <paramref name="uniqueEntities"/>.</param>
-        private IEnumerable LoadDbValues(Type entityType, IEnumerable uniqueEntities, ResourceHook targetHook, RelationshipAttribute[] relationshipsToNextLayer)
+        /// <param name="relationshipsToNextLayer">Relationships from <paramref name="resourceType"/> to the next layer: 
+        /// this indicates which relationships will be included on <paramref name="uniqueResources"/>.</param>
+        private IEnumerable LoadDbValues(Type resourceType, IEnumerable uniqueResources, ResourceHook targetHook, RelationshipAttribute[] relationshipsToNextLayer)
         {
             // We only need to load database values if the target hook of this hook execution
             // cycle is compatible with displaying database values and has this option enabled.
-            if (!_executorHelper.ShouldLoadDbValues(entityType, targetHook)) return null;
-            return _executorHelper.LoadDbValues(entityType, uniqueEntities, targetHook, relationshipsToNextLayer);
+            if (!_executorHelper.ShouldLoadDbValues(resourceType, targetHook)) return null;
+            return _executorHelper.LoadDbValues(resourceType, uniqueResources, targetHook, relationshipsToNextLayer);
         }
 
         /// <summary>
         /// Fires the AfterUpdateRelationship hook
         /// </summary>
-        private void FireAfterUpdateRelationship(IResourceHookContainer container, INode node, ResourcePipeline pipeline)
+        private void FireAfterUpdateRelationship(IResourceHookContainer container, IResourceNode node, ResourcePipeline pipeline)
         {
 
-            Dictionary<RelationshipAttribute, IEnumerable> currentEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetRightEntities();
-            // the relationships attributes in currenEntitiesGrouped will be pointing from a 
+            Dictionary<RelationshipAttribute, IEnumerable> currentResourcesGrouped = node.RelationshipsFromPreviousLayer.GetRightResources();
+            // the relationships attributes in currentResourcesGrouped will be pointing from a 
             // resource in the previouslayer to a resource in the current (nested) layer.
             // For the nested hook we need to replace these attributes with their inverse.
             // See the FireNestedBeforeUpdateHooks method for a more detailed example.
-            var resourcesByRelationship = CreateRelationshipHelper(node.ResourceType, ReplaceKeysWithInverseRelationships(currentEntitiesGrouped));
+            var resourcesByRelationship = CreateRelationshipHelper(node.ResourceType, ReplaceKeysWithInverseRelationships(currentResourcesGrouped));
             CallHook(container, ResourceHook.AfterUpdateRelationship, new object[] { resourcesByRelationship, pipeline });
         }
 
         /// <summary>
-        /// Returns a list of StringIds from a list of IIdentifiable entities (<paramref name="entities"/>).
+        /// Returns a list of StringIds from a list of IIdentifiable resources (<paramref name="resources"/>).
         /// </summary>
         /// <returns>The ids.</returns>
-        /// <param name="entities">IIdentifiable entities.</param>
-        private HashSet<string> GetIds(IEnumerable entities)
+        /// <param name="resources">IIdentifiable resources.</param>
+        private HashSet<string> GetIds(IEnumerable resources)
         {
-            return new HashSet<string>(entities.Cast<IIdentifiable>().Select(e => e.StringId));
+            return new HashSet<string>(resources.Cast<IIdentifiable>().Select(e => e.StringId));
         }
     }
 }

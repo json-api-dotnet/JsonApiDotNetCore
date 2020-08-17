@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 
@@ -12,6 +13,12 @@ namespace JsonApiDotNetCore.Exceptions
 
         public InvalidQueryStringParameterException(string queryParameterName, string genericMessage,
             string specificMessage)
+            : this(queryParameterName, genericMessage, specificMessage, null)
+        {
+        }
+
+        public InvalidQueryStringParameterException(string queryParameterName, string genericMessage,
+            string specificMessage, Exception innerException)
             : base(new Error(HttpStatusCode.BadRequest)
             {
                 Title = genericMessage,
@@ -20,7 +27,7 @@ namespace JsonApiDotNetCore.Exceptions
                 {
                     Parameter = queryParameterName
                 }
-            })
+            }, innerException)
         {
             QueryParameterName = queryParameterName;
         }

@@ -10,6 +10,6 @@ namespace JsonApiDotNetCore.Services
     public interface ICreateService<T, in TId>
         where T : class, IIdentifiable<TId>
     {
-        Task<T> CreateAsync(T entity);
+        Task<T> CreateAsync(T resource);
     }
 }
