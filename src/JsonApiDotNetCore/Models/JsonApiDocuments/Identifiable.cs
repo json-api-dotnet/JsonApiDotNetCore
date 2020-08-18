@@ -7,22 +7,22 @@ namespace JsonApiDotNetCore.Models
     public abstract class Identifiable : Identifiable<int>
     { }
 
-    public abstract class Identifiable<T> : IIdentifiable<T>
+    public abstract class Identifiable<TId> : IIdentifiable<TId>
     {
         /// <summary>
         /// The resource identifier
         /// </summary>
-        public virtual T Id { get; set; }
+        public virtual TId Id { get; set; }
 
         /// <summary>
         /// The string representation of the `Id`.
         /// 
         /// This is used in serialization and deserialization.
         /// The getters should handle the conversion
-        /// from `typeof(T)` to a string and the setter vice versa.
+        /// from `typeof(TId)` to a string and the setter vice versa.
         /// 
         /// To override this behavior, you can either implement the
-        /// <see cref="IIdentifiable{T}" /> interface directly or override
+        /// <see cref="IIdentifiable{TId}" /> interface directly or override
         /// `GetStringId` and `GetTypedId` methods.
         /// </summary>
         [NotMapped]
@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Models
             if(value == null)
                 return string.Empty; // todo; investigate why not using null, because null would make more sense in serialization
 
-            var type = typeof(T);
+            var type = typeof(TId);
             var stringValue = value.ToString();
 
             if (type == typeof(Guid))
@@ -57,11 +57,11 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// Convert a string to a typed resource identifier.
         /// </summary>
-        protected virtual T GetTypedId(string value)
+        protected virtual TId GetTypedId(string value)
         {
             if (value == null)
                 return default;
-            return (T)TypeHelper.ConvertType(value, typeof(T));
+            return (TId)TypeHelper.ConvertType(value, typeof(TId));
         }
     }
 }

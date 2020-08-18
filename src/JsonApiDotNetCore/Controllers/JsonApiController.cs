@@ -7,26 +7,26 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
+    public class JsonApiController<TResource, TId> : BaseJsonApiController<TResource, TId> where TResource : class, IIdentifiable<TId>
     {
         public JsonApiController(
             IJsonApiOptions jsonApiOptions,
             ILoggerFactory loggerFactory,
-            IResourceService<T, TId> resourceService)
+            IResourceService<TResource, TId> resourceService)
             : base(jsonApiOptions, loggerFactory, resourceService)
         { }
 
         public JsonApiController(
             IJsonApiOptions jsonApiOptions,
             ILoggerFactory loggerFactory,
-            IGetAllService<T, TId> getAll = null,
-            IGetByIdService<T, TId> getById = null,
-            IGetSecondaryService<T, TId> getSecondary = null,
-            IGetRelationshipService<T, TId> getRelationship = null,
-            ICreateService<T, TId> create = null,
-            IUpdateService<T, TId> update = null,
-            IUpdateRelationshipService<T, TId> updateRelationships = null,
-            IDeleteService<T, TId> delete = null)
+            IGetAllService<TResource, TId> getAll = null,
+            IGetByIdService<TResource, TId> getById = null,
+            IGetSecondaryService<TResource, TId> getSecondary = null,
+            IGetRelationshipService<TResource, TId> getRelationship = null,
+            ICreateService<TResource, TId> create = null,
+            IUpdateService<TResource, TId> update = null,
+            IUpdateRelationshipService<TResource, TId> updateRelationships = null,
+            IDeleteService<TResource, TId> delete = null)
             : base(jsonApiOptions, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
                 updateRelationships, delete)
         { }
@@ -46,11 +46,11 @@ namespace JsonApiDotNetCore.Controllers
             => await base.GetSecondaryAsync(id, relationshipName);
 
         [HttpPost]
-        public override async Task<IActionResult> PostAsync([FromBody] T resource)
+        public override async Task<IActionResult> PostAsync([FromBody] TResource resource)
             => await base.PostAsync(resource);
 
         [HttpPatch("{id}")]
-        public override async Task<IActionResult> PatchAsync(TId id, [FromBody] T resource)
+        public override async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource)
         {
             return await base.PatchAsync(id, resource);
         }
@@ -64,26 +64,26 @@ namespace JsonApiDotNetCore.Controllers
         public override async Task<IActionResult> DeleteAsync(TId id) => await base.DeleteAsync(id);
     }
 
-    public class JsonApiController<T> : JsonApiController<T, int> where T : class, IIdentifiable<int>
+    public class JsonApiController<TResource> : JsonApiController<TResource, int> where TResource : class, IIdentifiable<int>
     {
         public JsonApiController(
             IJsonApiOptions jsonApiOptions,
             ILoggerFactory loggerFactory,
-            IResourceService<T, int> resourceService)
+            IResourceService<TResource, int> resourceService)
             : base(jsonApiOptions, loggerFactory, resourceService)
         { }
 
         public JsonApiController(
             IJsonApiOptions jsonApiOptions,
             ILoggerFactory loggerFactory,
-            IGetAllService<T, int> getAll = null,
-            IGetByIdService<T, int> getById = null,
-            IGetSecondaryService<T, int> getSecondary = null,
-            IGetRelationshipService<T, int> getRelationship = null,
-            ICreateService<T, int> create = null,
-            IUpdateService<T, int> update = null,
-            IUpdateRelationshipService<T, int> updateRelationships = null,
-            IDeleteService<T, int> delete = null)
+            IGetAllService<TResource, int> getAll = null,
+            IGetByIdService<TResource, int> getById = null,
+            IGetSecondaryService<TResource, int> getSecondary = null,
+            IGetRelationshipService<TResource, int> getRelationship = null,
+            ICreateService<TResource, int> create = null,
+            IUpdateService<TResource, int> update = null,
+            IUpdateRelationshipService<TResource, int> updateRelationships = null,
+            IDeleteService<TResource, int> delete = null)
             : base(jsonApiOptions, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
                 updateRelationships, delete)
         { }

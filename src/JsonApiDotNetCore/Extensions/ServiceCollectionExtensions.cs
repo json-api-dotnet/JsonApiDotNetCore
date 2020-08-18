@@ -89,11 +89,11 @@ namespace JsonApiDotNetCore
         /// Adds all required registrations for the service to the container
         /// </summary>
         /// <exception cref="JsonApiSetupException"/>
-        public static IServiceCollection AddResourceService<T>(this IServiceCollection services)
+        public static IServiceCollection AddResourceService<TService>(this IServiceCollection services)
         {
             var typeImplementsAnExpectedInterface = false;
 
-            var serviceImplementationType = typeof(T);
+            var serviceImplementationType = typeof(TService);
 
             // it is _possible_ that a single concrete type could be used for multiple resources...
             var resourceDescriptors = GetResourceTypesFromServiceImplementation(serviceImplementationType);
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore
                 foreach (var openGenericType in ServiceDiscoveryFacade.ServiceInterfaces)
                 {
                     // A shorthand interface is one where the id type is omitted
-                    // e.g. IResourceService<T> is the shorthand for IResourceService<T, TId>
+                    // e.g. IResourceService<TResource> is the shorthand for IResourceService<TResource, TId>
                     var isShorthandInterface = openGenericType.GetTypeInfo().GenericTypeParameters.Length == 1;
                     if (isShorthandInterface && resourceDescriptor.IdType != typeof(int))
                         continue; // we can't create a shorthand for id types other than int

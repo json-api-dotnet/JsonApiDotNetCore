@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Internal
         public Type IdentityType { get; set; }
 
         /// <summary>
-        /// The concrete <see cref="ResourceDefinition{T}"/> type.
+        /// The concrete <see cref="ResourceDefinition{TResource}"/> type.
         /// We store this so that we don't need to re-compute the generic type.
         /// </summary>
         public Type ResourceDefinitionType { get; set; }

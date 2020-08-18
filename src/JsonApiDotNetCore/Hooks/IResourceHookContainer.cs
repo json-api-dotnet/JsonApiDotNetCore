@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Hooks
     public interface IResourceHookContainer { }
 
     /// <summary>
-    /// Implement this interface to implement business logic hooks on <see cref="ResourceDefinition{T}"/>.
+    /// Implement this interface to implement business logic hooks on <see cref="ResourceDefinition{TResource}"/>.
     /// </summary>
     public interface IResourceHookContainer<TResource>
         : IReadHookContainer<TResource>, IDeleteHookContainer<TResource>, ICreateHookContainer<TResource>,

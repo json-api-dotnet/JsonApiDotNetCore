@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Models
 {
-    public abstract class ExposableData<T> where T : class
+    public abstract class ExposableData<TResource> where TResource : class
     {
         /// <summary>
         /// see "primary data" in https://jsonapi.org/format/#document-top-level.
@@ -36,13 +36,13 @@ namespace JsonApiDotNetCore.Models
         /// Internally used for "single" primary data.
         /// </summary>
         [JsonIgnore]
-        public T SingleData { get; private set; }
+        public TResource SingleData { get; private set; }
 
         /// <summary>
         /// Internally used for "many" primary data.
         /// </summary>
         [JsonIgnore]
-        public List<T> ManyData { get; private set; }
+        public List<TResource> ManyData { get; private set; }
 
         /// <summary>
         /// Used to indicate if the document's primary data is "single" or "many".
@@ -77,16 +77,16 @@ namespace JsonApiDotNetCore.Models
         {
             IsPopulated = true;
             if (value is JObject jObject)
-                SingleData = jObject.ToObject<T>();
-            else if (value is T ro)
+                SingleData = jObject.ToObject<TResource>();
+            else if (value is TResource ro)
                 SingleData = ro;
             else if (value != null)
             {
                 IsManyData = true;
                 if (value is JArray jArray)
-                    ManyData = jArray.ToObject<List<T>>();
+                    ManyData = jArray.ToObject<List<TResource>>();
                 else
-                    ManyData = (List<T>)value;
+                    ManyData = (List<TResource>)value;
             }
         }
     }

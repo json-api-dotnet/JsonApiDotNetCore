@@ -3,12 +3,12 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-    public interface IUpdateRelationshipService<T> : IUpdateRelationshipService<T, int>
-        where T : class, IIdentifiable<int>
+    public interface IUpdateRelationshipService<TResource> : IUpdateRelationshipService<TResource, int>
+        where TResource : class, IIdentifiable<int>
     { }
 
-    public interface IUpdateRelationshipService<T, in TId>
-        where T : class, IIdentifiable<TId>
+    public interface IUpdateRelationshipService<TResource, in TId>
+        where TResource : class, IIdentifiable<TId>
     {
         Task UpdateRelationshipAsync(TId id, string relationshipName, object relationships);
     }

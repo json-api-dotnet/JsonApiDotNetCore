@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.Hooks
 {
     /// <summary>
     /// Transient service responsible for executing Resource Hooks as defined 
-    /// in <see cref="ResourceDefinition{T}"/>. see methods in 
+    /// in <see cref="ResourceDefinition{TResource}"/>. see methods in 
     /// <see cref="IReadHookExecutor"/>, <see cref="IUpdateHookExecutor"/> and 
     /// <see cref="IOnReturnHookExecutor"/> for more information.
     /// 

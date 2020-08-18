@@ -2,20 +2,20 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-    public interface IResourceQueryService<T> : 
-        IGetAllService<T>,
-        IGetByIdService<T>,
-        IGetRelationshipService<T>,
-        IGetSecondaryService<T>,
-        IResourceQueryService<T, int>
-        where T : class, IIdentifiable<int>
+    public interface IResourceQueryService<TResource> : 
+        IGetAllService<TResource>,
+        IGetByIdService<TResource>,
+        IGetRelationshipService<TResource>,
+        IGetSecondaryService<TResource>,
+        IResourceQueryService<TResource, int>
+        where TResource : class, IIdentifiable<int>
     { }
 
-    public interface IResourceQueryService<T, in TId> :
-        IGetAllService<T, TId>,
-        IGetByIdService<T, TId>,
-        IGetRelationshipService<T, TId>,
-        IGetSecondaryService<T, TId>
-        where T : class, IIdentifiable<TId>
+    public interface IResourceQueryService<TResource, in TId> :
+        IGetAllService<TResource, TId>,
+        IGetByIdService<TResource, TId>,
+        IGetRelationshipService<TResource, TId>,
+        IGetSecondaryService<TResource, TId>
+        where TResource : class, IIdentifiable<TId>
     { }
 }

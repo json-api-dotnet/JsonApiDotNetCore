@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Graph
     internal static class TypeLocator
     {
         /// <summary>
-        /// Determine whether or not this is a json:api resource by checking if it implements <see cref="IIdentifiable{T}"/>.
+        /// Determine whether or not this is a json:api resource by checking if it implements <see cref="IIdentifiable{TId}"/>.
         /// </summary>
         public static Type GetIdType(Type resourceType)
         {

@@ -5,8 +5,8 @@ namespace JsonApiDotNetCore.Models
         string StringId { get; set; }
     }
 
-    public interface IIdentifiable<T> : IIdentifiable
+    public interface IIdentifiable<TId> : IIdentifiable
     {
-        T Id { get; set; }
+        TId Id { get; set; }
     }
 }

@@ -3,13 +3,13 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-    public interface IGetByIdService<T> : IGetByIdService<T, int>
-        where T : class, IIdentifiable<int>
+    public interface IGetByIdService<TResource> : IGetByIdService<TResource, int>
+        where TResource : class, IIdentifiable<int>
     { }
 
-    public interface IGetByIdService<T, in TId>
-        where T : class, IIdentifiable<TId>
+    public interface IGetByIdService<TResource, in TId>
+        where TResource : class, IIdentifiable<TId>
     {
-        Task<T> GetAsync(TId id);
+        Task<TResource> GetAsync(TId id);
     }
 }

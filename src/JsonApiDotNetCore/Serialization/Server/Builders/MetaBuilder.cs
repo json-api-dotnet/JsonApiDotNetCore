@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Services;
 namespace JsonApiDotNetCore.Serialization.Server.Builders
 {
     /// <inheritdoc/>
-    public class MetaBuilder<T> : IMetaBuilder<T> where T : class, IIdentifiable
+    public class MetaBuilder<TResource> : IMetaBuilder<TResource> where TResource : class, IIdentifiable
     {
         private Dictionary<string, object> _meta = new Dictionary<string, object>();
         private readonly IPaginationContext _paginationContext;
@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         private readonly IHasMeta _resourceMeta;
 
         public MetaBuilder(IPaginationContext paginationContext, IJsonApiOptions options, IRequestMeta requestMeta = null,
-            ResourceDefinition<T> resourceDefinition = null)
+            ResourceDefinition<TResource> resourceDefinition = null)
         {
             _paginationContext = paginationContext;
             _options = options;

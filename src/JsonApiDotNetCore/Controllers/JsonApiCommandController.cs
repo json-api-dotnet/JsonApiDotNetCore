@@ -7,31 +7,31 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public abstract class JsonApiCommandController<T> : JsonApiCommandController<T, int> where T : class, IIdentifiable<int>
+    public abstract class JsonApiCommandController<TResource> : JsonApiCommandController<TResource, int> where TResource : class, IIdentifiable<int>
     {
         protected JsonApiCommandController(
             IJsonApiOptions jsonApiOptions,
             ILoggerFactory loggerFactory,
-            IResourceCommandService<T, int> commandService)
+            IResourceCommandService<TResource, int> commandService)
             : base(jsonApiOptions, loggerFactory, commandService)
         { }
     }
 
-    public abstract class JsonApiCommandController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
+    public abstract class JsonApiCommandController<TResource, TId> : BaseJsonApiController<TResource, TId> where TResource : class, IIdentifiable<TId>
     {
         protected JsonApiCommandController(
             IJsonApiOptions jsonApiOptions,
             ILoggerFactory loggerFactory,
-            IResourceCommandService<T, TId> commandService)
+            IResourceCommandService<TResource, TId> commandService)
             : base(jsonApiOptions, loggerFactory, null, commandService)
         { }
 
         [HttpPost]
-        public override async Task<IActionResult> PostAsync([FromBody] T resource)
+        public override async Task<IActionResult> PostAsync([FromBody] TResource resource)
             => await base.PostAsync(resource);
 
         [HttpPatch("{id}")]
-        public override async Task<IActionResult> PatchAsync(TId id, [FromBody] T resource)
+        public override async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource)
             => await base.PatchAsync(id, resource);
 
         [HttpPatch("{id}/relationships/{relationshipName}")]

@@ -35,17 +35,17 @@ namespace JsonApiDotNetCore.Internal
         public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
             => GetResourceContext(typeof(TResource));
         /// <inheritdoc/>
-        public List<ResourceFieldAttribute> GetFields<T>(Expression<Func<T, dynamic>> selector = null) where T : IIdentifiable
+        public List<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : IIdentifiable
         {
             return Getter(selector).ToList();
         }
         /// <inheritdoc/>
-        public List<AttrAttribute> GetAttributes<T>(Expression<Func<T, dynamic>> selector = null) where T : IIdentifiable
+        public List<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : IIdentifiable
         {
             return Getter(selector, FieldFilterType.Attribute).Cast<AttrAttribute>().ToList();
         }
         /// <inheritdoc/>
-        public List<RelationshipAttribute> GetRelationships<T>(Expression<Func<T, dynamic>> selector = null) where T : IIdentifiable
+        public List<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : IIdentifiable
         {
             return Getter(selector, FieldFilterType.Relationship).Cast<RelationshipAttribute>().ToList();
         }
@@ -73,15 +73,15 @@ namespace JsonApiDotNetCore.Internal
                             .SingleOrDefault(r => r.Property.Name == relationship.InverseNavigation);
         }
 
-        private IEnumerable<ResourceFieldAttribute> Getter<T>(Expression<Func<T, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where T : IIdentifiable
+        private IEnumerable<ResourceFieldAttribute> Getter<TResource>(Expression<Func<TResource, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where TResource : IIdentifiable
         {
             IEnumerable<ResourceFieldAttribute> available;
             if (type == FieldFilterType.Attribute)
-                available = GetResourceContext(typeof(T)).Attributes;
+                available = GetResourceContext(typeof(TResource)).Attributes;
             else if (type == FieldFilterType.Relationship)
-                available = GetResourceContext(typeof(T)).Relationships;
+                available = GetResourceContext(typeof(TResource)).Relationships;
             else
-                available = GetResourceContext(typeof(T)).Fields;
+                available = GetResourceContext(typeof(TResource)).Fields;
 
             if (selector == null)
                 return available;

@@ -2,13 +2,13 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-    public interface IResourceService<T> 
-        : IResourceCommandService<T>, IResourceQueryService<T>, IResourceService<T, int> 
-        where T : class, IIdentifiable<int>
+    public interface IResourceService<TResource> 
+        : IResourceCommandService<TResource>, IResourceQueryService<TResource>, IResourceService<TResource, int> 
+        where TResource : class, IIdentifiable<int>
     { }
 
-    public interface IResourceService<T, in TId> 
-        : IResourceCommandService<T, TId>, IResourceQueryService<T, TId>
-        where T : class, IIdentifiable<TId>
+    public interface IResourceService<TResource, in TId> 
+        : IResourceCommandService<TResource, TId>, IResourceQueryService<TResource, TId>
+        where TResource : class, IIdentifiable<TId>
     { }
 }
