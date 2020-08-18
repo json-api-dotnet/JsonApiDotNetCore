@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Resources.Annotations;
 using Xunit;
 using UnitTests.TestModels;
 

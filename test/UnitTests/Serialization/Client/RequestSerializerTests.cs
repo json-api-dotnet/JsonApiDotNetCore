@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Client;
 using Xunit;
 using UnitTests.TestModels;

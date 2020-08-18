@@ -1,12 +1,14 @@
 using System;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
+    /// <summary>
+    /// Global options
+    /// </summary>
     public interface IJsonApiOptions
     {
         /// <summary>

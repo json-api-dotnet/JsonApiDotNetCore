@@ -1,15 +1,12 @@
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.QueryStrings;
-using JsonApiDotNetCore.RequestServices.Contracts;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
-using JsonApiDotNetCore.Serialization.Server.Builders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 

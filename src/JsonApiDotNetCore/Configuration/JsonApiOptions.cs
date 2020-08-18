@@ -1,15 +1,11 @@
-using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Resources.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
-    /// <summary>
-    /// Global options
-    /// </summary>
-    public class JsonApiOptions : IJsonApiOptions
+    /// <inheritdoc/>
+    public sealed class JsonApiOptions : IJsonApiOptions
     {
         /// <inheritdoc/>
         public string Namespace { get; set; }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Client
 {

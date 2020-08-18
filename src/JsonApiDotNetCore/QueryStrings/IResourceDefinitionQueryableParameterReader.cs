@@ -1,5 +1,5 @@
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.QueryStrings
 {

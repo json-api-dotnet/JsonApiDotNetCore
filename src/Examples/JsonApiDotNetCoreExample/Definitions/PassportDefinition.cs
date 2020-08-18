@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Hooks.Internal.Execution;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions

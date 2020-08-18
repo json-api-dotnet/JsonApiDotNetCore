@@ -3,9 +3,9 @@ using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.QueryStrings;
+using JsonApiDotNetCore.QueryStrings.Internal;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -53,7 +53,7 @@ namespace UnitTests.QueryStringParameters
             var reader = new NullsQueryStringParameterReader(options);
 
             // Act
-            var isEnabled = reader.IsEnabled(new DisableQueryAttribute(parametersDisabled));
+            var isEnabled = reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
 
             // Assert
             isEnabled.Should().Be(allowOverride && expectIsEnabled);
@@ -118,7 +118,7 @@ namespace UnitTests.QueryStringParameters
             var reader = new NullsQueryStringParameterReader(options);
 
             // Act
-            if (reader.IsEnabled(DisableQueryAttribute.Empty))
+            if (reader.IsEnabled(DisableQueryStringAttribute.Empty))
             {
                 reader.Read("nulls", queryStringParameterValue);
             }

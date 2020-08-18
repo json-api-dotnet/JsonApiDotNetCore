@@ -3,15 +3,15 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Net;
 using FluentAssertions;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.QueryStrings.Internal;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Models;
 using Xunit;
 
 namespace UnitTests.QueryStringParameters
 {
-    public sealed class LegacyFilterParseTests : ParseTestsBase
+    public sealed class LegacyFilterParseTests : BaseParseTests
     {
         private readonly FilterQueryStringParameterReader _reader;
 

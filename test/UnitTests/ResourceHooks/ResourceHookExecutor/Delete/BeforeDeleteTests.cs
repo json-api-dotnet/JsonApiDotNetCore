@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.Hooks;
+using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;

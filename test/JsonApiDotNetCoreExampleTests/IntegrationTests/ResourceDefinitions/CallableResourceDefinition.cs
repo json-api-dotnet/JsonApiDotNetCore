@@ -2,12 +2,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
-using JsonApiDotNetCore;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions

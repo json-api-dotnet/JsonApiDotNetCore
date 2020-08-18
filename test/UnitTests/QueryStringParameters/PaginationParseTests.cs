@@ -2,16 +2,16 @@ using System;
 using System.Linq;
 using System.Net;
 using FluentAssertions;
-using JsonApiDotNetCore;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.QueryStrings;
+using JsonApiDotNetCore.QueryStrings.Internal;
 using Xunit;
 
 namespace UnitTests.QueryStringParameters
 {
-    public sealed class PaginationParseTests : ParseTestsBase
+    public sealed class PaginationParseTests : BaseParseTests
     {
         private readonly IPaginationQueryStringParameterReader _reader;
 
@@ -44,7 +44,7 @@ namespace UnitTests.QueryStringParameters
         public void Reader_Is_Enabled(StandardQueryStringParameters parametersDisabled, bool expectIsEnabled)
         {
             // Act
-            var isEnabled = _reader.IsEnabled(new DisableQueryAttribute(parametersDisabled));
+            var isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
             
             // Assert
             isEnabled.Should().Be(expectIsEnabled);

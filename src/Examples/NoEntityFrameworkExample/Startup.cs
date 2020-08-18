@@ -1,5 +1,5 @@
 using System;
-using JsonApiDotNetCore;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;

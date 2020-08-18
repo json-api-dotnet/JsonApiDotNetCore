@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries
 {

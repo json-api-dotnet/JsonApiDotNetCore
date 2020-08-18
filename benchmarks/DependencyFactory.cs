@@ -1,9 +1,6 @@
 using System;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services.Contract;
+using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 

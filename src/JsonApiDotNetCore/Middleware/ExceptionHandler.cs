@@ -2,8 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Middleware

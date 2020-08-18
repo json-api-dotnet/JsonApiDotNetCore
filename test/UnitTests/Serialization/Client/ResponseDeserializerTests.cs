@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 using Xunit;
 using UnitTests.TestModels;

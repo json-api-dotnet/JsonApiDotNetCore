@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    [DisableQuery("skipCache")]
+    [DisableQueryString("skipCache")]
     public sealed class TagsController : JsonApiController<Tag>
     {
         public TagsController(

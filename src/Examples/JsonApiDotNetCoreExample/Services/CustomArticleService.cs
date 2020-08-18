@@ -1,14 +1,13 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Hooks.Internal;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.RequestServices;
-using JsonApiDotNetCore.RequestServices.Contracts;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreExample.Services
 {

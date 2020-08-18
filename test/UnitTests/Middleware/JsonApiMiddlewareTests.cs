@@ -1,6 +1,4 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -9,8 +7,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCore.RequestServices;
+using JsonApiDotNetCore.Resources.Annotations;
 using Xunit;
 
 namespace UnitTests.Middleware

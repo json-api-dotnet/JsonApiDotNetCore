@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.DependencyInjection;

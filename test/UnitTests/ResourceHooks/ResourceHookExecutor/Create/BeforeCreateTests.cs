@@ -1,7 +1,7 @@
-using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using System.Collections.Generic;
+using JsonApiDotNetCore.Hooks.Internal.Execution;
 using Xunit;
 
 namespace UnitTests.ResourceHooks

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using JsonApiDotNetCore.Internal.Queries.Parsing;
+using JsonApiDotNetCore.Queries.Internal.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {

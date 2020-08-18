@@ -1,4 +1,4 @@
-namespace JsonApiDotNetCore
+namespace JsonApiDotNetCore.Middleware
 {
     public static class HeaderConstants
     {

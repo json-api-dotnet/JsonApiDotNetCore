@@ -1,13 +1,11 @@
 using System;
 using BenchmarkDotNet.Attributes;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.RequestServices;
+using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Server;
-using JsonApiDotNetCore.Serialization.Server.Builders;
+using JsonApiDotNetCore.Serialization.Building;
 using Moq;
 
 namespace Benchmarks.Serialization

@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -7,7 +6,7 @@ namespace JsonApiDotNetCore.Middleware
     /// <summary>
     /// Global exception filter that wraps any thrown error with a JsonApiException.
     /// </summary>
-    public class JsonApiExceptionFilter : ActionFilterAttribute, IExceptionFilter
+    public sealed class JsonApiExceptionFilter : ActionFilterAttribute, IExceptionFilter
     {
         private readonly IExceptionHandler _exceptionHandler;
 

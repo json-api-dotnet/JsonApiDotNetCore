@@ -17,9 +17,9 @@ namespace JsonApiDotNetCore.Middleware
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            DisableQueryAttribute disableQueryAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryAttribute>();
+            DisableQueryStringAttribute disableQueryStringAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryStringAttribute>();
 
-            _queryStringReader.ReadAll(disableQueryAttribute);
+            _queryStringReader.ReadAll(disableQueryStringAttribute);
             await next();
         }
     }

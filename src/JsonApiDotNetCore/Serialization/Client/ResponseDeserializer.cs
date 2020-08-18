@@ -1,18 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.Client
 {
     /// <summary>
-    /// Client deserializer implementation of the <see cref="BaseDocumentParser"/>
+    /// Client deserializer implementation of the <see cref="BaseDeserializer"/>
     /// </summary>
-    public class ResponseDeserializer : BaseDocumentParser, IResponseDeserializer
+    public class ResponseDeserializer : BaseDeserializer, IResponseDeserializer
     {
         public ResponseDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory) : base(contextProvider, resourceFactory) { }
 
@@ -71,7 +70,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             else if (field is HasManyAttribute hasManyAttr)
             {  // add attributes and relationships of a parsed HasMany relationship
                 var items = data.ManyData.Select(rio => ParseIncludedRelationship(hasManyAttr, rio));
-                var values = items.CopyToTypedCollection(hasManyAttr.Property.PropertyType);
+                var values = TypeHelper.CopyToTypedCollection(items, hasManyAttr.Property.PropertyType);
                 hasManyAttr.SetValue(resource, values, _resourceFactory);
             }
         }

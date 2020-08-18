@@ -1,5 +1,5 @@
 using System.Reflection;
-using JsonApiDotNetCore;
+using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 

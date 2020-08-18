@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Resources.Annotations;
 using Xunit;
 
 namespace UnitTests.Models

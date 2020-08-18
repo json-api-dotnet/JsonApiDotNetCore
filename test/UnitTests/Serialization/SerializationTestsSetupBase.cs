@@ -1,7 +1,5 @@
 using Bogus;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.Contracts;
 using Microsoft.Extensions.Logging.Abstractions;
 using UnitTests.TestModels;
 using Person = UnitTests.TestModels.Person;

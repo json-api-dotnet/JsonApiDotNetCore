@@ -11,10 +11,4 @@ namespace JsonApiDotNetCore.Middleware
     {
         Type Get();
     }
-
-    /// <inheritdoc/>
-    public class JsonApiExceptionFilterProvider : IJsonApiExceptionFilterProvider
-    {
-        public Type Get() => typeof(JsonApiExceptionFilter);
-    }
 }

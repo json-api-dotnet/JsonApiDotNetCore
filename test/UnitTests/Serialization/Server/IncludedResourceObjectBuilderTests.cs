@@ -1,8 +1,8 @@
 using Xunit;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCore.Serialization.Server.Builders;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Building;
 using UnitTests.TestModels;
 using Person = UnitTests.TestModels.Person;
 

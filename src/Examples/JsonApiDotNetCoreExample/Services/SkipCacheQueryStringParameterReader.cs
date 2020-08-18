@@ -1,6 +1,6 @@
 using System.Linq;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Exceptions;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.QueryStrings;
 using Microsoft.Extensions.Primitives;
 
@@ -12,9 +12,9 @@ namespace JsonApiDotNetCoreExample.Services
 
         public bool SkipCache { get; private set; }
 
-        public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
+        public bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            return !disableQueryAttribute.ParameterNames.Contains(_skipCacheParameterName.ToLowerInvariant());
+            return !disableQueryStringAttribute.ParameterNames.Contains(_skipCacheParameterName.ToLowerInvariant());
         }
 
         public bool CanRead(string parameterName)

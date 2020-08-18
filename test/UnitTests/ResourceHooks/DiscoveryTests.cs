@@ -1,12 +1,11 @@
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Hooks;
 using System.Collections.Generic;
 using Xunit;
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
 using System;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Hooks.Internal.Discovery;
+using JsonApiDotNetCore.Hooks.Internal.Execution;
+using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -78,7 +77,7 @@ namespace UnitTests.ResourceHooks
         public void HookDiscovery_WronglyUsedLoadDatabaseValueAttribute_ThrowsJsonApiSetupException()
         {
             //  assert
-            Assert.Throws<JsonApiSetupException>(() =>
+            Assert.Throws<InvalidConfigurationException>(() =>
             {
                 // Arrange & act
                 new HooksDiscovery<YetAnotherDummy>(MockProvider<YetAnotherDummy>(new YetAnotherDummyResourceDefinition()));

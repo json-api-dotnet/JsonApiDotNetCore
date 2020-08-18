@@ -1,7 +1,3 @@
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Formatters;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -9,16 +5,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
-using JsonApiDotNetCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using JsonApiDotNetCore;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.RequestServices;
-using JsonApiDotNetCore.RequestServices.Contracts;
-using JsonApiDotNetCore.Serialization.Server.Builders;
-using JsonApiDotNetCore.Serialization.Server;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Building;
 using Microsoft.AspNetCore.Authentication;
 
 namespace UnitTests.Extensions
@@ -136,7 +132,7 @@ namespace UnitTests.Extensions
             var services = new ServiceCollection();
 
             // Act, assert
-            Assert.Throws<JsonApiSetupException>(() => services.AddResourceService<int>());
+            Assert.Throws<InvalidConfigurationException>(() => services.AddResourceService<int>());
         }
 
         [Fact]

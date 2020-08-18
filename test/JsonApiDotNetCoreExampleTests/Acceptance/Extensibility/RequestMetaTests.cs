@@ -1,10 +1,10 @@
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
-using JsonApiDotNetCore.Models;
 using System.Collections.Generic;
 using FluentAssertions;
-using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.Extensions.DependencyInjection;

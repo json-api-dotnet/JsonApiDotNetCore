@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Queries.Expressions

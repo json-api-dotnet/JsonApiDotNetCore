@@ -1,8 +1,8 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

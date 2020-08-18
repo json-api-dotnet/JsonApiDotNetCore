@@ -1,7 +1,8 @@
 using System.Collections.Generic;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Building;
+using JsonApiDotNetCore.Serialization.Objects;
 using Moq;
 using Xunit;
 using UnitTests.TestModels;
@@ -10,13 +11,13 @@ namespace UnitTests.Serialization.Serializer
 {
     public sealed class BaseDocumentBuilderTests : SerializerTestsSetup
     {
-        private readonly TestDocumentBuilder _builder;
+        private readonly TestSerializer _builder;
 
         public BaseDocumentBuilderTests()
         {
             var mock = new Mock<IResourceObjectBuilder>();
             mock.Setup(m => m.Build(It.IsAny<IIdentifiable>(), It.IsAny<IReadOnlyCollection<AttrAttribute>>(), It.IsAny<IReadOnlyCollection<RelationshipAttribute>>())).Returns(new ResourceObject());
-            _builder = new TestDocumentBuilder(mock.Object);
+            _builder = new TestSerializer(mock.Object);
         }
 
 

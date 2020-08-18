@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    [DisableQuery(StandardQueryStringParameters.Sort | StandardQueryStringParameters.Page)]
+    [DisableQueryString(StandardQueryStringParameters.Sort | StandardQueryStringParameters.Page)]
     public sealed class CountriesController : JsonApiController<Country>
     {
         public CountriesController(

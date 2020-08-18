@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Serialization.Client
 {

@@ -1,6 +1,6 @@
 using System;
-using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
 using Xunit;
 
 namespace UnitTests.Internal

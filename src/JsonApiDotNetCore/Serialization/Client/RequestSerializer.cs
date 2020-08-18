@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Building;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Client
 {
     /// <summary>
-    /// Client serializer implementation of <see cref="BaseDocumentBuilder"/>
+    /// Client serializer implementation of <see cref="BaseSerializer"/>
     /// </summary>
-    public class RequestSerializer : BaseDocumentBuilder, IRequestSerializer
+    public class RequestSerializer : BaseSerializer, IRequestSerializer
     {
         private Type _currentTargetedResource;
         private readonly IResourceGraph _resourceGraph;

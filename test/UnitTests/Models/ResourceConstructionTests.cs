@@ -1,11 +1,8 @@
 using System;
 using System.ComponentModel.Design;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Server;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;

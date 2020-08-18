@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Controllers
@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Controllers
     [ServiceFilter(typeof(IQueryStringActionFilter))]
     public abstract class CoreJsonApiController : ControllerBase
     {
-        protected IActionResult Error(Error error)
+        protected IActionResult Error(Serialization.Objects.Error error)
         {
             return Error(new[] {error});
         }

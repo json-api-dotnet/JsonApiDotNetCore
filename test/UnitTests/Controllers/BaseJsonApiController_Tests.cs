@@ -1,14 +1,14 @@
 using System.Net;
 using System.Net.Http;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Moq;
 using Xunit;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
