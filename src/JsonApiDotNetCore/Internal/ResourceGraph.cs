@@ -35,17 +35,17 @@ namespace JsonApiDotNetCore.Internal
         public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
             => GetResourceContext(typeof(TResource));
         /// <inheritdoc/>
-        public List<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : IIdentifiable
+        public List<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
         {
             return Getter(selector).ToList();
         }
         /// <inheritdoc/>
-        public List<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : IIdentifiable
+        public List<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
         {
             return Getter(selector, FieldFilterType.Attribute).Cast<AttrAttribute>().ToList();
         }
         /// <inheritdoc/>
-        public List<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : IIdentifiable
+        public List<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
         {
             return Getter(selector, FieldFilterType.Relationship).Cast<RelationshipAttribute>().ToList();
         }
@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.Internal
                             .SingleOrDefault(r => r.Property.Name == relationship.InverseNavigation);
         }
 
-        private IEnumerable<ResourceFieldAttribute> Getter<TResource>(Expression<Func<TResource, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where TResource : IIdentifiable
+        private IEnumerable<ResourceFieldAttribute> Getter<TResource>(Expression<Func<TResource, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where TResource : class, IIdentifiable
         {
             IEnumerable<ResourceFieldAttribute> available;
             if (type == FieldFilterType.Attribute)

@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// </summary>
         /// <typeparam name="TResource">The resource for which to retrieve fields</typeparam>
         /// <param name="selector">Should be of the form: (TResource e) => new { e.Field1, e.Field2 }</param>
-        List<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : IIdentifiable;
+        List<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable;
         /// <summary>
         /// Gets all attributes for <typeparamref name="TResource"/>
         /// that are targeted by the selector. If no selector is provided, all
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// </summary>
         /// <typeparam name="TResource">The resource for which to retrieve attributes</typeparam>
         /// <param name="selector">Should be of the form: (TResource e) => new { e.Attribute1, e.Attribute2 }</param>
-        List<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : IIdentifiable;
+        List<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable;
         /// <summary>
         /// Gets all relationships for <typeparamref name="TResource"/>
         /// that are targeted by the selector. If no selector is provided, all
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// </summary>
         /// <typeparam name="TResource">The resource for which to retrieve relationships</typeparam>
         /// <param name="selector">Should be of the form: (TResource e) => new { e.Relationship1, e.Relationship2 }</param>
-        List<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : IIdentifiable;
+        List<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable;
         /// <summary>
         /// Gets all exposed fields (attributes and relationships) for type <paramref name="type"/>
         /// </summary>

@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     {
         public static SparseFieldSetExpression Including<TResource>(this SparseFieldSetExpression sparseFieldSet,
             Expression<Func<TResource, dynamic>> attributeSelector, IResourceGraph resourceGraph)
-            where TResource : IIdentifiable
+            where TResource : class, IIdentifiable
         {
             if (attributeSelector == null)
             {
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public static SparseFieldSetExpression Excluding<TResource>(this SparseFieldSetExpression sparseFieldSet,
             Expression<Func<TResource, dynamic>> attributeSelector, IResourceGraph resourceGraph)
-            where TResource : IIdentifiable
+            where TResource : class, IIdentifiable
         {
             if (attributeSelector == null)
             {
