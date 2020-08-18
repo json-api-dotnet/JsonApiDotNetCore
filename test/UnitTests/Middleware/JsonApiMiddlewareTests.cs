@@ -23,28 +23,28 @@ namespace UnitTests.Middleware
             // Arrange
             var id = "ABC123ABC";
             var configuration = GetConfiguration($"/obfuscatedIdModel/{id}", action: "GetAsync", id: id);
-            var currentRequest = configuration.CurrentRequest;
+            var request = configuration.Request;
 
             // Act
             await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Equal(id, currentRequest.PrimaryId);
+            Assert.Equal(id, request.PrimaryId);
         }
 
         [Fact]
-        public async Task ParseUrlBase_UrlHasPrimaryIdSet_ShouldSetCurrentRequestWithSaidId()
+        public async Task ParseUrlBase_UrlHasPrimaryIdSet_ShouldSetupRequestWithSameId()
         {
             // Arrange
             var id = "123";
             var configuration = GetConfiguration($"/users/{id}", id: id);
-            var currentRequest = configuration.CurrentRequest;
+            var request = configuration.Request;
 
             // Act
             await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Equal(id, currentRequest.PrimaryId);
+            Assert.Equal(id, request.PrimaryId);
         }
 
         [Fact]
@@ -52,13 +52,13 @@ namespace UnitTests.Middleware
         {
             // Arrange
             var configuration = GetConfiguration("/users");
-            var currentRequest = configuration.CurrentRequest;
+            var request = configuration.Request;
 
             // Act
             await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Null(currentRequest.PrimaryId);
+            Assert.Null(request.PrimaryId);
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace UnitTests.Middleware
             public HttpContext HttpContext;
             public Mock<IControllerResourceMapping> ControllerResourceMapping;
             public Mock<IJsonApiOptions> Options;
-            public CurrentRequest CurrentRequest;
+            public JsonApiRequest Request;
             public Mock<IResourceGraph> ResourceGraph;
         }
         private Task RunMiddlewareTask(InvokeConfiguration holder)
@@ -85,9 +85,9 @@ namespace UnitTests.Middleware
             var controllerResourceMapping = holder.ControllerResourceMapping.Object;
             var context = holder.HttpContext;
             var options = holder.Options.Object;
-            var currentRequest = holder.CurrentRequest;
+            var request = holder.Request;
             var resourceGraph = holder.ResourceGraph.Object;
-            return holder.MiddleWare.Invoke(context, controllerResourceMapping, options, currentRequest, resourceGraph);
+            return holder.MiddleWare.Invoke(context, controllerResourceMapping, options, request, resourceGraph);
         }
         private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", string action = "", string id =null, Type relType = null)
         {
@@ -103,10 +103,10 @@ namespace UnitTests.Middleware
             var mockMapping = new Mock<IControllerResourceMapping>();
             Mock<IJsonApiOptions> mockOptions = CreateMockOptions(forcedNamespace);
             var mockGraph = CreateMockResourceGraph(resourceName, includeRelationship: relType != null);
-            var currentRequest = new CurrentRequest();
+            var request = new JsonApiRequest();
             if (relType != null)
             {
-                currentRequest.Relationship = new HasManyAttribute
+                request.Relationship = new HasManyAttribute
                 {
                     RightType = relType
                 };
@@ -117,7 +117,7 @@ namespace UnitTests.Middleware
                 MiddleWare = middleware,
                 ControllerResourceMapping = mockMapping,
                 Options = mockOptions,
-                CurrentRequest = currentRequest,
+                Request = request,
                 HttpContext = context,
                 ResourceGraph = mockGraph
             };

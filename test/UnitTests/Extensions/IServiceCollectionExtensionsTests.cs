@@ -42,11 +42,11 @@ namespace UnitTests.Extensions
             var provider = services.BuildServiceProvider();
 
             // Assert
-            var currentRequest = provider.GetService<ICurrentRequest>() as CurrentRequest;
-            Assert.NotNull(currentRequest);
+            var request = provider.GetService<IJsonApiRequest>() as JsonApiRequest;
+            Assert.NotNull(request);
             var resourceGraph = provider.GetService<IResourceGraph>();
             Assert.NotNull(resourceGraph);
-            currentRequest.PrimaryResource = resourceGraph.GetResourceContext<TodoItem>();
+            request.PrimaryResource = resourceGraph.GetResourceContext<TodoItem>();
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IDbContextResolver>());
             Assert.NotNull(provider.GetService(typeof(IResourceRepository<TodoItem>)));

@@ -11,7 +11,7 @@ namespace UnitTests.QueryStringParameters
     {
         protected JsonApiOptions Options { get; }
         protected IResourceGraph ResourceGraph { get; }
-        protected CurrentRequest CurrentRequest { get; }
+        protected JsonApiRequest Request { get; }
 
         protected ParseTestsBase()
         {
@@ -27,7 +27,7 @@ namespace UnitTests.QueryStringParameters
                 .AddResource<Tag>()
                 .Build();
 
-            CurrentRequest = new CurrentRequest
+            Request = new JsonApiRequest
             {
                 PrimaryResource = ResourceGraph.GetResourceContext<Blog>(),
                 IsCollection = true

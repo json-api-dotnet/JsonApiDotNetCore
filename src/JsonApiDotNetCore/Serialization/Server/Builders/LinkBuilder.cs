@@ -19,17 +19,17 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         private readonly IResourceContextProvider _provider;
         private readonly IRequestQueryStringAccessor _queryStringAccessor;
         private readonly IJsonApiOptions _options;
-        private readonly ICurrentRequest _currentRequest;
+        private readonly IJsonApiRequest _request;
         private readonly IPaginationContext _paginationContext;
 
         public LinkBuilder(IJsonApiOptions options,
-                           ICurrentRequest currentRequest,
+                           IJsonApiRequest request,
                            IPaginationContext paginationContext,
                            IResourceContextProvider provider,
                            IRequestQueryStringAccessor queryStringAccessor)
         {
             _options = options;
-            _currentRequest = currentRequest;
+            _request = request;
             _paginationContext = paginationContext;
             _provider = provider;
             _queryStringAccessor = queryStringAccessor;
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// <inheritdoc/>
         public TopLevelLinks GetTopLevelLinks()
         {
-            ResourceContext resourceContext = _currentRequest.PrimaryResource;
+            ResourceContext resourceContext = _request.PrimaryResource;
 
             TopLevelLinks topLevelLinks = null;
             if (ShouldAddTopLevelLink(resourceContext, Links.Self))
@@ -92,21 +92,21 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         private string GetSelfTopLevelLink(ResourceContext resourceContext)
         {
             var builder = new StringBuilder();
-            builder.Append(_currentRequest.BasePath);
+            builder.Append(_request.BasePath);
             builder.Append("/");
             builder.Append(resourceContext.ResourceName);
 
-            string resourceId = _currentRequest.PrimaryId;
+            string resourceId = _request.PrimaryId;
             if (resourceId != null)
             {
                 builder.Append("/");
                 builder.Append(resourceId);
             }
 
-            if (_currentRequest.Relationship != null)
+            if (_request.Relationship != null)
             {
                 builder.Append("/");
-                builder.Append(_currentRequest.Relationship.PublicName);
+                builder.Append(_request.Relationship.PublicName);
             }
 
             builder.Append(DecodeSpecialCharacters(_queryStringAccessor.QueryString.Value));
@@ -122,7 +122,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
                 parameters["page[number]"] = pageOffset.ToString();
             });
 
-            return $"{_currentRequest.BasePath}/{resourceContext.ResourceName}" + queryString;
+            return $"{_request.BasePath}/{resourceContext.ResourceName}" + queryString;
         }
 
         private string BuildQueryString(Action<Dictionary<string, string>> updateAction)
@@ -174,17 +174,17 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
         private string GetSelfRelationshipLink(string parent, string parentId, string navigation)
         {
-            return $"{_currentRequest.BasePath}/{parent}/{parentId}/relationships/{navigation}";
+            return $"{_request.BasePath}/{parent}/{parentId}/relationships/{navigation}";
         }
 
         private string GetSelfResourceLink(string resource, string resourceId)
         {
-            return $"{_currentRequest.BasePath}/{resource}/{resourceId}";
+            return $"{_request.BasePath}/{resource}/{resourceId}";
         }
 
         private string GetRelatedRelationshipLink(string parent, string parentId, string navigation)
         {
-            return $"{_currentRequest.BasePath}/{parent}/{parentId}/{navigation}";
+            return $"{_request.BasePath}/{parent}/{parentId}/{navigation}";
         }
 
         /// <summary>

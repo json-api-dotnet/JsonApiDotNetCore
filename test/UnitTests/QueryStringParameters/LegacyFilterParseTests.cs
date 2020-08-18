@@ -19,10 +19,10 @@ namespace UnitTests.QueryStringParameters
         {
             Options.EnableLegacyFilterNotation = true;
 
-            CurrentRequest.PrimaryResource = ResourceGraph.GetResourceContext<Article>();
+            Request.PrimaryResource = ResourceGraph.GetResourceContext<Article>();
 
             var resourceFactory = new ResourceFactory(new ServiceContainer());
-            _reader = new FilterQueryStringParameterReader(CurrentRequest, ResourceGraph, resourceFactory, Options);
+            _reader = new FilterQueryStringParameterReader(Request, ResourceGraph, resourceFactory, Options);
         }
 
         [Theory]

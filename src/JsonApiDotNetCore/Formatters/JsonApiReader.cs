@@ -16,15 +16,15 @@ namespace JsonApiDotNetCore.Formatters
     public class JsonApiReader : IJsonApiReader
     {
         private readonly IJsonApiDeserializer _deserializer;
-        private readonly ICurrentRequest _currentRequest;
+        private readonly IJsonApiRequest _request;
         private readonly ILogger<JsonApiReader> _logger;
 
         public JsonApiReader(IJsonApiDeserializer deserializer,
-            ICurrentRequest currentRequest,
+            IJsonApiRequest request,
             ILoggerFactory loggerFactory)
         {
             _deserializer = deserializer;
-            _currentRequest = currentRequest;
+            _request = request;
             _logger = loggerFactory.CreateLogger<JsonApiReader>();
         }
 
@@ -67,9 +67,9 @@ namespace JsonApiDotNetCore.Formatters
                     throw new InvalidRequestBodyException("Payload must include id attribute.", null, body);
                 }
 
-                if (_currentRequest.Kind == EndpointKind.Primary && TryGetId(model, out var bodyId) && bodyId != _currentRequest.PrimaryId)
+                if (_request.Kind == EndpointKind.Primary && TryGetId(model, out var bodyId) && bodyId != _request.PrimaryId)
                 {
-                    throw new ResourceIdMismatchException(bodyId, _currentRequest.PrimaryId, context.HttpContext.Request.GetDisplayUrl());
+                    throw new ResourceIdMismatchException(bodyId, _request.PrimaryId, context.HttpContext.Request.GetDisplayUrl());
                 }
             }
 

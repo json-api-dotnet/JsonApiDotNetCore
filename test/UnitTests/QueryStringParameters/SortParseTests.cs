@@ -15,7 +15,7 @@ namespace UnitTests.QueryStringParameters
 
         public SortParseTests()
         {
-            _reader = new SortQueryStringParameterReader(CurrentRequest, ResourceGraph);
+            _reader = new SortQueryStringParameterReader(Request, ResourceGraph);
         }
 
         [Theory]

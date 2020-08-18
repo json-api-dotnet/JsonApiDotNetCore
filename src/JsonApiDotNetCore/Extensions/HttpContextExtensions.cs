@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Extensions
             return value == bool.TrueString;
         }
 
-        internal static void SetJsonApiRequest(this HttpContext httpContext)
+        internal static void RegisterJsonApiRequest(this HttpContext httpContext)
         {
             httpContext.Items["IsJsonApiRequest"] = bool.TrueString;
         }

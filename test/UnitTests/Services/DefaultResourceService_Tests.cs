@@ -80,7 +80,7 @@ namespace UnitTests.Services
             var resourceDefinitionProvider = new ResourceDefinitionProvider(_resourceGraph, new TestScopedServiceProvider(serviceProvider));
             var paginationContext = new PaginationContext();
             var composer = new QueryLayerComposer(new List<IQueryConstraintProvider>(), _resourceGraph, resourceDefinitionProvider, options, paginationContext);
-            var currentRequest = new CurrentRequest
+            var request = new JsonApiRequest
             {
                 PrimaryResource = _resourceGraph.GetResourceContext<TodoItem>(),
                 SecondaryResource = _resourceGraph.GetResourceContext<TodoItemCollection>(),
@@ -89,7 +89,7 @@ namespace UnitTests.Services
             };
 
             return new JsonApiResourceService<TodoItem>(_repositoryMock.Object, composer, paginationContext, options,
-                NullLoggerFactory.Instance, currentRequest, changeTracker, resourceFactory, null);
+                NullLoggerFactory.Instance, request, changeTracker, resourceFactory, null);
         }
     }
 }

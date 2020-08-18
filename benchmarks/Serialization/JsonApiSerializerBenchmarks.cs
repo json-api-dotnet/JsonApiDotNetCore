@@ -41,11 +41,11 @@ namespace Benchmarks.Serialization
 
         private static FieldsToSerialize CreateFieldsToSerialize(IResourceGraph resourceGraph)
         {
-            var currentRequest = new CurrentRequest();
+            var request = new JsonApiRequest();
 
             var constraintProviders = new IQueryConstraintProvider[]
             {
-                new SparseFieldSetQueryStringParameterReader(currentRequest, resourceGraph)
+                new SparseFieldSetQueryStringParameterReader(request, resourceGraph)
             };
 
             var resourceDefinitionProvider = DependencyFactory.CreateResourceDefinitionProvider(resourceGraph);

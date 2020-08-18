@@ -16,7 +16,7 @@ namespace UnitTests.QueryStringParameters
 
         public IncludeParseTests()
         {
-            _reader = new IncludeQueryStringParameterReader(CurrentRequest, ResourceGraph, new JsonApiOptions());
+            _reader = new IncludeQueryStringParameterReader(Request, ResourceGraph, new JsonApiOptions());
         }
 
         [Theory]

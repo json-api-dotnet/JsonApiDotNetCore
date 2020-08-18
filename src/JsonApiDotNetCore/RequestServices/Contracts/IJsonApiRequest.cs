@@ -5,9 +5,9 @@ using JsonApiDotNetCore.Models.Annotation;
 namespace JsonApiDotNetCore.RequestServices.Contracts
 {
     /// <summary>
-    /// Metadata associated to the current json:api request.
+    /// Metadata associated with the json:api request that is currently being processed.
     /// </summary>
-    public interface ICurrentRequest
+    public interface IJsonApiRequest
     {
         /// <summary>
         /// Routing information, based on the path of the request URL.

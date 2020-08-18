@@ -22,8 +22,8 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
         private IncludeExpression _includeExpression;
         private string _lastParameterName;
 
-        public IncludeQueryStringParameterReader(ICurrentRequest currentRequest, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
-            : base(currentRequest, resourceContextProvider)
+        public IncludeQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
+            : base(request, resourceContextProvider)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _includeParser = new IncludeParser(resourceContextProvider, ValidateSingleRelationship);

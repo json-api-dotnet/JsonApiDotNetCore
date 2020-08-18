@@ -15,16 +15,16 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
 
         protected ResourceContext RequestResource { get; }
 
-        protected QueryStringParameterReader(ICurrentRequest currentRequest, IResourceContextProvider resourceContextProvider)
+        protected QueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider)
         {
-            if (currentRequest == null)
+            if (request == null)
             {
-                throw new ArgumentNullException(nameof(currentRequest));
+                throw new ArgumentNullException(nameof(request));
             }
 
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _isCollectionRequest = currentRequest.IsCollection;
-            RequestResource = currentRequest.SecondaryResource ?? currentRequest.PrimaryResource;
+            _isCollectionRequest = request.IsCollection;
+            RequestResource = request.SecondaryResource ?? request.PrimaryResource;
         }
 
         protected ResourceContext GetResourceContextForScope(ResourceFieldChainExpression scope)

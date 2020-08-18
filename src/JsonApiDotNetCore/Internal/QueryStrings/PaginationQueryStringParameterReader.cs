@@ -25,8 +25,8 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
         private PaginationQueryStringValueExpression _pageSizeConstraint;
         private PaginationQueryStringValueExpression _pageNumberConstraint;
 
-        public PaginationQueryStringParameterReader(ICurrentRequest currentRequest, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
-            : base(currentRequest, resourceContextProvider)
+        public PaginationQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
+            : base(request, resourceContextProvider)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _paginationParser = new PaginationParser(resourceContextProvider);

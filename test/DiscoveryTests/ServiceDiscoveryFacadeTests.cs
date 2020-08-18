@@ -41,7 +41,7 @@ namespace DiscoveryTests
             _services.AddSingleton<IJsonApiOptions>(options);
             _services.AddSingleton<ILoggerFactory>(new LoggerFactory());
             _services.AddScoped(_ => new Mock<ILinkBuilder>().Object);
-            _services.AddScoped(_ => new Mock<ICurrentRequest>().Object);
+            _services.AddScoped(_ => new Mock<IJsonApiRequest>().Object);
             _services.AddScoped(_ => new Mock<ITargetedFields>().Object);
             _services.AddScoped(_ => new Mock<IResourceGraph>().Object);
             _services.AddScoped(_ => new Mock<IGenericServiceFactory>().Object);
@@ -117,11 +117,11 @@ namespace DiscoveryTests
                 IPaginationContext paginationContext,
                 IJsonApiOptions options,
                 ILoggerFactory loggerFactory,
-                ICurrentRequest currentRequest,
+                IJsonApiRequest request,
                 IResourceChangeTracker<TestModel> resourceChangeTracker,
                 IResourceFactory resourceFactory,
                 IResourceHookExecutor hookExecutor = null)
-                : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, currentRequest,
+                : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
                     resourceChangeTracker, resourceFactory, hookExecutor)
             {
             }

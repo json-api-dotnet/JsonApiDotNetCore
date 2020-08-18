@@ -12,11 +12,11 @@ namespace JsonApiDotNetCore.Serialization.Server
     public class ResponseSerializerFactory : IJsonApiSerializerFactory
     {
         private readonly IServiceProvider _provider;
-        private readonly ICurrentRequest _currentRequest;
+        private readonly IJsonApiRequest _request;
 
-        public ResponseSerializerFactory(ICurrentRequest currentRequest, IScopedServiceProvider provider)
+        public ResponseSerializerFactory(IJsonApiRequest request, IScopedServiceProvider provider)
         {
-            _currentRequest = currentRequest;
+            _request = request;
             _provider = provider;
         }
 
@@ -30,15 +30,15 @@ namespace JsonApiDotNetCore.Serialization.Server
 
             var serializerType = typeof(ResponseSerializer<>).MakeGenericType(targetType);
             var serializer = (IResponseSerializer)_provider.GetService(serializerType);
-            if (_currentRequest.Kind == EndpointKind.Relationship && _currentRequest.Relationship != null)
-                serializer.RequestRelationship = _currentRequest.Relationship;
+            if (_request.Kind == EndpointKind.Relationship && _request.Relationship != null)
+                serializer.RequestRelationship = _request.Relationship;
 
             return (IJsonApiSerializer)serializer;
         }
 
         private Type GetDocumentType()
         {
-            var resourceContext = _currentRequest.SecondaryResource ?? _currentRequest.PrimaryResource;
+            var resourceContext = _request.SecondaryResource ?? _request.PrimaryResource;
             return resourceContext.ResourceType;
         }
     }

@@ -20,11 +20,11 @@ namespace JsonApiDotNetCoreExample.Services
             IPaginationContext paginationContext,
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
-            ICurrentRequest currentRequest,
+            IJsonApiRequest request,
             IResourceChangeTracker<Article> resourceChangeTracker,
             IResourceFactory resourceFactory,
             IResourceHookExecutor hookExecutor = null)
-            : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, currentRequest,
+            : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
                 resourceChangeTracker, resourceFactory, hookExecutor)
         { }
 

@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IQueryLayerComposer _queryLayerComposer;
         private readonly IPaginationContext _paginationContext;
         private readonly IJsonApiOptions _options;
-        private readonly ICurrentRequest _currentRequest;
+        private readonly IJsonApiRequest _request;
         private readonly ILogger _logger;
         private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
         private readonly IResourceFactory _resourceFactory;
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Services
             IPaginationContext paginationContext,
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
-            ICurrentRequest currentRequest,
+            IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
             IResourceHookExecutor hookExecutor = null)
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Services
             _queryLayerComposer = queryLayerComposer;
             _paginationContext = paginationContext;
             _options = options;
-            _currentRequest = currentRequest;
+            _request = request;
             _logger = loggerFactory.CreateLogger<JsonApiResourceService<TResource, TId>>();
             _resourceChangeTracker = resourceChangeTracker;
             _resourceFactory = resourceFactory;
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCore.Services
                 _paginationContext.TotalResourceCount = await _repository.CountAsync(topFilter);
             }
 
-            var queryLayer = _queryLayerComposer.Compose(_currentRequest.PrimaryResource);
+            var queryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
             var resources = await _repository.GetAsync(queryLayer);
 
             if (_hookExecutor != null)
@@ -146,7 +146,7 @@ namespace JsonApiDotNetCore.Services
 
         private async Task<TResource> GetPrimaryResourceById(TId id, bool allowTopSparseFieldSet)
         {
-            var primaryLayer = _queryLayerComposer.Compose(_currentRequest.PrimaryResource);
+            var primaryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
             primaryLayer.Sort = null;
             primaryLayer.Pagination = null;
             primaryLayer.Filter = CreateFilterById(id);
@@ -171,7 +171,7 @@ namespace JsonApiDotNetCore.Services
 
         private FilterExpression CreateFilterById(TId id)
         {
-            var primaryIdAttribute = _currentRequest.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+            var primaryIdAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
 
             return new ComparisonExpression(ComparisonOperator.Equals,
                 new ResourceFieldChainExpression(primaryIdAttribute), new LiteralConstantExpression(id.ToString()));
@@ -186,9 +186,9 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
 
-            var secondaryLayer = _queryLayerComposer.Compose(_currentRequest.SecondaryResource);
+            var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
 
-            var secondaryIdAttribute = _currentRequest.SecondaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+            var secondaryIdAttribute = _request.SecondaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
 
             secondaryLayer.Include = null;
             secondaryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
@@ -221,7 +221,7 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
 
-            var secondaryLayer = _queryLayerComposer.Compose(_currentRequest.SecondaryResource);
+            var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
             var primaryLayer = GetPrimaryLayerForSecondaryEndpoint(secondaryLayer, id);
 
             var primaryResources = await _repository.GetAsync(primaryLayer);
@@ -235,7 +235,7 @@ namespace JsonApiDotNetCore.Services
                 primaryResource = _hookExecutor.OnReturn(AsList(primaryResource), ResourcePipeline.GetRelationship).Single();
             }
 
-            return _currentRequest.Relationship.GetValue(primaryResource);
+            return _request.Relationship.GetValue(primaryResource);
         }
 
         private QueryLayer GetPrimaryLayerForSecondaryEndpoint(QueryLayer secondaryLayer, TId primaryId)
@@ -244,16 +244,16 @@ namespace JsonApiDotNetCore.Services
             secondaryLayer.Include = null;
 
             var primaryIdAttribute =
-                _currentRequest.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+                _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
 
-            return new QueryLayer(_currentRequest.PrimaryResource)
+            return new QueryLayer(_request.PrimaryResource)
             {
                 Include = RewriteIncludeForSecondaryEndpoint(innerInclude),
                 Filter = CreateFilterById(primaryId),
                 Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
                 {
                     [primaryIdAttribute] = null,
-                    [_currentRequest.Relationship] = secondaryLayer
+                    [_request.Relationship] = secondaryLayer
                 }
             };
         }
@@ -261,8 +261,8 @@ namespace JsonApiDotNetCore.Services
         private IncludeExpression RewriteIncludeForSecondaryEndpoint(IncludeExpression relativeInclude)
         {
             var parentElement = relativeInclude != null
-                ? new IncludeElementExpression(_currentRequest.Relationship, relativeInclude.Elements)
-                : new IncludeElementExpression(_currentRequest.Relationship);
+                ? new IncludeElementExpression(_request.Relationship, relativeInclude.Elements)
+                : new IncludeElementExpression(_request.Relationship);
 
             return new IncludeExpression(new[] {parentElement});
         }
@@ -304,7 +304,7 @@ namespace JsonApiDotNetCore.Services
 
             AssertRelationshipExists(relationshipName);
 
-            var secondaryLayer = _queryLayerComposer.Compose(_currentRequest.SecondaryResource);
+            var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
             var primaryLayer = GetPrimaryLayerForSecondaryEndpoint(secondaryLayer, id);
             primaryLayer.Projection = null;
 
@@ -321,12 +321,12 @@ namespace JsonApiDotNetCore.Services
             string[] relationshipIds = null;
             if (related != null)
             {
-                relationshipIds = _currentRequest.Relationship is HasOneAttribute
+                relationshipIds = _request.Relationship is HasOneAttribute
                     ? new[] {((IIdentifiable) related).StringId}
                     : ((IEnumerable<IIdentifiable>) related).Select(e => e.StringId).ToArray();
             }
 
-            await _repository.UpdateRelationshipsAsync(primaryResource, _currentRequest.Relationship, relationshipIds ?? Array.Empty<string>());
+            await _repository.UpdateRelationshipsAsync(primaryResource, _request.Relationship, relationshipIds ?? Array.Empty<string>());
 
             if (_hookExecutor != null && primaryResource != null)
             {
@@ -338,16 +338,16 @@ namespace JsonApiDotNetCore.Services
         {
             if (resource == null)
             {
-                throw new ResourceNotFoundException(_currentRequest.PrimaryId, _currentRequest.PrimaryResource.ResourceName);
+                throw new ResourceNotFoundException(_request.PrimaryId, _request.PrimaryResource.ResourceName);
             }
         }
 
         private void AssertRelationshipExists(string relationshipName)
         {
-            var relationship = _currentRequest.Relationship;
+            var relationship = _request.Relationship;
             if (relationship == null)
             {
-                throw new RelationshipNotFoundException(relationshipName, _currentRequest.PrimaryResource.ResourceName);
+                throw new RelationshipNotFoundException(relationshipName, _request.PrimaryResource.ResourceName);
             }
         }
 
@@ -371,11 +371,11 @@ namespace JsonApiDotNetCore.Services
             IPaginationContext paginationContext,
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
-            ICurrentRequest currentRequest,
+            IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
             IResourceHookExecutor hookExecutor = null)
-            : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, currentRequest,
+            : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
                 resourceChangeTracker, resourceFactory, hookExecutor)
         { }
     }

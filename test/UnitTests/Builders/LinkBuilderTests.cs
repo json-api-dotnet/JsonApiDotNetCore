@@ -153,9 +153,9 @@ namespace UnitTests
 
             bool usePrimaryId = expectedSelfLink != _topSelf;
             string relationshipName = expectedSelfLink == _topRelatedSelf ? _relationshipName : null;
-            ICurrentRequest currentRequest = GetRequestManager(primaryResource, usePrimaryId, relationshipName);
+            IJsonApiRequest request = GetRequestManager(primaryResource, usePrimaryId, relationshipName);
 
-            var builder = new LinkBuilder(config, currentRequest, _paginationContext, _provider.Object, _queryStringAccessor);
+            var builder = new LinkBuilder(config, request, _paginationContext, _provider.Object, _queryStringAccessor);
 
             // Act
             var links = builder.GetTopLevelLinks();
@@ -186,9 +186,9 @@ namespace UnitTests
             }
         }
 
-        private ICurrentRequest GetRequestManager(ResourceContext resourceContext = null, bool usePrimaryId = false, string relationshipName = null)
+        private IJsonApiRequest GetRequestManager(ResourceContext resourceContext = null, bool usePrimaryId = false, string relationshipName = null)
         {
-            var mock = new Mock<ICurrentRequest>();
+            var mock = new Mock<IJsonApiRequest>();
             mock.Setup(m => m.BasePath).Returns(_host);
             mock.Setup(m => m.PrimaryId).Returns(usePrimaryId ? _primaryId.ToString() : null);
             mock.Setup(m => m.Relationship).Returns(relationshipName != null ? new HasOneAttribute(relationshipName) : null);

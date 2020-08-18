@@ -20,8 +20,8 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
         private readonly List<ExpressionInScope> _constraints = new List<ExpressionInScope>();
         private string _lastParameterName;
 
-        public SortQueryStringParameterReader(ICurrentRequest currentRequest, IResourceContextProvider resourceContextProvider)
-            : base(currentRequest, resourceContextProvider)
+        public SortQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider)
+            : base(request, resourceContextProvider)
         {
             _scopeParser = new QueryStringParameterScopeParser(resourceContextProvider, FieldChainRequirements.EndsInToMany);
             _sortParser = new SortParser(resourceContextProvider, ValidateSingleField);

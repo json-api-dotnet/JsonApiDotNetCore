@@ -18,7 +18,7 @@ namespace UnitTests.QueryStringParameters
         public PaginationParseTests()
         {
             Options.DefaultPageSize = new PageSize(25);
-            _reader = new PaginationQueryStringParameterReader(CurrentRequest, ResourceGraph, Options);
+            _reader = new PaginationQueryStringParameterReader(Request, ResourceGraph, Options);
         }
 
         [Theory]

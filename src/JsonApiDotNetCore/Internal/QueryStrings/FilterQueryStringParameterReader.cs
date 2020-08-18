@@ -28,9 +28,9 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
         private readonly Dictionary<ResourceFieldChainExpression, List<FilterExpression>> _filtersPerScope = new Dictionary<ResourceFieldChainExpression, List<FilterExpression>>();
         private string _lastParameterName;
 
-        public FilterQueryStringParameterReader(ICurrentRequest currentRequest,
+        public FilterQueryStringParameterReader(IJsonApiRequest request,
             IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory, IJsonApiOptions options)
-            : base(currentRequest, resourceContextProvider)
+            : base(request, resourceContextProvider)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _scopeParser = new QueryStringParameterScopeParser(resourceContextProvider, FieldChainRequirements.EndsInToMany);

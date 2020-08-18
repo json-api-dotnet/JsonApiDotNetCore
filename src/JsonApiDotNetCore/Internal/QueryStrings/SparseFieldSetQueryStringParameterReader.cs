@@ -20,8 +20,8 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
         private readonly List<ExpressionInScope> _constraints = new List<ExpressionInScope>();
         private string _lastParameterName;
 
-        public SparseFieldSetQueryStringParameterReader(ICurrentRequest currentRequest, IResourceContextProvider resourceContextProvider)
-            : base(currentRequest, resourceContextProvider)
+        public SparseFieldSetQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider)
+            : base(request, resourceContextProvider)
         {
             _sparseFieldSetParser = new SparseFieldSetParser(resourceContextProvider, ValidateSingleAttribute);
             _scopeParser = new QueryStringParameterScopeParser(resourceContextProvider, FieldChainRequirements.IsRelationship);

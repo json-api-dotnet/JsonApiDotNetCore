@@ -185,7 +185,7 @@ namespace JsonApiDotNetCore.Builders
             _services.AddSingleton<IResourceContextProvider>(resourceGraph);
             _services.AddSingleton<IExceptionHandler, ExceptionHandler>();
 
-            _services.AddScoped<ICurrentRequest, CurrentRequest>();
+            _services.AddScoped<IJsonApiRequest, JsonApiRequest>();
             _services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
             _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             _services.AddScoped<IJsonApiReader, JsonApiReader>();

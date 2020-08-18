@@ -22,7 +22,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
-    /// Intercepts HTTP requests to populate injected <see cref="ICurrentRequest"/> instance for json:api requests.
+    /// Intercepts HTTP requests to populate injected <see cref="IJsonApiRequest"/> instance for json:api requests.
     /// </summary>
     public sealed class JsonApiMiddleware
     {
@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.Middleware
         public async Task Invoke(HttpContext httpContext, 
             IControllerResourceMapping controllerResourceMapping, 
             IJsonApiOptions options, 
-            ICurrentRequest currentRequest, 
+            IJsonApiRequest request, 
             IResourceContextProvider resourceContextProvider)
         {
             var routeValues = httpContext.GetRouteData().Values;
@@ -50,9 +50,9 @@ namespace JsonApiDotNetCore.Middleware
                     return;
                 }
 
-                SetupCurrentRequest((CurrentRequest)currentRequest, primaryResourceContext, routeValues, options, resourceContextProvider, httpContext.Request);
+                SetupRequest((JsonApiRequest)request, primaryResourceContext, routeValues, options, resourceContextProvider, httpContext.Request);
 
-                httpContext.SetJsonApiRequest();
+                httpContext.RegisterJsonApiRequest();
             }
 
             await _next(httpContext);
@@ -151,20 +151,20 @@ namespace JsonApiDotNetCore.Middleware
             await httpResponse.Body.FlushAsync();
         }
 
-        private static void SetupCurrentRequest(CurrentRequest currentRequest, ResourceContext primaryResourceContext,
+        private static void SetupRequest(JsonApiRequest request, ResourceContext primaryResourceContext,
             RouteValueDictionary routeValues, IJsonApiOptions options, IResourceContextProvider resourceContextProvider,
             HttpRequest httpRequest)
         {
-            currentRequest.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method;
-            currentRequest.Kind = EndpointKind.Primary;
-            currentRequest.PrimaryResource = primaryResourceContext;
-            currentRequest.PrimaryId = GetPrimaryRequestId(routeValues);
-            currentRequest.BasePath = GetBasePath(primaryResourceContext.ResourceName, options, httpRequest);
+            request.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method;
+            request.Kind = EndpointKind.Primary;
+            request.PrimaryResource = primaryResourceContext;
+            request.PrimaryId = GetPrimaryRequestId(routeValues);
+            request.BasePath = GetBasePath(primaryResourceContext.ResourceName, options, httpRequest);
 
             var relationshipName = GetRelationshipNameForSecondaryRequest(routeValues);
             if (relationshipName != null)
             {
-                currentRequest.Kind = IsRouteForRelationship(routeValues) ? EndpointKind.Relationship : EndpointKind.Secondary;
+                request.Kind = IsRouteForRelationship(routeValues) ? EndpointKind.Relationship : EndpointKind.Secondary;
 
                 var requestRelationship =
                     primaryResourceContext.Relationships.SingleOrDefault(relationship =>
@@ -172,12 +172,12 @@ namespace JsonApiDotNetCore.Middleware
 
                 if (requestRelationship != null)
                 {
-                    currentRequest.Relationship = requestRelationship;
-                    currentRequest.SecondaryResource = resourceContextProvider.GetResourceContext(requestRelationship.RightType);
+                    request.Relationship = requestRelationship;
+                    request.SecondaryResource = resourceContextProvider.GetResourceContext(requestRelationship.RightType);
                 }
             }
 
-            currentRequest.IsCollection = currentRequest.PrimaryId == null || currentRequest.Relationship is HasManyAttribute;
+            request.IsCollection = request.PrimaryId == null || request.Relationship is HasManyAttribute;
         }
 
         private static string GetPrimaryRequestId(RouteValueDictionary routeValues)

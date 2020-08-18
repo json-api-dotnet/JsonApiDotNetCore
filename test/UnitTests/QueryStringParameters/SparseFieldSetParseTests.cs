@@ -15,7 +15,7 @@ namespace UnitTests.QueryStringParameters
 
         public SparseFieldSetParseTests()
         {
-            _reader = new SparseFieldSetQueryStringParameterReader(CurrentRequest, ResourceGraph);
+            _reader = new SparseFieldSetQueryStringParameterReader(Request, ResourceGraph);
         }
         
         [Theory]
