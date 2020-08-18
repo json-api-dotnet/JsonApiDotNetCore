@@ -45,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
     public sealed class TestRequestMeta : IRequestMeta
     {
-        public Dictionary<string, object> GetMeta()
+        public IReadOnlyDictionary<string, object> GetMeta()
         {
             return new Dictionary<string, object>
             {

@@ -7,9 +7,7 @@ namespace JsonApiDotNetCore.Controllers
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public sealed class DisableQueryAttribute : Attribute
     {
-        private readonly List<string> _parameterNames;
-
-        public IReadOnlyCollection<string> ParameterNames => _parameterNames.AsReadOnly();
+        public IReadOnlyCollection<string> ParameterNames { get; }
 
         public static readonly DisableQueryAttribute Empty = new DisableQueryAttribute(StandardQueryStringParameters.None);
 
@@ -18,16 +16,18 @@ namespace JsonApiDotNetCore.Controllers
         /// </summary>
         public DisableQueryAttribute(StandardQueryStringParameters parameters)
         {
-            _parameterNames = new List<string>();
+            var parameterNames = new List<string>();
 
             foreach (StandardQueryStringParameters value in Enum.GetValues(typeof(StandardQueryStringParameters)))
             {
                 if (value != StandardQueryStringParameters.None && value != StandardQueryStringParameters.All &&
                     parameters.HasFlag(value))
                 {
-                    _parameterNames.Add(value.ToString().ToLowerInvariant());
+                    parameterNames.Add(value.ToString().ToLowerInvariant());
                 }
             }
+
+            ParameterNames = parameterNames;
         }
 
         /// <summary>
@@ -37,13 +37,13 @@ namespace JsonApiDotNetCore.Controllers
         /// </summary>
         public DisableQueryAttribute(string parameterNames)
         {
-            _parameterNames = parameterNames.Split(",").Select(x => x.Trim().ToLowerInvariant()).ToList();
+            ParameterNames = parameterNames.Split(",").Select(x => x.Trim().ToLowerInvariant()).ToList();
         }
 
         public bool ContainsParameter(StandardQueryStringParameters parameter)
         {
             var name = parameter.ToString().ToLowerInvariant();
-            return _parameterNames.Contains(name);
+            return ParameterNames.Contains(name);
         }
     }
 }

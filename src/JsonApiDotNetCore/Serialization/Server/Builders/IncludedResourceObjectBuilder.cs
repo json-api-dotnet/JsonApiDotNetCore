@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         }
 
         /// <inheritdoc/>
-        public List<ResourceObject> Build()
+        public IList<ResourceObject> Build()
         {
             if (_included.Any())
             {
@@ -42,13 +42,13 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
                     }
                     resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
                 }
-                return _included.ToList();
+                return _included.ToArray();
             }
             return null;
         }
 
         /// <inheritdoc/>
-        public void IncludeRelationshipChain(List<RelationshipAttribute> inclusionChain, IIdentifiable rootResource)
+        public void IncludeRelationshipChain(IReadOnlyCollection<RelationshipAttribute> inclusionChain, IIdentifiable rootResource)
         {
             // We don't have to build a resource object for the root resource because
             // this one is already encoded in the documents primary data, so we process the chain
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             }
         }
 
-        private List<RelationshipAttribute> ShiftChain(List<RelationshipAttribute> chain)
+        private List<RelationshipAttribute> ShiftChain(IReadOnlyCollection<RelationshipAttribute> chain)
         {
             var chainRemainder = chain.ToList();
             chainRemainder.RemoveAt(0);

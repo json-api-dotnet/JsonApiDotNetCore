@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Serialization
                 if (_document.ManyData.Count == 0)
                     return Array.Empty<IIdentifiable>();
 
-                return _document.ManyData.Select(ParseResourceObject).ToList();
+                return _document.ManyData.Select(ParseResourceObject).ToArray();
             }
 
             if (_document.SingleData == null) return null;
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="attributeValues">Attributes and their values, as in the serialized content</param>
         /// <param name="attributes">Exposed attributes for <paramref name="resource"/></param>
         /// <returns></returns>
-        protected virtual IIdentifiable SetAttributes(IIdentifiable resource, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
+        protected virtual IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
         {
             if (attributeValues == null || attributeValues.Count == 0)
                 return resource;
@@ -92,18 +92,18 @@ namespace JsonApiDotNetCore.Serialization
         /// Sets the relationships on a parsed resource
         /// </summary>
         /// <param name="resource">The parsed resource</param>
-        /// <param name="relationshipsValues">Relationships and their values, as in the serialized content</param>
+        /// <param name="relationshipValues">Relationships and their values, as in the serialized content</param>
         /// <param name="relationshipAttributes">Exposed relationships for <paramref name="resource"/></param>
         /// <returns></returns>
-        protected virtual IIdentifiable SetRelationships(IIdentifiable resource, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
+        protected virtual IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipEntry> relationshipValues, IReadOnlyCollection<RelationshipAttribute> relationshipAttributes)
         {
-            if (relationshipsValues == null || relationshipsValues.Count == 0)
+            if (relationshipValues == null || relationshipValues.Count == 0)
                 return resource;
 
             var resourceProperties = resource.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
-                if (!relationshipsValues.TryGetValue(attr.PublicName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
+                if (!relationshipValues.TryGetValue(attr.PublicName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
                     continue;
 
                 if (attr is HasOneAttribute hasOneAttribute)

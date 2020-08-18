@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Serialization.Client
     public abstract class DeserializedResponseBase
     {
         public TopLevelLinks Links { get; set; }
-        public Dictionary<string, object> Meta { get; set; }
+        public IDictionary<string, object> Meta { get; set; }
         public object Errors { get; set; }
         public object JsonApi { get; set; }
     }
@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Serialization.Client
     /// Represents a deserialized document with "single data".
     /// </summary>
     /// <typeparam name="TResource">Type of the resource in the primary data</typeparam>
-    public sealed class DeserializedSingleResponse<TResource> : DeserializedResponseBase where TResource : class, IIdentifiable
+    public sealed class SingleResponse<TResource> : DeserializedResponseBase where TResource : class, IIdentifiable
     { 
         public TResource Data { get; set;  }
     }
@@ -29,8 +29,8 @@ namespace JsonApiDotNetCore.Serialization.Client
     /// Represents a deserialized document with "many data".
     /// </summary>
     /// <typeparam name="TResource">Type of the resource(s) in the primary data</typeparam>
-    public sealed class DeserializedListResponse<TResource> : DeserializedResponseBase where TResource : class, IIdentifiable
+    public sealed class ManyResponse<TResource> : DeserializedResponseBase where TResource : class, IIdentifiable
     {
-        public List<TResource> Data { get; set; }
+        public IReadOnlyCollection<TResource> Data { get; set; }
     }
 }

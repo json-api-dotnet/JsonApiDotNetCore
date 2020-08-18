@@ -77,7 +77,7 @@ namespace UnitTests.Serialization.Client
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeList<TestResource>(body);
+            var result = _deserializer.DeserializeMany<TestResource>(body);
 
             // Assert
             Assert.Empty(result.Data);
@@ -321,7 +321,7 @@ namespace UnitTests.Serialization.Client
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeList<MultipleRelationshipsPrincipalPart>(body);
+            var result = _deserializer.DeserializeMany<MultipleRelationshipsPrincipalPart>(body);
             var resource = result.Data.First();
 
             // Assert

@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var result = _fixture.GetDeserializer().DeserializeList<TodoItem>(body);
+            var result = _fixture.GetDeserializer().DeserializeMany<TodoItem>(body);
             var items = result.Data;
             var meta = result.Meta;
 
@@ -129,7 +129,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var result = _fixture.GetDeserializer().DeserializeList<TodoItem>(body);
+            var result = _fixture.GetDeserializer().DeserializeMany<TodoItem>(body);
 
             // Assert
             Assert.True(result.Data.Count == 20);

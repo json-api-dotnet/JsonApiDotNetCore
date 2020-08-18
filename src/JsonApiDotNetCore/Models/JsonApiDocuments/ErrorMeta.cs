@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
     public sealed class ErrorMeta
     {
         [JsonExtensionData]
-        public Dictionary<string, object> Data { get; } = new Dictionary<string, object>();
+        public IDictionary<string, object> Data { get; } = new Dictionary<string, object>();
 
         public void IncludeExceptionStackTrace(Exception exception)
         {
@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
             else
             {
                 Data["StackTrace"] = exception.Demystify().ToString()
-                    .Split(new[] { "\n" }, int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
+                    .Split("\n", int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
             }
         }
     }

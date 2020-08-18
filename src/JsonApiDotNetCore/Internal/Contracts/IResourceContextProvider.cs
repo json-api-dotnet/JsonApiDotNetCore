@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// <summary>
         /// Gets all registered resource contexts.
         /// </summary>
-        IEnumerable<ResourceContext> GetResourceContexts();
+        IReadOnlyCollection<ResourceContext> GetResourceContexts();
 
         /// <summary>
         /// Get the resource metadata by the DbSet property name

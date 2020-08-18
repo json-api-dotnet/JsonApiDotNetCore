@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 {
     /// <summary>
     /// Builds the top-level meta data object. This builder is generic to allow for
-    /// different top-level meta data object depending on the associated resource of the request.
+    /// different top-level meta data objects depending on the associated resource of the request.
     /// </summary>
     /// <typeparam name="TResource">Associated resource for which to build the meta data</typeparam>
     public interface IMetaBuilder<TResource> where TResource : class, IIdentifiable
@@ -18,10 +18,10 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// Joins the new dictionary with the current one. In the event of a key collision,
         /// the new value will override the old.
         /// </summary>
-        void Add(Dictionary<string,object> values);
+        void Add(IReadOnlyDictionary<string,object> values);
         /// <summary>
         /// Builds the top-level meta data object.
         /// </summary>
-        Dictionary<string, object> GetMeta();
+        IDictionary<string, object> GetMeta();
     }
 }

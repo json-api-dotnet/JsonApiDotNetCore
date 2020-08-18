@@ -18,6 +18,6 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="attributes">Attributes to include in the building process</param>
         /// <param name="relationships">Relationships to include in the building process</param>
         /// <returns>The resource object that was built</returns>
-        ResourceObject Build(IIdentifiable resource, IEnumerable<AttrAttribute> attributes, IEnumerable<RelationshipAttribute> relationships);
+        ResourceObject Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes, IReadOnlyCollection<RelationshipAttribute> relationships);
     }
 }

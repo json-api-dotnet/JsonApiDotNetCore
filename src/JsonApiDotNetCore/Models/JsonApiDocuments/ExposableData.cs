@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Models
         /// Internally used for "many" primary data.
         /// </summary>
         [JsonIgnore]
-        public List<TResource> ManyData { get; private set; }
+        public IList<TResource> ManyData { get; private set; }
 
         /// <summary>
         /// Used to indicate if the document's primary data is "single" or "many".

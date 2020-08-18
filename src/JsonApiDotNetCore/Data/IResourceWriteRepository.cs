@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Data
 
         Task UpdateAsync(TResource requestResource, TResource databaseResource);
 
-        Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
+        Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds);
 
         Task<bool> DeleteAsync(TId id);
 

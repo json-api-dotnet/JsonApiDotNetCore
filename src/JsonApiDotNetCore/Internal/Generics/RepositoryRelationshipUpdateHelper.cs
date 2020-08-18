@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Internal.Generics
         /// <summary>
         /// Processes updates of relationships
         /// </summary>
-        Task UpdateRelationshipAsync(IIdentifiable parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
+        Task UpdateRelationshipAsync(IIdentifiable parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds);
     }
 
     /// <inheritdoc/>
@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Internal.Generics
         }
 
         /// <inheritdoc/>
-        public virtual async Task UpdateRelationshipAsync(IIdentifiable parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
+        public virtual async Task UpdateRelationshipAsync(IIdentifiable parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds)
         {
             if (relationship is HasManyThroughAttribute hasManyThrough)
                 await UpdateManyToManyAsync(parent, hasManyThrough, relationshipIds);
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Internal.Generics
                 await UpdateOneToOneAsync(parent, relationship, relationshipIds);
         }
 
-        private async Task UpdateOneToOneAsync(IIdentifiable parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
+        private async Task UpdateOneToOneAsync(IIdentifiable parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds)
         {
             TRelatedResource value = null;
             if (relationshipIds.Any())
@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Internal.Generics
             relationship.SetValue(parent, value, _resourceFactory);
         }
 
-        private async Task UpdateOneToManyAsync(IIdentifiable parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
+        private async Task UpdateOneToManyAsync(IIdentifiable parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds)
         {
             IEnumerable value;
             if (!relationshipIds.Any())
@@ -102,7 +102,7 @@ namespace JsonApiDotNetCore.Internal.Generics
             relationship.SetValue(parent, value, _resourceFactory);
         }
 
-        private async Task UpdateManyToManyAsync(IIdentifiable parent, HasManyThroughAttribute relationship, IEnumerable<string> relationshipIds)
+        private async Task UpdateManyToManyAsync(IIdentifiable parent, HasManyThroughAttribute relationship, IReadOnlyCollection<string> relationshipIds)
         {
             // we need to create a transaction for the HasManyThrough case so we can get and remove any existing
             // through resources and only commit if all operations are successful

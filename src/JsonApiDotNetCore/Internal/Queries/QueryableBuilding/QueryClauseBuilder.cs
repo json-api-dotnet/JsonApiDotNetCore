@@ -61,12 +61,12 @@ namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
         protected virtual MemberExpression CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute> chain, Expression source)
         {
             var components = chain.Select(field =>
-                field is RelationshipAttribute relationship ? relationship.RelationshipPath : field.Property.Name);
+                field is RelationshipAttribute relationship ? relationship.RelationshipPath : field.Property.Name).ToArray();
             
             return CreatePropertyExpressionFromComponents(source, components);
         }
 
-        protected static MemberExpression CreatePropertyExpressionFromComponents(Expression source, IEnumerable<string> components)
+        protected static MemberExpression CreatePropertyExpressionFromComponents(Expression source, IReadOnlyCollection<string> components)
         {
             MemberExpression property = null;
 

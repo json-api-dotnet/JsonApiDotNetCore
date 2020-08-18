@@ -14,13 +14,13 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// </summary>
         /// <typeparam name="TResource">The type of the resources in the primary data</typeparam>
         /// <param name="body">The JSON to be deserialized</param>
-        DeserializedSingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable;
+        SingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable;
 
         /// <summary>
-        /// Deserializes a response with a (empty) list of resources as data.
+        /// Deserializes a response with an (empty) collection of resources as data.
         /// </summary>
         /// <typeparam name="TResource">The type of the resources in the primary data</typeparam>
         /// <param name="body">The JSON to be deserialized</param>
-        DeserializedListResponse<TResource> DeserializeList<TResource>(string body) where TResource : class, IIdentifiable;
+        ManyResponse<TResource> DeserializeMany<TResource>(string body) where TResource : class, IIdentifiable;
     }
 }

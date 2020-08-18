@@ -89,7 +89,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
         /// <inheritdoc/>
         public IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
-            return _constraints.AsReadOnly();
+            return _constraints;
         }
     }
 }

@@ -167,7 +167,7 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         /// <param name="attributes"></param>
         /// <param name="resources"></param>
-        public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributeDictionary<TValueOut>(List<AttrAttribute> attributes, HashSet<TValueOut> resources)
+        public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributeDictionary<TValueOut>(IEnumerable<AttrAttribute> attributes, HashSet<TValueOut> resources)
         {
             return attributes?.ToDictionary(attr => attr.Property, attr => resources);
         }

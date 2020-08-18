@@ -28,9 +28,9 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
             var statusCodes = Errors
                 .Select(e => (int)e.StatusCode)
                 .Distinct()
-                .ToList();
+                .ToArray();
 
-            if (statusCodes.Count == 1)
+            if (statusCodes.Length == 1)
                 return (HttpStatusCode)statusCodes[0];
 
             var statusCode = int.Parse(statusCodes.Max().ToString()[0] + "00");

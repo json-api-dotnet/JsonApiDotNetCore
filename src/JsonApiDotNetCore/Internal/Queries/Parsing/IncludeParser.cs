@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
             return IncludeChainConverter.FromRelationshipChains(chains);
         }
 
-        private static void ValidateMaximumIncludeDepth(int? maximumDepth, List<ResourceFieldChainExpression> chains)
+        private static void ValidateMaximumIncludeDepth(int? maximumDepth, IReadOnlyCollection<ResourceFieldChainExpression> chains)
         {
             if (maximumDepth != null)
             {

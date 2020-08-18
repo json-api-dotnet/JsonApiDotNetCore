@@ -17,10 +17,10 @@ namespace JsonApiDotNetCore.Serialization.Client
         public ResponseDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory) : base(contextProvider, resourceFactory) { }
 
         /// <inheritdoc/>
-        public DeserializedSingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
+        public SingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
         {
             var resource = Deserialize(body);
-            return new DeserializedSingleResponse<TResource>
+            return new SingleResponse<TResource>
             {
                 Links = _document.Links,
                 Meta = _document.Meta,
@@ -31,14 +31,14 @@ namespace JsonApiDotNetCore.Serialization.Client
         }
 
         /// <inheritdoc/>
-        public DeserializedListResponse<TResource> DeserializeList<TResource>(string body) where TResource : class, IIdentifiable
+        public ManyResponse<TResource> DeserializeMany<TResource>(string body) where TResource : class, IIdentifiable
         {
             var resources = Deserialize(body);
-            return new DeserializedListResponse<TResource>
+            return new ManyResponse<TResource>
             {
                 Links = _document.Links,
                 Meta = _document.Meta,
-                Data = ((ICollection<IIdentifiable>) resources)?.Cast<TResource>().ToList(),
+                Data = ((ICollection<IIdentifiable>) resources)?.Cast<TResource>().ToArray(),
                 JsonApi = null,
                 Errors = null
             };

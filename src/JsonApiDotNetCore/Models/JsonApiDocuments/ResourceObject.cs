@@ -7,10 +7,10 @@ namespace JsonApiDotNetCore.Models
     public sealed class ResourceObject : ResourceIdentifierObject
     {
         [JsonProperty("attributes", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Attributes { get; set; }
+        public IDictionary<string, object> Attributes { get; set; }
 
         [JsonProperty("relationships", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, RelationshipEntry> Relationships { get; set; }
+        public IDictionary<string, RelationshipEntry> Relationships { get; set; }
 
         [JsonProperty("links", NullValueHandling = NullValueHandling.Ignore)]
         public ResourceLinks Links { get; set; }

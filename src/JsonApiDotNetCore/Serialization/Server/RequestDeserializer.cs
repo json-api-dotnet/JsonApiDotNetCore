@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         private readonly ITargetedFields  _targetedFields;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RequestDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory, ITargetedFields  targetedFields, IHttpContextAccessor httpContextAccessor) 
+        public RequestDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory, ITargetedFields targetedFields, IHttpContextAccessor httpContextAccessor) 
             : base(contextProvider, resourceFactory)
         {
             _targetedFields = targetedFields;
@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.Serialization.Server
                 _targetedFields.Relationships.Add(relationship);
         }
 
-        protected override IIdentifiable SetAttributes(IIdentifiable resource, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
+        protected override IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
         {
             if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Patch.Method)
             {
@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Serialization.Server
             return base.SetAttributes(resource, attributeValues, attributes);
         }
 
-        protected override IIdentifiable SetRelationships(IIdentifiable resource, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
+        protected override IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipEntry> relationshipsValues, IReadOnlyCollection<RelationshipAttribute> relationshipAttributes)
         {
             // If there is a relationship included in the data of the POST or PATCH, then the 'IsRequired' attribute will be disabled for any
             // property within that object. For instance, a new article is posted and has a relationship included to an author. In this case,

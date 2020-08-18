@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
         {
             var components = chain.Select(field =>
                 // In case of a HasManyThrough access (from count() function), we only need to look at the number of entries in the join table.
-                field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty.Name : field.Property.Name).ToList();
+                field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty.Name : field.Property.Name).ToArray();
 
             return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
         }

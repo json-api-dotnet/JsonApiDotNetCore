@@ -178,7 +178,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
 
             public IReadOnlyCollection<ExpressionInScope> GetExpressionsInScope()
             {
-                return EnumerateExpressionsInScope().ToList();
+                return EnumerateExpressionsInScope().ToArray();
             }
 
             private IEnumerable<ExpressionInScope> EnumerateExpressionsInScope()

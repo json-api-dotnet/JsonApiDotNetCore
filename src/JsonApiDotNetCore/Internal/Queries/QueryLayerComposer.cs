@@ -113,7 +113,7 @@ namespace JsonApiDotNetCore.Internal.Queries
         }
 
         private IReadOnlyCollection<IncludeElementExpression> ProcessIncludeSet(IReadOnlyCollection<IncludeElementExpression> includeElements, 
-            QueryLayer parentLayer, IList<RelationshipAttribute> parentRelationshipChain, ExpressionInScope[] constraints)
+            QueryLayer parentLayer, ICollection<RelationshipAttribute> parentRelationshipChain, ExpressionInScope[] constraints)
         {
             includeElements = GetIncludeElements(includeElements, parentLayer.ResourceContext) ?? Array.Empty<IncludeElementExpression>();
 
@@ -190,7 +190,7 @@ namespace JsonApiDotNetCore.Internal.Queries
             return includeElements;
         }
 
-        protected virtual FilterExpression GetFilter(IEnumerable<QueryExpression> expressionsInScope, ResourceContext resourceContext)
+        protected virtual FilterExpression GetFilter(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
             var filters = expressionsInScope.OfType<FilterExpression>().ToArray();
             var filter = filters.Length > 1 ? new LogicalExpression(LogicalOperator.And, filters) : filters.FirstOrDefault();
@@ -204,7 +204,7 @@ namespace JsonApiDotNetCore.Internal.Queries
             return filter;
         }
 
-        protected virtual SortExpression GetSort(IEnumerable<QueryExpression> expressionsInScope, ResourceContext resourceContext)
+        protected virtual SortExpression GetSort(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
             var sort = expressionsInScope.OfType<SortExpression>().FirstOrDefault();
 
@@ -223,7 +223,7 @@ namespace JsonApiDotNetCore.Internal.Queries
             return sort;
         }
 
-        protected virtual PaginationExpression GetPagination(IEnumerable<QueryExpression> expressionsInScope, ResourceContext resourceContext)
+        protected virtual PaginationExpression GetPagination(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
             var pagination = expressionsInScope.OfType<PaginationExpression>().FirstOrDefault();
 
@@ -238,7 +238,7 @@ namespace JsonApiDotNetCore.Internal.Queries
             return pagination;
         }
 
-        protected virtual IDictionary<ResourceFieldAttribute, QueryLayer> GetSparseFieldSetProjection(IEnumerable<QueryExpression> expressionsInScope, ResourceContext resourceContext)
+        protected virtual IDictionary<ResourceFieldAttribute, QueryLayer> GetSparseFieldSetProjection(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
             var attributes = expressionsInScope.OfType<SparseFieldSetExpression>().SelectMany(sparseFieldSet => sparseFieldSet.Attributes).ToHashSet();
 

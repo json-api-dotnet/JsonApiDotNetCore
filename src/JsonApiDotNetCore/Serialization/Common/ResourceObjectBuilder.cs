@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <inheritdoc/> 
-        public ResourceObject Build(IIdentifiable resource, IEnumerable<AttrAttribute> attributes = null, IEnumerable<RelationshipAttribute> relationships = null)
+        public ResourceObject Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
         {
             var resourceContext = _provider.GetResourceContext(resource.GetType());
 
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Serialization
             var ro = new ResourceObject { Type = resourceContext.ResourceName, Id = resource.StringId == string.Empty ? null : resource.StringId };
 
             // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
-            if (attributes != null && (attributes = attributes.Where(attr => attr.Property.Name != _identifiablePropertyName)).Any())
+            if (attributes != null && (attributes = attributes.Where(attr => attr.Property.Name != _identifiablePropertyName).ToArray()).Any())
                 ProcessAttributes(resource, attributes, ro);
 
             // populating the top-level "relationship" member of a resource object.

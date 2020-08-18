@@ -74,7 +74,7 @@ namespace JsonApiDotNetCore.Hooks
         public RelationshipsDictionary(Dictionary<RelationshipAttribute, HashSet<TResource>> relationships) : base(relationships) { }
 
         /// <summary>
-        /// Used internally by the ResourceHookExecutor to make live a bit easier with generics
+        /// Used internally by the ResourceHookExecutor to make life a bit easier with generics
         /// </summary>
         internal RelationshipsDictionary(Dictionary<RelationshipAttribute, IEnumerable> relationships)
             : this(TypeHelper.ConvertRelationshipDictionary<TResource>(relationships)) { }

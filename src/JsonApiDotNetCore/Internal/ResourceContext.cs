@@ -35,21 +35,21 @@ namespace JsonApiDotNetCore.Internal
         /// Exposed resource attributes.
         /// See https://jsonapi.org/format/#document-resource-object-attributes.
         /// </summary>
-        public List<AttrAttribute> Attributes { get; set; }
+        public IReadOnlyCollection<AttrAttribute> Attributes { get; set; }
 
         /// <summary>
         /// Exposed resource relationships.
         /// See https://jsonapi.org/format/#document-resource-object-relationships
         /// </summary>
-        public List<RelationshipAttribute> Relationships { get; set; }
+        public IReadOnlyCollection<RelationshipAttribute> Relationships { get; set; }
 
         /// <summary>
         /// Related entities that are not exposed as resource relationships.
         /// </summary>
-        public List<EagerLoadAttribute> EagerLoads { get; set; }
+        public IReadOnlyCollection<EagerLoadAttribute> EagerLoads { get; set; }
 
-        private List<ResourceFieldAttribute> _fields;
-        public List<ResourceFieldAttribute> Fields { get { return _fields ??= Attributes.Cast<ResourceFieldAttribute>().Concat(Relationships).ToList();  } }
+        private IReadOnlyCollection<ResourceFieldAttribute> _fields;
+        public IReadOnlyCollection<ResourceFieldAttribute> Fields { get { return _fields ??= Attributes.Cast<ResourceFieldAttribute>().Concat(Relationships).ToArray();  } }
 
         /// <summary>
         /// Configures which links to show in the <see cref="TopLevelLinks"/>

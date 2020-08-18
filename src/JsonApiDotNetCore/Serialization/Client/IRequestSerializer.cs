@@ -18,23 +18,23 @@ namespace JsonApiDotNetCore.Serialization.Client
         string Serialize(IIdentifiable resource);
 
         /// <summary>
-        /// Creates and serializes a document for a list of resources.
+        /// Creates and serializes a document for a collection of resources.
         /// </summary>
         /// <returns>The serialized content</returns>
-        string Serialize(IEnumerable<IIdentifiable> resources);
+        string Serialize(IReadOnlyCollection<IIdentifiable> resources);
 
         /// <summary>
         /// Sets the attributes that will be included in the serialized payload.
         /// You can use <see cref="IResourceGraph.GetAttributes{TResource}"/>
         /// to conveniently access the desired <see cref="AttrAttribute"/> instances.
         /// </summary>
-        public IEnumerable<AttrAttribute> AttributesToSerialize { set; }
+        public IReadOnlyCollection<AttrAttribute> AttributesToSerialize { set; }
 
         /// <summary>
         /// Sets the relationships that will be included in the serialized payload.
         /// You can use <see cref="IResourceGraph.GetRelationships"/>
         /// to conveniently access the desired <see cref="RelationshipAttribute"/> instances.
         /// </summary>
-        public IEnumerable<RelationshipAttribute> RelationshipsToSerialize { set; }
+        public IReadOnlyCollection<RelationshipAttribute> RelationshipsToSerialize { set; }
     }
 }

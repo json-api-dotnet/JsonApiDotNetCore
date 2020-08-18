@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
@@ -59,7 +60,7 @@ namespace JsonApiDotNetCore.Serialization.Server
 
             if (data is IEnumerable<IIdentifiable> collectionOfIdentifiable)
             {
-                return SerializeMany(collectionOfIdentifiable);
+                return SerializeMany(collectionOfIdentifiable.ToArray());
             }
 
             if (data is ErrorDocument errorDocument)
@@ -111,7 +112,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <remarks>
         /// This method is set internal instead of private for easier testability.
         /// </remarks>
-        internal string SerializeMany(IEnumerable<IIdentifiable> resources)
+        internal string SerializeMany(IReadOnlyCollection<IIdentifiable> resources)
         {
             var (attributes, relationships) = GetFieldsToSerialize();
             var document = Build(resources, attributes, relationships);

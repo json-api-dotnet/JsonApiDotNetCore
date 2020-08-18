@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Exceptions
     /// </summary>
     public class InvalidModelStateException : Exception
     {
-        public IList<Error> Errors { get; }
+        public IReadOnlyCollection<Error> Errors { get; }
 
         public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType,
             bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Exceptions
             Errors = FromModelState(modelState, resourceType, includeExceptionStackTraceInErrors, namingStrategy);
         }
 
-        private static List<Error> FromModelState(ModelStateDictionary modelState, Type resourceType,
+        private static IReadOnlyCollection<Error> FromModelState(ModelStateDictionary modelState, Type resourceType,
             bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
         {
             List<Error> errors = new List<Error>();

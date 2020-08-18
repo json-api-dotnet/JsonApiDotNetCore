@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
             RelationshipEntry relationshipEntry = null;
-            List<List<RelationshipAttribute>> relationshipChains = null;
+            List<IReadOnlyCollection<RelationshipAttribute>> relationshipChains = null;
             if (Equals(relationship, _requestRelationship) || ShouldInclude(relationship, out relationshipChains))
             {
                 relationshipEntry = base.GetRelationshipData(relationship, resource);
@@ -69,21 +69,22 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// Inspects the included relationship chains (see <see cref="IIncludeQueryStringParameterReader"/>
         /// to see if <paramref name="relationship"/> should be included or not.
         /// </summary>
-        private bool ShouldInclude(RelationshipAttribute relationship, out List<List<RelationshipAttribute>> inclusionChain)
+        private bool ShouldInclude(RelationshipAttribute relationship, out List<IReadOnlyCollection<RelationshipAttribute>> inclusionChain)
         {
-            var includes = _constraintProviders
+            var chains = _constraintProviders
                 .SelectMany(p => p.GetConstraints())
                 .Select(expressionInScope => expressionInScope.Expression)
                 .OfType<IncludeExpression>()
+                .SelectMany(IncludeChainConverter.GetRelationshipChains)
                 .ToArray();
 
-            inclusionChain = new List<List<RelationshipAttribute>>();
+            inclusionChain = new List<IReadOnlyCollection<RelationshipAttribute>>();
 
-            foreach (var chain in includes.SelectMany(IncludeChainConverter.GetRelationshipChains))
+            foreach (var chain in chains)
             {
                 if (chain.Fields.First().Equals(relationship))
                 {
-                    inclusionChain.Add(chain.Fields.Cast<RelationshipAttribute>().ToList());
+                    inclusionChain.Add(chain.Fields.Cast<RelationshipAttribute>().ToArray());
                 }
             }
 

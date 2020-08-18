@@ -89,10 +89,10 @@ namespace JsonApiDotNetCore.Graph
         /// GetDerivedGenericTypes(assembly, typeof(ResourceDefinition<>), typeof(Article))
         /// ]]></code>
         /// </example>
-        public static IEnumerable<Type> GetDerivedGenericTypes(Assembly assembly, Type openGenericType, params Type[] genericArguments)
+        public static IReadOnlyCollection<Type> GetDerivedGenericTypes(Assembly assembly, Type openGenericType, params Type[] genericArguments)
         {
             var genericType = openGenericType.MakeGenericType(genericArguments);
-            return GetDerivedTypes(assembly, genericType);
+            return GetDerivedTypes(assembly, genericType).ToArray();
         }
 
         /// <summary>

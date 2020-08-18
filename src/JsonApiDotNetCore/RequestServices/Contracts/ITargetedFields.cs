@@ -9,12 +9,13 @@ namespace JsonApiDotNetCore.Serialization
     public interface ITargetedFields
     {
         /// <summary>
-        /// List of attributes that are updated by a request
+        /// List of attributes that are targeted by a request
         /// </summary>
-        List<AttrAttribute> Attributes { get; set; }
+        IList<AttrAttribute> Attributes { get; set; }
+
         /// <summary>
-        /// List of relationships that are updated by a request
+        /// List of relationships that are targeted by a request
         /// </summary>
-        List<RelationshipAttribute> Relationships { get; set; }
+        IList<RelationshipAttribute> Relationships { get; set; }
     }
 }

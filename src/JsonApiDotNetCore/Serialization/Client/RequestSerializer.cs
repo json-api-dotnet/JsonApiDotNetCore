@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         }
 
         /// <inheritdoc/>
-        public string Serialize(IEnumerable<IIdentifiable> resources)
+        public string Serialize(IReadOnlyCollection<IIdentifiable> resources)
         {
             IIdentifiable resource = null;
             foreach (IIdentifiable item in resources)
@@ -65,17 +65,17 @@ namespace JsonApiDotNetCore.Serialization.Client
         }
 
         /// <inheritdoc/>
-        public IEnumerable<AttrAttribute> AttributesToSerialize { private get; set; }
+        public IReadOnlyCollection<AttrAttribute> AttributesToSerialize { private get; set; }
 
         /// <inheritdoc/>
-        public IEnumerable<RelationshipAttribute> RelationshipsToSerialize { private get; set; }
+        public IReadOnlyCollection<RelationshipAttribute> RelationshipsToSerialize { private get; set; }
 
         /// <summary>
         /// By default, the client serializer includes all attributes in the result,
         /// unless a list of allowed attributes was supplied using the <see cref="AttributesToSerialize"/>
         /// method. For any related resources, attributes are never exposed.
         /// </summary>
-        private List<AttrAttribute> GetAttributesToSerialize(IIdentifiable resource)
+        private IReadOnlyCollection<AttrAttribute> GetAttributesToSerialize(IIdentifiable resource)
         {
             var currentResourceType = resource.GetType();
             if (_currentTargetedResource != currentResourceType)
@@ -86,7 +86,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             if (AttributesToSerialize == null)
                 return _resourceGraph.GetAttributes(currentResourceType);
 
-            return AttributesToSerialize.ToList();
+            return AttributesToSerialize;
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// for resources in the primary data unless explicitly included using
         /// <see cref="RelationshipsToSerialize"/>.
         /// </summary>
-        private List<RelationshipAttribute> GetRelationshipsToSerialize(IIdentifiable resource)
+        private IReadOnlyCollection<RelationshipAttribute> GetRelationshipsToSerialize(IIdentifiable resource)
         {
             var currentResourceType = resource.GetType();
             // only allow relationship attributes to be serialized if they were set using
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             if (RelationshipsToSerialize == null)
                 return _resourceGraph.GetRelationships(currentResourceType);
 
-            return RelationshipsToSerialize.ToList();
+            return RelationshipsToSerialize;
         }
     }
 }

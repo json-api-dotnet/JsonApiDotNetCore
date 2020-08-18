@@ -128,7 +128,7 @@ namespace JsonApiDotNetCore.Internal.QueryStrings
         /// <inheritdoc/>
         public IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
-            return EnumerateFiltersInScopes().ToList().AsReadOnly();
+            return EnumerateFiltersInScopes().ToArray();
         }
 
         private IEnumerable<ExpressionInScope> EnumerateFiltersInScopes()

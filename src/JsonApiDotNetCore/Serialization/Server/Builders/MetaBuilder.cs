@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         }
 
         /// <inheritdoc/>
-        public void Add(Dictionary<string,object> values)
+        public void Add(IReadOnlyDictionary<string,object> values)
         {
             _meta = values.Keys.Union(_meta.Keys)
                 .ToDictionary(key => key, 
@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         }
 
         /// <inheritdoc/>
-        public Dictionary<string, object> GetMeta()
+        public IDictionary<string, object> GetMeta()
         {
             if (_paginationContext.TotalResourceCount != null)
             {

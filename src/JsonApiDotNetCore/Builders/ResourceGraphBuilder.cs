@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Builders
             ResourceDefinitionType = GetResourceDefinitionType(resourceType)
         };
 
-        protected virtual List<AttrAttribute> GetAttributes(Type resourceType)
+        protected virtual IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
         {
             var attributes = new List<AttrAttribute>();
 
@@ -122,7 +122,7 @@ namespace JsonApiDotNetCore.Builders
             return attributes;
         }
 
-        protected virtual List<RelationshipAttribute> GetRelationships(Type resourceType)
+        protected virtual IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType)
         {
             var attributes = new List<RelationshipAttribute>();
             var properties = resourceType.GetProperties();
@@ -199,7 +199,7 @@ namespace JsonApiDotNetCore.Builders
         protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop) =>
             relation is HasOneAttribute ? prop.PropertyType : prop.PropertyType.GetGenericArguments()[0];
 
-        private List<EagerLoadAttribute> GetEagerLoads(Type resourceType, int recursionDepth = 0)
+        private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceType, int recursionDepth = 0)
         {
             if (recursionDepth >= 500)
             {

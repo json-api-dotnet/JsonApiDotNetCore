@@ -7,9 +7,8 @@ namespace JsonApiDotNetCore.Serialization
     public sealed class TargetedFields : ITargetedFields
     {
         /// <inheritdoc/>
-        public List<AttrAttribute> Attributes { get; set; } = new List<AttrAttribute>();
+        public IList<AttrAttribute> Attributes { get; set; } = new List<AttrAttribute>();
         /// <inheritdoc/>
-        public List<RelationshipAttribute> Relationships { get; set; } = new List<RelationshipAttribute>();
+        public IList<RelationshipAttribute> Relationships { get; set; } = new List<RelationshipAttribute>();
     }
-
 }

@@ -68,7 +68,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
+            var deserializedBody = _fixture.GetDeserializer().DeserializeMany<TodoItem>(body).Data;
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

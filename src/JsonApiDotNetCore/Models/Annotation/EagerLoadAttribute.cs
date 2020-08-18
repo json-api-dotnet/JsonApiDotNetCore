@@ -38,6 +38,6 @@ namespace JsonApiDotNetCore.Models.Annotation
     {
         public PropertyInfo Property { get; internal set; }
 
-        public IList<EagerLoadAttribute> Children { get; internal set; }
+        public IReadOnlyCollection<EagerLoadAttribute> Children { get; internal set; }
     }
 }

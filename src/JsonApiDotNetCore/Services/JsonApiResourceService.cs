@@ -121,7 +121,7 @@ namespace JsonApiDotNetCore.Services
             if (_hookExecutor != null)
             {
                 _hookExecutor.AfterRead(resources, ResourcePipeline.Get);
-                return _hookExecutor.OnReturn(resources, ResourcePipeline.Get).ToList();
+                return _hookExecutor.OnReturn(resources, ResourcePipeline.Get).ToArray();
             }
 
             return resources;

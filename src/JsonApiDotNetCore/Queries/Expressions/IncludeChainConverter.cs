@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             IncludeToChainsConverter converter = new IncludeToChainsConverter();
             converter.Visit(include, null);
 
-            return converter.Chains.AsReadOnly();
+            return converter.Chains;
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         ///   }
         /// }
         /// </example>
-        public static IncludeExpression FromRelationshipChains(IEnumerable<ResourceFieldChainExpression> chains)
+        public static IncludeExpression FromRelationshipChains(IReadOnlyCollection<ResourceFieldChainExpression> chains)
         {
             if (chains == null)
             {
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return elements.Any() ? new IncludeExpression(elements) : IncludeExpression.Empty;
         }
 
-        private static IReadOnlyCollection<IncludeElementExpression> ConvertChainsToElements(IEnumerable<ResourceFieldChainExpression> chains)
+        private static IReadOnlyCollection<IncludeElementExpression> ConvertChainsToElements(IReadOnlyCollection<ResourceFieldChainExpression> chains)
         {
             var rootNode = new MutableIncludeNode(null);
 
@@ -90,7 +90,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 }
             }
 
-            return rootNode.Children.Values.Select(child => child.ToExpression()).ToList();
+            return rootNode.Children.Values.Select(child => child.ToExpression()).ToArray();
         }
 
         private sealed class IncludeToChainsConverter : QueryExpressionVisitor<object, object>
@@ -152,7 +152,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             public IncludeElementExpression ToExpression()
             {
-                var elementChildren = Children.Values.Select(child => child.ToExpression()).ToList();
+                var elementChildren = Children.Values.Select(child => child.ToExpression()).ToArray();
                 return new IncludeElementExpression(_relationship, elementChildren);
             }
         }

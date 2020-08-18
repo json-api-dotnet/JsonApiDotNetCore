@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Models
         /// see "meta" in https://jsonapi.org/format/#document-top-level
         /// </summary>
         [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Meta { get; set; }
+        public IDictionary<string, object> Meta { get; set; }
 
         /// <summary>
         /// see "links" in https://jsonapi.org/format/#document-top-level
@@ -25,6 +25,6 @@ namespace JsonApiDotNetCore.Models
         /// see "included" in https://jsonapi.org/format/#document-top-level
         /// </summary>
         [JsonProperty("included", NullValueHandling = NullValueHandling.Ignore, Order = 1)]
-        public List<ResourceObject> Included { get; set; }
+        public IList<ResourceObject> Included { get; set; }
     }
 }

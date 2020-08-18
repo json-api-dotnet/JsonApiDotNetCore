@@ -88,7 +88,7 @@ namespace JsonApiDotNetCore.Data
                 .Where(expressionInScope => expressionInScope.Scope == null)
                 .Select(expressionInScope => expressionInScope.Expression)
                 .OfType<QueryableHandlerExpression>()
-                .ToList();
+                .ToArray();
 
             foreach (var queryableHandler in queryableHandlers)
             {
@@ -250,19 +250,19 @@ namespace JsonApiDotNetCore.Data
                 return GetTrackedHasOneRelationshipValue(relationshipValue, ref wasAlreadyAttached);
             }
 
-            IEnumerable<IIdentifiable> relationshipValueList = (IEnumerable<IIdentifiable>)relationshipAttr.GetValue(resource);
-            if (relationshipValueList == null)
+            IEnumerable<IIdentifiable> relationshipValues = (IEnumerable<IIdentifiable>)relationshipAttr.GetValue(resource);
+            if (relationshipValues == null)
                 return null;
 
-            return GetTrackedManyRelationshipValue(relationshipValueList, relationshipAttr, ref wasAlreadyAttached);
+            return GetTrackedManyRelationshipValue(relationshipValues, relationshipAttr, ref wasAlreadyAttached);
         }
 
         // helper method used in GetTrackedRelationshipValue. See comments below.
-        private IEnumerable GetTrackedManyRelationshipValue(IEnumerable<IIdentifiable> relationshipValueList, RelationshipAttribute relationshipAttr, ref bool wasAlreadyAttached)
+        private IEnumerable GetTrackedManyRelationshipValue(IEnumerable<IIdentifiable> relationshipValues, RelationshipAttribute relationshipAttr, ref bool wasAlreadyAttached)
         {
-            if (relationshipValueList == null) return null;
+            if (relationshipValues == null) return null;
             bool newWasAlreadyAttached = false;
-            var trackedPointerCollection = relationshipValueList.Select(pointer =>
+            var trackedPointerCollection = relationshipValues.Select(pointer =>
                 {
                     // convert each element in the value list to relationshipAttr.DependentType.
                     var tracked = AttachOrGetTracked(pointer);
@@ -284,7 +284,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
+        public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds)
         {
             _logger.LogTrace($"Entering {nameof(UpdateRelationshipsAsync)}({nameof(parent)}, {nameof(relationship)}, {nameof(relationshipIds)}).");
 

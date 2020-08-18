@@ -13,56 +13,56 @@ namespace JsonApiDotNetCore.Internal
     /// </summary>
     public class ResourceGraph : IResourceGraph
     {
-        private List<ResourceContext> Resources { get; }
-        private static readonly Type proxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
+        private readonly IReadOnlyCollection<ResourceContext> _resources;
+        private static readonly Type _proxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
 
-        public ResourceGraph(List<ResourceContext> resources)
+        public ResourceGraph(IReadOnlyCollection<ResourceContext> resources)
         {
-            Resources = resources;
+            _resources = resources;
         }
 
         /// <inheritdoc />
-        public IEnumerable<ResourceContext> GetResourceContexts() => Resources;
+        public IReadOnlyCollection<ResourceContext> GetResourceContexts() => _resources;
         /// <inheritdoc />
         public ResourceContext GetResourceContext(string resourceName)
-            => Resources.SingleOrDefault(e => e.ResourceName == resourceName);
+            => _resources.SingleOrDefault(e => e.ResourceName == resourceName);
         /// <inheritdoc />
         public ResourceContext GetResourceContext(Type resourceType)
             => IsLazyLoadingProxyForResourceType(resourceType) ?
-                Resources.SingleOrDefault(e => e.ResourceType == resourceType.BaseType) :
-                Resources.SingleOrDefault(e => e.ResourceType == resourceType);
+                _resources.SingleOrDefault(e => e.ResourceType == resourceType.BaseType) :
+                _resources.SingleOrDefault(e => e.ResourceType == resourceType);
         /// <inheritdoc />
         public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
             => GetResourceContext(typeof(TResource));
         /// <inheritdoc/>
-        public List<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
+        public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
         {
-            return Getter(selector).ToList();
+            return Getter(selector);
         }
         /// <inheritdoc/>
-        public List<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
+        public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
         {
-            return Getter(selector, FieldFilterType.Attribute).Cast<AttrAttribute>().ToList();
+            return Getter(selector, FieldFilterType.Attribute).Cast<AttrAttribute>().ToArray();
         }
         /// <inheritdoc/>
-        public List<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
+        public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
         {
-            return Getter(selector, FieldFilterType.Relationship).Cast<RelationshipAttribute>().ToList();
+            return Getter(selector, FieldFilterType.Relationship).Cast<RelationshipAttribute>().ToArray();
         }
         /// <inheritdoc/>
-        public List<ResourceFieldAttribute> GetFields(Type type)
+        public IReadOnlyCollection<ResourceFieldAttribute> GetFields(Type type)
         {
-            return GetResourceContext(type).Fields.ToList();
+            return GetResourceContext(type).Fields;
         }
         /// <inheritdoc/>
-        public List<AttrAttribute> GetAttributes(Type type)
+        public IReadOnlyCollection<AttrAttribute> GetAttributes(Type type)
         {
-            return GetResourceContext(type).Attributes.ToList();
+            return GetResourceContext(type).Attributes;
         }
         /// <inheritdoc/>
-        public List<RelationshipAttribute> GetRelationships(Type type)
+        public IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type)
         {
-            return GetResourceContext(type).Relationships.ToList();
+            return GetResourceContext(type).Relationships;
         }
         /// <inheritdoc />
         public RelationshipAttribute GetInverse(RelationshipAttribute relationship)
@@ -73,9 +73,9 @@ namespace JsonApiDotNetCore.Internal
                             .SingleOrDefault(r => r.Property.Name == relationship.InverseNavigation);
         }
 
-        private IEnumerable<ResourceFieldAttribute> Getter<TResource>(Expression<Func<TResource, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where TResource : class, IIdentifiable
+        private IReadOnlyCollection<ResourceFieldAttribute> Getter<TResource>(Expression<Func<TResource, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where TResource : class, IIdentifiable
         {
-            IEnumerable<ResourceFieldAttribute> available;
+            IReadOnlyCollection<ResourceFieldAttribute> available;
             if (type == FieldFilterType.Attribute)
                 available = GetResourceContext(typeof(TResource)).Attributes;
             else if (type == FieldFilterType.Relationship)
@@ -132,7 +132,7 @@ namespace JsonApiDotNetCore.Internal
         }
 
         private bool IsLazyLoadingProxyForResourceType(Type resourceType) =>
-            proxyTargetAccessorType?.IsAssignableFrom(resourceType) ?? false;
+            _proxyTargetAccessorType?.IsAssignableFrom(resourceType) ?? false;
 
         private static Expression RemoveConvert(Expression expression)
             => expression is UnaryExpression unaryExpression

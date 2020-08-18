@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// </summary>
         /// <typeparam name="TResource">The resource for which to retrieve fields</typeparam>
         /// <param name="selector">Should be of the form: (TResource e) => new { e.Field1, e.Field2 }</param>
-        List<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable;
+        IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable;
         /// <summary>
         /// Gets all attributes for <typeparamref name="TResource"/>
         /// that are targeted by the selector. If no selector is provided, all
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// </summary>
         /// <typeparam name="TResource">The resource for which to retrieve attributes</typeparam>
         /// <param name="selector">Should be of the form: (TResource e) => new { e.Attribute1, e.Attribute2 }</param>
-        List<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable;
+        IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable;
         /// <summary>
         /// Gets all relationships for <typeparamref name="TResource"/>
         /// that are targeted by the selector. If no selector is provided, all
@@ -35,22 +35,22 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// </summary>
         /// <typeparam name="TResource">The resource for which to retrieve relationships</typeparam>
         /// <param name="selector">Should be of the form: (TResource e) => new { e.Relationship1, e.Relationship2 }</param>
-        List<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable;
+        IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable;
         /// <summary>
         /// Gets all exposed fields (attributes and relationships) for type <paramref name="type"/>
         /// </summary>
         /// <param name="type">The resource type. Must extend IIdentifiable.</param>
-        List<ResourceFieldAttribute> GetFields(Type type);
+        IReadOnlyCollection<ResourceFieldAttribute> GetFields(Type type);
         /// <summary>
         /// Gets all exposed attributes for type <paramref name="type"/>
         /// </summary>
         /// <param name="type">The resource type. Must extend IIdentifiable.</param>
-        List<AttrAttribute> GetAttributes(Type type);
+        IReadOnlyCollection<AttrAttribute> GetAttributes(Type type);
         /// <summary>
         /// Gets all exposed relationships for type <paramref name="type"/>
         /// </summary>
         /// <param name="type">The resource type. Must extend IIdentifiable.</param>
-        List<RelationshipAttribute> GetRelationships(Type type);
+        IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type);
         /// <summary>
         /// Traverses the resource resourceGraph for the inverse relationship of the provided
         /// <paramref name="relationship"/>;
