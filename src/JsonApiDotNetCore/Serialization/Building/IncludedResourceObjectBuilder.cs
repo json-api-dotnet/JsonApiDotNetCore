@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.Building
 {
-    /// <inheritdoc/>
     public class IncludedResourceObjectBuilder : ResourceObjectBuilder, IIncludedResourceObjectBuilder
     {
         private readonly HashSet<ResourceObject> _included;

@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Repositories
         /// and returns that entity.
         /// </summary>
         internal static TEntity GetTrackedEntity<TEntity>(this DbContext context, TEntity entity)
-            where TEntity : IIdentifiable
+            where TEntity : class, IIdentifiable
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
