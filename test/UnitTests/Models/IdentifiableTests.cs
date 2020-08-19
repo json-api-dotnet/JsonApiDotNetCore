@@ -20,15 +20,15 @@ namespace UnitTests.Models
         }
 
         [Fact]
-        public void GetStringId_Returns_EmptyString_If_Object_Is_Null()
+        public void GetStringId_Returns_Null_If_Object_Is_Default()
         {
             var resource = new IntId();
-            var stringId = resource.ExposedGetStringId(null);
-            Assert.Equal(string.Empty, stringId);
+            var stringId = resource.ExposedGetStringId(default);
+            Assert.Null(stringId);
         }
 
         private sealed class IntId : Identifiable { 
-            public string ExposedGetStringId(object value) => GetStringId(value);
+            public string ExposedGetStringId(int value) => GetStringId(value);
         }
     }
 }

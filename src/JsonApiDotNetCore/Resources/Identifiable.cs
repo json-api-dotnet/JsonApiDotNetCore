@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JsonApiDotNetCore.Resources
@@ -34,23 +34,9 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Convert the provided resource identifier to a string.
         /// </summary>
-        protected virtual string GetStringId(object value)
+        protected virtual string GetStringId(TId value)
         {
-            if(value == null)
-                return string.Empty; // TODO: investigate why not using null, because null would make more sense in serialization
-
-            var type = typeof(TId);
-            var stringValue = value.ToString();
-
-            if (type == typeof(Guid))
-            {
-                var guid = Guid.Parse(stringValue);
-                return guid == Guid.Empty ? string.Empty : stringValue;
-            }
-
-            return stringValue == "0"
-                ? string.Empty
-                : stringValue;
+            return EqualityComparer<TId>.Default.Equals(value, default) ? null : value.ToString();
         }
 
         /// <summary>
@@ -58,9 +44,7 @@ namespace JsonApiDotNetCore.Resources
         /// </summary>
         protected virtual TId GetTypedId(string value)
         {
-            if (value == null)
-                return default;
-            return (TId)TypeHelper.ConvertType(value, typeof(TId));
+            return string.IsNullOrEmpty(value) ? default : (TId)TypeHelper.ConvertType(value, typeof(TId));
         }
     }
 }

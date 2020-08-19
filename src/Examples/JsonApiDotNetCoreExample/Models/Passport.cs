@@ -14,7 +14,7 @@ namespace JsonApiDotNetCoreExample.Models
         private readonly ISystemClock _systemClock;
         private int? _socialSecurityNumber;
 
-        protected override string GetStringId(object value)
+        protected override string GetStringId(int value)
         {
             return HexadecimalObfuscationCodec.Encode(value);
         }
