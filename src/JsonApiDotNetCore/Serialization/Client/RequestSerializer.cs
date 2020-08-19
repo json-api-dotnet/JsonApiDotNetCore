@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             var currentResourceType = resource.GetType();
             // only allow relationship attributes to be serialized if they were set using
             // <see cref="RelationshipsToInclude{T}(Expression{Func{T, dynamic}})"/>
-            // and the current <paramref name="resource"/> is a primary entry.
+            // and the current resource is a primary entry.
             if (RelationshipsToSerialize == null)
                 return _resourceGraph.GetRelationships(currentResourceType);
 

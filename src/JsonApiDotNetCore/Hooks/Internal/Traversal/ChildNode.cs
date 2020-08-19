@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         {
             get
             {
-                return new HashSet<TResource>(_relationshipsFromPreviousLayer.SelectMany(rfpl => rfpl.RightResources));
+                return new HashSet<TResource>(_relationshipsFromPreviousLayer.SelectMany(relationshipGroup => relationshipGroup.RightResources));
             }
         }
 

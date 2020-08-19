@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.AfterRead"/> for every unique
-        /// resource type occuring in parameter <paramref name="resources"/>.
+        /// resource type occurring in parameter <paramref name="resources"/>.
         /// </summary>
         /// <param name="resources">Target resources for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>

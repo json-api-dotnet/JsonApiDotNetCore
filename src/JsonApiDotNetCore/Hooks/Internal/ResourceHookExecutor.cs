@@ -270,7 +270,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                         var dbValues = LoadDbValues(resourceType, uniqueResources, ResourceHook.BeforeUpdateRelationship, relationships);
 
                         // these are the resources of the current node grouped by 
-                        // RelationshipAttributes that occured in the previous layer
+                        // RelationshipAttributes that occurred in the previous layer
                         // so it looks like { HasOneAttribute:owner  =>  owner_new }.
                         // Note that in the BeforeUpdateRelationship hook of Person, 
                         // we want want inverse relationship attribute:
@@ -458,7 +458,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
             Dictionary<RelationshipAttribute, IEnumerable> currentResourcesGrouped = node.RelationshipsFromPreviousLayer.GetRightResources();
             // the relationships attributes in currentResourcesGrouped will be pointing from a 
-            // resource in the previouslayer to a resource in the current (nested) layer.
+            // resource in the previous layer to a resource in the current (nested) layer.
             // For the nested hook we need to replace these attributes with their inverse.
             // See the FireNestedBeforeUpdateHooks method for a more detailed example.
             var resourcesByRelationship = CreateRelationshipHelper(node.ResourceType, ReplaceKeysWithInverseRelationships(currentResourcesGrouped));
