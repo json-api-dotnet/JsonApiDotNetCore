@@ -283,7 +283,7 @@ namespace JsonApiDotNetCore.Repositories
         {
             _logger.LogTrace($"Entering {nameof(UpdateRelationshipsAsync)}({nameof(parent)}, {nameof(relationship)}, {nameof(relationshipIds)}).");
 
-            var typeToUpdate = (relationship is HasManyThroughAttribute hasManyThrough)
+            var typeToUpdate = relationship is HasManyThroughAttribute hasManyThrough
                 ? hasManyThrough.ThroughType
                 : relationship.RightType;
 

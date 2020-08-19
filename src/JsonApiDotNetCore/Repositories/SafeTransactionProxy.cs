@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         public static async Task<IDbContextTransaction> GetOrCreateAsync(DatabaseFacade databaseFacade)
-            => (databaseFacade.CurrentTransaction != null)
+            => databaseFacade.CurrentTransaction != null
                 ? new SafeTransactionProxy(databaseFacade.CurrentTransaction, shouldExecute: false)
                 : new SafeTransactionProxy(await databaseFacade.BeginTransactionAsync(), shouldExecute: true);
 

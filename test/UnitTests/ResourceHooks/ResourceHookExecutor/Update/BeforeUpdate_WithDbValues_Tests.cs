@@ -27,7 +27,7 @@ namespace UnitTests.ResourceHooks
             var todoId = todoList[0].Id;
             var _personId = todoList[0].OneToOnePerson.Id;
             personId = _personId.ToString();
-            var _implicitPersonId = (_personId + 10000);
+            var _implicitPersonId = _personId + 10000;
 
             var implicitTodo = _todoFaker.Generate();
             implicitTodo.Id += 1000;
@@ -210,7 +210,7 @@ namespace UnitTests.ResourceHooks
 
             var getAffectedCheck = resources.GetAffected(e => e.OneToOnePerson).Any();
 
-            return (dbCheck && reqCheck && diffCheck && getAffectedCheck);
+            return dbCheck && reqCheck && diffCheck && getAffectedCheck;
         }
 
         private bool TodoCheck(IRelationshipsDictionary<TodoItem> rh, string checksum)
