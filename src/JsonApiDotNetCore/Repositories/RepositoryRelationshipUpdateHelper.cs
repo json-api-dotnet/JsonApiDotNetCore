@@ -116,7 +116,7 @@ namespace JsonApiDotNetCore.Repositories
 
             _context.AddRange(newLinks);
             await _context.SaveChangesAsync();
-            transaction.Commit();
+            await transaction.CommitAsync();
         }
     }
 }

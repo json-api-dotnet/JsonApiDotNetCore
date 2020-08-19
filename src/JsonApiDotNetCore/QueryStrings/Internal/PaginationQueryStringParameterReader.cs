@@ -14,8 +14,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 {
     public class PaginationQueryStringParameterReader : QueryStringParameterReader, IPaginationQueryStringParameterReader
     {
-        private const string _pageSizeParameterName = "page[size]";
-        private const string _pageNumberParameterName = "page[number]";
+        private const string PageSizeParameterName = "page[size]";
+        private const string PageNumberParameterName = "page[number]";
 
         private readonly IJsonApiOptions _options;
         private readonly PaginationParser _paginationParser;
@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc/>
         public bool CanRead(string parameterName)
         {
-            return parameterName == _pageSizeParameterName || parameterName == _pageNumberParameterName;
+            return parameterName == PageSizeParameterName || parameterName == PageNumberParameterName;
         }
 
         /// <inheritdoc/>
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                     AssertIsCollectionRequest();
                 }
 
-                if (parameterName == _pageSizeParameterName)
+                if (parameterName == PageSizeParameterName)
                 {
                     ValidatePageSize(constraint);
                     _pageSizeConstraint = constraint;

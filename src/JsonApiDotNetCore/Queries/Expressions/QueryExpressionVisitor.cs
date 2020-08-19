@@ -3,7 +3,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Implements the visitor design pattern that enables traversing a <see cref="QueryExpression"/> tree.
     /// </summary>
-    public class QueryExpressionVisitor<TArgument, TResult>
+    public abstract class QueryExpressionVisitor<TArgument, TResult>
     {
         public virtual TResult Visit(QueryExpression expression, TArgument argument)
         {

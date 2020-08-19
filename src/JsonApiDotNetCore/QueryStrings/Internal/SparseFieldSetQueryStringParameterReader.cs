@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
@@ -43,7 +44,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc/>
         public bool CanRead(string parameterName)
         {
-            var isNested = parameterName.StartsWith("fields[") && parameterName.EndsWith("]");
+            var isNested = parameterName.StartsWith("fields[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
             return parameterName == "fields" || isNested;
         }
 

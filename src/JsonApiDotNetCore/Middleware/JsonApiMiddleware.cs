@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -231,7 +232,7 @@ namespace JsonApiDotNetCore.Middleware
         private static bool IsRouteForRelationship(RouteValueDictionary routeValues)
         {
             var actionName = (string)routeValues["action"];
-            return actionName.EndsWith("Relationship");
+            return actionName.EndsWith("Relationship", StringComparison.Ordinal);
         }
     }
 }

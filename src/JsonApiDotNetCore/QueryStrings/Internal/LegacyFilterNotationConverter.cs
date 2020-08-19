@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 
@@ -5,14 +6,14 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 {
     public sealed class LegacyFilterNotationConverter
     {
-        private const string _parameterNamePrefix = "filter[";
-        private const string _parameterNameSuffix = "]";
-        private const string _outputParameterName = "filter";
+        private const string ParameterNamePrefix = "filter[";
+        private const string ParameterNameSuffix = "]";
+        private const string OutputParameterName = "filter";
 
-        private const string _expressionPrefix = "expr:";
-        private const string _notEqualsPrefix = "ne:";
-        private const string _inPrefix = "in:";
-        private const string _notInPrefix = "nin:";
+        private const string ExpressionPrefix = "expr:";
+        private const string NotEqualsPrefix = "ne:";
+        private const string InPrefix = "in:";
+        private const string NotInPrefix = "nin:";
 
         private static readonly Dictionary<string, string> _prefixConversionTable = new Dictionary<string, string>
         {
@@ -26,9 +27,9 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         public (string parameterName, string parameterValue) Convert(string parameterName, string parameterValue)
         {
-            if (parameterValue.StartsWith(_expressionPrefix))
+            if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal))
             {
-                string expression = parameterValue.Substring(_expressionPrefix.Length);
+                string expression = parameterValue.Substring(ExpressionPrefix.Length);
                 return (parameterName, expression);
             }
 
@@ -36,69 +37,69 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             foreach (var (prefix, keyword) in _prefixConversionTable)
             {
-                if (parameterValue.StartsWith(prefix))
+                if (parameterValue.StartsWith(prefix, StringComparison.Ordinal))
                 {
                     var value = parameterValue.Substring(prefix.Length);
                     string escapedValue = EscapeQuotes(value);
                     string expression = $"{keyword}({attributeName},'{escapedValue}')";
 
-                    return (_outputParameterName, expression);
+                    return (OutputParameterName, expression);
                 }
             }
 
-            if (parameterValue.StartsWith(_notEqualsPrefix))
+            if (parameterValue.StartsWith(NotEqualsPrefix, StringComparison.Ordinal))
             {
-                var value = parameterValue.Substring(_notEqualsPrefix.Length);
+                var value = parameterValue.Substring(NotEqualsPrefix.Length);
                 string escapedValue = EscapeQuotes(value);
                 string expression = $"{Keywords.Not}({Keywords.Equals}({attributeName},'{escapedValue}'))";
 
-                return (_outputParameterName, expression);
+                return (OutputParameterName, expression);
             }
 
-            if (parameterValue.StartsWith(_inPrefix))
+            if (parameterValue.StartsWith(InPrefix, StringComparison.Ordinal))
             {
-                string[] valueParts = parameterValue.Substring(_inPrefix.Length).Split(",");
+                string[] valueParts = parameterValue.Substring(InPrefix.Length).Split(",");
                 var valueList = "'" + string.Join("','", valueParts) + "'";
                 string expression = $"{Keywords.Any}({attributeName},{valueList})";
 
-                return (_outputParameterName, expression);
+                return (OutputParameterName, expression);
             }
 
-            if (parameterValue.StartsWith(_notInPrefix))
+            if (parameterValue.StartsWith(NotInPrefix, StringComparison.Ordinal))
             {
-                string[] valueParts = parameterValue.Substring(_notInPrefix.Length).Split(",");
+                string[] valueParts = parameterValue.Substring(NotInPrefix.Length).Split(",");
                 var valueList = "'" + string.Join("','", valueParts) + "'";
                 string expression = $"{Keywords.Not}({Keywords.Any}({attributeName},{valueList}))";
 
-                return (_outputParameterName, expression);
+                return (OutputParameterName, expression);
             }
 
             if (parameterValue == "isnull:")
             {
                 string expression = $"{Keywords.Equals}({attributeName},null)";
-                return (_outputParameterName, expression);
+                return (OutputParameterName, expression);
             }
 
             if (parameterValue == "isnotnull:")
             {
                 string expression = $"{Keywords.Not}({Keywords.Equals}({attributeName},null))";
-                return (_outputParameterName, expression);
+                return (OutputParameterName, expression);
             }
 
             {
                 string escapedValue = EscapeQuotes(parameterValue);
                 string expression = $"{Keywords.Equals}({attributeName},'{escapedValue}')";
 
-                return (_outputParameterName, expression);
+                return (OutputParameterName, expression);
             }
         }
 
         private static string ExtractAttributeName(string parameterName)
         {
-            if (parameterName.StartsWith(_parameterNamePrefix) && parameterName.EndsWith(_parameterNameSuffix))
+            if (parameterName.StartsWith(ParameterNamePrefix, StringComparison.Ordinal) && parameterName.EndsWith(ParameterNameSuffix, StringComparison.Ordinal))
             {
-                string attributeName = parameterName.Substring(_parameterNamePrefix.Length,
-                    parameterName.Length - _parameterNamePrefix.Length - _parameterNameSuffix.Length);
+                string attributeName = parameterName.Substring(ParameterNamePrefix.Length,
+                    parameterName.Length - ParameterNamePrefix.Length - ParameterNameSuffix.Length);
 
                 if (attributeName.Length > 0)
                 {

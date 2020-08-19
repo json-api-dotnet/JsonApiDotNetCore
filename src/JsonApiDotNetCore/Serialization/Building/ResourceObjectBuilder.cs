@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Serialization.Building
     {
         protected readonly IResourceContextProvider _provider;
         private readonly ResourceObjectBuilderSettings _settings;
-        private const string _identifiablePropertyName = nameof(Identifiable.Id);
+        private const string IdentifiablePropertyName = nameof(Identifiable.Id);
 
         public ResourceObjectBuilder(IResourceContextProvider provider, ResourceObjectBuilderSettings settings)
         {
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             var ro = new ResourceObject { Type = resourceContext.ResourceName, Id = resource.StringId == string.Empty ? null : resource.StringId };
 
             // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
-            if (attributes != null && (attributes = attributes.Where(attr => attr.Property.Name != _identifiablePropertyName).ToArray()).Any())
+            if (attributes != null && (attributes = attributes.Where(attr => attr.Property.Name != IdentifiablePropertyName).ToArray()).Any())
                 ProcessAttributes(resource, attributes, ro);
 
             // populating the top-level "relationship" member of a resource object.

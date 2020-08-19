@@ -53,7 +53,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc/>
         public bool CanRead(string parameterName)
         {
-            var isNested = parameterName.StartsWith("filter[") && parameterName.EndsWith("]");
+            var isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
             return parameterName == "filter" || isNested;
         }
 

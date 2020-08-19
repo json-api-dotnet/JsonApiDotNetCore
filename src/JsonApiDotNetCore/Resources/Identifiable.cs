@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Resources
         protected virtual string GetStringId(object value)
         {
             if(value == null)
-                return string.Empty; // todo; investigate why not using null, because null would make more sense in serialization
+                return string.Empty; // TODO: investigate why not using null, because null would make more sense in serialization
 
             var type = typeof(TId);
             var stringValue = value.ToString();
