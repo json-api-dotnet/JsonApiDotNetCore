@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Controllers
     [ServiceFilter(typeof(IQueryStringActionFilter))]
     public abstract class CoreJsonApiController : ControllerBase
     {
-        protected IActionResult Error(Serialization.Objects.Error error)
+        protected IActionResult Error(Error error)
         {
             return Error(new[] {error});
         }

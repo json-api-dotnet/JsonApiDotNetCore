@@ -13,20 +13,20 @@ namespace UnitTests
         public void Errors_Correctly_Infers_Status_Code()
         {
             // Arrange
-            var errors422 = new List<JsonApiDotNetCore.Serialization.Objects.Error>
+            var errors422 = new List<Error>
             {
-                new JsonApiDotNetCore.Serialization.Objects.Error(HttpStatusCode.UnprocessableEntity) {Title = "bad specific"},
-                new JsonApiDotNetCore.Serialization.Objects.Error(HttpStatusCode.UnprocessableEntity) {Title = "bad other specific"}
+                new Error(HttpStatusCode.UnprocessableEntity) {Title = "bad specific"},
+                new Error(HttpStatusCode.UnprocessableEntity) {Title = "bad other specific"}
             };
 
-            var errors400 = new List<JsonApiDotNetCore.Serialization.Objects.Error>
+            var errors400 = new List<Error>
             {
-                new JsonApiDotNetCore.Serialization.Objects.Error(HttpStatusCode.OK) {Title = "weird"},
-                new JsonApiDotNetCore.Serialization.Objects.Error(HttpStatusCode.BadRequest) {Title = "bad"},
-                new JsonApiDotNetCore.Serialization.Objects.Error(HttpStatusCode.UnprocessableEntity) {Title = "bad specific"},
+                new Error(HttpStatusCode.OK) {Title = "weird"},
+                new Error(HttpStatusCode.BadRequest) {Title = "bad"},
+                new Error(HttpStatusCode.UnprocessableEntity) {Title = "bad specific"},
             };
 
-            var errors500 = new List<JsonApiDotNetCore.Serialization.Objects.Error>
+            var errors500 = new List<Error>
             {
                 new Error(HttpStatusCode.OK) {Title = "weird"},
                 new Error(HttpStatusCode.BadRequest) {Title = "bad"},
