@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Serialization
     {
         private readonly IJsonApiDeserializer _deserializer;
         private readonly IJsonApiRequest _request;
-        private readonly ILogger<JsonApiReader> _logger;
+        private readonly TraceLogWriter<JsonApiReader> _traceWriter;
 
         public JsonApiReader(IJsonApiDeserializer deserializer,
             IJsonApiRequest request,
@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             _deserializer = deserializer;
             _request = request;
-            _logger = loggerFactory.CreateLogger<JsonApiReader>();
+            _traceWriter = new TraceLogWriter<JsonApiReader>(loggerFactory);
         }
 
         public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Serialization
             string body = await GetRequestBody(context.HttpContext.Request.Body);
 
             string url = context.HttpContext.Request.GetEncodedUrl();
-            _logger.LogTrace($"Received request at '{url}' with body: <<{body}>>");
+            _traceWriter.LogMessage(() => $"Received request at '{url}' with body: <<{body}>>");
 
             object model;
             try

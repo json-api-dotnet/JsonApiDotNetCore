@@ -2,6 +2,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace JsonApiDotNetCore.Controllers
         private readonly IUpdateService<TResource, TId> _update;
         private readonly IUpdateRelationshipService<TResource, TId> _updateRelationships;
         private readonly IDeleteService<TResource, TId> _delete;
-        private readonly ILogger<BaseJsonApiController<TResource, TId>> _logger;
+        private readonly TraceLogWriter<BaseJsonApiController<TResource, TId>> _traceWriter;
 
         protected BaseJsonApiController(
             IJsonApiOptions options,
@@ -52,7 +53,7 @@ namespace JsonApiDotNetCore.Controllers
             IDeleteService<TResource, TId> delete = null)
         {
             _options = options;
-            _logger = loggerFactory.CreateLogger<BaseJsonApiController<TResource, TId>>();
+            _traceWriter = new TraceLogWriter<BaseJsonApiController<TResource, TId>>(loggerFactory);
             _getAll = getAll;
             _getById = getById;
             _getSecondary = getSecondary;
@@ -65,7 +66,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetAsync()
         {
-            _logger.LogTrace($"Entering {nameof(GetAsync)}().");
+            _traceWriter.LogMethodStart();
 
             if (_getAll == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var resources = await _getAll.GetAsync();
@@ -74,7 +75,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetAsync(TId id)
         {
-            _logger.LogTrace($"Entering {nameof(GetAsync)}('{id}').");
+            _traceWriter.LogMethodStart(new {id});
 
             if (_getById == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var resource = await _getById.GetAsync(id);
@@ -83,7 +84,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
-            _logger.LogTrace($"Entering {nameof(GetRelationshipAsync)}('{id}', '{relationshipName}').");
+            _traceWriter.LogMethodStart(new {id, relationshipName});
 
             if (_getRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
@@ -93,7 +94,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName)
         {
-            _logger.LogTrace($"Entering {nameof(GetSecondaryAsync)}('{id}', '{relationshipName}').");
+            _traceWriter.LogMethodStart(new {id, relationshipName});
 
             if (_getSecondary == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var relationship = await _getSecondary.GetSecondaryAsync(id, relationshipName);
@@ -102,7 +103,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> PostAsync([FromBody] TResource resource)
         {
-            _logger.LogTrace($"Entering {nameof(PostAsync)}({(resource == null ? "null" : "object")}).");
+            _traceWriter.LogMethodStart(new {resource});
 
             if (_create == null)
                 throw new RequestMethodNotAllowedException(HttpMethod.Post);
@@ -126,7 +127,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource)
         {
-            _logger.LogTrace($"Entering {nameof(PatchAsync)}('{id}', {(resource == null ? "null" : "object")}).");
+            _traceWriter.LogMethodStart(new {id, resource});
 
             if (_update == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
             if (resource == null)
@@ -144,7 +145,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object relationships)
         {
-            _logger.LogTrace($"Entering {nameof(PatchRelationshipAsync)}('{id}', '{relationshipName}', {(relationships == null ? "null" : "object")}).");
+            _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
 
             if (_updateRelationships == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
             await _updateRelationships.UpdateRelationshipAsync(id, relationshipName, relationships);
@@ -153,7 +154,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> DeleteAsync(TId id)
         {
-            _logger.LogTrace($"Entering {nameof(DeleteAsync)}('{id}).");
+            _traceWriter.LogMethodStart(new {id});
 
             if (_delete == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
             await _delete.DeleteAsync(id);

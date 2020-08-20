@@ -24,8 +24,8 @@ namespace JsonApiDotNetCore.Services
         private readonly IQueryLayerComposer _queryLayerComposer;
         private readonly IPaginationContext _paginationContext;
         private readonly IJsonApiOptions _options;
+        private readonly TraceLogWriter<JsonApiResourceService<TResource, TId>> _traceWriter;
         private readonly IJsonApiRequest _request;
-        private readonly ILogger _logger;
         private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
         private readonly IResourceFactory _resourceFactory;
         private readonly IResourceHookExecutor _hookExecutor;
@@ -45,8 +45,8 @@ namespace JsonApiDotNetCore.Services
             _queryLayerComposer = queryLayerComposer;
             _paginationContext = paginationContext;
             _options = options;
+            _traceWriter = new TraceLogWriter<JsonApiResourceService<TResource, TId>>(loggerFactory);
             _request = request;
-            _logger = loggerFactory.CreateLogger<JsonApiResourceService<TResource, TId>>();
             _resourceChangeTracker = resourceChangeTracker;
             _resourceFactory = resourceFactory;
             _hookExecutor = hookExecutor;
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<TResource> CreateAsync(TResource resource)
         {
-            _logger.LogTrace($"Entering {nameof(CreateAsync)}(object).");
+            _traceWriter.LogMethodStart(new {resource});
 
             if (_hookExecutor != null)
             {
@@ -76,7 +76,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task DeleteAsync(TId id)
         {
-            _logger.LogTrace($"Entering {nameof(DeleteAsync)}('{id}').");
+            _traceWriter.LogMethodStart(new {id});
 
             if (_hookExecutor != null)
             {
@@ -104,7 +104,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<IReadOnlyCollection<TResource>> GetAsync()
         {
-            _logger.LogTrace($"Entering {nameof(GetAsync)}().");
+            _traceWriter.LogMethodStart();
 
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.Get);
 
@@ -128,7 +128,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<TResource> GetAsync(TId id)
         {
-            _logger.LogTrace($"Entering {nameof(GetAsync)}('{id}').");
+            _traceWriter.LogMethodStart(new {id});
 
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetSingle, id.ToString());
 
@@ -179,7 +179,7 @@ namespace JsonApiDotNetCore.Services
         // triggered by GET /articles/1/relationships/{relationshipName}
         public virtual async Task<TResource> GetRelationshipAsync(TId id, string relationshipName)
         {
-            _logger.LogTrace($"Entering {nameof(GetRelationshipAsync)}('{id}', '{relationshipName}').");
+            _traceWriter.LogMethodStart(new {id, relationshipName});
 
             AssertRelationshipExists(relationshipName);
 
@@ -214,7 +214,7 @@ namespace JsonApiDotNetCore.Services
         // triggered by GET /articles/1/{relationshipName}
         public virtual async Task<object> GetSecondaryAsync(TId id, string relationshipName)
         {
-            _logger.LogTrace($"Entering {nameof(GetSecondaryAsync)}('{id}', '{relationshipName}').");
+            _traceWriter.LogMethodStart(new {id, relationshipName});
 
             AssertRelationshipExists(relationshipName);
 
@@ -268,7 +268,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<TResource> UpdateAsync(TId id, TResource requestResource)
         {
-            _logger.LogTrace($"Entering {nameof(UpdateAsync)}('{id}', {(requestResource == null ? "null" : "object")}).");
+            _traceWriter.LogMethodStart(new {id, requestResource});
 
             TResource databaseResource = await GetPrimaryResourceById(id, false);
 
@@ -299,7 +299,7 @@ namespace JsonApiDotNetCore.Services
         // triggered by PATCH /articles/1/relationships/{relationshipName}
         public virtual async Task UpdateRelationshipAsync(TId id, string relationshipName, object related)
         {
-            _logger.LogTrace($"Entering {nameof(UpdateRelationshipAsync)}('{id}', '{relationshipName}', {(related == null ? "null" : "object")}).");
+            _traceWriter.LogMethodStart(new {id, relationshipName, related});
 
             AssertRelationshipExists(relationshipName);
 

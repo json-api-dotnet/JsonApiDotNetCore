@@ -23,14 +23,13 @@ namespace JsonApiDotNetCore.Serialization
     {
         private readonly IJsonApiSerializer _serializer;
         private readonly IExceptionHandler _exceptionHandler;
-        private readonly ILogger<JsonApiWriter> _logger;
+        private readonly TraceLogWriter<JsonApiWriter> _traceWriter;
 
         public JsonApiWriter(IJsonApiSerializer serializer, IExceptionHandler exceptionHandler, ILoggerFactory loggerFactory)
         {
             _serializer = serializer;
             _exceptionHandler = exceptionHandler;
-
-            _logger = loggerFactory.CreateLogger<JsonApiWriter>();
+            _traceWriter = new TraceLogWriter<JsonApiWriter>(loggerFactory);
         }
 
         public async Task WriteAsync(OutputFormatterWriteContext context)
@@ -63,7 +62,7 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             var url = context.HttpContext.Request.GetEncodedUrl();
-            _logger.LogTrace($"Sending {response.StatusCode} response for request at '{url}' with body: <<{responseContent}>>");
+            _traceWriter.LogMessage(() => $"Sending {response.StatusCode} response for request at '{url}' with body: <<{responseContent}>>");
 
             await writer.WriteAsync(responseContent);
             await writer.FlushAsync();

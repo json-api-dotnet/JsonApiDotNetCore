@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
@@ -26,7 +27,7 @@ namespace JsonApiDotNetCore.Repositories
         private readonly IGenericServiceFactory _genericServiceFactory;
         private readonly IResourceFactory _resourceFactory;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
-        private readonly ILogger<EntityFrameworkCoreRepository<TResource, TId>> _logger;
+        private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
 
         public EntityFrameworkCoreRepository(
             ITargetedFields targetedFields,
@@ -43,13 +44,13 @@ namespace JsonApiDotNetCore.Repositories
             _resourceFactory = resourceFactory;
             _constraintProviders = constraintProviders;
             _dbContext = contextResolver.GetContext();
-            _logger = loggerFactory.CreateLogger<EntityFrameworkCoreRepository<TResource, TId>>();
+            _traceWriter = new TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>>(loggerFactory);
         }
 
         /// <inheritdoc />
         public virtual async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer)
         {
-            _logger.LogTrace($"Entering {nameof(GetAsync)}('{layer}').");
+            _traceWriter.LogMethodStart(new {layer});
 
             if (layer == null)
             {
@@ -63,7 +64,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual async Task<int> CountAsync(FilterExpression topFilter)
         {
-            _logger.LogTrace($"Entering {nameof(CountAsync)}('{topFilter}').");
+            _traceWriter.LogMethodStart(new {topFilter});
 
             var resourceContext = _resourceGraph.GetResourceContext<TResource>();
             var layer = new QueryLayer(resourceContext)
@@ -106,7 +107,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual async Task CreateAsync(TResource resource)
         {
-            _logger.LogTrace($"Entering {nameof(CreateAsync)}({(resource == null ? "null" : "object")}).");
+            _traceWriter.LogMethodStart(new {resource});
 
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
@@ -204,7 +205,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual async Task UpdateAsync(TResource requestResource, TResource databaseResource)
         {
-            _logger.LogTrace($"Entering {nameof(UpdateAsync)}({(requestResource == null ? "null" : "object")}, {(databaseResource == null ? "null" : "object")}).");
+            _traceWriter.LogMethodStart(new {requestResource, databaseResource});
 
             foreach (var attribute in _targetedFields.Attributes)
                 attribute.SetValue(databaseResource, attribute.GetValue(requestResource));
@@ -281,7 +282,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds)
         {
-            _logger.LogTrace($"Entering {nameof(UpdateRelationshipsAsync)}({nameof(parent)}, {nameof(relationship)}, {nameof(relationshipIds)}).");
+            _traceWriter.LogMethodStart(new {parent, relationship, relationshipIds});
 
             var typeToUpdate = relationship is HasManyThroughAttribute hasManyThrough
                 ? hasManyThrough.ThroughType
@@ -296,7 +297,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual async Task<bool> DeleteAsync(TId id)
         {
-            _logger.LogTrace($"Entering {nameof(DeleteAsync)}('{id}').");
+            _traceWriter.LogMethodStart(new {id});
 
             var resourceToDelete = _resourceFactory.CreateInstance<TResource>();
             resourceToDelete.Id = id;
@@ -326,7 +327,7 @@ namespace JsonApiDotNetCore.Repositories
 
         public virtual void FlushFromCache(TResource resource)
         {
-            _logger.LogTrace($"Entering {nameof(FlushFromCache)}({nameof(resource)}).");
+            _traceWriter.LogMethodStart(new {resource});
 
             _dbContext.Entry(resource).State = EntityState.Detached;
         }
