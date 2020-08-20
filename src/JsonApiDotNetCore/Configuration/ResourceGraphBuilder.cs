@@ -17,7 +17,9 @@ namespace JsonApiDotNetCore.Configuration
 
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
-            _options = options;
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
         }
 
@@ -50,6 +52,8 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public IResourceGraphBuilder AddResource(Type resourceType, Type idType = null, string pluralizedTypeName = null)
         {
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+
             if (_resources.All(e => e.ResourceType != resourceType))
             {
                 if (TypeHelper.IsOrImplementsInterface(resourceType, typeof(IIdentifiable)))
@@ -81,6 +85,8 @@ namespace JsonApiDotNetCore.Configuration
 
         protected virtual IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
         {
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+
             var attributes = new List<AttrAttribute>();
 
             foreach (var property in resourceType.GetProperties())
@@ -120,6 +126,8 @@ namespace JsonApiDotNetCore.Configuration
 
         protected virtual IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType)
         {
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+
             var attributes = new List<RelationshipAttribute>();
             var properties = resourceType.GetProperties();
             foreach (var prop in properties)
@@ -192,8 +200,13 @@ namespace JsonApiDotNetCore.Configuration
             return null;
         }
 
-        protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop) =>
-            relation is HasOneAttribute ? prop.PropertyType : prop.PropertyType.GetGenericArguments()[0];
+        protected virtual Type GetRelationshipType(RelationshipAttribute relationship, PropertyInfo property)
+        {
+            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
+            if (property == null) throw new ArgumentNullException(nameof(property));
+
+            return relationship is HasOneAttribute ? property.PropertyType : property.PropertyType.GetGenericArguments()[0];
+        }
 
         private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceType, int recursionDepth = 0)
         {

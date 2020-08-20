@@ -15,11 +15,11 @@ namespace JsonApiDotNetCore.Serialization
     /// </summary>
     public abstract class BaseSerializer
     {
-        protected readonly IResourceObjectBuilder _resourceObjectBuilder;
+        protected IResourceObjectBuilder ResourceObjectBuilder { get; }
 
         protected BaseSerializer(IResourceObjectBuilder resourceObjectBuilder)
         {
-            _resourceObjectBuilder = resourceObjectBuilder;
+            ResourceObjectBuilder = resourceObjectBuilder ?? throw new ArgumentNullException(nameof(resourceObjectBuilder));
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Serialization
             if (resource == null)
                 return new Document();
 
-            return new Document { Data = _resourceObjectBuilder.Build(resource, attributes, relationships) };
+            return new Document { Data = ResourceObjectBuilder.Build(resource, attributes, relationships) };
         }
 
         /// <summary>
@@ -48,15 +48,19 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns>The resource object that was built</returns>
         protected Document Build(IReadOnlyCollection<IIdentifiable> resources, IReadOnlyCollection<AttrAttribute> attributes, IReadOnlyCollection<RelationshipAttribute> relationships)
         {
+            if (resources == null) throw new ArgumentNullException(nameof(resources));
+
             var data = new List<ResourceObject>();
             foreach (IIdentifiable resource in resources)
-                data.Add(_resourceObjectBuilder.Build(resource, attributes, relationships));
+                data.Add(ResourceObjectBuilder.Build(resource, attributes, relationships));
 
             return new Document { Data = data };
         }
 
         protected string SerializeObject(object value, JsonSerializerSettings defaultSettings, Action<JsonSerializer> changeSerializer = null)
         {
+            if (defaultSettings == null) throw new ArgumentNullException(nameof(defaultSettings));
+
             JsonSerializer serializer = JsonSerializer.CreateDefault(defaultSettings);
             changeSerializer?.Invoke(serializer);
 

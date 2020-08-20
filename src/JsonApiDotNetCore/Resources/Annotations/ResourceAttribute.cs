@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     {
         public ResourceAttribute(string resourceName)
         {
-            ResourceName = resourceName;
+            ResourceName = resourceName ?? throw new ArgumentNullException(nameof(resourceName));
         }
 
         public string ResourceName { get; }

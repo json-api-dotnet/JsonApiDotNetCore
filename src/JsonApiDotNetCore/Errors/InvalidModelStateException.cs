@@ -20,6 +20,10 @@ namespace JsonApiDotNetCore.Errors
         public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType,
             bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
         {
+            if (modelState == null) throw new ArgumentNullException(nameof(modelState));
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            if (namingStrategy == null) throw new ArgumentNullException(nameof(namingStrategy));
+            
             Errors = FromModelState(modelState, resourceType, includeExceptionStackTraceInErrors, namingStrategy);
         }
 
@@ -28,15 +32,14 @@ namespace JsonApiDotNetCore.Errors
         {
             List<Error> errors = new List<Error>();
 
-            foreach (var pair in modelState.Where(x => x.Value.Errors.Any()))
+            foreach (var (propertyName, entry) in modelState.Where(x => x.Value.Errors.Any()))
             {
-                var propertyName = pair.Key;
                 PropertyInfo property = resourceType.GetProperty(propertyName);
 
                 string attributeName =
                     property.GetCustomAttribute<AttrAttribute>().PublicName ?? namingStrategy.GetPropertyName(property.Name, false);
 
-                foreach (var modelError in pair.Value.Errors)
+                foreach (var modelError in entry.Errors)
                 {
                     if (modelError.Exception is JsonApiException jsonApiException)
                     {

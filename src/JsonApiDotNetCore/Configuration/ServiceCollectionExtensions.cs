@@ -21,6 +21,8 @@ namespace JsonApiDotNetCore.Configuration
             Action<IResourceGraphBuilder> resources = null,
             IMvcCoreBuilder mvcBuilder = null)
         {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, null);
             ResolveInverseRelationships(services);
 
@@ -37,6 +39,8 @@ namespace JsonApiDotNetCore.Configuration
             IMvcCoreBuilder mvcBuilder = null)
             where TDbContext : DbContext
         {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, typeof(TDbContext));
             ResolveInverseRelationships(services);
 
@@ -72,6 +76,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public static IServiceCollection AddClientSerialization(this IServiceCollection services)
         {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+
             services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
             services.AddScoped<IRequestSerializer>(sp =>
             {
@@ -87,6 +93,8 @@ namespace JsonApiDotNetCore.Configuration
         /// <exception cref="InvalidConfigurationException"/>
         public static IServiceCollection AddResourceService<TService>(this IServiceCollection services)
         {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+
             var typeImplementsAnExpectedInterface = false;
 
             var serviceImplementationType = typeof(TService);
@@ -116,7 +124,7 @@ namespace JsonApiDotNetCore.Configuration
                 }
             }
 
-            if (typeImplementsAnExpectedInterface == false)
+            if (!typeImplementsAnExpectedInterface)
                 throw new InvalidConfigurationException($"{serviceImplementationType} does not implement any of the expected JsonApiDotNetCore interfaces.");
 
             return services;

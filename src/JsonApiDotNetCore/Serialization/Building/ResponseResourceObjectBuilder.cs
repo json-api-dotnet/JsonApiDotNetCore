@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
@@ -20,18 +21,20 @@ namespace JsonApiDotNetCore.Serialization.Building
         public ResponseResourceObjectBuilder(ILinkBuilder linkBuilder,
                                              IIncludedResourceObjectBuilder includedBuilder,
                                              IEnumerable<IQueryConstraintProvider> constraintProviders,
-                                             IResourceContextProvider provider,
+                                             IResourceContextProvider resourceContextProvider,
                                              IResourceObjectBuilderSettingsProvider settingsProvider)
-            : base(provider, settingsProvider.Get())
+            : base(resourceContextProvider, settingsProvider.Get())
         {
-            _linkBuilder = linkBuilder;
-            _includedBuilder = includedBuilder;
-            _constraintProviders = constraintProviders;
+            _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
+            _includedBuilder = includedBuilder ?? throw new ArgumentNullException(nameof(includedBuilder));
+            _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
         }
 
         public RelationshipEntry Build(IIdentifiable resource, RelationshipAttribute requestRelationship)
         {
-            _requestRelationship = requestRelationship;
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
+            _requestRelationship = requestRelationship ?? throw new ArgumentNullException(nameof(requestRelationship));
             return GetRelationshipData(requestRelationship, resource);
         }
 
@@ -44,6 +47,9 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
+            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
             RelationshipEntry relationshipEntry = null;
             List<IReadOnlyCollection<RelationshipAttribute>> relationshipChains = null;
             if (Equals(relationship, _requestRelationship) || ShouldInclude(relationship, out relationshipChains))

@@ -13,16 +13,18 @@ namespace JsonApiDotNetCore.Serialization.Client
     /// </summary>
     public class ResponseDeserializer : BaseDeserializer, IResponseDeserializer
     {
-        public ResponseDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory) : base(contextProvider, resourceFactory) { }
+        public ResponseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory) : base(resourceContextProvider, resourceFactory) { }
 
         /// <inheritdoc/>
         public SingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
         {
-            var resource = Deserialize(body);
+            if (body == null) throw new ArgumentNullException(nameof(body));
+
+            var resource = DeserializeBody(body);
             return new SingleResponse<TResource>
             {
-                Links = _document.Links,
-                Meta = _document.Meta,
+                Links = Document.Links,
+                Meta = Document.Meta,
                 Data = (TResource) resource,
                 JsonApi = null,
                 Errors = null
@@ -32,11 +34,13 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <inheritdoc/>
         public ManyResponse<TResource> DeserializeMany<TResource>(string body) where TResource : class, IIdentifiable
         {
-            var resources = Deserialize(body);
+            if (body == null) throw new ArgumentNullException(nameof(body));
+
+            var resources = DeserializeBody(body);
             return new ManyResponse<TResource>
             {
-                Links = _document.Links,
-                Meta = _document.Meta,
+                Links = Document.Links,
+                Meta = Document.Meta,
                 Data = ((ICollection<IIdentifiable>) resources)?.Cast<TResource>().ToArray(),
                 JsonApi = null,
                 Errors = null
@@ -53,25 +57,28 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <param name="data">Relationship data for <paramref name="resource"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
         protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null)
         {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            if (field == null) throw new ArgumentNullException(nameof(field));
+
             // Client deserializers do not need additional processing for attributes.
             if (field is AttrAttribute)
                 return;
 
             // if the included property is empty or absent, there is no additional data to be parsed.
-            if (_document.Included == null || _document.Included.Count == 0)
+            if (Document.Included == null || Document.Included.Count == 0)
                 return;
 
             if (field is HasOneAttribute hasOneAttr)
             {
                 // add attributes and relationships of a parsed HasOne relationship
                 var rio = data.SingleData;
-                hasOneAttr.SetValue(resource, rio == null ? null : ParseIncludedRelationship(hasOneAttr, rio), _resourceFactory);
+                hasOneAttr.SetValue(resource, rio == null ? null : ParseIncludedRelationship(hasOneAttr, rio), ResourceFactory);
             }
             else if (field is HasManyAttribute hasManyAttr)
             {  // add attributes and relationships of a parsed HasMany relationship
                 var items = data.ManyData.Select(rio => ParseIncludedRelationship(hasManyAttr, rio));
                 var values = TypeHelper.CopyToTypedCollection(items, hasManyAttr.Property.PropertyType);
-                hasManyAttr.SetValue(resource, values, _resourceFactory);
+                hasManyAttr.SetValue(resource, values, ResourceFactory);
             }
         }
 
@@ -80,14 +87,14 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// </summary>
         private IIdentifiable ParseIncludedRelationship(RelationshipAttribute relationshipAttr, ResourceIdentifierObject relatedResourceIdentifier)
         {
-            var relatedInstance = (IIdentifiable)_resourceFactory.CreateInstance(relationshipAttr.RightType);
+            var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(relationshipAttr.RightType);
             relatedInstance.StringId = relatedResourceIdentifier.Id;
 
             var includedResource = GetLinkedResource(relatedResourceIdentifier);
             if (includedResource == null)
                 return relatedInstance;
 
-            var resourceContext = _contextProvider.GetResourceContext(relatedResourceIdentifier.Type);
+            var resourceContext = ResourceContextProvider.GetResourceContext(relatedResourceIdentifier.Type);
             if (resourceContext == null)
                 throw new InvalidOperationException($"Included type '{relationshipAttr.RightType}' is not a registered json:api resource.");
 
@@ -100,7 +107,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         {
             try
             {
-                return _document.Included.SingleOrDefault(r => r.Type == relatedResourceIdentifier.Type && r.Id == relatedResourceIdentifier.Id);
+                return Document.Included.SingleOrDefault(r => r.Type == relatedResourceIdentifier.Type && r.Id == relatedResourceIdentifier.Id);
             }
             catch (InvalidOperationException e)
             {

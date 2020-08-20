@@ -1,3 +1,4 @@
+using System;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace JsonApiDotNetCore.Configuration
 
         public InverseRelationships(IResourceContextProvider provider, IDbContextResolver resolver = null)
         {
-            _provider = provider;
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             _resolver = resolver;
         }
 

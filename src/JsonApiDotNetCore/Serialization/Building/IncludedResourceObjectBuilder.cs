@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +17,13 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         public IncludedResourceObjectBuilder(IFieldsToSerialize fieldsToSerialize,
                                              ILinkBuilder linkBuilder,
-                                             IResourceContextProvider provider,
+                                             IResourceContextProvider resourceContextProvider,
                                              IResourceObjectBuilderSettingsProvider settingsProvider)
-            : base(provider, settingsProvider.Get())
+            : base(resourceContextProvider, settingsProvider.Get())
         {
-            _included = new HashSet<ResourceObject>(new ResourceObjectComparer());
-            _fieldsToSerialize = fieldsToSerialize;
-            _linkBuilder = linkBuilder;
+            _included = new HashSet<ResourceObject>(ResourceIdentifierObjectComparer.Instance);
+            _fieldsToSerialize = fieldsToSerialize ?? throw new ArgumentNullException(nameof(fieldsToSerialize));
+            _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
         }
 
         /// <inheritdoc/>
@@ -49,6 +50,9 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <inheritdoc/>
         public void IncludeRelationshipChain(IReadOnlyCollection<RelationshipAttribute> inclusionChain, IIdentifiable rootResource)
         {
+            if (inclusionChain == null) throw new ArgumentNullException(nameof(inclusionChain));
+            if (rootResource == null) throw new ArgumentNullException(nameof(rootResource));
+
             // We don't have to build a resource object for the root resource because
             // this one is already encoded in the documents primary data, so we process the chain
             // starting from the first related resource.
@@ -108,6 +112,9 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <returns></returns>
         protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
+            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
             return new RelationshipEntry { Links = _linkBuilder.GetRelationshipLinks(relationship, resource) };
         }
 
@@ -121,7 +128,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         private ResourceObject GetOrBuildResourceObject(IIdentifiable parent, RelationshipAttribute relationship)
         {
             var type = parent.GetType();
-            var resourceName = _provider.GetResourceContext(type).ResourceName;
+            var resourceName = ResourceContextProvider.GetResourceContext(type).ResourceName;
             var entry = _included.SingleOrDefault(ro => ro.Type == resourceName && ro.Id == parent.StringId);
             if (entry == null)
             {

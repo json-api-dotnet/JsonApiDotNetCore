@@ -15,19 +15,19 @@ using Newtonsoft.Json.Linq;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
-    /// Abstract base class for deserialization. Deserializes JSON content into <see cref="Document"/>s
+    /// Abstract base class for deserialization. Deserializes JSON content into <see cref="Objects.Document"/>s
     /// And constructs instances of the resource(s) in the document body.
     /// </summary>
     public abstract class BaseDeserializer
     {
-        protected readonly IResourceContextProvider _contextProvider;
-        protected readonly IResourceFactory _resourceFactory;
-        protected Document _document;
+        protected IResourceContextProvider ResourceContextProvider { get; }
+        protected IResourceFactory ResourceFactory{ get; }
+        protected Document Document { get; set; }
 
-        protected BaseDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory)
+        protected BaseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory)
         {
-            _contextProvider = contextProvider;
-            _resourceFactory = resourceFactory;
+            ResourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            ResourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
         }
 
         /// <summary>
@@ -44,20 +44,22 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="data">Relationship data for <paramref name="resource"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
         protected abstract void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null);
 
-        protected object Deserialize(string body)
+        protected object DeserializeBody(string body)
         {
+            if (body == null) throw new ArgumentNullException(nameof(body));
+
             var bodyJToken = LoadJToken(body);
-            _document = bodyJToken.ToObject<Document>();
-            if (_document.IsManyData)
+            Document = bodyJToken.ToObject<Document>();
+            if (Document.IsManyData)
             {
-                if (_document.ManyData.Count == 0)
+                if (Document.ManyData.Count == 0)
                     return Array.Empty<IIdentifiable>();
 
-                return _document.ManyData.Select(ParseResourceObject).ToArray();
+                return Document.ManyData.Select(ParseResourceObject).ToArray();
             }
 
-            if (_document.SingleData == null) return null;
-            return ParseResourceObject(_document.SingleData);
+            if (Document.SingleData == null) return null;
+            return ParseResourceObject(Document.SingleData);
         }
 
         /// <summary>
@@ -69,6 +71,9 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns></returns>
         protected virtual IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
         {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            if (attributes == null) throw new ArgumentNullException(nameof(attributes));
+
             if (attributeValues == null || attributeValues.Count == 0)
                 return resource;
 
@@ -94,6 +99,9 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns></returns>
         protected virtual IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipEntry> relationshipValues, IReadOnlyCollection<RelationshipAttribute> relationshipAttributes)
         {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            if (relationshipAttributes == null) throw new ArgumentNullException(nameof(relationshipAttributes));
+
             if (relationshipValues == null || relationshipValues.Count == 0)
                 return resource;
 
@@ -131,7 +139,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns>The parsed resource</returns>
         private IIdentifiable ParseResourceObject(ResourceObject data)
         {
-            var resourceContext = _contextProvider.GetResourceContext(data.Type);
+            var resourceContext = ResourceContextProvider.GetResourceContext(data.Type);
             if (resourceContext == null)
             {
                 throw new InvalidRequestBodyException("Payload includes unknown resource type.",
@@ -140,7 +148,7 @@ namespace JsonApiDotNetCore.Serialization
                     "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.", null);
             }
 
-            var resource = (IIdentifiable)_resourceFactory.CreateInstance(resourceContext.ResourceType);
+            var resource = (IIdentifiable)ResourceFactory.CreateInstance(resourceContext.ResourceType);
 
             resource = SetAttributes(resource, data.Attributes, resourceContext.Attributes);
             resource = SetRelationships(resource, data.Relationships, resourceContext.Relationships);
@@ -197,7 +205,7 @@ namespace JsonApiDotNetCore.Serialization
                 throw new FormatException($"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
             }
 
-            var typedId = TypeHelper.ConvertStringIdToTypedId(attr.Property.PropertyType, id, _resourceFactory);
+            var typedId = TypeHelper.ConvertStringIdToTypedId(attr.Property.PropertyType, id, ResourceFactory);
             foreignKey.SetValue(resource, typedId);
         }
 
@@ -209,13 +217,13 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (relatedId == null)
             {
-                attr.SetValue(resource, null, _resourceFactory);
+                attr.SetValue(resource, null, ResourceFactory);
             }
             else
             {
-                var relatedInstance = (IIdentifiable)_resourceFactory.CreateInstance(attr.RightType);
+                var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(attr.RightType);
                 relatedInstance.StringId = relatedId;
-                attr.SetValue(resource, relatedInstance, _resourceFactory);
+                attr.SetValue(resource, relatedInstance, ResourceFactory);
             }
         }
 
@@ -231,13 +239,13 @@ namespace JsonApiDotNetCore.Serialization
             {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
                 var relatedResources = relationshipData.ManyData.Select(rio =>
                 {
-                    var relatedInstance = (IIdentifiable)_resourceFactory.CreateInstance(attr.RightType);
+                    var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(attr.RightType);
                     relatedInstance.StringId = rio.Id;
                     return relatedInstance;
                 });
 
                 var convertedCollection = TypeHelper.CopyToTypedCollection(relatedResources, attr.Property.PropertyType);
-                attr.SetValue(resource, convertedCollection, _resourceFactory);
+                attr.SetValue(resource, convertedCollection, ResourceFactory);
             }
 
             AfterProcessField(resource, attr, relationshipData);

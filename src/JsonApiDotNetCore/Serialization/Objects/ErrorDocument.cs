@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,17 +10,19 @@ namespace JsonApiDotNetCore.Serialization.Objects
         public IReadOnlyList<Error> Errors { get; }
 
         public ErrorDocument()
+            : this(Array.Empty<Error>())
         {
-            Errors = new List<Error>();
         }
 
         public ErrorDocument(Error error)
+            : this(new[] {error})
         {
-            Errors = new List<Error> {error};
         }
 
         public ErrorDocument(IEnumerable<Error> errors)
         {
+            if (errors == null) throw new ArgumentNullException(nameof(errors));
+
             Errors = errors.ToList();
         }
 

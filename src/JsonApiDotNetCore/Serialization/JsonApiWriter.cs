@@ -27,8 +27,10 @@ namespace JsonApiDotNetCore.Serialization
 
         public JsonApiWriter(IJsonApiSerializer serializer, IExceptionHandler exceptionHandler, ILoggerFactory loggerFactory)
         {
-            _serializer = serializer;
-            _exceptionHandler = exceptionHandler;
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+
+            _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+            _exceptionHandler = exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler));
             _traceWriter = new TraceLogWriter<JsonApiWriter>(loggerFactory);
         }
 

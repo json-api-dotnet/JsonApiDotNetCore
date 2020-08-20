@@ -57,7 +57,11 @@ namespace JsonApiDotNetCore.Serialization.Objects
         /// </summary>
         internal bool IsPopulated { get; private set; }
 
-        internal bool HasResource => IsPopulated && ((IsManyData && ManyData.Any()) || SingleData != null);
+        internal bool HasResource => IsPopulated && !IsEmpty;
+
+        private bool IsEmpty => !HasManyData && SingleData == null;
+
+        private bool HasManyData => IsManyData && ManyData.Any();
 
         /// <summary>
         /// Gets the "single" or "many" data depending on which one was

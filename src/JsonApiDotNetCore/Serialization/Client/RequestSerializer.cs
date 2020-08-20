@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
+using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Client
@@ -21,7 +23,7 @@ namespace JsonApiDotNetCore.Serialization.Client
                                 IResourceObjectBuilder resourceObjectBuilder)
             : base(resourceObjectBuilder)
         {
-            _resourceGraph = resourceGraph;
+            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
         }
 
         /// <inheritdoc/>
@@ -43,24 +45,25 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <inheritdoc/>
         public string Serialize(IReadOnlyCollection<IIdentifiable> resources)
         {
-            IIdentifiable resource = null;
-            foreach (IIdentifiable item in resources)
+            if (resources == null) throw new ArgumentNullException(nameof(resources));
+
+            IIdentifiable firstResource = resources.FirstOrDefault();
+
+            Document document;
+            if (firstResource == null)
             {
-                resource = item;
-                break;
+                document = Build(resources, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
+            }
+            else
+            {
+                _currentTargetedResource = firstResource.GetType();
+                var attributes = GetAttributesToSerialize(firstResource);
+                var relationships = GetRelationshipsToSerialize(firstResource);
+
+                document = Build(resources, attributes, relationships);
+                _currentTargetedResource = null;
             }
 
-            if (resource == null)
-            {
-                var result = Build(resources, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
-                return SerializeObject(result, _jsonSerializerSettings);
-            }
-
-            _currentTargetedResource = resource.GetType();
-            var attributes = GetAttributesToSerialize(resource);
-            var relationships = GetRelationshipsToSerialize(resource);
-            var document = Build(resources, attributes, relationships);
-            _currentTargetedResource = null;
             return SerializeObject(document, _jsonSerializerSettings);
         }
 

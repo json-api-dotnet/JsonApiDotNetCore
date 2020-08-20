@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Errors
             : base(new Error(HttpStatusCode.BadRequest)
             {
                 Title = reason,
-                Detail = exception.Message
+                Detail = exception?.Message
             }, exception)
         {
         }

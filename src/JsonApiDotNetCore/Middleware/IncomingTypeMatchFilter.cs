@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net.Http;
 using JsonApiDotNetCore.Configuration;
@@ -20,6 +21,8 @@ namespace JsonApiDotNetCore.Middleware
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             if (!context.HttpContext.IsJsonApiRequest())
             {
                 return;

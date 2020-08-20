@@ -98,6 +98,8 @@ namespace UnitTests.Middleware
             });
             var forcedNamespace = "api/v1";
             var mockMapping = new Mock<IControllerResourceMapping>();
+            mockMapping.Setup(x => x.GetAssociatedResource(It.IsAny<string>())).Returns(typeof(string));
+
             Mock<IJsonApiOptions> mockOptions = CreateMockOptions(forcedNamespace);
             var mockGraph = CreateMockResourceGraph(resourceName, includeRelationship: relType != null);
             var request = new JsonApiRequest();

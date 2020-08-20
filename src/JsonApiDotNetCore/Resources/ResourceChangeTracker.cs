@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -18,24 +19,30 @@ namespace JsonApiDotNetCore.Resources
         public ResourceChangeTracker(IJsonApiOptions options, IResourceContextProvider contextProvider,
             ITargetedFields targetedFields)
         {
-            _options = options;
-            _contextProvider = contextProvider;
-            _targetedFields = targetedFields;
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _contextProvider = contextProvider ?? throw new ArgumentNullException(nameof(contextProvider));
+            _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
         }
 
         public void SetInitiallyStoredAttributeValues(TResource resource)
         {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
             var resourceContext = _contextProvider.GetResourceContext<TResource>();
             _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
         }
 
         public void SetRequestedAttributeValues(TResource resource)
         {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
             _requestedAttributeValues = CreateAttributeDictionary(resource, _targetedFields.Attributes);
         }
 
         public void SetFinallyStoredAttributeValues(TResource resource)
         {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
             var resourceContext = _contextProvider.GetResourceContext<TResource>();
             _finallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
         }

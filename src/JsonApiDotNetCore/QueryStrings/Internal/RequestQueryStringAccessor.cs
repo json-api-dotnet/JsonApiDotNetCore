@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
@@ -12,7 +13,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         public RequestQueryStringAccessor(IHttpContextAccessor httpContextAccessor)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
@@ -18,8 +19,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         public MetaBuilder(IPaginationContext paginationContext, IJsonApiOptions options, IRequestMeta requestMeta = null,
             ResourceDefinition<TResource> resourceDefinition = null)
         {
-            _paginationContext = paginationContext;
-            _options = options;
+            _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _requestMeta = requestMeta;
             _resourceMeta = resourceDefinition as IHasMeta;
         }
@@ -27,12 +28,16 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <inheritdoc/>
         public void Add(string key, object value)
         {
-            _meta[key] = value;
+            if (key == null) throw new ArgumentNullException(nameof(key));
+
+            _meta[key] = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         /// <inheritdoc/>
         public void Add(IReadOnlyDictionary<string,object> values)
         {
+            if (values == null) throw new ArgumentNullException(nameof(values));
+
             _meta = values.Keys.Union(_meta.Keys)
                 .ToDictionary(key => key, 
                     key => values.ContainsKey(key) ? values[key] : _meta[key]);

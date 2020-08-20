@@ -17,6 +17,5 @@ namespace JsonApiDotNetCore.Configuration
         /// deal with resolving the inverse relationships. 
         /// </summary>
         void Resolve();
-
     }
 }

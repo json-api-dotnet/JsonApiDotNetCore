@@ -142,7 +142,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         public HasManyThroughAttribute(string throughPropertyName, Links relationshipLinks = Links.All, bool canInclude = true)
         : base(null, relationshipLinks, canInclude)
         {
-            ThroughPropertyName = throughPropertyName;
+            ThroughPropertyName = throughPropertyName ?? throw new ArgumentNullException(nameof(throughPropertyName));
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         public HasManyThroughAttribute(string publicName, string throughPropertyName, Links relationshipLinks = Links.All, bool canInclude = true)
         : base(publicName, relationshipLinks, canInclude)
         {
-            ThroughPropertyName = throughPropertyName;
+            ThroughPropertyName = throughPropertyName ?? throw new ArgumentNullException(nameof(throughPropertyName));
         }
 
         /// <summary>
@@ -172,6 +172,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public override object GetValue(object resource)
         {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
             IEnumerable throughResources = (IEnumerable)ThroughProperty.GetValue(resource) ?? Array.Empty<object>();
 
             IEnumerable<object> rightResources = throughResources
@@ -184,6 +186,9 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// <inheritdoc />
         public override void SetValue(object resource, object newValue, IResourceFactory resourceFactory)
         {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            if (resourceFactory == null) throw new ArgumentNullException(nameof(resourceFactory));
+
             base.SetValue(resource, newValue, resourceFactory);
 
             if (newValue == null)

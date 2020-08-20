@@ -38,11 +38,14 @@ namespace JsonApiDotNetCore.Repositories
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             ILoggerFactory loggerFactory)
         {
-            _targetedFields = targetedFields;
-            _resourceGraph = resourceGraph;
-            _genericServiceFactory = genericServiceFactory;
-            _resourceFactory = resourceFactory;
-            _constraintProviders = constraintProviders;
+            if (contextResolver == null) throw new ArgumentNullException(nameof(contextResolver));
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+
+            _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
+            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
+            _genericServiceFactory = genericServiceFactory ?? throw new ArgumentNullException(nameof(genericServiceFactory));
+            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
+            _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
             _dbContext = contextResolver.GetContext();
             _traceWriter = new TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>>(loggerFactory);
         }
@@ -51,11 +54,7 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer)
         {
             _traceWriter.LogMethodStart(new {layer});
-
-            if (layer == null)
-            {
-                throw new ArgumentNullException(nameof(layer));
-            }
+            if (layer == null) throw new ArgumentNullException(nameof(layer));
 
             IQueryable<TResource> query = ApplyQueryLayer(layer);
             return await query.ToListAsync();
@@ -78,6 +77,9 @@ namespace JsonApiDotNetCore.Repositories
 
         protected virtual IQueryable<TResource> ApplyQueryLayer(QueryLayer layer)
         {
+            _traceWriter.LogMethodStart(new {layer});
+            if (layer == null) throw new ArgumentNullException(nameof(layer));
+
             IQueryable<TResource> source = GetAll();
 
             var queryableHandlers = _constraintProviders
@@ -108,6 +110,7 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task CreateAsync(TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
 
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
@@ -206,6 +209,8 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task UpdateAsync(TResource requestResource, TResource databaseResource)
         {
             _traceWriter.LogMethodStart(new {requestResource, databaseResource});
+            if (requestResource == null) throw new ArgumentNullException(nameof(requestResource));
+            if (databaseResource == null) throw new ArgumentNullException(nameof(databaseResource));
 
             foreach (var attribute in _targetedFields.Attributes)
                 attribute.SetValue(databaseResource, attribute.GetValue(requestResource));
@@ -283,6 +288,9 @@ namespace JsonApiDotNetCore.Repositories
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds)
         {
             _traceWriter.LogMethodStart(new {parent, relationship, relationshipIds});
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
+            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
+            if (relationshipIds == null) throw new ArgumentNullException(nameof(relationshipIds));
 
             var typeToUpdate = relationship is HasManyThroughAttribute hasManyThrough
                 ? hasManyThrough.ThroughType
@@ -328,6 +336,7 @@ namespace JsonApiDotNetCore.Repositories
         public virtual void FlushFromCache(TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
 
             _dbContext.Entry(resource).State = EntityState.Detached;
         }
@@ -347,6 +356,9 @@ namespace JsonApiDotNetCore.Repositories
         /// </summary>
         protected void LoadCurrentRelationships(TResource oldResource, RelationshipAttribute relationshipAttribute)
         {
+            if (oldResource == null) throw new ArgumentNullException(nameof(oldResource));
+            if (relationshipAttribute == null) throw new ArgumentNullException(nameof(relationshipAttribute));
+
             if (relationshipAttribute is HasManyThroughAttribute throughAttribute)
             {
                 _dbContext.Entry(oldResource).Collection(throughAttribute.ThroughProperty.Name).Load();

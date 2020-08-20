@@ -197,6 +197,8 @@ namespace JsonApiDotNetCore.Resources
 
         public object GetQueryableHandlerForQueryStringParameter(string parameterName)
         {
+            if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
+
             var handlers = OnRegisterQueryableHandlersForQueryStringParameters();
             return handlers != null && handlers.ContainsKey(parameterName) ? handlers[parameterName] : null;
         }

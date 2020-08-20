@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -12,11 +13,13 @@ namespace JsonApiDotNetCore.Middleware
 
         public JsonApiExceptionFilter(IExceptionHandler exceptionHandler)
         {
-            _exceptionHandler = exceptionHandler;
+            _exceptionHandler = exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler));
         }
 
         public void OnException(ExceptionContext context)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             if (context.HttpContext.IsJsonApiRequest())
             {
                 var errorDocument = _exceptionHandler.HandleException(context.Exception);

@@ -10,6 +10,10 @@ namespace JsonApiDotNetCore.Hooks.Internal
     {
         public static readonly IdentifiableComparer Instance = new IdentifiableComparer();
 
+        private IdentifiableComparer()
+        {
+        }
+
         public bool Equals(IIdentifiable x, IIdentifiable y)
         {
             if (ReferenceEquals(x, y))

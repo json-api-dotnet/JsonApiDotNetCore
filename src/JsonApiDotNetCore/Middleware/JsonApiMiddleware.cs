@@ -36,6 +36,12 @@ namespace JsonApiDotNetCore.Middleware
             IJsonApiRequest request, 
             IResourceContextProvider resourceContextProvider)
         {
+            if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
+            if (controllerResourceMapping == null) throw new ArgumentNullException(nameof(controllerResourceMapping));
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (resourceContextProvider == null) throw new ArgumentNullException(nameof(resourceContextProvider));
+
             var routeValues = httpContext.GetRouteData().Values;
 
             var primaryResourceContext = CreatePrimaryResourceContext(routeValues, controllerResourceMapping, resourceContextProvider);
@@ -59,13 +65,16 @@ namespace JsonApiDotNetCore.Middleware
             IControllerResourceMapping controllerResourceMapping, IResourceContextProvider resourceContextProvider)
         {
             var controllerName = (string) routeValues["controller"];
-            if (controllerName == null)
+            if (controllerName != null)
             {
-                return null;
+                var resourceType = controllerResourceMapping.GetAssociatedResource(controllerName);
+                if (resourceType != null)
+                {
+                    return resourceContextProvider.GetResourceContext(resourceType);
+                }
             }
 
-            var resourceType = controllerResourceMapping.GetAssociatedResource(controllerName);
-            return resourceContextProvider.GetResourceContext(resourceType);
+            return null;
         }
 
         private static async Task<bool> ValidateContentTypeHeaderAsync(HttpContext httpContext, JsonSerializerSettings serializerSettings)

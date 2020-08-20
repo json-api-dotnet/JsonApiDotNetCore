@@ -44,7 +44,11 @@ namespace JsonApiDotNetCore.Repositories
         /// }
         /// </code>
         /// </example>
-        public static async Task<IDbContextTransaction> GetCurrentOrCreateTransactionAsync(this DbContext context) 
-            => await SafeTransactionProxy.GetOrCreateAsync(context.Database);
+        public static async Task<IDbContextTransaction> GetCurrentOrCreateTransactionAsync(this DbContext context)
+        {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
+            return await SafeTransactionProxy.GetOrCreateAsync(context.Database);
+        }
     }
 }

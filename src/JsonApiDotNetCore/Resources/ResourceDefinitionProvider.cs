@@ -11,14 +11,17 @@ namespace JsonApiDotNetCore.Resources
 
         public ResourceDefinitionProvider(IResourceGraph resourceContextProvider, IScopedServiceProvider serviceProvider)
         {
-            _resourceContextProvider = resourceContextProvider;
-            _serviceProvider = serviceProvider;
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         /// <inheritdoc/>
         public IResourceDefinition Get(Type resourceType)
         {
-            return (IResourceDefinition)_serviceProvider.GetService(_resourceContextProvider.GetResourceContext(resourceType).ResourceDefinitionType);
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+
+            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            return (IResourceDefinition)_serviceProvider.GetService(resourceContext.ResourceDefinitionType);
         }
     }
 }

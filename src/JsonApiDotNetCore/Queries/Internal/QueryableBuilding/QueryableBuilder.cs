@@ -40,6 +40,8 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public Expression ApplyQuery(QueryLayer layer)
         {
+            if (layer == null) throw new ArgumentNullException(nameof(layer));
+
             Expression expression = _source;
 
             if (layer.Include != null)

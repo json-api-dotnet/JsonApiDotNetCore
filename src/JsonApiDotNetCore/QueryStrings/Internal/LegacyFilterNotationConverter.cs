@@ -27,6 +27,9 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         public (string parameterName, string parameterValue) Convert(string parameterName, string parameterValue)
         {
+            if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
+            if (parameterValue == null) throw new ArgumentNullException(nameof(parameterValue));
+
             if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal))
             {
                 string expression = parameterValue.Substring(ExpressionPrefix.Length);

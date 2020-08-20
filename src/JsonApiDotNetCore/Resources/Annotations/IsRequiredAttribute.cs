@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +17,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
+            if (validationContext == null) throw new ArgumentNullException(nameof(validationContext));
+
             var httpContextAccessor = (IHttpContextAccessor)validationContext.GetRequiredService(typeof(IHttpContextAccessor));
             _isDisabled = httpContextAccessor.HttpContext.IsValidatorDisabled(validationContext.MemberName, validationContext.ObjectType.Name);
             return _isDisabled ? ValidationResult.Success : base.IsValid(value, validationContext);

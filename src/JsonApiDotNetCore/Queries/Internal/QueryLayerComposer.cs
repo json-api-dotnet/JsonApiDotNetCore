@@ -178,6 +178,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual IReadOnlyCollection<IncludeElementExpression> GetIncludeElements(IReadOnlyCollection<IncludeElementExpression> includeElements, ResourceContext resourceContext)
         {
+            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+
             var resourceDefinition = _resourceDefinitionProvider.Get(resourceContext.ResourceType);
             if (resourceDefinition != null)
             {
@@ -189,6 +191,9 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual FilterExpression GetFilter(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
+            if (expressionsInScope == null) throw new ArgumentNullException(nameof(expressionsInScope));
+            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+
             var filters = expressionsInScope.OfType<FilterExpression>().ToArray();
             var filter = filters.Length > 1 ? new LogicalExpression(LogicalOperator.And, filters) : filters.FirstOrDefault();
 
@@ -203,6 +208,9 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual SortExpression GetSort(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
+            if (expressionsInScope == null) throw new ArgumentNullException(nameof(expressionsInScope));
+            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+
             var sort = expressionsInScope.OfType<SortExpression>().FirstOrDefault();
 
             var resourceDefinition = _resourceDefinitionProvider.Get(resourceContext.ResourceType);
@@ -222,6 +230,9 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual PaginationExpression GetPagination(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
+            if (expressionsInScope == null) throw new ArgumentNullException(nameof(expressionsInScope));
+            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+
             var pagination = expressionsInScope.OfType<PaginationExpression>().FirstOrDefault();
 
             var resourceDefinition = _resourceDefinitionProvider.Get(resourceContext.ResourceType);
@@ -237,6 +248,9 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual IDictionary<ResourceFieldAttribute, QueryLayer> GetSparseFieldSetProjection(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
+            if (expressionsInScope == null) throw new ArgumentNullException(nameof(expressionsInScope));
+            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+
             var attributes = expressionsInScope.OfType<SparseFieldSetExpression>().SelectMany(sparseFieldSet => sparseFieldSet.Attributes).ToHashSet();
 
             var resourceDefinition = _resourceDefinitionProvider.Get(resourceContext.ResourceType);

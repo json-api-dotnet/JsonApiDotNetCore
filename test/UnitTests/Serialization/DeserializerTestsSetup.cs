@@ -24,7 +24,7 @@ namespace UnitTests.Serialization
 
             public new object Deserialize(string body)
             {
-                return base.Deserialize(body);
+                return base.DeserializeBody(body);
             }
 
             protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null) { }

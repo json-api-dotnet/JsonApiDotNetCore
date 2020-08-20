@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
@@ -19,17 +20,19 @@ namespace JsonApiDotNetCore.Serialization
         private readonly ITargetedFields  _targetedFields;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RequestDeserializer(IResourceContextProvider contextProvider, IResourceFactory resourceFactory, ITargetedFields targetedFields, IHttpContextAccessor httpContextAccessor) 
-            : base(contextProvider, resourceFactory)
+        public RequestDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory, ITargetedFields targetedFields, IHttpContextAccessor httpContextAccessor) 
+            : base(resourceContextProvider, resourceFactory)
         {
-            _targetedFields = targetedFields;
-            _httpContextAccessor = httpContextAccessor;
+            _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
         /// <inheritdoc/>
-        public new object Deserialize(string body)
+        public object Deserialize(string body)
         {
-            return base.Deserialize(body);
+            if (body == null) throw new ArgumentNullException(nameof(body));
+
+            return DeserializeBody(body);
         }
 
         /// <summary>
@@ -60,6 +63,9 @@ namespace JsonApiDotNetCore.Serialization
 
         protected override IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
         {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            if (attributes == null) throw new ArgumentNullException(nameof(attributes));
+
             if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Patch.Method)
             {
                 foreach (AttrAttribute attr in attributes)
@@ -82,6 +88,9 @@ namespace JsonApiDotNetCore.Serialization
 
         protected override IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipEntry> relationshipsValues, IReadOnlyCollection<RelationshipAttribute> relationshipAttributes)
         {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            if (relationshipAttributes == null) throw new ArgumentNullException(nameof(relationshipAttributes));
+
             // If there is a relationship included in the data of the POST or PATCH, then the 'IsRequired' attribute will be disabled for any
             // property within that object. For instance, a new article is posted and has a relationship included to an author. In this case,
             // the author name (which has the 'IsRequired' attribute) will not be included in the POST. Unless disabled, the POST will fail.

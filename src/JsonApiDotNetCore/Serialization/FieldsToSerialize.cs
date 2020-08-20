@@ -21,14 +21,16 @@ namespace JsonApiDotNetCore.Serialization
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             IResourceDefinitionProvider resourceDefinitionProvider)
         {
-            _resourceGraph = resourceGraph;
-            _constraintProviders = constraintProviders;
-            _resourceDefinitionProvider = resourceDefinitionProvider;
+            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
+            _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
+            _resourceDefinitionProvider = resourceDefinitionProvider ?? throw new ArgumentNullException(nameof(resourceDefinitionProvider));
         }
 
         /// <inheritdoc/>
         public IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType, RelationshipAttribute relationship = null)
-        {   
+        {
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+
             var sparseFieldSetAttributes = _constraintProviders
                 .SelectMany(p => p.GetConstraints())
                 .Where(expressionInScope => relationship == null
@@ -79,6 +81,8 @@ namespace JsonApiDotNetCore.Serialization
         /// </remarks>
         public IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             return _resourceGraph.GetRelationships(type);
         }
     }

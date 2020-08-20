@@ -117,7 +117,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var body = await response.Content.ReadAsStringAsync();
 
             var isQueryStringValueEmpty = queryStringValue == string.Empty;
-            var isDisallowedOverride = options.AllowQueryStringOverrideForSerializerDefaultValueHandling == false && queryStringValue != null;
+            var isDisallowedOverride = !options.AllowQueryStringOverrideForSerializerDefaultValueHandling && queryStringValue != null;
             var isQueryStringInvalid = queryStringValue != null && !bool.TryParse(queryStringValue, out _);
 
             if (isQueryStringValueEmpty)

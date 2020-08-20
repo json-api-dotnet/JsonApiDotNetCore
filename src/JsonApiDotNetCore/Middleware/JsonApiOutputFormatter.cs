@@ -10,14 +10,15 @@ namespace JsonApiDotNetCore.Middleware
     {
         public bool CanWriteResult(OutputFormatterCanWriteContext context)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            if (context == null) throw new ArgumentNullException(nameof(context));
 
             return context.HttpContext.IsJsonApiRequest();
         }
 
         public async Task WriteAsync(OutputFormatterWriteContext context)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             var writer = context.HttpContext.RequestServices.GetService<IJsonApiWriter>();
             await writer.WriteAsync(context);
         }

@@ -35,8 +35,8 @@ namespace JsonApiDotNetCore.Configuration
 
         public JsonApiApplicationBuilder(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
         {
-            _services = services;
-            _mvcBuilder = mvcBuilder;
+            _services = services ?? throw new ArgumentNullException(nameof(services));
+            _mvcBuilder = mvcBuilder ?? throw new ArgumentNullException(nameof(mvcBuilder));
         }
 
         /// <summary>

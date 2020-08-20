@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -52,7 +53,9 @@ namespace JsonApiDotNetCore.Controllers
             IUpdateRelationshipService<TResource, TId> updateRelationships = null,
             IDeleteService<TResource, TId> delete = null)
         {
-            _options = options;
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _traceWriter = new TraceLogWriter<BaseJsonApiController<TResource, TId>>(loggerFactory);
             _getAll = getAll;
             _getById = getById;
@@ -85,6 +88,7 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_getRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
@@ -95,6 +99,7 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_getSecondary == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var relationship = await _getSecondary.GetSecondaryAsync(id, relationshipName);
@@ -146,6 +151,7 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object relationships)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_updateRelationships == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
             await _updateRelationships.UpdateRelationshipAsync(id, relationshipName, relationships);

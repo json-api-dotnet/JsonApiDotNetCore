@@ -14,26 +14,27 @@ namespace JsonApiDotNetCore.Serialization.Building
     /// <inheritdoc/> 
     public class ResourceObjectBuilder : IResourceObjectBuilder
     {
-        protected readonly IResourceContextProvider _provider;
+        protected IResourceContextProvider ResourceContextProvider { get; }
         private readonly ResourceObjectBuilderSettings _settings;
-        private const string IdentifiablePropertyName = nameof(Identifiable.Id);
 
-        public ResourceObjectBuilder(IResourceContextProvider provider, ResourceObjectBuilderSettings settings)
+        public ResourceObjectBuilder(IResourceContextProvider resourceContextProvider, ResourceObjectBuilderSettings settings)
         {
-            _provider = provider;
-            _settings = settings;
+            ResourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
 
         /// <inheritdoc/> 
         public ResourceObject Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
         {
-            var resourceContext = _provider.GetResourceContext(resource.GetType());
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
+            var resourceContext = ResourceContextProvider.GetResourceContext(resource.GetType());
 
             // populating the top-level "type" and "id" members.
             var ro = new ResourceObject { Type = resourceContext.ResourceName, Id = resource.StringId == string.Empty ? null : resource.StringId };
 
             // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
-            if (attributes != null && (attributes = attributes.Where(attr => attr.Property.Name != IdentifiablePropertyName).ToArray()).Any())
+            if (attributes != null && (attributes = attributes.Where(attr => attr.Property.Name != nameof(Identifiable.Id)).ToArray()).Any())
                 ProcessAttributes(resource, attributes, ro);
 
             // populating the top-level "relationship" member of a resource object.
@@ -52,6 +53,9 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         protected virtual RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
+            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
             return new RelationshipEntry { Data = GetRelatedResourceLinkage(relationship, resource) };
         }
 
@@ -60,16 +64,18 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         protected object GetRelatedResourceLinkage(RelationshipAttribute relationship, IIdentifiable resource)
         {
-            if (relationship is HasOneAttribute hasOne)
-                return GetRelatedResourceLinkage(hasOne, resource);
+            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            return GetRelatedResourceLinkage((HasManyAttribute)relationship, resource);
+            return relationship is HasOneAttribute hasOne
+                ? (object) GetRelatedResourceLinkageForHasOne(hasOne, resource)
+                : GetRelatedResourceLinkageForHasMany((HasManyAttribute) relationship, resource);
         }
 
         /// <summary>
         /// Builds a <see cref="ResourceIdentifierObject"/> for a HasOne relationship
         /// </summary>
-        private ResourceIdentifierObject GetRelatedResourceLinkage(HasOneAttribute relationship, IIdentifiable resource)
+        private ResourceIdentifierObject GetRelatedResourceLinkageForHasOne(HasOneAttribute relationship, IIdentifiable resource)
         {
             var relatedResource = (IIdentifiable)relationship.GetValue(resource);
             if (relatedResource == null && IsRequiredToOneRelationship(relationship, resource))
@@ -84,7 +90,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <summary>
         /// Builds the <see cref="ResourceIdentifierObject"/>s for a HasMany relationship
         /// </summary>
-        private List<ResourceIdentifierObject> GetRelatedResourceLinkage(HasManyAttribute relationship, IIdentifiable resource)
+        private List<ResourceIdentifierObject> GetRelatedResourceLinkageForHasMany(HasManyAttribute relationship, IIdentifiable resource)
         {
             var relatedResources = (IEnumerable)relationship.GetValue(resource);
             var manyData = new List<ResourceIdentifierObject>();
@@ -100,7 +106,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         private ResourceIdentifierObject GetResourceIdentifier(IIdentifiable resource)
         {
-            var resourceName = _provider.GetResourceContext(resource.GetType()).ResourceName;
+            var resourceName = ResourceContextProvider.GetResourceContext(resource.GetType()).ResourceName;
             return new ResourceIdentifierObject
             {
                 Type = resourceName,

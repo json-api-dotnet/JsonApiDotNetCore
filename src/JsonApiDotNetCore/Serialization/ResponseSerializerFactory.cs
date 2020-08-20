@@ -15,8 +15,8 @@ namespace JsonApiDotNetCore.Serialization
 
         public ResponseSerializerFactory(IJsonApiRequest request, IScopedServiceProvider provider)
         {
-            _request = request;
-            _provider = provider;
+            _request = request ?? throw new ArgumentNullException(nameof(request));
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
         /// <summary>

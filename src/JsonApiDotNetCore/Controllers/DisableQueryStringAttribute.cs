@@ -48,6 +48,8 @@ namespace JsonApiDotNetCore.Controllers
         /// </summary>
         public DisableQueryStringAttribute(string parameterNames)
         {
+            if (parameterNames == null) throw new ArgumentNullException(nameof(parameterNames));
+
             ParameterNames = parameterNames.Split(",").Select(x => x.Trim().ToLowerInvariant()).ToList();
         }
 

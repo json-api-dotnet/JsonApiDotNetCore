@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,8 @@ namespace JsonApiDotNetCore.Errors
 
         private static Error ToError(ProblemDetails problemDetails)
         {
+            if (problemDetails == null) throw new ArgumentNullException(nameof(problemDetails));
+            
             var status = problemDetails.Status != null
                 ? (HttpStatusCode) problemDetails.Status.Value
                 : HttpStatusCode.InternalServerError;

@@ -41,20 +41,23 @@ namespace JsonApiDotNetCore.Services
             IResourceFactory resourceFactory,
             IResourceHookExecutor hookExecutor = null)
         {
-            _repository = repository;
-            _queryLayerComposer = queryLayerComposer;
-            _paginationContext = paginationContext;
-            _options = options;
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _queryLayerComposer = queryLayerComposer ?? throw new ArgumentNullException(nameof(queryLayerComposer));
+            _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _traceWriter = new TraceLogWriter<JsonApiResourceService<TResource, TId>>(loggerFactory);
-            _request = request;
-            _resourceChangeTracker = resourceChangeTracker;
-            _resourceFactory = resourceFactory;
+            _request = request ?? throw new ArgumentNullException(nameof(request));
+            _resourceChangeTracker = resourceChangeTracker ?? throw new ArgumentNullException(nameof(resourceChangeTracker));
+            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
             _hookExecutor = hookExecutor;
         }
 
         public virtual async Task<TResource> CreateAsync(TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
 
             if (_hookExecutor != null)
             {
@@ -180,6 +183,7 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<TResource> GetRelationshipAsync(TId id, string relationshipName)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
 
@@ -215,6 +219,7 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<object> GetSecondaryAsync(TId id, string relationshipName)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
 
@@ -269,6 +274,7 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<TResource> UpdateAsync(TId id, TResource requestResource)
         {
             _traceWriter.LogMethodStart(new {id, requestResource});
+            if (requestResource == null) throw new ArgumentNullException(nameof(requestResource));
 
             TResource databaseResource = await GetPrimaryResourceById(id, false);
 
@@ -297,9 +303,10 @@ namespace JsonApiDotNetCore.Services
         }
 
         // triggered by PATCH /articles/1/relationships/{relationshipName}
-        public virtual async Task UpdateRelationshipAsync(TId id, string relationshipName, object related)
+        public virtual async Task UpdateRelationshipAsync(TId id, string relationshipName, object relationships)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, related});
+            _traceWriter.LogMethodStart(new {id, relationshipName, related = relationships});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
 
@@ -318,11 +325,11 @@ namespace JsonApiDotNetCore.Services
             }
 
             string[] relationshipIds = null;
-            if (related != null)
+            if (relationships != null)
             {
                 relationshipIds = _request.Relationship is HasOneAttribute
-                    ? new[] {((IIdentifiable) related).StringId}
-                    : ((IEnumerable<IIdentifiable>) related).Select(e => e.StringId).ToArray();
+                    ? new[] {((IIdentifiable) relationships).StringId}
+                    : ((IEnumerable<IIdentifiable>) relationships).Select(e => e.StringId).ToArray();
             }
 
             await _repository.UpdateRelationshipsAsync(primaryResource, _request.Relationship, relationshipIds ?? Array.Empty<string>());

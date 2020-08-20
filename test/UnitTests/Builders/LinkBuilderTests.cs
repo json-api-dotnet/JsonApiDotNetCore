@@ -48,7 +48,7 @@ namespace UnitTests
             var config = GetConfiguration(resourceLinks: global);
             var primaryResource = GetArticleResourceContext(resourceLinks: resource);
             _provider.Setup(m => m.GetResourceContext("articles")).Returns(primaryResource);
-            var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object, _queryStringAccessor);
+            var builder = new LinkBuilder(config, GetRequestManager(), new PaginationContext(), _provider.Object, _queryStringAccessor);
 
             // Act
             var links = builder.GetResourceLinks("articles", _primaryId.ToString());
@@ -93,7 +93,7 @@ namespace UnitTests
             var config = GetConfiguration(relationshipLinks: global);
             var primaryResource = GetArticleResourceContext(relationshipLinks: resource);
             _provider.Setup(m => m.GetResourceContext(typeof(Article))).Returns(primaryResource);
-            var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object, _queryStringAccessor);
+            var builder = new LinkBuilder(config, GetRequestManager(), new PaginationContext(), _provider.Object, _queryStringAccessor);
             var attr = new HasOneAttribute(links: relationship) { RightType = typeof(Author), PublicName = "author" };
 
             // Act

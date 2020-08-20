@@ -10,14 +10,15 @@ namespace JsonApiDotNetCore.Middleware
     {
         public bool CanRead(InputFormatterContext context)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            if (context == null) throw new ArgumentNullException(nameof(context));
 
             return context.HttpContext.IsJsonApiRequest();
         }
 
         public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             var reader = context.HttpContext.RequestServices.GetService<IJsonApiReader>();
             return await reader.ReadAsync(context);
         }

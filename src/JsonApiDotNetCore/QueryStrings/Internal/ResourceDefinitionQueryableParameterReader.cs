@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Errors;
@@ -12,14 +13,14 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
     /// <inheritdoc/>
     public class ResourceDefinitionQueryableParameterReader : IResourceDefinitionQueryableParameterReader
     {
-        private readonly IJsonApiRequest _jsonApiRequest;
+        private readonly IJsonApiRequest _request;
         private readonly IResourceDefinitionProvider _resourceDefinitionProvider;
         private readonly List<ExpressionInScope> _constraints = new List<ExpressionInScope>();
 
-        public ResourceDefinitionQueryableParameterReader(IJsonApiRequest jsonApiRequest, IResourceDefinitionProvider resourceDefinitionProvider)
+        public ResourceDefinitionQueryableParameterReader(IJsonApiRequest request, IResourceDefinitionProvider resourceDefinitionProvider)
         {
-            _jsonApiRequest = jsonApiRequest;
-            _resourceDefinitionProvider = resourceDefinitionProvider;
+            _request = request ?? throw new ArgumentNullException(nameof(request));
+            _resourceDefinitionProvider = resourceDefinitionProvider ?? throw new ArgumentNullException(nameof(resourceDefinitionProvider));
         }
 
         /// <inheritdoc/>
@@ -45,14 +46,14 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private object GetQueryableHandler(string parameterName)
         {
-            if (_jsonApiRequest.Kind != EndpointKind.Primary)
+            if (_request.Kind != EndpointKind.Primary)
             {
                 throw new InvalidQueryStringParameterException(parameterName,
                     "Custom query string parameters cannot be used on nested resource endpoints.",
                     $"Query string parameter '{parameterName}' cannot be used on a nested resource endpoint.");
             }
 
-            var resourceType = _jsonApiRequest.PrimaryResource.ResourceType;
+            var resourceType = _request.PrimaryResource.ResourceType;
             var resourceDefinition = _resourceDefinitionProvider.Get(resourceType);
             return resourceDefinition?.GetQueryableHandlerForQueryStringParameter(parameterName);
         }

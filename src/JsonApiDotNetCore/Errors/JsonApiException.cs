@@ -14,12 +14,7 @@ namespace JsonApiDotNetCore.Errors
 
         public Error Error { get; }
 
-        public JsonApiException(Error error)
-            : this(error, null)
-        {
-        }
-
-        public JsonApiException(Error error, Exception innerException)
+        public JsonApiException(Error error, Exception innerException = null)
             : base(error.Title, innerException)
         {
             Error = error;

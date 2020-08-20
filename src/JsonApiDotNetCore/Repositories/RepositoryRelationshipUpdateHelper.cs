@@ -18,13 +18,19 @@ namespace JsonApiDotNetCore.Repositories
 
         public RepositoryRelationshipUpdateHelper(IDbContextResolver contextResolver, IResourceFactory resourceFactory)
         {
-            _resourceFactory = resourceFactory;
+            if (contextResolver == null) throw new ArgumentNullException(nameof(contextResolver));
+
+            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
             _context = contextResolver.GetContext();
         }
 
         /// <inheritdoc/>
         public virtual async Task UpdateRelationshipAsync(IIdentifiable parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds)
         {
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
+            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
+            if (relationshipIds == null) throw new ArgumentNullException(nameof(relationshipIds));
+
             if (relationship is HasManyThroughAttribute hasManyThrough)
                 await UpdateManyToManyAsync(parent, hasManyThrough, relationshipIds);
             else if (relationship is HasManyAttribute)

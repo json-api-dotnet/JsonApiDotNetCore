@@ -19,14 +19,18 @@ namespace JsonApiDotNetCore.Repositories
 
         private SafeTransactionProxy(IDbContextTransaction transaction, bool shouldExecute)
         {
-            _transaction = transaction;
+            _transaction = transaction ?? throw new ArgumentNullException(nameof(transaction));
             _shouldExecute = shouldExecute;
         }
 
         public static async Task<IDbContextTransaction> GetOrCreateAsync(DatabaseFacade databaseFacade)
-            => databaseFacade.CurrentTransaction != null
+        {
+            if (databaseFacade == null) throw new ArgumentNullException(nameof(databaseFacade));
+
+            return databaseFacade.CurrentTransaction != null
                 ? new SafeTransactionProxy(databaseFacade.CurrentTransaction, shouldExecute: false)
                 : new SafeTransactionProxy(await databaseFacade.BeginTransactionAsync(), shouldExecute: true);
+        }
 
         /// <inheritdoc />
         public Guid TransactionId => _transaction.TransactionId;
@@ -40,10 +44,10 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public void Dispose() => Proxy(t => t.Dispose());
 
-        private void Proxy(Action<IDbContextTransaction> func)
+        private void Proxy(Action<IDbContextTransaction> action)
         {
             if(_shouldExecute) 
-                func(_transaction);
+                action(_transaction);
         }
 
         public Task CommitAsync(CancellationToken cancellationToken = default)

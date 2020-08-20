@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Configuration
         public IReadOnlyCollection<EagerLoadAttribute> EagerLoads { get; set; }
 
         private IReadOnlyCollection<ResourceFieldAttribute> _fields;
-        public IReadOnlyCollection<ResourceFieldAttribute> Fields { get { return _fields ??= Attributes.Cast<ResourceFieldAttribute>().Concat(Relationships).ToArray();  } }
+        public IReadOnlyCollection<ResourceFieldAttribute> Fields => _fields ??= Attributes.Cast<ResourceFieldAttribute>().Concat(Relationships).ToArray();
 
         /// <summary>
         /// Configures which links to show in the <see cref="TopLevelLinks"/>

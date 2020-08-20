@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IDeleteService<,>)
         };
 
-        private static readonly HashSet<Type> RepositoryInterfaces = new HashSet<Type> {
+        private static readonly HashSet<Type> _repositoryInterfaces = new HashSet<Type> {
             typeof(IResourceRepository<>),
             typeof(IResourceRepository<,>),
             typeof(IResourceWriteRepository<>),
@@ -51,8 +51,8 @@ namespace JsonApiDotNetCore.Configuration
 
         public ServiceDiscoveryFacade(IServiceCollection services, IResourceGraphBuilder resourceGraphBuilder)
         {
-            _services = services;
-            _resourceGraphBuilder = resourceGraphBuilder;
+            _services = services ?? throw new ArgumentNullException(nameof(services));
+            _resourceGraphBuilder = resourceGraphBuilder ?? throw new ArgumentNullException(nameof(resourceGraphBuilder));
         }
 
         /// <summary>
@@ -65,6 +65,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
         {
+            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+
             AddDbContextResolvers(assembly);
 
             var resourceDescriptors = _typeCache.GetIdentifiableTypes(assembly);
@@ -120,7 +122,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddRepositories(Assembly assembly, ResourceDescriptor resourceDescriptor)
         {
-            foreach (var serviceInterface in RepositoryInterfaces)
+            foreach (var serviceInterface in _repositoryInterfaces)
             {
                 RegisterServiceImplementations(assembly, serviceInterface, resourceDescriptor);
             }

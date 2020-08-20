@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Used to locate types and facilitate auto-resource discovery
+    /// Used to locate types and facilitate resource auto-discovery.
     /// </summary>
     internal static class TypeLocator
     {
@@ -53,7 +53,7 @@ namespace JsonApiDotNetCore.Configuration
             if (openGenericInterfaceType == null) throw new ArgumentNullException(nameof(openGenericInterfaceType));
             if (genericInterfaceArguments == null) throw new ArgumentNullException(nameof(genericInterfaceArguments));
             if (genericInterfaceArguments.Length == 0) throw new ArgumentException("No arguments supplied for the generic interface.", nameof(genericInterfaceArguments));
-            if (openGenericInterfaceType.IsGenericType == false) throw new ArgumentException("Requested type is not a generic type.", nameof(openGenericInterfaceType));
+            if (!openGenericInterfaceType.IsGenericType) throw new ArgumentException("Requested type is not a generic type.", nameof(openGenericInterfaceType));
 
             foreach (var type in assembly.GetTypes())
             {

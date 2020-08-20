@@ -17,55 +17,81 @@ namespace JsonApiDotNetCore.Configuration
 
         public ResourceGraph(IReadOnlyCollection<ResourceContext> resources)
         {
-            _resources = resources;
+            _resources = resources ?? throw new ArgumentNullException(nameof(resources));
         }
 
         /// <inheritdoc />
         public IReadOnlyCollection<ResourceContext> GetResourceContexts() => _resources;
+
         /// <inheritdoc />
         public ResourceContext GetResourceContext(string resourceName)
-            => _resources.SingleOrDefault(e => e.ResourceName == resourceName);
+        {
+            if (resourceName == null) throw new ArgumentNullException(nameof(resourceName));
+
+            return _resources.SingleOrDefault(e => e.ResourceName == resourceName);
+        }
+
         /// <inheritdoc />
         public ResourceContext GetResourceContext(Type resourceType)
-            => IsLazyLoadingProxyForResourceType(resourceType) ?
-                _resources.SingleOrDefault(e => e.ResourceType == resourceType.BaseType) :
-                _resources.SingleOrDefault(e => e.ResourceType == resourceType);
+        {
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+
+            return IsLazyLoadingProxyForResourceType(resourceType)
+                ? _resources.SingleOrDefault(e => e.ResourceType == resourceType.BaseType)
+                : _resources.SingleOrDefault(e => e.ResourceType == resourceType);
+        }
+
         /// <inheritdoc />
         public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
             => GetResourceContext(typeof(TResource));
+
         /// <inheritdoc/>
         public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
         {
             return Getter(selector);
         }
+
         /// <inheritdoc/>
         public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
         {
             return Getter(selector, FieldFilterType.Attribute).Cast<AttrAttribute>().ToArray();
         }
+
         /// <inheritdoc/>
         public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
         {
             return Getter(selector, FieldFilterType.Relationship).Cast<RelationshipAttribute>().ToArray();
         }
+
         /// <inheritdoc/>
         public IReadOnlyCollection<ResourceFieldAttribute> GetFields(Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             return GetResourceContext(type).Fields;
         }
+
         /// <inheritdoc/>
         public IReadOnlyCollection<AttrAttribute> GetAttributes(Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             return GetResourceContext(type).Attributes;
         }
+
         /// <inheritdoc/>
         public IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             return GetResourceContext(type).Relationships;
         }
+
         /// <inheritdoc />
         public RelationshipAttribute GetInverse(RelationshipAttribute relationship)
         {
+            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
+
             if (relationship.InverseNavigation == null) return null;
             return GetResourceContext(relationship.RightType)
                             .Relationships

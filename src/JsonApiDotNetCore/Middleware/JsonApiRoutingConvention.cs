@@ -36,13 +36,15 @@ namespace JsonApiDotNetCore.Middleware
         
         public JsonApiRoutingConvention(IJsonApiOptions options)
         {
-            _options = options;
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _formatter = new ResourceNameFormatter(options);
         }
 
         /// <inheritdoc/>
         public Type GetAssociatedResource(string controllerName)
         {
+            if (controllerName == null) throw new ArgumentNullException(nameof(controllerName));
+
             _registeredResources.TryGetValue(controllerName, out Type type);
             return type;
         }
@@ -50,6 +52,8 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc/>
         public void Apply(ApplicationModel application)
         {
+            if (application == null) throw new ArgumentNullException(nameof(application));
+
             foreach (var controller in application.Controllers)
             {
                 var resourceType = GetResourceTypeFromController(controller.ControllerType);
@@ -57,7 +61,7 @@ namespace JsonApiDotNetCore.Middleware
                 if (resourceType != null)
                     _registeredResources.Add(controller.ControllerName, resourceType);
 
-                if (RoutingConventionDisabled(controller) == false)
+                if (!RoutingConventionDisabled(controller))
                     continue;
 
                 var template = TemplateFromResource(controller) ?? TemplateFromController(controller);

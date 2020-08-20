@@ -48,6 +48,9 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// <inheritdoc />
         public override void SetValue(object resource, object newValue, IResourceFactory resourceFactory)
         {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            if (resourceFactory == null) throw new ArgumentNullException(nameof(resourceFactory));
+
             // If we're deleting the relationship (setting it to null), we set the foreignKey to null.
             // We could also set the actual property to null, but then we would first need to load the
             // current relationship, which requires an extra query.

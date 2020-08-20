@@ -1,3 +1,4 @@
+using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.QueryStrings;
 
@@ -14,8 +15,8 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         public ResourceObjectBuilderSettingsProvider(IDefaultsQueryStringParameterReader defaultsReader, INullsQueryStringParameterReader nullsReader)
         {
-            _defaultsReader = defaultsReader;
-            _nullsReader = nullsReader;
+            _defaultsReader = defaultsReader ?? throw new ArgumentNullException(nameof(defaultsReader));
+            _nullsReader = nullsReader ?? throw new ArgumentNullException(nameof(nullsReader));
         }
 
         /// <inheritdoc/>

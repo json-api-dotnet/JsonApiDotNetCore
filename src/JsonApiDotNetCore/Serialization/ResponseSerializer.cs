@@ -26,6 +26,7 @@ namespace JsonApiDotNetCore.Serialization
         where TResource : class, IIdentifiable
     {
         public RelationshipAttribute RequestRelationship { get; set; }
+        
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IJsonApiOptions _options;
         private readonly IMetaBuilder<TResource> _metaBuilder;
@@ -41,11 +42,11 @@ namespace JsonApiDotNetCore.Serialization
             IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
-            _fieldsToSerialize = fieldsToSerialize;
-            _options = options;
-            _linkBuilder = linkBuilder;
-            _metaBuilder = metaBuilder;
-            _includedBuilder = includedBuilder;
+            _fieldsToSerialize = fieldsToSerialize ?? throw new ArgumentNullException(nameof(fieldsToSerialize));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
+            _metaBuilder = metaBuilder ?? throw new ArgumentNullException(nameof(metaBuilder));
+            _includedBuilder = includedBuilder ?? throw new ArgumentNullException(nameof(includedBuilder));
             _primaryResourceType = typeof(TResource);
         }
 
@@ -85,7 +86,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (RequestRelationship != null && resource != null)
             {
-                var relationship = ((ResponseResourceObjectBuilder)_resourceObjectBuilder).Build(resource, RequestRelationship);
+                var relationship = ((ResponseResourceObjectBuilder)ResourceObjectBuilder).Build(resource, RequestRelationship);
                 return SerializeObject(relationship, _options.SerializerSettings, serializer => { serializer.NullValueHandling = NullValueHandling.Include; });
             }
 

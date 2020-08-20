@@ -12,12 +12,14 @@ namespace JsonApiDotNetCore.Configuration
 
         public RequestScopedServiceProvider(IHttpContextAccessor httpContextAccessor)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
         /// <inheritdoc />
         public object GetService(Type serviceType)
         {
+            if (serviceType == null) throw new ArgumentNullException(nameof(serviceType));
+
             if (_httpContextAccessor.HttpContext == null)
             {
                 throw new InvalidOperationException(

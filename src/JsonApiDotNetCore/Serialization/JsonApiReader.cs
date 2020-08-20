@@ -23,8 +23,10 @@ namespace JsonApiDotNetCore.Serialization
             IJsonApiRequest request,
             ILoggerFactory loggerFactory)
         {
-            _deserializer = deserializer;
-            _request = request;
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+
+            _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
+            _request = request ?? throw new ArgumentNullException(nameof(request));
             _traceWriter = new TraceLogWriter<JsonApiReader>(loggerFactory);
         }
 

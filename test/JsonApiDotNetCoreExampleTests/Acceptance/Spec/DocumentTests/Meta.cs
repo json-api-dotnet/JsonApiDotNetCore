@@ -121,7 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // Assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-            Assert.True(documents.Meta?.ContainsKey("totalResources") != true);
+            Assert.True(documents.Meta == null || !documents.Meta.ContainsKey("totalResources"));
         }
 
         [Fact]
@@ -164,7 +164,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.True(documents.Meta?.ContainsKey("totalResources") != true);
+            Assert.True(documents.Meta == null || !documents.Meta.ContainsKey("totalResources"));
         }
 
         [Fact]

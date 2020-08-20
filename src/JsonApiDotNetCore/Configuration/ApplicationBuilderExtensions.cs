@@ -1,3 +1,4 @@
+using System;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
 
@@ -20,6 +21,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         public static void UseJsonApi(this IApplicationBuilder builder)
         {
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
+
             builder.UseMiddleware<JsonApiMiddleware>();
         }
     }

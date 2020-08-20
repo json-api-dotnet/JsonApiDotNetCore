@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -12,6 +13,8 @@ namespace JsonApiDotNetCore.Middleware
 
         public void OnResultExecuting(ResultExecutingContext context)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             if (!context.HttpContext.IsJsonApiRequest())
             {
                 return;
