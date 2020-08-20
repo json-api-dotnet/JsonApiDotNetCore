@@ -10,20 +10,20 @@ namespace JsonApiDotNetCore.Controllers
     public abstract class JsonApiCommandController<TResource> : JsonApiCommandController<TResource, int> where TResource : class, IIdentifiable<int>
     {
         protected JsonApiCommandController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceCommandService<TResource, int> commandService)
-            : base(jsonApiOptions, loggerFactory, commandService)
+            : base(options, loggerFactory, commandService)
         { }
     }
 
     public abstract class JsonApiCommandController<TResource, TId> : BaseJsonApiController<TResource, TId> where TResource : class, IIdentifiable<TId>
     {
         protected JsonApiCommandController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceCommandService<TResource, TId> commandService)
-            : base(jsonApiOptions, loggerFactory, null, commandService)
+            : base(options, loggerFactory, null, commandService)
         { }
 
         [HttpPost]

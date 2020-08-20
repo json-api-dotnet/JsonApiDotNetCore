@@ -15,10 +15,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     : BaseJsonApiController<T> where T : class, IIdentifiable<int>
     {
         protected AbstractTodoItemsController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<T, int> service)
-            : base(jsonApiOptions, loggerFactory, service)
+            : base(options, loggerFactory, service)
         { }
     }
 
@@ -27,10 +27,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     public class TodoItemsTestController : AbstractTodoItemsController<TodoItem>
     {
         public TodoItemsTestController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<TodoItem> service)
-            : base(jsonApiOptions, loggerFactory, service)
+            : base(options, loggerFactory, service)
         { }
 
         [HttpGet]

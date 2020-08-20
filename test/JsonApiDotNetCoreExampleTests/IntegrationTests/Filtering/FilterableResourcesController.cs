@@ -7,9 +7,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
 {
     public sealed class FilterableResourcesController : JsonApiController<FilterableResource>
     {
-        public FilterableResourcesController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+        public FilterableResourcesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
             IResourceService<FilterableResource> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         {
         }
     }

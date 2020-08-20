@@ -10,10 +10,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     public sealed class CountriesController : JsonApiController<Country>
     {
         public CountriesController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<Country> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
     }
 }

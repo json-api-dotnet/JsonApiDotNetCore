@@ -26,14 +26,14 @@ namespace UnitTests
         public sealed class ResourceController : BaseJsonApiController<Resource>
         {
             public ResourceController(
-                IJsonApiOptions jsonApiOptions,
+                IJsonApiOptions options,
                 ILoggerFactory loggerFactory,
                 IResourceService<Resource, int> resourceService)
-                : base(jsonApiOptions, loggerFactory, resourceService)
+                : base(options, loggerFactory, resourceService)
             { }
 
             public ResourceController(
-                IJsonApiOptions jsonApiOptions,
+                IJsonApiOptions options,
                 ILoggerFactory loggerFactory,
                 IGetAllService<Resource, int> getAll = null,
                 IGetByIdService<Resource, int> getById = null,
@@ -43,7 +43,7 @@ namespace UnitTests
                 IUpdateService<Resource, int> update = null,
                 IUpdateRelationshipService<Resource, int> updateRelationships = null,
                 IDeleteService<Resource, int> delete = null)
-                : base(jsonApiOptions, loggerFactory, getAll, getById, getSecondary, getRelationship, create,
+                : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create,
                     update, updateRelationships, delete)
             { }
         }

@@ -10,20 +10,20 @@ namespace JsonApiDotNetCore.Controllers
     public abstract class JsonApiQueryController<TResource> : JsonApiQueryController<TResource, int> where TResource : class, IIdentifiable<int>
     {
         protected JsonApiQueryController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceQueryService<TResource, int> queryService)
-            : base(jsonApiOptions, loggerFactory, queryService)
+            : base(options, loggerFactory, queryService)
         { }
     }
 
     public abstract class JsonApiQueryController<TResource, TId> : BaseJsonApiController<TResource, TId> where TResource : class, IIdentifiable<TId>
     {
         protected JsonApiQueryController(
-            IJsonApiOptions jsonApiContext,
+            IJsonApiOptions context,
             ILoggerFactory loggerFactory,
             IResourceQueryService<TResource, TId> queryService)
-            : base(jsonApiContext, loggerFactory, queryService)
+            : base(context, loggerFactory, queryService)
         { }
 
         [HttpGet]

@@ -30,10 +30,10 @@ You can disable the default casing convention and specify your own template by u
 public class CamelCasedModelsController : JsonApiController<CamelCasedModel>
 {
     public CamelCasedModelsController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IResourceService<CamelCasedModel> resourceService)
-        : base(jsonApiOptions, loggerFactory, resourceService)
+        : base(options, loggerFactory, resourceService)
     { }
 }
 ```

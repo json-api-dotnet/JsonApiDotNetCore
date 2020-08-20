@@ -9,10 +9,10 @@ namespace NoEntityFrameworkExample.Controllers
     public sealed class WorkItemsController : JsonApiController<WorkItem>
     {
         public WorkItemsController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<WorkItem> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
     }
 }

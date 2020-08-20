@@ -9,20 +9,20 @@ namespace JsonApiDotNetCoreExample.Controllers
     public sealed class UsersController : JsonApiController<User>
     {
         public UsersController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<User> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
     }
 
     public sealed class SuperUsersController : JsonApiController<SuperUser>
     {
         public SuperUsersController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<SuperUser> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
     }
 }

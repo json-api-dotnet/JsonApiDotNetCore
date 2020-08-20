@@ -10,10 +10,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     public sealed class TagsController : JsonApiController<Tag>
     {
         public TagsController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<Tag, int> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
     }
 }

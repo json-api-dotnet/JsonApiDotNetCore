@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Controllers
 {
     public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiController where TResource : class, IIdentifiable<TId>
     {
-        private readonly IJsonApiOptions _jsonApiOptions;
+        private readonly IJsonApiOptions _options;
         private readonly IGetAllService<TResource, TId> _getAll;
         private readonly IGetByIdService<TResource, TId> _getById;
         private readonly IGetSecondaryService<TResource, TId> _getSecondary;
@@ -23,24 +23,24 @@ namespace JsonApiDotNetCore.Controllers
         private readonly ILogger<BaseJsonApiController<TResource, TId>> _logger;
 
         protected BaseJsonApiController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<TResource, TId> resourceService)
-            : this(jsonApiOptions, loggerFactory, resourceService, resourceService, resourceService, resourceService,
+            : this(options, loggerFactory, resourceService, resourceService, resourceService, resourceService,
                 resourceService, resourceService, resourceService, resourceService)
         { }
 
         protected BaseJsonApiController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceQueryService<TResource, TId> queryService = null,
             IResourceCommandService<TResource, TId> commandService = null)
-            : this(jsonApiOptions, loggerFactory, queryService, queryService, queryService, queryService, commandService,
+            : this(options, loggerFactory, queryService, queryService, queryService, queryService, commandService,
                 commandService, commandService, commandService)
         { }
 
         protected BaseJsonApiController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IGetAllService<TResource, TId> getAll = null,
             IGetByIdService<TResource, TId> getById = null,
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Controllers
             IUpdateRelationshipService<TResource, TId> updateRelationships = null,
             IDeleteService<TResource, TId> delete = null)
         {
-            _jsonApiOptions = jsonApiOptions;
+            _options = options;
             _logger = loggerFactory.CreateLogger<BaseJsonApiController<TResource, TId>>();
             _getAll = getAll;
             _getById = getById;
@@ -110,13 +110,13 @@ namespace JsonApiDotNetCore.Controllers
             if (resource == null)
                 throw new InvalidRequestBodyException(null, null, null);
 
-            if (!_jsonApiOptions.AllowClientGeneratedIds && !string.IsNullOrEmpty(resource.StringId))
+            if (!_options.AllowClientGeneratedIds && !string.IsNullOrEmpty(resource.StringId))
                 throw new ResourceIdInPostRequestNotAllowedException();
 
-            if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
+            if (_options.ValidateModelState && !ModelState.IsValid)
             {
-                var namingStrategy = _jsonApiOptions.SerializerContractResolver.NamingStrategy;
-                throw new InvalidModelStateException(ModelState, typeof(TResource), _jsonApiOptions.IncludeExceptionStackTraceInErrors, namingStrategy);
+                var namingStrategy = _options.SerializerContractResolver.NamingStrategy;
+                throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors, namingStrategy);
             }
 
             resource = await _create.CreateAsync(resource);
@@ -132,10 +132,10 @@ namespace JsonApiDotNetCore.Controllers
             if (resource == null)
                 throw new InvalidRequestBodyException(null, null, null);
 
-            if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
+            if (_options.ValidateModelState && !ModelState.IsValid)
             {
-                var namingStrategy = _jsonApiOptions.SerializerContractResolver.NamingStrategy;
-                throw new InvalidModelStateException(ModelState, typeof(TResource), _jsonApiOptions.IncludeExceptionStackTraceInErrors, namingStrategy);
+                var namingStrategy = _options.SerializerContractResolver.NamingStrategy;
+                throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors, namingStrategy);
             }
 
             var updated = await _update.UpdateAsync(id, resource);
@@ -165,22 +165,22 @@ namespace JsonApiDotNetCore.Controllers
     public abstract class BaseJsonApiController<TResource> : BaseJsonApiController<TResource, int> where TResource : class, IIdentifiable<int>
     {
         protected BaseJsonApiController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<TResource, int> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService, resourceService)
+            : base(options, loggerFactory, resourceService, resourceService)
         { }
 
         protected BaseJsonApiController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceQueryService<TResource, int> queryService = null,
             IResourceCommandService<TResource, int> commandService = null)
-            : base(jsonApiOptions, loggerFactory, queryService, commandService)
+            : base(options, loggerFactory, queryService, commandService)
         { }
 
         protected BaseJsonApiController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IGetAllService<TResource, int> getAll = null,
             IGetByIdService<TResource, int> getById = null,
@@ -190,7 +190,7 @@ namespace JsonApiDotNetCore.Controllers
             IUpdateService<TResource, int> update = null,
             IUpdateRelationshipService<TResource, int> updateRelationships = null,
             IDeleteService<TResource, int> delete = null)
-            : base(jsonApiOptions, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
+            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
                 updateRelationships, delete)
         { }
     }

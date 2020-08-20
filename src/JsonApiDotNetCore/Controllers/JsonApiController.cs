@@ -10,14 +10,14 @@ namespace JsonApiDotNetCore.Controllers
     public class JsonApiController<TResource, TId> : BaseJsonApiController<TResource, TId> where TResource : class, IIdentifiable<TId>
     {
         public JsonApiController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<TResource, TId> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
 
         public JsonApiController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IGetAllService<TResource, TId> getAll = null,
             IGetByIdService<TResource, TId> getById = null,
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Controllers
             IUpdateService<TResource, TId> update = null,
             IUpdateRelationshipService<TResource, TId> updateRelationships = null,
             IDeleteService<TResource, TId> delete = null)
-            : base(jsonApiOptions, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
+            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
                 updateRelationships, delete)
         { }
 
@@ -67,14 +67,14 @@ namespace JsonApiDotNetCore.Controllers
     public class JsonApiController<TResource> : JsonApiController<TResource, int> where TResource : class, IIdentifiable<int>
     {
         public JsonApiController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<TResource, int> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
 
         public JsonApiController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IGetAllService<TResource, int> getAll = null,
             IGetByIdService<TResource, int> getById = null,
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCore.Controllers
             IUpdateService<TResource, int> update = null,
             IUpdateRelationshipService<TResource, int> updateRelationships = null,
             IDeleteService<TResource, int> delete = null)
-            : base(jsonApiOptions, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
+            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
                 updateRelationships, delete)
         { }
     }

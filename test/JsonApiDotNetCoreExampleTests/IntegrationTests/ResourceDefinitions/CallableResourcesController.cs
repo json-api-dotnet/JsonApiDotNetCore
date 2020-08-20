@@ -7,9 +7,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 {
     public sealed class CallableResourcesController : JsonApiController<CallableResource>
     {
-        public CallableResourcesController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+        public CallableResourcesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
             IResourceService<CallableResource> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         {
         }
     }

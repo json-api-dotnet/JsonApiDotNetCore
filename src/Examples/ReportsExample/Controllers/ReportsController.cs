@@ -12,10 +12,10 @@ namespace ReportsExample.Controllers
     public class ReportsController : BaseJsonApiController<Report> 
     {
         public ReportsController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IGetAllService<Report> getAll)
-            : base(jsonApiOptions, loggerFactory, getAll)
+            : base(options, loggerFactory, getAll)
         { }
 
         [HttpGet]
