@@ -10,7 +10,6 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Execution
 {
-    /// <inheritdoc />
     public sealed class DiffableResourceHashSet<TResource> : ResourceHashSet<TResource>, IDiffableResourceHashSet<TResource> where TResource : class, IIdentifiable
     {
         private readonly HashSet<TResource> _databaseValues;
