@@ -38,12 +38,12 @@ If($env:APPVEYOR_REPO_TAG -eq $true) {
 
     IF ([string]::IsNullOrWhitespace($revision)){
         Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts"
-        dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --include-symbols
+                              dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts
         CheckLastExitCode
     }
     Else {
         Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision"
-        dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision --include-symbols
+                              dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision
         CheckLastExitCode
     }
 }
