@@ -38,18 +38,19 @@ If($env:APPVEYOR_REPO_TAG -eq $true) {
 
     IF ([string]::IsNullOrWhitespace($revision)){
         Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts"
-        dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --include-symbols
+                              dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts
         CheckLastExitCode
     }
     Else {
         Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision"
-        dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision --include-symbols
+                              dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision
         CheckLastExitCode
     }
 }
-Else { 
-    Write-Output "VERSION-SUFFIX: alpha5-$revision"
-    Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=alpha1-$revision"
-    dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=alpha1-$revision --include-symbols
+Else {
+    $packageVersionSuffix="alpha5-$revision"
+    Write-Output "VERSION-SUFFIX: $packageVersionSuffix"
+    Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$packageVersionSuffix"
+                          dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$packageVersionSuffix
     CheckLastExitCode
 }
