@@ -121,3 +121,15 @@ A lot of changes were introduced in v4.0.0, the following chart should help you 
 | ----------------- | ------------- |
 | 2.*               | v3.*          |
 | 3.*               | v4.*          |
+
+## Trying out the latest build
+
+After each commit, a new prerelease NuGet package is automatically published to AppVeyor at https://ci.appveyor.com/nuget/jsonapidotnetcore. To try it out, follow the next steps:
+
+* In Visual Studio: **Tools**, **NuGet Package Manager**, **Package Manager Settings**, **Package Sources**
+    * Click **+**
+    * Name: **AppVeyor JADNC**, Source: **https://ci.appveyor.com/nuget/jsonapidotnetcore**
+    * Click **Update**, **Ok**
+* Open the NuGet package manager console (**Tools**, **NuGet Package Manager**, **Package Manager Console**)
+    * Select **AppVeyor JADNC** as package source
+    * Run command: `Install-Package JonApiDotNetCore -pre`
