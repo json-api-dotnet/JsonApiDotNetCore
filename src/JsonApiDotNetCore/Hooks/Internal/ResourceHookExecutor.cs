@@ -338,7 +338,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             // If it isn't, JADNC currently knows nothing about this relationship pointing back, and it 
             // currently cannot fire hooks for resources resolved through inverse relationships.
             var inversableRelationshipAttributes = resourcesByRelationship.Where(kvp => kvp.Key.InverseNavigation != null);
-            return inversableRelationshipAttributes.ToDictionary(kvp => _resourceGraph.GetInverse(kvp.Key), kvp => kvp.Value);
+            return inversableRelationshipAttributes.ToDictionary(kvp => _resourceGraph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             if (container == null) return;
             var implicitAffected = _executorHelper.LoadImplicitlyAffected(implicitsTarget, existingImplicitResources);
             if (!implicitAffected.Any()) return;
-            var inverse = implicitAffected.ToDictionary(kvp => _resourceGraph.GetInverse(kvp.Key), kvp => kvp.Value);
+            var inverse = implicitAffected.ToDictionary(kvp => _resourceGraph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
             var resourcesByRelationship = CreateRelationshipHelper(resourceTypeToInclude, inverse);
             CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { resourcesByRelationship, pipeline, });
         }
@@ -424,7 +424,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         }
 
         /// <summary>
-        /// Filter the source set by removing the resources with id that are not 
+        /// Filter the source set by removing the resources with ID that are not 
         /// in <paramref name="allowedIds"/>.
         /// </summary>
         private HashSet<IIdentifiable> GetAllowedResources(IEnumerable source, IEnumerable<string> allowedIds)

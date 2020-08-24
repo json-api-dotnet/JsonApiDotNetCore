@@ -11,6 +11,11 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
+    /// <summary>
+    /// Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture that delegates to a Resource Service.
+    /// </summary>
+    /// <typeparam name="TResource">The resource type.</typeparam>
+    /// <typeparam name="TId">The resource identifier type.</typeparam>
     public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiController where TResource : class, IIdentifiable<TId>
     {
         private readonly IJsonApiOptions _options;
@@ -24,6 +29,9 @@ namespace JsonApiDotNetCore.Controllers
         private readonly IDeleteService<TResource, TId> _delete;
         private readonly TraceLogWriter<BaseJsonApiController<TResource, TId>> _traceWriter;
 
+        /// <summary>
+        /// Creates an instance from a read/write service.
+        /// </summary>
         protected BaseJsonApiController(
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
@@ -32,6 +40,9 @@ namespace JsonApiDotNetCore.Controllers
                 resourceService, resourceService, resourceService, resourceService)
         { }
 
+        /// <summary>
+        /// Creates an instance from separate services for reading and writing.
+        /// </summary>
         protected BaseJsonApiController(
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
@@ -41,6 +52,9 @@ namespace JsonApiDotNetCore.Controllers
                 commandService, commandService, commandService)
         { }
 
+        /// <summary>
+        /// Creates an instance from separate services for the various individual read and write methods.
+        /// </summary>
         protected BaseJsonApiController(
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
@@ -67,6 +81,10 @@ namespace JsonApiDotNetCore.Controllers
             _delete = delete;
         }
 
+        /// <summary>
+        /// Gets a collection of top-level (non-nested) resources.
+        /// Example: GET /articles HTTP/1.1
+        /// </summary>
         public virtual async Task<IActionResult> GetAsync()
         {
             _traceWriter.LogMethodStart();
@@ -76,6 +94,10 @@ namespace JsonApiDotNetCore.Controllers
             return Ok(resources);
         }
 
+        /// <summary>
+        /// Gets a single top-level (non-nested) resource by ID.
+        /// Example: /articles/1
+        /// </summary>
         public virtual async Task<IActionResult> GetAsync(TId id)
         {
             _traceWriter.LogMethodStart(new {id});
@@ -85,6 +107,10 @@ namespace JsonApiDotNetCore.Controllers
             return Ok(resource);
         }
 
+        /// <summary>
+        /// Gets a single resource relationship.
+        /// Example: GET /articles/1/relationships/author HTTP/1.1
+        /// </summary>
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
@@ -96,6 +122,12 @@ namespace JsonApiDotNetCore.Controllers
             return Ok(relationship);
         }
 
+        /// <summary>
+        /// Gets a single resource or multiple resources at a nested endpoint.
+        /// Examples:
+        /// GET /articles/1/author HTTP/1.1
+        /// GET /articles/1/revisions HTTP/1.1
+        /// </summary>
         public virtual async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
@@ -106,6 +138,9 @@ namespace JsonApiDotNetCore.Controllers
             return Ok(relationship);
         }
 
+        /// <summary>
+        /// Creates a new resource.
+        /// </summary>
         public virtual async Task<IActionResult> PostAsync([FromBody] TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});
@@ -130,6 +165,9 @@ namespace JsonApiDotNetCore.Controllers
             return Created($"{HttpContext.Request.Path}/{resource.StringId}", resource);
         }
 
+        /// <summary>
+        /// Updates an existing resource. May contain a partial set of attributes.
+        /// </summary>
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource)
         {
             _traceWriter.LogMethodStart(new {id, resource});
@@ -148,6 +186,9 @@ namespace JsonApiDotNetCore.Controllers
             return updated == null ? Ok(null) : Ok(updated);
         }
 
+        /// <summary>
+        /// Updates a relationship.
+        /// </summary>
         public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object relationships)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
@@ -158,6 +199,9 @@ namespace JsonApiDotNetCore.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Deletes a resource.
+        /// </summary>
         public virtual async Task<IActionResult> DeleteAsync(TId id)
         {
             _traceWriter.LogMethodStart(new {id});
@@ -169,8 +213,10 @@ namespace JsonApiDotNetCore.Controllers
         }
     }
 
+    /// <inheritdoc />
     public abstract class BaseJsonApiController<TResource> : BaseJsonApiController<TResource, int> where TResource : class, IIdentifiable<int>
     {
+        /// <inheritdoc />
         protected BaseJsonApiController(
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
@@ -178,6 +224,7 @@ namespace JsonApiDotNetCore.Controllers
             : base(options, loggerFactory, resourceService, resourceService)
         { }
 
+        /// <inheritdoc />
         protected BaseJsonApiController(
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
@@ -186,6 +233,7 @@ namespace JsonApiDotNetCore.Controllers
             : base(options, loggerFactory, queryService, commandService)
         { }
 
+        /// <inheritdoc />
         protected BaseJsonApiController(
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,

@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Middleware
     ///
     /// public class RandomNameController<SomeResource> : JsonApiController<SomeResource> { } // => /someResources/relationship/relatedResource
     ///
-    /// // when using the kebab-case formatter:
+    /// // when using kebab-case casing convention:
     /// public class SomeResourceController<SomeResource> : JsonApiController<SomeResource> { } // => /some-resources/relationship/related-resource
     ///
     /// public class SomeVeryCustomController<SomeResource> : CoreJsonApiController { } // => /someVeryCustoms/relationship/relatedResource

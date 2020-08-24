@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Errors
         public ResourceIdInPostRequestNotAllowedException()
             : base(new Error(HttpStatusCode.Forbidden)
             {
-                Title = "Specifying the resource id in POST requests is not allowed.",
+                Title = "Specifying the resource ID in POST requests is not allowed.",
                 Source =
                 {
                     Pointer = "/data/id"

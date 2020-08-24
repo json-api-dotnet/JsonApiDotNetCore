@@ -2,67 +2,33 @@ using System;
 
 namespace JsonApiDotNetCore.Resources.Annotations
 {
+    /// <summary>
+    /// Used to expose a property on a resource class as a json:api attribute (https://jsonapi.org/format/#document-resource-object-attributes).
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class AttrAttribute : ResourceFieldAttribute
     {
-        internal bool HasExplicitCapabilities { get; }
+        private AttrCapabilities? _capabilities;
 
-        public AttrCapabilities Capabilities { get; internal set; }
+        internal bool HasExplicitCapabilities => _capabilities != null;
 
         /// <summary>
-        /// Exposes a resource property as a json:api attribute using the configured casing convention and capabilities.
+        /// The set of capabilities that are allowed to be performed on this attribute.
+        /// When not explicitly assigned, the configured default set of capabilities is used.
         /// </summary>
         /// <example>
         /// <code>
         /// public class Author : Identifiable
         /// {
-        ///     [Attr]
+        ///     [Attr(Capabilities = AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)]
         ///     public string Name { get; set; }
         /// }
         /// </code>
         /// </example>
-        public AttrAttribute()
+        public AttrCapabilities Capabilities
         {
-        }
-
-        /// <summary>
-        /// Exposes a resource property as a json:api attribute with an explicit name, using configured capabilities.
-        /// </summary>
-        public AttrAttribute(string publicName) 
-            : base(publicName)
-        {
-            if (publicName == null)
-            {
-                throw new ArgumentNullException(nameof(publicName));
-            }
-        }
-
-        /// <summary>
-        /// Exposes a resource property as a json:api attribute using the configured casing convention and an explicit set of capabilities.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// public class Author : Identifiable
-        /// {
-        ///     [Attr(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)]
-        ///     public string Name { get; set; }
-        /// }
-        /// </code>
-        /// </example>
-        public AttrAttribute(AttrCapabilities capabilities)
-        {
-            HasExplicitCapabilities = true;
-            Capabilities = capabilities;
-        }
-
-        /// <summary>
-        /// Exposes a resource property as a json:api attribute with an explicit name and capabilities.
-        /// </summary>
-        public AttrAttribute(string publicName, AttrCapabilities capabilities) 
-            : this(publicName)
-        {
-            HasExplicitCapabilities = true;
-            Capabilities = capabilities;
+            get => _capabilities ?? default;
+            set => _capabilities = value;
         }
 
         /// <summary>

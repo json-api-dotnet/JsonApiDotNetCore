@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Repositories
 {
     /// <summary>
-    /// Provides a repository implementation that uses Entity Framework Core.
+    /// Implements the foundational Repository layer in the JsonApiDotNetCore architecture that uses Entity Framework Core.
     /// </summary>
     public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository<TResource, TId>
         where TResource : class, IIdentifiable<TId>
@@ -141,8 +141,8 @@ namespace JsonApiDotNetCore.Repositories
         /// <remark>
         /// Consider the following example: 
         /// person.todoItems = [t1,t2] is updated to [t3, t4]. If t3, and/or t4 was
-        /// already related to a other person, and these persons are NOT loaded in to the 
-        /// db context, then the query may cause a foreign key constraint. Loading
+        /// already related to a other person, and these persons are NOT loaded into the 
+        /// DbContext, then the query may cause a foreign key constraint. Loading
         /// these "inverse relationships" into the DB context ensures EF core to take
         /// this into account.
         /// </remark>
@@ -333,6 +333,7 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
+        /// <inheritdoc />
         public virtual void FlushFromCache(TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});
@@ -399,7 +400,7 @@ namespace JsonApiDotNetCore.Repositories
     }
 
     /// <summary>
-    /// Provides a repository implementation that uses Entity Framework Core.
+    /// Implements the foundational repository implementation that uses Entity Framework Core.
     /// </summary>
     public class EntityFrameworkCoreRepository<TResource> : EntityFrameworkCoreRepository<TResource, int>, IResourceRepository<TResource>
         where TResource : class, IIdentifiable<int>

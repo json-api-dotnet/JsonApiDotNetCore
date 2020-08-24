@@ -2,30 +2,27 @@ using System;
 
 namespace JsonApiDotNetCore.Resources.Annotations
 {
+    /// <summary>
+    /// Used to expose a property on a resource class as a json:api to-many relationship (https://jsonapi.org/format/#document-resource-object-relationships).
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class HasManyAttribute : RelationshipAttribute
     {
         /// <summary>
-        /// Create a HasMany relational link to another resource
+        /// Creates a HasMany relational link to another resource.
         /// </summary>
-        /// 
-        /// <param name="publicName">The relationship name as exposed by the API</param>
-        /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Links.All"/></param>
-        /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
-        /// <param name="inverseNavigationProperty"></param>
         /// <example>
         /// <code><![CDATA[
         /// public class Author : Identifiable 
         /// {
-        ///     [HasMany("articles"]
+        ///     [HasMany(PublicName = "articles")]
         ///     public List<Article> Articles { get; set; }
         /// }
         /// ]]></code>
         /// </example>
-        public HasManyAttribute(string publicName = null, Links relationshipLinks = Links.All, bool canInclude = true, string inverseNavigationProperty = null)
-        : base(publicName, relationshipLinks, canInclude)
+        public HasManyAttribute()
         {
-            InverseNavigation = inverseNavigationProperty;
+            Links = LinkTypes.All;
         }
     }
 }

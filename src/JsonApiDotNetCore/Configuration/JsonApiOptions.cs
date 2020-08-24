@@ -20,13 +20,13 @@ namespace JsonApiDotNetCore.Configuration
         public bool UseRelativeLinks { get; set; }
 
         /// <inheritdoc />
-        public Links TopLevelLinks { get; set; } = Links.All;
+        public LinkTypes TopLevelLinks { get; set; } = LinkTypes.All;
 
         /// <inheritdoc />
-        public Links ResourceLinks { get; set; } = Links.All;
+        public LinkTypes ResourceLinks { get; set; } = LinkTypes.All;
 
         /// <inheritdoc />
-        public Links RelationshipLinks { get; set; } = Links.All;
+        public LinkTypes RelationshipLinks { get; set; } = LinkTypes.All;
 
         /// <inheritdoc />
         public bool IncludeTotalResourceCount { get; set; }
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Configuration
         };
 
         /// <summary>
-        /// Provides an interface for formatting relationship id properties given the navigation property name
+        /// Provides an interface for formatting relationship ID properties given the navigation property name.
         /// </summary>
         public static IRelatedIdMapper RelatedIdMapper { get; set; } = new RelatedIdMapper();
 

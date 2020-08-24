@@ -74,10 +74,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 {
                     continue;
                 }
-                builder.AddResource(rc.ResourceType, rc.IdentityType, rc.ResourceName);
+                builder.Add(rc.ResourceType, rc.IdentityType, rc.ResourceName);
             }
-            builder.AddResource<TodoItemClient>(formatter.FormatResourceName(typeof(TodoItem)));
-            builder.AddResource<TodoItemCollectionClient, Guid>(formatter.FormatResourceName(typeof(TodoItemCollection)));
+            builder.Add<TodoItemClient>(formatter.FormatResourceName(typeof(TodoItem)));
+            builder.Add<TodoItemCollectionClient, Guid>(formatter.FormatResourceName(typeof(TodoItemCollection)));
             return new ResponseDeserializer(builder.Build(), new ResourceFactory(_factory.ServiceProvider));
         }
 

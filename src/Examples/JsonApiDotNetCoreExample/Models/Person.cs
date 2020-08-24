@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public string LastName { get; set; }
 
-        [Attr("the-Age")]
+        [Attr(PublicName = "the-Age")]
         public int Age { get; set; }
 
         [Attr]
@@ -66,7 +66,7 @@ namespace JsonApiDotNetCoreExample.Models
         public TodoItem StakeHolderTodoItem { get; set; }
         public int? StakeHolderTodoItemId { get; set; }
 
-        [HasOne(links: Links.All, canInclude: false)]
+        [HasOne(Links = LinkTypes.All, CanInclude = false)]
         public TodoItem UnIncludeableItem { get; set; }
 
         [HasOne]

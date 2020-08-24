@@ -7,20 +7,37 @@ using System.Reflection;
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     /// <summary>
-    /// Create a HasMany relationship through a many-to-many join relationship.
-    /// This type can only be applied on types that implement ICollection.
+    /// Used to expose a property on a resource class as a json:api to-many relationship (https://jsonapi.org/format/#document-resource-object-relationships)
+    /// through a many-to-many join relationship.
     /// </summary>
-    /// 
     /// <example>
     /// In the following example, we expose a relationship named "tags"
     /// through the navigation property `ArticleTags`.
     /// The `Tags` property is decorated with `NotMapped` so that EF does not try
     /// to map this to a database relationship.
     /// <code><![CDATA[
-    /// [NotMapped]
-    /// [HasManyThrough("tags", nameof(ArticleTags))]
-    /// public ICollection<Tag> Tags { get; set; }
-    /// public ICollection<ArticleTag> ArticleTags { get; set; }
+    /// public sealed class Article : Identifiable
+    /// {
+    ///     [NotMapped]
+    ///     [HasManyThrough(nameof(ArticleTags), PublicName = "tags")]
+    ///     public ISet<Tag> Tags { get; set; }
+    ///     public ISet<ArticleTag> ArticleTags { get; set; }
+    /// }
+    ///
+    /// public class Tag : Identifiable
+    /// {
+    ///     [Attr]
+    ///     public string Name { get; set; }
+    /// }
+    ///
+    /// public sealed class ArticleTag
+    /// {
+    ///     public int ArticleId { get; set; }
+    ///     public Article Article { get; set; }
+    ///
+    ///     public int TagId { get; set; }
+    ///     public Tag Tag { get; set; }
+    /// }
     /// ]]></code>
     /// </example>
     [AttributeUsage(AttributeTargets.Property)]
@@ -28,147 +45,64 @@ namespace JsonApiDotNetCore.Resources.Annotations
     {
         /// <summary>
         /// The name of the join property on the parent resource.
+        /// In the example described above, this would be "ArticleTags".
         /// </summary>
-        /// <example>
-        /// In the `[HasManyThrough("tags", nameof(ArticleTags))]` example
-        /// this would be "ArticleTags".
-        /// </example>
         internal string ThroughPropertyName { get; }
 
         /// <summary>
         /// The join type.
+        /// In the example described above, this would be `ArticleTag`.
         /// </summary>
-        /// <example>
-        /// In the `[HasManyThrough("tags", nameof(ArticleTags))]` example
-        /// this would be `ArticleTag`.
-        /// </example>
         public Type ThroughType { get; internal set; }
 
         /// <summary>
         /// The navigation property back to the parent resource from the through type.
+        /// In the example described above, this would point to the `Article.ArticleTags.Article` property.
         /// </summary>
-        /// 
-        /// <example>
-        /// In the `[HasManyThrough("tags", nameof(ArticleTags))]` example
-        /// this would point to the `Article.ArticleTags.Article` property
-        ///
-        /// <code>
-        /// public Article Article { get; set; }
-        /// </code>
-        ///
-        /// </example>
         public PropertyInfo LeftProperty { get; internal set; }
 
         /// <summary>
-        /// The id property back to the parent resource from the through type.
+        /// The ID property back to the parent resource from the through type.
+        /// In the example described above, this would point to the `Article.ArticleTags.ArticleId` property.
         /// </summary>
-        /// 
-        /// <example>
-        /// In the `[HasManyThrough("tags", nameof(ArticleTags))]` example
-        /// this would point to the `Article.ArticleTags.ArticleId` property
-        ///
-        /// <code>
-        /// public int ArticleId { get; set; }
-        /// </code>
-        ///
-        /// </example>
         public PropertyInfo LeftIdProperty { get; internal set; }
 
         /// <summary>
         /// The navigation property to the related resource from the through type.
+        /// In the example described above, this would point to the `Article.ArticleTags.Tag` property.
         /// </summary>
-        /// 
-        /// <example>
-        /// In the `[HasManyThrough("tags", nameof(ArticleTags))]` example
-        /// this would point to the `Article.ArticleTags.Tag` property
-        ///
-        /// <code>
-        /// public Tag Tag { get; set; }
-        /// </code>
-        ///
-        /// </example>
         public PropertyInfo RightProperty { get; internal set; }
 
         /// <summary>
-        /// The id property to the related resource from the through type.
+        /// The ID property to the related resource from the through type.
+        /// In the example described above, this would point to the `Article.ArticleTags.TagId` property.
         /// </summary>
-        /// 
-        /// <example>
-        /// In the `[HasManyThrough("tags", nameof(ArticleTags))]` example
-        /// this would point to the `Article.ArticleTags.TagId` property
-        ///
-        /// <code>
-        /// public int TagId { get; set; }
-        /// </code>
-        ///
-        /// </example>
         public PropertyInfo RightIdProperty { get; internal set; }
 
         /// <summary>
         /// The join resource property on the parent resource.
+        /// In the example described above, this would point to the `Article.ArticleTags` property.
         /// </summary>
-        /// 
-        /// <example>
-        /// In the `[HasManyThrough("tags", nameof(ArticleTags))]` example
-        /// this would point to the `Article.ArticleTags` property
-        ///
-        /// <code><![CDATA[
-        /// public ICollection<ArticleTags> ArticleTags { get; set; }
-        /// ]]></code>
-        ///
-        /// </example>
         public PropertyInfo ThroughProperty { get; internal set; }
 
-        /// <inheritdoc />
-        /// <example>
-        /// "ArticleTags.Tag"
-        /// </example>
+        /// <summary>
+        /// The internal navigation property path to the related resource.
+        /// In the example described above, this would contain "ArticleTags.Tag".
+        /// </summary>
         public override string RelationshipPath => $"{ThroughProperty.Name}.{RightProperty.Name}";
 
         /// <summary>
-        /// Create a HasMany relationship through a many-to-many join relationship.
-        /// The public name exposed through the API will be based on the configured convention.
+        /// Creates a HasMany relationship through a many-to-many join relationship.
         /// </summary>
-        /// 
-        /// <param name="throughPropertyName">The name of the navigation property that will be used to get the HasMany relationship</param>
-        /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Links.All"/></param>
-        /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
-        /// 
-        /// <example>
-        /// <code>
-        /// [HasManyThrough(nameof(ArticleTags), relationshipLinks: Links.All, canInclude: true)]
-        /// </code>
-        /// </example>
-        public HasManyThroughAttribute(string throughPropertyName, Links relationshipLinks = Links.All, bool canInclude = true)
-        : base(null, relationshipLinks, canInclude)
+        /// <param name="throughPropertyName">The name of the navigation property that will be used to access the join relationship.</param>
+        public HasManyThroughAttribute(string throughPropertyName)
         {
             ThroughPropertyName = throughPropertyName ?? throw new ArgumentNullException(nameof(throughPropertyName));
         }
 
         /// <summary>
-        /// Create a HasMany relationship through a many-to-many join relationship.
-        /// </summary>
-        /// 
-        /// <param name="publicName">The relationship name as exposed by the API</param>
-        /// <param name="throughPropertyName">The name of the navigation property that will be used to get the HasMany relationship</param>
-        /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Links.All"/></param>
-        /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
-        /// 
-        /// <example>
-        /// <code>
-        /// [HasManyThrough("tags", nameof(ArticleTags), relationshipLinks: Links.All, canInclude: true)]
-        /// </code>
-        /// </example>
-        public HasManyThroughAttribute(string publicName, string throughPropertyName, Links relationshipLinks = Links.All, bool canInclude = true)
-        : base(publicName, relationshipLinks, canInclude)
-        {
-            ThroughPropertyName = throughPropertyName ?? throw new ArgumentNullException(nameof(throughPropertyName));
-        }
-
-        /// <summary>
-        /// Traverses through the provided resource and returns the 
-        /// value of the relationship on the other side of a through type
-        /// (e.g. Articles.ArticleTags.Tag).
+        /// Traverses through the provided resource and returns the value of the relationship on the other side of the through type.
+        /// In the example described above, this would be the value of "Articles.ArticleTags.Tag".
         /// </summary>
         public override object GetValue(object resource)
         {
@@ -183,7 +117,10 @@ namespace JsonApiDotNetCore.Resources.Annotations
             return TypeHelper.CopyToTypedCollection(rightResources, Property.PropertyType);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Traverses through the provided resource and sets the value of the relationship on the other side of the through type.
+        /// In the example described above, this would be the value of "Articles.ArticleTags.Tag".
+        /// </summary>
         public override void SetValue(object resource, object newValue, IResourceFactory resourceFactory)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));

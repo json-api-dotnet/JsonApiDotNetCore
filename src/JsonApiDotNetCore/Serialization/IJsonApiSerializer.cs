@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.Serialization
     public interface IJsonApiSerializer
     {
         /// <summary>
-        /// Serializes a single resource or a list of resources.
+        /// Serializes a single resource or a collection of resources.
         /// </summary>
         string Serialize(object content);
     }

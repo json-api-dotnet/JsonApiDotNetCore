@@ -3,7 +3,7 @@ using System;
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     [Flags]
-    public enum Links
+    public enum LinkTypes
     {
         Self = 1 << 0,
         Related = 1 << 1,

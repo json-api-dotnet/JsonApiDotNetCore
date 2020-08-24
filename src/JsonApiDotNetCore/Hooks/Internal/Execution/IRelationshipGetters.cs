@@ -23,7 +23,6 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         /// Gets a collection of all the resources for the property within <paramref name="navigationAction"/>
         /// has been affected by the request
         /// </summary>
-        /// <param name="navigationAction"></param>
         HashSet<TLeftResource> GetAffected(Expression<Func<TLeftResource, object>> navigationAction);
     }
 }

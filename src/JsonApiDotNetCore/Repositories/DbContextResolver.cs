@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Repositories
 {
+    /// <inheritdoc />
     public sealed class DbContextResolver<TDbContext> : IDbContextResolver
         where TDbContext : DbContext
     {

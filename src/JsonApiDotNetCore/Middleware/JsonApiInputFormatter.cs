@@ -6,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Middleware
 {
+    /// <summary>
+    /// Extensibility point for reading incoming HTTP request.
+    /// </summary>
     public sealed class JsonApiInputFormatter : IInputFormatter
     {
         public bool CanRead(InputFormatterContext context)

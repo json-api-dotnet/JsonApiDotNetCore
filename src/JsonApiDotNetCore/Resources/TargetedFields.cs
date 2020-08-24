@@ -8,6 +8,7 @@ namespace JsonApiDotNetCore.Resources
     {
         /// <inheritdoc />
         public IList<AttrAttribute> Attributes { get; set; } = new List<AttrAttribute>();
+
         /// <inheritdoc />
         public IList<RelationshipAttribute> Relationships { get; set; } = new List<RelationshipAttribute>();
     }

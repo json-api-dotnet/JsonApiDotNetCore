@@ -21,10 +21,10 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Attempts to get a descriptor of the resource type.
+        /// Attempts to get a descriptor for the resource type.
         /// </summary>
         /// <returns>
-        /// True if the type is a valid json:api type (must implement <see cref="IIdentifiable"/>), false otherwise.
+        /// <c>true</c> if the type is a valid json:api type (must implement <see cref="IIdentifiable"/>); <c>false</c>, otherwise.
         /// </returns>
         internal static bool TryGetResourceDescriptor(Type type, out ResourceDescriptor descriptor)
         {
@@ -37,11 +37,11 @@ namespace JsonApiDotNetCore.Configuration
             return false;
         }
         /// <summary>
-        /// Get all implementations of the generic interface
+        /// Gets all implementations of the generic interface.
         /// </summary>
-        /// <param name="assembly">The assembly to search</param>
-        /// <param name="openGenericInterfaceType">The open generic type, e.g. `typeof(IResourceService&lt;&gt;)`</param>
-        /// <param name="genericInterfaceArguments">Parameters to the generic type</param>
+        /// <param name="assembly">The assembly to search.</param>
+        /// <param name="openGenericInterfaceType">The open generic type, e.g. `typeof(IResourceService&lt;&gt;)`.</param>
+        /// <param name="genericInterfaceArguments">Parameters to the generic type.</param>
         /// <example>
         /// <code><![CDATA[
         /// GetGenericInterfaceImplementation(assembly, typeof(IResourceService<>), typeof(Article), typeof(Guid));
@@ -78,11 +78,11 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Get all derivatives of the concrete, generic type.
+        /// Gets all derivatives of the concrete, generic type.
         /// </summary>
-        /// <param name="assembly">The assembly to search</param>
-        /// <param name="openGenericType">The open generic type, e.g. `typeof(ResourceDefinition&lt;&gt;)`</param>
-        /// <param name="genericArguments">Parameters to the generic type</param>
+        /// <param name="assembly">The assembly to search.</param>
+        /// <param name="openGenericType">The open generic type, e.g. `typeof(ResourceDefinition&lt;&gt;)`.</param>
+        /// <param name="genericArguments">Parameters to the generic type.</param>
         /// <example>
         /// <code><![CDATA[
         /// GetDerivedGenericTypes(assembly, typeof(ResourceDefinition<>), typeof(Article))
@@ -95,10 +95,10 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Get all derivatives of the specified type.
+        /// Gets all derivatives of the specified type.
         /// </summary>
-        /// <param name="assembly">The assembly to search</param>
-        /// <param name="inheritedType">The inherited type</param>
+        /// <param name="assembly">The assembly to search.</param>
+        /// <param name="inheritedType">The inherited type.</param>
         /// <example>
         /// <code>
         /// GetDerivedGenericTypes(assembly, typeof(DbContext))

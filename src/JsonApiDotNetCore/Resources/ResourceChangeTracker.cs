@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Resources
 {
+    /// <inheritdoc />
     public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TResource> where TResource : class, IIdentifiable
     {
         private readonly IJsonApiOptions _options;
@@ -24,6 +25,7 @@ namespace JsonApiDotNetCore.Resources
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
         }
 
+        /// <inheritdoc />
         public void SetInitiallyStoredAttributeValues(TResource resource)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -32,6 +34,7 @@ namespace JsonApiDotNetCore.Resources
             _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
         }
 
+        /// <inheritdoc />
         public void SetRequestedAttributeValues(TResource resource)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -39,6 +42,7 @@ namespace JsonApiDotNetCore.Resources
             _requestedAttributeValues = CreateAttributeDictionary(resource, _targetedFields.Attributes);
         }
 
+        /// <inheritdoc />
         public void SetFinallyStoredAttributeValues(TResource resource)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -62,6 +66,7 @@ namespace JsonApiDotNetCore.Resources
             return result;
         }
 
+        /// <inheritdoc />
         public bool HasImplicitChanges()
         {
             foreach (var key in _initiallyStoredAttributeValues.Keys)

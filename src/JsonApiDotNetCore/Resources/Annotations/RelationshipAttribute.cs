@@ -1,23 +1,29 @@
 using System;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 
 namespace JsonApiDotNetCore.Resources.Annotations
 {
+    /// <summary>
+    /// Used to expose a property on a resource class as a json:api relationship (https://jsonapi.org/format/#document-resource-object-relationships).
+    /// </summary>
     public abstract class RelationshipAttribute : ResourceFieldAttribute
     {
-        public string InverseNavigation { get; internal set; }
+        private LinkTypes _links;
+
+        public string InverseNavigation { get; set; }
 
         /// <summary>
         /// The internal navigation property path to the related resource.
         /// </summary>
         /// <remarks>
-        /// In all cases except the HasManyThrough relationships, this will just be the property name.
+        /// In all cases except for <see cref="HasManyThroughAttribute"/> relationships, this equals the property name.
         /// </remarks>
         public virtual string RelationshipPath => Property.Name;
 
         /// <summary>
-        /// The related resource type. This does not necessarily match the navigation property type.
-        /// In the case of a HasMany relationship, this value will be the generic argument type.
+        /// The child resource type. This does not necessarily match the navigation property type.
+        /// In the case of a <see cref="HasManyAttribute"/> relationship, this value will be the collection argument type.
         /// </summary>
         /// <example>
         /// <code><![CDATA[
@@ -32,22 +38,33 @@ namespace JsonApiDotNetCore.Resources.Annotations
         public Type LeftType { get; internal set; }
 
         /// <summary>
-        /// Configures which links to show in the <see cref="RelationshipLinks"/>
-        /// object for this relationship.
+        /// Configures which links to show in the <see cref="Links"/> object for this relationship.
+        /// When not explicitly assigned, the default value depends on the relationship type (see remarks).
         /// </summary>
-        public Links RelationshipLinks { get; }
-
-        public bool CanInclude { get; }
-
-        protected RelationshipAttribute(string publicName, Links relationshipLinks, bool canInclude)
-            : base(publicName)
+        /// <remarks>
+        /// This defaults to <see cref="LinkTypes.All"/> for <see cref="HasManyAttribute"/> and <see cref="HasManyThroughAttribute"/> relationships.
+        /// This defaults to <see cref="LinkTypes.NotConfigured"/> for <see cref="HasOneAttribute"/> relationships, which means that
+        /// the configuration in <see cref="IJsonApiOptions"/> or <see cref="ResourceContext"/> is used.
+        /// </remarks>
+        public LinkTypes Links
         {
-            if (relationshipLinks == Links.Paging)
-                throw new InvalidConfigurationException($"{Links.Paging:g} not allowed for argument {nameof(relationshipLinks)}");
+            get => _links;
+            set
+            {
+                if (value == LinkTypes.Paging)
+                {
+                    throw new InvalidConfigurationException($"{LinkTypes.Paging:g} not allowed for argument {nameof(value)}");
+                }
 
-            RelationshipLinks = relationshipLinks;
-            CanInclude = canInclude;
+                _links = value;
+            }
         }
+
+        /// <summary>
+        /// Whether or not this relationship can be included using the <c>?include=publicName</c> query string parameter.
+        /// This is <c>true</c> by default.
+        /// </summary>
+        public bool CanInclude { get; set; } = true;
 
         /// <summary>
         /// Gets the value of the resource property this attributes was declared on.

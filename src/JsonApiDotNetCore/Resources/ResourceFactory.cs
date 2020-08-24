@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources
 {
+    /// <inheritdoc />
     internal sealed class ResourceFactory : IResourceFactory
     {
         private readonly IServiceProvider _serviceProvider;
@@ -16,6 +17,7 @@ namespace JsonApiDotNetCore.Resources
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
+        /// <inheritdoc />
         public object CreateInstance(Type resourceType)
         {
             if (resourceType == null)
@@ -26,6 +28,7 @@ namespace JsonApiDotNetCore.Resources
             return InnerCreateInstance(resourceType, _serviceProvider);
         }
 
+        /// <inheritdoc />
         public TResource CreateInstance<TResource>()
         {
             return (TResource) InnerCreateInstance(typeof(TResource), _serviceProvider);
@@ -50,6 +53,7 @@ namespace JsonApiDotNetCore.Resources
             }
         }
 
+        /// <inheritdoc />
         public NewExpression CreateNewExpression(Type resourceType)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));

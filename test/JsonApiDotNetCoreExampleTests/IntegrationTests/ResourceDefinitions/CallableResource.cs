@@ -19,13 +19,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         [Attr]
         public int RiskLevel { get; set; }
 
-        [Attr(AttrCapabilities.AllowView | AttrCapabilities.AllowSort)]
+        [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowSort)]
         public DateTime CreatedAt { get; set; }
 
-        [Attr(AttrCapabilities.AllowView | AttrCapabilities.AllowSort)]
+        [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowSort)]
         public DateTime ModifiedAt { get; set; }
 
-        [Attr(AttrCapabilities.None)]
+        [Attr(Capabilities = AttrCapabilities.None)]
         public bool IsDeleted { get; set; }
 
         [HasMany]

@@ -15,17 +15,17 @@ namespace JsonApiDotNetCore.Configuration
         IReadOnlyCollection<ResourceContext> GetResourceContexts();
 
         /// <summary>
-        /// Get the resource metadata by the DbSet property name
+        /// Gets the resource metadata for the specified exposed resource name.
         /// </summary>
         ResourceContext GetResourceContext(string resourceName);
 
         /// <summary>
-        /// Get the resource metadata by the resource type
+        /// Gets the resource metadata for the specified resource type.
         /// </summary>
         ResourceContext GetResourceContext(Type resourceType);
 
         /// <summary>
-        /// Get the resource metadata by the resource type
+        /// Gets the resource metadata for the specified resource type.
         /// </summary>
         ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable;
     }

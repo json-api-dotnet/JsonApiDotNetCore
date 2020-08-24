@@ -12,7 +12,6 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Retrieves the resource definition associated to <paramref name="resourceType"/>.
         /// </summary>
-        /// <param name="resourceType"></param>
         IResourceDefinition Get(Type resourceType);
     }
 }

@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Building
 {
-
     /// <inheritdoc /> 
     public class ResourceObjectBuilder : IResourceObjectBuilder
     {
@@ -46,7 +45,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         /// <summary>
         /// Builds the <see cref="RelationshipEntry"/> entries of the "relationships
-        /// objects" The default behaviour is to just construct a resource linkage
+        /// objects". The default behavior is to just construct a resource linkage
         /// with the "data" field populated with "single" or "many" data.
         /// Depending on the requirements of the implementation (server or client serializer),
         /// this may be overridden.
@@ -73,7 +72,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <summary>
-        /// Builds a <see cref="ResourceIdentifierObject"/> for a HasOne relationship
+        /// Builds a <see cref="ResourceIdentifierObject"/> for a HasOne relationship.
         /// </summary>
         private ResourceIdentifierObject GetRelatedResourceLinkageForHasOne(HasOneAttribute relationship, IIdentifiable resource)
         {
@@ -88,7 +87,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <summary>
-        /// Builds the <see cref="ResourceIdentifierObject"/>s for a HasMany relationship
+        /// Builds the <see cref="ResourceIdentifierObject"/>s for a HasMany relationship.
         /// </summary>
         private List<ResourceIdentifierObject> GetRelatedResourceLinkageForHasMany(HasManyAttribute relationship, IIdentifiable resource)
         {

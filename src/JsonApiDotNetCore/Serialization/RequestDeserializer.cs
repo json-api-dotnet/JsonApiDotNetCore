@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
-    /// Server deserializer implementation of the <see cref="BaseDeserializer"/>
+    /// Server deserializer implementation of the <see cref="BaseDeserializer"/>.
     /// </summary>
     public class RequestDeserializer : BaseDeserializer, IJsonApiDeserializer
     {
@@ -39,9 +39,9 @@ namespace JsonApiDotNetCore.Serialization
         /// Additional processing required for server deserialization. Flags a
         /// processed attribute or relationship as updated using <see cref="ITargetedFields"/>.
         /// </summary>
-        /// <param name="resource">The resource that was constructed from the document's body</param>
-        /// <param name="field">The metadata for the exposed field</param>
-        /// <param name="data">Relationship data for <paramref name="resource"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
+        /// <param name="resource">The resource that was constructed from the document's body.</param>
+        /// <param name="field">The metadata for the exposed field.</param>
+        /// <param name="data">Relationship data for <paramref name="resource"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/>.</param>
         protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null)
         {
             if (field is AttrAttribute attr)

@@ -2,6 +2,9 @@ using System;
 
 namespace JsonApiDotNetCore.Controllers
 {
+    /// <summary>
+    /// Lists query string parameters used by <see cref="DisableQueryStringAttribute"/>.
+    /// </summary>
     [Flags]
     public enum StandardQueryStringParameters
     {

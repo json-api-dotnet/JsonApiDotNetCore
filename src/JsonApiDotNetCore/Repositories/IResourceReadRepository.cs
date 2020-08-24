@@ -6,16 +6,22 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Repositories
 {
+    /// <inheritdoc />
     public interface IResourceReadRepository<TResource>
        : IResourceReadRepository<TResource, int>
        where TResource : class, IIdentifiable<int>
     { }
 
+    /// <summary>
+    /// Groups read operations.
+    /// </summary>
+    /// <typeparam name="TResource">The resource type.</typeparam>
+    /// <typeparam name="TId">The resource identifier type.</typeparam>
     public interface IResourceReadRepository<TResource, in TId>
         where TResource : class, IIdentifiable<TId>
     {
         /// <summary>
-        /// Executes a read query using the specified constraints and returns the list of matching resources.
+        /// Executes a read query using the specified constraints and returns the collection of matching resources.
         /// </summary>
         Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer);
 

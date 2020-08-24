@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Configuration
 {
+    /// <inheritdoc />
     public class ResourceGraphBuilder : IResourceGraphBuilder
     {
         private readonly IJsonApiOptions _options;
@@ -32,7 +33,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private void SetResourceLinksOptions(ResourceContext resourceContext)
         {
-            var attribute = (LinksAttribute)resourceContext.ResourceType.GetCustomAttribute(typeof(LinksAttribute));
+            var attribute = (ResourceLinksAttribute)resourceContext.ResourceType.GetCustomAttribute(typeof(ResourceLinksAttribute));
             if (attribute != null)
             {
                 resourceContext.RelationshipLinks = attribute.RelationshipLinks;
@@ -42,15 +43,15 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public IResourceGraphBuilder AddResource<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>
-            => AddResource<TResource, int>(pluralizedTypeName);
+        public IResourceGraphBuilder Add<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>
+            => Add<TResource, int>(pluralizedTypeName);
 
         /// <inheritdoc />
-        public IResourceGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<TId>
-            => AddResource(typeof(TResource), typeof(TId), pluralizedTypeName);
+        public IResourceGraphBuilder Add<TResource, TId>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<TId>
+            => Add(typeof(TResource), typeof(TId), pluralizedTypeName);
 
         /// <inheritdoc />
-        public IResourceGraphBuilder AddResource(Type resourceType, Type idType = null, string pluralizedTypeName = null)
+        public IResourceGraphBuilder Add(Type resourceType, Type idType = null, string pluralizedTypeName = null)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
@@ -94,7 +95,7 @@ namespace JsonApiDotNetCore.Configuration
                 var attribute = (AttrAttribute)property.GetCustomAttribute(typeof(AttrAttribute));
 
                 // Although strictly not correct, 'id' is added to the list of attributes for convenience.
-                // For example, it enables to filter on id, without the need to special-case existing logic.
+                // For example, it enables to filter on ID, without the need to special-case existing logic.
                 // And when using sparse fields, it silently adds 'id' to the set of attributes to retrieve.
                 if (property.Name == nameof(Identifiable.Id) && attribute == null)
                 {
@@ -166,7 +167,7 @@ namespace JsonApiDotNetCore.Configuration
                     // ArticleTag.ArticleId
                     var leftIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.LeftProperty.Name);
                     hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(x => x.Name == leftIdPropertyName)
-                        ?? throw new InvalidConfigurationException($"{throughType} does not contain a relationship id property to type {resourceType} with name {leftIdPropertyName}");
+                        ?? throw new InvalidConfigurationException($"{throughType} does not contain a relationship ID property to type {resourceType} with name {leftIdPropertyName}");
 
                     // ArticleTag.Tag
                     hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.RightType)
@@ -175,7 +176,7 @@ namespace JsonApiDotNetCore.Configuration
                     // ArticleTag.TagId
                     var rightIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.RightProperty.Name);
                     hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName)
-                        ?? throw new InvalidConfigurationException($"{throughType} does not contain a relationship id property to type {hasManyThroughAttribute.RightType} with name {rightIdPropertyName}");
+                        ?? throw new InvalidConfigurationException($"{throughType} does not contain a relationship ID property to type {hasManyThroughAttribute.RightType} with name {rightIdPropertyName}");
                 }
             }
 

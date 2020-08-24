@@ -16,6 +16,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Services
 {
+    /// <inheritdoc />
     public class JsonApiResourceService<TResource, TId> :
         IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
@@ -54,6 +55,7 @@ namespace JsonApiDotNetCore.Services
             _hookExecutor = hookExecutor;
         }
 
+        /// <inheritdoc />
         public virtual async Task<TResource> CreateAsync(TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});
@@ -77,6 +79,7 @@ namespace JsonApiDotNetCore.Services
             return resource;
         }
 
+        /// <inheritdoc />
         public virtual async Task DeleteAsync(TId id)
         {
             _traceWriter.LogMethodStart(new {id});
@@ -105,6 +108,7 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
+        /// <inheritdoc />
         public virtual async Task<IReadOnlyCollection<TResource>> GetAsync()
         {
             _traceWriter.LogMethodStart();
@@ -129,6 +133,7 @@ namespace JsonApiDotNetCore.Services
             return resources;
         }
 
+        /// <inheritdoc />
         public virtual async Task<TResource> GetAsync(TId id)
         {
             _traceWriter.LogMethodStart(new {id});
@@ -179,6 +184,7 @@ namespace JsonApiDotNetCore.Services
                 new ResourceFieldChainExpression(primaryIdAttribute), new LiteralConstantExpression(id.ToString()));
         }
 
+        /// <inheritdoc />
         // triggered by GET /articles/1/relationships/{relationshipName}
         public virtual async Task<TResource> GetRelationshipAsync(TId id, string relationshipName)
         {
@@ -215,6 +221,7 @@ namespace JsonApiDotNetCore.Services
             return primaryResource;
         }
 
+        /// <inheritdoc />
         // triggered by GET /articles/1/{relationshipName}
         public virtual async Task<object> GetSecondaryAsync(TId id, string relationshipName)
         {
@@ -271,6 +278,7 @@ namespace JsonApiDotNetCore.Services
             return new IncludeExpression(new[] {parentElement});
         }
 
+        /// <inheritdoc />
         public virtual async Task<TResource> UpdateAsync(TId id, TResource requestResource)
         {
             _traceWriter.LogMethodStart(new {id, requestResource});
@@ -302,6 +310,7 @@ namespace JsonApiDotNetCore.Services
             return hasImplicitChanges ? afterResource : null;
         }
 
+        /// <inheritdoc />
         // triggered by PATCH /articles/1/relationships/{relationshipName}
         public virtual async Task UpdateRelationshipAsync(TId id, string relationshipName, object relationships)
         {
@@ -364,9 +373,9 @@ namespace JsonApiDotNetCore.Services
     }
 
     /// <summary>
-    /// No mapping with integer as default
+    /// Represents the foundational Resource Service layer in the JsonApiDotNetCore architecture that uses a Resource Repository for data access.
     /// </summary>
-    /// <typeparam name="TResource"></typeparam>
+    /// <typeparam name="TResource">The resource type.</typeparam>
     public class JsonApiResourceService<TResource> : JsonApiResourceService<TResource, int>,
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>

@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
     public abstract class ExposableData<TResource> where TResource : class
     {
         /// <summary>
-        /// see "primary data" in https://jsonapi.org/format/#document-top-level.
+        /// See "primary data" in https://jsonapi.org/format/#document-top-level.
         /// </summary>
         [JsonProperty("data")]
         public object Data
@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         }
 
         /// <summary>
-        /// see https://www.newtonsoft.com/json/help/html/ConditionalProperties.htm
+        /// See https://www.newtonsoft.com/json/help/html/ConditionalProperties.htm.
         /// </summary>
         /// <remarks>
         /// Moving this method to the derived class where it is needed only in the
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         public IList<TResource> ManyData { get; private set; }
 
         /// <summary>
-        /// Used to indicate if the document's primary data is "single" or "many".
+        /// Indicates if the document's primary data is "single" or "many".
         /// </summary>
         [JsonIgnore]
         public bool IsManyData { get; private set; }

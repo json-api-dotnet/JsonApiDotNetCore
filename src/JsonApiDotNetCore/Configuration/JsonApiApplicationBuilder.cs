@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Executes the action provided by the user to configure <see cref="JsonApiOptions"/>
+        /// Executes the action provided by the user to configure <see cref="JsonApiOptions"/>.
         /// </summary>
         public void ConfigureJsonApiOptions(Action<JsonApiOptions> options)
         {
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Configures built-in .NET Core MVC (things like middleware, routing). Most of this configuration can be adjusted for the developers' need.
+        /// Configures built-in ASP.NET Core MVC (things like middleware, routing). Most of this configuration can be adjusted for the developers' need.
         /// Before calling .AddJsonApi(), a developer can register their own implementation of the following services to customize startup:
         /// <see cref="IResourceGraphBuilder"/>, <see cref="IServiceDiscoveryFacade"/>, <see cref="IJsonApiExceptionFilterProvider"/>,
         /// <see cref="IJsonApiTypeMatchFilterProvider"/> and <see cref="IJsonApiRoutingConvention"/>.
@@ -101,7 +101,7 @@ namespace JsonApiDotNetCore.Configuration
 
                 foreach (var entityType in dbContext.Model.GetEntityTypes())
                 {
-                    _resourceGraphBuilder.AddResource(entityType.ClrType);
+                    _resourceGraphBuilder.Add(entityType.ClrType);
                 }
             }
         }
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Executes the action provided by the user to configure the resources using <see cref="IResourceGraphBuilder"/>
+        /// Executes the action provided by the user to configure the resources using <see cref="IResourceGraphBuilder"/>.
         /// </summary>
         public void ConfigureResources(Action<IResourceGraphBuilder> resources)
         {
@@ -179,7 +179,7 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddSingleton<IExceptionHandler, ExceptionHandler>();
 
             _services.AddScoped<IJsonApiRequest, JsonApiRequest>();
-            _services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
+            _services.AddScoped<IRequestScopedServiceProvider, RequestScopedServiceProvider>();
             _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             _services.AddScoped<IJsonApiReader, JsonApiReader>();
             _services.AddScoped<IGenericServiceFactory, GenericServiceFactory>();

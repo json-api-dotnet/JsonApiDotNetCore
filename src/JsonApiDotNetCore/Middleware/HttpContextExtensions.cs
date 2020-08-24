@@ -5,6 +5,9 @@ namespace JsonApiDotNetCore.Middleware
 {
     public static class HttpContextExtensions
     {
+        /// <summary>
+        /// Indicates whether the currently executing HTTP request is being handled by JsonApiDotNetCore.
+        /// </summary>
         public static bool IsJsonApiRequest(this HttpContext httpContext)
         {
             if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));

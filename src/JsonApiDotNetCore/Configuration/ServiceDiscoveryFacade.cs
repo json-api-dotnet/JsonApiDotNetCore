@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Configuration
 {
+    /// <inheritdoc />
     public class ServiceDiscoveryFacade : IServiceDiscoveryFacade
     {
         internal static readonly HashSet<Type> ServiceInterfaces = new HashSet<Type> {
@@ -55,14 +56,10 @@ namespace JsonApiDotNetCore.Configuration
             _resourceGraphBuilder = resourceGraphBuilder ?? throw new ArgumentNullException(nameof(resourceGraphBuilder));
         }
 
-        /// <summary>
-        /// Adds resource, service and repository implementations to the container.
-        /// </summary>
+        /// <inheritdoc />
         public ServiceDiscoveryFacade AddCurrentAssembly() => AddAssembly(Assembly.GetCallingAssembly());
 
-        /// <summary>
-        /// Adds resource, service and repository implementations defined in the specified assembly to the container.
-        /// </summary>
+        /// <inheritdoc />
         public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
         {
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
@@ -93,7 +90,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             RegisterResourceDefinition(assembly, resourceDescriptor);
 
-            _resourceGraphBuilder.AddResource(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
+            _resourceGraphBuilder.Add(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
         }
 
         private void RegisterResourceDefinition(Assembly assembly, ResourceDescriptor identifiable)

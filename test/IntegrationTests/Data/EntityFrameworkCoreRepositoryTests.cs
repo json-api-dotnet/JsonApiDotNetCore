@@ -46,8 +46,9 @@ namespace JADNC.IntegrationTests.Data
                 arrangeDbContext.Add(databaseResource);
                 await arrangeDbContext.SaveChangesAsync();
 
-                var descAttr = new AttrAttribute("description")
+                var descAttr = new AttrAttribute
                 {
+                    PublicName = "description",
                     Property = typeof(TodoItem).GetProperty(nameof(TodoItem.Description))
                 };
                 targetedFields.Setup(m => m.Attributes).Returns(new List<AttrAttribute> { descAttr });
@@ -85,7 +86,7 @@ namespace JADNC.IntegrationTests.Data
             var resourceFactory = new ResourceFactory(serviceProvider);
             var contextResolverMock = new Mock<IDbContextResolver>();
             contextResolverMock.Setup(m => m.GetContext()).Returns(context);
-            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).AddResource<TodoItem>().Build();
+            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TodoItem>().Build();
             var targetedFields = new Mock<ITargetedFields>();
             var serviceFactory = new Mock<IGenericServiceFactory>().Object;
             var repository = new EntityFrameworkCoreRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph, serviceFactory, resourceFactory, new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);

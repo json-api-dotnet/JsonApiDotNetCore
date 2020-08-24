@@ -1,7 +1,9 @@
+using JsonApiDotNetCore.Resources.Annotations;
+
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Responsible for populating the RelationshipAttribute InverseNavigation property.
+    /// Responsible for populating the <see cref="RelationshipAttribute.InverseNavigation"/> property.
     /// 
     /// This service is instantiated in the configure phase of the application.
     /// 

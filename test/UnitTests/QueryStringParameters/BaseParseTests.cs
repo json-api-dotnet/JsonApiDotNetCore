@@ -16,13 +16,13 @@ namespace UnitTests.QueryStringParameters
             Options = new JsonApiOptions();
 
             ResourceGraph = new ResourceGraphBuilder(Options, NullLoggerFactory.Instance)
-                .AddResource<Blog>()
-                .AddResource<Article>()
-                .AddResource<Author>()
-                .AddResource<Address>()
-                .AddResource<Country>()
-                .AddResource<Revision>()
-                .AddResource<Tag>()
+                .Add<Blog>()
+                .Add<Article>()
+                .Add<Author>()
+                .Add<Address>()
+                .Add<Country>()
+                .Add<Revision>()
+                .Add<Tag>()
                 .Build();
 
             Request = new JsonApiRequest

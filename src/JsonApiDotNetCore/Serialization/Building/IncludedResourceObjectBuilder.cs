@@ -104,12 +104,9 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <summary>
-        /// We only need a empty relationship object entry here. It will be populated in the
+        /// We only need an empty relationship object entry here. It will be populated in the
         /// ProcessRelationships method.
         /// </summary>
-        /// <param name="relationship"></param>
-        /// <param name="resource"></param>
-        /// <returns></returns>
         protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
             if (relationship == null) throw new ArgumentNullException(nameof(relationship));
@@ -120,11 +117,8 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         /// <summary>
         /// Gets the resource object for <paramref name="parent"/> by searching the included list.
-        /// If it was not already build, it is constructed and added to the included list.
+        /// If it was not already built, it is constructed and added to the inclusion list.
         /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="relationship"></param>
-        /// <returns></returns>
         private ResourceObject GetOrBuildResourceObject(IIdentifiable parent, RelationshipAttribute relationship)
         {
             var type = parent.GetType();

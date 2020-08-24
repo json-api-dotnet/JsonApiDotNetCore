@@ -42,13 +42,13 @@ namespace UnitTests.ResourceHooks
             var appDbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>().Options, new FrozenSystemClock());
 
             _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-                .AddResource<TodoItem>()
-                .AddResource<Person>()
-                .AddResource<Passport>()
-                .AddResource<Article>()
-                .AddResource<IdentifiableArticleTag>()
-                .AddResource<Tag>()
-                .AddResource<TodoItemCollection, Guid>()
+                .Add<TodoItem>()
+                .Add<Person>()
+                .Add<Passport>()
+                .Add<Article>()
+                .Add<IdentifiableArticleTag>()
+                .Add<Tag>()
+                .Add<TodoItemCollection, Guid>()
                 .Build();
 
             _todoFaker = new Faker<TodoItem>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
@@ -197,8 +197,8 @@ namespace UnitTests.ResourceHooks
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions, new FrozenSystemClock()) : null;
 
             var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-                .AddResource<TPrimary>()
-                .AddResource<TSecondary>()
+                .Add<TPrimary>()
+                .Add<TSecondary>()
                 .Build();
 
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery, dbContext, resourceGraph);
@@ -234,9 +234,9 @@ namespace UnitTests.ResourceHooks
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions, new FrozenSystemClock()) : null;
 
             var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-                .AddResource<TPrimary>()
-                .AddResource<TFirstSecondary>()
-                .AddResource<TSecondSecondary>()
+                .Add<TPrimary>()
+                .Add<TFirstSecondary>()
+                .Add<TSecondSecondary>()
                 .Build();
 
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery, dbContext, resourceGraph);

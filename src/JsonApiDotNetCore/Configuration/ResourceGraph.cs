@@ -7,9 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Configuration
 {
-    /// <summary>
-    ///  keeps track of all the models/resources defined in JADNC
-    /// </summary>
+    /// <inheritdoc />
     public class ResourceGraph : IResourceGraph
     {
         private readonly IReadOnlyCollection<ResourceContext> _resources;
@@ -88,7 +86,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public RelationshipAttribute GetInverse(RelationshipAttribute relationship)
+        public RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship)
         {
             if (relationship == null) throw new ArgumentNullException(nameof(relationship));
 
@@ -170,9 +168,6 @@ namespace JsonApiDotNetCore.Configuration
             throw new ArgumentException($"{memberName} is not an json:api exposed {type:g}.");
         }
 
-        /// <summary>
-        /// internally used only by <see cref="ResourceGraph"/>.
-        /// </summary>
         private enum FieldFilterType
         {
             None,

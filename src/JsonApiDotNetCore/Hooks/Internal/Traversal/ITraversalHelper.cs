@@ -8,14 +8,10 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// <summary>
         /// Crates the next layer
         /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
         NodeLayer CreateNextLayer(IResourceNode node);
         /// <summary>
         /// Creates the next layer based on the nodes provided
         /// </summary>
-        /// <param name="nodes"></param>
-        /// <returns></returns>
         NodeLayer CreateNextLayer(IEnumerable<IResourceNode> nodes);
         /// <summary>
         /// Creates a root node for breadth-first-traversal (BFS). Note that typically, in

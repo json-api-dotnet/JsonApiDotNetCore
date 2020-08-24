@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Errors
 {
+    /// <summary>
+    /// The base class for an <see cref="Exception"/> that represents a json:api error object in an unsuccessful response.
+    /// </summary>
     public class JsonApiException : Exception
     {
         private static readonly JsonSerializerSettings _errorSerializerSettings = new JsonSerializerSettings

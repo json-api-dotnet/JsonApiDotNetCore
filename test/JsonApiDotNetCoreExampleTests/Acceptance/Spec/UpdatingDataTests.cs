@@ -153,7 +153,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("Resource of type 'todoItems' with id '100' does not exist.", errorDocument.Errors[0].Detail);
+            Assert.Equal("Resource of type 'todoItems' with ID '100' does not exist.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -184,7 +184,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var error = document.Errors.Single();
             Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
-            Assert.Equal("Failed to deserialize request body: Payload must include id attribute.", error.Title);
+            Assert.Equal("Failed to deserialize request body: Payload must include 'id' element.", error.Title);
             Assert.StartsWith("Request body: <<", error.Detail);
         }
 
@@ -219,8 +219,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var error = document.Errors.Single();
             Assert.Equal(HttpStatusCode.Conflict, error.StatusCode);
-            Assert.Equal("Resource id mismatch between request body and endpoint URL.", error.Title);
-            Assert.Equal($"Expected resource id '{wrongTodoItemId}' in PATCH request body at endpoint 'http://localhost/api/v1/todoItems/{wrongTodoItemId}', instead of '{todoItem.Id}'.", error.Detail);
+            Assert.Equal("Resource ID mismatch between request body and endpoint URL.", error.Title);
+            Assert.Equal($"Expected resource ID '{wrongTodoItemId}' in PATCH request body at endpoint 'http://localhost/api/v1/todoItems/{wrongTodoItemId}', instead of '{todoItem.Id}'.", error.Detail);
         }
 
         [Fact]

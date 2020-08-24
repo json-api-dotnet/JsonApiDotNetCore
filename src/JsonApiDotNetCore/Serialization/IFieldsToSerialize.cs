@@ -8,21 +8,19 @@ namespace JsonApiDotNetCore.Serialization
     /// <summary>
     /// Responsible for getting the set of fields that are to be included for a
     /// given type in the serialization result. Typically combines various sources
-    /// of information, like application-wide hidden fields as set in
-    /// <see cref="ResourceDefinition{TResource}"/>, or request-wide hidden fields
-    /// through sparse field selection.
+    /// of information, like application-wide and request-wide sparse fieldsets.
     /// </summary>
     public interface IFieldsToSerialize
     {
         /// <summary>
-        /// Gets the list of attributes that are to be serialized for resource of type <paramref name="resourceType"/>.
-        /// If <paramref name="relationship"/> is non-null, it will consider the allowed list of attributes
+        /// Gets the collection of attributes that are to be serialized for resources of type <paramref name="resourceType"/>.
+        /// If <paramref name="relationship"/> is non-null, it will consider the allowed collection of attributes
         /// as an included relationship.
         /// </summary>
         IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType, RelationshipAttribute relationship = null);
 
         /// <summary>
-        /// Gets the list of relationships that are to be serialized for resource of type <paramref name="type"/>.
+        /// Gets the collection of relationships that are to be serialized for resources of type <paramref name="type"/>.
         /// </summary>
         IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type);
     }

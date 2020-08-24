@@ -17,7 +17,7 @@ namespace UnitTests.Internal
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
 
             // Act
-            resourceGraphBuilder.AddResource(typeof(TestContext));
+            resourceGraphBuilder.Add(typeof(TestContext));
             var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
 
             // Assert
@@ -30,7 +30,7 @@ namespace UnitTests.Internal
             // Arrange
             var loggerFactory = new FakeLoggerFactory();
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), loggerFactory);
-            resourceGraphBuilder.AddResource(typeof(TestContext));
+            resourceGraphBuilder.Add(typeof(TestContext));
 
             // Act
             resourceGraphBuilder.Build();
@@ -46,7 +46,7 @@ namespace UnitTests.Internal
         {
             // Arrange
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
-            resourceGraphBuilder.AddResource<Bar>();
+            resourceGraphBuilder.Add<Bar>();
             var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
             var proxyGenerator = new ProxyGenerator();
 
@@ -63,7 +63,7 @@ namespace UnitTests.Internal
         {
             // Arrange
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
-            resourceGraphBuilder.AddResource<Bar>();
+            resourceGraphBuilder.Add<Bar>();
             var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
 
             // Act

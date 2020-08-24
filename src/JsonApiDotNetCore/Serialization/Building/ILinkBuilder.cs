@@ -20,8 +20,6 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <summary>
         /// Builds the links object that is included in the values of the <see cref="RelationshipEntry"/>.
         /// </summary>
-        /// <param name="relationship"></param>
-        /// <param name="parent"></param>
         RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable parent);
     }
 }

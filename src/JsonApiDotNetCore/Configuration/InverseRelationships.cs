@@ -39,10 +39,7 @@ namespace JsonApiDotNetCore.Configuration
             }
         }
 
-        /// <summary>
-        /// If EF Core is not being used, we're expecting the resolver to not be registered.
-        /// </summary>
-        /// <returns><c>true</c>, if Entity Framework Core was enabled, <c>false</c> otherwise.</returns>
+        // If EF Core is not being used, we're expecting the resolver to not be registered.
         private bool IsEntityFrameworkCoreEnabled() => _resolver != null;
     }
 }

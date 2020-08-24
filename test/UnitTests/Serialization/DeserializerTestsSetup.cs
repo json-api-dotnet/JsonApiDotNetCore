@@ -22,9 +22,9 @@ namespace UnitTests.Serialization
         {
             public TestDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory) : base(resourceGraph, resourceFactory) { }
 
-            public new object Deserialize(string body)
+            public object Deserialize(string body)
             {
-                return base.DeserializeBody(body);
+                return DeserializeBody(body);
             }
 
             protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null) { }

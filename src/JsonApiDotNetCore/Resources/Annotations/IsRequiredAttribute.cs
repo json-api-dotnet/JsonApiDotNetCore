@@ -6,15 +6,20 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources.Annotations
 {
+    /// <summary>
+    /// Used with model state validation as a replacement for the built-in <see cref="RequiredAttribute"/> to support partial updates.
+    /// </summary>
     public sealed class IsRequiredAttribute : RequiredAttribute
     {
         private bool _isDisabled;
 
+        /// <inheritdoc />
         public override bool IsValid(object value)
         {
             return _isDisabled || base.IsValid(value);
         }
 
+        /// <inheritdoc />
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             if (validationContext == null) throw new ArgumentNullException(nameof(validationContext));

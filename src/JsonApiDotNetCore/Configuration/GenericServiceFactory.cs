@@ -2,15 +2,17 @@ using System;
 
 namespace JsonApiDotNetCore.Configuration
 {
+    /// <inheritdoc />
     public sealed class GenericServiceFactory : IGenericServiceFactory
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public GenericServiceFactory(IScopedServiceProvider serviceProvider)
+        public GenericServiceFactory(IRequestScopedServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
+        /// <inheritdoc />
         public TInterface Get<TInterface>(Type openGenericType, Type resourceType)
         {
             if (openGenericType == null) throw new ArgumentNullException(nameof(openGenericType));
@@ -19,6 +21,7 @@ namespace JsonApiDotNetCore.Configuration
             return GetInternal<TInterface>(openGenericType, resourceType);
         }
 
+        /// <inheritdoc />
         public TInterface Get<TInterface>(Type openGenericType, Type resourceType, Type keyType)
         {
             if (openGenericType == null) throw new ArgumentNullException(nameof(openGenericType));

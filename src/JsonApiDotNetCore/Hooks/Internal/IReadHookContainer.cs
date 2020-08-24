@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// </summary>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <param name="isIncluded">Indicates whether the to be queried resources are the primary request resources or if they were included</param>
-        /// <param name="stringId">The string id of the requested resource, in the case of <see cref="ResourcePipeline.GetSingle"/></param>
+        /// <param name="stringId">The string ID of the requested resource, in the case of <see cref="ResourcePipeline.GetSingle"/></param>
         void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null);
         /// <summary>
         /// Implement this hook to run custom logic in the <see cref=" JsonApiResourceService{TResource}"/> 

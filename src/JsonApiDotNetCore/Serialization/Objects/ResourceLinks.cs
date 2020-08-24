@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
     public sealed class ResourceLinks
     {
         /// <summary>
-        /// https://jsonapi.org/format/#document-resource-object-links
+        /// See https://jsonapi.org/format/#document-resource-object-links.
         /// </summary>
         [JsonProperty("self", NullValueHandling = NullValueHandling.Ignore)]
         public string Self { get; set; }

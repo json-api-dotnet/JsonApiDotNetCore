@@ -3,6 +3,9 @@ using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Resources
 {
+    /// <summary>
+    /// Used internally to track resource extensibility endpoints. Do not implement this interface directly.
+    /// </summary>
     public interface IResourceDefinition
     {
         IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes);

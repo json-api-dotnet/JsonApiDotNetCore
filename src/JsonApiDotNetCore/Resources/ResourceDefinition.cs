@@ -12,12 +12,11 @@ using Microsoft.Extensions.Primitives;
 namespace JsonApiDotNetCore.Resources
 {
     /// <summary>
-    /// Exposes developer friendly hooks into how their resources are exposed. 
-    /// It is intended to improve the experience and reduce boilerplate for commonly required features.
-    /// The goal of this class is to reduce the frequency with which developers have to override the
-    /// service and repository layers.
+    /// Provides a resource-specific extensibility point for API developers to be notified of various events and influence behavior using custom code.
+    /// It is intended to improve the developer experience and reduce boilerplate for commonly required features.
+    /// The goal of this class is to reduce the frequency with which developers have to override the service and repository layers.
     /// </summary>
-    /// <typeparam name="TResource">The resource type</typeparam>
+    /// <typeparam name="TResource">The resource type.</typeparam>
     public class ResourceDefinition<TResource> : IResourceDefinition, IResourceHookContainer<TResource> where TResource : class, IIdentifiable
     {
         protected IResourceGraph ResourceGraph { get; }
@@ -28,28 +27,51 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
+        /// <remarks>This method is part of Resource Hooks, which is an experimental feature and subject to change in future versions.</remarks>
         public virtual void AfterCreate(HashSet<TResource> resources, ResourcePipeline pipeline) { }
+        
         /// <inheritdoc />
+        /// <remarks>This method is part of Resource Hooks, which is an experimental feature and subject to change in future versions.</remarks>
         public virtual void AfterRead(HashSet<TResource> resources, ResourcePipeline pipeline, bool isIncluded = false) { }
+        
         /// <inheritdoc />
+        /// <remarks>This method is part of Resource Hooks, which is an experimental feature and subject to change in future versions.</remarks>
         public virtual void AfterUpdate(HashSet<TResource> resources, ResourcePipeline pipeline) { }
+        
         /// <inheritdoc />
+        /// <remarks>This method is part of Resource Hooks, which is an experimental feature and subject to change in future versions.</remarks>
         public virtual void AfterDelete(HashSet<TResource> resources, ResourcePipeline pipeline, bool succeeded) { }
+        
         /// <inheritdoc />
+        /// <remarks>This method is part of Resource Hooks, which is an experimental feature and subject to change in future versions.</remarks>
         public virtual void AfterUpdateRelationship(IRelationshipsDictionary<TResource> resourcesByRelationship, ResourcePipeline pipeline) { }
+        
         /// <inheritdoc />
+        /// <remarks>This method is part of Resource Hooks, which is an experimental feature and subject to change in future versions.</remarks>
         public virtual IEnumerable<TResource> BeforeCreate(IResourceHashSet<TResource> resources, ResourcePipeline pipeline) { return resources; }
+        
         /// <inheritdoc />
+        /// <remarks>This method is part of Resource Hooks, which is an experimental feature and subject to change in future versions.</remarks>
         public virtual void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null) { }
+        
         /// <inheritdoc />
+        /// <remarks>This method is part of Resource Hooks, which is an experimental feature and subject to change in future versions.</remarks>
         public virtual IEnumerable<TResource> BeforeUpdate(IDiffableResourceHashSet<TResource> resources, ResourcePipeline pipeline) { return resources; }
+        
         /// <inheritdoc />
+        /// <remarks>This method is part of Resource Hooks, which is an experimental feature and subject to change in future versions.</remarks>
         public virtual IEnumerable<TResource> BeforeDelete(IResourceHashSet<TResource> resources, ResourcePipeline pipeline) { return resources; }
+        
         /// <inheritdoc />
+        /// <remarks>This method is part of Resource Hooks, which is an experimental feature and subject to change in future versions.</remarks>
         public virtual IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<TResource> resourcesByRelationship, ResourcePipeline pipeline) { return ids; }
+        
         /// <inheritdoc />
+        /// <remarks>This method is part of Resource Hooks, which is an experimental feature and subject to change in future versions.</remarks>
         public virtual void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<TResource> resourcesByRelationship, ResourcePipeline pipeline) { }
+        
         /// <inheritdoc />
+        /// <remarks>This method is part of Resource Hooks, which is an experimental feature and subject to change in future versions.</remarks>
         public virtual IEnumerable<TResource> OnReturn(HashSet<TResource> resources, ResourcePipeline pipeline) { return resources; }
 
         /// <summary>
@@ -189,7 +211,6 @@ namespace JsonApiDotNetCore.Resources
         /// }
         /// ]]></code>
         /// </example>
-        /// <returns></returns>
         protected virtual QueryStringParameterHandlers OnRegisterQueryableHandlersForQueryStringParameters()
         {
             return new QueryStringParameterHandlers();

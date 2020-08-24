@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Repositories
     /// <remarks>
     /// This service required to be able translate involved expressions into queries
     /// instead of having them evaluated on the client side. In particular, for all three types of relationship
-    /// a lookup is performed based on an id. Expressions that use IIdentifiable.StringId can never
+    /// a lookup is performed based on an ID. Expressions that use IIdentifiable.StringId can never
     /// be translated into queries because this property only exists at runtime after the query is performed.
     /// We will have to build expression trees if we want to use IIdentifiable{TId}.TId, for which we minimally a
     /// generic execution to DbContext.Set{T}().

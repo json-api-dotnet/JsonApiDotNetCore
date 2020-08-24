@@ -7,9 +7,9 @@ namespace JsonApiDotNetCore.Resources
     internal sealed class ResourceDefinitionProvider : IResourceDefinitionProvider
     {
         private readonly IResourceGraph _resourceContextProvider;
-        private readonly IScopedServiceProvider _serviceProvider;
+        private readonly IRequestScopedServiceProvider _serviceProvider;
 
-        public ResourceDefinitionProvider(IResourceGraph resourceContextProvider, IScopedServiceProvider serviceProvider)
+        public ResourceDefinitionProvider(IResourceGraph resourceContextProvider, IRequestScopedServiceProvider serviceProvider)
         {
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));

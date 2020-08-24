@@ -164,8 +164,6 @@ namespace JsonApiDotNetCore
         /// <summary>
         /// Converts a dictionary of AttrAttributes to the underlying PropertyInfo that is referenced
         /// </summary>
-        /// <param name="attributes"></param>
-        /// <param name="resources"></param>
         public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributeDictionary<TValueOut>(IEnumerable<AttrAttribute> attributes, HashSet<TValueOut> resources)
         {
             return attributes?.ToDictionary(attr => attr.Property, attr => resources);
@@ -304,7 +302,6 @@ namespace JsonApiDotNetCore
         /// </summary>
         /// <param name="source">Source to copy from.</param>
         /// <param name="collectionType">Target collection type, for example: typeof(List{Article}) or typeof(ISet{Person}).</param>
-        /// <returns></returns>
         public static IEnumerable CopyToTypedCollection(IEnumerable source, Type collectionType)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));

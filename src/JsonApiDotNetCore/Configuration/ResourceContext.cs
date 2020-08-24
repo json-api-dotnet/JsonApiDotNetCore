@@ -6,20 +6,23 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Configuration
 {
+    /// <summary>
+    /// Provides metadata for a resource, such as its attributes and relationships.
+    /// </summary>
     public class ResourceContext
     {
         /// <summary>
-        /// The exposed resource name
+        /// The publicly exposed resource name.
         /// </summary>
         public string ResourceName { get; set; }
 
         /// <summary>
-        /// The data model type
+        /// The CLR type of the resource.
         /// </summary>
         public Type ResourceType { get; set; }
 
         /// <summary>
-        /// The identity member type
+        /// The identity type of the resource.
         /// </summary>
         public Type IdentityType { get; set; }
 
@@ -37,7 +40,7 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <summary>
         /// Exposed resource relationships.
-        /// See https://jsonapi.org/format/#document-resource-object-relationships
+        /// See https://jsonapi.org/format/#document-resource-object-relationships.
         /// </summary>
         public IReadOnlyCollection<RelationshipAttribute> Relationships { get; set; }
 
@@ -47,32 +50,37 @@ namespace JsonApiDotNetCore.Configuration
         public IReadOnlyCollection<EagerLoadAttribute> EagerLoads { get; set; }
 
         private IReadOnlyCollection<ResourceFieldAttribute> _fields;
+        
+        /// <summary>
+        /// Exposed resource attributes and relationships.
+        /// See https://jsonapi.org/format/#document-resource-object-fields.
+        /// </summary>
         public IReadOnlyCollection<ResourceFieldAttribute> Fields => _fields ??= Attributes.Cast<ResourceFieldAttribute>().Concat(Relationships).ToArray();
 
         /// <summary>
         /// Configures which links to show in the <see cref="TopLevelLinks"/>
-        /// object for this resource. If set to <see cref="Links.NotConfigured"/>,
+        /// object for this resource. If set to <see cref="LinkTypes.NotConfigured"/>,
         /// the configuration will be read from <see cref="IJsonApiOptions"/>.
-        /// Defaults to <see cref="Links.NotConfigured"/>.
+        /// Defaults to <see cref="LinkTypes.NotConfigured"/>.
         /// </summary>
-        public Links TopLevelLinks { get; internal set; } = Links.NotConfigured;
+        public LinkTypes TopLevelLinks { get; internal set; } = LinkTypes.NotConfigured;
 
         /// <summary>
         /// Configures which links to show in the <see cref="ResourceLinks"/>
-        /// object for this resource. If set to <see cref="Links.NotConfigured"/>,
+        /// object for this resource. If set to <see cref="LinkTypes.NotConfigured"/>,
         /// the configuration will be read from <see cref="IJsonApiOptions"/>.
-        /// Defaults to <see cref="Links.NotConfigured"/>.
+        /// Defaults to <see cref="LinkTypes.NotConfigured"/>.
         /// </summary>
-        public Links ResourceLinks { get; internal set; } = Links.NotConfigured;
+        public LinkTypes ResourceLinks { get; internal set; } = LinkTypes.NotConfigured;
 
         /// <summary>
         /// Configures which links to show in the <see cref="RelationshipLinks"/>
         /// for all relationships of the resource for which this attribute was instantiated.
-        /// If set to <see cref="Links.NotConfigured"/>, the configuration will
-        /// be read from <see cref="RelationshipAttribute.RelationshipLinks"/>  or
-        /// <see cref="IJsonApiOptions"/>. Defaults to <see cref="Links.NotConfigured"/>.
+        /// If set to <see cref="LinkTypes.NotConfigured"/>, the configuration will
+        /// be read from <see cref="RelationshipAttribute.Links"/>  or
+        /// <see cref="IJsonApiOptions"/>. Defaults to <see cref="LinkTypes.NotConfigured"/>.
         /// </summary>
-        public Links RelationshipLinks { get; internal set; } = Links.NotConfigured;
+        public LinkTypes RelationshipLinks { get; internal set; } = LinkTypes.NotConfigured;
 
         public override string ToString()
         {

@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Configuration;
 
 namespace UnitTests
 {
-    public sealed class TestScopedServiceProvider : IScopedServiceProvider
+    public sealed class TestScopedServiceProvider : IRequestScopedServiceProvider
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock = new Mock<IHttpContextAccessor>();

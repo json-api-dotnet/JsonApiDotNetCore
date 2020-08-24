@@ -35,7 +35,7 @@ namespace UnitTests
             services.AddLogging();
             services.AddDbContext<TestContext>();
             
-            services.AddJsonApi<TestContext>(resources: builder => builder.AddResource<NonDbResource>("nonDbResources"));
+            services.AddJsonApi<TestContext>(resources: builder => builder.Add<NonDbResource>("nonDbResources"));
 
             // Act
             var container = services.BuildServiceProvider();
@@ -54,7 +54,7 @@ namespace UnitTests
         {
             // Arrange
             var builder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
-            builder.AddResource<TestResource>();
+            builder.Add<TestResource>();
 
             // Act
             var resourceGraph = builder.Build();
@@ -69,7 +69,7 @@ namespace UnitTests
         {
             // Arrange
             var builder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
-            builder.AddResource<TestResource>();
+            builder.Add<TestResource>();
 
             // Act
             var resourceGraph = builder.Build();
@@ -84,7 +84,7 @@ namespace UnitTests
         {
             // Arrange
             var builder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
-            builder.AddResource<TestResource>();
+            builder.Add<TestResource>();
 
             // Act
             var resourceGraph = builder.Build();

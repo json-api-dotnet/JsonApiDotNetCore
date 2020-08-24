@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
     /// Abstract base class for deserialization. Deserializes JSON content into <see cref="Objects.Document"/>s
-    /// And constructs instances of the resource(s) in the document body.
+    /// and constructs instances of the resource(s) in the document body.
     /// </summary>
     public abstract class BaseDeserializer
     {
@@ -31,17 +31,17 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <summary>
-        /// This method is called each time an <paramref name="resource"/> is constructed
+        /// This method is called each time a <paramref name="resource"/> is constructed
         /// from the serialized content, which is used to do additional processing
-        /// depending on the type of deserializers.
+        /// depending on the type of deserializer.
         /// </summary>
         /// <remarks>
         /// See the implementation of this method in <see cref="ResponseDeserializer"/>
         /// and <see cref="RequestDeserializer"/> for examples.
         /// </remarks>
-        /// <param name="resource">The resource that was constructed from the document's body</param>
-        /// <param name="field">The metadata for the exposed field</param>
-        /// <param name="data">Relationship data for <paramref name="resource"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
+        /// <param name="resource">The resource that was constructed from the document's body.</param>
+        /// <param name="field">The metadata for the exposed field.</param>
+        /// <param name="data">Relationship data for <paramref name="resource"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/>.</param>
         protected abstract void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null);
 
         protected object DeserializeBody(string body)
@@ -65,10 +65,9 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Sets the attributes on a parsed resource.
         /// </summary>
-        /// <param name="resource">The parsed resource</param>
-        /// <param name="attributeValues">Attributes and their values, as in the serialized content</param>
-        /// <param name="attributes">Exposed attributes for <paramref name="resource"/></param>
-        /// <returns></returns>
+        /// <param name="resource">The parsed resource.</param>
+        /// <param name="attributeValues">Attributes and their values, as in the serialized content.</param>
+        /// <param name="attributes">Exposed attributes for <paramref name="resource"/>.</param>
         protected virtual IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -91,12 +90,11 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <summary>
-        /// Sets the relationships on a parsed resource
+        /// Sets the relationships on a parsed resource.
         /// </summary>
-        /// <param name="resource">The parsed resource</param>
-        /// <param name="relationshipValues">Relationships and their values, as in the serialized content</param>
-        /// <param name="relationshipAttributes">Exposed relationships for <paramref name="resource"/></param>
-        /// <returns></returns>
+        /// <param name="resource">The parsed resource.</param>
+        /// <param name="relationshipValues">Relationships and their values, as in the serialized content.</param>
+        /// <param name="relationshipAttributes">Exposed relationships for <paramref name="resource"/>.</param>
         protected virtual IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipEntry> relationshipValues, IReadOnlyCollection<RelationshipAttribute> relationshipAttributes)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -133,10 +131,9 @@ namespace JsonApiDotNetCore.Serialization
 
         /// <summary>
         /// Creates an instance of the referenced type in <paramref name="data"/>
-        /// and sets its attributes and relationships
+        /// and sets its attributes and relationships.
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns>The parsed resource</returns>
+        /// <returns>The parsed resource.</returns>
         private IIdentifiable ParseResourceObject(ResourceObject data)
         {
             var resourceContext = ResourceContextProvider.GetResourceContext(data.Type);
@@ -145,7 +142,7 @@ namespace JsonApiDotNetCore.Serialization
                 throw new InvalidRequestBodyException("Payload includes unknown resource type.",
                     $"The resource '{data.Type}' is not registered on the resource graph. " +
                     "If you are using Entity Framework Core, make sure the DbSet matches the expected resource name. " +
-                    "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.", null);
+                    "If you have manually registered the resource, check that the call to Add correctly sets the public name.", null);
             }
 
             var resource = (IIdentifiable)ResourceFactory.CreateInstance(resourceContext.ResourceType);
@@ -163,10 +160,6 @@ namespace JsonApiDotNetCore.Serialization
         /// Sets a HasOne relationship on a parsed resource. If present, also
         /// populates the foreign key.
         /// </summary>
-        /// <param name="resource"></param>
-        /// <param name="resourceProperties"></param>
-        /// <param name="attr"></param>
-        /// <param name="relationshipData"></param>
         private void SetHasOneRelationship(IIdentifiable resource,
             PropertyInfo[] resourceProperties,
             HasOneAttribute attr,
@@ -211,7 +204,7 @@ namespace JsonApiDotNetCore.Serialization
 
         /// <summary>
         /// Sets the principal side of a HasOne relationship, which means no
-        /// foreign key is involved
+        /// foreign key is involved.
         /// </summary>
         private void SetNavigation(IIdentifiable resource, HasOneAttribute attr, string relatedId)
         {

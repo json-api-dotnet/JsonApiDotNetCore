@@ -1,18 +1,16 @@
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Provides an interface for formatting relationship identifiers from the navigation property name
+    /// Provides an interface for formatting relationship identifiers from the navigation property name.
     /// </summary>
     public interface IRelatedIdMapper
     {
         /// <summary>
-        /// Get the internal property name for the database mapped identifier property
+        /// Gets the internal property name for the database mapped identifier property.
         /// </summary>
-        ///
         /// <example>
         /// <code>
-        /// RelatedIdMapper.GetRelatedIdPropertyName("Article");
-        /// // "ArticleId"
+        /// RelatedIdMapper.GetRelatedIdPropertyName("Article"); // returns "ArticleId"
         /// </code>
         /// </example>
         string GetRelatedIdPropertyName(string propertyName);

@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Serialization.Client
 {
     /// <summary>
-    /// Interface for client serializer that can be used to register with the DI, for usage in
+    /// Interface for client serializer that can be used to register with the DI container, for usage in
     /// custom services or repositories.
     /// </summary>
     public interface IRequestSerializer

@@ -77,10 +77,10 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <summary>
-        /// Convert a single resource into a serialized <see cref="Document"/>
+        /// Converts a single resource into a serialized <see cref="Document"/>.
         /// </summary>
         /// <remarks>
-        /// This method is set internal instead of private for easier testability.
+        /// This method is internal instead of private for easier testability.
         /// </remarks>
         internal string SerializeSingle(IIdentifiable resource)
         {
@@ -107,10 +107,10 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <summary>
-        /// Convert a list of resources into a serialized <see cref="Document"/>
+        /// Converts a collection of resources into a serialized <see cref="Document"/>.
         /// </summary>
         /// <remarks>
-        /// This method is set internal instead of private for easier testability.
+        /// This method is internal instead of private for easier testability.
         /// </remarks>
         internal string SerializeMany(IReadOnlyCollection<IIdentifiable> resources)
         {

@@ -25,8 +25,8 @@ namespace UnitTests.Services
         public JsonApiResourceServiceTests()
         {
             _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-                .AddResource<TodoItem>()
-                .AddResource<TodoItemCollection, Guid>()
+                .Add<TodoItem>()
+                .Add<TodoItemCollection, Guid>()
                 .Build();
         }
 

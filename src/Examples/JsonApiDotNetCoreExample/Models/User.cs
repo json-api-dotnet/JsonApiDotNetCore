@@ -13,7 +13,7 @@ namespace JsonApiDotNetCoreExample.Models
 
         [Attr] public string UserName { get; set; }
 
-        [Attr(AttrCapabilities.AllowChange)]
+        [Attr(Capabilities = AttrCapabilities.AllowChange)]
         public string Password
         {
             get => _password;

@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Serialization.Client
 {
     /// <summary>
-    /// Client serializer implementation of <see cref="BaseSerializer"/>
+    /// Client serializer implementation of <see cref="BaseSerializer"/>.
     /// </summary>
     public class RequestSerializer : BaseSerializer, IRequestSerializer
     {

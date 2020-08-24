@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace JsonApiDotNetCore.Middleware
 {
+    /// <summary>
+    /// Transforms <see cref="ActionResult"/>s without parameters for correct internal handling.
+    /// For example: return NotFound() -> return NotFound(null)
+    /// </summary>
     public sealed class ConvertEmptyActionResultFilter : IAlwaysRunResultFilter
     {
         public void OnResultExecuted(ResultExecutedContext context)

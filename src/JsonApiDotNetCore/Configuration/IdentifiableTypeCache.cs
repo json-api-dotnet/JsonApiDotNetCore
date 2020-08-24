@@ -7,14 +7,14 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Used to cache and locate types, to facilitate auto-resource discovery
+    /// Used to cache and locate types, to facilitate resource auto-discovery.
     /// </summary>
     internal sealed class IdentifiableTypeCache
     {
         private readonly ConcurrentDictionary<Assembly, IReadOnlyCollection<ResourceDescriptor>> _typeCache = new ConcurrentDictionary<Assembly, IReadOnlyCollection<ResourceDescriptor>>();
 
         /// <summary>
-        /// Get all implementations of <see cref="IIdentifiable"/> in the assembly
+        /// Gets all implementations of <see cref="IIdentifiable"/> in the assembly.
         /// </summary>
         public IReadOnlyCollection<ResourceDescriptor> GetIdentifiableTypes(Assembly assembly)
         {

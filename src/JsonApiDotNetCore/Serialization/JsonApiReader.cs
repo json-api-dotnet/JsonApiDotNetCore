@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.Serialization
                 bool hasMissingId = model is IList list ? HasMissingId(list) : HasMissingId(model);
                 if (hasMissingId)
                 {
-                    throw new InvalidRequestBodyException("Payload must include id attribute.", null, body);
+                    throw new InvalidRequestBodyException("Payload must include 'id' element.", null, body);
                 }
 
                 if (_request.Kind == EndpointKind.Primary && TryGetId(model, out var bodyId) && bodyId != _request.PrimaryId)

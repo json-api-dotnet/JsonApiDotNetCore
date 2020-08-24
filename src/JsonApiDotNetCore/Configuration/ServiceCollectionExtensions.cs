@@ -88,7 +88,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Adds all required registrations for the service to the container
+        /// Adds all required registrations for the service to the container.
         /// </summary>
         /// <exception cref="InvalidConfigurationException"/>
         public static IServiceCollection AddResourceService<TService>(this IServiceCollection services)
@@ -106,11 +106,11 @@ namespace JsonApiDotNetCore.Configuration
             {
                 foreach (var openGenericType in ServiceDiscoveryFacade.ServiceInterfaces)
                 {
-                    // A shorthand interface is one where the id type is omitted
+                    // A shorthand interface is one where the ID type is omitted
                     // e.g. IResourceService<TResource> is the shorthand for IResourceService<TResource, TId>
                     var isShorthandInterface = openGenericType.GetTypeInfo().GenericTypeParameters.Length == 1;
                     if (isShorthandInterface && resourceDescriptor.IdType != typeof(int))
-                        continue; // we can't create a shorthand for id types other than int
+                        continue; // we can't create a shorthand for ID types other than int
 
                     var concreteGenericType = isShorthandInterface
                         ? openGenericType.MakeGenericType(resourceDescriptor.ResourceType)

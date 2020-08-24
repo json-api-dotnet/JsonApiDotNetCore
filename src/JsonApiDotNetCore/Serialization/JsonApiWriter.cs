@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
-    /// Formats the response data used  https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0.
+    /// Formats the response data used (see https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0).
     /// It was intended to have as little dependencies as possible in formatting layer for greater extensibility.
     /// </summary>
     public class JsonApiWriter : IJsonApiWriter

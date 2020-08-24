@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <para />
         /// The returned <see cref="IEnumerable{TResource}"/> may be a subset 
         /// of <paramref name="ids"/>, in which case the operation of the 
-        /// pipeline will not be executed for any resource whose id was omitted
+        /// pipeline will not be executed for any resource whose ID was omitted
         /// <para />
         /// </summary>
         /// <returns>The transformed set of ids</returns>

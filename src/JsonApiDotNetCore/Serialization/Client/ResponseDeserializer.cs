@@ -9,7 +9,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.Serialization.Client
 {
     /// <summary>
-    /// Client deserializer implementation of the <see cref="BaseDeserializer"/>
+    /// Client deserializer implementation of the <see cref="BaseDeserializer"/>.
     /// </summary>
     public class ResponseDeserializer : BaseDeserializer, IResponseDeserializer
     {
@@ -52,9 +52,9 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// for parsing the <see cref="Document.Included"/> property. When a relationship value is parsed,
         /// it goes through the included list to set its attributes and relationships.
         /// </summary>
-        /// <param name="resource">The resource that was constructed from the document's body</param>
-        /// <param name="field">The metadata for the exposed field</param>
-        /// <param name="data">Relationship data for <paramref name="resource"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
+        /// <param name="resource">The resource that was constructed from the document's body.</param>
+        /// <param name="field">The metadata for the exposed field.</param>
+        /// <param name="data">Relationship data for <paramref name="resource"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/>.</param>
         protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         }
 
         /// <summary>
-        /// Searches for and parses the included relationship
+        /// Searches for and parses the included relationship.
         /// </summary>
         private IIdentifiable ParseIncludedRelationship(RelationshipAttribute relationshipAttr, ResourceIdentifierObject relatedResourceIdentifier)
         {
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             }
             catch (InvalidOperationException e)
             {
-                throw new InvalidOperationException("A compound document MUST NOT include more than one resource object for each type and id pair."
+                throw new InvalidOperationException("A compound document MUST NOT include more than one resource object for each type and ID pair."
                         + $"The duplicate pair was '{relatedResourceIdentifier.Type}, {relatedResourceIdentifier.Id}'", e);
             }
         }

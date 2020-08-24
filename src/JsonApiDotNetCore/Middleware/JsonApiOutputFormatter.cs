@@ -6,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Middleware
 {
+    /// <summary>
+    /// Extensibility point for writing outgoing HTTP response.
+    /// </summary>
     public sealed class JsonApiOutputFormatter : IOutputFormatter
     {
         public bool CanWriteResult(OutputFormatterCanWriteContext context)

@@ -3,27 +3,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JsonApiDotNetCore.Resources
 {
+    /// <inheritdoc />
     public abstract class Identifiable : Identifiable<int>
     { }
 
+    /// <summary>
+    /// A convenient basic implementation of <see cref="IIdentifiable"/> that provides conversion between <see cref="Id"/> and <see cref="StringId"/>.
+    /// </summary>
+    /// <typeparam name="TId">The resource identifier type.</typeparam>
     public abstract class Identifiable<TId> : IIdentifiable<TId>
     {
-        /// <summary>
-        /// The resource identifier
-        /// </summary>
+        /// <inheritdoc />
         public virtual TId Id { get; set; }
 
-        /// <summary>
-        /// The string representation of the `Id`.
-        /// 
-        /// This is used in serialization and deserialization.
-        /// The getters should handle the conversion
-        /// from `typeof(TId)` to a string and the setter vice versa.
-        /// 
-        /// To override this behavior, you can either implement the
-        /// <see cref="IIdentifiable{TId}" /> interface directly or override
-        /// `GetStringId` and `GetTypedId` methods.
-        /// </summary>
+        /// <inheritdoc />
         [NotMapped]
         public string StringId
         {
@@ -32,7 +25,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <summary>
-        /// Convert the provided resource identifier to a string.
+        /// Converts an outgoing typed resource identifier to string format for use in a json:api response.
         /// </summary>
         protected virtual string GetStringId(TId value)
         {
@@ -40,7 +33,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <summary>
-        /// Convert a string to a typed resource identifier.
+        /// Converts an incoming 'id' element from a json:api request to the typed resource identifier.
         /// </summary>
         protected virtual TId GetTypedId(string value)
         {

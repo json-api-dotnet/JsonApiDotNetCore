@@ -6,14 +6,14 @@ namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
     /// A factory class to abstract away the initialization of the serializer from the
-    /// .net core formatter pipeline.
+    /// ASP.NET Core formatter pipeline.
     /// </summary>
     public class ResponseSerializerFactory : IJsonApiSerializerFactory
     {
         private readonly IServiceProvider _provider;
         private readonly IJsonApiRequest _request;
 
-        public ResponseSerializerFactory(IJsonApiRequest request, IScopedServiceProvider provider)
+        public ResponseSerializerFactory(IJsonApiRequest request, IRequestScopedServiceProvider provider)
         {
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));

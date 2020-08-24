@@ -7,7 +7,7 @@ using Newtonsoft.Json.Serialization;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Global options
+    /// Global options that configure the behavior of JsonApiDotNetCore.
     /// </summary>
     public interface IJsonApiOptions
     {
@@ -58,27 +58,27 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Configures globally which links to show in the <see cref="TopLevelLinks"/>
         /// object for a requested resource. Setting can be overridden per resource by
-        /// adding a <see cref="LinksAttribute"/> to the class definition of that resource.
+        /// adding a <see cref="ResourceLinksAttribute"/> to the class definition of that resource.
         /// </summary>
-        Links TopLevelLinks { get; }
+        LinkTypes TopLevelLinks { get; }
 
         /// <summary>
         /// Configures globally which links to show in the <see cref="ResourceLinks"/>
         /// object for a requested resource. Setting can be overridden per resource by
-        /// adding a <see cref="LinksAttribute"/> to the class definition of that resource.
+        /// adding a <see cref="ResourceLinksAttribute"/> to the class definition of that resource.
         /// </summary>
-        Links ResourceLinks { get; }
+        LinkTypes ResourceLinks { get; }
 
         /// <summary>
         /// Configures globally which links to show in the <see cref="RelationshipLinks"/>
         /// object for a requested resource. Setting can be overridden per resource by
-        /// adding a <see cref="LinksAttribute"/> to the class definition of that resource.
+        /// adding a <see cref="ResourceLinksAttribute"/> to the class definition of that resource.
         /// This option can also be specified per relationship by using the associated links argument
         /// in the constructor of <see cref="RelationshipAttribute"/>.
         /// </summary>
         /// <example>
         /// <code>
-        /// options.RelationshipLinks = Links.None;
+        /// options.RelationshipLinks = LinkTypes.None;
         /// </code>
         /// <code>
         /// {
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.Configuration
         /// }
         /// </code>
         /// </example>
-        Links RelationshipLinks { get; }
+        LinkTypes RelationshipLinks { get; }
 
         /// <summary>
         /// Whether or not the total resource count should be included in all document-level meta objects.

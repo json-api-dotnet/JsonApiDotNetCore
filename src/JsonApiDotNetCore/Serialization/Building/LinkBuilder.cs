@@ -40,12 +40,12 @@ namespace JsonApiDotNetCore.Serialization.Building
             ResourceContext resourceContext = _request.PrimaryResource;
 
             TopLevelLinks topLevelLinks = null;
-            if (ShouldAddTopLevelLink(resourceContext, Links.Self))
+            if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Self))
             {
                 topLevelLinks = new TopLevelLinks { Self = GetSelfTopLevelLink(resourceContext) };
             }
 
-            if (ShouldAddTopLevelLink(resourceContext, Links.Paging) && _paginationContext.PageSize != null)
+            if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Paging) && _paginationContext.PageSize != null)
             {   
                 SetPageLinks(resourceContext, topLevelLinks ??= new TopLevelLinks());
             }
@@ -58,9 +58,9 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// configuration on the <see cref="ResourceContext"/>, and if not configured, by checking with the
         /// global configuration in <see cref="IJsonApiOptions"/>.
         /// </summary>
-        private bool ShouldAddTopLevelLink(ResourceContext resourceContext, Links link)
+        private bool ShouldAddTopLevelLink(ResourceContext resourceContext, LinkTypes link)
         {
-            if (resourceContext.TopLevelLinks != Links.NotConfigured)
+            if (resourceContext.TopLevelLinks != LinkTypes.NotConfigured)
             {
                 return resourceContext.TopLevelLinks.HasFlag(link);
             }
@@ -145,7 +145,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             if (id == null) throw new ArgumentNullException(nameof(id));
 
             var resourceContext = _provider.GetResourceContext(resourceName);
-            if (ShouldAddResourceLink(resourceContext, Links.Self))
+            if (ShouldAddResourceLink(resourceContext, LinkTypes.Self))
             {
                 return new ResourceLinks { Self = GetSelfResourceLink(resourceName, id) };
             }
@@ -162,12 +162,12 @@ namespace JsonApiDotNetCore.Serialization.Building
             var parentResourceContext = _provider.GetResourceContext(parent.GetType());
             var childNavigation = relationship.PublicName;
             RelationshipLinks links = null;
-            if (ShouldAddRelationshipLink(parentResourceContext, relationship, Links.Related))
+            if (ShouldAddRelationshipLink(parentResourceContext, relationship, LinkTypes.Related))
             {
                 links = new RelationshipLinks { Related = GetRelatedRelationshipLink(parentResourceContext.ResourceName, parent.StringId, childNavigation) };
             }
 
-            if (ShouldAddRelationshipLink(parentResourceContext, relationship, Links.Self))
+            if (ShouldAddRelationshipLink(parentResourceContext, relationship, LinkTypes.Self))
             {
                 links ??= new RelationshipLinks();
                 links.Self = GetSelfRelationshipLink(parentResourceContext.ResourceName, parent.StringId, childNavigation);
@@ -197,9 +197,9 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// configuration on the <see cref="ResourceContext"/>, and if not configured, by checking with the
         /// global configuration in <see cref="IJsonApiOptions"/>.
         /// </summary>
-        private bool ShouldAddResourceLink(ResourceContext resourceContext, Links link)
+        private bool ShouldAddResourceLink(ResourceContext resourceContext, LinkTypes link)
         {
-            if (resourceContext.ResourceLinks != Links.NotConfigured)
+            if (resourceContext.ResourceLinks != LinkTypes.NotConfigured)
             {
                 return resourceContext.ResourceLinks.HasFlag(link);
             }
@@ -212,13 +212,13 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// the <see cref="ResourceContext"/>, and if not configured by checking with the
         /// global configuration in <see cref="IJsonApiOptions"/>.
         /// </summary>
-        private bool ShouldAddRelationshipLink(ResourceContext resourceContext, RelationshipAttribute relationship, Links link)
+        private bool ShouldAddRelationshipLink(ResourceContext resourceContext, RelationshipAttribute relationship, LinkTypes link)
         {
-            if (relationship.RelationshipLinks != Links.NotConfigured)
+            if (relationship.Links != LinkTypes.NotConfigured)
             {
-                return relationship.RelationshipLinks.HasFlag(link);
+                return relationship.Links.HasFlag(link);
             }
-            if (resourceContext.RelationshipLinks != Links.NotConfigured)
+            if (resourceContext.RelationshipLinks != LinkTypes.NotConfigured)
             {
                 return resourceContext.RelationshipLinks.HasFlag(link);
             }

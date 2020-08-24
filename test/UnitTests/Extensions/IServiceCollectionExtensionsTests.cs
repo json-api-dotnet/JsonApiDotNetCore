@@ -34,7 +34,7 @@ namespace UnitTests.Extensions
             // Act
             // this is required because the DbContextResolver requires access to the current HttpContext
             // to get the request scoped DbContext instance
-            services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
+            services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
             var provider = services.BuildServiceProvider();
 
             // Assert
@@ -70,7 +70,7 @@ namespace UnitTests.Extensions
             // Act
             // this is required because the DbContextResolver requires access to the current HttpContext
             // to get the request scoped DbContext instance
-            services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
+            services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
             var provider = services.BuildServiceProvider();
             var graph = provider.GetService<IResourceGraph>();
             var resourceContext = graph.GetResourceContext<Author>();
@@ -143,7 +143,7 @@ namespace UnitTests.Extensions
             services.AddLogging();
             services.AddDbContext<TestContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
-            services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
+            services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
 
             // Act
             services.AddJsonApi<TestContext>();

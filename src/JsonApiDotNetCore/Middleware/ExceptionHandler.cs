@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Middleware
 {
+    /// <inheritdoc />
     public class ExceptionHandler : IExceptionHandler
     {
         private readonly IJsonApiOptions _options;
