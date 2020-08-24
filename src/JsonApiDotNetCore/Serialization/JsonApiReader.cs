@@ -61,6 +61,13 @@ namespace JsonApiDotNetCore.Serialization
                 throw new InvalidRequestBodyException(null, null, body, exception);
             }
 
+            ValidatePatchRequestIncludesId(context, model, body);
+
+            return await InputFormatterResult.SuccessAsync(model);
+        }
+
+        private void ValidatePatchRequestIncludesId(InputFormatterContext context, object model, string body)
+        {
             if (context.HttpContext.Request.Method == "PATCH")
             {
                 bool hasMissingId = model is IList list ? HasMissingId(list) : HasMissingId(model);
@@ -74,8 +81,6 @@ namespace JsonApiDotNetCore.Serialization
                     throw new ResourceIdMismatchException(bodyId, _request.PrimaryId, context.HttpContext.Request.GetDisplayUrl());
                 }
             }
-
-            return await InputFormatterResult.SuccessAsync(model);
         }
 
         /// <summary> Checks if the deserialized payload has an ID included </summary>
