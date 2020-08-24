@@ -15,7 +15,7 @@ using RightType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Execution
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     internal sealed class HookExecutorHelper : IHookExecutorHelper
     {
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             _targetedHooksForRelatedResources = new List<ResourceHook>();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IResourceHookContainer GetResourceHookContainer(RightType targetResource, ResourceHook hook = ResourceHook.None)
         {
             // checking the cache if we have a reference for the requested container, 
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             return null;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IResourceHookContainer<TResource> GetResourceHookContainer<TResource>(ResourceHook hook = ResourceHook.None) where TResource : class, IIdentifiable
         {
             return (IResourceHookContainer<TResource>)GetResourceHookContainer(typeof(TResource), hook);

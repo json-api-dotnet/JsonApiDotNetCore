@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Serialization.Building
 {
 
-    /// <inheritdoc/> 
+    /// <inheritdoc /> 
     public class ResourceObjectBuilder : IResourceObjectBuilder
     {
         protected IResourceContextProvider ResourceContextProvider { get; }
@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
 
-        /// <inheritdoc/> 
+        /// <inheritdoc /> 
         public ResourceObject Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));

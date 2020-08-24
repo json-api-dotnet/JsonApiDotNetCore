@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Middleware
             _formatter = new ResourceNameFormatter(options);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Type GetAssociatedResource(string controllerName)
         {
             if (controllerName == null) throw new ArgumentNullException(nameof(controllerName));
@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Middleware
             return type;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Apply(ApplicationModel application)
         {
             if (application == null) throw new ArgumentNullException(nameof(application));

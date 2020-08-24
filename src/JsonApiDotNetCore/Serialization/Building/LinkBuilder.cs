@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             _queryStringAccessor = queryStringAccessor ?? throw new ArgumentNullException(nameof(queryStringAccessor));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public TopLevelLinks GetTopLevelLinks()
         {
             ResourceContext resourceContext = _request.PrimaryResource;
@@ -138,7 +138,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             return uri.Replace("%5B", "[").Replace("%5D", "]").Replace("%27", "'");
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public ResourceLinks GetResourceLinks(string resourceName, string id)
         {
             if (resourceName == null) throw new ArgumentNullException(nameof(resourceName));
@@ -153,7 +153,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             return null;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable parent)
         {
             if (relationship == null) throw new ArgumentNullException(nameof(relationship));

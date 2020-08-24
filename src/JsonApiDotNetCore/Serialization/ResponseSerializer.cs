@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Serialization
             _primaryResourceType = typeof(TResource);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public string Serialize(object data)
         {
             if (data == null || data is IIdentifiable)

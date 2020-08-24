@@ -27,29 +27,29 @@ namespace JsonApiDotNetCore.Resources
             ResourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void AfterCreate(HashSet<TResource> resources, ResourcePipeline pipeline) { }
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void AfterRead(HashSet<TResource> resources, ResourcePipeline pipeline, bool isIncluded = false) { }
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void AfterUpdate(HashSet<TResource> resources, ResourcePipeline pipeline) { }
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void AfterDelete(HashSet<TResource> resources, ResourcePipeline pipeline, bool succeeded) { }
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void AfterUpdateRelationship(IRelationshipsDictionary<TResource> resourcesByRelationship, ResourcePipeline pipeline) { }
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual IEnumerable<TResource> BeforeCreate(IResourceHashSet<TResource> resources, ResourcePipeline pipeline) { return resources; }
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null) { }
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual IEnumerable<TResource> BeforeUpdate(IDiffableResourceHashSet<TResource> resources, ResourcePipeline pipeline) { return resources; }
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual IEnumerable<TResource> BeforeDelete(IResourceHashSet<TResource> resources, ResourcePipeline pipeline) { return resources; }
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<TResource> resourcesByRelationship, ResourcePipeline pipeline) { return ids; }
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<TResource> resourcesByRelationship, ResourcePipeline pipeline) { }
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual IEnumerable<TResource> OnReturn(HashSet<TResource> resources, ResourcePipeline pipeline) { return resources; }
 
         /// <summary>

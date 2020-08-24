@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Resources
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     internal sealed class ResourceDefinitionProvider : IResourceDefinitionProvider
     {
         private readonly IResourceGraph _resourceContextProvider;
@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Resources
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IResourceDefinition Get(Type resourceType)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));

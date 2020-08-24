@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
             if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
@@ -47,13 +47,13 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             return !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Include);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual bool CanRead(string parameterName)
         {
             return parameterName == "include";
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void Read(string parameterName, StringValues parameterValue)
         {
             _lastParameterName = parameterName;
@@ -74,7 +74,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             return _includeParser.Parse(parameterValue, RequestResource, _options.MaximumIncludeDepth);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             var expressionInScope = _includeExpression != null

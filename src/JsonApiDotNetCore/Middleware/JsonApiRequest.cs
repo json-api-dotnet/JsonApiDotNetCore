@@ -3,31 +3,31 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public sealed class JsonApiRequest : IJsonApiRequest
     {
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public EndpointKind Kind { get; set; }
         
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public string BasePath { get; set; }
         
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public string PrimaryId { get; set; }
         
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public ResourceContext PrimaryResource { get; set; }
         
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public ResourceContext SecondaryResource { get; set; }
         
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public RelationshipAttribute Relationship { get; set; }
         
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool IsCollection { get; set; }
         
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool IsReadOnly { get; set; }
     }
 }

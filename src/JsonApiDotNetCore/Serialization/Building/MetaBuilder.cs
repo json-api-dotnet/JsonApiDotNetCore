@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Serialization.Building
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public class MetaBuilder<TResource> : IMetaBuilder<TResource> where TResource : class, IIdentifiable
     {
         private Dictionary<string, object> _meta = new Dictionary<string, object>();
@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             _resourceMeta = resourceDefinition as IHasMeta;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Add(string key, object value)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             _meta[key] = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Add(IReadOnlyDictionary<string,object> values)
         {
             if (values == null) throw new ArgumentNullException(nameof(values));
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Serialization.Building
                     key => values.ContainsKey(key) ? values[key] : _meta[key]);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IDictionary<string, object> GetMeta()
         {
             if (_paginationContext.TotalResourceCount != null)

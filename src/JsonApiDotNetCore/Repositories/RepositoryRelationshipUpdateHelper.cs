@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Repositories
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public class RepositoryRelationshipUpdateHelper<TRelatedResource> : IRepositoryRelationshipUpdateHelper where TRelatedResource : class
     {
         private readonly IResourceFactory _resourceFactory;
@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Repositories
             _context = contextResolver.GetContext();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual async Task UpdateRelationshipAsync(IIdentifiable parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds)
         {
             if (parent == null) throw new ArgumentNullException(nameof(parent));

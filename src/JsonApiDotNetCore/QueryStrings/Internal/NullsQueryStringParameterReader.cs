@@ -7,12 +7,12 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public class NullsQueryStringParameterReader : INullsQueryStringParameterReader
     {
         private readonly IJsonApiOptions _options;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public NullValueHandling SerializerNullValueHandling { get; private set; }
 
         public NullsQueryStringParameterReader(IJsonApiOptions options)
@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             SerializerNullValueHandling = options.SerializerSettings.NullValueHandling;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
             if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
@@ -30,13 +30,13 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                    !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Nulls);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual bool CanRead(string parameterName)
         {
             return parameterName == "nulls";
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void Read(string parameterName, StringValues parameterValue)
         {
             if (!bool.TryParse(parameterValue, out var result))

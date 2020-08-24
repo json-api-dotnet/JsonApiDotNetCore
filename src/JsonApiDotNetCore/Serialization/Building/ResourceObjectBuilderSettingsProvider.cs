@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             _nullsReader = nullsReader ?? throw new ArgumentNullException(nameof(nullsReader));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public ResourceObjectBuilderSettings Get()
         {
             return new ResourceObjectBuilderSettings(_nullsReader.SerializerNullValueHandling, _defaultsReader.SerializerDefaultValueHandling);

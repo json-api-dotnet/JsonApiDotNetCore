@@ -10,7 +10,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public class ResourceDefinitionQueryableParameterReader : IResourceDefinitionQueryableParameterReader
     {
         private readonly IJsonApiRequest _request;
@@ -23,20 +23,20 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             _resourceDefinitionProvider = resourceDefinitionProvider ?? throw new ArgumentNullException(nameof(resourceDefinitionProvider));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
             return true;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual bool CanRead(string parameterName)
         {
             var queryableHandler = GetQueryableHandler(parameterName);
             return queryableHandler != null;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void Read(string parameterName, StringValues parameterValue)
         {
             var queryableHandler = GetQueryableHandler(parameterName);
@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             return resourceDefinition?.GetQueryableHandlerForQueryStringParameter(parameterName);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             return _constraints;

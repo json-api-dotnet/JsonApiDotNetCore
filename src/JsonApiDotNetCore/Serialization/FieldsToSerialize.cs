@@ -9,7 +9,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Serialization
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public class FieldsToSerialize : IFieldsToSerialize
     {
         private readonly IResourceGraph _resourceGraph;
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Serialization
             _resourceDefinitionProvider = resourceDefinitionProvider ?? throw new ArgumentNullException(nameof(resourceDefinitionProvider));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType, RelationshipAttribute relationship = null)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Serialization
                 .ToHashSet();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         /// <remarks>
         /// Note: this method does NOT check if a relationship is included to determine
         /// if it should be serialized. This is because completely hiding a relationship

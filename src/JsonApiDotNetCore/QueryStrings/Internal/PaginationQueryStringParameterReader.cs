@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             _paginationParser = new PaginationParser(resourceContextProvider);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
             if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
@@ -38,13 +38,13 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             return !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Page);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual bool CanRead(string parameterName)
         {
             return parameterName == PageSizeParameterName || parameterName == PageNumberParameterName;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void Read(string parameterName, StringValues parameterValue)
         {
             try
@@ -113,7 +113,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             var context = new PaginationContext();

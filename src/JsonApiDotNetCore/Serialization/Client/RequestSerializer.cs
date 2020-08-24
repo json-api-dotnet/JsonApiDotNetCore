@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public string Serialize(IIdentifiable resource)
         {
             if (resource == null)
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             return SerializeObject(document, _jsonSerializerSettings);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public string Serialize(IReadOnlyCollection<IIdentifiable> resources)
         {
             if (resources == null) throw new ArgumentNullException(nameof(resources));
@@ -67,10 +67,10 @@ namespace JsonApiDotNetCore.Serialization.Client
             return SerializeObject(document, _jsonSerializerSettings);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IReadOnlyCollection<AttrAttribute> AttributesToSerialize { private get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IReadOnlyCollection<RelationshipAttribute> RelationshipsToSerialize { private get; set; }
 
         /// <summary>

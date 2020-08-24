@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public class QueryLayerComposer : IQueryLayerComposer
     {
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public FilterExpression GetTopFilter()
         {
             var constraints = _constraintProviders.SelectMany(p => p.GetConstraints()).ToArray();
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             return new LogicalExpression(LogicalOperator.And, topFilters);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public QueryLayer Compose(ResourceContext requestResource)
         {
             if (requestResource == null)

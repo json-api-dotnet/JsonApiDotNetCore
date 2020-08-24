@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     internal sealed class RequestQueryStringAccessor : IRequestQueryStringAccessor
     {
         private readonly IHttpContextAccessor _httpContextAccessor;

@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IList<ResourceObject> Build()
         {
             if (_included.Any())
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             return null;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void IncludeRelationshipChain(IReadOnlyCollection<RelationshipAttribute> inclusionChain, IIdentifiable rootResource)
         {
             if (inclusionChain == null) throw new ArgumentNullException(nameof(inclusionChain));

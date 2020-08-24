@@ -2,7 +2,7 @@
 
 namespace JsonApiDotNetCore.Middleware
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public class JsonApiTypeMatchFilterProvider : IJsonApiTypeMatchFilterProvider
     {
         public Type Get() => typeof(IncomingTypeMatchFilter);

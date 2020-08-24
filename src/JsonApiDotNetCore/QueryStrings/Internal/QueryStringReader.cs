@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public class QueryStringReader : IQueryStringReader
     {
         private readonly IJsonApiOptions _options;
@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             _logger = loggerFactory.CreateLogger<QueryStringReader>();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void ReadAll(DisableQueryStringAttribute disableQueryStringAttribute)
         {
             disableQueryStringAttribute ??= DisableQueryStringAttribute.Empty;

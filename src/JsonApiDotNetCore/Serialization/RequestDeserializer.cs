@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Serialization
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public object Deserialize(string body)
         {
             if (body == null) throw new ArgumentNullException(nameof(body));

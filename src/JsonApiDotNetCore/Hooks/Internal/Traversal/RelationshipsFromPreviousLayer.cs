@@ -15,13 +15,13 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
             _collection = collection;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Dictionary<RelationshipAttribute, IEnumerable> GetRightResources()
         {
             return _collection.ToDictionary(rg => rg.Proxy.Attribute, rg => (IEnumerable)rg.RightResources);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Dictionary<RelationshipAttribute, IEnumerable> GetLeftResources()
         {
             return _collection.ToDictionary(rg => rg.Proxy.Attribute, rg => (IEnumerable)rg.LeftResources);

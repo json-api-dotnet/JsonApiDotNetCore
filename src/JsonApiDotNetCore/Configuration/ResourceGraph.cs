@@ -45,25 +45,25 @@ namespace JsonApiDotNetCore.Configuration
         public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
             => GetResourceContext(typeof(TResource));
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
         {
             return Getter(selector);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
         {
             return Getter(selector, FieldFilterType.Attribute).Cast<AttrAttribute>().ToArray();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
         {
             return Getter(selector, FieldFilterType.Relationship).Cast<RelationshipAttribute>().ToArray();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IReadOnlyCollection<ResourceFieldAttribute> GetFields(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Configuration
             return GetResourceContext(type).Fields;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IReadOnlyCollection<AttrAttribute> GetAttributes(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -79,7 +79,7 @@ namespace JsonApiDotNetCore.Configuration
             return GetResourceContext(type).Attributes;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));

@@ -2,7 +2,7 @@ using System;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public sealed class JsonApiExceptionFilterProvider : IJsonApiExceptionFilterProvider
     {
         public Type Get() => typeof(JsonApiExceptionFilter);

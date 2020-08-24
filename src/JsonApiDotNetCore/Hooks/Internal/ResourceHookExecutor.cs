@@ -15,7 +15,7 @@ using RightType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks.Internal
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     internal sealed class ResourceHookExecutor : IResourceHookExecutor
     {
         private readonly IHookExecutorHelper _executorHelper;
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             _resourceFactory = resourceFactory;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void BeforeRead<TResource>(ResourcePipeline pipeline, string stringId = null) where TResource : class, IIdentifiable
         {
             var hookContainer = _executorHelper.GetResourceHookContainer<TResource>(ResourceHook.BeforeRead);
@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IEnumerable<TResource> BeforeUpdate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.BeforeUpdate, resources, out var container, out var node))
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             return resources;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IEnumerable<TResource> BeforeCreate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.BeforeCreate, resources, out var container, out var node))
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             return resources;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IEnumerable<TResource> BeforeDelete<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.BeforeDelete, resources, out var container, out var node))
@@ -118,7 +118,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             return resources;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IEnumerable<TResource> OnReturn<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.OnReturn, resources, out var container, out var node) && pipeline != ResourcePipeline.GetRelationship)
@@ -138,7 +138,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             return resources;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void AfterRead<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.AfterRead, resources, out var container, out var node))
@@ -152,7 +152,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             });
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void AfterCreate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.AfterCreate, resources, out var container, out var node))
@@ -165,7 +165,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 (nextContainer, nextNode) => FireAfterUpdateRelationship(nextContainer, nextNode, pipeline));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void AfterUpdate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.AfterUpdate, resources, out var container, out var node))
@@ -178,7 +178,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 (nextContainer, nextNode) => FireAfterUpdateRelationship(nextContainer, nextNode, pipeline));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void AfterDelete<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline, bool succeeded) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.AfterDelete, resources, out var container, out var node))

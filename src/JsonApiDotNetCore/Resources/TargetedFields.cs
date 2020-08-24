@@ -3,12 +3,12 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public sealed class TargetedFields : ITargetedFields
     {
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IList<AttrAttribute> Attributes { get; set; } = new List<AttrAttribute>();
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IList<RelationshipAttribute> Relationships { get; set; } = new List<RelationshipAttribute>();
     }
 }

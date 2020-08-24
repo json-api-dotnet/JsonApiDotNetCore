@@ -7,12 +7,12 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public class DefaultsQueryStringParameterReader : IDefaultsQueryStringParameterReader
     {
         private readonly IJsonApiOptions _options;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public DefaultValueHandling SerializerDefaultValueHandling { get; private set; }
 
         public DefaultsQueryStringParameterReader(IJsonApiOptions options)
@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             SerializerDefaultValueHandling = options.SerializerSettings.DefaultValueHandling;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
             if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
@@ -30,13 +30,13 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                    !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Defaults);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual bool CanRead(string parameterName)
         {
             return parameterName == "defaults";
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual void Read(string parameterName, StringValues parameterValue)
         {
             if (!bool.TryParse(parameterValue, out var result))

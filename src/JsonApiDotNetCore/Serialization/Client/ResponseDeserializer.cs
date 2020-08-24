@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Serialization.Client
     {
         public ResponseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory) : base(resourceContextProvider, resourceFactory) { }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public SingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
         {
             if (body == null) throw new ArgumentNullException(nameof(body));
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             };
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public ManyResponse<TResource> DeserializeMany<TResource>(string body) where TResource : class, IIdentifiable
         {
             if (body == null) throw new ArgumentNullException(nameof(body));

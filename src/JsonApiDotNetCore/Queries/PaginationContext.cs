@@ -3,19 +3,19 @@ using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Queries
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     internal sealed class PaginationContext : IPaginationContext
     {
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public PageNumber PageNumber { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public PageSize PageSize { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public int? TotalResourceCount { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public int? TotalPageCount => TotalResourceCount == null || PageSize == null
             ? null
             : (int?) Math.Ceiling((decimal) TotalResourceCount.Value / PageSize.Value);

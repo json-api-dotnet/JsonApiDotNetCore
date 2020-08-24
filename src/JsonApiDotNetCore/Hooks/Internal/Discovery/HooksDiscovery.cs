@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Discovery
             ResourceHook.BeforeDelete
         };
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public ResourceHook[] ImplementedHooks { get; private set; }
         public ResourceHook[] DatabaseValuesEnabledHooks { get; private set; }
         public ResourceHook[] DatabaseValuesDisabledHooks { get; private set; }
