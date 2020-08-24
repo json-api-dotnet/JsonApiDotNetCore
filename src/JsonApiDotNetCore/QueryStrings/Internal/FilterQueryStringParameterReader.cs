@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             _filterParser = new FilterParser(resourceContextProvider, resourceFactory, ValidateSingleField);
         }
 
-        private void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)
+        protected void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)
         {
             if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowFilter))
             {
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc/>
-        public bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
+        public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
             if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
 
@@ -53,14 +53,14 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc/>
-        public bool CanRead(string parameterName)
+        public virtual bool CanRead(string parameterName)
         {
             var isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
             return parameterName == "filter" || isNested;
         }
 
         /// <inheritdoc/>
-        public void Read(string parameterName, StringValues parameterValues)
+        public virtual void Read(string parameterName, StringValues parameterValues)
         {
             _lastParameterName = parameterName;
 
@@ -126,7 +126,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc/>
-        public IReadOnlyCollection<ExpressionInScope> GetConstraints()
+        public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             return EnumerateFiltersInScopes().ToArray();
         }

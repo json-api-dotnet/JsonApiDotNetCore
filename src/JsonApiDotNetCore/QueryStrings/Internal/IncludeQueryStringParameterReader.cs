@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             _includeParser = new IncludeParser(resourceContextProvider, ValidateSingleRelationship);
         }
 
-        private void ValidateSingleRelationship(RelationshipAttribute relationship, ResourceContext resourceContext, string path)
+        protected void ValidateSingleRelationship(RelationshipAttribute relationship, ResourceContext resourceContext, string path)
         {
             if (!relationship.CanInclude)
             {
@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc/>
-        public bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
+        public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
             if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
 
@@ -48,13 +48,13 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc/>
-        public bool CanRead(string parameterName)
+        public virtual bool CanRead(string parameterName)
         {
             return parameterName == "include";
         }
 
         /// <inheritdoc/>
-        public void Read(string parameterName, StringValues parameterValue)
+        public virtual void Read(string parameterName, StringValues parameterValue)
         {
             _lastParameterName = parameterName;
 
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc/>
-        public IReadOnlyCollection<ExpressionInScope> GetConstraints()
+        public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             var expressionInScope = _includeExpression != null
                 ? new ExpressionInScope(null, _includeExpression)

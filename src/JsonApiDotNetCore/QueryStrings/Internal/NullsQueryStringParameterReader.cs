@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc/>
-        public bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
+        public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
             if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
 
@@ -31,13 +31,13 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc/>
-        public bool CanRead(string parameterName)
+        public virtual bool CanRead(string parameterName)
         {
             return parameterName == "nulls";
         }
 
         /// <inheritdoc/>
-        public void Read(string parameterName, StringValues parameterValue)
+        public virtual void Read(string parameterName, StringValues parameterValue)
         {
             if (!bool.TryParse(parameterValue, out var result))
             {

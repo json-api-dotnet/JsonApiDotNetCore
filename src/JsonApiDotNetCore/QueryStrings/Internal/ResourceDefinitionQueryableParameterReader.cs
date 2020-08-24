@@ -24,20 +24,20 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc/>
-        public bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
+        public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
             return true;
         }
 
         /// <inheritdoc/>
-        public bool CanRead(string parameterName)
+        public virtual bool CanRead(string parameterName)
         {
             var queryableHandler = GetQueryableHandler(parameterName);
             return queryableHandler != null;
         }
 
         /// <inheritdoc/>
-        public void Read(string parameterName, StringValues parameterValue)
+        public virtual void Read(string parameterName, StringValues parameterValue)
         {
             var queryableHandler = GetQueryableHandler(parameterName);
             var expressionInScope = new ExpressionInScope(null, new QueryableHandlerExpression(queryableHandler, parameterValue));
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc/>
-        public IReadOnlyCollection<ExpressionInScope> GetConstraints()
+        public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             return _constraints;
         }

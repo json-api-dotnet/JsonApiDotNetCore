@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc/>
-        public bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
+        public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
             if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
 
@@ -39,13 +39,13 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc/>
-        public bool CanRead(string parameterName)
+        public virtual bool CanRead(string parameterName)
         {
             return parameterName == PageSizeParameterName || parameterName == PageNumberParameterName;
         }
 
         /// <inheritdoc/>
-        public void Read(string parameterName, StringValues parameterValue)
+        public virtual void Read(string parameterName, StringValues parameterValue)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             return _paginationParser.Parse(parameterValue, RequestResource);
         }
 
-        private void ValidatePageSize(PaginationQueryStringValueExpression constraint)
+        protected virtual void ValidatePageSize(PaginationQueryStringValueExpression constraint)
         {
             if (_options.MaximumPageSize != null)
             {
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             }
         }
 
-        private void ValidatePageNumber(PaginationQueryStringValueExpression constraint)
+        protected virtual void ValidatePageNumber(PaginationQueryStringValueExpression constraint)
         {
             if (_options.MaximumPageNumber != null &&
                 constraint.Elements.Any(element => element.Value > _options.MaximumPageNumber.OneBasedValue))
@@ -114,7 +114,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc/>
-        public IReadOnlyCollection<ExpressionInScope> GetConstraints()
+        public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             var context = new PaginationContext();
 
