@@ -59,10 +59,10 @@ namespace DiscoveryTests
         public void AddAssembly_Adds_All_Resources_To_Graph()
         {
             // Arrange, act
-            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
             facade.AddAssembly(typeof(Person).Assembly);
             facade.DiscoverResources();
-            
+
             // Assert
             var resourceGraph = _resourceGraphBuilder.Build();
             var personResource = resourceGraph.GetResourceContext(typeof(Person));
@@ -76,7 +76,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Resources_To_Graph()
         {
             // Arrange, act
-            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
             facade.AddCurrentAssembly();
             facade.DiscoverResources();
             
@@ -90,7 +90,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Services_To_Container()
         {
             // Arrange, act
-            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
             facade.AddCurrentAssembly();
             facade.DiscoverServices();
             
@@ -104,7 +104,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Repositories_To_Container()
         {
             // Arrange, act
-            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
             facade.AddCurrentAssembly();
             facade.DiscoverServices();
 

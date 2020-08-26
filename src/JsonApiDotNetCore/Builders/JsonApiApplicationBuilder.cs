@@ -74,22 +74,22 @@ namespace JsonApiDotNetCore.Builders
         {
             RegisterJsonApiStartupServices();
             
-            using (var resourceConfigurationTemporaryProvider = _services.BuildServiceProvider())
+            using (var resourceConfigurationIntermediateProvider = _services.BuildServiceProvider())
             {
-                _resourceGraphBuilder = resourceConfigurationTemporaryProvider.GetRequiredService<IResourceGraphBuilder>();
-                _serviceDiscoveryFacade = resourceConfigurationTemporaryProvider.GetRequiredService<IServiceDiscoveryFacade>();
-                _services.AddSingleton(BuildResourceGraph(resourceConfigurationTemporaryProvider));
+                _resourceGraphBuilder = resourceConfigurationIntermediateProvider.GetRequiredService<IResourceGraphBuilder>();
+                _serviceDiscoveryFacade = resourceConfigurationIntermediateProvider.GetRequiredService<IServiceDiscoveryFacade>();
+                _services.AddSingleton(BuildResourceGraph(resourceConfigurationIntermediateProvider));
             }           
             
             IJsonApiExceptionFilterProvider exceptionFilterProvider;
             IJsonApiTypeMatchFilterProvider typeMatchFilterProvider;
             IJsonApiRoutingConvention routingConvention;
             
-            using (var middlewareConfigurationTemporaryProvider = _services.BuildServiceProvider())
+            using (var middlewareConfigurationIntermediateProvider = _services.BuildServiceProvider())
             {
-                exceptionFilterProvider = middlewareConfigurationTemporaryProvider.GetRequiredService<IJsonApiExceptionFilterProvider>();
-                typeMatchFilterProvider = middlewareConfigurationTemporaryProvider.GetRequiredService<IJsonApiTypeMatchFilterProvider>();
-                routingConvention = middlewareConfigurationTemporaryProvider.GetRequiredService<IJsonApiRoutingConvention>();
+                exceptionFilterProvider = middlewareConfigurationIntermediateProvider.GetRequiredService<IJsonApiExceptionFilterProvider>();
+                typeMatchFilterProvider = middlewareConfigurationIntermediateProvider.GetRequiredService<IJsonApiTypeMatchFilterProvider>();
+                routingConvention = middlewareConfigurationIntermediateProvider.GetRequiredService<IJsonApiRoutingConvention>();
             }
             
             _mvcBuilder.AddMvcOptions(options =>
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCore.Builders
         public void ConfigureServices()
         {
             
-            ((ServiceDiscoveryFacade)_serviceDiscoveryFacade).DiscoverServices();
+            _serviceDiscoveryFacade.DiscoverServices();
             
             if (_dbContextType != null)
             {
@@ -276,12 +276,12 @@ namespace JsonApiDotNetCore.Builders
         }
 
         /// <summary>
-        /// Executes auto-discovery of JADNC services.
+        /// Performs auto-discovery of JsonApiDotNetCore services.
         /// </summary>
         private void AutoDiscoverResources()
         {
             _configureAutoDiscovery?.Invoke(_serviceDiscoveryFacade);
-            ((ServiceDiscoveryFacade)_serviceDiscoveryFacade).DiscoverResources();
+            _serviceDiscoveryFacade.DiscoverResources();
         }
 
         /// <summary>
