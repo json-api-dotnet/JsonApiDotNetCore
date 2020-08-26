@@ -44,23 +44,23 @@ namespace JsonApiDotNetCore.Builders
         }
 
         /// <inheritdoc />
-        public IResourceGraphBuilder AddResource<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>
-            => AddResource<TResource, int>(pluralizedTypeName);
+        public IResourceGraphBuilder AddResource<TResource>(string pluralizedResourceName = null) where TResource : class, IIdentifiable<int>
+            => AddResource<TResource, int>(pluralizedResourceName);
 
         /// <inheritdoc />
-        public IResourceGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<TId>
-            => AddResource(typeof(TResource), typeof(TId), pluralizedTypeName);
+        public IResourceGraphBuilder AddResource<TResource, TId>(string pluralizedResourceName = null) where TResource : class, IIdentifiable<TId>
+            => AddResource(typeof(TResource), typeof(TId), pluralizedResourceName);
 
         /// <inheritdoc />
-        public IResourceGraphBuilder AddResource(Type resourceType, Type idType = null, string pluralizedTypeName = null)
+        public IResourceGraphBuilder AddResource(Type resourceType, Type idType = null, string pluralizedResourceName = null)
         {
             if (_resources.All(e => e.ResourceType != resourceType))
             {
                 if (resourceType.IsOrImplementsInterface(typeof(IIdentifiable)))
                 {
-                    pluralizedTypeName ??= FormatResourceName(resourceType);
+                    pluralizedResourceName ??= FormatResourceName(resourceType);
                     idType ??= TypeLocator.GetIdType(resourceType);
-                    var resourceContext = CreateResourceContext(pluralizedTypeName, resourceType, idType);
+                    var resourceContext = CreateResourceContext(pluralizedResourceName, resourceType, idType);
                     _resources.Add(resourceContext);
                 }
                 else
@@ -72,9 +72,9 @@ namespace JsonApiDotNetCore.Builders
             return this;
         }
 
-        private ResourceContext CreateResourceContext(string pluralizedTypeName, Type resourceType, Type idType) => new ResourceContext
+        private ResourceContext CreateResourceContext(string pluralizedResourceName, Type resourceType, Type idType) => new ResourceContext
         {
-            ResourceName = pluralizedTypeName,
+            ResourceName = pluralizedResourceName,
             ResourceType = resourceType,
             IdentityType = idType,
             Attributes = GetAttributes(resourceType),
