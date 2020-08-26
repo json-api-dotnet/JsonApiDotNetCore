@@ -44,9 +44,12 @@ namespace JsonApiDotNetCore.Internal
         /// <inheritdoc/>
         public Type GetAssociatedResource(string controllerName)
         {
-            _registeredResources.TryGetValue(controllerName, out var resourceContext);
-            // ReSharper disable once PossibleNullReferenceException
-            return resourceContext.ResourceType;
+            if (_registeredResources.TryGetValue(controllerName, out var resourceContext))
+            {
+                return resourceContext.ResourceType;
+            };
+            
+            return null;
         }
 
         /// <inheritdoc/>
