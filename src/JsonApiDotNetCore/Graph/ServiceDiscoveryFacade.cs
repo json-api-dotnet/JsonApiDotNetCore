@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Graph
         void IServiceDiscoveryFacade.DiscoverResources()
         {
             
-            foreach (var (assembly, discoveredResourceDescriptors) in  _discoverableAssemblies)
+            foreach (var (assembly, discoveredResourceDescriptors) in  _discoverableAssemblies.ToArray())
             {
                 var resourceDescriptors = GetOrSetResourceDescriptors(discoveredResourceDescriptors, assembly);
 
@@ -86,7 +86,7 @@ namespace JsonApiDotNetCore.Graph
         /// <inheritdoc/>
         void IServiceDiscoveryFacade.DiscoverServices()
         {
-            foreach (var (assembly, discoveredResourceDescriptors) in  _discoverableAssemblies)
+            foreach (var (assembly, discoveredResourceDescriptors) in  _discoverableAssemblies.ToArray())
             {
                 AddDbContextResolvers(assembly);
 

@@ -54,7 +54,7 @@ namespace DiscoveryTests
 
             _resourceGraphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
         }
-        
+
         [Fact]
         public void AddAssembly_Adds_All_Resources_To_Graph()
         {
