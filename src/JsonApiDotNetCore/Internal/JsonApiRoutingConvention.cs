@@ -5,7 +5,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Graph;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -31,21 +31,22 @@ namespace JsonApiDotNetCore.Internal
     public class JsonApiRoutingConvention : IJsonApiRoutingConvention
     {
         private readonly IJsonApiOptions _options;
-        private readonly ResourceNameFormatter _formatter;
+        private readonly IResourceGraph _resourceGraph;
         private readonly HashSet<string> _registeredTemplates = new HashSet<string>();
-        private readonly Dictionary<string, Type> _registeredResources = new Dictionary<string, Type>();
+        private readonly Dictionary<string, ResourceContext> _registeredResources = new Dictionary<string, ResourceContext>();
         
-        public JsonApiRoutingConvention(IJsonApiOptions options)
+        public JsonApiRoutingConvention(IJsonApiOptions options, IResourceGraph resourceGraph)
         {
             _options = options;
-            _formatter = new ResourceNameFormatter(options);
+            _resourceGraph = resourceGraph;
         }
 
         /// <inheritdoc/>
         public Type GetAssociatedResource(string controllerName)
         {
-            _registeredResources.TryGetValue(controllerName, out Type type);
-            return type;
+            _registeredResources.TryGetValue(controllerName, out var resourceContext);
+            // ReSharper disable once PossibleNullReferenceException
+            return resourceContext.ResourceType;
         }
 
         /// <inheritdoc/>
@@ -53,17 +54,24 @@ namespace JsonApiDotNetCore.Internal
         {
             foreach (var controller in application.Controllers)
             {
-                var resourceType = GetResourceTypeFromController(controller.ControllerType);
+                var resourceType = ExtractResourceTypeFromController(controller.ControllerType);
+                var resourceContext = _resourceGraph.GetResourceContext(resourceType);
                 
-                if (resourceType != null)
-                    _registeredResources.Add(controller.ControllerName, resourceType);
+                if (resourceContext != null)
+                {
+                    _registeredResources.Add(controller.ControllerName, resourceContext);
+                }
 
                 if (RoutingConventionDisabled(controller) == false)
+                {
                     continue;
+                }
 
                 var template = TemplateFromResource(controller) ?? TemplateFromController(controller);
                 if (template == null)
+                {
                     throw new JsonApiSetupException($"Controllers with overlapping route templates detected: {controller.ControllerType.FullName}");
+                }
 
                 controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel { Template = template };
             }
@@ -84,15 +92,14 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         private string TemplateFromResource(ControllerModel model)
         {
-            if (_registeredResources.TryGetValue(model.ControllerName, out Type resourceType))
+            if (!_registeredResources.TryGetValue(model.ControllerName, out var resourceContext))
             {
-                var template = $"{_options.Namespace}/{_formatter.FormatResourceName(resourceType)}";
-                if (_registeredTemplates.Add(template))
-                {
-                    return template;
-                }
+                return null;
             }
-            return null;
+            
+            var template = $"{_options.Namespace}/{resourceContext.ResourceName}";
+            
+            return _registeredTemplates.Add(template) ? template : null;
         }
 
         /// <summary>
@@ -100,23 +107,17 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         private string TemplateFromController(ControllerModel model)
         {
-            string controllerName = _options.SerializerContractResolver.NamingStrategy.GetPropertyName(model.ControllerName, false);
+            var controllerName = _options.SerializerContractResolver.NamingStrategy.GetPropertyName(model.ControllerName, false);
 
             var template = $"{_options.Namespace}/{controllerName}";
-            if (_registeredTemplates.Add(template))
-            {
-                return template;
-            }
-            else
-            {
-                return null;
-            }
+            
+            return _registeredTemplates.Add(template) ? template : null;
         }
 
         /// <summary>
-        /// Determines the resource associated to a controller by inspecting generic arguments.
+        /// Determines the resource associated to a controller by inspecting generic arguments in its inheritance tree.
         /// </summary>
-        private Type GetResourceTypeFromController(Type type)
+        private Type ExtractResourceTypeFromController(Type type)
         {
             var aspNetControllerType = typeof(ControllerBase);
             var coreControllerType = typeof(CoreJsonApiController);

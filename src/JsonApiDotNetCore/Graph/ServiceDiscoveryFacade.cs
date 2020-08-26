@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Graph
         private readonly IServiceCollection _services;
         private readonly IResourceGraphBuilder _resourceGraphBuilder;
         private readonly IdentifiableTypeCache _typeCache = new IdentifiableTypeCache();
-
+        private readonly Dictionary<Assembly, IEnumerable<ResourceDescriptor>> _discoverableAssemblies = new Dictionary<Assembly, IEnumerable<ResourceDescriptor>>();
         public ServiceDiscoveryFacade(IServiceCollection services, IResourceGraphBuilder resourceGraphBuilder)
         {
             _services = services;
@@ -66,18 +66,37 @@ namespace JsonApiDotNetCore.Graph
         /// </summary>
         public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
         {
-            AddDbContextResolvers(assembly);
-
-            var resourceDescriptors = _typeCache.GetIdentifiableTypes(assembly);
-            foreach (var resourceDescriptor in resourceDescriptors)
-            {
-                AddResource(assembly, resourceDescriptor);
-                AddServices(assembly, resourceDescriptor);
-                AddRepositories(assembly, resourceDescriptor);
-            }
+            _discoverableAssemblies.Add(assembly, _typeCache.GetIdentifiableTypes(assembly));
+            
             return this;
         }
 
+        public void DiscoverResources()
+        {
+            foreach (var (assembly, resourceDescriptors) in  _discoverableAssemblies)
+            {
+                foreach (var descriptor in resourceDescriptors)
+                {
+                    AddResource(assembly, descriptor);
+                }
+            }
+        }
+
+        public void DiscoverServices()
+        {
+            foreach (var (assembly, resourceDescriptors) in  _discoverableAssemblies)
+            {
+                AddDbContextResolvers(assembly);
+
+                foreach (var descriptor in resourceDescriptors)
+                {
+                    AddResourceDefinition(assembly, descriptor);
+                    AddServices(assembly, descriptor);
+                    AddRepositories(assembly, descriptor);
+                }
+            }
+        }
+        
         private void AddDbContextResolvers(Assembly assembly)
         {
             var dbContextTypes = TypeLocator.GetDerivedTypes(assembly, typeof(DbContext));
@@ -88,14 +107,14 @@ namespace JsonApiDotNetCore.Graph
             }
         }
 
+        
+        
         private void AddResource(Assembly assembly, ResourceDescriptor resourceDescriptor)
         {
-            RegisterResourceDefinition(assembly, resourceDescriptor);
-
             _resourceGraphBuilder.AddResource(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
         }
 
-        private void RegisterResourceDefinition(Assembly assembly, ResourceDescriptor identifiable)
+        private void AddResourceDefinition(Assembly assembly, ResourceDescriptor identifiable)
         {
             try
             {

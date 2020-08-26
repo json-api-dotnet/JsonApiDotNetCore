@@ -48,15 +48,14 @@ namespace JsonApiDotNetCore
         }
 
         private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> options,
-            Action<IServiceDiscoveryFacade> discovery,
+            Action<IServiceDiscoveryFacade> autoDiscovery,
             Action<IResourceGraphBuilder> resources, IMvcCoreBuilder mvcBuilder, Type dbContextType)
         {
             var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
 
             applicationBuilder.ConfigureJsonApiOptions(options);
-            applicationBuilder.ConfigureMvc(dbContextType);
-            applicationBuilder.AutoDiscover(discovery);
-            applicationBuilder.ConfigureResources(resources);
+            applicationBuilder.RegisterResourceSources(dbContextType, autoDiscovery, resources);
+            applicationBuilder.ConfigureMvc();
             applicationBuilder.ConfigureServices();
         }
 

@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.QueryStrings;
@@ -38,7 +39,13 @@ namespace JsonApiDotNetCoreExample
                 options.UseNpgsql(_connectionString, innerOptions => innerOptions.SetPostgresVersion(new Version(9, 6)));
             }, ServiceLifetime.Transient);
 
-            services.AddJsonApi<AppDbContext>(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
+            services.AddJsonApi<AppDbContext>(ConfigureJsonApiOptions, discovery =>
+            {
+                discovery.AddCurrentAssembly();
+                // discovery.AddAssembly(AppDomain.CurrentDomain
+                //     .GetAssemblies()
+                //     .First(a => a.FullName.Contains("JsonApiDotNetCoreExampleTests")));
+            });
             
             // once all tests have been moved to WebApplicationFactory format we can get rid of this line below
             services.AddClientSerialization();
