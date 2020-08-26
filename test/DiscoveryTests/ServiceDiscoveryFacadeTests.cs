@@ -54,15 +54,15 @@ namespace DiscoveryTests
 
             _resourceGraphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
         }
-
-        private ServiceDiscoveryFacade Facade => new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
-
+        
         [Fact]
         public void AddAssembly_Adds_All_Resources_To_Graph()
         {
             // Arrange, act
-            Facade.AddAssembly(typeof(Person).Assembly);
-
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            facade.AddAssembly(typeof(Person).Assembly);
+            facade.DiscoverResources();
+            
             // Assert
             var resourceGraph = _resourceGraphBuilder.Build();
             var personResource = resourceGraph.GetResourceContext(typeof(Person));
@@ -76,8 +76,10 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Resources_To_Graph()
         {
             // Arrange, act
-            Facade.AddCurrentAssembly();
-
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            facade.AddCurrentAssembly();
+            facade.DiscoverResources();
+            
             // Assert
             var resourceGraph = _resourceGraphBuilder.Build();
             var testModelResource = resourceGraph.GetResourceContext(typeof(TestModel));
@@ -88,8 +90,10 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Services_To_Container()
         {
             // Arrange, act
-            Facade.AddCurrentAssembly();
-
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            facade.AddCurrentAssembly();
+            facade.DiscoverServices();
+            
             // Assert
             var services = _services.BuildServiceProvider();
             var service = services.GetService<IResourceService<TestModel>>();
@@ -100,7 +104,9 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Repositories_To_Container()
         {
             // Arrange, act
-            Facade.AddCurrentAssembly();
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            facade.AddCurrentAssembly();
+            facade.DiscoverServices();
 
             // Assert
             var services = _services.BuildServiceProvider();
