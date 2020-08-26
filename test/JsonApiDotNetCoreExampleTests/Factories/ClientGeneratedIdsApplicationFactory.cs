@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests
                     options.IncludeTotalResourceCount = true;
                     options.AllowClientGeneratedIds = true;
                 },
-                    discovery => discovery.AddCurrentAssembly().AddAssembly(Assembly.Load(nameof(JsonApiDotNetCoreExample))));
+                    discovery => discovery.AddAssembly(Assembly.Load(nameof(JsonApiDotNetCoreExample))));
             });
         }
     }
