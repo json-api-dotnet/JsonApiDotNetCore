@@ -116,7 +116,6 @@ namespace JsonApiDotNetCore.Builders
         /// </summary>
         public void ConfigureServices()
         {
-            
             _serviceDiscoveryFacade.DiscoverServices();
             
             if (_dbContextType != null)
@@ -184,7 +183,9 @@ namespace JsonApiDotNetCore.Builders
             AddServerSerialization();
             AddQueryStringParameterServices();
             if (_options.EnableResourceHooks)
+            {
                 AddResourceHooks();
+            }
 
             _services.AddScoped<IInverseRelationships, InverseRelationships>();
         }
