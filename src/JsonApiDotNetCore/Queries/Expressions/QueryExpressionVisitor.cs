@@ -114,5 +114,10 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             return DefaultVisit(expression, argument);
         }
+
+        public virtual TResult VisitCustom(CustomExpression expression, TArgument argument)
+        {
+            return DefaultVisit(expression, argument);
+        }
     }
 }

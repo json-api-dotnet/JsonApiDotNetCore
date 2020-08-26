@@ -109,6 +109,11 @@ namespace JsonApiDotNetCore.Internal.Queries.QueryableBuilding
             return ContainsExtensionMethodCall(collection, property);
         }
 
+        public override Expression VisitCustom(CustomExpression expression, Type argument)
+        {
+            return Expression.ReferenceEqual(Expression.Constant(1), Expression.Constant(1));
+        }
+
         private static Expression ContainsExtensionMethodCall(Expression collection, Expression value)
         {
             return Expression.Call(typeof(Enumerable), "Contains", new[]

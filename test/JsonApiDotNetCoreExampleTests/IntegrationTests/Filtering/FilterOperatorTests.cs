@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/filterableResources?filter=equals(someString,'{HttpUtility.UrlEncode(resource.SomeString)}')";
+            var route = $"/filterableResources?filter=equals(someString,'{HttpUtility.UrlEncode(resource.SomeString)}')&filter=custom(someString,'1')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

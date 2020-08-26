@@ -73,6 +73,10 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
                     {
                         return ParseHas();
                     }
+                    default:
+                    {
+                        return ParseCustom();
+                    }
                 }
             }
 
@@ -230,6 +234,28 @@ namespace JsonApiDotNetCore.Internal.Queries.Parsing
             EatSingleCharacterToken(TokenKind.CloseParen);
 
             return new CollectionNotEmptyExpression(targetCollection);
+        }
+
+        protected CustomExpression ParseCustom()
+        {
+            // TODO: eat until token
+            EatText("custom");
+            EatSingleCharacterToken(TokenKind.OpenParen);
+
+            ResourceFieldChainExpression targetAttribute = ParseFieldChain(FieldChainRequirements.EndsInAttribute, null);
+
+            var constants = new List<LiteralConstantExpression>();
+            while (TokenStack.TryPeek(out Token nextToken) && nextToken.Kind == TokenKind.Comma)
+            {
+                EatSingleCharacterToken(TokenKind.Comma);
+
+                LiteralConstantExpression constant = ParseConstant();
+                constants.Add(constant);
+            }
+
+            EatSingleCharacterToken(TokenKind.CloseParen);
+
+            return new CustomExpression("custom", constants);
         }
 
         protected QueryExpression ParseCountOrField(FieldChainRequirements chainRequirements)
