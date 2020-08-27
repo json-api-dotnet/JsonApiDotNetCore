@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <summary>
-        /// Verifies if routing convention should be enabled for this controller
+        /// Verifies if routing convention should be enabled for this controller.
         /// </summary>
         private bool RoutingConventionDisabled(ControllerModel controller)
         {
