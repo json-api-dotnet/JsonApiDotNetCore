@@ -79,8 +79,7 @@ public void ConfigureServices(IServiceCollection services)
 
 ### Public Resource Name
 
-The public resource name is exposed in the json:api payload as the `type` member. 
-How this is exposed can be configured in with the following approaches (in order of priority):
+The public resource name is exposed through the `type` member in the json:api payload. This can be configured by the following approaches (in order of priority):
 
 1. The `publicResourceName` option when manually adding a resource to the graph
 ```c#
