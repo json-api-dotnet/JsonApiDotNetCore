@@ -47,16 +47,19 @@ namespace JsonApiDotNetCore
             return services;
         }
 
-        private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> options,
-            Action<IServiceDiscoveryFacade> autoDiscovery,
-            Action<IResourceGraphBuilder> resources, IMvcCoreBuilder mvcBuilder, Type dbContextType)
+        private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> configureOptions,
+            Action<IServiceDiscoveryFacade> configureAutoDiscovery,
+            Action<IResourceGraphBuilder> configureResources, IMvcCoreBuilder mvcBuilder, Type dbContextType)
         {
             var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
 
-            applicationBuilder.ConfigureJsonApiOptions(options);
-            applicationBuilder.RegisterResourceSources(dbContextType, autoDiscovery, resources);
+            applicationBuilder.ConfigureJsonApiOptions(configureOptions);
+            applicationBuilder.RegisterJsonApiStartupServices();
+            applicationBuilder.ConfigureAutoDiscovery(configureAutoDiscovery);
+            applicationBuilder.AddResourceGraph(dbContextType, configureResources);
             applicationBuilder.ConfigureMvc();
-            applicationBuilder.ConfigureServices();
+            applicationBuilder.DiscoverServices();
+            applicationBuilder.ConfigureServices(dbContextType);
         }
 
         private static void ResolveInverseRelationships(IServiceCollection services)

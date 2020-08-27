@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Graph
         private readonly IServiceCollection _services;
         private readonly IResourceGraphBuilder _resourceGraphBuilder;
         private readonly IdentifiableTypeCache _typeCache = new IdentifiableTypeCache();
-        private readonly Dictionary<Assembly, IEnumerable<ResourceDescriptor>> _discoverableAssemblies = new Dictionary<Assembly, IEnumerable<ResourceDescriptor>>();
+        private readonly Dictionary<Assembly, IList<ResourceDescriptor>> _resourceDescriptorsPerAssemblyCache = new Dictionary<Assembly, IList<ResourceDescriptor>>();
         
         public ServiceDiscoveryFacade(IServiceCollection services, IResourceGraphBuilder resourceGraphBuilder)
         {
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Graph
         /// <inheritdoc/>
         public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
         {
-            _discoverableAssemblies.Add(assembly, null);
+            _resourceDescriptorsPerAssemblyCache.Add(assembly, null);
             
             return this;
         }
@@ -71,10 +71,9 @@ namespace JsonApiDotNetCore.Graph
         /// <inheritdoc/>
         void IServiceDiscoveryFacade.DiscoverResources()
         {
-            
-            foreach (var (assembly, discoveredResourceDescriptors) in  _discoverableAssemblies.ToArray())
+            foreach (var (assembly, discoveredResourceDescriptors) in  _resourceDescriptorsPerAssemblyCache.ToArray())
             {
-                var resourceDescriptors = GetOrSetResourceDescriptors(discoveredResourceDescriptors, assembly);
+                var resourceDescriptors = GetResourceDescriptorsFromCache(discoveredResourceDescriptors, assembly);
 
                 foreach (var descriptor in resourceDescriptors)
                 {
@@ -86,11 +85,11 @@ namespace JsonApiDotNetCore.Graph
         /// <inheritdoc/>
         void IServiceDiscoveryFacade.DiscoverServices()
         {
-            foreach (var (assembly, discoveredResourceDescriptors) in  _discoverableAssemblies.ToArray())
+            foreach (var (assembly, discoveredResourceDescriptors) in  _resourceDescriptorsPerAssemblyCache.ToArray())
             {
                 AddDbContextResolvers(assembly);
 
-                var resourceDescriptors = GetOrSetResourceDescriptors(discoveredResourceDescriptors, assembly);
+                var resourceDescriptors = GetResourceDescriptorsFromCache(discoveredResourceDescriptors, assembly);
 
                 foreach (var descriptor in resourceDescriptors)
                 {
@@ -124,7 +123,9 @@ namespace JsonApiDotNetCore.Graph
                     .SingleOrDefault();
 
                 if (resourceDefinition != null)
+                {
                     _services.AddScoped(typeof(ResourceDefinition<>).MakeGenericType(identifiable.ResourceType), resourceDefinition);
+                }
             }
             catch (InvalidOperationException e)
             {
@@ -163,13 +164,13 @@ namespace JsonApiDotNetCore.Graph
             }
         }
         
-        private IEnumerable<ResourceDescriptor> GetOrSetResourceDescriptors(IEnumerable<ResourceDescriptor> discoveredResourceDescriptors, Assembly assembly)
+        private IList<ResourceDescriptor> GetResourceDescriptorsFromCache(IList<ResourceDescriptor> discoveredResourceDescriptors, Assembly assembly)
         {
-            IEnumerable<ResourceDescriptor> resourceDescriptors;
+            IList<ResourceDescriptor> resourceDescriptors;
             if (discoveredResourceDescriptors == null)
             {
-                resourceDescriptors = _typeCache.GetIdentifiableTypes(assembly);
-                _discoverableAssemblies[assembly] = resourceDescriptors;
+                resourceDescriptors = (IList<ResourceDescriptor>)_typeCache.GetIdentifiableTypes(assembly);
+                _resourceDescriptorsPerAssemblyCache[assembly] = resourceDescriptors;
             }
             else
             {

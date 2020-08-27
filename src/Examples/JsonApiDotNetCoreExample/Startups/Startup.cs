@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.QueryStrings;
