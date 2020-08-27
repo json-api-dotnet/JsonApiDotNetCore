@@ -97,8 +97,8 @@ namespace JsonApiDotNetCore.Builders
         public void AddResourceGraph(Type dbContextType, Action<IResourceGraphBuilder> configureResources)
         {
             using var intermediateProvider = _services.BuildServiceProvider();
-            AddResourcesFromDbContext(dbContextType, intermediateProvider, _resourceGraphBuilder);
             AutoDiscoverResources(_serviceDiscoveryFacade);
+            AddResourcesFromDbContext(dbContextType, intermediateProvider, _resourceGraphBuilder);
             UserConfigureResources(configureResources, _resourceGraphBuilder);
             _services.AddSingleton(_resourceGraphBuilder.Build());
         }
