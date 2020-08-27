@@ -58,12 +58,12 @@ namespace DiscoveryTests
         [Fact]
         public void AddAssembly_Adds_All_Resources_To_Graph()
         {
-            // Arrange, act
+            // Arrange
             IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
             facade.AddAssembly(typeof(Person).Assembly);
             facade.DiscoverResources();
 
-            // Assert
+            // Act
             var resourceGraph = _resourceGraphBuilder.Build();
             var personResource = resourceGraph.GetResourceContext(typeof(Person));
             var articleResource = resourceGraph.GetResourceContext(typeof(Article));
@@ -75,8 +75,10 @@ namespace DiscoveryTests
         [Fact]
         public void AddCurrentAssembly_Adds_Resources_To_Graph()
         {
-            // Arrange, act
+            // Arrange
             IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            
+            // Act
             facade.AddCurrentAssembly();
             facade.DiscoverResources();
             
@@ -89,8 +91,10 @@ namespace DiscoveryTests
         [Fact]
         public void AddCurrentAssembly_Adds_Services_To_Container()
         {
-            // Arrange, act
+            // Arrange
             IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            
+            // Act
             facade.AddCurrentAssembly();
             facade.DiscoverServices();
             
@@ -103,8 +107,10 @@ namespace DiscoveryTests
         [Fact]
         public void AddCurrentAssembly_Adds_Repositories_To_Container()
         {
-            // Arrange, act
+            // Arrange
             IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            
+            // Act
             facade.AddCurrentAssembly();
             facade.DiscoverServices();
 
@@ -113,6 +119,20 @@ namespace DiscoveryTests
             Assert.IsType<TestModelRepository>(services.GetService<IResourceRepository<TestModel>>());
         }
 
+        [Fact]
+        public void AddCurrentAssembly_Adds_ResourceDefinitions_To_Container()
+        {
+            // Arrange
+            IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            
+            // Act
+            facade.AddCurrentAssembly();
+            facade.DiscoverServices();
+
+            // Assert
+            var services = _services.BuildServiceProvider();
+            Assert.IsType<TestModelResourceDefinition>(services.GetService<ResourceDefinition<TestModel>>());
+        }
         public sealed class TestModel : Identifiable { }
 
         public class TestModelService : JsonApiResourceService<TestModel>
@@ -146,6 +166,11 @@ namespace DiscoveryTests
                 ILoggerFactory loggerFactory)
                 : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory)
             { }
+        }
+        
+        public class TestModelResourceDefinition : ResourceDefinition<TestModel>
+        {
+            public TestModelResourceDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
         }
     }
 }

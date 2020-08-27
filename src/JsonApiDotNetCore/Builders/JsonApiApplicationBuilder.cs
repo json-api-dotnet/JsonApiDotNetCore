@@ -124,7 +124,7 @@ namespace JsonApiDotNetCore.Builders
             if (dbContextType != null)
             {
                 var contextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
-                _services.AddScoped(typeof(IDbContextResolver), contextResolverType);
+                _services.TryAddScoped(typeof(IDbContextResolver), contextResolverType);
             }
             else
             {
