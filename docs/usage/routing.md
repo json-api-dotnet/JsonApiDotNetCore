@@ -7,11 +7,10 @@ GET /api/compoundModels HTTP/1.1
 
 There are two ways the library will try to create a route for a controller:
 1. **By inspecting the controller for an associated resource**. The library will try to first use the public resource name of the resource associated to a controller. This means that the value of the `type` member of the json:api document for a resource will be equal to the route.
-Note that this implies that it is possible to configure a route configuring the exposed resource name. See [this section](~/usage/resource-graph.md#public-resource-name) on how this can be achieved.
-For example: 
+Note that this implies that it is possible to configure a route configuring the exposed resource name. See [this section](~/usage/resource-graph.md#public-resource-name) on how this can be achieved. Example:
 ```c#
 // controller
-public class MyResourceController : JsonApiController<MyApiResource> { /* .... */ }
+public class MyResourceController : JsonApiController<MyApiResource> { /* .... */ } // note that the route is NOT "myResources", but "myApiResources"
 
 // request
 GET /myApiResources HTTP/1.1
@@ -28,8 +27,8 @@ Content-Type: application/vnd.api+json
   }]
 }
 ```
-2. **By using the name of the controller**. If no associated resource was detected for a controller, the library will construct a route from the name of the controller by using the configured naming strategy (*camelCase* by default, see [this section](~/usage/resource-graph.md#public-resource-name) on how to configure this).
-In the following example the controller does not inherit from `BaseJsonApiController<T>` and the library is unable associate a resource to it.
+2. **By using the name of the controller**. If no associated resource was detected for a controller, the library will construct a route from the name of the controller by using the configured naming strategy (*camelCase* by default, see [this section](~/usage/resource-graph.md#public-resource-name) on how to configure this). This is in alignment with the default .NET Core MVC routing approach. 
+In the following example the controller is not associated to a resource by the library because it does not inherit from `BaseJsonApiController<T>`.
 ```c#
 // controller
 public class MyResourceController : ControllerBase { /* .... */ }
@@ -63,18 +62,9 @@ Which results in URLs like: https://yourdomain.com/api/v1/people
 
 ## Disabling the Default Routing Convention
 It is possible to completely bypass the default routing convention for a particular controller and specify a custom routing template by using the `DisableRoutingConvention` attribute.
-In the following example, the `CamelCasedModel` resource can be accessed on `/myCustomResources` (assuming that the default naming strategy is used).
+In the following example, the `CamelCasedModel` resource can be accessed on `/myCustomResources` (this assumes that the default naming strategy is unchanged).
 
 ```c#
-[Route("[controller]")]
-[DisableRoutingConvention]
-public class MyCustomResourceController : JsonApiController<CamelCasedModel>
-{
-    public MyCustomResourceController(
-        IJsonApiOptions jsonApiOptions,
-        ILoggerFactory loggerFactory,
-        IResourceService<CamelCasedModel> resourceService)
-        : base(jsonApiOptions, loggerFactory, resourceService)
-    { }
-}
+[Route("[controller]"), DisableRoutingConvention]
+public class MyCustomResourceController : JsonApiController<CamelCasedModel> { /* ... */ }
 ```
