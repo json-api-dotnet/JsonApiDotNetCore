@@ -166,9 +166,9 @@ namespace JsonApiDotNetCore.Builders
         /// <summary>
         /// Discovers DI registrable services in the assemblies marked for discovery.
         /// </summary>
-        public void DiscoverServices()
+        public void DiscoverInjectables()
         {
-            _serviceDiscoveryFacade.DiscoverServices();
+            _serviceDiscoveryFacade.DiscoverInjectables();
         }
 
         private void AddRepositoryLayer()

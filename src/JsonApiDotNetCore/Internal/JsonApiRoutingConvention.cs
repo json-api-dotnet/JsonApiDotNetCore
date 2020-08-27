@@ -95,14 +95,16 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         private string TemplateFromResource(ControllerModel model)
         {
-            if (!_registeredResources.TryGetValue(model.ControllerName, out var resourceContext))
+            if (_registeredResources.TryGetValue(model.ControllerName, out var resourceContext))
             {
-                return null;
+                var template = $"{_options.Namespace}/{resourceContext.ResourceName}";
+                if (_registeredTemplates.Add(template))
+                {
+                    return template;
+                }
             }
-            
-            var template = $"{_options.Namespace}/{resourceContext.ResourceName}";
-            
-            return _registeredTemplates.Add(template) ? template : null;
+
+            return null;
         }
 
         /// <summary>

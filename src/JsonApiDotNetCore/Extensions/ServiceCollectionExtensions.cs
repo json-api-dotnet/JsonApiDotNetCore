@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore
             applicationBuilder.ConfigureAutoDiscovery(configureAutoDiscovery);
             applicationBuilder.AddResourceGraph(dbContextType, configureResources);
             applicationBuilder.ConfigureMvc();
-            applicationBuilder.DiscoverServices();
+            applicationBuilder.DiscoverInjectables();
             applicationBuilder.ConfigureServices(dbContextType);
         }
 

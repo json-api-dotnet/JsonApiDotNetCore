@@ -96,7 +96,7 @@ namespace DiscoveryTests
             
             // Act
             facade.AddCurrentAssembly();
-            facade.DiscoverServices();
+            facade.DiscoverInjectables();
             
             // Assert
             var services = _services.BuildServiceProvider();
@@ -112,7 +112,7 @@ namespace DiscoveryTests
             
             // Act
             facade.AddCurrentAssembly();
-            facade.DiscoverServices();
+            facade.DiscoverInjectables();
 
             // Assert
             var services = _services.BuildServiceProvider();
@@ -127,7 +127,7 @@ namespace DiscoveryTests
             
             // Act
             facade.AddCurrentAssembly();
-            facade.DiscoverServices();
+            facade.DiscoverInjectables();
 
             // Assert
             var services = _services.BuildServiceProvider();

@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Graph
         /// <summary>
         /// Discovers JsonApiDotNetCore services in the registered assemblies and adds them to the DI container.
         /// </summary>
-        internal void DiscoverServices();
+        internal void DiscoverInjectables();
 
         /// <summary>
         /// Discovers JsonApiDotNetCore resources in the registered assemblies and adds them to the resource graph.

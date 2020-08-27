@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Graph
         }
         
         /// <inheritdoc/>
-        void IServiceDiscoveryFacade.DiscoverServices()
+        void IServiceDiscoveryFacade.DiscoverInjectables()
         {
             foreach (var (assembly, discoveredResourceDescriptors) in  _resourceDescriptorsPerAssemblyCache.ToArray())
             {
