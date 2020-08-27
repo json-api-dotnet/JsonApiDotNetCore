@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Builders
     }
 
     /// <summary>
-    /// Executes the action provided by the user to configure <see cref="JsonApiOptions"/>
+    /// Executes the action provided by the user to configure <see cref="JsonApiOptions"/>.
     /// </summary>
     public void ConfigureJsonApiOptions(Action<JsonApiOptions> configureOptions)
     {
