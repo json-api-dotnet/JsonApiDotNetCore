@@ -11,6 +11,7 @@ using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore
 {
@@ -21,8 +22,8 @@ namespace JsonApiDotNetCore
         /// </summary>
         public static IServiceCollection AddJsonApi(this IServiceCollection services,
             Action<JsonApiOptions> options = null,
-            Action<IServiceDiscoveryFacade> discovery = null,
-            Action<IResourceGraphBuilder> resources = null,
+            Action<ServiceDiscoveryFacade> discovery = null,
+            Action<ResourceGraphBuilder> resources = null,
             IMvcCoreBuilder mvcBuilder = null)
         {
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, null);
@@ -36,25 +37,25 @@ namespace JsonApiDotNetCore
         /// </summary>
         public static IServiceCollection AddJsonApi<TDbContext>(this IServiceCollection services,
             Action<JsonApiOptions> options = null,
-            Action<IServiceDiscoveryFacade> discovery = null,
-            Action<IResourceGraphBuilder> resources = null,
-            IMvcCoreBuilder mvcBuilder = null)
+            Action<ServiceDiscoveryFacade> discovery = null,
+            Action<ResourceGraphBuilder> resources = null,
+            IMvcCoreBuilder mvcBuilder = null,
+            ILoggerFactory loggerFactory = null)
             where TDbContext : DbContext
         {
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, typeof(TDbContext));
             ResolveInverseRelationships(services);
 
             return services;
-        }
+        }     
 
         private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> configureOptions,
-            Action<IServiceDiscoveryFacade> configureAutoDiscovery,
-            Action<IResourceGraphBuilder> configureResources, IMvcCoreBuilder mvcBuilder, Type dbContextType)
+            Action<ServiceDiscoveryFacade> configureAutoDiscovery,
+            Action<ResourceGraphBuilder> configureResources, IMvcCoreBuilder mvcBuilder, Type dbContextType)
         {
             var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
 
             applicationBuilder.ConfigureJsonApiOptions(configureOptions);
-            applicationBuilder.RegisterJsonApiStartupServices();
             applicationBuilder.ConfigureAutoDiscovery(configureAutoDiscovery);
             applicationBuilder.AddResourceGraph(dbContextType, configureResources);
             applicationBuilder.ConfigureMvc();

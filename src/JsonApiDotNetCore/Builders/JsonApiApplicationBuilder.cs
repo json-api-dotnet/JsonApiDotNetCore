@@ -26,6 +26,7 @@ using JsonApiDotNetCore.RequestServices;
 using JsonApiDotNetCore.RequestServices.Contracts;
 using JsonApiDotNetCore.Services.Contract;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -37,17 +38,20 @@ namespace JsonApiDotNetCore.Builders
     {
         private readonly JsonApiOptions _options = new JsonApiOptions();
         private readonly IServiceCollection _services;
-        private IServiceDiscoveryFacade _serviceDiscoveryFacade;
-        private IResourceGraphBuilder _resourceGraphBuilder;
         private readonly IMvcCoreBuilder _mvcBuilder;
-        private ServiceProvider _intermediateServiceProvider;
+        private readonly ResourceGraphBuilder _resourceGraphBuilder;
+        private readonly ServiceDiscoveryFacade _serviceDiscoveryFacade;
+        private readonly ServiceProvider _intermediateProvider;
         public Action<MvcOptions> ConfigureMvcOptions { get; set; }
 
-        public JsonApiApplicationBuilder(IServiceCollection services,
-            IMvcCoreBuilder mvcBuilder)
+        public JsonApiApplicationBuilder(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
         {
             _services = services;
             _mvcBuilder = mvcBuilder;
+            _intermediateProvider = services.BuildServiceProvider();
+            var loggerFactory = _intermediateProvider.GetService<ILoggerFactory>();
+            _resourceGraphBuilder = new ResourceGraphBuilder(_options, loggerFactory);
+            _serviceDiscoveryFacade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, loggerFactory);
         }
         
         /// <summary>
@@ -57,35 +61,22 @@ namespace JsonApiDotNetCore.Builders
         {
             configureOptions?.Invoke(_options);
         }
-
-        /// <summary>
-        /// Registers services that are required for the configuration of JsonApiDotNetCore during the start up.
-        /// </summary>
-        public void RegisterJsonApiStartupServices()
+        
+        public void ConfigureAutoDiscovery(Action<ServiceDiscoveryFacade> configureAutoDiscovery)
         {
-            _services.AddSingleton<IJsonApiOptions>(_options);
-            _services.TryAddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
-            _services.TryAddSingleton<IResourceGraphBuilder, ResourceGraphBuilder>();
-            _services.TryAddSingleton<IServiceDiscoveryFacade>(sp =>
-                new ServiceDiscoveryFacade(_services, sp.GetRequiredService<IResourceGraphBuilder>()));
-        }
-
-        public void ConfigureAutoDiscovery(Action<IServiceDiscoveryFacade> configureAutoDiscovery)
-        {
-            var intermediateProvider = _services.BuildServiceProvider();
-            _serviceDiscoveryFacade = intermediateProvider.GetRequiredService<IServiceDiscoveryFacade>();
-            _resourceGraphBuilder = intermediateProvider.GetRequiredService<IResourceGraphBuilder>();
-            RegisterDiscoverableAssemblies(configureAutoDiscovery, _serviceDiscoveryFacade);
-            _intermediateServiceProvider = intermediateProvider;
+            configureAutoDiscovery?.Invoke(_serviceDiscoveryFacade);
         }
 
         /// <summary>
         /// Configures and build the resource graph with resources from the provided sources and adds it to the DI container. 
         /// </summary>
-        public void AddResourceGraph(Type dbContextType, Action<IResourceGraphBuilder> configureResources)
+        public void AddResourceGraph(Type dbContextType, Action<ResourceGraphBuilder> configureResources)
         {
             AutoDiscoverResources(_serviceDiscoveryFacade);
-            AddResourcesFromDbContext(dbContextType, _intermediateServiceProvider, _resourceGraphBuilder);
+            if (dbContextType != null)
+            {
+                AddResourcesFromDbContext((DbContext)_intermediateProvider.GetService(dbContextType), _resourceGraphBuilder);
+            }
             UserConfigureResources(configureResources, _resourceGraphBuilder);
             _services.AddSingleton(_resourceGraphBuilder.Build());
         }
@@ -93,7 +84,7 @@ namespace JsonApiDotNetCore.Builders
         /// <summary>
         /// Configures built-in .NET Core MVC (things like middleware, routing). Most of this configuration can be adjusted for the developers' need.
         /// Before calling .AddJsonApi(), a developer can register their own implementation of the following services to customize startup:
-        /// <see cref="IResourceGraphBuilder"/>, <see cref="IServiceDiscoveryFacade"/>, <see cref="IJsonApiTypeMatchFilter"/>,
+        /// <see cref="ResourceGraphBuilder"/>, <see cref="ServiceDiscoveryFacade"/>, <see cref="IJsonApiTypeMatchFilter"/>,
         /// <see cref="IJsonApiExceptionFilter"/> and <see cref="IJsonApiRoutingConvention"/>.
         /// </summary>
         public void ConfigureMvc()
@@ -104,9 +95,7 @@ namespace JsonApiDotNetCore.Builders
                 options.Filters.AddService<IJsonApiExceptionFilter>();
                 options.Filters.AddService<IJsonApiTypeMatchFilter>();
                 options.Filters.AddService<IQueryStringActionFilter>();
-                options.Filters.Add(new ConvertEmptyActionResultFilter());
-                options.InputFormatters.Insert(0, new JsonApiInputFormatter());
-                options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
+                options.Filters.AddService<IConvertEmptyActionResultFilter>();
                 ConfigureMvcOptions?.Invoke(options);
             });
 
@@ -122,7 +111,7 @@ namespace JsonApiDotNetCore.Builders
         public void DiscoverInjectables()
         {
             _serviceDiscoveryFacade.DiscoverInjectables();
-            _intermediateServiceProvider.Dispose();
+            _intermediateProvider.Dispose();
         }
 
         /// <summary>
@@ -143,27 +132,14 @@ namespace JsonApiDotNetCore.Builders
 
             AddRepositoryLayer();
             AddServiceLayer();
+            AddMiddlewareLayer();
 
-            _services.AddSingleton<IJsonApiApplicationBuilder>(this);
-            _services.AddSingleton<IControllerResourceMapping>(sp => sp.GetService<IJsonApiRoutingConvention>());
-
-            _services.TryAddSingleton<IExceptionHandler, ExceptionHandler>();
-            _services.TryAddScoped<IJsonApiExceptionFilter, JsonApiExceptionFilter>();
-            _services.TryAddScoped<IJsonApiTypeMatchFilter, JsonApiTypeMatchFilter>();
-            _services.TryAddScoped<IQueryStringActionFilter, QueryStringActionFilter>();
-
-            _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             _services.AddSingleton<IResourceContextProvider>(sp => sp.GetRequiredService<IResourceGraph>());
             
-            _services.AddScoped<ICurrentRequest, CurrentRequest>();
             _services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
-            _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
-            _services.AddScoped<IJsonApiReader, JsonApiReader>();
             _services.AddScoped<IGenericServiceFactory, GenericServiceFactory>();
             _services.AddScoped(typeof(RepositoryRelationshipUpdateHelper<>));
-            _services.AddScoped<ITargetedFields, TargetedFields>();
             _services.AddScoped<IResourceDefinitionProvider, ResourceDefinitionProvider>();
-            _services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
             _services.AddScoped<IResourceFactory, ResourceFactory>();
             _services.AddScoped<IPaginationContext, PaginationContext>();
@@ -179,10 +155,25 @@ namespace JsonApiDotNetCore.Builders
             _services.AddScoped<IInverseRelationships, InverseRelationships>();
         }
 
-        private void RegisterDiscoverableAssemblies(Action<IServiceDiscoveryFacade> configureAutoDiscovery,
-            IServiceDiscoveryFacade serviceDiscoveryFacade)
+        private void AddMiddlewareLayer()
         {
-            configureAutoDiscovery?.Invoke(serviceDiscoveryFacade);
+            _services.AddSingleton<IJsonApiOptions>(_options);
+            _services.AddSingleton<IJsonApiApplicationBuilder>(this);
+            _services.TryAddSingleton<IExceptionHandler, ExceptionHandler>();
+            _services.TryAddScoped<IJsonApiExceptionFilter, JsonApiExceptionFilter>();
+            _services.TryAddScoped<IJsonApiTypeMatchFilter, JsonApiTypeMatchFilter>();
+            _services.TryAddScoped<IQueryStringActionFilter, QueryStringActionFilter>();
+            _services.TryAddScoped<IConvertEmptyActionResultFilter, ConvertEmptyActionResultFilter>();
+            _services.TryAddSingleton<IJsonApiInputFormatter, JsonApiInputFormatter>();
+            _services.TryAddSingleton<IJsonApiOutputFormatter, JsonApiOutputFormatter>();
+            _services.TryAddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
+            _services.AddSingleton<IControllerResourceMapping>(sp => sp.GetService<IJsonApiRoutingConvention>());
+            _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            _services.AddScoped<ICurrentRequest, CurrentRequest>();
+            _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
+            _services.AddScoped<IJsonApiReader, JsonApiReader>();
+            _services.AddScoped<ITargetedFields, TargetedFields>();
+            _services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
         }
 
         private void AddRepositoryLayer()
@@ -284,33 +275,27 @@ namespace JsonApiDotNetCore.Builders
             _services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
         }
 
-        private void AddResourcesFromDbContext(Type dbContextType, ServiceProvider intermediateProvider,
-            IResourceGraphBuilder builder)
+        private void AddResourcesFromDbContext(DbContext dbContext, ResourceGraphBuilder builder)
         {
-            if (dbContextType != null)
+            foreach (var entityType in dbContext.Model.GetEntityTypes())
             {
-                var dbContext = (DbContext) intermediateProvider.GetRequiredService(dbContextType);
-
-                foreach (var entityType in dbContext.Model.GetEntityTypes())
-                {
-                    builder.AddResource(entityType.ClrType);
-                }
+                builder.AddResource(entityType.ClrType);
             }
         }
 
         /// <summary>
         /// Performs auto-discovery of JsonApiDotNetCore services.
         /// </summary>
-        private void AutoDiscoverResources(IServiceDiscoveryFacade serviceDiscoveryFacade)
+        private void AutoDiscoverResources(ServiceDiscoveryFacade serviceDiscoveryFacade)
         {
             serviceDiscoveryFacade.DiscoverResources();
         }
 
         /// <summary>
-        /// Executes the action provided by the user to configure the resources using <see cref="IResourceGraphBuilder"/>
+        /// Executes the action provided by the user to configure the resources using <see cref="ResourceGraphBuilder"/>
         /// </summary>
-        private void UserConfigureResources(Action<IResourceGraphBuilder> configureResources,
-            IResourceGraphBuilder resourceGraphBuilder)
+        private void UserConfigureResources(Action<ResourceGraphBuilder> configureResources,
+            ResourceGraphBuilder resourceGraphBuilder)
         {
             configureResources?.Invoke(resourceGraphBuilder);
         }

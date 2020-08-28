@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCoreExample.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -28,7 +29,6 @@ namespace JsonApiDotNetCoreExample
         public override void ConfigureServices(IServiceCollection services)
         {
             ConfigureClock(services);
-
             services.AddScoped<SkipCacheQueryStringParameterReader>();
             services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<SkipCacheQueryStringParameterReader>());
 

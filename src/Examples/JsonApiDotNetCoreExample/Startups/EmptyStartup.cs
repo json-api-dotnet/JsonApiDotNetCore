@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -11,16 +12,10 @@ namespace JsonApiDotNetCoreExample
     /// </summary>
     public abstract class EmptyStartup
     {
-        protected EmptyStartup(IConfiguration configuration)
-        {
-        }
+        protected EmptyStartup(IConfiguration configuration) { }
 
-        public virtual void ConfigureServices(IServiceCollection services)
-        {
-        }
+        public virtual void ConfigureServices(IServiceCollection services) { }
 
-        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
-        {
-        }
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment environment) { }
     }
 }

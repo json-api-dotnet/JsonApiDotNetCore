@@ -1,5 +1,6 @@
 using System;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
@@ -29,7 +30,10 @@ namespace JsonApiDotNetCore
             var jsonApiApplicationBuilder =  builder.ApplicationServices.GetRequiredService<IJsonApiApplicationBuilder>();
             jsonApiApplicationBuilder.ConfigureMvcOptions = options =>
             {
+                options.InputFormatters.Insert(0, builder.ApplicationServices.GetRequiredService<IJsonApiInputFormatter>());
+                options.OutputFormatters.Insert(0, builder.ApplicationServices.GetRequiredService<IJsonApiOutputFormatter>());
                 options.Conventions.Insert(0, builder.ApplicationServices.GetRequiredService<IJsonApiRoutingConvention>());
+                
                 configureMvcOptions?.Invoke(options);
             };
             

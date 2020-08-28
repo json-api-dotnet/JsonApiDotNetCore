@@ -2,14 +2,13 @@ using System;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample
 {
     public class TestStartup : Startup
     {
-        public TestStartup(IConfiguration configuration) : base(configuration)
-        {
-        }
+        public TestStartup(IConfiguration configuration) : base(configuration) { }
 
         protected override void ConfigureClock(IServiceCollection services)
         {

@@ -59,7 +59,7 @@ namespace DiscoveryTests
         public void AddAssembly_Adds_All_Resources_To_Graph()
         {
             // Arrange
-            IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, new NullLoggerFactory());
             facade.AddAssembly(typeof(Person).Assembly);
             facade.DiscoverResources();
 
@@ -76,7 +76,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Resources_To_Graph()
         {
             // Arrange
-            IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, new NullLoggerFactory());
             
             // Act
             facade.AddCurrentAssembly();
@@ -92,7 +92,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Services_To_Container()
         {
             // Arrange
-            IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, new NullLoggerFactory());
             
             // Act
             facade.AddCurrentAssembly();
@@ -108,7 +108,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Repositories_To_Container()
         {
             // Arrange
-            IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, new NullLoggerFactory());
             
             // Act
             facade.AddCurrentAssembly();
@@ -123,7 +123,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_ResourceDefinitions_To_Container()
         {
             // Arrange
-            IServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, new NullLoggerFactory());
             
             // Act
             facade.AddCurrentAssembly();

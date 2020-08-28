@@ -9,10 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Graph
 {
-    public class ServiceDiscoveryFacade : IServiceDiscoveryFacade
+    public class ServiceDiscoveryFacade
     {
         internal static readonly HashSet<Type> ServiceInterfaces = new HashSet<Type> {
             typeof(IResourceService<>),
@@ -47,14 +48,16 @@ namespace JsonApiDotNetCore.Graph
         };
 
         private readonly IServiceCollection _services;
-        private readonly IResourceGraphBuilder _resourceGraphBuilder;
+        private readonly ResourceGraphBuilder _resourceGraphBuilder;
         private readonly IdentifiableTypeCache _typeCache = new IdentifiableTypeCache();
         private readonly Dictionary<Assembly, IList<ResourceDescriptor>> _resourceDescriptorsPerAssemblyCache = new Dictionary<Assembly, IList<ResourceDescriptor>>();
-        
-        public ServiceDiscoveryFacade(IServiceCollection services, IResourceGraphBuilder resourceGraphBuilder)
+        private readonly ILogger<ResourceGraphBuilder> _logger;
+
+        public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, ILoggerFactory loggerFactory)
         {
             _services = services;
             _resourceGraphBuilder = resourceGraphBuilder;
+            _logger = loggerFactory?.CreateLogger<ResourceGraphBuilder>();
         }
 
         /// <inheritdoc/>
@@ -64,12 +67,13 @@ namespace JsonApiDotNetCore.Graph
         public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
         {
             _resourceDescriptorsPerAssemblyCache.Add(assembly, null);
-            
+            _logger?.LogDebug($"Registering assembly '{assembly.FullName}' for discovery of resources and injectables.");
+
             return this;
         }
 
         /// <inheritdoc/>
-        void IServiceDiscoveryFacade.DiscoverResources()
+        internal void DiscoverResources()
         {
             foreach (var (assembly, discoveredResourceDescriptors) in  _resourceDescriptorsPerAssemblyCache.ToArray())
             {
@@ -83,7 +87,7 @@ namespace JsonApiDotNetCore.Graph
         }
         
         /// <inheritdoc/>
-        void IServiceDiscoveryFacade.DiscoverInjectables()
+        internal void DiscoverInjectables()
         {
             foreach (var (assembly, discoveredResourceDescriptors) in  _resourceDescriptorsPerAssemblyCache.ToArray())
             {

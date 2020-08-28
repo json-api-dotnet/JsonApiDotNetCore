@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Builders
 {
-    public class ResourceGraphBuilder : IResourceGraphBuilder
+    public class ResourceGraphBuilder
     {
         private readonly IJsonApiOptions _options;
         private readonly ILogger<ResourceGraphBuilder> _logger;
@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Builders
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
             _options = options;
-            _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
+            _logger = loggerFactory?.CreateLogger<ResourceGraphBuilder>();
         }
 
         /// <inheritdoc />
@@ -44,15 +44,15 @@ namespace JsonApiDotNetCore.Builders
         }
 
         /// <inheritdoc />
-        public IResourceGraphBuilder AddResource<TResource>(string publicResourceName = null) where TResource : class, IIdentifiable<int>
+        public ResourceGraphBuilder AddResource<TResource>(string publicResourceName = null) where TResource : class, IIdentifiable<int>
             => AddResource<TResource, int>(publicResourceName);
 
         /// <inheritdoc />
-        public IResourceGraphBuilder AddResource<TResource, TId>(string publicResourceName = null) where TResource : class, IIdentifiable<TId>
+        public ResourceGraphBuilder AddResource<TResource, TId>(string publicResourceName = null) where TResource : class, IIdentifiable<TId>
             => AddResource(typeof(TResource), typeof(TId), publicResourceName);
 
         /// <inheritdoc />
-        public IResourceGraphBuilder AddResource(Type resourceType, Type idType = null, string publicResourceName = null)
+        public ResourceGraphBuilder AddResource(Type resourceType, Type idType = null, string publicResourceName = null)
         {
             if (_resources.All(e => e.ResourceType != resourceType))
             {
@@ -65,7 +65,7 @@ namespace JsonApiDotNetCore.Builders
                 }
                 else
                 {
-                    _logger.LogWarning($"Entity '{resourceType}' does not implement '{nameof(IIdentifiable)}'.");
+                    _logger?.LogWarning($"Entity '{resourceType}' does not implement '{nameof(IIdentifiable)}'.");
                 }
             }
 

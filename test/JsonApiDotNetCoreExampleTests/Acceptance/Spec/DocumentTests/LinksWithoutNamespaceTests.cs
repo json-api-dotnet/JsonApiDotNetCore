@@ -85,9 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
     public sealed class NoNamespaceStartup : TestStartup
     {
-        public NoNamespaceStartup(IConfiguration configuration) : base(configuration)
-        {
-        }
+        public NoNamespaceStartup(IConfiguration configuration) : base(configuration) { }
 
         protected override void ConfigureJsonApiOptions(JsonApiOptions options)
         {

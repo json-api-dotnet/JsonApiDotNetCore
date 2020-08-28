@@ -4,14 +4,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace JsonApiDotNetCore.Middleware
-{ 
-    /// <summary>
-    /// Converts action result without parameters into action result with null parameter.
-    /// For example: return NotFound() -> return NotFound(null)
-    /// This ensures our formatter is invoked, where we'll build a json:api compliant response.
-    /// For details, see: https://github.com/dotnet/aspnetcore/issues/16969
-    /// </summary>
-    public sealed class ConvertEmptyActionResultFilter : IAlwaysRunResultFilter
+{
+    /// <inheritdoc/>
+    public sealed class ConvertEmptyActionResultFilter : IConvertEmptyActionResultFilter
     {
         public void OnResultExecuted(ResultExecutedContext context) { /* noop */ }
 

@@ -10,13 +10,15 @@ namespace JsonApiDotNetCore.Middleware
     public sealed class QueryStringActionFilter : IQueryStringActionFilter
     {
         private readonly IQueryStringReader _queryStringReader;
-
+    
         public QueryStringActionFilter(IQueryStringReader queryStringReader)
         {
             _queryStringReader = queryStringReader;
         }
+        
+        public void OnActionExecuted(ActionExecutedContext context) {  /* noop */ }
 
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        public void OnActionExecuting(ActionExecutingContext context)
         {
             if (!context.HttpContext.IsJsonApiRequest())
             {
@@ -24,9 +26,8 @@ namespace JsonApiDotNetCore.Middleware
             }
             
             var disableQueryAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryAttribute>();
-
+    
             _queryStringReader.ReadAll(disableQueryAttribute);
-            await next();
         }
     }
 }

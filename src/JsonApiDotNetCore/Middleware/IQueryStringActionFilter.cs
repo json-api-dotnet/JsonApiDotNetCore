@@ -10,5 +10,5 @@ namespace JsonApiDotNetCore.Middleware
     /// <summary>
     /// Entry point for processing all query string parameters.
     /// </summary>
-    public interface IQueryStringActionFilter : IAsyncActionFilter { }
+    public interface IQueryStringActionFilter : IActionFilter { }
 }
