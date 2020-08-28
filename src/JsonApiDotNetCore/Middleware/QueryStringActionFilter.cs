@@ -1,12 +1,13 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.QueryStrings;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    public sealed class QueryStringActionFilter : IAsyncActionFilter, IQueryStringActionFilter
+    public sealed class QueryStringActionFilter : IQueryStringActionFilter
     {
         private readonly IQueryStringReader _queryStringReader;
 
@@ -17,7 +18,12 @@ namespace JsonApiDotNetCore.Middleware
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            DisableQueryAttribute disableQueryAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryAttribute>();
+            if (!context.HttpContext.IsJsonApiRequest())
+            {
+                return;
+            }
+            
+            var disableQueryAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryAttribute>();
 
             _queryStringReader.ReadAll(disableQueryAttribute);
             await next();
