@@ -33,6 +33,11 @@ namespace JsonApiDotNetCore.Models.Annotation
             PublicName = publicName;
         }
 
+        protected ResourceFieldAttribute(string publicName, PropertyInfo property) : this(publicName)
+        {
+            Property = property;
+        }
+
         public override string ToString()
         {
             return PublicName ?? (Property != null ? Property.Name : base.ToString());

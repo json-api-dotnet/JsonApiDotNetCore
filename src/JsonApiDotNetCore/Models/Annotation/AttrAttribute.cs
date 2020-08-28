@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Models.Annotation
@@ -31,6 +32,17 @@ namespace JsonApiDotNetCore.Models.Annotation
         /// </summary>
         public AttrAttribute(string publicName) 
             : base(publicName)
+        {
+            CheckPublicName(publicName);
+        }
+
+        public AttrAttribute(string publicName, PropertyInfo property) 
+            : base(publicName, property)
+        {
+            CheckPublicName(publicName);
+        }
+
+        private void CheckPublicName(string publicName)
         {
             if (publicName == null)
             {
