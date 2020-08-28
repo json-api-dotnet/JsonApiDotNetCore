@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Builders
     private IServiceDiscoveryFacade _serviceDiscoveryFacade;
     private IResourceGraphBuilder _resourceGraphBuilder;
     private readonly IMvcCoreBuilder _mvcBuilder;
-    private ServiceProvider _serviceProviderToDispose;
+    private ServiceProvider _intermediateServiceProvider;
 
     public JsonApiApplicationBuilder(IServiceCollection services,
         IMvcCoreBuilder mvcBuilder)
@@ -76,7 +76,7 @@ namespace JsonApiDotNetCore.Builders
         _serviceDiscoveryFacade = intermediateProvider.GetRequiredService<IServiceDiscoveryFacade>();
         _resourceGraphBuilder = intermediateProvider.GetRequiredService<IResourceGraphBuilder>();
         RegisterDiscoverableAssemblies(configureAutoDiscovery, _serviceDiscoveryFacade);
-        _serviceProviderToDispose = intermediateProvider;
+        _intermediateServiceProvider = intermediateProvider;
     }
 
     /// <summary>
@@ -84,13 +84,10 @@ namespace JsonApiDotNetCore.Builders
     /// </summary>
     public void AddResourceGraph(Type dbContextType, Action<IResourceGraphBuilder> configureResources)
     {
-        using (var intermediateProvider = _services.BuildServiceProvider())
-        {
-            AutoDiscoverResources(_serviceDiscoveryFacade);
-            AddResourcesFromDbContext(dbContextType, intermediateProvider, _resourceGraphBuilder);
-            UserConfigureResources(configureResources, _resourceGraphBuilder);
-            _services.AddSingleton(_resourceGraphBuilder.Build());            
-        }
+        AutoDiscoverResources(_serviceDiscoveryFacade);
+        AddResourcesFromDbContext(dbContextType, _intermediateServiceProvider, _resourceGraphBuilder);
+        UserConfigureResources(configureResources, _resourceGraphBuilder);
+        _services.AddSingleton(_resourceGraphBuilder.Build());
     }
 
     /// <summary>
@@ -137,7 +134,7 @@ namespace JsonApiDotNetCore.Builders
     public void DiscoverInjectables()
     {
         _serviceDiscoveryFacade.DiscoverInjectables();
-        _serviceProviderToDispose.Dispose();
+        _intermediateServiceProvider.Dispose();
     }
 
     /// <summary>
