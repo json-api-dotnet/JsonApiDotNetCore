@@ -92,7 +92,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Act
             var response = await client.SendAsync(request);
-
+            var test = await response.Content.ReadAsStringAsync();
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("text/plain; charset=utf-8", response.Content.Headers.ContentType.ToString());

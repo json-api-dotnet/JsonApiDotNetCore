@@ -11,7 +11,9 @@ namespace JsonApiDotNetCore.Formatters
         public bool CanWriteResult(OutputFormatterCanWriteContext context)
         {
             if (context == null)
+            {
                 throw new ArgumentNullException(nameof(context));
+            }
 
             return context.HttpContext.IsJsonApiRequest();
         }

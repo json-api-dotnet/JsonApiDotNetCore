@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    [ServiceFilter(typeof(IQueryStringActionFilter))]
     public abstract class CoreJsonApiController : ControllerBase
     {
         protected IActionResult Error(Error error)
