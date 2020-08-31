@@ -1,16 +1,14 @@
 using System.Collections.Generic;
-using System.Net;
 using System.ComponentModel.Design;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
+using System.Net;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Server;
+using JsonApiDotNetCore.Serialization.Objects;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
-
 
 namespace UnitTests.Serialization.Server
 {

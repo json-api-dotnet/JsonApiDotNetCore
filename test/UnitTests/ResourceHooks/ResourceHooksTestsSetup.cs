@@ -1,26 +1,25 @@
-using Bogus;
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Generics;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
-using Microsoft.EntityFrameworkCore;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Person = JsonApiDotNetCoreExample.Models.Person;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Models.Annotation;
+using Bogus;
+using JsonApiDotNetCore;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Hooks.Internal;
+using JsonApiDotNetCore.Hooks.Internal.Discovery;
+using JsonApiDotNetCore.Hooks.Internal.Execution;
+using JsonApiDotNetCore.Hooks.Internal.Traversal;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace UnitTests.ResourceHooks
 {
@@ -43,13 +42,13 @@ namespace UnitTests.ResourceHooks
             var appDbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>().Options, new FrozenSystemClock());
 
             _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-                .AddResource<TodoItem>()
-                .AddResource<Person>()
-                .AddResource<Passport>()
-                .AddResource<Article>()
-                .AddResource<IdentifiableArticleTag>()
-                .AddResource<Tag>()
-                .AddResource<TodoItemCollection, Guid>()
+                .Add<TodoItem>()
+                .Add<Person>()
+                .Add<Passport>()
+                .Add<Article>()
+                .Add<IdentifiableArticleTag>()
+                .Add<Tag>()
+                .Add<TodoItemCollection, Guid>()
                 .Build();
 
             _todoFaker = new Faker<TodoItem>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
@@ -173,7 +172,8 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, _resourceGraph, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph, null);
+            var resourceFactory = new Mock<IResourceFactory>().Object;
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph, resourceFactory);
 
             return (constraintsMock, hookExecutor, primaryResource);
         }
@@ -197,8 +197,8 @@ namespace UnitTests.ResourceHooks
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions, new FrozenSystemClock()) : null;
 
             var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-                .AddResource<TPrimary>()
-                .AddResource<TSecondary>()
+                .Add<TPrimary>()
+                .Add<TSecondary>()
                 .Build();
 
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery, dbContext, resourceGraph);
@@ -206,7 +206,8 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, _resourceGraph, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph, null);
+            var resourceFactory = new Mock<IResourceFactory>().Object;
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph, resourceFactory);
 
             return (constraintsMock, ufMock, hookExecutor, primaryResource, secondaryResource);
         }
@@ -233,9 +234,9 @@ namespace UnitTests.ResourceHooks
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions, new FrozenSystemClock()) : null;
 
             var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-                .AddResource<TPrimary>()
-                .AddResource<TFirstSecondary>()
-                .AddResource<TSecondSecondary>()
+                .Add<TPrimary>()
+                .Add<TFirstSecondary>()
+                .Add<TSecondSecondary>()
                 .Build();
 
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery, dbContext, resourceGraph);
@@ -244,7 +245,8 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, _resourceGraph, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph, null);
+            var resourceFactory = new Mock<IResourceFactory>().Object;
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph, resourceFactory);
 
             return (constraintsMock, hookExecutor, primaryResource, firstSecondaryResource, secondSecondaryResource);
         }
@@ -368,7 +370,9 @@ namespace UnitTests.ResourceHooks
             var serviceProvider = ((IInfrastructure<IServiceProvider>) dbContext).Instance;
             var resourceFactory = new ResourceFactory(serviceProvider);
             IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
-            return new EntityFrameworkCoreRepository<TModel, int>(null, resolver, resourceGraph, null, resourceFactory, new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
+            var serviceFactory = new Mock<IGenericServiceFactory>().Object;
+            var targetedFields = new TargetedFields();
+            return new EntityFrameworkCoreRepository<TModel, int>(targetedFields, resolver, resourceGraph, serviceFactory, resourceFactory, new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
         }
 
         private IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace UnitTests.TestModels
 {
@@ -14,7 +14,7 @@ namespace UnitTests.TestModels
         [Attr] public int? NullableIntField { get; set; }
         [Attr] public Guid GuidField { get; set; }
         [Attr] public ComplexType ComplexField { get; set; }
-        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowChange)] public string Immutable { get; set; }
+        [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowChange)] public string Immutable { get; set; }
     }
 
     public class TestResourceWithList : Identifiable
@@ -93,7 +93,7 @@ namespace UnitTests.TestModels
         [HasOne] public Person Reviewer { get; set; }
         [HasOne] public Person Author { get; set; }
 
-        [HasOne(canInclude: false)] public Person CannotInclude { get; set; }
+        [HasOne(CanInclude = false)] public Person CannotInclude { get; set; }
     }
 
     public class Person : Identifiable

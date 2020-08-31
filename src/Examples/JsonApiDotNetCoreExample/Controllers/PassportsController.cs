@@ -11,10 +11,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     public sealed class PassportsController : BaseJsonApiController<Passport>
     {
         public PassportsController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<Passport, int> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
 
         [HttpGet]

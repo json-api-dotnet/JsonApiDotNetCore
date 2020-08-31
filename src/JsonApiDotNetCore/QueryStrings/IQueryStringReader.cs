@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Controllers.Annotations;
 
 namespace JsonApiDotNetCore.QueryStrings
 {
@@ -10,9 +10,9 @@ namespace JsonApiDotNetCore.QueryStrings
         /// <summary>
         /// Reads and processes the key/value pairs from the request query string.
         /// </summary>
-        /// <param name="disableQueryAttribute">
-        /// The <see cref="DisableQueryAttribute"/> if set on the controller that is targeted by the current request.
+        /// <param name="disableQueryStringAttribute">
+        /// The <see cref="DisableQueryStringAttribute"/> if set on the controller that is targeted by the current request.
         /// </param>
-        void ReadAll(DisableQueryAttribute disableQueryAttribute);
+        void ReadAll(DisableQueryStringAttribute disableQueryStringAttribute);
     }
 }

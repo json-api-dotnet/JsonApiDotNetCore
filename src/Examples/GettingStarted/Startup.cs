@@ -1,6 +1,6 @@
 using GettingStarted.Data;
 using GettingStarted.Models;
-using JsonApiDotNetCore;
+using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

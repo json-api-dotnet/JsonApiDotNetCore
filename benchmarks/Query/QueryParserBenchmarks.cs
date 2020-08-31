@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using BenchmarkDotNet.Attributes;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.QueryStrings;
-using JsonApiDotNetCore.RequestServices;
+using JsonApiDotNetCore.QueryStrings.Internal;
+using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -30,20 +29,19 @@ namespace Benchmarks.Query
 
             IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
 
-            var currentRequest = new CurrentRequest
+            var request = new JsonApiRequest
             {
                 PrimaryResource = resourceGraph.GetResourceContext(typeof(BenchmarkResource))
             };
 
-            _queryStringReaderForSort = CreateQueryParameterDiscoveryForSort(resourceGraph, currentRequest, options, _queryStringAccessor);
-            _queryStringReaderForAll = CreateQueryParameterDiscoveryForAll(resourceGraph, currentRequest, options, _queryStringAccessor);
+            _queryStringReaderForSort = CreateQueryParameterDiscoveryForSort(resourceGraph, request, options, _queryStringAccessor);
+            _queryStringReaderForAll = CreateQueryParameterDiscoveryForAll(resourceGraph, request, options, _queryStringAccessor);
         }
 
         private static QueryStringReader CreateQueryParameterDiscoveryForSort(IResourceGraph resourceGraph,
-            CurrentRequest currentRequest,
-            IJsonApiOptions options, FakeRequestQueryStringAccessor queryStringAccessor)
+            JsonApiRequest request, IJsonApiOptions options, FakeRequestQueryStringAccessor queryStringAccessor)
         {
-            var sortReader = new SortQueryStringParameterReader(currentRequest, resourceGraph);
+            var sortReader = new SortQueryStringParameterReader(request, resourceGraph);
             
             var readers = new List<IQueryStringParameterReader>
             {
@@ -54,14 +52,14 @@ namespace Benchmarks.Query
         }
 
         private static QueryStringReader CreateQueryParameterDiscoveryForAll(IResourceGraph resourceGraph,
-            CurrentRequest currentRequest, IJsonApiOptions options, FakeRequestQueryStringAccessor queryStringAccessor)
+            JsonApiRequest request, IJsonApiOptions options, FakeRequestQueryStringAccessor queryStringAccessor)
         {
             var resourceFactory = new ResourceFactory(new ServiceContainer());
 
-            var filterReader = new FilterQueryStringParameterReader(currentRequest, resourceGraph, resourceFactory, options);
-            var sortReader = new SortQueryStringParameterReader(currentRequest, resourceGraph);
-            var sparseFieldSetReader = new SparseFieldSetQueryStringParameterReader(currentRequest, resourceGraph);
-            var paginationReader = new PaginationQueryStringParameterReader(currentRequest, resourceGraph, options);
+            var filterReader = new FilterQueryStringParameterReader(request, resourceGraph, resourceFactory, options);
+            var sortReader = new SortQueryStringParameterReader(request, resourceGraph);
+            var sparseFieldSetReader = new SparseFieldSetQueryStringParameterReader(request, resourceGraph);
+            var paginationReader = new PaginationQueryStringParameterReader(request, resourceGraph, options);
             var defaultsReader = new DefaultsQueryStringParameterReader(options);
             var nullsReader = new NullsQueryStringParameterReader(options);
 

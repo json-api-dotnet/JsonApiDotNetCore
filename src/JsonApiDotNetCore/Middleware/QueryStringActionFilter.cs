@@ -1,7 +1,6 @@
+using System;
 using System.Reflection;
-using System.Threading.Tasks;
-using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.QueryStrings;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -13,21 +12,30 @@ namespace JsonApiDotNetCore.Middleware
     
         public QueryStringActionFilter(IQueryStringReader queryStringReader)
         {
-            _queryStringReader = queryStringReader;
+            _queryStringReader = queryStringReader ?? throw new ArgumentNullException(nameof(queryStringReader));
         }
         
         public void OnActionExecuted(ActionExecutedContext context) {  /* noop */ }
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+            
             if (!context.HttpContext.IsJsonApiRequest())
             {
                 return;
             }
             
-            var disableQueryAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryAttribute>();
+            var disableQueryAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryStringAttribute>();
     
             _queryStringReader.ReadAll(disableQueryAttribute);
+
+            DisableQueryStringAttribute disableQueryStringAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryStringAttribute>();
+
+            _queryStringReader.ReadAll(disableQueryStringAttribute);
         }
     }
 }

@@ -3,15 +3,16 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Net;
 using FluentAssertions;
-using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.Controllers.Annotations;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.QueryStrings;
+using JsonApiDotNetCore.QueryStrings.Internal;
+using JsonApiDotNetCore.Resources;
 using Xunit;
 
 namespace UnitTests.QueryStringParameters
 {
-    public sealed class FilterParseTests : ParseTestsBase
+    public sealed class FilterParseTests : BaseParseTests
     {
         private readonly FilterQueryStringParameterReader _reader;
 
@@ -20,7 +21,7 @@ namespace UnitTests.QueryStringParameters
             Options.EnableLegacyFilterNotation = false;
 
             var resourceFactory = new ResourceFactory(new ServiceContainer());
-            _reader = new FilterQueryStringParameterReader(CurrentRequest, ResourceGraph, resourceFactory, Options);
+            _reader = new FilterQueryStringParameterReader(Request, ResourceGraph, resourceFactory, Options);
         }
 
         [Theory]
@@ -46,7 +47,7 @@ namespace UnitTests.QueryStringParameters
         public void Reader_Is_Enabled(StandardQueryStringParameters parametersDisabled, bool expectIsEnabled)
         {
             // Act
-            var isEnabled = _reader.IsEnabled(new DisableQueryAttribute(parametersDisabled));
+            var isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
 
             // Assert
             isEnabled.Should().Be(expectIsEnabled);

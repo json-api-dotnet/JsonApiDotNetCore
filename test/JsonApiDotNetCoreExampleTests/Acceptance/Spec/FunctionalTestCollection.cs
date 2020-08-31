@@ -4,14 +4,10 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using JsonApiDotNetCore;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
@@ -78,10 +74,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 {
                     continue;
                 }
-                builder.AddResource(rc.ResourceType, rc.IdentityType, rc.ResourceName);
+                builder.Add(rc.ResourceType, rc.IdentityType, rc.ResourceName);
             }
-            builder.AddResource<TodoItemClient>(formatter.FormatResourceName(typeof(TodoItem)));
-            builder.AddResource<TodoItemCollectionClient, Guid>(formatter.FormatResourceName(typeof(TodoItemCollection)));
+            builder.Add<TodoItemClient>(formatter.FormatResourceName(typeof(TodoItem)));
+            builder.Add<TodoItemCollectionClient, Guid>(formatter.FormatResourceName(typeof(TodoItemCollection)));
             return new ResponseDeserializer(builder.Build(), new ResourceFactory(_factory.ServiceProvider));
         }
 

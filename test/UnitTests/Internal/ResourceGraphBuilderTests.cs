@@ -1,11 +1,9 @@
-using JsonApiDotNetCore.Builders;
+using Castle.DynamicProxy;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Castle.DynamicProxy;
 using Xunit;
 
 namespace UnitTests.Internal
@@ -19,7 +17,7 @@ namespace UnitTests.Internal
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
 
             // Act
-            resourceGraphBuilder.AddResource(typeof(TestContext));
+            resourceGraphBuilder.Add(typeof(TestContext));
             var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
 
             // Assert
@@ -32,7 +30,7 @@ namespace UnitTests.Internal
             // Arrange
             var loggerFactory = new FakeLoggerFactory();
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), loggerFactory);
-            resourceGraphBuilder.AddResource(typeof(TestContext));
+            resourceGraphBuilder.Add(typeof(TestContext));
 
             // Act
             resourceGraphBuilder.Build();
@@ -48,7 +46,7 @@ namespace UnitTests.Internal
         {
             // Arrange
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
-            resourceGraphBuilder.AddResource<Bar>();
+            resourceGraphBuilder.Add<Bar>();
             var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
             var proxyGenerator = new ProxyGenerator();
 
@@ -65,7 +63,7 @@ namespace UnitTests.Internal
         {
             // Arrange
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
-            resourceGraphBuilder.AddResource<Bar>();
+            resourceGraphBuilder.Add<Bar>();
             var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
 
             // Act

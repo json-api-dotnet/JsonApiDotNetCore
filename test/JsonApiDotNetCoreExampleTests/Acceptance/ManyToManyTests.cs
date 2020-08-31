@@ -5,8 +5,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.Single(document.ManyData);
 
-            var tagResponse = _fixture.GetDeserializer().DeserializeList<Tag>(body).Data.First();
+            var tagResponse = _fixture.GetDeserializer().DeserializeMany<Tag>(body).Data.First();
             Assert.NotNull(tagResponse);
             Assert.Equal(tag.Id, tagResponse.Id);
             Assert.Equal(tag.Name, tagResponse.Name);
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.Null(document.Included);
 
-            var tagResponse = _fixture.GetDeserializer().DeserializeList<Tag>(body).Data.First();
+            var tagResponse = _fixture.GetDeserializer().DeserializeMany<Tag>(body).Data.First();
             Assert.NotNull(tagResponse);
             Assert.Equal(tag.Id, tagResponse.Id);
         }
@@ -155,7 +155,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.Null(document.Included);
             
-            var tagResponse = _fixture.GetDeserializer().DeserializeList<Tag>(body).Data.First();
+            var tagResponse = _fixture.GetDeserializer().DeserializeMany<Tag>(body).Data.First();
             Assert.NotNull(tagResponse);
             Assert.Equal(tag.Id, tagResponse.Id);
         }

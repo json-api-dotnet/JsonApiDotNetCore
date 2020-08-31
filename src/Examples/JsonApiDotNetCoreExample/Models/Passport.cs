@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Authentication;
 
@@ -14,7 +14,7 @@ namespace JsonApiDotNetCoreExample.Models
         private readonly ISystemClock _systemClock;
         private int? _socialSecurityNumber;
 
-        protected override string GetStringId(object value)
+        protected override string GetStringId(int value)
         {
             return HexadecimalObfuscationCodec.Encode(value);
         }
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCoreExample.Models
         [EagerLoad]
         public Country BirthCountry { get; set; }
 
-        [Attr(AttrCapabilities.All & ~AttrCapabilities.AllowChange)]
+        [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowChange)]
         [NotMapped]
         public string GrantedVisaCountries => GrantedVisas == null || !GrantedVisas.Any()
             ? null

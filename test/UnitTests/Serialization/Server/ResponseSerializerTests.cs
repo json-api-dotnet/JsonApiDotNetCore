@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
-using Xunit;
 using UnitTests.TestModels;
+using Xunit;
 
 namespace UnitTests.Serialization.Server
 {
@@ -23,8 +23,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            var expectedFormatted = @"{
                ""data"":{
                   ""type"":""testResource"",
                   ""id"":""1"",
@@ -57,8 +56,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeMany(new List<TestResource> { resource });
 
             // Assert
-            var expectedFormatted =
-            @"{
+            var expectedFormatted = @"{
                ""data"":[{
                   ""type"":""testResource"",
                   ""id"":""1"",
@@ -96,8 +94,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            var expectedFormatted = @"{
                ""data"":{
                   ""type"":""multiPrincipals"",
                   ""id"":""1"",
@@ -153,14 +150,14 @@ namespace UnitTests.Serialization.Server
             };
 
             var chains = _resourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>()
-                                .Select(r =>
-                                {
-                                    var chain = new List<RelationshipAttribute> { r };
-                                    if (r.PublicName != "populatedToManies")
-                                        return new List<RelationshipAttribute> { r };
-                                    chain.AddRange(_resourceGraph.GetRelationships<OneToManyDependent>());
-                                    return chain;
-                                }).ToList();
+                .Select(r =>
+                {
+                    var chain = new List<RelationshipAttribute> {r};
+                    if (r.PublicName != "populatedToManies")
+                        return new List<RelationshipAttribute> {r};
+                    chain.AddRange(_resourceGraph.GetRelationships<OneToManyDependent>());
+                    return chain;
+                }).ToList();
 
             var serializer = GetResponseSerializer<MultipleRelationshipsPrincipalPart>(inclusionChains: chains);
 
@@ -168,8 +165,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            var expectedFormatted = @"{
                ""data"":{ 
                   ""type"":""multiPrincipals"",
                   ""id"":""10"",
@@ -269,14 +265,13 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            var expectedFormatted = @"{
                ""links"":{
                   ""self"":""http://www.dummy.com/dummy-self-link"",
-                  ""next"":""http://www.dummy.com/dummy-next-link"",
-                  ""prev"":""http://www.dummy.com/dummy-prev-link"",
                   ""first"":""http://www.dummy.com/dummy-first-link"",
-                  ""last"":""http://www.dummy.com/dummy-last-link""
+                  ""last"":""http://www.dummy.com/dummy-last-link"",
+                  ""prev"":""http://www.dummy.com/dummy-prev-link"",
+                  ""next"":""http://www.dummy.com/dummy-next-link""
                },
                ""data"":{
                   ""type"":""oneToManyPrincipals"",
@@ -314,8 +309,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            var expectedFormatted = @"{
                 ""meta"":{ ""test"": ""meta"" },
                 ""data"":{
                     ""type"":""oneToManyPrincipals"",
@@ -341,15 +335,14 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(null);
             
             // Assert
-            var expectedFormatted =
-            @"{
+            var expectedFormatted = @"{
                 ""meta"":{ ""test"": ""meta"" },
                 ""links"":{
                     ""self"":""http://www.dummy.com/dummy-self-link"",
-                    ""next"":""http://www.dummy.com/dummy-next-link"",
-                    ""prev"":""http://www.dummy.com/dummy-prev-link"",
                     ""first"":""http://www.dummy.com/dummy-first-link"",
-                    ""last"":""http://www.dummy.com/dummy-last-link""
+                    ""last"":""http://www.dummy.com/dummy-last-link"",
+                    ""prev"":""http://www.dummy.com/dummy-prev-link"",
+                    ""next"":""http://www.dummy.com/dummy-next-link""
                 },
                 ""data"": null
             }";
@@ -390,8 +383,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            var expectedFormatted = @"{
                ""data"":{
                   ""type"":""oneToOneDependents"",
                   ""id"":""1""
@@ -436,8 +428,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            var expectedFormatted = @"{
                ""data"":[{
                   ""type"":""oneToManyDependents"",
                   ""id"":""1""

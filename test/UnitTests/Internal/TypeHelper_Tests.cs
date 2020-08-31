@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore;
+using JsonApiDotNetCore.Resources;
 using Xunit;
 
 namespace UnitTests.Internal
@@ -131,6 +132,46 @@ namespace UnitTests.Internal
             Assert.Throws<FormatException>(() => TypeHelper.ConvertType(formattedString, typeof(TimeSpan)));
         }
 
+        [Fact]
+        public void New_Creates_An_Instance_If_T_Implements_Interface()
+        {
+            // Arrange
+            var type = typeof(Model);
+
+            // Act
+            var instance = (IIdentifiable)TypeHelper.CreateInstance(type);
+
+            // Assert
+            Assert.NotNull(instance);
+            Assert.IsType<Model>(instance);
+        }
+
+        [Fact]
+        public void Implements_Returns_True_If_Type_Implements_Interface()
+        {
+            // Arrange
+            var type = typeof(Model);
+
+            // Act
+            var result = TypeHelper.IsOrImplementsInterface(type, typeof(IIdentifiable));
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void Implements_Returns_False_If_Type_DoesNot_Implement_Interface()
+        {
+            // Arrange
+            var type = typeof(string);
+
+            // Act
+            var result = TypeHelper.IsOrImplementsInterface(type, typeof(IIdentifiable));
+
+            // Assert
+            Assert.False(result);
+        }
+
         private enum TestEnum
         {
             Test = 1
@@ -146,5 +187,10 @@ namespace UnitTests.Internal
 
         private interface IType
         { }
+
+        private sealed class Model : IIdentifiable
+        {
+            public string StringId { get; set; }
+        }
     }
 }

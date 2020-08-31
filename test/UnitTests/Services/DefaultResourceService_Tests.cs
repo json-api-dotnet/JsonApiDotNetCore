@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Queries;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.RequestServices;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Queries.Internal;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -28,8 +25,8 @@ namespace UnitTests.Services
         public JsonApiResourceServiceTests()
         {
             _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-                .AddResource<TodoItem>()
-                .AddResource<TodoItemCollection, Guid>()
+                .Add<TodoItem>()
+                .Add<TodoItemCollection, Guid>()
                 .Build();
         }
 
@@ -80,7 +77,7 @@ namespace UnitTests.Services
             var resourceDefinitionProvider = new ResourceDefinitionProvider(_resourceGraph, new TestScopedServiceProvider(serviceProvider));
             var paginationContext = new PaginationContext();
             var composer = new QueryLayerComposer(new List<IQueryConstraintProvider>(), _resourceGraph, resourceDefinitionProvider, options, paginationContext);
-            var currentRequest = new CurrentRequest
+            var request = new JsonApiRequest
             {
                 PrimaryResource = _resourceGraph.GetResourceContext<TodoItem>(),
                 SecondaryResource = _resourceGraph.GetResourceContext<TodoItemCollection>(),
@@ -89,7 +86,7 @@ namespace UnitTests.Services
             };
 
             return new JsonApiResourceService<TodoItem>(_repositoryMock.Object, composer, paginationContext, options,
-                NullLoggerFactory.Instance, currentRequest, changeTracker, resourceFactory, null);
+                NullLoggerFactory.Instance, request, changeTracker, resourceFactory, null);
         }
     }
 }

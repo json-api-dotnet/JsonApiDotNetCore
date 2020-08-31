@@ -1,7 +1,7 @@
-using JsonApiDotNetCore;
+using System.Reflection;
+using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using System.Reflection;
 
 namespace JsonApiDotNetCoreExampleTests
 {

@@ -2,20 +2,21 @@ using System;
 using System.Linq;
 using System.Net;
 using FluentAssertions;
-using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.Controllers.Annotations;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.QueryStrings;
+using JsonApiDotNetCore.QueryStrings.Internal;
 using Xunit;
 
 namespace UnitTests.QueryStringParameters
 {
-    public sealed class SparseFieldSetParseTests : ParseTestsBase
+    public sealed class SparseFieldSetParseTests : BaseParseTests
     {
         private readonly SparseFieldSetQueryStringParameterReader _reader;
 
         public SparseFieldSetParseTests()
         {
-            _reader = new SparseFieldSetQueryStringParameterReader(CurrentRequest, ResourceGraph);
+            _reader = new SparseFieldSetQueryStringParameterReader(Request, ResourceGraph);
         }
         
         [Theory]
@@ -42,7 +43,7 @@ namespace UnitTests.QueryStringParameters
         public void Reader_Is_Enabled(StandardQueryStringParameters parametersDisabled, bool expectIsEnabled)
         {
             // Act
-            var isEnabled = _reader.IsEnabled(new DisableQueryAttribute(parametersDisabled));
+            var isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
 
             // Assert
             isEnabled.Should().Be(expectIsEnabled);

@@ -1,4 +1,5 @@
 using System;
+using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {

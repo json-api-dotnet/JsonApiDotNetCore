@@ -1,16 +1,16 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Bogus;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
+using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Xunit;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCoreExample.Data;
-using Bogus;
-using JsonApiDotNetCoreExample.Models;
-using Microsoft.AspNetCore;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests

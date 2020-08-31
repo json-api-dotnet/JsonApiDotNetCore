@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
-    /// Holds a <see cref="IQueryable{TResource}"/> expression, used for custom query string handlers from <see cref="ResourceDefinition{TResource}"/>s.
+    /// Holds a <see cref="IQueryable{T}"/> expression, used for custom query string handlers from <see cref="ResourceDefinition{TResource}"/>s.
     /// </summary>
     public class QueryableHandlerExpression : QueryExpression
     {

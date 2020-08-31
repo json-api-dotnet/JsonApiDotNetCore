@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Middleware

@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Controllers.Annotations;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings
@@ -9,9 +9,9 @@ namespace JsonApiDotNetCore.QueryStrings
     public interface IQueryStringParameterReader
     {
         /// <summary>
-        /// Indicates whether usage of this query string parameter is blocked using <see cref="DisableQueryAttribute"/> on a controller.
+        /// Indicates whether usage of this query string parameter is blocked using <see cref="DisableQueryStringAttribute"/> on a controller.
         /// </summary>
-        bool IsEnabled(DisableQueryAttribute disableQueryAttribute);
+        bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute);
 
         /// <summary>
         /// Indicates whether this reader can handle the specified query string parameter.

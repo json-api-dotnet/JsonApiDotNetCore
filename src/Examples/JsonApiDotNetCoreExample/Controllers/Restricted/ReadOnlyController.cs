@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,10 @@ namespace JsonApiDotNetCoreExample.Controllers.Restricted
     public class ReadOnlyController : BaseJsonApiController<Article>
     {
         public ReadOnlyController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<Article> resourceService) 
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
 
         [HttpGet]
@@ -36,10 +37,10 @@ namespace JsonApiDotNetCoreExample.Controllers.Restricted
     public class NoHttpPostController : BaseJsonApiController<Article>
     {
         public NoHttpPostController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<Article> resourceService) 
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
 
         [HttpGet]
@@ -60,10 +61,10 @@ namespace JsonApiDotNetCoreExample.Controllers.Restricted
     public class NoHttpPatchController : BaseJsonApiController<Article>
     {
         public NoHttpPatchController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<Article> resourceService) 
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
 
         [HttpGet]
@@ -84,10 +85,10 @@ namespace JsonApiDotNetCoreExample.Controllers.Restricted
     public class NoHttpDeleteController : BaseJsonApiController<Article>
     {
         public NoHttpDeleteController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<Article> resourceService) 
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
 
         [HttpGet]

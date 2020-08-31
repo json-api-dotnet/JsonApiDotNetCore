@@ -9,10 +9,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     public sealed class ThrowingResourcesController : JsonApiController<ThrowingResource>
     {
         public ThrowingResourcesController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<ThrowingResource> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
     }
 }

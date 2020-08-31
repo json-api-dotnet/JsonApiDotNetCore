@@ -1,14 +1,13 @@
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Hooks;
-using System.Collections.Generic;
-using Xunit;
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
 using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Hooks.Internal.Discovery;
+using JsonApiDotNetCore.Hooks.Internal.Execution;
+using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
+using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
@@ -17,7 +16,7 @@ namespace UnitTests.ResourceHooks
         public class Dummy : Identifiable { }
         public sealed class DummyResourceDefinition : ResourceDefinition<Dummy>
         {
-            public DummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).AddResource<Dummy>().Build()) { }
+            public DummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<Dummy>().Build()) { }
 
             public override IEnumerable<Dummy> BeforeDelete(IResourceHashSet<Dummy> affected, ResourcePipeline pipeline) { return affected; }
             public override void AfterDelete(HashSet<Dummy> resources, ResourcePipeline pipeline, bool succeeded) { }
@@ -50,7 +49,7 @@ namespace UnitTests.ResourceHooks
 
         public sealed class AnotherDummyResourceDefinition : ResourceDefinitionBase<AnotherDummy>
         {
-            public AnotherDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).AddResource<AnotherDummy>().Build()) { }
+            public AnotherDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<AnotherDummy>().Build()) { }
         }
 
         [Fact]
@@ -66,7 +65,7 @@ namespace UnitTests.ResourceHooks
         public class YetAnotherDummy : Identifiable { }
         public sealed class YetAnotherDummyResourceDefinition : ResourceDefinition<YetAnotherDummy>
         {
-            public YetAnotherDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).AddResource<YetAnotherDummy>().Build()) { }
+            public YetAnotherDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<YetAnotherDummy>().Build()) { }
 
             public override IEnumerable<YetAnotherDummy> BeforeDelete(IResourceHashSet<YetAnotherDummy> affected, ResourcePipeline pipeline) { return affected; }
 
@@ -78,7 +77,7 @@ namespace UnitTests.ResourceHooks
         public void HookDiscovery_WronglyUsedLoadDatabaseValueAttribute_ThrowsJsonApiSetupException()
         {
             //  assert
-            Assert.Throws<JsonApiSetupException>(() =>
+            Assert.Throws<InvalidConfigurationException>(() =>
             {
                 // Arrange & act
                 new HooksDiscovery<YetAnotherDummy>(MockProvider<YetAnotherDummy>(new YetAnotherDummyResourceDefinition()));
@@ -98,7 +97,7 @@ namespace UnitTests.ResourceHooks
 
         public sealed class GenericDummyResourceDefinition<TResource> : ResourceDefinition<TResource> where TResource : class, IIdentifiable<int>
         {
-            public GenericDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).AddResource<TResource>().Build()) { }
+            public GenericDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TResource>().Build()) { }
 
             public override IEnumerable<TResource> BeforeDelete(IResourceHashSet<TResource> resources, ResourcePipeline pipeline) { return resources; }
             public override void AfterDelete(HashSet<TResource> resources, ResourcePipeline pipeline, bool succeeded) { }

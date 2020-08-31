@@ -1,8 +1,7 @@
 using System.Linq;
 using System.Net.Http;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Middleware

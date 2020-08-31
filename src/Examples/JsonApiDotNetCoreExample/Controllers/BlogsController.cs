@@ -9,10 +9,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     public sealed class BlogsController : JsonApiController<Blog>
     {
         public BlogsController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<Blog> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
     }
 }

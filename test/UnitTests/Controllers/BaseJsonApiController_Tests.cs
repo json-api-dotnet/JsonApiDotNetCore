@@ -1,18 +1,18 @@
 using System.Net;
 using System.Net.Http;
-using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
-using Moq;
-using Xunit;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using Xunit;
 
 namespace UnitTests
 {
@@ -26,14 +26,14 @@ namespace UnitTests
         public sealed class ResourceController : BaseJsonApiController<Resource>
         {
             public ResourceController(
-                IJsonApiOptions jsonApiOptions,
+                IJsonApiOptions options,
                 ILoggerFactory loggerFactory,
                 IResourceService<Resource, int> resourceService)
-                : base(jsonApiOptions, loggerFactory, resourceService)
+                : base(options, loggerFactory, resourceService)
             { }
 
             public ResourceController(
-                IJsonApiOptions jsonApiOptions,
+                IJsonApiOptions options,
                 ILoggerFactory loggerFactory,
                 IGetAllService<Resource, int> getAll = null,
                 IGetByIdService<Resource, int> getById = null,
@@ -43,7 +43,7 @@ namespace UnitTests
                 IUpdateService<Resource, int> update = null,
                 IUpdateRelationshipService<Resource, int> updateRelationships = null,
                 IDeleteService<Resource, int> delete = null)
-                : base(jsonApiOptions, loggerFactory, getAll, getById, getSecondary, getRelationship, create,
+                : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create,
                     update, updateRelationships, delete)
             { }
         }

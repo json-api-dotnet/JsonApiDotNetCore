@@ -43,8 +43,17 @@ It is possible to fully customize routing behaviour by registering a `IJsonApiRo
 // Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
+<<<<<<< HEAD
     services.AddSingleton<IJsonApiConvention, CustomRoutingConvention>();
     services.AddJsonApi( /* ... */ );
+=======
+    public CamelCasedModelsController(
+        IJsonApiOptions options,
+        ILoggerFactory loggerFactory,
+        IResourceService<CamelCasedModel> resourceService)
+        : base(options, loggerFactory, resourceService)
+    { }
+>>>>>>> master
 }
 ```
 

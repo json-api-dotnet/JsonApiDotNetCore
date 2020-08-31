@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.QueryStrings
     public interface IDefaultsQueryStringParameterReader : IQueryStringParameterReader
     {
         /// <summary>
-        /// Contains the effective value of default configuration and query string override, after parsing has occured.
+        /// Contains the effective value of default configuration and query string override, after parsing has occurred.
         /// </summary>
         DefaultValueHandling SerializerDefaultValueHandling { get; }
     }

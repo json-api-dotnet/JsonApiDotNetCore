@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
-using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Client.Internal;
+using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
-using Xunit;
 using UnitTests.TestModels;
+using Xunit;
 
 namespace UnitTests.Serialization.Client
 {
@@ -77,7 +76,7 @@ namespace UnitTests.Serialization.Client
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeList<TestResource>(body);
+            var result = _deserializer.DeserializeMany<TestResource>(body);
 
             // Assert
             Assert.Empty(result.Data);
@@ -321,7 +320,7 @@ namespace UnitTests.Serialization.Client
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeList<MultipleRelationshipsPrincipalPart>(body);
+            var result = _deserializer.DeserializeMany<MultipleRelationshipsPrincipalPart>(body);
             var resource = result.Data.First();
 
             // Assert

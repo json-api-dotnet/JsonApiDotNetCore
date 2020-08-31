@@ -1,24 +1,20 @@
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
-using Microsoft.EntityFrameworkCore;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IntegrationTests;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models.Annotation;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Xunit;
 
 namespace JADNC.IntegrationTests.Data
@@ -50,8 +46,9 @@ namespace JADNC.IntegrationTests.Data
                 arrangeDbContext.Add(databaseResource);
                 await arrangeDbContext.SaveChangesAsync();
 
-                var descAttr = new AttrAttribute("description")
+                var descAttr = new AttrAttribute
                 {
+                    PublicName = "description",
                     Property = typeof(TodoItem).GetProperty(nameof(TodoItem.Description))
                 };
                 targetedFields.Setup(m => m.Attributes).Returns(new List<AttrAttribute> { descAttr });
@@ -89,9 +86,10 @@ namespace JADNC.IntegrationTests.Data
             var resourceFactory = new ResourceFactory(serviceProvider);
             var contextResolverMock = new Mock<IDbContextResolver>();
             contextResolverMock.Setup(m => m.GetContext()).Returns(context);
-            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).AddResource<TodoItem>().Build();
+            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TodoItem>().Build();
             var targetedFields = new Mock<ITargetedFields>();
-            var repository = new EntityFrameworkCoreRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph, null, resourceFactory, new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
+            var serviceFactory = new Mock<IGenericServiceFactory>().Object;
+            var repository = new EntityFrameworkCoreRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph, serviceFactory, resourceFactory, new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
             return (repository, targetedFields, resourceGraph);
         }
 

@@ -9,10 +9,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     public sealed class VisasController : JsonApiController<Visa>
     {
         public VisasController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<Visa> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
     }
 }

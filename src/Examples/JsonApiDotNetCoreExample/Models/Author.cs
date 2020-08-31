@@ -1,7 +1,7 @@
 using System;
-using JsonApiDotNetCore.Models;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExample.Models
 {

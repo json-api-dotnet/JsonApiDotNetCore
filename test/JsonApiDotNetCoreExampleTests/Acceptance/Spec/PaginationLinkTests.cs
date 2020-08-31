@@ -1,9 +1,8 @@
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Models;
 using Newtonsoft.Json;
 using Xunit;

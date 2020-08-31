@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Resources.Annotations;
 using Xunit;
 
 namespace UnitTests.Models
@@ -9,70 +9,70 @@ namespace UnitTests.Models
         public void All_Contains_All_Flags_Except_None()
         {
             // Arrange
-            var e = Links.All;
+            var e = LinkTypes.All;
 
             // Assert
-            Assert.True(e.HasFlag(Links.Self));
-            Assert.True(e.HasFlag(Links.Paging));
-            Assert.True(e.HasFlag(Links.Related));
-            Assert.True(e.HasFlag(Links.All));
-            Assert.False(e.HasFlag(Links.None));
+            Assert.True(e.HasFlag(LinkTypes.Self));
+            Assert.True(e.HasFlag(LinkTypes.Paging));
+            Assert.True(e.HasFlag(LinkTypes.Related));
+            Assert.True(e.HasFlag(LinkTypes.All));
+            Assert.False(e.HasFlag(LinkTypes.None));
         }
 
         [Fact]
         public void None_Contains_Only_None()
         {
             // Arrange
-            var e = Links.None;
+            var e = LinkTypes.None;
 
             // Assert
-            Assert.False(e.HasFlag(Links.Self));
-            Assert.False(e.HasFlag(Links.Paging));
-            Assert.False(e.HasFlag(Links.Related));
-            Assert.False(e.HasFlag(Links.All));
-            Assert.True(e.HasFlag(Links.None));
+            Assert.False(e.HasFlag(LinkTypes.Self));
+            Assert.False(e.HasFlag(LinkTypes.Paging));
+            Assert.False(e.HasFlag(LinkTypes.Related));
+            Assert.False(e.HasFlag(LinkTypes.All));
+            Assert.True(e.HasFlag(LinkTypes.None));
         }
 
         [Fact]
         public void Self()
         {
             // Arrange
-            var e = Links.Self;
+            var e = LinkTypes.Self;
 
             // Assert
-            Assert.True(e.HasFlag(Links.Self));
-            Assert.False(e.HasFlag(Links.Paging));
-            Assert.False(e.HasFlag(Links.Related));
-            Assert.False(e.HasFlag(Links.All));
-            Assert.False(e.HasFlag(Links.None));
+            Assert.True(e.HasFlag(LinkTypes.Self));
+            Assert.False(e.HasFlag(LinkTypes.Paging));
+            Assert.False(e.HasFlag(LinkTypes.Related));
+            Assert.False(e.HasFlag(LinkTypes.All));
+            Assert.False(e.HasFlag(LinkTypes.None));
         }
 
         [Fact]
         public void Paging()
         {
             // Arrange
-            var e = Links.Paging;
+            var e = LinkTypes.Paging;
 
             // Assert
-            Assert.False(e.HasFlag(Links.Self));
-            Assert.True(e.HasFlag(Links.Paging));
-            Assert.False(e.HasFlag(Links.Related));
-            Assert.False(e.HasFlag(Links.All));
-            Assert.False(e.HasFlag(Links.None));
+            Assert.False(e.HasFlag(LinkTypes.Self));
+            Assert.True(e.HasFlag(LinkTypes.Paging));
+            Assert.False(e.HasFlag(LinkTypes.Related));
+            Assert.False(e.HasFlag(LinkTypes.All));
+            Assert.False(e.HasFlag(LinkTypes.None));
         }
 
         [Fact]
         public void Related()
         {
             // Arrange
-            var e = Links.Related;
+            var e = LinkTypes.Related;
 
             // Assert
-            Assert.False(e.HasFlag(Links.Self));
-            Assert.False(e.HasFlag(Links.Paging));
-            Assert.True(e.HasFlag(Links.Related));
-            Assert.False(e.HasFlag(Links.All));
-            Assert.False(e.HasFlag(Links.None));
+            Assert.False(e.HasFlag(LinkTypes.Self));
+            Assert.False(e.HasFlag(LinkTypes.Paging));
+            Assert.True(e.HasFlag(LinkTypes.Related));
+            Assert.False(e.HasFlag(LinkTypes.All));
+            Assert.False(e.HasFlag(LinkTypes.None));
         }
     }
 }

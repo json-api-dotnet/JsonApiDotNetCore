@@ -1,10 +1,10 @@
-using JsonApiDotNetCore.Hooks;
+using System.Collections.Generic;
+using System.Linq;
+using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace UnitTests.ResourceHooks
@@ -27,7 +27,7 @@ namespace UnitTests.ResourceHooks
             var todoId = todoList[0].Id;
             var _personId = todoList[0].OneToOnePerson.Id;
             personId = _personId.ToString();
-            var _implicitPersonId = (_personId + 10000);
+            var _implicitPersonId = _personId + 10000;
 
             var implicitTodo = _todoFaker.Generate();
             implicitTodo.Id += 1000;
@@ -82,7 +82,7 @@ namespace UnitTests.ResourceHooks
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
             var (_, ufMock, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
-            ufMock.Setup(c => c.Relationships).Returns(_resourceGraph.GetRelationships((TodoItem t) => t.OneToOnePerson));
+            ufMock.Setup(c => c.Relationships).Returns(_resourceGraph.GetRelationships((TodoItem t) => t.OneToOnePerson).ToList());
 
             // Act
             var _todoList = new List<TodoItem> { new TodoItem { Id = todoList[0].Id } };
@@ -210,7 +210,7 @@ namespace UnitTests.ResourceHooks
 
             var getAffectedCheck = resources.GetAffected(e => e.OneToOnePerson).Any();
 
-            return (dbCheck && reqCheck && diffCheck && getAffectedCheck);
+            return dbCheck && reqCheck && diffCheck && getAffectedCheck;
         }
 
         private bool TodoCheck(IRelationshipsDictionary<TodoItem> rh, string checksum)

@@ -28,17 +28,4 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
-
-  <!-- 
-    To generate DocFX documentation on Windows platforms: dotnet build -c Release /p:DocFx=true
-  -->
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <IsWindows Condition="'$(OS)' == 'Windows_NT'">true</IsWindows>
-    <GenerateDocumentation Condition="'$(IsWindows)|$(DocFx)' == 'true|true'">true</GenerateDocumentation>
-    <DocumentationFile>bin\Release\netstandard2.0\JsonApiDotNetCore.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <ItemGroup Condition="'$(GenerateDocumentation)' == 'true'">
-    <PackageReference Include="docfx.console" Version="2.33.0" />
-  </ItemGroup>
 </Project>

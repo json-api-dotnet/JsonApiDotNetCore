@@ -2,10 +2,9 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -57,7 +56,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var result = _fixture.GetDeserializer().DeserializeList<TodoItem>(body);
+            var result = _fixture.GetDeserializer().DeserializeMany<TodoItem>(body);
             var items = result.Data;
             var meta = result.Meta;
 
@@ -129,7 +128,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var result = _fixture.GetDeserializer().DeserializeList<TodoItem>(body);
+            var result = _fixture.GetDeserializer().DeserializeMany<TodoItem>(body);
 
             // Assert
             Assert.True(result.Data.Count == 20);
@@ -162,7 +161,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("Resource of type 'todoItems' with id '123' does not exist.", errorDocument.Errors[0].Detail);
+            Assert.Equal("Resource of type 'todoItems' with ID '123' does not exist.", errorDocument.Errors[0].Detail);
         }
     }
 }
