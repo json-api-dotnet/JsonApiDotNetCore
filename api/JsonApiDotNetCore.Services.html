@@ -78,68 +78,62 @@
     <h3 id="classes">Classes
   </h3>
       <h4><a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a></h4>
-      <section><p>No mapping with integer as default</p>
+      <section><p>Represents the foundational Resource Service layer in the JsonApiDotNetCore architecture that uses a Resource Repository for data access.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-2.html">JsonApiResourceService&lt;TResource, TId&gt;</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.RequestScopedServiceProvider.html">RequestScopedServiceProvider</a></h4>
-      <section><p>A service provider that uses the current HttpContext request scope</p>
+      <section><p>Represents the foundational Resource Service layer in the JsonApiDotNetCore architecture that uses a Resource Repository for data access.</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.ICreateService-1.html">ICreateService&lt;T&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.ICreateService-1.html">ICreateService&lt;TResource&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html">ICreateService&lt;T, TId&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html">ICreateService&lt;TResource, TId&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-1.html">IDeleteService&lt;T&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-1.html">IDeleteService&lt;TResource&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-2.html">IDeleteService&lt;T, TId&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-2.html">IDeleteService&lt;TResource, TId&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetAllService-1.html">IGetAllService&lt;T&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetAllService-1.html">IGetAllService&lt;TResource&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetAllService-2.html">IGetAllService&lt;T, TId&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetAllService-2.html">IGetAllService&lt;TResource, TId&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetByIdService-1.html">IGetByIdService&lt;T&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetByIdService-1.html">IGetByIdService&lt;TResource&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetByIdService-2.html">IGetByIdService&lt;T, TId&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetByIdService-2.html">IGetByIdService&lt;TResource, TId&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipService-1.html">IGetRelationshipService&lt;T&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipService-1.html">IGetRelationshipService&lt;TResource&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipService-2.html">IGetRelationshipService&lt;T, TId&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipService-2.html">IGetRelationshipService&lt;TResource, TId&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetSecondaryService-1.html">IGetSecondaryService&lt;T&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetSecondaryService-1.html">IGetSecondaryService&lt;TResource&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetSecondaryService-2.html">IGetSecondaryService&lt;T, TId&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetSecondaryService-2.html">IGetSecondaryService&lt;TResource, TId&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IRequestMeta.html">IRequestMeta</a></h4>
-      <section><p>Service to add global top-level metadata to a <a class="xref" href="JsonApiDotNetCore.Models.Document.html">Document</a>.
-Use <a class="xref" href="JsonApiDotNetCore.Models.IHasMeta.html">IHasMeta</a> on <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition&lt;TResource&gt;</a>
-to specify top-level metadata per resource type.</p>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceCommandService-1.html">IResourceCommandService&lt;TResource&gt;</a></h4>
+      <section><p>Groups write operations.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceCommandService-1.html">IResourceCommandService&lt;T&gt;</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceCommandService-2.html">IResourceCommandService&lt;T, TId&gt;</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceQueryService-1.html">IResourceQueryService&lt;T&gt;</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceQueryService-2.html">IResourceQueryService&lt;T, TId&gt;</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceService-1.html">IResourceService&lt;T&gt;</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceService-2.html">IResourceService&lt;T, TId&gt;</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IScopedServiceProvider.html">IScopedServiceProvider</a></h4>
-      <section><p>An interface used to separate the registration of the global ServiceProvider
-from a request scoped service provider. This is useful in cases when we need to 
-manually resolve services from the request scope (e.g. operation processors)</p>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceCommandService-2.html">IResourceCommandService&lt;TResource, TId&gt;</a></h4>
+      <section><p>Groups write operations.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-1.html">IUpdateRelationshipService&lt;T&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceQueryService-1.html">IResourceQueryService&lt;TResource&gt;</a></h4>
+      <section><p>Groups read operations.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceQueryService-2.html">IResourceQueryService&lt;TResource, TId&gt;</a></h4>
+      <section><p>Groups read operations.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceService-1.html">IResourceService&lt;TResource&gt;</a></h4>
+      <section><p>Represents the foundational Resource Service layer in the JsonApiDotNetCore architecture that uses a Resource Repository for data access.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceService-2.html">IResourceService&lt;TResource, TId&gt;</a></h4>
+      <section><p>Represents the foundational Resource Service layer in the JsonApiDotNetCore architecture that uses a Resource Repository for data access.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-1.html">IUpdateRelationshipService&lt;TResource&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-2.html">IUpdateRelationshipService&lt;T, TId&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-2.html">IUpdateRelationshipService&lt;TResource, TId&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-1.html">IUpdateService&lt;T&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-1.html">IUpdateService&lt;TResource&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-2.html">IUpdateService&lt;T, TId&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-2.html">IUpdateService&lt;TResource, TId&gt;</a></h4>
       <section></section>
 </article>
           </div>

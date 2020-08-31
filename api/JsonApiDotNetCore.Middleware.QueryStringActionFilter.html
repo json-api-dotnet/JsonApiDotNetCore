@@ -82,13 +82,39 @@
   </div>
   <div classs="implements">
     <h5>Implements</h5>
+    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncActionFilter</span></div>
+    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata</span></div>
     <div><a class="xref" href="JsonApiDotNetCore.Middleware.IQueryStringActionFilter.html">IQueryStringActionFilter</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Middleware.html">JsonApiDotNetCore.Middleware</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Middleware_QueryStringActionFilter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class QueryStringActionFilter : IAsyncActionFilter, IQueryStringActionFilter</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class QueryStringActionFilter : IAsyncActionFilter, IFilterMetadata, IQueryStringActionFilter</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -97,7 +123,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_QueryStringActionFilter__ctor_JsonApiDotNetCore_QueryStrings_IQueryStringReader_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.QueryStringActionFilter.%23ctor(JsonApiDotNetCore.QueryStrings.IQueryStringReader)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/QueryStringActionFilter.cs/#L13">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/QueryStringActionFilter.cs/#L14">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_QueryStringActionFilter__ctor_" data-uid="JsonApiDotNetCore.Middleware.QueryStringActionFilter.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_QueryStringActionFilter__ctor_JsonApiDotNetCore_QueryStrings_IQueryStringReader_" data-uid="JsonApiDotNetCore.Middleware.QueryStringActionFilter.#ctor(JsonApiDotNetCore.QueryStrings.IQueryStringReader)">QueryStringActionFilter(IQueryStringReader)</h4>
@@ -128,13 +154,13 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_QueryStringActionFilter_OnActionExecutionAsync_ActionExecutingContext_ActionExecutionDelegate_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.QueryStringActionFilter.OnActionExecutionAsync(ActionExecutingContext%2CActionExecutionDelegate)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_QueryStringActionFilter_OnActionExecutionAsync_Microsoft_AspNetCore_Mvc_Filters_ActionExecutingContext_Microsoft_AspNetCore_Mvc_Filters_ActionExecutionDelegate_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.QueryStringActionFilter.OnActionExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext%2CMicrosoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/QueryStringActionFilter.cs/#L18">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/QueryStringActionFilter.cs/#L19">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_QueryStringActionFilter_OnActionExecutionAsync_" data-uid="JsonApiDotNetCore.Middleware.QueryStringActionFilter.OnActionExecutionAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Middleware_QueryStringActionFilter_OnActionExecutionAsync_ActionExecutingContext_ActionExecutionDelegate_" data-uid="JsonApiDotNetCore.Middleware.QueryStringActionFilter.OnActionExecutionAsync(ActionExecutingContext,ActionExecutionDelegate)">OnActionExecutionAsync(ActionExecutingContext, ActionExecutionDelegate)</h4>
+  <h4 id="JsonApiDotNetCore_Middleware_QueryStringActionFilter_OnActionExecutionAsync_Microsoft_AspNetCore_Mvc_Filters_ActionExecutingContext_Microsoft_AspNetCore_Mvc_Filters_ActionExecutionDelegate_" data-uid="JsonApiDotNetCore.Middleware.QueryStringActionFilter.OnActionExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext,Microsoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate)">OnActionExecutionAsync(ActionExecutingContext, ActionExecutionDelegate)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -152,12 +178,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">ActionExecutingContext</span></td>
+        <td><span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext</span></td>
         <td><span class="parametername">context</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">ActionExecutionDelegate</span></td>
+        <td><span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate</span></td>
         <td><span class="parametername">next</span></td>
         <td></td>
       </tr>
@@ -173,12 +199,18 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncActionFilter</span>
+  </div>
+  <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata</span>
+  </div>
   <div>
       <a class="xref" href="JsonApiDotNetCore.Middleware.IQueryStringActionFilter.html">IQueryStringActionFilter</a>
   </div>
@@ -193,7 +225,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_QueryStringActionFilter.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.QueryStringActionFilter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/QueryStringActionFilter.cs/#L9" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/QueryStringActionFilter.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

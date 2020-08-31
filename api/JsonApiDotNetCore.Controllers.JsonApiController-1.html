@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class JsonApiController&lt;T&gt;
+    <title>Class JsonApiController&lt;TResource&gt;
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class JsonApiController&lt;T&gt;
+    <meta name="title" content="Class JsonApiController&lt;TResource&gt;
    ">
     <meta name="generator" content="docfx 2.56.2.0">
     
@@ -71,80 +71,606 @@
             <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`1">
   
   
-  <h1 id="JsonApiDotNetCore_Controllers_JsonApiController_1" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`1" class="text-break">Class JsonApiController&lt;T&gt;
+  <h1 id="JsonApiDotNetCore_Controllers_JsonApiController_1" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`1" class="text-break">Class JsonApiController&lt;TResource&gt;
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>The base class to derive resource-specific controllers from.
+This class delegates all work to <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController&lt;TResource, TId&gt;</a> but adds attributes for routing templates.
+If you want to provide routing templates yourself, you should derive from BaseJsonApiController directly.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html">CoreJsonApiController</a></div>
-    <div class="level2"><a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController</a>&lt;T, <span class="xref">System.Int32</span>&gt;</div>
-    <div class="level3"><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html">JsonApiController</a>&lt;T, <span class="xref">System.Int32</span>&gt;</div>
-    <div class="level4"><span class="xref">JsonApiController&lt;T&gt;</span></div>
+    <div class="level1"><span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase</span></div>
+    <div class="level2"><a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html">CoreJsonApiController</a></div>
+    <div class="level3"><a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</div>
+    <div class="level4"><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html">JsonApiController</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</div>
+    <div class="level5"><span class="xref">JsonApiController&lt;TResource&gt;</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync">JsonApiController&lt;T, Int32&gt;.GetAsync()</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync">JsonApiController&lt;TResource, Int32&gt;.GetAsync()</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync__1_">JsonApiController&lt;T, Int32&gt;.GetAsync(Int32)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync__1_">JsonApiController&lt;TResource, Int32&gt;.GetAsync(Int32)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_GetRelationshipAsync__1_System_String_">JsonApiController&lt;T, Int32&gt;.GetRelationshipAsync(Int32, String)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_GetRelationshipAsync__1_System_String_">JsonApiController&lt;TResource, Int32&gt;.GetRelationshipAsync(Int32, String)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_GetSecondaryAsync__1_System_String_">JsonApiController&lt;T, Int32&gt;.GetSecondaryAsync(Int32, String)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_GetSecondaryAsync__1_System_String_">JsonApiController&lt;TResource, Int32&gt;.GetSecondaryAsync(Int32, String)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_PostAsync__0_">JsonApiController&lt;T, Int32&gt;.PostAsync(T)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_PostAsync__0_">JsonApiController&lt;TResource, Int32&gt;.PostAsync(TResource)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_PatchAsync__1__0_">JsonApiController&lt;T, Int32&gt;.PatchAsync(Int32, T)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_PatchAsync__1__0_">JsonApiController&lt;TResource, Int32&gt;.PatchAsync(Int32, TResource)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_PatchRelationshipAsync__1_System_String_System_Object_">JsonApiController&lt;T, Int32&gt;.PatchRelationshipAsync(Int32, String, Object)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_PatchRelationshipAsync__1_System_String_System_Object_">JsonApiController&lt;TResource, Int32&gt;.PatchRelationshipAsync(Int32, String, Object)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteAsync__1_">JsonApiController&lt;T, Int32&gt;.DeleteAsync(Int32)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html#JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteAsync__1_">JsonApiController&lt;TResource, Int32&gt;.DeleteAsync(Int32)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetAsync">BaseJsonApiController&lt;T, Int32&gt;.GetAsync()</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetAsync">BaseJsonApiController&lt;TResource, Int32&gt;.GetAsync()</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetAsync__1_">BaseJsonApiController&lt;T, Int32&gt;.GetAsync(Int32)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetAsync__1_">BaseJsonApiController&lt;TResource, Int32&gt;.GetAsync(Int32)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetRelationshipAsync__1_System_String_">BaseJsonApiController&lt;T, Int32&gt;.GetRelationshipAsync(Int32, String)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetRelationshipAsync__1_System_String_">BaseJsonApiController&lt;TResource, Int32&gt;.GetRelationshipAsync(Int32, String)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetSecondaryAsync__1_System_String_">BaseJsonApiController&lt;T, Int32&gt;.GetSecondaryAsync(Int32, String)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetSecondaryAsync__1_System_String_">BaseJsonApiController&lt;TResource, Int32&gt;.GetSecondaryAsync(Int32, String)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PostAsync__0_">BaseJsonApiController&lt;T, Int32&gt;.PostAsync(T)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PostAsync__0_">BaseJsonApiController&lt;TResource, Int32&gt;.PostAsync(TResource)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PatchAsync__1__0_">BaseJsonApiController&lt;T, Int32&gt;.PatchAsync(Int32, T)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PatchAsync__1__0_">BaseJsonApiController&lt;TResource, Int32&gt;.PatchAsync(Int32, TResource)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PatchRelationshipAsync__1_System_String_System_Object_">BaseJsonApiController&lt;T, Int32&gt;.PatchRelationshipAsync(Int32, String, Object)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PatchRelationshipAsync__1_System_String_System_Object_">BaseJsonApiController&lt;TResource, Int32&gt;.PatchRelationshipAsync(Int32, String, Object)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_DeleteAsync__1_">BaseJsonApiController&lt;T, Int32&gt;.DeleteAsync(Int32)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_DeleteAsync__1_">BaseJsonApiController&lt;TResource, Int32&gt;.DeleteAsync(Int32)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html#JsonApiDotNetCore_Controllers_CoreJsonApiController_Error_JsonApiDotNetCore_Models_JsonApiDocuments_Error_">CoreJsonApiController.Error(Error)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html#JsonApiDotNetCore_Controllers_CoreJsonApiController_Error_JsonApiDotNetCore_Serialization_Objects_Error_">CoreJsonApiController.Error(Error)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html#JsonApiDotNetCore_Controllers_CoreJsonApiController_Error_IEnumerable_JsonApiDotNetCore_Models_JsonApiDocuments_Error__">CoreJsonApiController.Error(IEnumerable&lt;Error&gt;)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html#JsonApiDotNetCore_Controllers_CoreJsonApiController_Error_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Serialization_Objects_Error__">CoreJsonApiController.Error(IEnumerable&lt;Error&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Accepted()</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Accepted(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Accepted(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Accepted(System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Accepted(System.Uri)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Accepted(System.Uri, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtAction(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtAction(System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtAction(System.String, System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtAction(System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtAction(System.String, System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtAction(System.String, System.String, System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtRoute(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtRoute(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtRoute(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtRoute(System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtRoute(System.String, System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.BadRequest()</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.BadRequest(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.BadRequest(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Challenge()</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Challenge(Microsoft.AspNetCore.Authentication.AuthenticationProperties)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Challenge(Microsoft.AspNetCore.Authentication.AuthenticationProperties, System.String[])</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Challenge(System.String[])</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Conflict()</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Conflict(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Conflict(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Content(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Content(System.String, Microsoft.Net.Http.Headers.MediaTypeHeaderValue)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Content(System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Content(System.String, System.String, System.Text.Encoding)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Created(System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Created(System.Uri, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.CreatedAtAction(System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.CreatedAtAction(System.String, System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.CreatedAtAction(System.String, System.String, System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.CreatedAtRoute(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.CreatedAtRoute(System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.CreatedAtRoute(System.String, System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.Byte[], System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.Byte[], System.String, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.Byte[], System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.Byte[], System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.Byte[], System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.Byte[], System.String, System.String, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.Byte[], System.String, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.Byte[], System.String, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, System.String, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, System.String, System.String, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, System.String, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, System.String, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.String, System.String, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.String, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.String, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.String, System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.String, System.String, System.String, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.String, System.String, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.String, System.String, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Forbid()</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Forbid(Microsoft.AspNetCore.Authentication.AuthenticationProperties)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Forbid(Microsoft.AspNetCore.Authentication.AuthenticationProperties, System.String[])</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Forbid(System.String[])</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.LocalRedirect(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.LocalRedirectPermanent(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.LocalRedirectPermanentPreserveMethod(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.LocalRedirectPreserveMethod(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.NoContent()</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.NotFound()</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.NotFound(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Ok()</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Ok(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(System.String, System.String, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(System.String, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(System.String, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(System.String, System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(System.String, System.String, System.String, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(System.String, System.String, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(System.String, System.String, System.String, System.Nullable&lt;System.DateTimeOffset&gt;, Microsoft.Net.Http.Headers.EntityTagHeaderValue, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Problem(System.String, System.String, System.Nullable&lt;System.Int32&gt;, System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Redirect(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectPermanent(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectPermanentPreserveMethod(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectPreserveMethod(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction()</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction(System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction(System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction(System.String, System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction(System.String, System.String, System.Object, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction(System.String, System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanent(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanent(System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanent(System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanent(System.String, System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanent(System.String, System.String, System.Object, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanent(System.String, System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanentPreserveMethod(System.String, System.String, System.Object, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPreserveMethod(System.String, System.String, System.Object, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPage(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPage(System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPage(System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPage(System.String, System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPage(System.String, System.String, System.Object, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPage(System.String, System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePermanent(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePermanent(System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePermanent(System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePermanent(System.String, System.String, System.Object, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePermanent(System.String, System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePermanentPreserveMethod(System.String, System.String, System.Object, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePreserveMethod(System.String, System.String, System.Object, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoute(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoute(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoute(System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoute(System.String, System.Object, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoute(System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePermanent(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePermanent(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePermanent(System.String, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePermanent(System.String, System.Object, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePermanent(System.String, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePermanentPreserveMethod(System.String, System.Object, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePreserveMethod(System.String, System.Object, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.SignIn(System.Security.Claims.ClaimsPrincipal, Microsoft.AspNetCore.Authentication.AuthenticationProperties, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.SignIn(System.Security.Claims.ClaimsPrincipal, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.SignOut(Microsoft.AspNetCore.Authentication.AuthenticationProperties, System.String[])</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.SignOut(System.String[])</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(System.Int32, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync(System.Object, System.Type, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync(System.Object, System.Type, System.String, Microsoft.AspNetCore.Mvc.ModelBinding.IValueProvider, System.Func&lt;Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata, System.Boolean&gt;)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, System.String, Microsoft.AspNetCore.Mvc.ModelBinding.IValueProvider)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, System.String, Microsoft.AspNetCore.Mvc.ModelBinding.IValueProvider, System.Func&lt;Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata, System.Boolean&gt;)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, System.String, Microsoft.AspNetCore.Mvc.ModelBinding.IValueProvider, System.Linq.Expressions.Expression&lt;System.Func&lt;TModel, System.Object&gt;&gt;[])</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, System.String, System.Func&lt;Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata, System.Boolean&gt;)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, System.String, System.Linq.Expressions.Expression&lt;System.Func&lt;TModel, System.Object&gt;&gt;[])</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryValidateModel(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryValidateModel(System.Object, System.String)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Unauthorized()</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Unauthorized(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.UnprocessableEntity()</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.UnprocessableEntity(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.UnprocessableEntity(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ValidationProblem()</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ValidationProblem(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ValidationProblem(Microsoft.AspNetCore.Mvc.ValidationProblemDetails)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ValidationProblem(System.String, System.String, System.Nullable&lt;System.Int32&gt;, System.String, System.String, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ControllerContext</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.HttpContext</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.MetadataProvider</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ModelBinderFactory</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ModelState</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ObjectValidator</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ProblemDetailsFactory</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Request</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Response</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RouteData</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Url</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.User</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Controllers.html">JsonApiDotNetCore.Controllers</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Controllers_JsonApiController_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class JsonApiController&lt;T&gt; : JsonApiController&lt;T, int&gt; where T : class, IIdentifiable&lt;int&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class JsonApiController&lt;TResource&gt; : JsonApiController&lt;TResource, int&gt; where TResource : class, IIdentifiable&lt;int&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -156,7 +682,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">T</span></td>
+        <td><span class="parametername">TResource</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -165,18 +691,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_ILoggerFactory_JsonApiDotNetCore_Services_IGetAllService__0_System_Int32__JsonApiDotNetCore_Services_IGetByIdService__0_System_Int32__JsonApiDotNetCore_Services_IGetSecondaryService__0_System_Int32__JsonApiDotNetCore_Services_IGetRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_ICreateService__0_System_Int32__JsonApiDotNetCore_Services_IUpdateService__0_System_Int32__JsonApiDotNetCore_Services_IUpdateRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_IDeleteService__0_System_Int32__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%601.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CILoggerFactory%2CJsonApiDotNetCore.Services.IGetAllService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.IGetByIdService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.IGetSecondaryService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.IGetRelationshipService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.ICreateService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.IUpdateService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.IUpdateRelationshipService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.IDeleteService%7B%600%2CSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IGetAllService__0_System_Int32__JsonApiDotNetCore_Services_IGetByIdService__0_System_Int32__JsonApiDotNetCore_Services_IGetSecondaryService__0_System_Int32__JsonApiDotNetCore_Services_IGetRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_ICreateService__0_System_Int32__JsonApiDotNetCore_Services_IUpdateService__0_System_Int32__JsonApiDotNetCore_Services_IUpdateRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_IDeleteService__0_System_Int32__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%601.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CMicrosoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.Services.IGetAllService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.IGetByIdService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.IGetSecondaryService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.IGetRelationshipService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.ICreateService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.IUpdateService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.IUpdateRelationshipService%7B%600%2CSystem.Int32%7D%2CJsonApiDotNetCore.Services.IDeleteService%7B%600%2CSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L76">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L96">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_1__ctor_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`1.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_ILoggerFactory_JsonApiDotNetCore_Services_IGetAllService__0_System_Int32__JsonApiDotNetCore_Services_IGetByIdService__0_System_Int32__JsonApiDotNetCore_Services_IGetSecondaryService__0_System_Int32__JsonApiDotNetCore_Services_IGetRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_ICreateService__0_System_Int32__JsonApiDotNetCore_Services_IUpdateService__0_System_Int32__JsonApiDotNetCore_Services_IUpdateRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_IDeleteService__0_System_Int32__" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,ILoggerFactory,JsonApiDotNetCore.Services.IGetAllService{`0,System.Int32},JsonApiDotNetCore.Services.IGetByIdService{`0,System.Int32},JsonApiDotNetCore.Services.IGetSecondaryService{`0,System.Int32},JsonApiDotNetCore.Services.IGetRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.ICreateService{`0,System.Int32},JsonApiDotNetCore.Services.IUpdateService{`0,System.Int32},JsonApiDotNetCore.Services.IUpdateRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.IDeleteService{`0,System.Int32})">JsonApiController(IJsonApiOptions, ILoggerFactory, IGetAllService&lt;T, Int32&gt;, IGetByIdService&lt;T, Int32&gt;, IGetSecondaryService&lt;T, Int32&gt;, IGetRelationshipService&lt;T, Int32&gt;, ICreateService&lt;T, Int32&gt;, IUpdateService&lt;T, Int32&gt;, IUpdateRelationshipService&lt;T, Int32&gt;, IDeleteService&lt;T, Int32&gt;)</h4>
+  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IGetAllService__0_System_Int32__JsonApiDotNetCore_Services_IGetByIdService__0_System_Int32__JsonApiDotNetCore_Services_IGetSecondaryService__0_System_Int32__JsonApiDotNetCore_Services_IGetRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_ICreateService__0_System_Int32__JsonApiDotNetCore_Services_IUpdateService__0_System_Int32__JsonApiDotNetCore_Services_IUpdateRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_IDeleteService__0_System_Int32__" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IGetAllService{`0,System.Int32},JsonApiDotNetCore.Services.IGetByIdService{`0,System.Int32},JsonApiDotNetCore.Services.IGetSecondaryService{`0,System.Int32},JsonApiDotNetCore.Services.IGetRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.ICreateService{`0,System.Int32},JsonApiDotNetCore.Services.IUpdateService{`0,System.Int32},JsonApiDotNetCore.Services.IUpdateRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.IDeleteService{`0,System.Int32})">JsonApiController(IJsonApiOptions, ILoggerFactory, IGetAllService&lt;TResource, Int32&gt;, IGetByIdService&lt;TResource, Int32&gt;, IGetSecondaryService&lt;TResource, Int32&gt;, IGetRelationshipService&lt;TResource, Int32&gt;, ICreateService&lt;TResource, Int32&gt;, IUpdateService&lt;TResource, Int32&gt;, IUpdateRelationshipService&lt;TResource, Int32&gt;, IDeleteService&lt;TResource, Int32&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public JsonApiController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory, IGetAllService&lt;T, int&gt; getAll = null, IGetByIdService&lt;T, int&gt; getById = null, IGetSecondaryService&lt;T, int&gt; getSecondary = null, IGetRelationshipService&lt;T, int&gt; getRelationship = null, ICreateService&lt;T, int&gt; create = null, IUpdateService&lt;T, int&gt; update = null, IUpdateRelationshipService&lt;T, int&gt; updateRelationships = null, IDeleteService&lt;T, int&gt; delete = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService&lt;TResource, int&gt; getAll = null, IGetByIdService&lt;TResource, int&gt; getById = null, IGetSecondaryService&lt;TResource, int&gt; getSecondary = null, IGetRelationshipService&lt;TResource, int&gt; getRelationship = null, ICreateService&lt;TResource, int&gt; create = null, IUpdateService&lt;TResource, int&gt; update = null, IUpdateRelationshipService&lt;TResource, int&gt; updateRelationships = null, IDeleteService&lt;TResource, int&gt; delete = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -190,51 +716,51 @@
     <tbody>
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></td>
-        <td><span class="parametername">jsonApiOptions</span></td>
+        <td><span class="parametername">options</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">ILoggerFactory</span></td>
+        <td><span class="xref">Microsoft.Extensions.Logging.ILoggerFactory</span></td>
         <td><span class="parametername">loggerFactory</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IGetAllService-2.html">IGetAllService</a>&lt;T, <span class="xref">System.Int32</span>&gt;</td>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IGetAllService-2.html">IGetAllService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">getAll</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IGetByIdService-2.html">IGetByIdService</a>&lt;T, <span class="xref">System.Int32</span>&gt;</td>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IGetByIdService-2.html">IGetByIdService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">getById</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IGetSecondaryService-2.html">IGetSecondaryService</a>&lt;T, <span class="xref">System.Int32</span>&gt;</td>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IGetSecondaryService-2.html">IGetSecondaryService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">getSecondary</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipService-2.html">IGetRelationshipService</a>&lt;T, <span class="xref">System.Int32</span>&gt;</td>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipService-2.html">IGetRelationshipService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">getRelationship</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html">ICreateService</a>&lt;T, <span class="xref">System.Int32</span>&gt;</td>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html">ICreateService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">create</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-2.html">IUpdateService</a>&lt;T, <span class="xref">System.Int32</span>&gt;</td>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-2.html">IUpdateService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">update</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-2.html">IUpdateRelationshipService</a>&lt;T, <span class="xref">System.Int32</span>&gt;</td>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-2.html">IUpdateRelationshipService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">updateRelationships</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-2.html">IDeleteService</a>&lt;T, <span class="xref">System.Int32</span>&gt;</td>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-2.html">IDeleteService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">delete</span></td>
         <td></td>
       </tr>
@@ -242,18 +768,18 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_ILoggerFactory_JsonApiDotNetCore_Services_IResourceService__0_System_Int32__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%601.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CILoggerFactory%2CJsonApiDotNetCore.Services.IResourceService%7B%600%2CSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IResourceService__0_System_Int32__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%601.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CMicrosoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.Services.IResourceService%7B%600%2CSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L69">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L88">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_1__ctor_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`1.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_ILoggerFactory_JsonApiDotNetCore_Services_IResourceService__0_System_Int32__" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,ILoggerFactory,JsonApiDotNetCore.Services.IResourceService{`0,System.Int32})">JsonApiController(IJsonApiOptions, ILoggerFactory, IResourceService&lt;T, Int32&gt;)</h4>
+  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IResourceService__0_System_Int32__" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceService{`0,System.Int32})">JsonApiController(IJsonApiOptions, ILoggerFactory, IResourceService&lt;TResource, Int32&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public JsonApiController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory, IResourceService&lt;T, int&gt; resourceService)</code></pre>
+    <pre><code class="lang-csharp hljs">public JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService&lt;TResource, int&gt; resourceService)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -267,16 +793,16 @@
     <tbody>
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></td>
-        <td><span class="parametername">jsonApiOptions</span></td>
+        <td><span class="parametername">options</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">ILoggerFactory</span></td>
+        <td><span class="xref">Microsoft.Extensions.Logging.ILoggerFactory</span></td>
         <td><span class="parametername">loggerFactory</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IResourceService-2.html">IResourceService</a>&lt;T, <span class="xref">System.Int32</span>&gt;</td>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IResourceService-2.html">IResourceService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">resourceService</span></td>
         <td></td>
       </tr>
@@ -293,7 +819,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L67" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L85" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -78,13 +78,16 @@
     <h3 id="classes">Classes
   </h3>
       <h4><a class="xref" href="JsonApiDotNetCore.Queries.ExpressionInScope.html">ExpressionInScope</a></h4>
-      <section><p>Represents an expression coming from query string. The scope determines at which depth in the <a class="xref" href="JsonApiDotNetCore.Internal.Contracts.IResourceGraph.html">IResourceGraph</a> to apply its expression.</p>
+      <section><p>Represents an expression coming from query string. The scope determines at which depth in the <a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraph.html">IResourceGraph</a> to apply its expression.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a></h4>
       <section><p>A nested data structure that contains <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a> constraints per resource type.</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Queries.IPaginationContext.html">IPaginationContext</a></h4>
+      <section><p>Tracks values used for pagination, which is a combined effort from options, query string parsing and fetching the total number of rows.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Queries.IQueryConstraintProvider.html">IQueryConstraintProvider</a></h4>
       <section><p>Provides constraints (such as filters, sorting, pagination, sparse fieldsets and inclusions) to be applied on a data set.</p>
 </section>

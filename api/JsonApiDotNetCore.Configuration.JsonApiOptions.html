@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Configuration_JsonApiOptions" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions" class="text-break">Class JsonApiOptions
   </h1>
-  <div class="markdown level0 summary"><p>Global options</p>
+  <div class="markdown level0 summary"><p>Global options that configure the behavior of JsonApiDotNetCore.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -85,11 +85,35 @@
     <h5>Implements</h5>
     <div><a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></div>
   </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Configuration.html">JsonApiDotNetCore.Configuration</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Configuration_JsonApiOptions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class JsonApiOptions : object, IJsonApiOptions</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class JsonApiOptions : IJsonApiOptions</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -98,7 +122,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_AllowClientGeneratedIds.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.AllowClientGeneratedIds%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L51">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L47">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowClientGeneratedIds_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowClientGeneratedIds*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowClientGeneratedIds" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowClientGeneratedIds">AllowClientGeneratedIds</h4>
@@ -131,11 +155,11 @@ False by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerDefaultValueHandling.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L69">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L65">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerDefaultValueHandling_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerDefaultValueHandling" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling">AllowQueryStringOverrideForSerializerDefaultValueHandling</h4>
-  <div class="markdown level1 summary"><p>Determines whether the <see cref="!:JsonSerializerSettings.DefaultValueHandling"></see> serialization setting can be overridden by using a query string parameter.
+  <div class="markdown level1 summary"><p>Determines whether the <span class="xref">Newtonsoft.Json.JsonSerializerSettings.DefaultValueHandling</span> serialization setting can be overridden by using a query string parameter.
 False by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -163,11 +187,11 @@ False by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerNullValueHandling.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L66">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L62">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerNullValueHandling_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerNullValueHandling" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling">AllowQueryStringOverrideForSerializerNullValueHandling</h4>
-  <div class="markdown level1 summary"><p>Determines whether the <see cref="!:JsonSerializerSettings.NullValueHandling"></see> serialization setting can be overridden by using a query string parameter.
+  <div class="markdown level1 summary"><p>Determines whether the <span class="xref">Newtonsoft.Json.JsonSerializerSettings.NullValueHandling</span> serialization setting can be overridden by using a query string parameter.
 False by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -195,7 +219,7 @@ False by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_AllowUnknownQueryStringParameters.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.AllowUnknownQueryStringParameters%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L60">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L56">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowUnknownQueryStringParameters_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowUnknownQueryStringParameters*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowUnknownQueryStringParameters" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowUnknownQueryStringParameters">AllowUnknownQueryStringParameters</h4>
@@ -227,12 +251,12 @@ False by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttrCapabilities%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L18">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L14">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttrCapabilities*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttrCapabilities">DefaultAttrCapabilities</h4>
   <div class="markdown level1 summary"><p>Specifies the default query string capabilities that can be used on exposed json:api attributes.
-Defaults to <a class="xref" href="JsonApiDotNetCore.Models.AttrCapabilities.html#JsonApiDotNetCore_Models_AttrCapabilities_All">All</a>.</p>
+Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.AttrCapabilities.html#JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_All">All</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -249,7 +273,7 @@ Defaults to <a class="xref" href="JsonApiDotNetCore.Models.AttrCapabilities.html
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.AttrCapabilities.html">AttrCapabilities</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.AttrCapabilities.html">AttrCapabilities</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -259,7 +283,7 @@ Defaults to <a class="xref" href="JsonApiDotNetCore.Models.AttrCapabilities.html
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultPageSize.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultPageSize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L39">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L35">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultPageSize_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultPageSize*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultPageSize" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultPageSize">DefaultPageSize</h4>
@@ -280,7 +304,7 @@ Defaults to <a class="xref" href="JsonApiDotNetCore.Models.AttrCapabilities.html
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.PageSize.html">PageSize</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.PageSize.html">PageSize</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -290,7 +314,7 @@ Defaults to <a class="xref" href="JsonApiDotNetCore.Models.AttrCapabilities.html
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_EnableLegacyFilterNotation.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.EnableLegacyFilterNotation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L63">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L59">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_EnableLegacyFilterNotation_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.EnableLegacyFilterNotation*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_EnableLegacyFilterNotation" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.EnableLegacyFilterNotation">EnableLegacyFilterNotation</h4>
@@ -322,7 +346,7 @@ False by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_EnableResourceHooks.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.EnableResourceHooks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L54">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L50">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_EnableResourceHooks_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.EnableResourceHooks*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_EnableResourceHooks" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.EnableResourceHooks">EnableResourceHooks</h4>
@@ -355,11 +379,11 @@ Defaults to False.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_IncludeExceptionStackTraceInErrors.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeExceptionStackTraceInErrors%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L21">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L17">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_IncludeExceptionStackTraceInErrors_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeExceptionStackTraceInErrors*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_IncludeExceptionStackTraceInErrors" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeExceptionStackTraceInErrors">IncludeExceptionStackTraceInErrors</h4>
-  <div class="markdown level1 summary"><p>Whether or not <see cref="!:Exception"></see> stack traces should be serialized in <a class="xref" href="JsonApiDotNetCore.Models.JsonApiDocuments.ErrorMeta.html">ErrorMeta</a> objects.
+  <div class="markdown level1 summary"><p>Whether or not <span class="xref">System.Exception</span> stack traces should be serialized in <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ErrorMeta.html">ErrorMeta</a> objects.
 False by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -387,7 +411,7 @@ False by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_IncludeTotalResourceCount.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeTotalResourceCount%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L36">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L32">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_IncludeTotalResourceCount_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeTotalResourceCount*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_IncludeTotalResourceCount" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeTotalResourceCount">IncludeTotalResourceCount</h4>
@@ -419,7 +443,7 @@ False by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_LoadDatabaseValues.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.LoadDatabaseValues%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L57">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L53">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_LoadDatabaseValues_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.LoadDatabaseValues*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_LoadDatabaseValues" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.LoadDatabaseValues">LoadDatabaseValues</h4>
@@ -452,11 +476,14 @@ False by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumIncludeDepth.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumIncludeDepth%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L71">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L68">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumIncludeDepth_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumIncludeDepth*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumIncludeDepth" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumIncludeDepth">MaximumIncludeDepth</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Controls how many levels deep includes are allowed to be nested.
+For example, MaximumIncludeDepth=1 would allow ?include=articles but not ?include=articles.revisions.
+<code>null</code> by default, which means unconstrained.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -482,7 +509,7 @@ False by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumPageNumber.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageNumber%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L45">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L41">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumPageNumber_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageNumber*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumPageNumber" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageNumber">MaximumPageNumber</h4>
@@ -503,7 +530,7 @@ False by default.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.PageNumber.html">PageNumber</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.PageNumber.html">PageNumber</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -513,7 +540,7 @@ False by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumPageSize.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageSize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L42">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L38">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumPageSize_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageSize*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumPageSize" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageSize">MaximumPageSize</h4>
@@ -534,7 +561,7 @@ False by default.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.PageSize.html">PageSize</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.PageSize.html">PageSize</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -544,7 +571,7 @@ False by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_Namespace.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.Namespace%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L15">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L11">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_Namespace_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.Namespace*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_Namespace" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.Namespace">Namespace</h4>
@@ -575,11 +602,11 @@ False by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_RelatedIdMapper.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.RelatedIdMapper%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L85">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L82">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_RelatedIdMapper_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.RelatedIdMapper*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_RelatedIdMapper" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.RelatedIdMapper">RelatedIdMapper</h4>
-  <div class="markdown level1 summary"><p>Provides an interface for formatting relationship id properties given the navigation property name</p>
+  <div class="markdown level1 summary"><p>Provides an interface for formatting relationship ID properties given the navigation property name.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -596,7 +623,7 @@ False by default.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Graph.IRelatedIdMapper.html">IRelatedIdMapper</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.IRelatedIdMapper.html">IRelatedIdMapper</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -606,20 +633,20 @@ False by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_RelationshipLinks.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.RelationshipLinks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L33">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L29">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_RelationshipLinks_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.RelationshipLinks*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_RelationshipLinks" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.RelationshipLinks">RelationshipLinks</h4>
   <div class="markdown level1 summary"><p>Configures globally which links to show in the <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_RelationshipLinks">RelationshipLinks</a>
 object for a requested resource. Setting can be overridden per resource by
-adding a <a class="xref" href="JsonApiDotNetCore.Models.Annotation.LinksAttribute.html">LinksAttribute</a> to the class definition of that resource.
+adding a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceLinksAttribute.html">ResourceLinksAttribute</a> to the class definition of that resource.
 This option can also be specified per relationship by using the associated links argument
-in the constructor of <a class="xref" href="JsonApiDotNetCore.Models.Annotation.RelationshipAttribute.html">RelationshipAttribute</a>.</p>
+in the constructor of <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Links RelationshipLinks { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public LinkTypes RelationshipLinks { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -631,7 +658,7 @@ in the constructor of <a class="xref" href="JsonApiDotNetCore.Models.Annotation.
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.JsonApiDocuments.Links.html">Links</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html">LinkTypes</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -641,18 +668,18 @@ in the constructor of <a class="xref" href="JsonApiDotNetCore.Models.Annotation.
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_ResourceLinks.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.ResourceLinks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L30">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L26">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_ResourceLinks_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.ResourceLinks*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_ResourceLinks" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.ResourceLinks">ResourceLinks</h4>
   <div class="markdown level1 summary"><p>Configures globally which links to show in the <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_ResourceLinks">ResourceLinks</a>
 object for a requested resource. Setting can be overridden per resource by
-adding a <a class="xref" href="JsonApiDotNetCore.Models.Annotation.LinksAttribute.html">LinksAttribute</a> to the class definition of that resource.</p>
+adding a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceLinksAttribute.html">ResourceLinksAttribute</a> to the class definition of that resource.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Links ResourceLinks { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public LinkTypes ResourceLinks { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -664,7 +691,7 @@ adding a <a class="xref" href="JsonApiDotNetCore.Models.Annotation.LinksAttribut
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.JsonApiDocuments.Links.html">Links</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html">LinkTypes</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -674,11 +701,11 @@ adding a <a class="xref" href="JsonApiDotNetCore.Models.Annotation.LinksAttribut
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_SerializerSettings.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.SerializerSettings%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L74">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L71">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_SerializerSettings_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.SerializerSettings*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_SerializerSettings" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.SerializerSettings">SerializerSettings</h4>
-  <div class="markdown level1 summary"><p>Specifies the settings that are used by the <see cref="!:JsonSerializer"></see>.
+  <div class="markdown level1 summary"><p>Specifies the settings that are used by the <span class="xref">Newtonsoft.Json.JsonSerializer</span>.
 Note that at some places a few settings are ignored, to ensure json:api spec compliance.
 <example>
 The next example changes the casing convention to kebab casing.<p>
@@ -703,7 +730,7 @@ The next example changes the casing convention to kebab casing.<p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">JsonSerializerSettings</span></td>
+        <td><span class="xref">Newtonsoft.Json.JsonSerializerSettings</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -713,18 +740,18 @@ The next example changes the casing convention to kebab casing.<p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_TopLevelLinks.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.TopLevelLinks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L27">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L23">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_TopLevelLinks_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.TopLevelLinks*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_TopLevelLinks" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.TopLevelLinks">TopLevelLinks</h4>
   <div class="markdown level1 summary"><p>Configures globally which links to show in the <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_TopLevelLinks">TopLevelLinks</a>
 object for a requested resource. Setting can be overridden per resource by
-adding a <a class="xref" href="JsonApiDotNetCore.Models.Annotation.LinksAttribute.html">LinksAttribute</a> to the class definition of that resource.</p>
+adding a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceLinksAttribute.html">ResourceLinksAttribute</a> to the class definition of that resource.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Links TopLevelLinks { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public LinkTypes TopLevelLinks { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -736,7 +763,7 @@ adding a <a class="xref" href="JsonApiDotNetCore.Models.Annotation.LinksAttribut
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.JsonApiDocuments.Links.html">Links</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html">LinkTypes</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -746,7 +773,7 @@ adding a <a class="xref" href="JsonApiDotNetCore.Models.Annotation.LinksAttribut
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_UseRelativeLinks.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.UseRelativeLinks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L24">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L20">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_UseRelativeLinks_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.UseRelativeLinks*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_UseRelativeLinks" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.UseRelativeLinks">UseRelativeLinks</h4>
@@ -777,7 +804,7 @@ adding a <a class="xref" href="JsonApiDotNetCore.Models.Annotation.LinksAttribut
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions_ValidateModelState.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions.ValidateModelState%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L48">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L44">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_ValidateModelState_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.ValidateModelState*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_ValidateModelState" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.ValidateModelState">ValidateModelState</h4>
@@ -819,7 +846,7 @@ False by default.</p>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_JsonApiOptions.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.JsonApiOptions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L8" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -73,30 +73,62 @@
   
   <h1 id="JsonApiDotNetCore_Middleware_ConvertEmptyActionResultFilter" data-uid="JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter" class="text-break">Class ConvertEmptyActionResultFilter
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Transforms <span class="xref">Microsoft.AspNetCore.Mvc.ActionResult</span>s without parameters for correct internal handling.
+For example: return NotFound() -&gt; return NotFound(null)</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">ConvertEmptyActionResultFilter</span></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAlwaysRunResultFilter</span></div>
+    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IResultFilter</span></div>
+    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Middleware.html">JsonApiDotNetCore.Middleware</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Middleware_ConvertEmptyActionResultFilter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class ConvertEmptyActionResultFilter : IAlwaysRunResultFilter</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class ConvertEmptyActionResultFilter : IAlwaysRunResultFilter, IResultFilter, IFilterMetadata</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ConvertEmptyActionResultFilter_OnResultExecuted_ResultExecutedContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter.OnResultExecuted(ResultExecutedContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ConvertEmptyActionResultFilter_OnResultExecuted_Microsoft_AspNetCore_Mvc_Filters_ResultExecutedContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter.OnResultExecuted(Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/ConvertEmptyActionResultFilter.cs/#L10">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/ConvertEmptyActionResultFilter.cs/#L14">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_ConvertEmptyActionResultFilter_OnResultExecuted_" data-uid="JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter.OnResultExecuted*"></a>
-  <h4 id="JsonApiDotNetCore_Middleware_ConvertEmptyActionResultFilter_OnResultExecuted_ResultExecutedContext_" data-uid="JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter.OnResultExecuted(ResultExecutedContext)">OnResultExecuted(ResultExecutedContext)</h4>
+  <h4 id="JsonApiDotNetCore_Middleware_ConvertEmptyActionResultFilter_OnResultExecuted_Microsoft_AspNetCore_Mvc_Filters_ResultExecutedContext_" data-uid="JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter.OnResultExecuted(Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext)">OnResultExecuted(ResultExecutedContext)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -114,7 +146,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">ResultExecutedContext</span></td>
+        <td><span class="xref">Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext</span></td>
         <td><span class="parametername">context</span></td>
         <td></td>
       </tr>
@@ -122,13 +154,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ConvertEmptyActionResultFilter_OnResultExecuting_ResultExecutingContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter.OnResultExecuting(ResultExecutingContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ConvertEmptyActionResultFilter_OnResultExecuting_Microsoft_AspNetCore_Mvc_Filters_ResultExecutingContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter.OnResultExecuting(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/ConvertEmptyActionResultFilter.cs/#L14">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/ConvertEmptyActionResultFilter.cs/#L18">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_ConvertEmptyActionResultFilter_OnResultExecuting_" data-uid="JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter.OnResultExecuting*"></a>
-  <h4 id="JsonApiDotNetCore_Middleware_ConvertEmptyActionResultFilter_OnResultExecuting_ResultExecutingContext_" data-uid="JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter.OnResultExecuting(ResultExecutingContext)">OnResultExecuting(ResultExecutingContext)</h4>
+  <h4 id="JsonApiDotNetCore_Middleware_ConvertEmptyActionResultFilter_OnResultExecuting_Microsoft_AspNetCore_Mvc_Filters_ResultExecutingContext_" data-uid="JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter.OnResultExecuting(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext)">OnResultExecuting(ResultExecutingContext)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -146,12 +178,22 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">ResultExecutingContext</span></td>
+        <td><span class="xref">Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext</span></td>
         <td><span class="parametername">context</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAlwaysRunResultFilter</span>
+  </div>
+  <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IResultFilter</span>
+  </div>
+  <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata</span>
+  </div>
 </article>
           </div>
           
@@ -163,7 +205,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ConvertEmptyActionResultFilter.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/ConvertEmptyActionResultFilter.cs/#L8" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/ConvertEmptyActionResultFilter.cs/#L12" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

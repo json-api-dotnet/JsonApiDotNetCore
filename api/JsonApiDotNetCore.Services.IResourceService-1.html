@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IResourceService&lt;T&gt;
+    <title>Interface IResourceService&lt;TResource&gt;
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IResourceService&lt;T&gt;
+    <meta name="title" content="Interface IResourceService&lt;TResource&gt;
    ">
     <meta name="generator" content="docfx 2.56.2.0">
     
@@ -71,42 +71,43 @@
             <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Services.IResourceService`1">
   
   
-  <h1 id="JsonApiDotNetCore_Services_IResourceService_1" data-uid="JsonApiDotNetCore.Services.IResourceService`1" class="text-break">Interface IResourceService&lt;T&gt;
+  <h1 id="JsonApiDotNetCore_Services_IResourceService_1" data-uid="JsonApiDotNetCore.Services.IResourceService`1" class="text-break">Interface IResourceService&lt;TResource&gt;
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Represents the foundational Resource Service layer in the JsonApiDotNetCore architecture that uses a Resource Repository for data access.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html#JsonApiDotNetCore_Services_ICreateService_2_CreateAsync__0_">ICreateService&lt;T, Int32&gt;.CreateAsync(T)</a>
+      <a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html#JsonApiDotNetCore_Services_ICreateService_2_CreateAsync__0_">ICreateService&lt;TResource, Int32&gt;.CreateAsync(TResource)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-2.html#JsonApiDotNetCore_Services_IUpdateService_2_UpdateAsync__1__0_">IUpdateService&lt;T, Int32&gt;.UpdateAsync(Int32, T)</a>
+      <a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-2.html#JsonApiDotNetCore_Services_IUpdateService_2_UpdateAsync__1__0_">IUpdateService&lt;TResource, Int32&gt;.UpdateAsync(Int32, TResource)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-2.html#JsonApiDotNetCore_Services_IUpdateRelationshipService_2_UpdateRelationshipAsync__1_System_String_System_Object_">IUpdateRelationshipService&lt;T, Int32&gt;.UpdateRelationshipAsync(Int32, String, Object)</a>
+      <a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-2.html#JsonApiDotNetCore_Services_IUpdateRelationshipService_2_UpdateRelationshipAsync__1_System_String_System_Object_">IUpdateRelationshipService&lt;TResource, Int32&gt;.UpdateRelationshipAsync(Int32, String, Object)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-2.html#JsonApiDotNetCore_Services_IDeleteService_2_DeleteAsync__1_">IDeleteService&lt;T, Int32&gt;.DeleteAsync(Int32)</a>
+      <a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-2.html#JsonApiDotNetCore_Services_IDeleteService_2_DeleteAsync__1_">IDeleteService&lt;TResource, Int32&gt;.DeleteAsync(Int32)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Services.IGetAllService-2.html#JsonApiDotNetCore_Services_IGetAllService_2_GetAsync">IGetAllService&lt;T, Int32&gt;.GetAsync()</a>
+      <a class="xref" href="JsonApiDotNetCore.Services.IGetAllService-2.html#JsonApiDotNetCore_Services_IGetAllService_2_GetAsync">IGetAllService&lt;TResource, Int32&gt;.GetAsync()</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Services.IGetByIdService-2.html#JsonApiDotNetCore_Services_IGetByIdService_2_GetAsync__1_">IGetByIdService&lt;T, Int32&gt;.GetAsync(Int32)</a>
+      <a class="xref" href="JsonApiDotNetCore.Services.IGetByIdService-2.html#JsonApiDotNetCore_Services_IGetByIdService_2_GetAsync__1_">IGetByIdService&lt;TResource, Int32&gt;.GetAsync(Int32)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipService-2.html#JsonApiDotNetCore_Services_IGetRelationshipService_2_GetRelationshipAsync__1_System_String_">IGetRelationshipService&lt;T, Int32&gt;.GetRelationshipAsync(Int32, String)</a>
+      <a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipService-2.html#JsonApiDotNetCore_Services_IGetRelationshipService_2_GetRelationshipAsync__1_System_String_">IGetRelationshipService&lt;TResource, Int32&gt;.GetRelationshipAsync(Int32, String)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Services.IGetSecondaryService-2.html#JsonApiDotNetCore_Services_IGetSecondaryService_2_GetSecondaryAsync__1_System_String_">IGetSecondaryService&lt;T, Int32&gt;.GetSecondaryAsync(Int32, String)</a>
+      <a class="xref" href="JsonApiDotNetCore.Services.IGetSecondaryService-2.html#JsonApiDotNetCore_Services_IGetSecondaryService_2_GetSecondaryAsync__1_System_String_">IGetSecondaryService&lt;TResource, Int32&gt;.GetSecondaryAsync(Int32, String)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Services.html">JsonApiDotNetCore.Services</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Services_IResourceService_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IResourceService&lt;T&gt; : IResourceCommandService&lt;T&gt;, ICreateService&lt;T&gt;, IUpdateService&lt;T&gt;, IUpdateRelationshipService&lt;T&gt;, IDeleteService&lt;T&gt;, IResourceQueryService&lt;T&gt;, IGetAllService&lt;T&gt;, IGetByIdService&lt;T&gt;, IGetRelationshipService&lt;T&gt;, IGetSecondaryService&lt;T&gt;, IResourceService&lt;T, int&gt;, IResourceCommandService&lt;T, int&gt;, ICreateService&lt;T, int&gt;, IUpdateService&lt;T, int&gt;, IUpdateRelationshipService&lt;T, int&gt;, IDeleteService&lt;T, int&gt;, IResourceQueryService&lt;T, int&gt;, IGetAllService&lt;T, int&gt;, IGetByIdService&lt;T, int&gt;, IGetRelationshipService&lt;T, int&gt;, IGetSecondaryService&lt;T, int&gt; where T : class, IIdentifiable&lt;int&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IResourceService&lt;TResource&gt; : IResourceCommandService&lt;TResource&gt;, ICreateService&lt;TResource&gt;, IUpdateService&lt;TResource&gt;, IUpdateRelationshipService&lt;TResource&gt;, IDeleteService&lt;TResource&gt;, IResourceQueryService&lt;TResource&gt;, IGetAllService&lt;TResource&gt;, IGetByIdService&lt;TResource&gt;, IGetRelationshipService&lt;TResource&gt;, IGetSecondaryService&lt;TResource&gt;, IResourceService&lt;TResource, int&gt;, IResourceCommandService&lt;TResource, int&gt;, ICreateService&lt;TResource, int&gt;, IUpdateService&lt;TResource, int&gt;, IUpdateRelationshipService&lt;TResource, int&gt;, IDeleteService&lt;TResource, int&gt;, IResourceQueryService&lt;TResource, int&gt;, IGetAllService&lt;TResource, int&gt;, IGetByIdService&lt;TResource, int&gt;, IGetRelationshipService&lt;TResource, int&gt;, IGetSecondaryService&lt;TResource, int&gt; where TResource : class, IIdentifiable&lt;int&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -118,8 +119,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">T</span></td>
-        <td></td>
+        <td><span class="parametername">TResource</span></td>
+        <td><p>The resource type.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -134,7 +136,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_IResourceService_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.IResourceService%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/Contract/IResourceService.cs/#L5" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/IResourceService.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

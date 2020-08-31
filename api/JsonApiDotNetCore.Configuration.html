@@ -77,13 +77,84 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.ApplicationBuilderExtensions.html">ApplicationBuilderExtensions</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.GenericServiceFactory.html">GenericServiceFactory</a></h4>
+      <section><p>Represents the Service Locator design pattern. Used to obtain object instances for types are not known until runtime.
+The typical use case would be for accessing relationship data or resolving operations processors.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.InverseRelationships.html">InverseRelationships</a></h4>
+      <section><p>Responsible for populating the <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigation">InverseNavigation</a> property.</p>
+<p>This service is instantiated in the configure phase of the application.</p>
+<p>When using a data access layer different from EF Core, and when using ResourceHooks
+that depend on the inverse navigation property (BeforeImplicitUpdateRelationship),
+you will need to override this service, or pass along the inverseNavigationProperty in
+the RelationshipAttribute.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Configuration.JsonApiOptions.html">JsonApiOptions</a></h4>
-      <section><p>Global options</p>
+      <section><p>Global options that configure the behavior of JsonApiDotNetCore.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.PageNumber.html">PageNumber</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.PageSize.html">PageSize</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.RelatedIdMapper.html">RelatedIdMapper</a></h4>
+      <section><p>Provides an interface for formatting relationship identifiers from the navigation property name.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.RequestScopedServiceProvider.html">RequestScopedServiceProvider</a></h4>
+      <section><p>An interface used to separate the registration of the global <span class="xref">System.IServiceProvider</span>
+from a request-scoped service provider. This is useful in cases when we need to 
+manually resolve services from the request scope (e.g. operation processors).</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></h4>
+      <section><p>Provides metadata for a resource, such as its attributes and relationships.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceGraph.html">ResourceGraph</a></h4>
+      <section><p>Enables retrieving the exposed resource fields (attributes and relationships) of resources registered in the resource graph.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceGraphBuilder.html">ResourceGraphBuilder</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.html">ServiceCollectionExtensions</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.html">ServiceDiscoveryFacade</a></h4>
+      <section><p>Scans for types like resources, services, repositories and resource definitions in an assembly and registers them to the IoC container. This is part of the resource auto-discovery process.</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IGenericServiceFactory.html">IGenericServiceFactory</a></h4>
+      <section><p>Represents the Service Locator design pattern. Used to obtain object instances for types are not known until runtime.
+The typical use case would be for accessing relationship data or resolving operations processors.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IInverseRelationships.html">IInverseRelationships</a></h4>
+      <section><p>Responsible for populating the <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigation">InverseNavigation</a> property.</p>
+<p>This service is instantiated in the configure phase of the application.</p>
+<p>When using a data access layer different from EF Core, and when using ResourceHooks
+that depend on the inverse navigation property (BeforeImplicitUpdateRelationship),
+you will need to override this service, or pass along the inverseNavigationProperty in
+the RelationshipAttribute.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></h4>
+      <section><p>Global options that configure the behavior of JsonApiDotNetCore.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IRelatedIdMapper.html">IRelatedIdMapper</a></h4>
+      <section><p>Provides an interface for formatting relationship identifiers from the navigation property name.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IRequestScopedServiceProvider.html">IRequestScopedServiceProvider</a></h4>
+      <section><p>An interface used to separate the registration of the global <span class="xref">System.IServiceProvider</span>
+from a request-scoped service provider. This is useful in cases when we need to 
+manually resolve services from the request scope (e.g. operation processors).</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceContextProvider.html">IResourceContextProvider</a></h4>
+      <section><p>Responsible for getting <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a>s from the <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceGraph.html">ResourceGraph</a>.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraph.html">IResourceGraph</a></h4>
+      <section><p>Enables retrieving the exposed resource fields (attributes and relationships) of resources registered in the resource graph.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraphBuilder.html">IResourceGraphBuilder</a></h4>
       <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IServiceDiscoveryFacade.html">IServiceDiscoveryFacade</a></h4>
+      <section><p>Scans for types like resources, services, repositories and resource definitions in an assembly and registers them to the IoC container. This is part of the resource auto-discovery process.</p>
+</section>
 </article>
           </div>
           

@@ -73,10 +73,10 @@
 <pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article&gt;
 {
     public ArticlesController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IResourceService&lt;Article&gt; resourceService)
-        : base(jsonApiOptions, loggerFactory, resourceService)
+        : base(options, loggerFactory, resourceService)
     { }
 }
 </code></pre><h2 id="non-integer-type-keys">Non-Integer Type Keys</h2>
@@ -85,11 +85,11 @@
 //---------------------------------------------------------- ^^^^
 {
     public ArticlesController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IResourceService&lt;Article, Guid&gt; resourceService)
         //----------------------- ^^^^
-        : base(jsonApiOptions, loggerFactory, resourceService)
+        : base(options, loggerFactory, resourceService)
     { }
 }
 </code></pre><h2 id="resource-access-control">Resource Access Control</h2>
@@ -99,10 +99,10 @@
 <pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article&gt;
 {
     public ArticlesController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IResourceService&lt;Article&gt; resourceService)
-        : base(jsonApiOptions, loggerFactory, resourceService)
+        : base(options, loggerFactory, resourceService)
     { }
 
     [HttpGet]
@@ -131,10 +131,10 @@ An attempt to use one blacklisted methods will result in a HTTP 405 Method Not A
 public class ArticlesController : BaseJsonApiController&lt;Article&gt;
 {
     public ArticlesController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IResourceService&lt;Article&gt; resourceService)
-        : base(jsonApiOptions, loggerFactory, resourceService)
+        : base(options, loggerFactory, resourceService)
     { }
 }
 </code></pre><h2 id="implicit-access-by-service-injection">Implicit Access By Service Injection</h2>
@@ -144,10 +144,10 @@ public class ArticlesController : BaseJsonApiController&lt;Article&gt;
 <pre><code class="lang-c#">public class ReportsController : BaseJsonApiController&lt;Report&gt;
 {
     public ReportsController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IResourceService&lt;Report&gt; resourceService)
-        : base(jsonApiOptions, loggerFactory, resourceService)
+        : base(options, loggerFactory, resourceService)
     { }
 
     [HttpGet]

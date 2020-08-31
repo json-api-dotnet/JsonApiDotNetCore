@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter" data-uid="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter" class="text-break">Class IncomingTypeMatchFilter
   </h1>
-  <div class="markdown level0 summary"><p>Action filter used to verify the incoming type matches the target type, else return a 409</p>
+  <div class="markdown level0 summary"><p>Action filter used to verify the incoming resource type matches the target type, else return a 409.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -81,23 +81,52 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">IncomingTypeMatchFilter</span></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IActionFilter</span></div>
+    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Middleware.html">JsonApiDotNetCore.Middleware</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class IncomingTypeMatchFilter : IActionFilter</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class IncomingTypeMatchFilter : IActionFilter, IFilterMetadata</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter__ctor_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.%23ctor(JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.%23ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IncomingTypeMatchFilter.cs/#L18">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IncomingTypeMatchFilter.cs/#L17">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter__ctor_" data-uid="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter__ctor_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_" data-uid="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.#ctor(JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider)">IncomingTypeMatchFilter(IResourceContextProvider)</h4>
+  <h4 id="JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_" data-uid="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider)">IncomingTypeMatchFilter(IResourceContextProvider)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -115,7 +144,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider.html">IResourceContextProvider</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceContextProvider.html">IResourceContextProvider</a></td>
         <td><span class="parametername">provider</span></td>
         <td></td>
       </tr>
@@ -125,13 +154,13 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter_OnActionExecuted_ActionExecutedContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.OnActionExecuted(ActionExecutedContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter_OnActionExecuted_Microsoft_AspNetCore_Mvc_Filters_ActionExecutedContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IncomingTypeMatchFilter.cs/#L46">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IncomingTypeMatchFilter.cs/#L47">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter_OnActionExecuted_" data-uid="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.OnActionExecuted*"></a>
-  <h4 id="JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter_OnActionExecuted_ActionExecutedContext_" data-uid="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.OnActionExecuted(ActionExecutedContext)">OnActionExecuted(ActionExecutedContext)</h4>
+  <h4 id="JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter_OnActionExecuted_Microsoft_AspNetCore_Mvc_Filters_ActionExecutedContext_" data-uid="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">OnActionExecuted(ActionExecutedContext)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -149,7 +178,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">ActionExecutedContext</span></td>
+        <td><span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext</span></td>
         <td><span class="parametername">context</span></td>
         <td></td>
       </tr>
@@ -157,13 +186,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter_OnActionExecuting_ActionExecutingContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.OnActionExecuting(ActionExecutingContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter_OnActionExecuting_Microsoft_AspNetCore_Mvc_Filters_ActionExecutingContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IncomingTypeMatchFilter.cs/#L23">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IncomingTypeMatchFilter.cs/#L22">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter_OnActionExecuting_" data-uid="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.OnActionExecuting*"></a>
-  <h4 id="JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter_OnActionExecuting_ActionExecutingContext_" data-uid="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.OnActionExecuting(ActionExecutingContext)">OnActionExecuting(ActionExecutingContext)</h4>
+  <h4 id="JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter_OnActionExecuting_Microsoft_AspNetCore_Mvc_Filters_ActionExecutingContext_" data-uid="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">OnActionExecuting(ActionExecutingContext)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -181,12 +210,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">ActionExecutingContext</span></td>
+        <td><span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext</span></td>
         <td><span class="parametername">context</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IActionFilter</span>
+  </div>
+  <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata</span>
+  </div>
 </article>
           </div>
           
@@ -198,7 +234,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_IncomingTypeMatchFilter.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IncomingTypeMatchFilter.cs/#L14" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IncomingTypeMatchFilter.cs/#L13" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

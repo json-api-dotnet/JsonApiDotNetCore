@@ -87,10 +87,10 @@ Based on the <a href="https://jsonapi.org/recommendations/">recommendations</a> 
 public class CamelCasedModelsController : JsonApiController&lt;CamelCasedModel&gt;
 {
     public CamelCasedModelsController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IResourceService&lt;CamelCasedModel&gt; resourceService)
-        : base(jsonApiOptions, loggerFactory, resourceService)
+        : base(options, loggerFactory, resourceService)
     { }
 }
 </code></pre><p>It is important to note that your routes must still end with the model name in the same format as the resource name. This is so that we can build accurate resource links in the json:api document. For example, if you define a resource as MyModels, the controller route must match.</p>

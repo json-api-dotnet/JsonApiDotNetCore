@@ -115,10 +115,10 @@ where <code>T</code> is the model that inherits from <code>Identifiable&lt;TId&g
 <pre><code class="lang-c#">public class PeopleController : JsonApiController&lt;Person&gt;
 {
     public PeopleController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IResourceService&lt;Person&gt; resourceService)
-    : base(jsonApiOptions, loggerFactory, resourceService)
+    : base(options, loggerFactory, resourceService)
     { }
 }
 </code></pre><h3 id="middleware-and-services">Middleware and Services</h3>

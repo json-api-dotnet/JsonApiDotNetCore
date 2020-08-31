@@ -189,11 +189,11 @@ public class Startup
 <pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article&gt;
 {
     public ArticlesController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         ICreateService&lt;Article, int&gt; create,
         IDeleteService&lt;Article, int&gt; delete)
-        : base(jsonApiOptions, loggerFactory, create: create, delete: delete)
+        : base(options, loggerFactory, create: create, delete: delete)
     { }
 
     [HttpPost]
