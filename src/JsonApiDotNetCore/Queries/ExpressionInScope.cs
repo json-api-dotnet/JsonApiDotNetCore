@@ -1,5 +1,5 @@
 using System;
-using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Queries

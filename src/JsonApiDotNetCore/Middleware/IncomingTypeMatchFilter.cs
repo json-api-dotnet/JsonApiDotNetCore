@@ -1,15 +1,14 @@
+using System;
 using System.Linq;
 using System.Net.Http;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
-    /// Action filter used to verify the incoming type matches the target type, else return a 409
+    /// Action filter used to verify the incoming resource type matches the target type, else return a 409.
     /// </summary>
     public sealed class IncomingTypeMatchFilter : IActionFilter
     {
@@ -22,6 +21,8 @@ namespace JsonApiDotNetCore.Middleware
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             if (!context.HttpContext.IsJsonApiRequest())
             {
                 return;

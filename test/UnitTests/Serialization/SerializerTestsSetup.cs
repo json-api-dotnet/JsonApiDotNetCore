@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Server;
-using JsonApiDotNetCore.Serialization.Server.Builders;
+using JsonApiDotNetCore.Serialization.Building;
+using JsonApiDotNetCore.Serialization.Objects;
 using Moq;
 
 namespace UnitTests.Serialization
@@ -117,16 +116,16 @@ namespace UnitTests.Serialization
         /// Minimal implementation of abstract JsonApiSerializer base class, with
         /// the purpose of testing the business logic for building the document structure.
         /// </summary>
-        protected sealed class TestDocumentBuilder : BaseDocumentBuilder
+        protected sealed class TestSerializer : BaseSerializer
         {
-            public TestDocumentBuilder(IResourceObjectBuilder resourceObjectBuilder) : base(resourceObjectBuilder) { }
+            public TestSerializer(IResourceObjectBuilder resourceObjectBuilder) : base(resourceObjectBuilder) { }
 
             public new Document Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
             {
                 return base.Build(resource, attributes, relationships);
             }
 
-            public new Document Build(IEnumerable<IIdentifiable> resources, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
+            public new Document Build(IReadOnlyCollection<IIdentifiable> resources, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
             {
                 return base.Build(resources, attributes, relationships);
             }

@@ -1,7 +1,5 @@
 using Bogus;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.Contracts;
 using Microsoft.Extensions.Logging.Abstractions;
 using UnitTests.TestModels;
 using Person = UnitTests.TestModels.Person;
@@ -40,25 +38,25 @@ namespace UnitTests.Serialization
         protected IResourceGraph BuildGraph()
         {
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
-            resourceGraphBuilder.AddResource<TestResource>("testResource");
-            resourceGraphBuilder.AddResource<TestResourceWithList>("testResource-with-list");
+            resourceGraphBuilder.Add<TestResource>("testResource");
+            resourceGraphBuilder.Add<TestResourceWithList>("testResource-with-list");
             // one to one relationships
-            resourceGraphBuilder.AddResource<OneToOnePrincipal>("oneToOnePrincipals");
-            resourceGraphBuilder.AddResource<OneToOneDependent>("oneToOneDependents");
-            resourceGraphBuilder.AddResource<OneToOneRequiredDependent>("oneToOneRequiredDependents");
+            resourceGraphBuilder.Add<OneToOnePrincipal>("oneToOnePrincipals");
+            resourceGraphBuilder.Add<OneToOneDependent>("oneToOneDependents");
+            resourceGraphBuilder.Add<OneToOneRequiredDependent>("oneToOneRequiredDependents");
             // one to many relationships
-            resourceGraphBuilder.AddResource<OneToManyPrincipal>("oneToManyPrincipals");
-            resourceGraphBuilder.AddResource<OneToManyDependent>("oneToManyDependents");
-            resourceGraphBuilder.AddResource<OneToManyRequiredDependent>("oneToMany-requiredDependents");
+            resourceGraphBuilder.Add<OneToManyPrincipal>("oneToManyPrincipals");
+            resourceGraphBuilder.Add<OneToManyDependent>("oneToManyDependents");
+            resourceGraphBuilder.Add<OneToManyRequiredDependent>("oneToMany-requiredDependents");
             // collective relationships
-            resourceGraphBuilder.AddResource<MultipleRelationshipsPrincipalPart>("multiPrincipals");
-            resourceGraphBuilder.AddResource<MultipleRelationshipsDependentPart>("multiDependents");
+            resourceGraphBuilder.Add<MultipleRelationshipsPrincipalPart>("multiPrincipals");
+            resourceGraphBuilder.Add<MultipleRelationshipsDependentPart>("multiDependents");
 
-            resourceGraphBuilder.AddResource<Article>();
-            resourceGraphBuilder.AddResource<Person>();
-            resourceGraphBuilder.AddResource<Blog>();
-            resourceGraphBuilder.AddResource<Food>();
-            resourceGraphBuilder.AddResource<Song>();
+            resourceGraphBuilder.Add<Article>();
+            resourceGraphBuilder.Add<Person>();
+            resourceGraphBuilder.Add<Blog>();
+            resourceGraphBuilder.Add<Food>();
+            resourceGraphBuilder.Add<Song>();
 
             return resourceGraphBuilder.Build();
         }

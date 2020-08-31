@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Net;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 

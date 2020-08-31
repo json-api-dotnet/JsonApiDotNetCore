@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +17,11 @@ namespace JsonApiDotNetCoreExample.Controllers
         private readonly IDbContextResolver _dbResolver;
 
         public TodoCollectionsController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IDbContextResolver contextResolver,
             IResourceService<TodoItemCollection, Guid> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         {
             _dbResolver = contextResolver;
         }

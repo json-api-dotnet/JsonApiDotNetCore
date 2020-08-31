@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

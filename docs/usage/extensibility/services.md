@@ -148,11 +148,11 @@ Then in the controller, you should inherit from the base controller and pass the
 public class ArticlesController : BaseJsonApiController<Article>
 {
     public ArticlesController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         ICreateService<Article, int> create,
         IDeleteService<Article, int> delete)
-        : base(jsonApiOptions, loggerFactory, create: create, delete: delete)
+        : base(options, loggerFactory, create: create, delete: delete)
     { }
 
     [HttpPost]

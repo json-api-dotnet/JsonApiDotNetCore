@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.Design;
 using System.Linq.Expressions;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;

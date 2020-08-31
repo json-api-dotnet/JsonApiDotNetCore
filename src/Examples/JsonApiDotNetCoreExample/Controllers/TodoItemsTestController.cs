@@ -2,8 +2,9 @@ using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Controllers.Annotations;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     : BaseJsonApiController<T> where T : class, IIdentifiable<int>
     {
         protected AbstractTodoItemsController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<T, int> service)
-            : base(jsonApiOptions, loggerFactory, service)
+            : base(options, loggerFactory, service)
         { }
     }
 
@@ -27,10 +28,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     public class TodoItemsTestController : AbstractTodoItemsController<TodoItem>
     {
         public TodoItemsTestController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<TodoItem> service)
-            : base(jsonApiOptions, loggerFactory, service)
+            : base(options, loggerFactory, service)
         { }
 
         [HttpGet]

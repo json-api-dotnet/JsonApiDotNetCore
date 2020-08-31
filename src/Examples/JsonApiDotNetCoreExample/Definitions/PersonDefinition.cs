@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Hooks.Internal.Execution;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExample.Definitions
             resourcesByRelationship.GetByRelationship<Passport>().ToList().ForEach(kvp => DisallowLocked(kvp.Value));
         }
 
-        public Dictionary<string, object> GetMeta()
+        public IReadOnlyDictionary<string, object> GetMeta()
         {
             return new Dictionary<string, object> {
                 { "copyright", "Copyright 2015 Example Corp." },

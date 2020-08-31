@@ -1,5 +1,5 @@
 using System;
-using JsonApiDotNetCore;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +26,7 @@ namespace NoEntityFrameworkExample
         {
             services.AddJsonApi(
                 options => options.Namespace = "api/v1",
-                resources: builder => builder.AddResource<WorkItem>("workItems")
+                resources: builder => builder.Add<WorkItem>("workItems")
             );
 
             services.AddScoped<IResourceService<WorkItem>, WorkItemService>();

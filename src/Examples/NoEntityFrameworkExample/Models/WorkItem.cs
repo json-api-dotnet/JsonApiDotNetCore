@@ -1,6 +1,6 @@
 using System;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace NoEntityFrameworkExample.Models
 {

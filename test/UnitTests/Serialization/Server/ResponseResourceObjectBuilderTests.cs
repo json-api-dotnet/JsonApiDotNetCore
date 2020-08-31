@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Models.Annotation;
-using Xunit;
+using JsonApiDotNetCore.Resources.Annotations;
 using UnitTests.TestModels;
+using Xunit;
 
 namespace UnitTests.Serialization.Server
 {
@@ -13,7 +13,7 @@ namespace UnitTests.Serialization.Server
 
         public ResponseResourceObjectBuilderTests()
         {
-            _relationshipsForBuild = _resourceGraph.GetRelationships<OneToManyPrincipal>(e => new { e.Dependents });
+            _relationshipsForBuild = _resourceGraph.GetRelationships<OneToManyPrincipal>(e => new { e.Dependents }).ToList();
         }
 
         [Fact]

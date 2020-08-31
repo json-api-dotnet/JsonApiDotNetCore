@@ -3,20 +3,21 @@ using System.Linq;
 using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal.QueryStrings;
+using JsonApiDotNetCore.Controllers.Annotations;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.QueryStrings;
+using JsonApiDotNetCore.QueryStrings.Internal;
 using Xunit;
 
 namespace UnitTests.QueryStringParameters
 {
-    public sealed class IncludeParseTests : ParseTestsBase
+    public sealed class IncludeParseTests : BaseParseTests
     {
         private readonly IncludeQueryStringParameterReader _reader;
 
         public IncludeParseTests()
         {
-            _reader = new IncludeQueryStringParameterReader(CurrentRequest, ResourceGraph, new JsonApiOptions());
+            _reader = new IncludeQueryStringParameterReader(Request, ResourceGraph, new JsonApiOptions());
         }
 
         [Theory]
@@ -40,7 +41,7 @@ namespace UnitTests.QueryStringParameters
         public void Reader_Is_Enabled(StandardQueryStringParameters parametersDisabled, bool expectIsEnabled)
         {
             // Act
-            var isEnabled = _reader.IsEnabled(new DisableQueryAttribute(parametersDisabled));
+            var isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
 
             // Assert
             isEnabled.Should().Be(expectIsEnabled);

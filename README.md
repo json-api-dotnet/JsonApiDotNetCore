@@ -54,10 +54,10 @@ public class Article : Identifiable
 public class ArticlesController : JsonApiController<Article>
 {
         public ArticlesController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             IResourceService<Article> resourceService,
             ILoggerFactory loggerFactory)
-            : base(jsonApiOptions, resourceService, loggerFactory)
+            : base(options, resourceService, loggerFactory)
         { }
 }
 ```

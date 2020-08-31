@@ -3,8 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -121,7 +120,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var body = await response.Content.ReadAsStringAsync();
 
             var isQueryStringValueEmpty = queryStringValue == string.Empty;
-            var isDisallowedOverride = options.AllowQueryStringOverrideForSerializerNullValueHandling == false && queryStringValue != null;
+            var isDisallowedOverride = !options.AllowQueryStringOverrideForSerializerNullValueHandling && queryStringValue != null;
             var isQueryStringInvalid = queryStringValue != null && !bool.TryParse(queryStringValue, out _);
 
             if (isQueryStringValueEmpty)

@@ -1,12 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Generics;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets

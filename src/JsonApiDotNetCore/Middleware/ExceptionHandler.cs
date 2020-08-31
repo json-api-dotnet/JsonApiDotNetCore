@@ -2,12 +2,13 @@ using System;
 using System.Diagnostics;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Middleware
 {
+    /// <inheritdoc />
     public class ExceptionHandler : IExceptionHandler
     {
         private readonly IJsonApiOptions _options;
@@ -15,12 +16,16 @@ namespace JsonApiDotNetCore.Middleware
 
         public ExceptionHandler(ILoggerFactory loggerFactory, IJsonApiOptions options)
         {
-            _options = options;
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory.CreateLogger<ExceptionHandler>();
         }
 
         public ErrorDocument HandleException(Exception exception)
         {
+            if (exception == null) throw new ArgumentNullException(nameof(exception));
+
             Exception demystified = exception.Demystify();
 
             LogException(demystified);
@@ -38,6 +43,8 @@ namespace JsonApiDotNetCore.Middleware
 
         protected virtual LogLevel GetLogLevel(Exception exception)
         {
+            if (exception == null) throw new ArgumentNullException(nameof(exception));
+
             if (exception is JsonApiException || exception is InvalidModelStateException)
             {
                 return LogLevel.Information;
@@ -48,6 +55,8 @@ namespace JsonApiDotNetCore.Middleware
 
         protected virtual string GetLogMessage(Exception exception)
         {
+            if (exception == null) throw new ArgumentNullException(nameof(exception));
+
             return exception is JsonApiException jsonApiException
                 ? jsonApiException.Error.Title
                 : exception.Message;
@@ -55,6 +64,8 @@ namespace JsonApiDotNetCore.Middleware
 
         protected virtual ErrorDocument CreateErrorDocument(Exception exception)
         {
+            if (exception == null) throw new ArgumentNullException(nameof(exception));
+
             if (exception is InvalidModelStateException modelStateException)
             {
                 return new ErrorDocument(modelStateException.Errors);

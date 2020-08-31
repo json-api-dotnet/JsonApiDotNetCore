@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Microsoft.EntityFrameworkCore;
@@ -81,7 +81,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.Forbidden, errorDocument.Errors[0].StatusCode);
-            Assert.Equal("Specifying the resource id in POST requests is not allowed.", errorDocument.Errors[0].Title);
+            Assert.Equal("Specifying the resource ID in POST requests is not allowed.", errorDocument.Errors[0].Title);
             Assert.Null(errorDocument.Errors[0].Detail);
         }
 

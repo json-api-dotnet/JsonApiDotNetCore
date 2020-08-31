@@ -1,9 +1,9 @@
 using System;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Exceptions;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Logging;
 using Xunit;
 

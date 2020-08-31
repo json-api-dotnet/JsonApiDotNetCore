@@ -6,9 +6,8 @@ using System.Web;
 using FluentAssertions;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 

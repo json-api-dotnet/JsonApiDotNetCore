@@ -1,6 +1,6 @@
 using System;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Authentication;
 
@@ -13,7 +13,7 @@ namespace JsonApiDotNetCoreExample.Models
 
         [Attr] public string UserName { get; set; }
 
-        [Attr(AttrCapabilities.AllowChange)]
+        [Attr(Capabilities = AttrCapabilities.AllowChange)]
         public string Password
         {
             get => _password;

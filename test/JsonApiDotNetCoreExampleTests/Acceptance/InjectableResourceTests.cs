@@ -3,8 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -216,7 +215,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("Resource of type 'passports' with id '" + passportId + "' does not exist.", errorDocument.Errors[0].Detail);
+            Assert.Equal("Resource of type 'passports' with ID '" + passportId + "' does not exist.", errorDocument.Errors[0].Detail);
         }
     }
 }

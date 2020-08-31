@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Queries

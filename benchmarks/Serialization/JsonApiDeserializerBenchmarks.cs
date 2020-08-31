@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using BenchmarkDotNet.Attributes;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Server;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 

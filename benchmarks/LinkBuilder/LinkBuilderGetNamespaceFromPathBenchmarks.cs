@@ -1,6 +1,6 @@
-using BenchmarkDotNet.Attributes;
 using System;
 using System.Text;
+using BenchmarkDotNet.Attributes;
 
 namespace Benchmarks.LinkBuilder
 {

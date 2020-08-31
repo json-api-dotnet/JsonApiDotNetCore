@@ -1,15 +1,15 @@
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
-using JsonApiDotNetCore.Models;
-using Xunit;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {

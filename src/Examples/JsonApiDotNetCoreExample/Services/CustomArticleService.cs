@@ -1,14 +1,13 @@
+using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Hooks;
+using JsonApiDotNetCore.Hooks.Internal;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.RequestServices;
-using JsonApiDotNetCore.RequestServices.Contracts;
 
 namespace JsonApiDotNetCoreExample.Services
 {
@@ -20,11 +19,11 @@ namespace JsonApiDotNetCoreExample.Services
             IPaginationContext paginationContext,
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
-            ICurrentRequest currentRequest,
+            IJsonApiRequest request,
             IResourceChangeTracker<Article> resourceChangeTracker,
             IResourceFactory resourceFactory,
             IResourceHookExecutor hookExecutor = null)
-            : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, currentRequest,
+            : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
                 resourceChangeTracker, resourceFactory, hookExecutor)
         { }
 

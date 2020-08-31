@@ -1,9 +1,9 @@
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Moq;
 
@@ -18,13 +18,13 @@ namespace UnitTests.Serialization
             _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
             _mockHttpContextAccessor.Setup(mock => mock.HttpContext).Returns(new DefaultHttpContext());
         }
-        protected sealed class TestDocumentParser : BaseDocumentParser
+        protected sealed class TestDeserializer : BaseDeserializer
         {
-            public TestDocumentParser(IResourceGraph resourceGraph, IResourceFactory resourceFactory) : base(resourceGraph, resourceFactory) { }
+            public TestDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory) : base(resourceGraph, resourceFactory) { }
 
-            public new object Deserialize(string body)
+            public object Deserialize(string body)
             {
-                return base.Deserialize(body);
+                return DeserializeBody(body);
             }
 
             protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null) { }

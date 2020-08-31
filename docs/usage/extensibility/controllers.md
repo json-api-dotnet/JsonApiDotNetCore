@@ -6,10 +6,10 @@ You need to create controllers that inherit from `JsonApiController<T>`
 public class ArticlesController : JsonApiController<Article>
 {
     public ArticlesController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IResourceService<Article> resourceService)
-        : base(jsonApiOptions, loggerFactory, resourceService)
+        : base(options, loggerFactory, resourceService)
     { }
 }
 ```
@@ -23,11 +23,11 @@ public class ArticlesController : JsonApiController<Article, Guid>
 //---------------------------------------------------------- ^^^^
 {
     public ArticlesController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IResourceService<Article, Guid> resourceService)
         //----------------------- ^^^^
-        : base(jsonApiOptions, loggerFactory, resourceService)
+        : base(options, loggerFactory, resourceService)
     { }
 }
 ```
@@ -44,10 +44,10 @@ This approach is ok, but introduces some boilerplate that can easily be avoided.
 public class ArticlesController : BaseJsonApiController<Article>
 {
     public ArticlesController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IResourceService<Article> resourceService)
-        : base(jsonApiOptions, loggerFactory, resourceService)
+        : base(options, loggerFactory, resourceService)
     { }
 
     [HttpGet]
@@ -81,10 +81,10 @@ An attempt to use one blacklisted methods will result in a HTTP 405 Method Not A
 public class ArticlesController : BaseJsonApiController<Article>
 {
     public ArticlesController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IResourceService<Article> resourceService)
-        : base(jsonApiOptions, loggerFactory, resourceService)
+        : base(options, loggerFactory, resourceService)
     { }
 }
 ```
@@ -101,10 +101,10 @@ For more information about resource injection, see the next section titled Resou
 public class ReportsController : BaseJsonApiController<Report>
 {
     public ReportsController(
-        IJsonApiOptions jsonApiOptions,
+        IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IResourceService<Report> resourceService)
-        : base(jsonApiOptions, loggerFactory, resourceService)
+        : base(options, loggerFactory, resourceService)
     { }
 
     [HttpGet]

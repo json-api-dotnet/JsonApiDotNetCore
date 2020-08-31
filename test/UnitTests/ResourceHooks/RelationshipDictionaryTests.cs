@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Hooks.Internal.Execution;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using Xunit;
 
 namespace UnitTests.ResourceHooks
@@ -39,20 +39,23 @@ namespace UnitTests.ResourceHooks
         public readonly HashSet<Dummy> AllResources;
         public RelationshipDictionaryTests()
         {
-            FirstToOneAttr = new HasOneAttribute("firstToOne")
+            FirstToOneAttr = new HasOneAttribute
             {
+                PublicName = "firstToOne",
                 LeftType = typeof(Dummy),
                 RightType = typeof(ToOne),
                 Property = typeof(Dummy).GetProperty(nameof(Dummy.FirstToOne))
             };
-            SecondToOneAttr = new HasOneAttribute("secondToOne")
+            SecondToOneAttr = new HasOneAttribute
             {
+                PublicName = "secondToOne",
                 LeftType = typeof(Dummy),
                 RightType = typeof(ToOne),
                 Property = typeof(Dummy).GetProperty(nameof(Dummy.SecondToOne))
             };
-            ToManyAttr = new HasManyAttribute("toManies")
+            ToManyAttr = new HasManyAttribute
             {
+                PublicName = "toManies",
                 LeftType = typeof(Dummy),
                 RightType = typeof(ToMany),
                 Property = typeof(Dummy).GetProperty(nameof(Dummy.ToManies))

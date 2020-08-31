@@ -1,25 +1,21 @@
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Formatters;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Generics;
-using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Xunit;
-using Microsoft.EntityFrameworkCore;
-using JsonApiDotNetCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using JsonApiDotNetCore;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.RequestServices;
-using JsonApiDotNetCore.RequestServices.Contracts;
-using JsonApiDotNetCore.Serialization.Server.Builders;
-using JsonApiDotNetCore.Serialization.Server;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Building;
+using JsonApiDotNetCore.Services;
+using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Xunit;
 
 namespace UnitTests.Extensions
 {
@@ -38,15 +34,15 @@ namespace UnitTests.Extensions
             // Act
             // this is required because the DbContextResolver requires access to the current HttpContext
             // to get the request scoped DbContext instance
-            services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
+            services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
             var provider = services.BuildServiceProvider();
 
             // Assert
-            var currentRequest = provider.GetService<ICurrentRequest>() as CurrentRequest;
-            Assert.NotNull(currentRequest);
+            var request = provider.GetService<IJsonApiRequest>() as JsonApiRequest;
+            Assert.NotNull(request);
             var resourceGraph = provider.GetService<IResourceGraph>();
             Assert.NotNull(resourceGraph);
-            currentRequest.PrimaryResource = resourceGraph.GetResourceContext<TodoItem>();
+            request.PrimaryResource = resourceGraph.GetResourceContext<TodoItem>();
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IDbContextResolver>());
             Assert.NotNull(provider.GetService(typeof(IResourceRepository<TodoItem>)));
@@ -74,7 +70,7 @@ namespace UnitTests.Extensions
             // Act
             // this is required because the DbContextResolver requires access to the current HttpContext
             // to get the request scoped DbContext instance
-            services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
+            services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
             var provider = services.BuildServiceProvider();
             var graph = provider.GetService<IResourceGraph>();
             var resourceContext = graph.GetResourceContext<Author>();
@@ -136,7 +132,7 @@ namespace UnitTests.Extensions
             var services = new ServiceCollection();
 
             // Act, assert
-            Assert.Throws<JsonApiSetupException>(() => services.AddResourceService<int>());
+            Assert.Throws<InvalidConfigurationException>(() => services.AddResourceService<int>());
         }
 
         [Fact]
@@ -147,7 +143,7 @@ namespace UnitTests.Extensions
             services.AddLogging();
             services.AddDbContext<TestContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
-            services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
+            services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
 
             // Act
             services.AddJsonApi<TestContext>();

@@ -1,19 +1,21 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Controllers.Annotations;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    [DisableQuery(StandardQueryStringParameters.Sort | StandardQueryStringParameters.Page)]
+    [DisableQueryString(StandardQueryStringParameters.Sort | StandardQueryStringParameters.Page)]
     public sealed class CountriesController : JsonApiController<Country>
     {
         public CountriesController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<Country> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
     }
 }

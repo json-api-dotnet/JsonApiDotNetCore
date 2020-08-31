@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     {
         public static SparseFieldSetExpression Including<TResource>(this SparseFieldSetExpression sparseFieldSet,
             Expression<Func<TResource, dynamic>> attributeSelector, IResourceGraph resourceGraph)
-            where TResource : IIdentifiable
+            where TResource : class, IIdentifiable
         {
             if (attributeSelector == null)
             {
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public static SparseFieldSetExpression Excluding<TResource>(this SparseFieldSetExpression sparseFieldSet,
             Expression<Func<TResource, dynamic>> attributeSelector, IResourceGraph resourceGraph)
-            where TResource : IIdentifiable
+            where TResource : class, IIdentifiable
         {
             if (attributeSelector == null)
             {

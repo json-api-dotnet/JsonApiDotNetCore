@@ -3,8 +3,9 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using JsonApiDotNetCore;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -120,7 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // Assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-            Assert.True(documents.Meta?.ContainsKey("totalResources") != true);
+            Assert.True(documents.Meta == null || !documents.Meta.ContainsKey("totalResources"));
         }
 
         [Fact]
@@ -163,7 +164,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.True(documents.Meta?.ContainsKey("totalResources") != true);
+            Assert.True(documents.Meta == null || !documents.Meta.ContainsKey("totalResources"));
         }
 
         [Fact]

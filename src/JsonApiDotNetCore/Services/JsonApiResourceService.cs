@@ -1,22 +1,22 @@
-using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Hooks;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Models.Annotation;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Hooks.Internal;
+using JsonApiDotNetCore.Hooks.Internal.Execution;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.RequestServices;
-using JsonApiDotNetCore.RequestServices.Contracts;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Services
 {
+    /// <inheritdoc />
     public class JsonApiResourceService<TResource, TId> :
         IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
@@ -25,8 +25,8 @@ namespace JsonApiDotNetCore.Services
         private readonly IQueryLayerComposer _queryLayerComposer;
         private readonly IPaginationContext _paginationContext;
         private readonly IJsonApiOptions _options;
-        private readonly ICurrentRequest _currentRequest;
-        private readonly ILogger _logger;
+        private readonly TraceLogWriter<JsonApiResourceService<TResource, TId>> _traceWriter;
+        private readonly IJsonApiRequest _request;
         private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
         private readonly IResourceFactory _resourceFactory;
         private readonly IResourceHookExecutor _hookExecutor;
@@ -37,25 +37,29 @@ namespace JsonApiDotNetCore.Services
             IPaginationContext paginationContext,
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
-            ICurrentRequest currentRequest,
+            IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
             IResourceHookExecutor hookExecutor = null)
         {
-            _repository = repository;
-            _queryLayerComposer = queryLayerComposer;
-            _paginationContext = paginationContext;
-            _options = options;
-            _currentRequest = currentRequest;
-            _logger = loggerFactory.CreateLogger<JsonApiResourceService<TResource, TId>>();
-            _resourceChangeTracker = resourceChangeTracker;
-            _resourceFactory = resourceFactory;
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _queryLayerComposer = queryLayerComposer ?? throw new ArgumentNullException(nameof(queryLayerComposer));
+            _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _traceWriter = new TraceLogWriter<JsonApiResourceService<TResource, TId>>(loggerFactory);
+            _request = request ?? throw new ArgumentNullException(nameof(request));
+            _resourceChangeTracker = resourceChangeTracker ?? throw new ArgumentNullException(nameof(resourceChangeTracker));
+            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
             _hookExecutor = hookExecutor;
         }
 
+        /// <inheritdoc />
         public virtual async Task<TResource> CreateAsync(TResource resource)
         {
-            _logger.LogTrace($"Entering {nameof(CreateAsync)}(object).");
+            _traceWriter.LogMethodStart(new {resource});
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
 
             if (_hookExecutor != null)
             {
@@ -75,9 +79,10 @@ namespace JsonApiDotNetCore.Services
             return resource;
         }
 
+        /// <inheritdoc />
         public virtual async Task DeleteAsync(TId id)
         {
-            _logger.LogTrace($"Entering {nameof(DeleteAsync)}('{id}').");
+            _traceWriter.LogMethodStart(new {id});
 
             if (_hookExecutor != null)
             {
@@ -103,9 +108,10 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
+        /// <inheritdoc />
         public virtual async Task<IReadOnlyCollection<TResource>> GetAsync()
         {
-            _logger.LogTrace($"Entering {nameof(GetAsync)}().");
+            _traceWriter.LogMethodStart();
 
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.Get);
 
@@ -115,21 +121,22 @@ namespace JsonApiDotNetCore.Services
                 _paginationContext.TotalResourceCount = await _repository.CountAsync(topFilter);
             }
 
-            var queryLayer = _queryLayerComposer.Compose(_currentRequest.PrimaryResource);
+            var queryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
             var resources = await _repository.GetAsync(queryLayer);
 
             if (_hookExecutor != null)
             {
                 _hookExecutor.AfterRead(resources, ResourcePipeline.Get);
-                return _hookExecutor.OnReturn(resources, ResourcePipeline.Get).ToList();
+                return _hookExecutor.OnReturn(resources, ResourcePipeline.Get).ToArray();
             }
 
             return resources;
         }
 
+        /// <inheritdoc />
         public virtual async Task<TResource> GetAsync(TId id)
         {
-            _logger.LogTrace($"Entering {nameof(GetAsync)}('{id}').");
+            _traceWriter.LogMethodStart(new {id});
 
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetSingle, id.ToString());
 
@@ -146,7 +153,7 @@ namespace JsonApiDotNetCore.Services
 
         private async Task<TResource> GetPrimaryResourceById(TId id, bool allowTopSparseFieldSet)
         {
-            var primaryLayer = _queryLayerComposer.Compose(_currentRequest.PrimaryResource);
+            var primaryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
             primaryLayer.Sort = null;
             primaryLayer.Pagination = null;
             primaryLayer.Filter = CreateFilterById(id);
@@ -171,24 +178,26 @@ namespace JsonApiDotNetCore.Services
 
         private FilterExpression CreateFilterById(TId id)
         {
-            var primaryIdAttribute = _currentRequest.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+            var primaryIdAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
 
             return new ComparisonExpression(ComparisonOperator.Equals,
                 new ResourceFieldChainExpression(primaryIdAttribute), new LiteralConstantExpression(id.ToString()));
         }
 
+        /// <inheritdoc />
         // triggered by GET /articles/1/relationships/{relationshipName}
         public virtual async Task<TResource> GetRelationshipAsync(TId id, string relationshipName)
         {
-            _logger.LogTrace($"Entering {nameof(GetRelationshipAsync)}('{id}', '{relationshipName}').");
+            _traceWriter.LogMethodStart(new {id, relationshipName});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
 
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
 
-            var secondaryLayer = _queryLayerComposer.Compose(_currentRequest.SecondaryResource);
+            var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
 
-            var secondaryIdAttribute = _currentRequest.SecondaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+            var secondaryIdAttribute = _request.SecondaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
 
             secondaryLayer.Include = null;
             secondaryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
@@ -212,16 +221,18 @@ namespace JsonApiDotNetCore.Services
             return primaryResource;
         }
 
+        /// <inheritdoc />
         // triggered by GET /articles/1/{relationshipName}
         public virtual async Task<object> GetSecondaryAsync(TId id, string relationshipName)
         {
-            _logger.LogTrace($"Entering {nameof(GetSecondaryAsync)}('{id}', '{relationshipName}').");
+            _traceWriter.LogMethodStart(new {id, relationshipName});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
 
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
 
-            var secondaryLayer = _queryLayerComposer.Compose(_currentRequest.SecondaryResource);
+            var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
             var primaryLayer = GetPrimaryLayerForSecondaryEndpoint(secondaryLayer, id);
 
             var primaryResources = await _repository.GetAsync(primaryLayer);
@@ -235,7 +246,7 @@ namespace JsonApiDotNetCore.Services
                 primaryResource = _hookExecutor.OnReturn(AsList(primaryResource), ResourcePipeline.GetRelationship).Single();
             }
 
-            return _currentRequest.Relationship.GetValue(primaryResource);
+            return _request.Relationship.GetValue(primaryResource);
         }
 
         private QueryLayer GetPrimaryLayerForSecondaryEndpoint(QueryLayer secondaryLayer, TId primaryId)
@@ -244,16 +255,16 @@ namespace JsonApiDotNetCore.Services
             secondaryLayer.Include = null;
 
             var primaryIdAttribute =
-                _currentRequest.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+                _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
 
-            return new QueryLayer(_currentRequest.PrimaryResource)
+            return new QueryLayer(_request.PrimaryResource)
             {
                 Include = RewriteIncludeForSecondaryEndpoint(innerInclude),
                 Filter = CreateFilterById(primaryId),
                 Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
                 {
                     [primaryIdAttribute] = null,
-                    [_currentRequest.Relationship] = secondaryLayer
+                    [_request.Relationship] = secondaryLayer
                 }
             };
         }
@@ -261,15 +272,17 @@ namespace JsonApiDotNetCore.Services
         private IncludeExpression RewriteIncludeForSecondaryEndpoint(IncludeExpression relativeInclude)
         {
             var parentElement = relativeInclude != null
-                ? new IncludeElementExpression(_currentRequest.Relationship, relativeInclude.Elements)
-                : new IncludeElementExpression(_currentRequest.Relationship);
+                ? new IncludeElementExpression(_request.Relationship, relativeInclude.Elements)
+                : new IncludeElementExpression(_request.Relationship);
 
             return new IncludeExpression(new[] {parentElement});
         }
 
+        /// <inheritdoc />
         public virtual async Task<TResource> UpdateAsync(TId id, TResource requestResource)
         {
-            _logger.LogTrace($"Entering {nameof(UpdateAsync)}('{id}', {(requestResource == null ? "null" : "object")}).");
+            _traceWriter.LogMethodStart(new {id, requestResource});
+            if (requestResource == null) throw new ArgumentNullException(nameof(requestResource));
 
             TResource databaseResource = await GetPrimaryResourceById(id, false);
 
@@ -297,14 +310,16 @@ namespace JsonApiDotNetCore.Services
             return hasImplicitChanges ? afterResource : null;
         }
 
+        /// <inheritdoc />
         // triggered by PATCH /articles/1/relationships/{relationshipName}
-        public virtual async Task UpdateRelationshipAsync(TId id, string relationshipName, object related)
+        public virtual async Task UpdateRelationshipAsync(TId id, string relationshipName, object relationships)
         {
-            _logger.LogTrace($"Entering {nameof(UpdateRelationshipAsync)}('{id}', '{relationshipName}', {(related == null ? "null" : "object")}).");
+            _traceWriter.LogMethodStart(new {id, relationshipName, related = relationships});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
 
-            var secondaryLayer = _queryLayerComposer.Compose(_currentRequest.SecondaryResource);
+            var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
             var primaryLayer = GetPrimaryLayerForSecondaryEndpoint(secondaryLayer, id);
             primaryLayer.Projection = null;
 
@@ -319,14 +334,14 @@ namespace JsonApiDotNetCore.Services
             }
 
             string[] relationshipIds = null;
-            if (related != null)
+            if (relationships != null)
             {
-                relationshipIds = _currentRequest.Relationship is HasOneAttribute
-                    ? new[] {((IIdentifiable) related).StringId}
-                    : ((IEnumerable<IIdentifiable>) related).Select(e => e.StringId).ToArray();
+                relationshipIds = _request.Relationship is HasOneAttribute
+                    ? new[] {((IIdentifiable) relationships).StringId}
+                    : ((IEnumerable<IIdentifiable>) relationships).Select(e => e.StringId).ToArray();
             }
 
-            await _repository.UpdateRelationshipsAsync(primaryResource, _currentRequest.Relationship, relationshipIds ?? Array.Empty<string>());
+            await _repository.UpdateRelationshipsAsync(primaryResource, _request.Relationship, relationshipIds ?? Array.Empty<string>());
 
             if (_hookExecutor != null && primaryResource != null)
             {
@@ -338,16 +353,16 @@ namespace JsonApiDotNetCore.Services
         {
             if (resource == null)
             {
-                throw new ResourceNotFoundException(_currentRequest.PrimaryId, _currentRequest.PrimaryResource.ResourceName);
+                throw new ResourceNotFoundException(_request.PrimaryId, _request.PrimaryResource.ResourceName);
             }
         }
 
         private void AssertRelationshipExists(string relationshipName)
         {
-            var relationship = _currentRequest.Relationship;
+            var relationship = _request.Relationship;
             if (relationship == null)
             {
-                throw new RelationshipNotFoundException(relationshipName, _currentRequest.PrimaryResource.ResourceName);
+                throw new RelationshipNotFoundException(relationshipName, _request.PrimaryResource.ResourceName);
             }
         }
 
@@ -358,9 +373,9 @@ namespace JsonApiDotNetCore.Services
     }
 
     /// <summary>
-    /// No mapping with integer as default
+    /// Represents the foundational Resource Service layer in the JsonApiDotNetCore architecture that uses a Resource Repository for data access.
     /// </summary>
-    /// <typeparam name="TResource"></typeparam>
+    /// <typeparam name="TResource">The resource type.</typeparam>
     public class JsonApiResourceService<TResource> : JsonApiResourceService<TResource, int>,
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>
@@ -371,11 +386,11 @@ namespace JsonApiDotNetCore.Services
             IPaginationContext paginationContext,
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
-            ICurrentRequest currentRequest,
+            IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
             IResourceHookExecutor hookExecutor = null)
-            : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, currentRequest,
+            : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
                 resourceChangeTracker, resourceFactory, hookExecutor)
         { }
     }

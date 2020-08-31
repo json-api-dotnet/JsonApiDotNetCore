@@ -1,76 +1,73 @@
-using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Resources.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
-    /// <summary>
-    /// Global options
-    /// </summary>
-    public class JsonApiOptions : IJsonApiOptions
+    /// <inheritdoc />
+    public sealed class JsonApiOptions : IJsonApiOptions
     {
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public string Namespace { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public AttrCapabilities DefaultAttrCapabilities { get; set; } = AttrCapabilities.All;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool IncludeExceptionStackTraceInErrors { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool UseRelativeLinks { get; set; }
 
-        /// <inheritdoc/>
-        public Links TopLevelLinks { get; set; } = Links.All;
+        /// <inheritdoc />
+        public LinkTypes TopLevelLinks { get; set; } = LinkTypes.All;
 
-        /// <inheritdoc/>
-        public Links ResourceLinks { get; set; } = Links.All;
+        /// <inheritdoc />
+        public LinkTypes ResourceLinks { get; set; } = LinkTypes.All;
 
-        /// <inheritdoc/>
-        public Links RelationshipLinks { get; set; } = Links.All;
+        /// <inheritdoc />
+        public LinkTypes RelationshipLinks { get; set; } = LinkTypes.All;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool IncludeTotalResourceCount { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public PageSize DefaultPageSize { get; set; } = new PageSize(10);
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public PageSize MaximumPageSize { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public PageNumber MaximumPageNumber { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool ValidateModelState { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool AllowClientGeneratedIds { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool EnableResourceHooks { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool LoadDatabaseValues { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool AllowUnknownQueryStringParameters { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool EnableLegacyFilterNotation { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool AllowQueryStringOverrideForSerializerNullValueHandling { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool AllowQueryStringOverrideForSerializerDefaultValueHandling { get; set; }
 
+        /// <inheritdoc />
         public int? MaximumIncludeDepth { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings
         {
             ContractResolver = new DefaultContractResolver
@@ -80,7 +77,7 @@ namespace JsonApiDotNetCore.Configuration
         };
 
         /// <summary>
-        /// Provides an interface for formatting relationship id properties given the navigation property name
+        /// Provides an interface for formatting relationship ID properties given the navigation property name.
         /// </summary>
         public static IRelatedIdMapper RelatedIdMapper { get; set; } = new RelatedIdMapper();
 

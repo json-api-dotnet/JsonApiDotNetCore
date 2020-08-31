@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Annotation;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExample.Models
 {
@@ -38,7 +37,7 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public string LastName { get; set; }
 
-        [Attr("the-Age")]
+        [Attr(PublicName = "the-Age")]
         public int Age { get; set; }
 
         [Attr]
@@ -67,7 +66,7 @@ namespace JsonApiDotNetCoreExample.Models
         public TodoItem StakeHolderTodoItem { get; set; }
         public int? StakeHolderTodoItemId { get; set; }
 
-        [HasOne(links: Links.All, canInclude: false)]
+        [HasOne(Links = LinkTypes.All, CanInclude = false)]
         public TodoItem UnIncludeableItem { get; set; }
 
         [HasOne]

@@ -2,10 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
-using Xunit;
+using JsonApiDotNetCore.Serialization.Building;
+using JsonApiDotNetCore.Serialization.Objects;
 using UnitTests.TestModels;
+using Xunit;
 
 namespace UnitTests.Serialization.Serializer
 {
