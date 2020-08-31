@@ -15,7 +15,6 @@ namespace JsonApiDotNetCore
         /// Registers the JsonApiDotNetCore middleware.
         /// </summary>
         /// <param name="builder">The <see cref="IApplicationBuilder"/> to add the middleware to.</param>
-        /// <param name="configureMvcOptions">Configure .NET Core MVC options</param>
         /// <example>
         /// The code below is the minimal that is required for proper activation,
         /// which should be added to your Startup.Configure method.
@@ -25,7 +24,7 @@ namespace JsonApiDotNetCore
         /// app.UseEndpoints(endpoints => endpoints.MapControllers());
         /// ]]></code>
         /// </example>
-        public static void UseJsonApi(this IApplicationBuilder builder, Action<MvcOptions> configureMvcOptions = null)
+        public static void UseJsonApi(this IApplicationBuilder builder)
         {
             var jsonApiApplicationBuilder =  builder.ApplicationServices.GetRequiredService<IJsonApiApplicationBuilder>();
             jsonApiApplicationBuilder.ConfigureMvcOptions = options =>
@@ -33,8 +32,6 @@ namespace JsonApiDotNetCore
                 options.InputFormatters.Insert(0, builder.ApplicationServices.GetRequiredService<IJsonApiInputFormatter>());
                 options.OutputFormatters.Insert(0, builder.ApplicationServices.GetRequiredService<IJsonApiOutputFormatter>());
                 options.Conventions.Insert(0, builder.ApplicationServices.GetRequiredService<IJsonApiRoutingConvention>());
-                
-                configureMvcOptions?.Invoke(options);
             };
             
             builder.UseMiddleware<JsonApiMiddleware>();

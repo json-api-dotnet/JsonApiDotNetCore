@@ -29,6 +29,7 @@ namespace JsonApiDotNetCoreExample
         public override void ConfigureServices(IServiceCollection services)
         {
             ConfigureClock(services);
+
             services.AddScoped<SkipCacheQueryStringParameterReader>();
             services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<SkipCacheQueryStringParameterReader>());
 
