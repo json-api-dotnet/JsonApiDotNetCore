@@ -152,7 +152,7 @@ namespace JsonApiDotNetCore.Builders
                 AddResourceHooks();
             }
 
-            _services.AddScoped<IInverseRelationships, InverseRelationships>();
+            _services.TryAddScoped<IInverseRelationships, InverseRelationships>();
         }
 
         private void AddMiddlewareLayer()

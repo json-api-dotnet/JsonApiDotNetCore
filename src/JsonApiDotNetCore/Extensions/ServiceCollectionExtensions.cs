@@ -27,7 +27,6 @@ namespace JsonApiDotNetCore
             IMvcCoreBuilder mvcBuilder = null)
         {
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, null);
-            ResolveInverseRelationships(services);
 
             return services;
         }
@@ -44,7 +43,6 @@ namespace JsonApiDotNetCore
             where TDbContext : DbContext
         {
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, typeof(TDbContext));
-            ResolveInverseRelationships(services);
 
             return services;
         }     
