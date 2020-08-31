@@ -1,6 +1,7 @@
 using System;
+using JsonApiDotNetCore.Controllers.Annotations;
 
-namespace JsonApiDotNetCore.Controllers
+namespace JsonApiDotNetCore.QueryStrings
 {
     /// <summary>
     /// Lists query string parameters used by <see cref="DisableQueryStringAttribute"/>.

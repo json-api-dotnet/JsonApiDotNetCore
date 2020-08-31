@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.QueryStrings;
 
-namespace JsonApiDotNetCore.Controllers
+namespace JsonApiDotNetCore.Controllers.Annotations
 {
     /// <summary>
     /// Used on an ASP.NET Core controller class to indicate which query string parameters are blocked.

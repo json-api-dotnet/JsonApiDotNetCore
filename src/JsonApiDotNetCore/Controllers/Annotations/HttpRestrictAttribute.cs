@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Errors;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace JsonApiDotNetCore.Controllers
+namespace JsonApiDotNetCore.Controllers.Annotations
 {
     public abstract class HttpRestrictAttribute : ActionFilterAttribute
     {

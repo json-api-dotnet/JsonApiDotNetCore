@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.QueryStrings;
 using Microsoft.AspNetCore.Mvc.Filters;
 

@@ -1,5 +1,5 @@
 using System.Linq;
-using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.QueryStrings;
 using Microsoft.Extensions.Primitives;

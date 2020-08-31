@@ -1,6 +1,6 @@
 using System;
 
-namespace JsonApiDotNetCore.Controllers
+namespace JsonApiDotNetCore.Controllers.Annotations
 {
     /// <summary>
     /// Used on an ASP.NET Core controller class to indicate that a custom route is used instead of the built-in routing convention.

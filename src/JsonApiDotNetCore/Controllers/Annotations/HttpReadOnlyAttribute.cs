@@ -1,4 +1,4 @@
-namespace JsonApiDotNetCore.Controllers
+namespace JsonApiDotNetCore.Controllers.Annotations
 {
     /// <summary>
     /// Used on an ASP.NET Core controller class to indicate write actions must be blocked.
