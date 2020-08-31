@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 using UnitTests.TestModels;

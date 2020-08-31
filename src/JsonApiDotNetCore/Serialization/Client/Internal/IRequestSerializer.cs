@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.Serialization.Client
+namespace JsonApiDotNetCore.Serialization.Client.Internal
 {
     /// <summary>
     /// Interface for client serializer that can be used to register with the DI container, for usage in

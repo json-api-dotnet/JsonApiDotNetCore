@@ -5,7 +5,7 @@ using System.Net.Http;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;

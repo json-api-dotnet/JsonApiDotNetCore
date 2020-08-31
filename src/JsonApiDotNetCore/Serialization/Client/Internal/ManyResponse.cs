@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCore.Serialization.Client
+namespace JsonApiDotNetCore.Serialization.Client.Internal
 {
     /// <summary>
     /// Represents a deserialized document with "many data".

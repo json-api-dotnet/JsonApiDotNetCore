@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCore.Serialization.Client
+namespace JsonApiDotNetCore.Serialization.Client.Internal
 {
     /// <summary>
     /// Client deserializer. Currently not used internally in JsonApiDotNetCore,

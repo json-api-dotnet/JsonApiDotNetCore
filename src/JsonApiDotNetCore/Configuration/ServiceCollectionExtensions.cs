@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Serialization.Building;
-using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCore.Serialization.Client.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

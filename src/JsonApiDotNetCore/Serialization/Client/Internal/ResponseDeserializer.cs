@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
-namespace JsonApiDotNetCore.Serialization.Client
+namespace JsonApiDotNetCore.Serialization.Client.Internal
 {
     /// <summary>
     /// Client deserializer implementation of the <see cref="BaseDeserializer"/>.

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Serialization.Objects;
 
-namespace JsonApiDotNetCore.Serialization.Client
+namespace JsonApiDotNetCore.Serialization.Client.Internal
 {
     /// Base class for "single data" and "many data" deserialized responses.
     /// TODO: Currently <see cref="ResourceLinks"/> and <see cref="RelationshipLinks"/>

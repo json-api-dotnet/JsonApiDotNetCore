@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCore.Serialization.Client
+namespace JsonApiDotNetCore.Serialization.Client.Internal
 {
     /// <summary>
     /// Represents a deserialized document with "single data".

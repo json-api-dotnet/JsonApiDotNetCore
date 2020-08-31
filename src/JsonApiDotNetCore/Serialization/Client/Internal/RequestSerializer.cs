@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 
-namespace JsonApiDotNetCore.Serialization.Client
+namespace JsonApiDotNetCore.Serialization.Client.Internal
 {
     /// <summary>
     /// Client serializer implementation of <see cref="BaseSerializer"/>.
