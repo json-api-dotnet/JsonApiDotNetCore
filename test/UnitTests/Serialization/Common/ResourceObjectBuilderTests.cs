@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
-using Xunit;
 using UnitTests.TestModels;
+using Xunit;
 
 namespace UnitTests.Serialization.Serializer
 {

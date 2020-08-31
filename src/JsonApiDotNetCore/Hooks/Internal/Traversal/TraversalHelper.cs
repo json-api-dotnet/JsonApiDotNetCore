@@ -305,4 +305,3 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         }
     }
 }
-

@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCore.Configuration;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ReportsExample.Models;
 

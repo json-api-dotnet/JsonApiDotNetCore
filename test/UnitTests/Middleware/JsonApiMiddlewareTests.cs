@@ -1,13 +1,13 @@
-using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Middleware;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
-using Moq;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Moq;
 using Xunit;
 
 namespace UnitTests.Middleware

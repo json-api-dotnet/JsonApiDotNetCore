@@ -1,6 +1,5 @@
-using System.Collections.Generic;
-using Xunit;
 using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
@@ -8,6 +7,7 @@ using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
+using Xunit;
 
 namespace UnitTests.ResourceHooks
 {

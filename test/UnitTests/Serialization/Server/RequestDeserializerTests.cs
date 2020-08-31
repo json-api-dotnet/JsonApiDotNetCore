@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Net;
 using System.ComponentModel.Design;
+using System.Net;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -9,7 +9,6 @@ using JsonApiDotNetCore.Serialization.Objects;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
-
 
 namespace UnitTests.Serialization.Server
 {

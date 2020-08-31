@@ -10,7 +10,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
     /// <summary>
-    /// Transforms <see cref="FilterExpression"/> into <see cref="Queryable.Where{TSource}(IQueryable{TSource}, Expression{Func{TSource, bool}})"/> calls.
+    /// Transforms <see cref="FilterExpression"/> into <see cref="Queryable.Where{TSource}(IQueryable{TSource}, Expression{Func{TSource,bool}})"/> calls.
     /// </summary>
     public class WhereClauseBuilder : QueryClauseBuilder<Type>
     {

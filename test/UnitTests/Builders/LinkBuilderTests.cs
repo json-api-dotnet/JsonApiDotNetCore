@@ -5,10 +5,10 @@ using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCoreExample.Models;
-using Moq;
-using Xunit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
+using Moq;
+using Xunit;
 
 namespace UnitTests
 {

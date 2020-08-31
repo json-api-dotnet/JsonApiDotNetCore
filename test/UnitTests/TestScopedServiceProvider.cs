@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Http;
-using Moq;
 using System;
 using JsonApiDotNetCore.Configuration;
+using Microsoft.AspNetCore.Http;
+using Moq;
 
 namespace UnitTests
 {

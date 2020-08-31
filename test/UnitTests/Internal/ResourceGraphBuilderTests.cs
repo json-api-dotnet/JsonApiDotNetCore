@@ -1,9 +1,9 @@
+using Castle.DynamicProxy;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Castle.DynamicProxy;
-using JsonApiDotNetCore.Resources;
 using Xunit;
 
 namespace UnitTests.Internal

@@ -1,9 +1,3 @@
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using NoEntityFrameworkExample;
-using NoEntityFrameworkExample.Data;
-using NoEntityFrameworkExample.Models;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -11,6 +5,12 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using NoEntityFrameworkExample;
+using NoEntityFrameworkExample.Data;
+using NoEntityFrameworkExample.Models;
 using Xunit;
 
 namespace NoEntityFrameworkTests

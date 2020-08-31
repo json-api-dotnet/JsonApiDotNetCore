@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
     /// <summary>
-    /// Transforms <see cref="SortExpression"/> into <see cref="Queryable.OrderBy{TSource, TKey}(IQueryable{TSource}, Expression{Func{TSource, TKey}})"/> calls.
+    /// Transforms <see cref="SortExpression"/> into <see cref="Queryable.OrderBy{TSource, TKey}(IQueryable{TSource}, Expression{Func{TSource,TKey}})"/> calls.
     /// </summary>
     public class OrderClauseBuilder : QueryClauseBuilder<Expression>
     {

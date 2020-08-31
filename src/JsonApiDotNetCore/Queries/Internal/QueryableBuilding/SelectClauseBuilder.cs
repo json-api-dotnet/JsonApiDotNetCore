@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
     /// <summary>
-    /// Transforms <see cref="SparseFieldSetExpression"/> into <see cref="Queryable.Select{TSource, TKey}(IQueryable{TSource}, Expression{Func{TSource, TKey}})"/> calls.
+    /// Transforms <see cref="SparseFieldSetExpression"/> into <see cref="Queryable.Select{TSource, TKey}(IQueryable{TSource}, Expression{Func{TSource,TKey}})"/> calls.
     /// </summary>
     public class SelectClauseBuilder : QueryClauseBuilder<object>
     {

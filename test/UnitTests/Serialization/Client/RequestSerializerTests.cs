@@ -3,8 +3,8 @@ using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Client;
-using Xunit;
 using UnitTests.TestModels;
+using Xunit;
 
 namespace UnitTests.Serialization.Client
 {

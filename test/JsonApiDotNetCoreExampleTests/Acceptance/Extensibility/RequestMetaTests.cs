@@ -1,13 +1,13 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Xunit;
-using System.Collections.Generic;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
