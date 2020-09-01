@@ -81,11 +81,11 @@ public void ConfigureServices(IServiceCollection services)
 
 The public resource name is exposed through the `type` member in the json:api payload. This can be configured by the following approaches (in order of priority):
 
-1. The `publicResourceName` option when manually adding a resource to the graph
+1. The `publicName` option when manually adding a resource to the graph
 ```c#
 services.AddJsonApi(resources: builder =>
 {
-    builder.AddResource<Person>(publicResourceName: "people");
+    builder.AddResource<Person>(publicName: "people");
 });
 ```
 

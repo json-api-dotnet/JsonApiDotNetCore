@@ -40,15 +40,15 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public ResourceGraphBuilder Add<TResource>(string publicResourceName = null) where TResource : class, IIdentifiable<int>
-            => Add<TResource, int>(publicResourceName);
+        public ResourceGraphBuilder Add<TResource>(string publicName = null) where TResource : class, IIdentifiable<int>
+            => Add<TResource, int>(publicName);
 
         /// <inheritdoc />
-        public ResourceGraphBuilder Add<TResource, TId>(string publicResourceName = null) where TResource : class, IIdentifiable<TId>
-            => Add(typeof(TResource), typeof(TId), publicResourceName);
+        public ResourceGraphBuilder Add<TResource, TId>(string publicName = null) where TResource : class, IIdentifiable<TId>
+            => Add(typeof(TResource), typeof(TId), publicName);
 
         /// <inheritdoc />
-        public ResourceGraphBuilder Add(Type resourceType, Type idType = null, string publicResourceName = null)
+        public ResourceGraphBuilder Add(Type resourceType, Type idType = null, string publicName = null)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
@@ -56,9 +56,9 @@ namespace JsonApiDotNetCore.Configuration
             {
                 if (TypeHelper.IsOrImplementsInterface(resourceType, typeof(IIdentifiable)))
                 {
-                    publicResourceName ??= FormatResourceName(resourceType);
+                    publicName ??= FormatResourceName(resourceType);
                     idType ??= TypeLocator.GetIdType(resourceType);
-                    var resourceContext = CreateResourceContext(publicResourceName, resourceType, idType);
+                    var resourceContext = CreateResourceContext(publicName, resourceType, idType);
                     _resources.Add(resourceContext);
                 }
                 else
@@ -70,9 +70,9 @@ namespace JsonApiDotNetCore.Configuration
             return this;
         }
 
-        private ResourceContext CreateResourceContext(string publicResourceName, Type resourceType, Type idType) => new ResourceContext
+        private ResourceContext CreateResourceContext(string publicName, Type resourceType, Type idType) => new ResourceContext
         {
-            ResourceName = publicResourceName,
+            ResourceName = publicName,
             ResourceType = resourceType,
             IdentityType = idType,
             Attributes = GetAttributes(resourceType),

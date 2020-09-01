@@ -38,13 +38,12 @@ GET /myResources HTTP/1.1
 ```
 
 ## Customized the Routing Convention
-It is possible to fully customize routing behaviour by registering a `IJsonApiRoutingConvention` implementation **before** calling `AddJsonApi( ... )`.
+It is possible to fully customize routing behaviour by registering a `IJsonApiRoutingConvention` implementation.
 ```c#
 // Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddSingleton<IJsonApiConvention, CustomRoutingConvention>();
-    services.AddJsonApi( /* ... */ );
 }
 ```
 
