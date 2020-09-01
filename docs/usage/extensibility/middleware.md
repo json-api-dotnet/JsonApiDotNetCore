@@ -17,8 +17,6 @@ app.UseEndpoints(endpoints => endpoints.MapControllers());
 
 The following middleware components, in respective order, are registered:
 
-
-
 Filters:
 - `IJsonApiExceptionFilter`
 - `IJsonApiTypeMatchFilter`

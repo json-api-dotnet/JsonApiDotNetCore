@@ -92,7 +92,6 @@ options.SerializerSettings.Formatting = Formatting.Indented;
 
 Because we copy resource properties into an intermediate object before serialization, Newtonsoft.Json annotations on properties are ignored.
 
-
 ## Enable ModelState Validation
 
 If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set `ValidateModelState = true`. By default, no model validation is performed.
