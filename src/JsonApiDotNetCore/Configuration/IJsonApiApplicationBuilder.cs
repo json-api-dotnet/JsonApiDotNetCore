@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JsonApiDotNetCore.Builders
+namespace JsonApiDotNetCore.Configuration
 {
     internal interface IJsonApiApplicationBuilder
     {

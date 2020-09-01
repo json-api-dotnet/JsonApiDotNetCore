@@ -62,11 +62,15 @@ namespace JsonApiDotNetCore.Middleware
             foreach (var controller in application.Controllers)
             {
                 var resourceType = ExtractResourceTypeFromController(controller.ControllerType);
-                var resourceContext = _resourceGraph.GetResourceContext(resourceType);
 
-                if (resourceContext != null)
+                if (resourceType != null)
                 {
-                    _registeredResources.Add(controller.ControllerName, resourceContext);
+                    var resourceContext = _resourceGraph.GetResourceContext(resourceType);
+    
+                    if (resourceContext != null)
+                    {
+                        _registeredResources.Add(controller.ControllerName, resourceContext);
+                    }
                 }
 
                 if (RoutingConventionDisabled(controller) == false)

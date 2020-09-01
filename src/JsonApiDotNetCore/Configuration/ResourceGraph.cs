@@ -24,7 +24,10 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public ResourceContext GetResourceContext(string resourceName)
         {
-            if (resourceName == null) throw new ArgumentNullException(nameof(resourceName));
+            if (resourceName == null)
+            {
+                throw new ArgumentNullException(nameof(resourceName));
+            }
 
             return _resources.SingleOrDefault(e => e.ResourceName == resourceName);
         }
@@ -32,7 +35,10 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public ResourceContext GetResourceContext(Type resourceType)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            if (resourceType == null)
+            {
+                throw new ArgumentNullException(nameof(resourceType));
+            }
 
             return IsLazyLoadingProxyForResourceType(resourceType)
                 ? _resources.SingleOrDefault(e => e.ResourceType == resourceType.BaseType)

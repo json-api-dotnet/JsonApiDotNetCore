@@ -1,4 +1,3 @@
-
 using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Formatters;
@@ -23,7 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCore.Builders
+namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
     /// A utility class that builds a JsonApi application. It registers all required services

@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
@@ -34,6 +33,8 @@ namespace JsonApiDotNetCore.Configuration
                 options.OutputFormatters.Insert(0, builder.ApplicationServices.GetRequiredService<IJsonApiOutputFormatter>());
                 options.Conventions.Insert(0, builder.ApplicationServices.GetRequiredService<IJsonApiRoutingConvention>());
             };
+
+            builder.UseMiddleware<JsonApiMiddleware>();
         }
     }
 }
