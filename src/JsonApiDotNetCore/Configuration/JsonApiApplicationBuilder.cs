@@ -40,8 +40,8 @@ namespace JsonApiDotNetCore.Configuration
 
         public JsonApiApplicationBuilder(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
         {
-            _services = services;
-            _mvcBuilder = mvcBuilder;
+            _services = services ?? throw new ArgumentNullException(nameof(services));
+            _mvcBuilder = mvcBuilder ?? throw new ArgumentNullException(nameof(mvcBuilder));
             _intermediateProvider = services.BuildServiceProvider();
             var loggerFactory = _intermediateProvider.GetService<ILoggerFactory>();
             _resourceGraphBuilder = new ResourceGraphBuilder(_options, loggerFactory);

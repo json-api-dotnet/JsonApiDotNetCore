@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Middleware
                 throw new ArgumentNullException(nameof(context));
             }
             
-            if (context.HttpContext.IsJsonApiRequest())
+            if (!context.HttpContext.IsJsonApiRequest())
             {
                 return;
             }

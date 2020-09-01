@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Configuration
 
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
-            _options = options;
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory?.CreateLogger<ResourceGraphBuilder>();
         }
 

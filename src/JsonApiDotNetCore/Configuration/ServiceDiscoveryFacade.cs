@@ -54,8 +54,8 @@ namespace JsonApiDotNetCore.Configuration
 
         public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, ILoggerFactory loggerFactory)
         {
-            _services = services;
-            _resourceGraphBuilder = resourceGraphBuilder;
+            _services = services ?? throw new ArgumentNullException(nameof(services));
+            _resourceGraphBuilder = resourceGraphBuilder ?? throw new ArgumentNullException(nameof(resourceGraphBuilder));
             _logger = loggerFactory?.CreateLogger<ResourceGraphBuilder>();
         }
 

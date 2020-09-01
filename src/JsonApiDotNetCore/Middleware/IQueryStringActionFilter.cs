@@ -3,7 +3,7 @@
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
-    /// Entry point for processing all query string parameters.
+    /// Extensibility point for processing request query strings.
     /// </summary>
     public interface IQueryStringActionFilter : IActionFilter { }
 }

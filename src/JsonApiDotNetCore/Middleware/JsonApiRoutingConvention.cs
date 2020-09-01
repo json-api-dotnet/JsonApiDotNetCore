@@ -39,8 +39,8 @@ namespace JsonApiDotNetCore.Middleware
 
         public JsonApiRoutingConvention(IJsonApiOptions options, IResourceGraph resourceGraph)
         {
-            _options = options;
-            _resourceGraph = resourceGraph;
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
         }
 
         /// <inheritdoc />
@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.Middleware
                     }
                 }
 
-                if (RoutingConventionDisabled(controller) == false)
+                if (!RoutingConventionDisabled(controller))
                 {
                     continue;
                 }
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCore.Middleware
                         $"Controllers with overlapping route templates detected: {controller.ControllerType.FullName}");
                 }
 
-                controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel {Template = template};
+                controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel { Template = template };
             }
         }
 
