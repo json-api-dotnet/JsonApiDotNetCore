@@ -90,7 +90,13 @@ options.SerializerSettings.Converters.Add(new StringEnumConverter());
 options.SerializerSettings.Formatting = Formatting.Indented;
 ```
 
+The default naming convention as used in the routes and public resources names is also determined here, and can be changed (default is camel-case):
+```c#
+options.SerializerSettings.ContractResolver = new DefaultContractResolver { NamingStrategy = new KebabCaseNamingStrategy() };
+```
+
 Because we copy resource properties into an intermediate object before serialization, Newtonsoft.Json annotations on properties are ignored.
+
 
 ## Enable ModelState Validation
 

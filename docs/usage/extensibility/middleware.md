@@ -39,11 +39,11 @@ All of these components (except for `JsonApiMiddleware`) can be customized by re
 services.AddSingleton<IJsonApiExceptionFilter, MyCustomExceptionFilter>();
 ```
 
-It is also possible to directly access the .NET Core `MvcOptions` object and have full controll over which components are registered. 
+It is also possible to directly access the .NET Core `MvcOptions` object and have full control over which components are registered. 
 
 ## Configuring MvcOptions
 
-JsonApiDotNetCore internally configures `MvcOptions` when calling `AddJsonApi( ... )`. However, it is still possible to register a custom configuration callback. To achieve this it is recommended to register this callback *after* the `AddJsonApi( ... )` call. It is also possible to do it earlier, but your configuration might be overridden by the JsonApiDotNetCore configuration. 
+JsonApiDotNetCore internally configures `MvcOptions` when calling `AddJsonApi( ... )`. However, it is still possible to register a custom configuration callback. To achieve this it is recommended to register this callback *after* the `AddJsonApi( ... )` call. It is also possible to do it earlier, but your configuration might be overwritten by the JsonApiDotNetCore configuration. 
 
 The following example replaces all internally registered filters by retrieving a custom filter from the DI container.
 ```c#
@@ -57,10 +57,10 @@ public class Startup
 
         var builder = services.AddMvcCore();
         services.AddJsonApi<AppDbContext>( ... , mvcBuilder: builder);
-        mvcCoreBuilder.AddMvcOptions(x =>
+        mvcCoreBuilder.AddMvcOptions(mvcOptions =>
         {
-            // execute the mvc configuration callback after the JsonApiDotNetCore callback as been executed.
-            _postConfigureMvcOptions?.Invoke(x);
+            // Execute the mvcOptions configuration callback after the JsonApiDotNetCore callback as been executed.
+            _postConfigureMvcOptions?.Invoke(mvcOptions);
         });
 
         ...

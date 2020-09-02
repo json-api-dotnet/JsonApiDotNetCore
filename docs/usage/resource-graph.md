@@ -28,7 +28,7 @@ public void ConfigureServices(IServiceCollection services)
 {
     services.AddJsonApi(resources: builder =>
     {
-        builder.AddResource<Person>();
+        builder.Add<Person>();
     });
 }
 ```
@@ -60,7 +60,7 @@ public void ConfigureServices(IServiceCollection services)
 ### Auto-discovery
 
 Auto-discovery refers to the process of reflecting on an assembly and
-detecting all of the json:api resources and services.
+detecting all of the json:api resources, resource definitions, resource services and repositories.
 
 The following command will build the resource graph using all `IIdentifiable`
 implementations. It also injects resource definitions and service layer overrides which we will
@@ -81,11 +81,11 @@ public void ConfigureServices(IServiceCollection services)
 
 The public resource name is exposed through the `type` member in the json:api payload. This can be configured by the following approaches (in order of priority):
 
-1. The `publicName` option when manually adding a resource to the graph
+1. The `publicName` parameter when manually adding a resource to the graph
 ```c#
 services.AddJsonApi(resources: builder =>
 {
-    builder.AddResource<Person>(publicName: "people");
+    builder.Add<Person>(publicName: "people");
 });
 ```
 
@@ -100,17 +100,4 @@ public class MyModel : Identifiable { /* ... */ }
 // this will be registered as "myModels"
 public class MyModel : Identifiable { /* ... */ }
 ```
-This convention can be changed by setting the `SerializerSettings` property on `IJsonApiOptions`.
-```c#
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddJsonApi(
-        options =>
-        {
-            options.SerializerSettings.ContractResolver = new DefaultContractResolver
-            {
-                NamingStrategy = new KebabCaseNamingStrategy()
-            }
-        });
-}
-```
+This convention can be changed by setting the `SerializerSettings.ContractResolver` property on `IJsonApiOptions`. See the [options documentation](./options.md#custom-serializer-settings).
