@@ -46,6 +46,11 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public Type GetAssociatedResource(string controllerName)
         {
+            if (controllerName == null)
+            {
+                throw new ArgumentNullException(nameof(controllerName));
+            }
+            
             if (_registeredResources.TryGetValue(controllerName, out var resourceContext))
             {
                 return resourceContext.ResourceType;
@@ -57,7 +62,10 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public void Apply(ApplicationModel application)
         {
-            if (application == null) throw new ArgumentNullException(nameof(application));
+            if (application == null)
+            {
+                throw new ArgumentNullException(nameof(application));
+            }
 
             foreach (var controller in application.Controllers)
             {

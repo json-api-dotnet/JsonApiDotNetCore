@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Formatters;
 
-namespace JsonApiDotNetCore.Formatters
+namespace JsonApiDotNetCore.Middleware
 {
     public interface IJsonApiOutputFormatter : IOutputFormatter { }
 }

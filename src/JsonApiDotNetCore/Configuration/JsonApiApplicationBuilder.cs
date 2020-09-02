@@ -1,6 +1,4 @@
 using System;
-using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
@@ -28,7 +26,7 @@ namespace JsonApiDotNetCore.Configuration
     /// A utility class that builds a JsonApi application. It registers all required services
     /// and allows the user to override parts of the startup configuration.
     /// </summary>
-    internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
+    internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, IDisposable
     {
         private readonly JsonApiOptions _options = new JsonApiOptions();
         private readonly IServiceCollection _services;
@@ -36,14 +34,17 @@ namespace JsonApiDotNetCore.Configuration
         private readonly ResourceGraphBuilder _resourceGraphBuilder;
         private readonly ServiceDiscoveryFacade _serviceDiscoveryFacade;
         private readonly ServiceProvider _intermediateProvider;
+        
         public Action<MvcOptions> ConfigureMvcOptions { get; set; }
 
         public JsonApiApplicationBuilder(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _mvcBuilder = mvcBuilder ?? throw new ArgumentNullException(nameof(mvcBuilder));
+            
             _intermediateProvider = services.BuildServiceProvider();
             var loggerFactory = _intermediateProvider.GetService<ILoggerFactory>();
+            
             _resourceGraphBuilder = new ResourceGraphBuilder(_options, loggerFactory);
             _serviceDiscoveryFacade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, loggerFactory);
         }
@@ -62,16 +63,16 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Configures and build the resource graph with resources from the provided sources and adds it to the DI container. 
+        /// Configures and builds the resource graph with resources from the provided sources and adds it to the DI container. 
         /// </summary>
-        public void AddResourceGraph(Type dbContextType, Action<ResourceGraphBuilder> configureResources)
+        public void AddResourceGraph(Type dbContextType, Action<ResourceGraphBuilder> configureResourceGraph)
         {
             AutoDiscoverResources(_serviceDiscoveryFacade);
             if (dbContextType != null)
             {
                 AddResourcesFromDbContext((DbContext)_intermediateProvider.GetService(dbContextType), _resourceGraphBuilder);
             }
-            UserConfigureResources(configureResources, _resourceGraphBuilder);
+            ExecuteManualConfigurationOfResources(configureResourceGraph, _resourceGraphBuilder);
             _services.AddSingleton(_resourceGraphBuilder.Build());
         }
 
@@ -105,7 +106,6 @@ namespace JsonApiDotNetCore.Configuration
         public void DiscoverInjectables()
         {
             _serviceDiscoveryFacade.DiscoverInjectables();
-            _intermediateProvider.Dispose();
         }
 
         /// <summary>
@@ -140,6 +140,7 @@ namespace JsonApiDotNetCore.Configuration
 
             AddServerSerialization();
             AddQueryStringParameterServices();
+            
             if (_options.EnableResourceHooks)
             {
                 AddResourceHooks();
@@ -288,11 +289,15 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Executes the action provided by the user to configure the resources using <see cref="ResourceGraphBuilder"/>
         /// </summary>
-        private void UserConfigureResources(Action<ResourceGraphBuilder> configureResources,
+        private void ExecuteManualConfigurationOfResources(Action<ResourceGraphBuilder> configureResources,
             ResourceGraphBuilder resourceGraphBuilder)
         {
             configureResources?.Invoke(resourceGraphBuilder);
         }
-
+        
+        public void Dispose()
+        {
+            _intermediateProvider?.Dispose();
+        }
     }
 }

@@ -36,11 +36,13 @@ namespace JsonApiDotNetCore.Configuration
             Action<JsonApiOptions> options = null,
             Action<ServiceDiscoveryFacade> discovery = null,
             Action<ResourceGraphBuilder> resources = null,
-            IMvcCoreBuilder mvcBuilder = null,
-            ILoggerFactory loggerFactory = null)
+            IMvcCoreBuilder mvcBuilder = null)
             where TDbContext : DbContext
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
 
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, typeof(TDbContext));
 
@@ -49,27 +51,19 @@ namespace JsonApiDotNetCore.Configuration
 
         private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> configureOptions,
             Action<ServiceDiscoveryFacade> configureAutoDiscovery,
-            Action<ResourceGraphBuilder> configureResources, IMvcCoreBuilder mvcBuilder, Type dbContextType)
+            Action<ResourceGraphBuilder> configureResourceGraph, IMvcCoreBuilder mvcBuilder, Type dbContextType)
         {
             var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
 
             applicationBuilder.ConfigureJsonApiOptions(configureOptions);
             applicationBuilder.ConfigureAutoDiscovery(configureAutoDiscovery);
-            applicationBuilder.AddResourceGraph(dbContextType, configureResources);
+            applicationBuilder.AddResourceGraph(dbContextType, configureResourceGraph);
             applicationBuilder.ConfigureMvc();
             applicationBuilder.DiscoverInjectables();
             applicationBuilder.ConfigureServices(dbContextType);
+            applicationBuilder.Dispose();
         }
-
-        private static void ResolveInverseRelationships(IServiceCollection services)
-        {
-            using var intermediateProvider = services.BuildServiceProvider();
-            using var scope = intermediateProvider.CreateScope();
-
-            var inverseRelationshipResolver = scope.ServiceProvider.GetService<IInverseRelationships>();
-            inverseRelationshipResolver?.Resolve();
-        }
-
+        
         /// <summary>
         /// Enables client serializers for sending requests and receiving responses
         /// in json:api format. Internally only used for testing.

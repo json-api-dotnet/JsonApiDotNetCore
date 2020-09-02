@@ -29,12 +29,7 @@ namespace JsonApiDotNetCore.Middleware
                 return;
             }
             
-            var disableQueryAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryStringAttribute>();
-    
-            _queryStringReader.ReadAll(disableQueryAttribute);
-
-            DisableQueryStringAttribute disableQueryStringAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryStringAttribute>();
-
+            var disableQueryStringAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryStringAttribute>();
             _queryStringReader.ReadAll(disableQueryStringAttribute);
         }
     }

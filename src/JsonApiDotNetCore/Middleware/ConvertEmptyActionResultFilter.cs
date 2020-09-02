@@ -12,7 +12,10 @@ namespace JsonApiDotNetCore.Middleware
 
         public void OnResultExecuting(ResultExecutingContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
 
             if (!context.HttpContext.IsJsonApiRequest())
             {
@@ -24,7 +27,7 @@ namespace JsonApiDotNetCore.Middleware
                 case ObjectResult objectResult when objectResult.Value != null:
                     return;
                 case IStatusCodeActionResult statusCodeResult:
-                    context.Result = new ObjectResult(null) {StatusCode = statusCodeResult.StatusCode};
+                    context.Result = new ObjectResult(null) { StatusCode = statusCodeResult.StatusCode };
                     break;
             }
         }

@@ -12,6 +12,9 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Configuration
 {
+    /// <summary>
+    /// Scans for types like resources, services, repositories and resource definitions in an assembly and registers them to the IoC container.
+    /// </summary>
     public class ServiceDiscoveryFacade
     {
         internal static readonly HashSet<Type> ServiceInterfaces = new HashSet<Type> {
@@ -46,32 +49,40 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IResourceReadRepository<,>)
         };
 
+        private readonly ILogger<ResourceGraphBuilder> _logger;
         private readonly IServiceCollection _services;
         private readonly ResourceGraphBuilder _resourceGraphBuilder;
         private readonly IdentifiableTypeCache _typeCache = new IdentifiableTypeCache();
         private readonly Dictionary<Assembly, IList<ResourceDescriptor>> _resourceDescriptorsPerAssemblyCache = new Dictionary<Assembly, IList<ResourceDescriptor>>();
-        private readonly ILogger<ResourceGraphBuilder> _logger;
 
         public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, ILoggerFactory loggerFactory)
         {
+            if (loggerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(loggerFactory));
+            }
+            
+            _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _resourceGraphBuilder = resourceGraphBuilder ?? throw new ArgumentNullException(nameof(resourceGraphBuilder));
-            _logger = loggerFactory?.CreateLogger<ResourceGraphBuilder>();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Scan the calling assembly.
+        /// </summary>
         public ServiceDiscoveryFacade AddCurrentAssembly() => AddAssembly(Assembly.GetCallingAssembly());
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Scan the specified assembly.
+        /// </summary>
         public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
         {
             _resourceDescriptorsPerAssemblyCache.Add(assembly, null);
-            _logger?.LogDebug($"Registering assembly '{assembly.FullName}' for discovery of resources and injectables.");
+            _logger.LogDebug($"Registering assembly '{assembly.FullName}' for discovery of resources and injectables.");
 
             return this;
         }
-
-        /// <inheritdoc />
+        
         internal void DiscoverResources()
         {
             foreach (var (assembly, discoveredResourceDescriptors) in  _resourceDescriptorsPerAssemblyCache.ToArray())
@@ -85,7 +96,6 @@ namespace JsonApiDotNetCore.Configuration
             }
         }
         
-        /// <inheritdoc />
         internal void DiscoverInjectables()
         {
             foreach (var (assembly, discoveredResourceDescriptors) in  _resourceDescriptorsPerAssemblyCache.ToArray())
