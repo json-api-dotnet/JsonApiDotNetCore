@@ -79,18 +79,18 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Configures built-in .NET Core MVC (things like middleware, routing). Most of this configuration can be adjusted for the developers' need.
         /// Before calling .AddJsonApi(), a developer can register their own implementation of the following services to customize startup:
-        /// <see cref="ResourceGraphBuilder"/>, <see cref="ServiceDiscoveryFacade"/>, <see cref="IJsonApiTypeMatchFilter"/>,
-        /// <see cref="IJsonApiExceptionFilter"/> and <see cref="IJsonApiRoutingConvention"/>.
+        /// <see cref="ResourceGraphBuilder"/>, <see cref="ServiceDiscoveryFacade"/>, <see cref="IAsyncResourceTypeMatchFilter"/>,
+        /// <see cref="IAsyncJsonApiExceptionFilter"/> and <see cref="IJsonApiRoutingConvention"/>.
         /// </summary>
         public void ConfigureMvc()
         {
             _mvcBuilder.AddMvcOptions(options =>
             {
                 options.EnableEndpointRouting = true;
-                options.Filters.AddService<IJsonApiExceptionFilter>();
-                options.Filters.AddService<IJsonApiTypeMatchFilter>();
-                options.Filters.AddService<IQueryStringActionFilter>();
-                options.Filters.AddService<IConvertEmptyActionResultFilter>();
+                options.Filters.AddService<IAsyncJsonApiExceptionFilter>();
+                options.Filters.AddService<IAsyncResourceTypeMatchFilter>();
+                options.Filters.AddService<IAsyncQueryStringActionFilter>();
+                options.Filters.AddService<IAsyncConvertEmptyActionResultFilter>();
                 ConfigureMvcOptions?.Invoke(options);
             });
 
@@ -154,10 +154,10 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddSingleton<IJsonApiOptions>(_options);
             _services.AddSingleton<IJsonApiApplicationBuilder>(this);
             _services.TryAddSingleton<IExceptionHandler, ExceptionHandler>();
-            _services.TryAddScoped<IJsonApiExceptionFilter, JsonApiExceptionFilter>();
-            _services.TryAddScoped<IJsonApiTypeMatchFilter, JsonApiTypeMatchFilter>();
-            _services.TryAddScoped<IQueryStringActionFilter, QueryStringActionFilter>();
-            _services.TryAddScoped<IConvertEmptyActionResultFilter, ConvertEmptyActionResultFilter>();
+            _services.TryAddScoped<IAsyncJsonApiExceptionFilter, AsyncJsonApiExceptionFilter>();
+            _services.TryAddScoped<IAsyncResourceTypeMatchFilter, AsyncResourceTypeMatchFilter>();
+            _services.TryAddScoped<IAsyncQueryStringActionFilter, AsyncQueryStringActionFilter>();
+            _services.TryAddScoped<IAsyncConvertEmptyActionResultFilter, AsyncConvertEmptyActionResultFilter>();
             _services.TryAddSingleton<IJsonApiInputFormatter, JsonApiInputFormatter>();
             _services.TryAddSingleton<IJsonApiOutputFormatter, JsonApiOutputFormatter>();
             _services.TryAddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();

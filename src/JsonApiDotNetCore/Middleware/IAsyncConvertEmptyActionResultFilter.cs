@@ -8,5 +8,5 @@ namespace JsonApiDotNetCore.Middleware
     /// This ensures our formatter is invoked, where we'll build a json:api compliant response.
     /// For details, see: https://github.com/dotnet/aspnetcore/issues/16969
     /// </summary>
-    public interface IConvertEmptyActionResultFilter : IAlwaysRunResultFilter { }
+    public interface IAsyncConvertEmptyActionResultFilter : IAsyncAlwaysRunResultFilter { }
 }

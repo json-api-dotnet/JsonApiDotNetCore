@@ -6,11 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    /// <summary>
-    /// Extensibility point for reading incoming HTTP request.
-    /// </summary>
+    /// <inheritdoc />
     public sealed class JsonApiInputFormatter : IJsonApiInputFormatter
     {
+        /// <inheritdoc />
         public bool CanRead(InputFormatterContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
@@ -18,6 +17,7 @@ namespace JsonApiDotNetCore.Middleware
             return context.HttpContext.IsJsonApiRequest();
         }
 
+        /// <inheritdoc />
         public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
