@@ -77,6 +77,11 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
         {
+            if (assembly == null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+            
             _resourceDescriptorsPerAssemblyCache.Add(assembly, null);
             _logger.LogDebug($"Registering assembly '{assembly.FullName}' for discovery of resources and injectables.");
 
