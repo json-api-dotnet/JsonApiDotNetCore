@@ -13,7 +13,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
     public sealed class TestableStartup<TDbContext> : EmptyStartup
         where TDbContext : DbContext
     {
-        public TestableStartup(IConfiguration configuration) : base(configuration) { }
+        public TestableStartup(IConfiguration configuration) : base(configuration)
+        {
+        }
 
         public override void ConfigureServices(IServiceCollection services)
         {

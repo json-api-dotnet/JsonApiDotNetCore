@@ -51,15 +51,16 @@ namespace DiscoveryTests
         public void AddAssembly_Adds_All_Resources_To_Graph()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, new NullLoggerFactory());
-            facade.AddAssembly(typeof(Person).Assembly);
-            facade.DiscoverResources();
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
 
             // Act
+            facade.AddAssembly(typeof(Person).Assembly);
+            facade.DiscoverResources();
             var resourceGraph = _resourceGraphBuilder.Build();
             var personResource = resourceGraph.GetResourceContext(typeof(Person));
             var articleResource = resourceGraph.GetResourceContext(typeof(Article));
 
+            // Assert
             Assert.NotNull(personResource);
             Assert.NotNull(articleResource);
         }
@@ -68,7 +69,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Resources_To_Graph()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, new NullLoggerFactory());
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
             
             // Act
             facade.AddCurrentAssembly();
@@ -84,7 +85,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Services_To_Container()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, new NullLoggerFactory());
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
             
             // Act
             facade.AddCurrentAssembly();
@@ -100,7 +101,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Repositories_To_Container()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, new NullLoggerFactory());
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
             
             // Act
             facade.AddCurrentAssembly();
@@ -115,7 +116,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_ResourceDefinitions_To_Container()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, new NullLoggerFactory());
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
             
             // Act
             facade.AddCurrentAssembly();

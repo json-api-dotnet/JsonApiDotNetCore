@@ -46,10 +46,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public Type GetAssociatedResource(string controllerName)
         {
-            if (controllerName == null)
-            {
-                throw new ArgumentNullException(nameof(controllerName));
-            }
+            if (controllerName == null) throw new ArgumentNullException(nameof(controllerName));
             
             if (_registeredResources.TryGetValue(controllerName, out var resourceContext))
             {
@@ -62,10 +59,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public void Apply(ApplicationModel application)
         {
-            if (application == null)
-            {
-                throw new ArgumentNullException(nameof(application));
-            }
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
             foreach (var controller in application.Controllers)
             {
@@ -129,12 +123,17 @@ namespace JsonApiDotNetCore.Middleware
         /// </summary>
         private string TemplateFromController(ControllerModel model)
         {
-            var controllerName =
+            string controllerName =
                 _options.SerializerContractResolver.NamingStrategy.GetPropertyName(model.ControllerName, false);
 
             var template = $"{_options.Namespace}/{controllerName}";
 
-            return _registeredTemplates.Add(template) ? template : null;
+            if (_registeredTemplates.Add(template))
+            {
+                return template;
+            }
+            
+            return null;
         }
 
         /// <summary>
