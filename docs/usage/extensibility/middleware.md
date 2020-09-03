@@ -1,84 +1,45 @@
 # Middleware
 
-The following is the default configuration of JsonApiDotNetCore:
-1. Call one of the `AddJsonApi( ... )` overloads in the ` Startup.ConfigureServices` method. In this example uses a `DbContext` to build the resource graph
+It is possible to execute your own middleware before or after `JsonApiMiddleware` by registering it accordingly.
 
 ```c#
-services.AddJsonApi<AppDbContext>();
-```
-
-2. In the Startup.Configure method, configure your application to use routing, to add the JsonApiMiddleware and to configure endpoint routing.
-
-```c#
-app.UseRouting();
+/// In Startup.Configure
+app.UseMiddleware<CustomPreMiddleware>();
 app.UseJsonApi();
-app.UseEndpoints(endpoints => endpoints.MapControllers());
+app.UseMiddleware<CustomPostMiddleware>();
 ```
 
-The following middleware components, in respective order, are registered:
-
-Filters:
-- `IJsonApiExceptionFilter`
-- `IJsonApiTypeMatchFilter`
-- `IQueryStringActionFilter`
-- `IConvertEmptyActionResultFilter`
-
-Formatters:
-- `IJsonApiInputFormatter`
-- `IJsonApiOutputFormatter`
-
-Routing convention:
-- `IJsonApiRoutingConvention`
-
-Middleware:
-- `JsonApiMiddleware`
-
-All of these components (except for `JsonApiMiddleware`) can be customized by registering your own implementation of these services. For example:
-
+It is also possible to replace any other JsonApiDotNetCore middleware component. The following example replaces the internal exception filter with a custom implementation
 ```c#
-services.AddSingleton<IJsonApiExceptionFilter, MyCustomExceptionFilter>();
+/// In Startup.ConfigureServices
+services.AddService<IJsonApiGlobalExceptionFilter, CustomExceptionFilter>()
 ```
 
-It is also possible to directly access the .NET Core `MvcOptions` object and have full control over which components are registered. 
+Alternatively, you can add additional middleware components by configuring `MvcOptions` directly.
 
 ## Configuring MvcOptions
 
-JsonApiDotNetCore internally configures `MvcOptions` when calling `AddJsonApi( ... )`. However, it is still possible to register a custom configuration callback. To achieve this it is recommended to register this callback *after* the `AddJsonApi( ... )` call. It is also possible to do it earlier, but your configuration might be overwritten by the JsonApiDotNetCore configuration. 
+JsonApiDotNetCore configures `MvcOptions` internally when calling `AddJsonApi()`. Additionaly, it is possible to perform a custom configuration of `MvcOptions`. To prevent the library from overwriting your configuration, it is recommended to configure it *after* the library is done configuring `MvcOptions`.
 
-The following example replaces all internally registered filters by retrieving a custom filter from the DI container.
+The following example demonstrates this by clearing all internal filters and registering a custom one.
 ```c#
-public class Startup
+/// In Startup.ConfigureServices
+services.AddSingleton<CustomFilter>();
+var builder = services.AddMvcCore();
+services.AddJsonApi<AppDbContext>(mvcBuilder: builder);
+// Ensure the configuration action is registered after the `AddJsonApiCall`.
+builder.AddMvcOptions( mvcOptions =>
 {
-    private Action<MvcOptions> _postConfigureMvcOptions;
+    // Execute the MvcOptions configuration callback after the JsonApiDotNetCore callback as been executed.
+    _postConfigureMvcOptions?.Invoke(mvcOptions);
+});
 
-    public void ConfigureServices(IServiceCollection services)
-    {
-        ...
-
-        var builder = services.AddMvcCore();
-        services.AddJsonApi<AppDbContext>( ... , mvcBuilder: builder);
-        mvcCoreBuilder.AddMvcOptions(mvcOptions =>
-        {
-            // Execute the mvcOptions configuration callback after the JsonApiDotNetCore callback as been executed.
-            _postConfigureMvcOptions?.Invoke(mvcOptions);
-        });
-
-        ...
-    }
-
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
-    {
-
-        ... 
-
-        // Using a callback, we can defer to later (when service collection has become available).
-        _postConfigureMvcOptions = mvcOptions =>
-        {
-            mvcOptions.Filters.Clear();
-            mvcOptions.Filters.Insert(0, app.ApplicationServices.GetService<CustomFilter>());
-        };
-        
-        ...
-    }
-}
+/// In Startup.Configure
+app.UseJsonApi();
+// Ensure the configuration callback is set after calling `UseJsonApi()`.
+_postConfigureMvcOptions = mvcOptions => 
+{ 
+    mvcOptions.Filters.Clear();
+    mvcOptions.Filters.Insert(0, app.ApplicationServices.GetService<CustomFilter>());
+};
 ```
