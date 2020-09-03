@@ -30,7 +30,7 @@ The route for this example will be `/myApiResources`, which will match the type 
 
 ### Non-json:api endpoints
 
-If a controller does not have an associated resource, the [configured naming strategy](./options#custom-serializer-settings) will be applied to the name of the controller.
+If a controller does not have an associated resource, the [configured naming strategy](./options.md#custom-serializer-settings) will be applied to the name of the controller.
 ```c#
 public class MyResourceController : ControllerBase { /* .... */ }
 ```
