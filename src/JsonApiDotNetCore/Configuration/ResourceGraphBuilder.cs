@@ -47,11 +47,11 @@ namespace JsonApiDotNetCore.Configuration
         }
         
         /// <summary>
-        /// Adds a json:api resource.
+        /// Adds a json:api resource with <code>int</code> as the identifier type.
         /// </summary>
         /// <typeparam name="TResource">The resource model type.</typeparam>
         /// <param name="publicName">
-        /// The pluralized name, under which the resource is publicly exposed by the API. 
+        /// The name under which the resource is publicly exposed by the API. 
         /// If nothing is specified, the configured casing convention formatter will be applied.
         /// </param>
         public ResourceGraphBuilder Add<TResource>(string publicName = null) where TResource : class, IIdentifiable<int>
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <typeparam name="TResource">The resource model type.</typeparam>
         /// <typeparam name="TId">The resource model identifier type.</typeparam>
         /// <param name="publicName">
-        /// The pluralized name, under which the resource is publicly exposed by the API. 
+        /// The name under which the resource is publicly exposed by the API. 
         /// If nothing is specified, the configured casing convention formatter will be applied.
         /// </param>
         public ResourceGraphBuilder Add<TResource, TId>(string publicName = null) where TResource : class, IIdentifiable<TId>
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <param name="resourceType">The resource model type.</param>
         /// <param name="idType">The resource model identifier type.</param>
         /// <param name="publicName">
-        /// The pluralized name, under which the resource is publicly exposed by the API. 
+        /// The name under which the resource is publicly exposed by the API. 
         /// If nothing is specified, the configured casing convention formatter will be applied.
         /// </param>
         public ResourceGraphBuilder Add(Type resourceType, Type idType = null, string publicName = null)

@@ -181,7 +181,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
     public sealed class KebabCaseStartup : TestStartup
     {
-        public KebabCaseStartup(IConfiguration configuration) : base(configuration) { }
+        public KebabCaseStartup(IConfiguration configuration) : base(configuration) 
+        {
+        }
 
         protected override void ConfigureJsonApiOptions(JsonApiOptions options)
         {
