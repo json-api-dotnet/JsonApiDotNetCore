@@ -196,24 +196,18 @@ namespace JsonApiDotNetCore.Services
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
 
             var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
-
-            var secondaryIdAttribute = _request.SecondaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
-
+            secondaryLayer.Projection = _queryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(_request.SecondaryResource);
             secondaryLayer.Include = null;
-            secondaryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
-            {
-                [secondaryIdAttribute] = null
-            };
-            
-            var primaryLayer = GetPrimaryLayerForSecondaryEndpoint(secondaryLayer, id);
+
+            var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
 
             var primaryResources = await _repository.GetAsync(primaryLayer);
-            
+
             var primaryResource = primaryResources.SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
 
             if (_hookExecutor != null)
-            {   
+            {
                 _hookExecutor.AfterRead(AsList(primaryResource), ResourcePipeline.GetRelationship);
                 primaryResource = _hookExecutor.OnReturn(AsList(primaryResource), ResourcePipeline.GetRelationship).Single();
             }
@@ -233,7 +227,7 @@ namespace JsonApiDotNetCore.Services
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
 
             var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
-            var primaryLayer = GetPrimaryLayerForSecondaryEndpoint(secondaryLayer, id);
+            var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
 
             var primaryResources = await _repository.GetAsync(primaryLayer);
             
@@ -247,35 +241,6 @@ namespace JsonApiDotNetCore.Services
             }
 
             return _request.Relationship.GetValue(primaryResource);
-        }
-
-        private QueryLayer GetPrimaryLayerForSecondaryEndpoint(QueryLayer secondaryLayer, TId primaryId)
-        {
-            var innerInclude = secondaryLayer.Include;
-            secondaryLayer.Include = null;
-
-            var primaryIdAttribute =
-                _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
-
-            return new QueryLayer(_request.PrimaryResource)
-            {
-                Include = RewriteIncludeForSecondaryEndpoint(innerInclude),
-                Filter = CreateFilterById(primaryId),
-                Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
-                {
-                    [primaryIdAttribute] = null,
-                    [_request.Relationship] = secondaryLayer
-                }
-            };
-        }
-
-        private IncludeExpression RewriteIncludeForSecondaryEndpoint(IncludeExpression relativeInclude)
-        {
-            var parentElement = relativeInclude != null
-                ? new IncludeElementExpression(_request.Relationship, relativeInclude.Elements)
-                : new IncludeElementExpression(_request.Relationship);
-
-            return new IncludeExpression(new[] {parentElement});
         }
 
         /// <inheritdoc />
@@ -320,7 +285,7 @@ namespace JsonApiDotNetCore.Services
             AssertRelationshipExists(relationshipName);
 
             var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
-            var primaryLayer = GetPrimaryLayerForSecondaryEndpoint(secondaryLayer, id);
+            var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
             primaryLayer.Projection = null;
 
             var primaryResources = await _repository.GetAsync(primaryLayer);

@@ -176,6 +176,55 @@ namespace JsonApiDotNetCore.Queries.Internal
             return newIncludeElements;
         }
 
+        /// <inheritdoc />
+        public QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceContext primaryResourceContext, TId primaryId, RelationshipAttribute secondaryRelationship)
+        {
+            var innerInclude = secondaryLayer.Include;
+            secondaryLayer.Include = null;
+
+            var primaryIdAttribute = primaryResourceContext.Attributes.Single(x => x.Property.Name == nameof(Identifiable.Id));
+            var sparseFieldSet = new SparseFieldSetExpression(new[] { primaryIdAttribute });
+
+            var primaryProjection = GetSparseFieldSetProjection(new[] { sparseFieldSet }, primaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
+            primaryProjection[secondaryRelationship] = secondaryLayer;
+            primaryProjection[primaryIdAttribute] = null;
+
+            return new QueryLayer(primaryResourceContext)
+            {
+                Include = RewriteIncludeForSecondaryEndpoint(innerInclude, secondaryRelationship),
+                Filter = CreateFilterById(primaryId, primaryResourceContext),
+                Projection = primaryProjection
+            };
+        }
+
+        private IncludeExpression RewriteIncludeForSecondaryEndpoint(IncludeExpression relativeInclude, RelationshipAttribute secondaryRelationship)
+        {
+            var parentElement = relativeInclude != null
+                ? new IncludeElementExpression(secondaryRelationship, relativeInclude.Elements)
+                : new IncludeElementExpression(secondaryRelationship);
+
+            return new IncludeExpression(new[] {parentElement});
+        }
+
+        private FilterExpression CreateFilterById<TId>(TId id, ResourceContext resourceContext)
+        {
+            var primaryIdAttribute = resourceContext.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+
+            return new ComparisonExpression(ComparisonOperator.Equals,
+                new ResourceFieldChainExpression(primaryIdAttribute), new LiteralConstantExpression(id.ToString()));
+        }
+
+        public IDictionary<ResourceFieldAttribute, QueryLayer> GetSecondaryProjectionForRelationshipEndpoint(ResourceContext secondaryResourceContext)
+        {
+            var secondaryIdAttribute = secondaryResourceContext.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+            var sparseFieldSet = new SparseFieldSetExpression(new[] { secondaryIdAttribute });
+
+            var secondaryProjection = GetSparseFieldSetProjection(new[] { sparseFieldSet }, secondaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
+            secondaryProjection[secondaryIdAttribute] = null;
+
+            return secondaryProjection;
+        }
+
         protected virtual IReadOnlyCollection<IncludeElementExpression> GetIncludeElements(IReadOnlyCollection<IncludeElementExpression> includeElements, ResourceContext resourceContext)
         {
             if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));

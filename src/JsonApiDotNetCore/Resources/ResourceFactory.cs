@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources
@@ -73,7 +75,12 @@ namespace JsonApiDotNetCore.Resources
                     object constructorArgument =
                         ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, constructorParameter.ParameterType);
 
-                    constructorArguments.Add(Expression.Constant(constructorArgument));
+                    var argumentExpression = typeof(DbContext).Assembly.GetName().Version.Major >= 5
+                        // Workaround for https://github.com/dotnet/efcore/issues/20502 to not fail on injected DbContext in EF Core 5.
+                        ? CreateTupleAccessExpressionForConstant(constructorArgument, constructorArgument.GetType())
+                        : Expression.Constant(constructorArgument);
+
+                    constructorArguments.Add(argumentExpression);
                 }
                 catch (Exception exception)
                 {
@@ -84,6 +91,19 @@ namespace JsonApiDotNetCore.Resources
             }
 
             return Expression.New(longestConstructor, constructorArguments);
+        }
+
+        private static Expression CreateTupleAccessExpressionForConstant(object value, Type type)
+        {
+            MethodInfo tupleCreateMethod = typeof(Tuple).GetMethods()
+                .Single(m => m.Name == "Create" && m.IsGenericMethod && m.GetGenericArguments().Length == 1);
+
+            MethodInfo constructedTupleCreateMethod = tupleCreateMethod.MakeGenericMethod(type);
+
+            ConstantExpression constantExpression = Expression.Constant(value, type);
+
+            MethodCallExpression tupleCreateCall = Expression.Call(constructedTupleCreateMethod, constantExpression);
+            return Expression.Property(tupleCreateCall, "Item1");
         }
 
         private static bool HasSingleConstructorWithoutParameters(Type type)
