@@ -20,7 +20,7 @@ The library will configure routes for all controllers in your project.
 
 By default, for json:api controllers, 
 - routes are camel-cased. This is based on the [recommendations](https://jsonapi.org/recommendations/) outlined in the json:api spec.
-- the route of a controller will match the public name of the resource that is associated it. This means that routes can be customized by [configuring the public name of the associated resource](~/usage/resource-graph.md#public-resource-name).
+- the route of a controller will match the public name of the resource that is associated it. This means that routes can be customized by [configuring the public name of the associated resource](./resource-graph.md#public-resource-name).
 
 ```c#
 public class MyResourceController : JsonApiController<MyApiResource> { /* .... */ }
