@@ -39,10 +39,7 @@ namespace JsonApiDotNetCore.Configuration
             IMvcCoreBuilder mvcBuilder = null)
             where TDbContext : DbContext
         {
-            if (services == null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
+            if (services == null) throw new ArgumentNullException(nameof(services));
 
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, typeof(TDbContext));
 
@@ -53,7 +50,7 @@ namespace JsonApiDotNetCore.Configuration
             Action<ServiceDiscoveryFacade> configureAutoDiscovery,
             Action<ResourceGraphBuilder> configureResourceGraph, IMvcCoreBuilder mvcBuilder, Type dbContextType)
         {
-            var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
+            using var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
 
             applicationBuilder.ConfigureJsonApiOptions(configureOptions);
             applicationBuilder.ConfigureAutoDiscovery(configureAutoDiscovery);
@@ -61,7 +58,6 @@ namespace JsonApiDotNetCore.Configuration
             applicationBuilder.ConfigureMvc();
             applicationBuilder.DiscoverInjectables();
             applicationBuilder.ConfigureServices(dbContextType);
-            applicationBuilder.Dispose();
         }
         
         /// <summary>

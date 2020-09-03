@@ -222,7 +222,7 @@ namespace UnitTests
                 ResourceLinks = resourceLinks,
                 TopLevelLinks = topLevelLinks,
                 RelationshipLinks = relationshipLinks,
-                ResourceName = "articles"
+                PublicName = "articles"
             };
         }
 

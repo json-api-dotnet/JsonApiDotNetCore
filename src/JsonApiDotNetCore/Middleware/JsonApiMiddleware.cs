@@ -165,7 +165,7 @@ namespace JsonApiDotNetCore.Middleware
             request.Kind = EndpointKind.Primary;
             request.PrimaryResource = primaryResourceContext;
             request.PrimaryId = GetPrimaryRequestId(routeValues);
-            request.BasePath = GetBasePath(primaryResourceContext.ResourceName, options, httpRequest);
+            request.BasePath = GetBasePath(primaryResourceContext.PublicName, options, httpRequest);
 
             var relationshipName = GetRelationshipNameForSecondaryRequest(routeValues);
             if (relationshipName != null)

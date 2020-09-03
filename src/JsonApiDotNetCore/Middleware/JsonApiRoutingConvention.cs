@@ -114,7 +114,7 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (_registeredResources.TryGetValue(model.ControllerName, out var resourceContext))
             {
-                var template = $"{_options.Namespace}/{resourceContext.ResourceName}";
+                var template = $"{_options.Namespace}/{resourceContext.PublicName}";
                 if (_registeredTemplates.Add(template))
                 {
                     return template;

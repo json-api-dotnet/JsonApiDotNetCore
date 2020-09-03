@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IResourceReadRepository<,>)
         };
 
-        private readonly ILogger<ResourceGraphBuilder> _logger;
+        private readonly ILogger<ServiceDiscoveryFacade> _logger;
         private readonly IServiceCollection _services;
         private readonly ResourceGraphBuilder _resourceGraphBuilder;
         private readonly IdentifiableTypeCache _typeCache = new IdentifiableTypeCache();
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCore.Configuration
                 throw new ArgumentNullException(nameof(loggerFactory));
             }
             
-            _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
+            _logger = loggerFactory.CreateLogger<ServiceDiscoveryFacade>();
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _resourceGraphBuilder = resourceGraphBuilder ?? throw new ArgumentNullException(nameof(resourceGraphBuilder));
         }

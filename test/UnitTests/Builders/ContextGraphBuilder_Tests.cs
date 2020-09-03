@@ -61,7 +61,7 @@ namespace UnitTests
 
             // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("testResources", resource.ResourceName);
+            Assert.Equal("testResources", resource.PublicName);
         }
 
         [Fact]

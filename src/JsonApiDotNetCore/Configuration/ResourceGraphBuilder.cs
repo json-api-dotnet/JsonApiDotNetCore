@@ -14,16 +14,16 @@ namespace JsonApiDotNetCore.Configuration
     /// </summary>
     public class ResourceGraphBuilder
     {
-        private readonly ILogger<ResourceGraphBuilder> _logger;
         private readonly IJsonApiOptions _options;
+        private readonly ILogger<ResourceGraphBuilder> _logger;
         private readonly List<ResourceContext> _resources = new List<ResourceContext>();
 
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 
-            _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
             _options = options ?? throw new ArgumentNullException(nameof(options));
+            _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private ResourceContext CreateResourceContext(string publicName, Type resourceType, Type idType) => new ResourceContext
         {
-            ResourceName = publicName,
+            PublicName = publicName,
             ResourceType = resourceType,
             IdentityType = idType,
             Attributes = GetAttributes(resourceType),

@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// The publicly exposed resource name.
         /// </summary>
-        public string ResourceName { get; set; }
+        public string PublicName { get; set; }
 
         /// <summary>
         /// The CLR type of the resource.
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCore.Configuration
 
         public override string ToString()
         {
-            return ResourceName;
+            return PublicName;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             if (resourceName == null) throw new ArgumentNullException(nameof(resourceName));
 
-            return _resources.SingleOrDefault(e => e.ResourceName == resourceName);
+            return _resources.SingleOrDefault(e => e.PublicName == resourceName);
         }
 
         /// <inheritdoc />

@@ -353,7 +353,7 @@ namespace JsonApiDotNetCore.Services
         {
             if (resource == null)
             {
-                throw new ResourceNotFoundException(_request.PrimaryId, _request.PrimaryResource.ResourceName);
+                throw new ResourceNotFoundException(_request.PrimaryId, _request.PrimaryResource.PublicName);
             }
         }
 
@@ -362,7 +362,7 @@ namespace JsonApiDotNetCore.Services
             var relationship = _request.Relationship;
             if (relationship == null)
             {
-                throw new RelationshipNotFoundException(relationshipName, _request.PrimaryResource.ResourceName);
+                throw new RelationshipNotFoundException(relationshipName, _request.PrimaryResource.PublicName);
             }
         }
 
