@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Configuration
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, typeof(TDbContext));
 
             return services;
-        }     
+        }
 
         private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> configureOptions,
             Action<ServiceDiscoveryFacade> configureAutoDiscovery,
