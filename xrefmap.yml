@@ -8637,6 +8637,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetPagination
   nameWithType: QueryLayerComposer.GetPagination
+- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(JsonApiDotNetCore.Configuration.ResourceContext)
+  name: GetSecondaryProjectionForRelationshipEndpoint(ResourceContext)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSecondaryProjectionForRelationshipEndpoint_JsonApiDotNetCore_Configuration_ResourceContext_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(JsonApiDotNetCore.Configuration.ResourceContext)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(JsonApiDotNetCore.Configuration.ResourceContext)
+  nameWithType: QueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(ResourceContext)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint*
+  name: GetSecondaryProjectionForRelationshipEndpoint
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSecondaryProjectionForRelationshipEndpoint_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint
+  nameWithType: QueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint
 - uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSort(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.QueryExpression},JsonApiDotNetCore.Configuration.ResourceContext)
   name: GetSort(IReadOnlyCollection<QueryExpression>, ResourceContext)
   href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSort_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_QueryExpression__JsonApiDotNetCore_Configuration_ResourceContext_
@@ -8682,6 +8695,22 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilter
   nameWithType: QueryLayerComposer.GetTopFilter
+- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.WrapLayerForSecondaryEndpoint*
+  name: WrapLayerForSecondaryEndpoint
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_WrapLayerForSecondaryEndpoint_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.WrapLayerForSecondaryEndpoint
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.WrapLayerForSecondaryEndpoint
+  nameWithType: QueryLayerComposer.WrapLayerForSecondaryEndpoint
+- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.WrapLayerForSecondaryEndpoint``1(JsonApiDotNetCore.Queries.QueryLayer,JsonApiDotNetCore.Configuration.ResourceContext,``0,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
+  name: WrapLayerForSecondaryEndpoint<TId>(QueryLayer, ResourceContext, TId, RelationshipAttribute)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_WrapLayerForSecondaryEndpoint__1_JsonApiDotNetCore_Queries_QueryLayer_JsonApiDotNetCore_Configuration_ResourceContext___0_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.WrapLayerForSecondaryEndpoint``1(JsonApiDotNetCore.Queries.QueryLayer,JsonApiDotNetCore.Configuration.ResourceContext,``0,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
+  name.vb: WrapLayerForSecondaryEndpoint(Of TId)(QueryLayer, ResourceContext, TId, RelationshipAttribute)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.WrapLayerForSecondaryEndpoint<TId>(JsonApiDotNetCore.Queries.QueryLayer, JsonApiDotNetCore.Configuration.ResourceContext, TId, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
+  fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.WrapLayerForSecondaryEndpoint(Of TId)(JsonApiDotNetCore.Queries.QueryLayer, JsonApiDotNetCore.Configuration.ResourceContext, TId, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
+  nameWithType: QueryLayerComposer.WrapLayerForSecondaryEndpoint<TId>(QueryLayer, ResourceContext, TId, RelationshipAttribute)
+  nameWithType.vb: QueryLayerComposer.WrapLayerForSecondaryEndpoint(Of TId)(QueryLayer, ResourceContext, TId, RelationshipAttribute)
 - uid: JsonApiDotNetCore.Queries.IPaginationContext
   name: IPaginationContext
   href: api/JsonApiDotNetCore.Queries.IPaginationContext.html
@@ -8778,6 +8807,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.Compose
   nameWithType: IQueryLayerComposer.Compose
+- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(JsonApiDotNetCore.Configuration.ResourceContext)
+  name: GetSecondaryProjectionForRelationshipEndpoint(ResourceContext)
+  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetSecondaryProjectionForRelationshipEndpoint_JsonApiDotNetCore_Configuration_ResourceContext_
+  commentId: M:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(JsonApiDotNetCore.Configuration.ResourceContext)
+  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(JsonApiDotNetCore.Configuration.ResourceContext)
+  nameWithType: IQueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(ResourceContext)
+- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint*
+  name: GetSecondaryProjectionForRelationshipEndpoint
+  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetSecondaryProjectionForRelationshipEndpoint_
+  commentId: Overload:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint
+  nameWithType: IQueryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint
 - uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilter
   name: GetTopFilter()
   href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetTopFilter
@@ -8791,6 +8833,22 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilter
   nameWithType: IQueryLayerComposer.GetTopFilter
+- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint*
+  name: WrapLayerForSecondaryEndpoint
+  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_WrapLayerForSecondaryEndpoint_
+  commentId: Overload:JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint
+  nameWithType: IQueryLayerComposer.WrapLayerForSecondaryEndpoint
+- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint``1(JsonApiDotNetCore.Queries.QueryLayer,JsonApiDotNetCore.Configuration.ResourceContext,``0,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
+  name: WrapLayerForSecondaryEndpoint<TId>(QueryLayer, ResourceContext, TId, RelationshipAttribute)
+  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_WrapLayerForSecondaryEndpoint__1_JsonApiDotNetCore_Queries_QueryLayer_JsonApiDotNetCore_Configuration_ResourceContext___0_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_
+  commentId: M:JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint``1(JsonApiDotNetCore.Queries.QueryLayer,JsonApiDotNetCore.Configuration.ResourceContext,``0,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
+  name.vb: WrapLayerForSecondaryEndpoint(Of TId)(QueryLayer, ResourceContext, TId, RelationshipAttribute)
+  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint<TId>(JsonApiDotNetCore.Queries.QueryLayer, JsonApiDotNetCore.Configuration.ResourceContext, TId, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
+  fullName.vb: JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint(Of TId)(JsonApiDotNetCore.Queries.QueryLayer, JsonApiDotNetCore.Configuration.ResourceContext, TId, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
+  nameWithType: IQueryLayerComposer.WrapLayerForSecondaryEndpoint<TId>(QueryLayer, ResourceContext, TId, RelationshipAttribute)
+  nameWithType.vb: IQueryLayerComposer.WrapLayerForSecondaryEndpoint(Of TId)(QueryLayer, ResourceContext, TId, RelationshipAttribute)
 - uid: JsonApiDotNetCore.Queries.QueryLayer
   name: QueryLayer
   href: api/JsonApiDotNetCore.Queries.QueryLayer.html
