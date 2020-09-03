@@ -1,7 +1,7 @@
 # Routing
 
 ## Namespacing and Versioning URLs
-You can add a namespace to all URLs by specifying it in ConfigureServices
+You can add a namespace to all URLs by specifying it in ConfigureServices.
 
 ```c#
 public void ConfigureServices(IServiceCollection services)
@@ -14,44 +14,44 @@ Which results in URLs like: https://yourdomain.com/api/v1/people
 
 ## Customizing Routes
 
-The library will configure routes for each controller. By default, based on the [recommendations](https://jsonapi.org/recommendations/) outlined in the json:api spec, routes are camel-cased.
+The library will configure routes for all controllers in your project.
 
-```http
-GET /api/compoundModels HTTP/1.1
-```
+### Json:api endpoints
 
-1. **Using the public name of the resource associated to a controller**.
+By default, for json:api controllers, 
+- routes are camel-cased. This is based on the [recommendations](https://jsonapi.org/recommendations/) outlined in the json:api spec.
+- the route of a controller will match the public name of the resource that is associated it. This means that routes can be customized by [configuring the public name of the associated resource](~/usage/resource-graph.md#public-resource-name).
 
 ```c#
 public class MyResourceController : JsonApiController<MyApiResource> { /* .... */ }
 ```
-Note that the route
-- is `/myApiResources`, which matches the public resouce name in the json:api payload (`{ "type": "myApiResources", ... }`) 
-- can be configured by configuring the public resource name. See [this section](~/usage/resource-graph.md#public-resource-name) on how to do that. 
+The route for this example will be `/myApiResources`, which will match the type in the json:api payload: `{ "type": "myApiResources", ... }`.
 
 
-2. **Using the controller name**. 
-If a controller does not have an associated resource, the name of the controller will be used following the configured naming strategy.
+### Non-json:api endpoints
+
+If a controller does not have an associated resource, the [configured naming strategy](./options#custom-serializer-settings) will be applied to the name of the controller.
 ```c#
 public class MyResourceController : ControllerBase { /* .... */ }
 ```
-Note that the route is `myResources` can be changed by renaming the controller. This approach is the default .NET Core MVC routing approach.
+The route for this example is `/myResources`, which can be changed by renaming the controller.
 
-## Customizing the Routing Convention
-It is possible to fully customize routing behavior by registering a `IJsonApiRoutingConvention` implementation.
-```c#
-// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddSingleton<IJsonApiConvention, CustomRoutingConvention>();
-}
-```
 
 ## Disabling the Default Routing Convention
-It is possible to completely bypass the default routing convention for a particular controller and specify a custom routing template by using the `DisableRoutingConvention` attribute.
-In the following example, the `CamelCasedModel` resource can be accessed on `/my-custom-route`.
 
+It is possible to by-pass the default routing convention for a controller by combining the `Route` and `DisableRoutingConvention`attributes. Any usage of `Route` without `DisableRoutingConvention` is ignored.
 ```c#
-[Route("my-custom-route"), DisableRoutingConvention]
+[Route("v1/camelCasedModels"), DisableRoutingConvention]
 public class MyCustomResourceController : JsonApiController<CamelCasedModel> { /* ... */ }
+```
+This example exposes a versioned `CamelCasedModel` endpoint. To ensure guarantee valid link building, it is *highly recommended* to match your custom url with the public name of the associated resource.
+
+## Advanced Usage: Custom Routing Convention.
+
+It is possible to use a [custom routing convention](add-link) by registering a custom `IJsonApiRoutingConvention` implementation. This is generally not recommended and for advanced usage only.
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+	services.AddSingleton<IJsonApiConvention, CustomRoutingConvention>();
+}
 ```
