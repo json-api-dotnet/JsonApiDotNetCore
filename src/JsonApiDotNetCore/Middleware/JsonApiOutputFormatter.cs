@@ -6,11 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    /// <summary>
-    /// Extensibility point for writing outgoing HTTP response.
-    /// </summary>
+    /// <inheritdoc />
     public sealed class JsonApiOutputFormatter : IJsonApiOutputFormatter
     {
+        /// <inheritdoc />
         public bool CanWriteResult(OutputFormatterCanWriteContext context)
         {
             if (context == null)
@@ -21,6 +20,7 @@ namespace JsonApiDotNetCore.Middleware
             return context.HttpContext.IsJsonApiRequest();
         }
 
+        /// <inheritdoc />
         public async Task WriteAsync(OutputFormatterWriteContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
