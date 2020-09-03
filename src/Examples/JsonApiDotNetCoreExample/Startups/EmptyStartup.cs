@@ -11,10 +11,16 @@ namespace JsonApiDotNetCoreExample
     /// </summary>
     public abstract class EmptyStartup
     {
-        protected EmptyStartup(IConfiguration configuration) { }
+        protected EmptyStartup(IConfiguration configuration)
+        {
+        }
 
-        public virtual void ConfigureServices(IServiceCollection services) { }
+        public virtual void ConfigureServices(IServiceCollection services)
+        {
+        }
 
-        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment environment) { }
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
+        {
+        }
     }
 }

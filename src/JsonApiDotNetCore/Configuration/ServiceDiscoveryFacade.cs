@@ -68,12 +68,12 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Scan the calling assembly.
+        /// Mark the calling assembly for scanning of resources and injectables.
         /// </summary>
         public ServiceDiscoveryFacade AddCurrentAssembly() => AddAssembly(Assembly.GetCallingAssembly());
 
         /// <summary>
-        /// Scan the specified assembly.
+        /// Mark the specified assembly for scanning of resources and injectables.
         /// </summary>
         public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
         {

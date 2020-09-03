@@ -9,6 +9,9 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Configuration
 {
+    /// <summary>
+    /// Builds and configures the <see cref="ResourceGraph"/>.
+    /// </summary>
     public class ResourceGraphBuilder
     {
         private readonly ILogger<ResourceGraphBuilder> _logger;
@@ -17,11 +20,8 @@ namespace JsonApiDotNetCore.Configuration
 
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(loggerFactory));
-            }
-            
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+
             _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
             _options = options ?? throw new ArgumentNullException(nameof(options));
         }
@@ -45,29 +45,39 @@ namespace JsonApiDotNetCore.Configuration
                 resourceContext.TopLevelLinks = attribute.TopLevelLinks;
             }
         }
-
+        
         /// <summary>
-        /// Adds a json:api resource to the resource graph.
+        /// Adds a json:api resource.
         /// </summary>
-        /// <typeparam name="TResource">The resource type.</typeparam>
-        /// <typeparam name="TId">The identifier type of the resource</typeparam>
+        /// <typeparam name="TResource">The resource model type.</typeparam>
         /// <param name="publicName">
-        /// The name under which the resource is publicly exposed by the API. 
+        /// The pluralized name, under which the resource is publicly exposed by the API. 
+        /// If nothing is specified, the configured casing convention formatter will be applied.
+        /// </param>
+        public ResourceGraphBuilder Add<TResource>(string publicName = null) where TResource : class, IIdentifiable<int>
+            => Add<TResource, int>(publicName);
+        
+        /// <summary>
+        /// Adds a json:api resource.
+        /// </summary>
+        /// <typeparam name="TResource">The resource model type.</typeparam>
+        /// <typeparam name="TId">The resource model identifier type.</typeparam>
+        /// <param name="publicName">
+        /// The pluralized name, under which the resource is publicly exposed by the API. 
         /// If nothing is specified, the configured casing convention formatter will be applied.
         /// </param>
         public ResourceGraphBuilder Add<TResource, TId>(string publicName = null) where TResource : class, IIdentifiable<TId>
             => Add(typeof(TResource), typeof(TId), publicName);
         
         /// <summary>
-        /// <see cref="Add{TResource,TId}(string)"/>  
+        /// Adds a json:api resource.
         /// </summary>
-        public ResourceGraphBuilder Add<TResource>(string publicName = null) where TResource : class, IIdentifiable<int>
-            => Add<TResource, int>(publicName);
-        
-
-        /// <summary>
-        /// <see cref="Add{TResource,TId}(string)"/>  
-        /// </summary>
+        /// <param name="resourceType">The resource model type.</param>
+        /// <param name="idType">The resource model identifier type.</param>
+        /// <param name="publicName">
+        /// The pluralized name, under which the resource is publicly exposed by the API. 
+        /// If nothing is specified, the configured casing convention formatter will be applied.
+        /// </param>
         public ResourceGraphBuilder Add(Type resourceType, Type idType = null, string publicName = null)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));

@@ -28,20 +28,13 @@ namespace JsonApiDotNetCore.Configuration
                 foreach (ResourceContext ce in _provider.GetResourceContexts())
                 {
                     IEntityType meta = context.Model.FindEntityType(ce.ResourceType);
-                    if (meta == null)
-                    {
-                        continue;
-                    }
-                    
+                    if (meta == null) continue;
                     foreach (var attr in ce.Relationships)
                     {
-                        if (attr is HasManyThroughAttribute)
-                        {
-                            continue;
-                        }
+                        if (attr is HasManyThroughAttribute) continue;
                         INavigation inverseNavigation = meta.FindNavigation(attr.Property.Name)?.FindInverse();
                         attr.InverseNavigation = inverseNavigation?.Name;
-                    }          
+                    }
                 }
             }
         }

@@ -7,7 +7,9 @@ namespace JsonApiDotNetCoreExample
 {
     public class TestStartup : Startup
     {
-        public TestStartup(IConfiguration configuration) : base(configuration) { }
+        public TestStartup(IConfiguration configuration) : base(configuration)
+        {
+        }
 
         protected override void ConfigureClock(IServiceCollection services)
         {
