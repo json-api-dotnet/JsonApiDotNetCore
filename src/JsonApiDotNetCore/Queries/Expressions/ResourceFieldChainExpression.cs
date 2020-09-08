@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Represents a chain of fields (relationships and attributes), resulting from text such as: articles.revisions.author
     /// </summary>
-    public class ResourceFieldChainExpression : IdentifierExpression, IEquatable<ResourceFieldChainExpression>
+    public class ResourceFieldChainExpression : IdentifierExpression
     {
         public IReadOnlyCollection<ResourceFieldAttribute> Fields { get; }
 
@@ -43,29 +43,33 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return string.Join(".", Fields.Select(field => field.PublicName));
         }
 
-        public bool Equals(ResourceFieldChainExpression other)
+        public override bool Equals(object obj)
         {
-            if (other is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
+            if (ReferenceEquals(this, obj))
             {
                 return true;
             }
 
-            return Fields.SequenceEqual(other.Fields);
-        }
+            if (obj is null || GetType() != obj.GetType())
+            {
+                return false;
+            }
 
-        public override bool Equals(object other)
-        {
-            return Equals(other as ResourceFieldChainExpression);
+            var other = (ResourceFieldChainExpression) obj;
+
+            return Fields.SequenceEqual(other.Fields);
         }
 
         public override int GetHashCode()
         {
-            return Fields.Aggregate(0, HashCode.Combine);
+            var hashCode = new HashCode();
+
+            foreach (var field in Fields)
+            {
+                hashCode.Add(field);
+            }
+
+            return hashCode.ToHashCode();
         }
     }
 }

@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// The name of the join property on the parent resource.
         /// In the example described above, this would be "ArticleTags".
         /// </summary>
-        internal string ThroughPropertyName { get; }
+        public string ThroughPropertyName { get; }
 
         /// <summary>
         /// The join type.
@@ -146,6 +146,32 @@ namespace JsonApiDotNetCore.Resources.Annotations
                 var typedCollection = TypeHelper.CopyToTypedCollection(throughResources, ThroughProperty.PropertyType);
                 ThroughProperty.SetValue(resource, typedCollection);
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (HasManyThroughAttribute) obj;
+
+            return ThroughPropertyName == other.ThroughPropertyName && ThroughType == other.ThroughType &&
+                   LeftProperty == other.LeftProperty && LeftIdProperty == other.LeftIdProperty &&
+                   RightProperty == other.RightProperty && RightIdProperty == other.RightIdProperty &&
+                   ThroughProperty == other.ThroughProperty && base.Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ThroughPropertyName, ThroughType, LeftProperty, LeftIdProperty, RightProperty,
+                RightIdProperty, ThroughProperty, base.GetHashCode());
         }
     }
 }

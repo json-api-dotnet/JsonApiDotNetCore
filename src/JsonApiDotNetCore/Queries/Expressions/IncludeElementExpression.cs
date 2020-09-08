@@ -44,5 +44,35 @@ namespace JsonApiDotNetCore.Queries.Expressions
             
             return builder.ToString();
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (IncludeElementExpression) obj;
+
+            return Relationship.Equals(other.Relationship) == Children.SequenceEqual(other.Children);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = new HashCode();
+            hashCode.Add(Relationship);
+
+            foreach (var child in Children)
+            {
+                hashCode.Add(child);
+            }
+
+            return hashCode.ToHashCode();
+        }
     }
 }

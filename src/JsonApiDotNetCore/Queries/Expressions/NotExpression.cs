@@ -24,5 +24,27 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             return $"{Keywords.Not}({Child})";
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (NotExpression) obj;
+
+            return Child.Equals(other.Child);
+        }
+
+        public override int GetHashCode()
+        {
+            return Child.GetHashCode();
+        }
     }
 }

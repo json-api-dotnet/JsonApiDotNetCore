@@ -89,20 +89,25 @@ namespace JsonApiDotNetCore.Resources.Annotations
 
         public override bool Equals(object obj)
         {
-            if (obj == null || GetType() != obj.GetType())
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null || GetType() != obj.GetType())
             {
                 return false;
             }
 
             var other = (RelationshipAttribute) obj;
 
-            return PublicName == other.PublicName && LeftType == other.LeftType &&
-                   RightType == other.RightType;
+            return LeftType == other.LeftType && RightType == other.RightType && Links == other.Links && 
+                CanInclude == other.CanInclude && base.Equals(other);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(PublicName, LeftType, RightType);
+            return HashCode.Combine(LeftType, RightType, Links, CanInclude, base.GetHashCode());
         }
     }
 }

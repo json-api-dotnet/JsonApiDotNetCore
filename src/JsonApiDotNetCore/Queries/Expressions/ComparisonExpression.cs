@@ -28,5 +28,27 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             return $"{Operator.ToString().Camelize()}({Left},{Right})";
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (ComparisonExpression) obj;
+
+            return Operator == other.Operator && Left.Equals(other.Left) && Right.Equals(other.Right);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Operator, Left, Right);
+        }
     }
 }
