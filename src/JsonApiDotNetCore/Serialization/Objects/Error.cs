@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         public string Title { get; set; }
 
         /// <summary>
-        /// A human-readable explanation specific to this occurrence of the problem. Like title, this field’s value can be localized.
+        /// A human-readable explanation specific to this occurrence of the problem. Like title, this field's value can be localized.
         /// </summary>
         [JsonProperty]
         public string Detail { get; set; }
