@@ -156,7 +156,7 @@ namespace JsonApiDotNetCore.Services
             var primaryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
             primaryLayer.Sort = null;
             primaryLayer.Pagination = null;
-            primaryLayer.Filter = CreateFilterById(id);
+            primaryLayer.Filter = IncludeFilterById(id, primaryLayer.Filter);
 
             if (!allowTopSparseFieldSet && primaryLayer.Projection != null)
             {
@@ -176,12 +176,16 @@ namespace JsonApiDotNetCore.Services
             return primaryResource;
         }
 
-        private FilterExpression CreateFilterById(TId id)
+        private FilterExpression IncludeFilterById(TId id, FilterExpression existingFilter)
         {
             var primaryIdAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
 
-            return new ComparisonExpression(ComparisonOperator.Equals,
+            FilterExpression filterById = new ComparisonExpression(ComparisonOperator.Equals,
                 new ResourceFieldChainExpression(primaryIdAttribute), new LiteralConstantExpression(id.ToString()));
+
+            return existingFilter == null
+                ? filterById
+                : new LogicalExpression(LogicalOperator.And, new[] {filterById, existingFilter});
         }
 
         /// <inheritdoc />
@@ -279,12 +283,15 @@ namespace JsonApiDotNetCore.Services
         // triggered by PATCH /articles/1/relationships/{relationshipName}
         public virtual async Task UpdateRelationshipAsync(TId id, string relationshipName, object relationships)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, related = relationships});
+            _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
 
             var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
+            secondaryLayer.Projection = _queryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(_request.SecondaryResource);
+            secondaryLayer.Include = null;
+
             var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
             primaryLayer.Projection = null;
 
@@ -306,7 +313,7 @@ namespace JsonApiDotNetCore.Services
                     : ((IEnumerable<IIdentifiable>) relationships).Select(e => e.StringId).ToArray();
             }
 
-            await _repository.UpdateRelationshipsAsync(primaryResource, _request.Relationship, relationshipIds ?? Array.Empty<string>());
+            await _repository.UpdateRelationshipAsync(primaryResource, _request.Relationship, relationshipIds ?? Array.Empty<string>());
 
             if (_hookExecutor != null && primaryResource != null)
             {

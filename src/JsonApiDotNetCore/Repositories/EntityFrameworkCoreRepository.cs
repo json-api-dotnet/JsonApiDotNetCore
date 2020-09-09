@@ -285,7 +285,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds)
+        public async Task UpdateRelationshipAsync(object parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds)
         {
             _traceWriter.LogMethodStart(new {parent, relationship, relationshipIds});
             if (parent == null) throw new ArgumentNullException(nameof(parent));
