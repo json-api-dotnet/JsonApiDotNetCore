@@ -4,7 +4,7 @@ using System.Linq;
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
-    /// Building block for rewriting <see cref="QueryExpression" /> trees. It walks nested expressions and updates parent on changes.
+    /// Building block for rewriting <see cref="QueryExpression" /> trees. It walks through nested expressions and updates parent on changes.
     /// </summary>
     public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgument, QueryExpression>
     {
