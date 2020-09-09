@@ -77,10 +77,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Configures built-in .NET Core MVC (things like middleware, routing). Most of this configuration can be adjusted for the developers' need.
-        /// Before calling .AddJsonApi(), a developer can register their own implementation of the following services to customize startup:
-        /// <see cref="ResourceGraphBuilder"/>, <see cref="ServiceDiscoveryFacade"/>, <see cref="IAsyncResourceTypeMatchFilter"/>,
-        /// <see cref="IAsyncJsonApiExceptionFilter"/> and <see cref="IJsonApiRoutingConvention"/>.
+        /// Configures built-in ASP.NET Core MVC components. Most of this configuration can be adjusted for the developers' need.
         /// </summary>
         public void ConfigureMvc()
         {
@@ -277,10 +274,7 @@ namespace JsonApiDotNetCore.Configuration
                 builder.Add(entityType.ClrType);
             }
         }
-
-        /// <summary>
-        /// Performs auto-discovery of JsonApiDotNetCore services.
-        /// </summary>
+        
         private void AutoDiscoverResources(ServiceDiscoveryFacade serviceDiscoveryFacade)
         {
             serviceDiscoveryFacade.DiscoverResources();
@@ -297,7 +291,7 @@ namespace JsonApiDotNetCore.Configuration
         
         public void Dispose()
         {
-            _intermediateProvider?.Dispose();
+            _intermediateProvider.Dispose();
         }
     }
 }

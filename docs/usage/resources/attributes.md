@@ -14,13 +14,7 @@ public class Person : Identifiable
 
 There are two ways the public attribute name is determined:
 
-1. By convention, specified in @JsonApiDotNetCore.Configuration.JsonApiOptions#JsonApiDotNetCore_Configuration_JsonApiOptions_SerializerSettings
-```c#
-options.SerializerSettings.ContractResolver = new DefaultContractResolver
-{
-    NamingStrategy = new KebabCaseNamingStrategy() // default: CamelCaseNamingStrategy
-};
-```
+1. By convention, specified by configuring the [naming strategy](./options.md#custom-serializer-settings).
 
 2. Individually using the attribute's constructor
 ```c#

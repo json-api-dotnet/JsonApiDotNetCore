@@ -1,34 +1,26 @@
 # Middleware
 
-It is possible to execute your own middleware before or after `JsonApiMiddleware` by registering it accordingly.
+It is possible to replace JsonApiDotNetCore middleware components by configuring the IoC container and by configuring `MvcOptions`. 
 
-```c#
-/// In Startup.Configure
-app.UseMiddleware<CustomPreMiddleware>();
-app.UseJsonApi();
-app.UseMiddleware<CustomPostMiddleware>();
-```
+## Configuring the IoC container 
 
-It is also possible to replace any other JsonApiDotNetCore middleware component. The following example replaces the internal exception filter with a custom implementation
+The following example replaces the internal exception filter with a custom implementation
 ```c#
 /// In Startup.ConfigureServices
 services.AddService<IJsonApiGlobalExceptionFilter, CustomExceptionFilter>()
 ```
 
-Alternatively, you can add additional middleware components by configuring `MvcOptions` directly.
+## Configuring `MvcOptions`
 
-## Configuring MvcOptions
-
-JsonApiDotNetCore configures `MvcOptions` internally when calling `AddJsonApi()`. Additionaly, it is possible to perform a custom configuration of `MvcOptions`. To prevent the library from overwriting your configuration, it is recommended to configure it *after* the library is done configuring `MvcOptions`.
-
-The following example demonstrates this by clearing all internal filters and registering a custom one.
+To prevent the library from overwriting your configuration, perform your configuration *after* the library is done configuring `MvcOptions`. The following example replaces all internal filters with a custom filter.
 ```c#
 /// In Startup.ConfigureServices
 services.AddSingleton<CustomFilter>();
 var builder = services.AddMvcCore();
 services.AddJsonApi<AppDbContext>(mvcBuilder: builder);
-// Ensure the configuration action is registered after the `AddJsonApiCall`.
-builder.AddMvcOptions( mvcOptions =>
+
+// Ensure the configuration action is registered after the `AddJsonApi()` call.
+builder.AddMvcOptions(mvcOptions =>
 {
     // Execute the MvcOptions configuration callback after the JsonApiDotNetCore callback as been executed.
     _postConfigureMvcOptions?.Invoke(mvcOptions);
@@ -36,6 +28,7 @@ builder.AddMvcOptions( mvcOptions =>
 
 /// In Startup.Configure
 app.UseJsonApi();
+
 // Ensure the configuration callback is set after calling `UseJsonApi()`.
 _postConfigureMvcOptions = mvcOptions => 
 { 
