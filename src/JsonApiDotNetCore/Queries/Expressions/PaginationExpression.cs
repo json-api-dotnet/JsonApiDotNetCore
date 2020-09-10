@@ -26,5 +26,27 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             return PageSize != null ? $"Page number: {PageNumber}, size: {PageSize}" : "(none)";
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (PaginationExpression) obj;
+
+            return PageNumber.Equals(other.PageNumber) && Equals(PageSize, other.PageSize);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(PageNumber, PageSize);
+        }
     }
 }

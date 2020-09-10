@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             var resourceContext = ResourceContextProvider.GetResourceContext(resource.GetType());
 
             // populating the top-level "type" and "id" members.
-            var ro = new ResourceObject { Type = resourceContext.ResourceName, Id = resource.StringId == string.Empty ? null : resource.StringId };
+            var ro = new ResourceObject { Type = resourceContext.PublicName, Id = resource.StringId == string.Empty ? null : resource.StringId };
 
             // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
             if (attributes != null && (attributes = attributes.Where(attr => attr.Property.Name != nameof(Identifiable.Id)).ToArray()).Any())
@@ -105,7 +105,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         private ResourceIdentifierObject GetResourceIdentifier(IIdentifiable resource)
         {
-            var resourceName = ResourceContextProvider.GetResourceContext(resource.GetType()).ResourceName;
+            var resourceName = ResourceContextProvider.GetResourceContext(resource.GetType()).PublicName;
             return new ResourceIdentifierObject
             {
                 Type = resourceName,

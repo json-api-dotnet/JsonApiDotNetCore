@@ -21,7 +21,7 @@ from Entity Framework Core `IQueryable` execution.
 There are some cases where you want attributes conditionally excluded from your resource response.
 For example, you may accept some sensitive data that should only be exposed to administrators after creation.
 
-Note: to exclude attributes unconditionally, use `Attr[~AttrCapabilities.AllowView]`.
+Note: to exclude attributes unconditionally, use `[Attr(Capabilities = ~AttrCapabilities.AllowView)]`.
 
 ```c#
 public class UserDefinition : ResourceDefinition<User>

@@ -35,5 +35,27 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             return $"handler('{_parameterValue}')";
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (QueryableHandlerExpression) obj;
+
+            return _queryableHandler == other._queryableHandler && _parameterValue.Equals(other._parameterValue);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_queryableHandler, _parameterValue);
+        }
     }
 }

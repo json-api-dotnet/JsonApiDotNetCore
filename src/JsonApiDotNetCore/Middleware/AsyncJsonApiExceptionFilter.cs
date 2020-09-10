@@ -1,22 +1,22 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    /// <summary>
-    /// Global exception filter that wraps any thrown error with a JsonApiException.
-    /// </summary>
-    public sealed class JsonApiExceptionFilter : ActionFilterAttribute, IExceptionFilter
+    /// <inheritdoc />
+    public class AsyncJsonApiExceptionFilter : IAsyncJsonApiExceptionFilter
     {
         private readonly IExceptionHandler _exceptionHandler;
 
-        public JsonApiExceptionFilter(IExceptionHandler exceptionHandler)
+        public AsyncJsonApiExceptionFilter(IExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler));
         }
 
-        public void OnException(ExceptionContext context)
+        /// <inheritdoc />
+        public Task OnExceptionAsync(ExceptionContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
@@ -29,6 +29,8 @@ namespace JsonApiDotNetCore.Middleware
                     StatusCode = (int) errorDocument.GetErrorStatusCode()
                 };
             }
+
+            return Task.CompletedTask;
         }
     }
 }

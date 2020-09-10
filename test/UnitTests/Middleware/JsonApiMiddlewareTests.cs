@@ -152,7 +152,7 @@ namespace UnitTests.Middleware
             var mockGraph = new Mock<IResourceGraph>();
             var resourceContext = new ResourceContext
             {
-                ResourceName = resourceName,
+                PublicName = resourceName,
                 IdentityType = typeof(string)
             };
              var seq = mockGraph.SetupSequence(d => d.GetResourceContext(It.IsAny<Type>())).Returns(resourceContext);
@@ -160,7 +160,7 @@ namespace UnitTests.Middleware
             {
                 var relResourceContext = new ResourceContext
                 {
-                    ResourceName = "todoItems",
+                    PublicName = "todoItems",
                     IdentityType = typeof(string)
                 };
                 seq.Returns(relResourceContext);

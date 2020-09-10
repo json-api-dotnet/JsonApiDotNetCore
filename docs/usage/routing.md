@@ -1,15 +1,7 @@
 # Routing
 
-By default the library will configure routes for each controller.
-Based on the [recommendations](https://jsonapi.org/recommendations/) outlined in the json:api spec, routes are camel-cased.
-
-```http
-GET /api/compoundModels HTTP/1.1
-```
-
 ## Namespacing and Versioning URLs
-
-You can add a namespace to all URLs by specifying it in ConfigureServices
+You can add a namespace to all URLs by specifying it in ConfigureServices.
 
 ```c#
 public void ConfigureServices(IServiceCollection services)
@@ -20,40 +12,47 @@ public void ConfigureServices(IServiceCollection services)
 ```
 Which results in URLs like: https://yourdomain.com/api/v1/people
 
-## Disable Convention
+## Default Routing Convention
 
-You can disable the default casing convention and specify your own template by using the `DisableRoutingConvention` attribute.
+The library will configure routes for all controllers in your project. By default, routes are camel-cased. This is based on the [recommendations](https://jsonapi.org/recommendations/) outlined in the json:api spec.
 
 ```c#
-[Route("[controller]")]
-[DisableRoutingConvention]
-public class CamelCasedModelsController : JsonApiController<CamelCasedModel>
-{
-    public CamelCasedModelsController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
-        IResourceService<CamelCasedModel> resourceService)
-        : base(options, loggerFactory, resourceService)
-    { }
-}
+public class OrderLine : Identifiable {  }
+
+public class OrderLineController : JsonApiController<OrderLine> { /* .... */ }
 ```
 
-It is important to note that your routes must still end with the model name in the same format as the resource name. This is so that we can build accurate resource links in the json:api document. For example, if you define a resource as MyModels, the controller route must match.
+```http
+GET /orderLines HTTP/1.1
+```
 
+The public name of the resource ([which can be customized](./resource-graph.md#public-resource-name)) is used for the route, instead of the controller name.
+
+### Non-json:api controllers
+
+If a controller does not inherit from `JsonApiController<TResource>`, the [configured naming convention](./options.md#custom-serializer-settings) is applied to the name of the controller.
+```c#
+public class OrderLineController : ControllerBase { /* .... */ }
+```
+```http
+GET /orderLines HTTP/1.1
+```
+
+## Disabling the Default Routing Convention
+
+It is possible to bypass the default routing convention for a controller.
+```c#
+[Route("v1/custom/route/orderLines"), DisableRoutingConvention]
+public class OrderLineController : JsonApiController<OrderLine> { /* ... */ }
+```
+It is required to match your custom url with the public name of the associated resource.
+
+## Advanced Usage: Custom Routing Convention
+
+It is possible to replace the built-in routing convention with a [custom routing convention]](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-3.1#sample-custom-routing-convention) by registering an implementation of `IJsonApiRoutingConvention`.
 ```c#
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddJsonApi(resources: builder =>
-        builder.AddResource<TodoItem>("my-models")); // kebab-cased
-}
-
-// controller definition
-[Route("api/my-models"), DisableRoutingConvention]
-public class MyModelsController : JsonApiController<TodoItem>
-{
-  //...
+	services.AddSingleton<IJsonApiRoutingConvention, CustomRoutingConvention>();
 }
 ```
-
-See [this](~/usage/resource-graph.md#public-resource-type-name) for
-more information on how the resource name is determined.

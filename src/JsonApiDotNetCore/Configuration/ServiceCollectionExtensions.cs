@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Client.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -17,14 +18,13 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public static IServiceCollection AddJsonApi(this IServiceCollection services,
             Action<JsonApiOptions> options = null,
-            Action<IServiceDiscoveryFacade> discovery = null,
-            Action<IResourceGraphBuilder> resources = null,
+            Action<ServiceDiscoveryFacade> discovery = null,
+            Action<ResourceGraphBuilder> resources = null,
             IMvcCoreBuilder mvcBuilder = null)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, null);
-            ResolveInverseRelationships(services);
 
             return services;
         }
@@ -34,41 +34,32 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public static IServiceCollection AddJsonApi<TDbContext>(this IServiceCollection services,
             Action<JsonApiOptions> options = null,
-            Action<IServiceDiscoveryFacade> discovery = null,
-            Action<IResourceGraphBuilder> resources = null,
+            Action<ServiceDiscoveryFacade> discovery = null,
+            Action<ResourceGraphBuilder> resources = null,
             IMvcCoreBuilder mvcBuilder = null)
             where TDbContext : DbContext
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, typeof(TDbContext));
-            ResolveInverseRelationships(services);
 
             return services;
         }
 
-        private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> options,
-            Action<IServiceDiscoveryFacade> discovery,
-            Action<IResourceGraphBuilder> resources, IMvcCoreBuilder mvcBuilder, Type dbContextType)
+        private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> configureOptions,
+            Action<ServiceDiscoveryFacade> configureAutoDiscovery,
+            Action<ResourceGraphBuilder> configureResourceGraph, IMvcCoreBuilder mvcBuilder, Type dbContextType)
         {
-            var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
+            using var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
 
-            applicationBuilder.ConfigureJsonApiOptions(options);
-            applicationBuilder.ConfigureMvc(dbContextType);
-            applicationBuilder.AutoDiscover(discovery);
-            applicationBuilder.ConfigureResources(resources);
-            applicationBuilder.ConfigureServices();
+            applicationBuilder.ConfigureJsonApiOptions(configureOptions);
+            applicationBuilder.ConfigureAutoDiscovery(configureAutoDiscovery);
+            applicationBuilder.AddResourceGraph(dbContextType, configureResourceGraph);
+            applicationBuilder.ConfigureMvc();
+            applicationBuilder.DiscoverInjectables();
+            applicationBuilder.ConfigureServices(dbContextType);
         }
-
-        private static void ResolveInverseRelationships(IServiceCollection services)
-        {
-            using var intermediateProvider = services.BuildServiceProvider();
-            using var scope = intermediateProvider.CreateScope();
-
-            var inverseRelationshipResolver = scope.ServiceProvider.GetService<IInverseRelationships>();
-            inverseRelationshipResolver?.Resolve();
-        }
-
+        
         /// <summary>
         /// Enables client serializers for sending requests and receiving responses
         /// in json:api format. Internally only used for testing.

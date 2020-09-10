@@ -47,29 +47,34 @@ namespace DiscoveryTests
             _resourceGraphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
         }
 
-        private ServiceDiscoveryFacade Facade => new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
-
         [Fact]
-        public void AddAssembly_Adds_All_Resources_To_Graph()
+        public void DiscoverResources_Adds_Resources_From_Added_Assembly_To_Graph()
         {
-            // Arrange, act
-            Facade.AddAssembly(typeof(Person).Assembly);
+            // Arrange
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
+            facade.AddAssembly(typeof(Person).Assembly);
 
+            // Act
+            facade.DiscoverResources();
+            
             // Assert
             var resourceGraph = _resourceGraphBuilder.Build();
             var personResource = resourceGraph.GetResourceContext(typeof(Person));
             var articleResource = resourceGraph.GetResourceContext(typeof(Article));
-
             Assert.NotNull(personResource);
             Assert.NotNull(articleResource);
         }
 
         [Fact]
-        public void AddCurrentAssembly_Adds_Resources_To_Graph()
+        public void DiscoverResources_Adds_Resources_From_Current_Assembly_To_Graph()
         {
-            // Arrange, act
-            Facade.AddCurrentAssembly();
-
+            // Arrange
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
+            facade.AddCurrentAssembly();
+            
+            // Act
+            facade.DiscoverResources();
+            
             // Assert
             var resourceGraph = _resourceGraphBuilder.Build();
             var testModelResource = resourceGraph.GetResourceContext(typeof(TestModel));
@@ -77,11 +82,15 @@ namespace DiscoveryTests
         }
 
         [Fact]
-        public void AddCurrentAssembly_Adds_Services_To_Container()
+        public void DiscoverInjectables_Adds_Resource_Services_From_Current_Assembly_To_Container()
         {
-            // Arrange, act
-            Facade.AddCurrentAssembly();
-
+            // Arrange
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
+            facade.AddCurrentAssembly();
+            
+            // Act
+            facade.DiscoverInjectables();
+            
             // Assert
             var services = _services.BuildServiceProvider();
             var service = services.GetService<IResourceService<TestModel>>();
@@ -89,16 +98,34 @@ namespace DiscoveryTests
         }
 
         [Fact]
-        public void AddCurrentAssembly_Adds_Repositories_To_Container()
+        public void DiscoverInjectables_Adds_Resource_Repositories_From_Current_Assembly_To_Container()
         {
-            // Arrange, act
-            Facade.AddCurrentAssembly();
+            // Arrange
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
+            facade.AddCurrentAssembly();
+            
+            // Act
+            facade.DiscoverInjectables();
 
             // Assert
             var services = _services.BuildServiceProvider();
             Assert.IsType<TestModelRepository>(services.GetService<IResourceRepository<TestModel>>());
         }
 
+        [Fact]
+        public void AddCurrentAssembly_Adds_Resource_Definitions_From_Current_Assembly_To_Container()
+        {
+            // Arrange
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
+            facade.AddCurrentAssembly();
+            
+            // Act
+            facade.DiscoverInjectables();
+
+            // Assert
+            var services = _services.BuildServiceProvider();
+            Assert.IsType<TestModelResourceDefinition>(services.GetService<ResourceDefinition<TestModel>>());
+        }
         public sealed class TestModel : Identifiable { }
 
         public class TestModelService : JsonApiResourceService<TestModel>
@@ -132,6 +159,11 @@ namespace DiscoveryTests
                 ILoggerFactory loggerFactory)
                 : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory)
             { }
+        }
+        
+        public class TestModelResourceDefinition : ResourceDefinition<TestModel>
+        {
+            public TestModelResourceDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
         }
     }
 }

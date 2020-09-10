@@ -1,3 +1,5 @@
+using System;
+
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
@@ -22,6 +24,28 @@ namespace JsonApiDotNetCore.Queries.Expressions
         public override string ToString()
         {
             return Scope == null ? Value.ToString() : $"{Scope}: {Value}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (PaginationElementQueryStringValueExpression) obj;
+
+            return Equals(Scope, other.Scope) && Value == other.Value;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Scope, Value);
         }
     }
 }

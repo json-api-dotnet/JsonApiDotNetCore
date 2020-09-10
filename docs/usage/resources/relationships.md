@@ -11,10 +11,10 @@ For example, a TodoItem may have an Owner and so the Id attribute should be Owne
 ```c#
 public class TodoItem : Identifiable<int>
 {
-    [Attr("description")]
+    [Attr]
     public string Description { get; set; }
 
-    [HasOne("owner")]
+    [HasOne]
     public Person Owner { get; set; }
     public int OwnerId { get; set; }
 }
@@ -28,10 +28,10 @@ the @JsonApiDotNetCore.Configuration.JsonApiOptions#JsonApiDotNetCore_Configurat
 ```c#
 public class Person : Identifiable<int>
 {
-    [Attr("first-name")]
+    [Attr(PublicName = "first-name")]
     public string FirstName { get; set; }
 
-    [HasMany("todo-items")]
+    [HasMany(PublicName = "todo-items")]
     public ICollection<TodoItem> TodoItems { get; set; }
 }
 ```

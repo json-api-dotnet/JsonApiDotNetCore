@@ -76,7 +76,7 @@ namespace UnitTests.Extensions
             var resourceContext = graph.GetResourceContext<Author>();
 
             // Assert 
-            Assert.Equal("authors", resourceContext.ResourceName);
+            Assert.Equal("authors", resourceContext.PublicName);
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace UnitTests.Extensions
             var provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetService<IResourceGraph>();
             var resource = resourceGraph.GetResourceContext(typeof(IntResource));
-            Assert.Equal("intResources", resource.ResourceName);
+            Assert.Equal("intResources", resource.PublicName);
         }
 
         public sealed class IntResource : Identifiable { }

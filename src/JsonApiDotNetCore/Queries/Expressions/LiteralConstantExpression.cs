@@ -24,5 +24,27 @@ namespace JsonApiDotNetCore.Queries.Expressions
             string value = Value.Replace("\'", "\'\'");
             return $"'{value}'";
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (LiteralConstantExpression) obj;
+
+            return Value == other.Value;
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
     }
 }

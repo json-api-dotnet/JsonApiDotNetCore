@@ -24,5 +24,27 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             return $"{Keywords.Has}({TargetCollection})";
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (CollectionNotEmptyExpression) obj;
+
+            return TargetCollection.Equals(other.TargetCollection);
+        }
+
+        public override int GetHashCode()
+        {
+            return TargetCollection.GetHashCode();
+        }
     }
 }

@@ -9,8 +9,10 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Configuration
 {
-    /// <inheritdoc />
-    public class ResourceGraphBuilder : IResourceGraphBuilder
+    /// <summary>
+    /// Builds and configures the <see cref="ResourceGraph"/>.
+    /// </summary>
+    public class ResourceGraphBuilder
     {
         private readonly IJsonApiOptions _options;
         private readonly ILogger<ResourceGraphBuilder> _logger;
@@ -19,12 +21,14 @@ namespace JsonApiDotNetCore.Configuration
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
-            
+
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Constructs the <see cref="ResourceGraph"/>.
+        /// </summary>
         public IResourceGraph Build()
         {
             _resources.ForEach(SetResourceLinksOptions);
@@ -41,17 +45,40 @@ namespace JsonApiDotNetCore.Configuration
                 resourceContext.TopLevelLinks = attribute.TopLevelLinks;
             }
         }
-
-        /// <inheritdoc />
-        public IResourceGraphBuilder Add<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>
-            => Add<TResource, int>(pluralizedTypeName);
-
-        /// <inheritdoc />
-        public IResourceGraphBuilder Add<TResource, TId>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<TId>
-            => Add(typeof(TResource), typeof(TId), pluralizedTypeName);
-
-        /// <inheritdoc />
-        public IResourceGraphBuilder Add(Type resourceType, Type idType = null, string pluralizedTypeName = null)
+        
+        /// <summary>
+        /// Adds a json:api resource with <code>int</code> as the identifier type.
+        /// </summary>
+        /// <typeparam name="TResource">The resource model type.</typeparam>
+        /// <param name="publicName">
+        /// The name under which the resource is publicly exposed by the API. 
+        /// If nothing is specified, the configured naming convention formatter will be applied.
+        /// </param>
+        public ResourceGraphBuilder Add<TResource>(string publicName = null) where TResource : class, IIdentifiable<int>
+            => Add<TResource, int>(publicName);
+        
+        /// <summary>
+        /// Adds a json:api resource.
+        /// </summary>
+        /// <typeparam name="TResource">The resource model type.</typeparam>
+        /// <typeparam name="TId">The resource model identifier type.</typeparam>
+        /// <param name="publicName">
+        /// The name under which the resource is publicly exposed by the API. 
+        /// If nothing is specified, the configured naming convention formatter will be applied.
+        /// </param>
+        public ResourceGraphBuilder Add<TResource, TId>(string publicName = null) where TResource : class, IIdentifiable<TId>
+            => Add(typeof(TResource), typeof(TId), publicName);
+        
+        /// <summary>
+        /// Adds a json:api resource.
+        /// </summary>
+        /// <param name="resourceType">The resource model type.</param>
+        /// <param name="idType">The resource model identifier type.</param>
+        /// <param name="publicName">
+        /// The name under which the resource is publicly exposed by the API. 
+        /// If nothing is specified, the configured naming convention formatter will be applied.
+        /// </param>
+        public ResourceGraphBuilder Add(Type resourceType, Type idType = null, string publicName = null)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
@@ -59,9 +86,9 @@ namespace JsonApiDotNetCore.Configuration
             {
                 if (TypeHelper.IsOrImplementsInterface(resourceType, typeof(IIdentifiable)))
                 {
-                    pluralizedTypeName ??= FormatResourceName(resourceType);
+                    publicName ??= FormatResourceName(resourceType);
                     idType ??= TypeLocator.GetIdType(resourceType);
-                    var resourceContext = CreateResourceContext(pluralizedTypeName, resourceType, idType);
+                    var resourceContext = CreateResourceContext(publicName, resourceType, idType);
                     _resources.Add(resourceContext);
                 }
                 else
@@ -73,9 +100,9 @@ namespace JsonApiDotNetCore.Configuration
             return this;
         }
 
-        private ResourceContext CreateResourceContext(string pluralizedTypeName, Type resourceType, Type idType) => new ResourceContext
+        private ResourceContext CreateResourceContext(string publicName, Type resourceType, Type idType) => new ResourceContext
         {
-            ResourceName = pluralizedTypeName,
+            PublicName = publicName,
             ResourceType = resourceType,
             IdentityType = idType,
             Attributes = GetAttributes(resourceType),
@@ -84,7 +111,7 @@ namespace JsonApiDotNetCore.Configuration
             ResourceDefinitionType = GetResourceDefinitionType(resourceType)
         };
 
-        protected virtual IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
+        private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
@@ -125,7 +152,7 @@ namespace JsonApiDotNetCore.Configuration
             return attributes;
         }
 
-        protected virtual IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType)
+        private IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
@@ -183,7 +210,7 @@ namespace JsonApiDotNetCore.Configuration
             return attributes;
         }
 
-        private static Type TryGetThroughType(PropertyInfo throughProperty)
+        private Type TryGetThroughType(PropertyInfo throughProperty)
         {
             if (throughProperty.PropertyType.IsGenericType)
             {
@@ -201,7 +228,7 @@ namespace JsonApiDotNetCore.Configuration
             return null;
         }
 
-        protected virtual Type GetRelationshipType(RelationshipAttribute relationship, PropertyInfo property)
+        private Type GetRelationshipType(RelationshipAttribute relationship, PropertyInfo property)
         {
             if (relationship == null) throw new ArgumentNullException(nameof(relationship));
             if (property == null) throw new ArgumentNullException(nameof(property));
@@ -234,7 +261,7 @@ namespace JsonApiDotNetCore.Configuration
             return attributes;
         }
 
-        private static Type TypeOrElementType(Type type)
+        private Type TypeOrElementType(Type type)
         {
             var interfaces = type.GetInterfaces()
                 .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)).ToArray();
