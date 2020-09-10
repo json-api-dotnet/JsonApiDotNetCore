@@ -10917,24 +10917,24 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).UpdateAsync
   nameWithType: EntityFrameworkCoreRepository<TResource, TId>.UpdateAsync
   nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).UpdateAsync
-- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.UpdateRelationshipsAsync(System.Object,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.IReadOnlyCollection{System.String})
-  name: UpdateRelationshipsAsync(Object, RelationshipAttribute, IReadOnlyCollection<String>)
-  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_UpdateRelationshipsAsync_System_Object_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_IReadOnlyCollection_System_String__
-  commentId: M:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.UpdateRelationshipsAsync(System.Object,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.IReadOnlyCollection{System.String})
-  name.vb: UpdateRelationshipsAsync(Object, RelationshipAttribute, IReadOnlyCollection(Of String))
-  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.UpdateRelationshipsAsync(System.Object, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.IReadOnlyCollection<System.String>)
-  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).UpdateRelationshipsAsync(System.Object, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.IReadOnlyCollection(Of System.String))
-  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.UpdateRelationshipsAsync(Object, RelationshipAttribute, IReadOnlyCollection<String>)
-  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).UpdateRelationshipsAsync(Object, RelationshipAttribute, IReadOnlyCollection(Of String))
-- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.UpdateRelationshipsAsync*
-  name: UpdateRelationshipsAsync
-  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_UpdateRelationshipsAsync_
-  commentId: Overload:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.UpdateRelationshipsAsync
+- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.UpdateRelationshipAsync(System.Object,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.IReadOnlyCollection{System.String})
+  name: UpdateRelationshipAsync(Object, RelationshipAttribute, IReadOnlyCollection<String>)
+  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_UpdateRelationshipAsync_System_Object_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_IReadOnlyCollection_System_String__
+  commentId: M:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.UpdateRelationshipAsync(System.Object,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.IReadOnlyCollection{System.String})
+  name.vb: UpdateRelationshipAsync(Object, RelationshipAttribute, IReadOnlyCollection(Of String))
+  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.UpdateRelationshipAsync(System.Object, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.IReadOnlyCollection<System.String>)
+  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).UpdateRelationshipAsync(System.Object, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.IReadOnlyCollection(Of System.String))
+  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.UpdateRelationshipAsync(Object, RelationshipAttribute, IReadOnlyCollection<String>)
+  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).UpdateRelationshipAsync(Object, RelationshipAttribute, IReadOnlyCollection(Of String))
+- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.UpdateRelationshipAsync*
+  name: UpdateRelationshipAsync
+  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_UpdateRelationshipAsync_
+  commentId: Overload:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.UpdateRelationshipAsync
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.UpdateRelationshipsAsync
-  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).UpdateRelationshipsAsync
-  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.UpdateRelationshipsAsync
-  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).UpdateRelationshipsAsync
+  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.UpdateRelationshipAsync
+  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).UpdateRelationshipAsync
+  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.UpdateRelationshipAsync
+  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).UpdateRelationshipAsync
 - uid: JsonApiDotNetCore.Repositories.IDbContextResolver
   name: IDbContextResolver
   href: api/JsonApiDotNetCore.Repositories.IDbContextResolver.html
@@ -11132,24 +11132,24 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.IResourceWriteRepository(Of TResource, TId).UpdateAsync
   nameWithType: IResourceWriteRepository<TResource, TId>.UpdateAsync
   nameWithType.vb: IResourceWriteRepository(Of TResource, TId).UpdateAsync
-- uid: JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.UpdateRelationshipsAsync(System.Object,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.IReadOnlyCollection{System.String})
-  name: UpdateRelationshipsAsync(Object, RelationshipAttribute, IReadOnlyCollection<String>)
-  href: api/JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_UpdateRelationshipsAsync_System_Object_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_IReadOnlyCollection_System_String__
-  commentId: M:JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.UpdateRelationshipsAsync(System.Object,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.IReadOnlyCollection{System.String})
-  name.vb: UpdateRelationshipsAsync(Object, RelationshipAttribute, IReadOnlyCollection(Of String))
-  fullName: JsonApiDotNetCore.Repositories.IResourceWriteRepository<TResource, TId>.UpdateRelationshipsAsync(System.Object, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.IReadOnlyCollection<System.String>)
-  fullName.vb: JsonApiDotNetCore.Repositories.IResourceWriteRepository(Of TResource, TId).UpdateRelationshipsAsync(System.Object, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.IReadOnlyCollection(Of System.String))
-  nameWithType: IResourceWriteRepository<TResource, TId>.UpdateRelationshipsAsync(Object, RelationshipAttribute, IReadOnlyCollection<String>)
-  nameWithType.vb: IResourceWriteRepository(Of TResource, TId).UpdateRelationshipsAsync(Object, RelationshipAttribute, IReadOnlyCollection(Of String))
-- uid: JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.UpdateRelationshipsAsync*
-  name: UpdateRelationshipsAsync
-  href: api/JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_UpdateRelationshipsAsync_
-  commentId: Overload:JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.UpdateRelationshipsAsync
+- uid: JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.UpdateRelationshipAsync(System.Object,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.IReadOnlyCollection{System.String})
+  name: UpdateRelationshipAsync(Object, RelationshipAttribute, IReadOnlyCollection<String>)
+  href: api/JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_UpdateRelationshipAsync_System_Object_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_IReadOnlyCollection_System_String__
+  commentId: M:JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.UpdateRelationshipAsync(System.Object,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.IReadOnlyCollection{System.String})
+  name.vb: UpdateRelationshipAsync(Object, RelationshipAttribute, IReadOnlyCollection(Of String))
+  fullName: JsonApiDotNetCore.Repositories.IResourceWriteRepository<TResource, TId>.UpdateRelationshipAsync(System.Object, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.IReadOnlyCollection<System.String>)
+  fullName.vb: JsonApiDotNetCore.Repositories.IResourceWriteRepository(Of TResource, TId).UpdateRelationshipAsync(System.Object, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.IReadOnlyCollection(Of System.String))
+  nameWithType: IResourceWriteRepository<TResource, TId>.UpdateRelationshipAsync(Object, RelationshipAttribute, IReadOnlyCollection<String>)
+  nameWithType.vb: IResourceWriteRepository(Of TResource, TId).UpdateRelationshipAsync(Object, RelationshipAttribute, IReadOnlyCollection(Of String))
+- uid: JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.UpdateRelationshipAsync*
+  name: UpdateRelationshipAsync
+  href: api/JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_UpdateRelationshipAsync_
+  commentId: Overload:JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.UpdateRelationshipAsync
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Repositories.IResourceWriteRepository<TResource, TId>.UpdateRelationshipsAsync
-  fullName.vb: JsonApiDotNetCore.Repositories.IResourceWriteRepository(Of TResource, TId).UpdateRelationshipsAsync
-  nameWithType: IResourceWriteRepository<TResource, TId>.UpdateRelationshipsAsync
-  nameWithType.vb: IResourceWriteRepository(Of TResource, TId).UpdateRelationshipsAsync
+  fullName: JsonApiDotNetCore.Repositories.IResourceWriteRepository<TResource, TId>.UpdateRelationshipAsync
+  fullName.vb: JsonApiDotNetCore.Repositories.IResourceWriteRepository(Of TResource, TId).UpdateRelationshipAsync
+  nameWithType: IResourceWriteRepository<TResource, TId>.UpdateRelationshipAsync
+  nameWithType.vb: IResourceWriteRepository(Of TResource, TId).UpdateRelationshipAsync
 - uid: JsonApiDotNetCore.Repositories.RepositoryRelationshipUpdateHelper`1
   name: RepositoryRelationshipUpdateHelper<TRelatedResource>
   href: api/JsonApiDotNetCore.Repositories.RepositoryRelationshipUpdateHelper-1.html
