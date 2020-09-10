@@ -4732,6 +4732,32 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: CollectionNotEmptyExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: CollectionNotEmptyExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.html#JsonApiDotNetCore_Queries_Expressions_CollectionNotEmptyExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Equals(System.Object)
+  nameWithType: CollectionNotEmptyExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.html#JsonApiDotNetCore_Queries_Expressions_CollectionNotEmptyExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Equals
+  nameWithType: CollectionNotEmptyExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.html#JsonApiDotNetCore_Queries_Expressions_CollectionNotEmptyExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.GetHashCode()
+  nameWithType: CollectionNotEmptyExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.html#JsonApiDotNetCore_Queries_Expressions_CollectionNotEmptyExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.GetHashCode
+  nameWithType: CollectionNotEmptyExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.TargetCollection
   name: TargetCollection
   href: api/JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.html#JsonApiDotNetCore_Queries_Expressions_CollectionNotEmptyExpression_TargetCollection
@@ -4793,6 +4819,32 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: ComparisonExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: ComparisonExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.html#JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.Equals(System.Object)
+  nameWithType: ComparisonExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.html#JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.Equals
+  nameWithType: ComparisonExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.html#JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.GetHashCode()
+  nameWithType: ComparisonExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.html#JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.GetHashCode
+  nameWithType: ComparisonExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.Left
   name: Left
   href: api/JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.html#JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_Left
@@ -4916,6 +4968,32 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.CountExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: CountExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: CountExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.CountExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.CountExpression.html#JsonApiDotNetCore_Queries_Expressions_CountExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.CountExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.CountExpression.Equals(System.Object)
+  nameWithType: CountExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.CountExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.CountExpression.html#JsonApiDotNetCore_Queries_Expressions_CountExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.CountExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.CountExpression.Equals
+  nameWithType: CountExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.CountExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.CountExpression.html#JsonApiDotNetCore_Queries_Expressions_CountExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.CountExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.CountExpression.GetHashCode()
+  nameWithType: CountExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.CountExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.CountExpression.html#JsonApiDotNetCore_Queries_Expressions_CountExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.CountExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.CountExpression.GetHashCode
+  nameWithType: CountExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.CountExpression.TargetCollection
   name: TargetCollection
   href: api/JsonApiDotNetCore.Queries.Expressions.CountExpression.html#JsonApiDotNetCore_Queries_Expressions_CountExpression_TargetCollection
@@ -4993,6 +5071,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.Constants
   nameWithType: EqualsAnyOfExpression.Constants
+- uid: JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.html#JsonApiDotNetCore_Queries_Expressions_EqualsAnyOfExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.Equals(System.Object)
+  nameWithType: EqualsAnyOfExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.html#JsonApiDotNetCore_Queries_Expressions_EqualsAnyOfExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.Equals
+  nameWithType: EqualsAnyOfExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.html#JsonApiDotNetCore_Queries_Expressions_EqualsAnyOfExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.GetHashCode()
+  nameWithType: EqualsAnyOfExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.html#JsonApiDotNetCore_Queries_Expressions_EqualsAnyOfExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.GetHashCode
+  nameWithType: EqualsAnyOfExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.TargetAttribute
   name: TargetAttribute
   href: api/JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression.html#JsonApiDotNetCore_Queries_Expressions_EqualsAnyOfExpression_TargetAttribute
@@ -5094,6 +5198,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.Children
   nameWithType: IncludeElementExpression.Children
+- uid: JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html#JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.Equals(System.Object)
+  nameWithType: IncludeElementExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html#JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.Equals
+  nameWithType: IncludeElementExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html#JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.GetHashCode()
+  nameWithType: IncludeElementExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html#JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.GetHashCode
+  nameWithType: IncludeElementExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.Relationship
   name: Relationship
   href: api/JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html#JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression_Relationship
@@ -5177,6 +5307,32 @@ references:
   commentId: F:JsonApiDotNetCore.Queries.Expressions.IncludeExpression.Empty
   fullName: JsonApiDotNetCore.Queries.Expressions.IncludeExpression.Empty
   nameWithType: IncludeExpression.Empty
+- uid: JsonApiDotNetCore.Queries.Expressions.IncludeExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html#JsonApiDotNetCore_Queries_Expressions_IncludeExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.IncludeExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.IncludeExpression.Equals(System.Object)
+  nameWithType: IncludeExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.IncludeExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html#JsonApiDotNetCore_Queries_Expressions_IncludeExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.IncludeExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.IncludeExpression.Equals
+  nameWithType: IncludeExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.IncludeExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html#JsonApiDotNetCore_Queries_Expressions_IncludeExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.IncludeExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.IncludeExpression.GetHashCode()
+  nameWithType: IncludeExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.IncludeExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html#JsonApiDotNetCore_Queries_Expressions_IncludeExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.IncludeExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.IncludeExpression.GetHashCode
+  nameWithType: IncludeExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.IncludeExpression.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html#JsonApiDotNetCore_Queries_Expressions_IncludeExpression_ToString
@@ -5225,6 +5381,32 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: LiteralConstantExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: LiteralConstantExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.html#JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.Equals(System.Object)
+  nameWithType: LiteralConstantExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.html#JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.Equals
+  nameWithType: LiteralConstantExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.html#JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.GetHashCode()
+  nameWithType: LiteralConstantExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.html#JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.GetHashCode
+  nameWithType: LiteralConstantExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.html#JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_ToString
@@ -5289,6 +5471,32 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: LogicalExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: LogicalExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html#JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Equals(System.Object)
+  nameWithType: LogicalExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html#JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Equals
+  nameWithType: LogicalExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html#JsonApiDotNetCore_Queries_Expressions_LogicalExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.LogicalExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.GetHashCode()
+  nameWithType: LogicalExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html#JsonApiDotNetCore_Queries_Expressions_LogicalExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.LogicalExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.GetHashCode
+  nameWithType: LogicalExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Operator
   name: Operator
   href: api/JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html#JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Operator
@@ -5381,6 +5589,32 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: MatchTextExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: MatchTextExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Equals(System.Object)
+  nameWithType: MatchTextExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Equals
+  nameWithType: MatchTextExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.GetHashCode()
+  nameWithType: MatchTextExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.GetHashCode
+  nameWithType: MatchTextExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchKind
   name: MatchKind
   href: api/JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html#JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_MatchKind
@@ -5481,6 +5715,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.NotExpression.Child
   nameWithType: NotExpression.Child
+- uid: JsonApiDotNetCore.Queries.Expressions.NotExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.NotExpression.html#JsonApiDotNetCore_Queries_Expressions_NotExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.NotExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.NotExpression.Equals(System.Object)
+  nameWithType: NotExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.NotExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.NotExpression.html#JsonApiDotNetCore_Queries_Expressions_NotExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.NotExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.NotExpression.Equals
+  nameWithType: NotExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.NotExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.NotExpression.html#JsonApiDotNetCore_Queries_Expressions_NotExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.NotExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.NotExpression.GetHashCode()
+  nameWithType: NotExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.NotExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.NotExpression.html#JsonApiDotNetCore_Queries_Expressions_NotExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.NotExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.NotExpression.GetHashCode
+  nameWithType: NotExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.NotExpression.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Queries.Expressions.NotExpression.html#JsonApiDotNetCore_Queries_Expressions_NotExpression_ToString
@@ -5516,6 +5776,32 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: NullConstantExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: NullConstantExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.html#JsonApiDotNetCore_Queries_Expressions_NullConstantExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.Equals(System.Object)
+  nameWithType: NullConstantExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.html#JsonApiDotNetCore_Queries_Expressions_NullConstantExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.Equals
+  nameWithType: NullConstantExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.html#JsonApiDotNetCore_Queries_Expressions_NullConstantExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.GetHashCode()
+  nameWithType: NullConstantExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.html#JsonApiDotNetCore_Queries_Expressions_NullConstantExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.GetHashCode
+  nameWithType: NullConstantExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.html#JsonApiDotNetCore_Queries_Expressions_NullConstantExpression_ToString
@@ -5564,6 +5850,32 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: PaginationElementQueryStringValueExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: PaginationElementQueryStringValueExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.Equals(System.Object)
+  nameWithType: PaginationElementQueryStringValueExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.Equals
+  nameWithType: PaginationElementQueryStringValueExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.GetHashCode()
+  nameWithType: PaginationElementQueryStringValueExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.GetHashCode
+  nameWithType: PaginationElementQueryStringValueExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.Scope
   name: Scope
   href: api/JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression_Scope
@@ -5638,6 +5950,32 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.PaginationExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: PaginationExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: PaginationExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.PaginationExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.PaginationExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationExpression.Equals(System.Object)
+  nameWithType: PaginationExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.PaginationExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.PaginationExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationExpression.Equals
+  nameWithType: PaginationExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.PaginationExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.PaginationExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationExpression.GetHashCode()
+  nameWithType: PaginationExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.PaginationExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.PaginationExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationExpression.GetHashCode
+  nameWithType: PaginationExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.PaginationExpression.PageNumber
   name: PageNumber
   href: api/JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationExpression_PageNumber
@@ -5728,6 +6066,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.Elements
   nameWithType: PaginationQueryStringValueExpression.Elements
+- uid: JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationQueryStringValueExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.Equals(System.Object)
+  nameWithType: PaginationQueryStringValueExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationQueryStringValueExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.Equals
+  nameWithType: PaginationQueryStringValueExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationQueryStringValueExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.GetHashCode()
+  nameWithType: PaginationQueryStringValueExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationQueryStringValueExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.GetHashCode
+  nameWithType: PaginationQueryStringValueExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationQueryStringValueExpression_ToString
@@ -5792,6 +6156,32 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.Apply(Of TResource)(System.Linq.IQueryable(Of TResource))
   nameWithType: QueryableHandlerExpression.Apply<TResource>(IQueryable<TResource>)
   nameWithType.vb: QueryableHandlerExpression.Apply(Of TResource)(IQueryable(Of TResource))
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.html#JsonApiDotNetCore_Queries_Expressions_QueryableHandlerExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.Equals(System.Object)
+  nameWithType: QueryableHandlerExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.html#JsonApiDotNetCore_Queries_Expressions_QueryableHandlerExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.Equals
+  nameWithType: QueryableHandlerExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.html#JsonApiDotNetCore_Queries_Expressions_QueryableHandlerExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.GetHashCode()
+  nameWithType: QueryableHandlerExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.html#JsonApiDotNetCore_Queries_Expressions_QueryableHandlerExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.GetHashCode
+  nameWithType: QueryableHandlerExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression.html#JsonApiDotNetCore_Queries_Expressions_QueryableHandlerExpression_ToString
@@ -5827,6 +6217,407 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: QueryExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: QueryExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1
+  name: QueryExpressionRewriter<TArgument>
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html
+  commentId: T:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1
+  name.vb: QueryExpressionRewriter(Of TArgument)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.DefaultVisit(JsonApiDotNetCore.Queries.Expressions.QueryExpression,`0)
+  name: DefaultVisit(QueryExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_DefaultVisit_JsonApiDotNetCore_Queries_Expressions_QueryExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.DefaultVisit(JsonApiDotNetCore.Queries.Expressions.QueryExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.DefaultVisit(JsonApiDotNetCore.Queries.Expressions.QueryExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).DefaultVisit(JsonApiDotNetCore.Queries.Expressions.QueryExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.DefaultVisit(QueryExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).DefaultVisit(QueryExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.DefaultVisit*
+  name: DefaultVisit
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_DefaultVisit_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.DefaultVisit
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.DefaultVisit
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).DefaultVisit
+  nameWithType: QueryExpressionRewriter<TArgument>.DefaultVisit
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).DefaultVisit
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression,`0)
+  name: PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_PaginationElementQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.PaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).PaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationElementQueryStringValue*
+  name: PaginationElementQueryStringValue
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_PaginationElementQueryStringValue_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationElementQueryStringValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.PaginationElementQueryStringValue
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).PaginationElementQueryStringValue
+  nameWithType: QueryExpressionRewriter<TArgument>.PaginationElementQueryStringValue
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).PaginationElementQueryStringValue
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression,`0)
+  name: PaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_PaginationQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationQueryStringValueExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.PaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).PaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.PaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).PaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationQueryStringValue*
+  name: PaginationQueryStringValue
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_PaginationQueryStringValue_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationQueryStringValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.PaginationQueryStringValue
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).PaginationQueryStringValue
+  nameWithType: QueryExpressionRewriter<TArgument>.PaginationQueryStringValue
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).PaginationQueryStringValue
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.Visit(JsonApiDotNetCore.Queries.Expressions.QueryExpression,`0)
+  name: Visit(QueryExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_Visit_JsonApiDotNetCore_Queries_Expressions_QueryExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.Visit(JsonApiDotNetCore.Queries.Expressions.QueryExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.Visit(JsonApiDotNetCore.Queries.Expressions.QueryExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).Visit(JsonApiDotNetCore.Queries.Expressions.QueryExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.Visit(QueryExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).Visit(QueryExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.Visit*
+  name: Visit
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_Visit_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.Visit
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.Visit
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).Visit
+  nameWithType: QueryExpressionRewriter<TArgument>.Visit
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).Visit
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitCollectionNotEmpty(JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression,`0)
+  name: VisitCollectionNotEmpty(CollectionNotEmptyExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitCollectionNotEmpty_JsonApiDotNetCore_Queries_Expressions_CollectionNotEmptyExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitCollectionNotEmpty(JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitCollectionNotEmpty(JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitCollectionNotEmpty(JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitCollectionNotEmpty(CollectionNotEmptyExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitCollectionNotEmpty(CollectionNotEmptyExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitCollectionNotEmpty*
+  name: VisitCollectionNotEmpty
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitCollectionNotEmpty_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitCollectionNotEmpty
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitCollectionNotEmpty
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitCollectionNotEmpty
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitCollectionNotEmpty
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitCollectionNotEmpty
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitComparison(JsonApiDotNetCore.Queries.Expressions.ComparisonExpression,`0)
+  name: VisitComparison(ComparisonExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitComparison_JsonApiDotNetCore_Queries_Expressions_ComparisonExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitComparison(JsonApiDotNetCore.Queries.Expressions.ComparisonExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitComparison(JsonApiDotNetCore.Queries.Expressions.ComparisonExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitComparison(JsonApiDotNetCore.Queries.Expressions.ComparisonExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitComparison(ComparisonExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitComparison(ComparisonExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitComparison*
+  name: VisitComparison
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitComparison_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitComparison
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitComparison
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitComparison
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitComparison
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitComparison
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitCount(JsonApiDotNetCore.Queries.Expressions.CountExpression,`0)
+  name: VisitCount(CountExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitCount_JsonApiDotNetCore_Queries_Expressions_CountExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitCount(JsonApiDotNetCore.Queries.Expressions.CountExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitCount(JsonApiDotNetCore.Queries.Expressions.CountExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitCount(JsonApiDotNetCore.Queries.Expressions.CountExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitCount(CountExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitCount(CountExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitCount*
+  name: VisitCount
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitCount_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitCount
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitCount
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitCount
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitCount
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitCount
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitEqualsAnyOf(JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression,`0)
+  name: VisitEqualsAnyOf(EqualsAnyOfExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitEqualsAnyOf_JsonApiDotNetCore_Queries_Expressions_EqualsAnyOfExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitEqualsAnyOf(JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitEqualsAnyOf(JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitEqualsAnyOf(JsonApiDotNetCore.Queries.Expressions.EqualsAnyOfExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitEqualsAnyOf(EqualsAnyOfExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitEqualsAnyOf(EqualsAnyOfExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitEqualsAnyOf*
+  name: VisitEqualsAnyOf
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitEqualsAnyOf_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitEqualsAnyOf
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitEqualsAnyOf
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitEqualsAnyOf
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitEqualsAnyOf
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitEqualsAnyOf
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitInclude(JsonApiDotNetCore.Queries.Expressions.IncludeExpression,`0)
+  name: VisitInclude(IncludeExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitInclude_JsonApiDotNetCore_Queries_Expressions_IncludeExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitInclude(JsonApiDotNetCore.Queries.Expressions.IncludeExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitInclude(JsonApiDotNetCore.Queries.Expressions.IncludeExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitInclude(JsonApiDotNetCore.Queries.Expressions.IncludeExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitInclude(IncludeExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitInclude(IncludeExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitInclude*
+  name: VisitInclude
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitInclude_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitInclude
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitInclude
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitInclude
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitInclude
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitInclude
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitIncludeElement(JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression,`0)
+  name: VisitIncludeElement(IncludeElementExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitIncludeElement_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitIncludeElement(JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitIncludeElement(JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitIncludeElement(JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitIncludeElement(IncludeElementExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitIncludeElement(IncludeElementExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitIncludeElement*
+  name: VisitIncludeElement
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitIncludeElement_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitIncludeElement
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitIncludeElement
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitIncludeElement
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitIncludeElement
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitIncludeElement
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitLiteralConstant(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,`0)
+  name: VisitLiteralConstant(LiteralConstantExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitLiteralConstant_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitLiteralConstant(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitLiteralConstant(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitLiteralConstant(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitLiteralConstant(LiteralConstantExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitLiteralConstant(LiteralConstantExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitLiteralConstant*
+  name: VisitLiteralConstant
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitLiteralConstant_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitLiteralConstant
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitLiteralConstant
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitLiteralConstant
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitLiteralConstant
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitLiteralConstant
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitLogical(JsonApiDotNetCore.Queries.Expressions.LogicalExpression,`0)
+  name: VisitLogical(LogicalExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitLogical_JsonApiDotNetCore_Queries_Expressions_LogicalExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitLogical(JsonApiDotNetCore.Queries.Expressions.LogicalExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitLogical(JsonApiDotNetCore.Queries.Expressions.LogicalExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitLogical(JsonApiDotNetCore.Queries.Expressions.LogicalExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitLogical(LogicalExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitLogical(LogicalExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitLogical*
+  name: VisitLogical
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitLogical_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitLogical
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitLogical
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitLogical
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitLogical
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitLogical
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitMatchText(JsonApiDotNetCore.Queries.Expressions.MatchTextExpression,`0)
+  name: VisitMatchText(MatchTextExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitMatchText_JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitMatchText(JsonApiDotNetCore.Queries.Expressions.MatchTextExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitMatchText(JsonApiDotNetCore.Queries.Expressions.MatchTextExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitMatchText(JsonApiDotNetCore.Queries.Expressions.MatchTextExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitMatchText(MatchTextExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitMatchText(MatchTextExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitMatchText*
+  name: VisitMatchText
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitMatchText_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitMatchText
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitMatchText
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitMatchText
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitMatchText
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitMatchText
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitNot(JsonApiDotNetCore.Queries.Expressions.NotExpression,`0)
+  name: VisitNot(NotExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitNot_JsonApiDotNetCore_Queries_Expressions_NotExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitNot(JsonApiDotNetCore.Queries.Expressions.NotExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitNot(JsonApiDotNetCore.Queries.Expressions.NotExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitNot(JsonApiDotNetCore.Queries.Expressions.NotExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitNot(NotExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitNot(NotExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitNot*
+  name: VisitNot
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitNot_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitNot
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitNot
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitNot
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitNot
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitNot
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitNullConstant(JsonApiDotNetCore.Queries.Expressions.NullConstantExpression,`0)
+  name: VisitNullConstant(NullConstantExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitNullConstant_JsonApiDotNetCore_Queries_Expressions_NullConstantExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitNullConstant(JsonApiDotNetCore.Queries.Expressions.NullConstantExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitNullConstant(JsonApiDotNetCore.Queries.Expressions.NullConstantExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitNullConstant(JsonApiDotNetCore.Queries.Expressions.NullConstantExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitNullConstant(NullConstantExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitNullConstant(NullConstantExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitNullConstant*
+  name: VisitNullConstant
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitNullConstant_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitNullConstant
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitNullConstant
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitNullConstant
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitNullConstant
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitNullConstant
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression,`0)
+  name: VisitPagination(PaginationExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitPagination_JsonApiDotNetCore_Queries_Expressions_PaginationExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitPagination(PaginationExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitPagination(PaginationExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitPagination*
+  name: VisitPagination
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitPagination_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitPagination
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitPagination
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitPagination
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitPagination
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitPagination
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitQueryableHandler(JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression,`0)
+  name: VisitQueryableHandler(QueryableHandlerExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitQueryableHandler_JsonApiDotNetCore_Queries_Expressions_QueryableHandlerExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitQueryableHandler(JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitQueryableHandler(JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitQueryableHandler(JsonApiDotNetCore.Queries.Expressions.QueryableHandlerExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitQueryableHandler(QueryableHandlerExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitQueryableHandler(QueryableHandlerExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitQueryableHandler*
+  name: VisitQueryableHandler
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitQueryableHandler_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitQueryableHandler
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitQueryableHandler
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitQueryableHandler
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitQueryableHandler
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitQueryableHandler
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitQueryStringParameterScope(JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression,`0)
+  name: VisitQueryStringParameterScope(QueryStringParameterScopeExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitQueryStringParameterScope_JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitQueryStringParameterScope(JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitQueryStringParameterScope(JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitQueryStringParameterScope(JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitQueryStringParameterScope(QueryStringParameterScopeExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitQueryStringParameterScope(QueryStringParameterScopeExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitQueryStringParameterScope*
+  name: VisitQueryStringParameterScope
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitQueryStringParameterScope_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitQueryStringParameterScope
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitQueryStringParameterScope
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitQueryStringParameterScope
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitQueryStringParameterScope
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitQueryStringParameterScope
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitResourceFieldChain(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,`0)
+  name: VisitResourceFieldChain(ResourceFieldChainExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitResourceFieldChain_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitResourceFieldChain(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitResourceFieldChain(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitResourceFieldChain(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitResourceFieldChain(ResourceFieldChainExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitResourceFieldChain(ResourceFieldChainExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitResourceFieldChain*
+  name: VisitResourceFieldChain
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitResourceFieldChain_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitResourceFieldChain
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitResourceFieldChain
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitResourceFieldChain
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitResourceFieldChain
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitResourceFieldChain
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSequence*
+  name: VisitSequence
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitSequence_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSequence
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitSequence
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitSequence
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitSequence
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitSequence
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSequence``1(System.Collections.Generic.IEnumerable{``0},`0)
+  name: VisitSequence<TExpression>(IEnumerable<TExpression>, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitSequence__1_System_Collections_Generic_IEnumerable___0___0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSequence``1(System.Collections.Generic.IEnumerable{``0},`0)
+  name.vb: VisitSequence(Of TExpression)(IEnumerable(Of TExpression), TArgument)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitSequence<TExpression>(System.Collections.Generic.IEnumerable<TExpression>, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitSequence(Of TExpression)(System.Collections.Generic.IEnumerable(Of TExpression), TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitSequence<TExpression>(IEnumerable<TExpression>, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitSequence(Of TExpression)(IEnumerable(Of TExpression), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSort(JsonApiDotNetCore.Queries.Expressions.SortExpression,`0)
+  name: VisitSort(SortExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitSort_JsonApiDotNetCore_Queries_Expressions_SortExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSort(JsonApiDotNetCore.Queries.Expressions.SortExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitSort(JsonApiDotNetCore.Queries.Expressions.SortExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitSort(JsonApiDotNetCore.Queries.Expressions.SortExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitSort(SortExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitSort(SortExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSort*
+  name: VisitSort
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitSort_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSort
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitSort
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitSort
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitSort
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitSort
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSortElement(JsonApiDotNetCore.Queries.Expressions.SortElementExpression,`0)
+  name: VisitSortElement(SortElementExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitSortElement_JsonApiDotNetCore_Queries_Expressions_SortElementExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSortElement(JsonApiDotNetCore.Queries.Expressions.SortElementExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitSortElement(JsonApiDotNetCore.Queries.Expressions.SortElementExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitSortElement(JsonApiDotNetCore.Queries.Expressions.SortElementExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitSortElement(SortElementExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitSortElement(SortElementExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSortElement*
+  name: VisitSortElement
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitSortElement_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSortElement
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitSortElement
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitSortElement
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitSortElement
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitSortElement
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression,`0)
+  name: VisitSparseFieldSet(SparseFieldSetExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitSparseFieldSet_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitSparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitSparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitSparseFieldSet(SparseFieldSetExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitSparseFieldSet(SparseFieldSetExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSparseFieldSet*
+  name: VisitSparseFieldSet
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitSparseFieldSet_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSparseFieldSet
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitSparseFieldSet
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitSparseFieldSet
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitSparseFieldSet
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitSparseFieldSet
 - uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2
   name: QueryExpressionVisitor<TArgument, TResult>
   href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html
@@ -6245,6 +7036,32 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: QueryStringParameterScopeExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: QueryStringParameterScopeExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.html#JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.Equals(System.Object)
+  nameWithType: QueryStringParameterScopeExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.html#JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.Equals
+  nameWithType: QueryStringParameterScopeExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.html#JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.GetHashCode()
+  nameWithType: QueryStringParameterScopeExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.html#JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.GetHashCode
+  nameWithType: QueryStringParameterScopeExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.ParameterName
   name: ParameterName
   href: api/JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.html#JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression_ParameterName
@@ -6328,12 +7145,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: ResourceFieldChainExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: ResourceFieldChainExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
-- uid: JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.Equals(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression)
-  name: Equals(ResourceFieldChainExpression)
-  href: api/JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.html#JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_Equals_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.Equals(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression)
-  fullName: JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.Equals(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression)
-  nameWithType: ResourceFieldChainExpression.Equals(ResourceFieldChainExpression)
 - uid: JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.Equals(System.Object)
   name: Equals(Object)
   href: api/JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.html#JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_Equals_System_Object_
@@ -6443,6 +7254,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.SortElementExpression.Count
   nameWithType: SortElementExpression.Count
+- uid: JsonApiDotNetCore.Queries.Expressions.SortElementExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.SortElementExpression.html#JsonApiDotNetCore_Queries_Expressions_SortElementExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.SortElementExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.SortElementExpression.Equals(System.Object)
+  nameWithType: SortElementExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.SortElementExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.SortElementExpression.html#JsonApiDotNetCore_Queries_Expressions_SortElementExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SortElementExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.SortElementExpression.Equals
+  nameWithType: SortElementExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.SortElementExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.SortElementExpression.html#JsonApiDotNetCore_Queries_Expressions_SortElementExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.SortElementExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.SortElementExpression.GetHashCode()
+  nameWithType: SortElementExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.SortElementExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.SortElementExpression.html#JsonApiDotNetCore_Queries_Expressions_SortElementExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SortElementExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.SortElementExpression.GetHashCode
+  nameWithType: SortElementExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.SortElementExpression.IsAscending
   name: IsAscending
   href: api/JsonApiDotNetCore.Queries.Expressions.SortElementExpression.html#JsonApiDotNetCore_Queries_Expressions_SortElementExpression_IsAscending
@@ -6533,6 +7370,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.SortExpression.Elements
   nameWithType: SortExpression.Elements
+- uid: JsonApiDotNetCore.Queries.Expressions.SortExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.SortExpression.html#JsonApiDotNetCore_Queries_Expressions_SortExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.SortExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.SortExpression.Equals(System.Object)
+  nameWithType: SortExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.SortExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.SortExpression.html#JsonApiDotNetCore_Queries_Expressions_SortExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SortExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.SortExpression.Equals
+  nameWithType: SortExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.SortExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.SortExpression.html#JsonApiDotNetCore_Queries_Expressions_SortExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.SortExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.SortExpression.GetHashCode()
+  nameWithType: SortExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.SortExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.SortExpression.html#JsonApiDotNetCore_Queries_Expressions_SortExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SortExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.SortExpression.GetHashCode
+  nameWithType: SortExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.SortExpression.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Queries.Expressions.SortExpression.html#JsonApiDotNetCore_Queries_Expressions_SortExpression_ToString
@@ -6597,6 +7460,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Attributes
   nameWithType: SparseFieldSetExpression.Attributes
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Equals(System.Object)
+  nameWithType: SparseFieldSetExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Equals
+  nameWithType: SparseFieldSetExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.GetHashCode()
+  nameWithType: SparseFieldSetExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.GetHashCode
+  nameWithType: SparseFieldSetExpression.GetHashCode
 - uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_ToString
@@ -10336,6 +11225,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.Annotations.AttrAttribute.Capabilities
   nameWithType: AttrAttribute.Capabilities
+- uid: JsonApiDotNetCore.Resources.Annotations.AttrAttribute.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Resources.Annotations.AttrAttribute.html#JsonApiDotNetCore_Resources_Annotations_AttrAttribute_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.AttrAttribute.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Resources.Annotations.AttrAttribute.Equals(System.Object)
+  nameWithType: AttrAttribute.Equals(Object)
+- uid: JsonApiDotNetCore.Resources.Annotations.AttrAttribute.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Resources.Annotations.AttrAttribute.html#JsonApiDotNetCore_Resources_Annotations_AttrAttribute_Equals_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.AttrAttribute.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.AttrAttribute.Equals
+  nameWithType: AttrAttribute.Equals
+- uid: JsonApiDotNetCore.Resources.Annotations.AttrAttribute.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Resources.Annotations.AttrAttribute.html#JsonApiDotNetCore_Resources_Annotations_AttrAttribute_GetHashCode
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.AttrAttribute.GetHashCode
+  fullName: JsonApiDotNetCore.Resources.Annotations.AttrAttribute.GetHashCode()
+  nameWithType: AttrAttribute.GetHashCode()
+- uid: JsonApiDotNetCore.Resources.Annotations.AttrAttribute.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Resources.Annotations.AttrAttribute.html#JsonApiDotNetCore_Resources_Annotations_AttrAttribute_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.AttrAttribute.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.AttrAttribute.GetHashCode
+  nameWithType: AttrAttribute.GetHashCode
 - uid: JsonApiDotNetCore.Resources.Annotations.AttrAttribute.GetValue(System.Object)
   name: GetValue(Object)
   href: api/JsonApiDotNetCore.Resources.Annotations.AttrAttribute.html#JsonApiDotNetCore_Resources_Annotations_AttrAttribute_GetValue_System_Object_
@@ -10474,6 +11389,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.HasManyThroughAttribute
   nameWithType: HasManyThroughAttribute.HasManyThroughAttribute
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals(System.Object)
+  nameWithType: HasManyThroughAttribute.Equals(Object)
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_Equals_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals
+  nameWithType: HasManyThroughAttribute.Equals
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_GetHashCode
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode()
+  nameWithType: HasManyThroughAttribute.GetHashCode()
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode
+  nameWithType: HasManyThroughAttribute.GetHashCode
 - uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetValue(System.Object)
   name: GetValue(Object)
   href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_GetValue_System_Object_
@@ -10578,6 +11519,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughProperty
   nameWithType: HasManyThroughAttribute.ThroughProperty
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName
+  name: ThroughPropertyName
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughPropertyName
+  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName
+  nameWithType: HasManyThroughAttribute.ThroughPropertyName
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName*
+  name: ThroughPropertyName
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughPropertyName_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName
+  nameWithType: HasManyThroughAttribute.ThroughPropertyName
 - uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughType
   name: ThroughType
   href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughType
@@ -10877,6 +11831,32 @@ references:
   commentId: T:JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute
   fullName: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute
   nameWithType: ResourceFieldAttribute
+- uid: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.Equals(System.Object)
+  nameWithType: ResourceFieldAttribute.Equals(Object)
+- uid: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_Equals_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.Equals
+  nameWithType: ResourceFieldAttribute.Equals
+- uid: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_GetHashCode
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.GetHashCode
+  fullName: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.GetHashCode()
+  nameWithType: ResourceFieldAttribute.GetHashCode()
+- uid: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.GetHashCode
+  nameWithType: ResourceFieldAttribute.GetHashCode
 - uid: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.Property
   name: Property
   href: api/JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_Property
