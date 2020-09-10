@@ -21,7 +21,7 @@ There are two ways the public attribute name is determined:
 ```c#
 public class Person : Identifiable
 {
-    [Attr("first-name")]
+    [Attr(PublicName = "first-name")]
     public string FirstName { get; set; }
 }
 ```
@@ -45,7 +45,7 @@ Attributes can be marked to allow returning their value in responses. When not a
 ```c#
 public class User : Identifiable<int>
 {
-    [Attr(~AttrCapabilities.AllowView)]
+    [Attr(Capabilities = ~AttrCapabilities.AllowView)]
     public string Password { get; set; }
 }
 ```
@@ -57,7 +57,7 @@ Attributes can be marked as mutable, which will allow `PATCH` requests to update
 ```c#
 public class Person : Identifiable<int>
 {
-    [Attr(AttrCapabilities.AllowMutate)]
+    [Attr(Capabilities = AttrCapabilities.AllowChange)]
     public string FirstName { get; set; }
 }
 ```
@@ -69,7 +69,7 @@ Attributes can be marked to allow filtering and/or sorting. When not allowed, it
 ```c#
 public class Person : Identifiable<int>
 {
-    [Attr(AttrCapabilities.AllowSort | AttrCapabilities.AllowFilter)]
+    [Attr(Capabilities = AttrCapabilities.AllowSort | AttrCapabilities.AllowFilter)]
     public string FirstName { get; set; }
 }
 ```

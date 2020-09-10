@@ -21,11 +21,11 @@ public class TodoItemService : JsonApiResourceService<TodoItem>
         IPaginationContext paginationContext,
         IJsonApiOptions options,
         ILoggerFactory loggerFactory,
-        ICurrentRequest currentRequest,
+        IJsonApiRequest request,
         IResourceChangeTracker<TResource> resourceChangeTracker,
         IResourceFactory resourceFactory,
         IResourceHookExecutor hookExecutor = null)
-        : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, currentRequest,
+        : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
             resourceChangeTracker, resourceFactory, hookExecutor)
     {
         _notificationService = notificationService;
@@ -47,7 +47,7 @@ public class TodoItemService : JsonApiResourceService<TodoItem>
 ## Not Using Entity Framework Core?
 
 As previously discussed, this library uses Entity Framework Core by default.
-If you'd like to use another ORM that does not provide what JsonApiResourceService depends upon, you can use a custom `IResourceService<T>` implementation.
+If you'd like to use another ORM that does not provide what JsonApiResourceService depends upon, you can use a custom `IResourceService<TResource>` implementation.
 
 ```c#
 // Startup.cs
