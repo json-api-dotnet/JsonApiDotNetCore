@@ -1,8 +1,9 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using JsonApiDotNetCore.Formatters;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization;
 
 namespace JsonApiDotNetCoreExample.Models
 {

@@ -1,10 +1,10 @@
-using JsonApiDotNetCore.Hooks;
+using System.Collections.Generic;
+using System.Linq;
+using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace UnitTests.ResourceHooks
@@ -53,7 +53,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
 
             // Assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<IEntityHashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Post), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<IResourceHashSet<TodoItem>>((resources) => TodoCheck(resources, description)), ResourcePipeline.Post), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
                 It.IsAny<IRelationshipsDictionary<Person>>(),
@@ -98,7 +98,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
 
             // Assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<IEntityHashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Post), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<IResourceHashSet<TodoItem>>((resources) => TodoCheck(resources, description)), ResourcePipeline.Post), Times.Once());
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
                 It.Is<IRelationshipsDictionary<TodoItem>>(rh => TodoCheckRelationships(rh, description + description)),
                 ResourcePipeline.Post),
@@ -118,7 +118,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
 
             // Assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<IEntityHashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Post), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<IResourceHashSet<TodoItem>>((resources) => TodoCheck(resources, description)), ResourcePipeline.Post), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
                 It.IsAny<IRelationshipsDictionary<Person>>(),
@@ -159,13 +159,13 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
 
             // Assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<IEntityHashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Post), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<IResourceHashSet<TodoItem>>((resources) => TodoCheck(resources, description)), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
-        private bool TodoCheck(IEnumerable<TodoItem> entities, string checksum)
+        private bool TodoCheck(IEnumerable<TodoItem> resources, string checksum)
         {
-            return entities.Single().Description == checksum;
+            return resources.Single().Description == checksum;
         }
 
         private bool TodoCheckRelationships(IRelationshipsDictionary<TodoItem> rh, string checksum)

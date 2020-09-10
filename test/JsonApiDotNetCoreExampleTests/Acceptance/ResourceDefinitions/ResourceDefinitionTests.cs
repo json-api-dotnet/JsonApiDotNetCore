@@ -5,73 +5,58 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Acceptance.Spec;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
-    [Collection("WebHostCollection")]
-    public sealed class ResourceDefinitionTests
+    public sealed class ResourceDefinitionTests : FunctionalTestCollection<ResourceHooksApplicationFactory>
     {
-        private readonly TestFixture<TestStartup> _fixture;
-        private readonly AppDbContext _context;
         private readonly Faker<User> _userFaker;
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
-        private readonly Faker<Article> _articleFaker = new Faker<Article>()
-            .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
-            .RuleFor(a => a.Author, f => new Author());
-
+        private readonly Faker<Article> _articleFaker;
+        private readonly Faker<Author> _authorFaker;
         private readonly Faker<Tag> _tagFaker;
 
-        public ResourceDefinitionTests(TestFixture<TestStartup> fixture)
+        public ResourceDefinitionTests(ResourceHooksApplicationFactory factory) : base(factory)
         {
-            _fixture = fixture;
-            _context = fixture.GetService<AppDbContext>();
+            _authorFaker = new Faker<Author>()
+                .RuleFor(a => a.LastName, f => f.Random.Words(2));
+
+            _articleFaker = new Faker<Article>()
+                .RuleFor(a => a.Caption, f => f.Random.AlphaNumeric(10))
+                .RuleFor(a => a.Author, f => _authorFaker.Generate());
+
             _userFaker = new Faker<User>()
-                .CustomInstantiator(f => new User(_context))
-                .RuleFor(u => u.Username, f => f.Internet.UserName())
+                .CustomInstantiator(f => new User(_dbContext))
+                .RuleFor(u => u.UserName, f => f.Internet.UserName())
                 .RuleFor(u => u.Password, f => f.Internet.Password());
+
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
                 .RuleFor(t => t.CreatedDate, f => f.Date.Past());
+
             _personFaker = new Faker<Person>()
                 .RuleFor(p => p.FirstName, f => f.Name.FirstName())
                 .RuleFor(p => p.LastName, f => f.Name.LastName());
+
             _tagFaker = new Faker<Tag>()
-                .CustomInstantiator(f => new Tag(_context))
+                .CustomInstantiator(f => new Tag())
                 .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
-        }
 
-        [Fact]
-        public async Task Password_Is_Not_Included_In_Response_Payload()
-        {
-            // Arrange
-            var user = _userFaker.Generate();
-            _context.Users.Add(user);
-            _context.SaveChanges();
-
-            var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/users/{user.Id}";
-            var request = new HttpRequestMessage(httpMethod, route);
-
-            // Act
-            var response = await _fixture.Client.SendAsync(request);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var body = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(body);
-            Assert.False(document.SingleData.Attributes.ContainsKey("password"));
+            var options = (JsonApiOptions) _factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.DisableTopPagination = false;
+            options.DisableChildrenPagination = false;
         }
 
         [Fact]
@@ -80,9 +65,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var user = _userFaker.Generate();
 
-            var serializer = _fixture.GetSerializer<User>(p => new { p.Password, p.Username });
+            var serializer = GetSerializer<User>(p => new { p.Password, p.UserName });
 
-            
             var httpMethod = new HttpMethod("POST");
             var route = "/api/v1/users";
 
@@ -93,21 +77,21 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
             // response assertions
             var body = await response.Content.ReadAsStringAsync();
-            var returnedUser = _fixture.GetDeserializer().DeserializeSingle<User>(body).Data;
+            var returnedUser = _deserializer.DeserializeSingle<User>(body).Data;
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.False(document.SingleData.Attributes.ContainsKey("password"));
-            Assert.Equal(user.Username, document.SingleData.Attributes["username"]);
+            Assert.Equal(user.UserName, document.SingleData.Attributes["userName"]);
 
             // db assertions
-            var dbUser = await _context.Users.FindAsync(returnedUser.Id);
-            Assert.Equal(user.Username, dbUser.Username);
+            var dbUser = await _dbContext.Users.FindAsync(returnedUser.Id);
+            Assert.Equal(user.UserName, dbUser.UserName);
             Assert.Equal(user.Password, dbUser.Password);
         }
 
@@ -116,10 +100,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var user = _userFaker.Generate();
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+
             user.Password = _userFaker.Generate().Password;
-            var serializer = _fixture.GetSerializer<User>(p => new { p.Password });
+            var serializer = GetSerializer<User>(p => new { p.Password });
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/users/{user.Id}";
             var request = new HttpRequestMessage(httpMethod, route)
@@ -129,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -138,10 +123,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var body = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.False(document.SingleData.Attributes.ContainsKey("password"));
-            Assert.Equal(user.Username, document.SingleData.Attributes["username"]);
+            Assert.Equal(user.UserName, document.SingleData.Attributes["userName"]);
 
             // db assertions
-            var dbUser = _context.Users.AsNoTracking().Single(u => u.Id == user.Id);
+            var dbUser = _dbContext.Users.AsNoTracking().Single(u => u.Id == user.Id);
             Assert.Equal(user.Password, dbUser.Password);
         }
 
@@ -152,7 +137,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var route = "/api/v1/todoItems/1337";
 
             // Act
-            var response = await _fixture.Client.GetAsync(route);
+            var response = await _client.GetAsync(route);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
@@ -172,7 +157,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var route = "/api/v1/people/1?include=passport";
 
             // Act
-            var response = await _fixture.Client.GetAsync(route);
+            var response = await _client.GetAsync(route);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
@@ -189,18 +174,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Unauthorized_Article()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
-            await context.SaveChangesAsync();
-
             var article = _articleFaker.Generate();
-            article.Name = "Classified";
-            context.Articles.Add(article);
-            await context.SaveChangesAsync();
+            article.Caption = "Classified";
+            _dbContext.Articles.Add(article);
+            await _dbContext.SaveChangesAsync();
 
             var route = $"/api/v1/articles/{article.Id}";
 
             // Act
-            var response = await _fixture.Client.GetAsync(route);
+            var response = await _client.GetAsync(route);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
@@ -217,20 +199,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Article_Is_Hidden()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
-
             var articles = _articleFaker.Generate(3);
             string toBeExcluded = "This should not be included";
-            articles[0].Name = toBeExcluded;
+            articles[0].Caption = toBeExcluded;
 
-
-            context.Articles.AddRange(articles);
-            await context.SaveChangesAsync();
+            _dbContext.Articles.AddRange(articles);
+            await _dbContext.SaveChangesAsync();
 
             var route = "/api/v1/articles";
 
             // Act
-            var response = await _fixture.Client.GetAsync(route);
+            var response = await _client.GetAsync(route);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
@@ -242,9 +221,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Tag_Is_Hidden()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
-            await context.SaveChangesAsync();
-
             var article = _articleFaker.Generate();
             var tags = _tagFaker.Generate(2);
             string toBeExcluded = "This should not be included";
@@ -252,24 +228,29 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var articleTags = new[]
             {
-                new ArticleTag(context)
+                new ArticleTag
                 {
                     Article = article,
                     Tag = tags[0]
                 },
-                new ArticleTag(context)
+                new ArticleTag
                 {
                     Article = article,
                     Tag = tags[1]
                 }
             };
-            context.ArticleTags.AddRange(articleTags);
-            await context.SaveChangesAsync();
+            _dbContext.ArticleTags.AddRange(articleTags);
+            await _dbContext.SaveChangesAsync();
+
+            // Workaround for https://github.com/dotnet/efcore/issues/21026
+            var options = (JsonApiOptions) _factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.DisableTopPagination = false;
+            options.DisableChildrenPagination = true;
 
             var route = "/api/v1/articles?include=tags";
 
             // Act
-            var response = await _fixture.Client.GetAsync(route);
+            var response = await _client.GetAsync(route);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
@@ -278,7 +259,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
         ///// <summary>
         ///// In the Cascade Permission Error tests, we ensure that  all the relevant 
-        ///// entities are provided in the hook definitions. In this case, 
+        ///// resources are provided in the hook definitions. In this case, 
         ///// re-relating the meta object to a different article would require 
         ///// also a check for the lockedTodo, because we're implicitly updating 
         ///// its foreign key.
@@ -287,13 +268,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Cascade_Permission_Error_Create_ToOne_Relationship()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
             var lockedPerson = _personFaker.Generate();
             lockedPerson.IsLocked = true;
-            var passport = new Passport(context);
+            var passport = new Passport(_dbContext);
             lockedPerson.Passport = passport;
-            context.People.AddRange(lockedPerson);
-            await context.SaveChangesAsync();
+            _dbContext.People.AddRange(lockedPerson);
+            await _dbContext.SaveChangesAsync();
 
             var content = new
             {
@@ -320,7 +300,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
@@ -337,14 +317,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Cascade_Permission_Error_Updating_ToOne_Relationship()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
             var person = _personFaker.Generate();
-            var passport = new Passport(context) { IsLocked = true };
+            var passport = new Passport(_dbContext) { IsLocked = true };
             person.Passport = passport;
-            context.People.AddRange(person);
-            var newPassport = new Passport(context);
-            context.Passports.Add(newPassport);
-            await context.SaveChangesAsync();
+            _dbContext.People.AddRange(person);
+            var newPassport = new Passport(_dbContext);
+            _dbContext.Passports.Add(newPassport);
+            await _dbContext.SaveChangesAsync();
 
             var content = new
             {
@@ -372,7 +351,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
@@ -389,14 +368,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Cascade_Permission_Error_Updating_ToOne_Relationship_Deletion()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
             var person = _personFaker.Generate();
-            var passport = new Passport(context) { IsLocked = true };
+            var passport = new Passport(_dbContext) { IsLocked = true };
             person.Passport = passport;
-            context.People.AddRange(person);
-            var newPassport = new Passport(context);
-            context.Passports.Add(newPassport);
-            await context.SaveChangesAsync();
+            _dbContext.People.AddRange(person);
+            var newPassport = new Passport(_dbContext);
+            _dbContext.Passports.Add(newPassport);
+            await _dbContext.SaveChangesAsync();
 
             var content = new
             {
@@ -424,7 +402,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
@@ -441,20 +419,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Cascade_Permission_Error_Delete_ToOne_Relationship()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
             var lockedPerson = _personFaker.Generate();
             lockedPerson.IsLocked = true;
-            var passport = new Passport(context);
+            var passport = new Passport(_dbContext);
             lockedPerson.Passport = passport;
-            context.People.AddRange(lockedPerson);
-            await context.SaveChangesAsync();
+            _dbContext.People.AddRange(lockedPerson);
+            await _dbContext.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("DELETE");
             var route = $"/api/v1/passports/{lockedPerson.Passport.StringId}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
@@ -471,13 +448,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Cascade_Permission_Error_Create_ToMany_Relationship()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
             var persons = _personFaker.Generate(2);
             var lockedTodo = _todoItemFaker.Generate();
             lockedTodo.IsLocked = true;
             lockedTodo.StakeHolders = persons.ToHashSet();
-            context.TodoItems.Add(lockedTodo);
-            await context.SaveChangesAsync();
+            _dbContext.TodoItems.Add(lockedTodo);
+            await _dbContext.SaveChangesAsync();
 
             var content = new
             {
@@ -509,7 +485,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
@@ -526,15 +502,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Cascade_Permission_Error_Updating_ToMany_Relationship()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
             var persons = _personFaker.Generate(2);
             var lockedTodo = _todoItemFaker.Generate();
             lockedTodo.IsLocked = true;
             lockedTodo.StakeHolders = persons.ToHashSet();
-            context.TodoItems.Add(lockedTodo);
+            _dbContext.TodoItems.Add(lockedTodo);
             var unlockedTodo = _todoItemFaker.Generate();
-            context.TodoItems.Add(unlockedTodo);
-            await context.SaveChangesAsync();
+            _dbContext.TodoItems.Add(unlockedTodo);
+            await _dbContext.SaveChangesAsync();
 
             var content = new
             {
@@ -567,7 +542,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
@@ -584,20 +559,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Cascade_Permission_Error_Delete_ToMany_Relationship()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
             var persons = _personFaker.Generate(2);
             var lockedTodo = _todoItemFaker.Generate();
             lockedTodo.IsLocked = true;
             lockedTodo.StakeHolders = persons.ToHashSet();
-            context.TodoItems.Add(lockedTodo);
-            await context.SaveChangesAsync();
+            _dbContext.TodoItems.Add(lockedTodo);
+            await _dbContext.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("DELETE");
             var route = $"/api/v1/people/{persons[0].Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();

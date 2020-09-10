@@ -1,13 +1,16 @@
 using System;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class Visa
+    public sealed class Visa : Identifiable
     {
-        public int Id { get; set; }
-
+        [Attr]
         public DateTime ExpiresAt { get; set; }
+
+        [Attr]
+        public string CountryName => TargetCountry.Name;
 
         [EagerLoad]
         public Country TargetCountry { get; set; }

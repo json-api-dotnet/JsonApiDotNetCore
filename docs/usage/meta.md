@@ -1,6 +1,6 @@
 # Metadata
 
-Non-standard metadata can be added to your API responses in 2 ways. Resource and Request meta. In the event of a key collision, the Request Meta will take precendence.
+Non-standard metadata can be added to your API responses in two ways: Resource and Request Meta. In the event of a key collision, the Request Meta will take precendence.
 
 ## Resource Meta
 

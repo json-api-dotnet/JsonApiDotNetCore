@@ -9,10 +9,10 @@ namespace GettingStarted.Controllers
     public sealed class PeopleController : JsonApiController<Person>
     {
         public PeopleController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<Person> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
     }
 }

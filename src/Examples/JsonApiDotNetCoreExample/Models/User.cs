@@ -1,5 +1,6 @@
 using System;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Authentication;
 
@@ -10,9 +11,9 @@ namespace JsonApiDotNetCoreExample.Models
         private readonly ISystemClock _systemClock;
         private string _password;
 
-        [Attr] public string Username { get; set; }
+        [Attr] public string UserName { get; set; }
 
-        [Attr]
+        [Attr(Capabilities = AttrCapabilities.AllowChange)]
         public string Password
         {
             get => _password;

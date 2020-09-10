@@ -1,27 +1,24 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.QueryStrings;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCoreExample.Models;
-using Moq;
-using Xunit;
-using JsonApiDotNetCore.Query;
-using JsonApiDotNetCore.QueryParameterServices.Common;
-using JsonApiDotNetCore.Serialization.Server.Builders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
+using Moq;
+using Xunit;
 
 namespace UnitTests
 {
     public sealed class LinkBuilderTests
     {
-        private readonly IPageService _pageService;
+        private readonly IPaginationContext _paginationContext;
         private readonly Mock<IResourceGraph> _provider = new Mock<IResourceGraph>();
         private readonly IRequestQueryStringAccessor _queryStringAccessor = new FakeRequestQueryStringAccessor("?foo=bar");
         private const string _host = "http://www.example.com";
-        private const int _baseId = 123;
+        private const int _primaryId = 123;
         private const string _relationshipName = "author";
         private const string _topSelf = "http://www.example.com/articles?foo=bar";
         private const string _topResourceSelf = "http://www.example.com/articles/123?foo=bar";
@@ -32,29 +29,29 @@ namespace UnitTests
 
         public LinkBuilderTests()
         {
-            _pageService = GetPageManager();
+            _paginationContext = GetPaginationContext();
         }
 
         [Theory]
-        [InlineData(Link.All, Link.NotConfigured, _resourceSelf)]
-        [InlineData(Link.Self, Link.NotConfigured, _resourceSelf)]
-        [InlineData(Link.None, Link.NotConfigured, null)]
-        [InlineData(Link.All, Link.Self, _resourceSelf)]
-        [InlineData(Link.Self, Link.Self, _resourceSelf)]
-        [InlineData(Link.None, Link.Self, _resourceSelf)]
-        [InlineData(Link.All, Link.None, null)]
-        [InlineData(Link.Self, Link.None, null)]
-        [InlineData(Link.None, Link.None, null)]
-        public void BuildResourceLinks_GlobalAndResourceConfiguration_ExpectedResult(Link global, Link resource, object expectedResult)
+        [InlineData(LinkTypes.All, LinkTypes.NotConfigured, _resourceSelf)]
+        [InlineData(LinkTypes.Self, LinkTypes.NotConfigured, _resourceSelf)]
+        [InlineData(LinkTypes.None, LinkTypes.NotConfigured, null)]
+        [InlineData(LinkTypes.All, LinkTypes.Self, _resourceSelf)]
+        [InlineData(LinkTypes.Self, LinkTypes.Self, _resourceSelf)]
+        [InlineData(LinkTypes.None, LinkTypes.Self, _resourceSelf)]
+        [InlineData(LinkTypes.All, LinkTypes.None, null)]
+        [InlineData(LinkTypes.Self, LinkTypes.None, null)]
+        [InlineData(LinkTypes.None, LinkTypes.None, null)]
+        public void BuildResourceLinks_GlobalAndResourceConfiguration_ExpectedResult(LinkTypes global, LinkTypes resource, object expectedResult)
         {
             // Arrange
             var config = GetConfiguration(resourceLinks: global);
             var primaryResource = GetArticleResourceContext(resourceLinks: resource);
             _provider.Setup(m => m.GetResourceContext("articles")).Returns(primaryResource);
-            var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object, _queryStringAccessor);
+            var builder = new LinkBuilder(config, GetRequestManager(), new PaginationContext(), _provider.Object, _queryStringAccessor);
 
             // Act
-            var links = builder.GetResourceLinks("articles", _baseId.ToString());
+            var links = builder.GetResourceLinks("articles", _primaryId.ToString());
 
             // Assert
             if (expectedResult == null)
@@ -64,46 +61,43 @@ namespace UnitTests
         }
 
         [Theory]
-        [InlineData(Link.All, Link.NotConfigured, Link.NotConfigured, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.NotConfigured, Link.All, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.NotConfigured, Link.Self, _relSelf, null)]
-        [InlineData(Link.All, Link.NotConfigured, Link.Related, null, _relRelated)]
-        [InlineData(Link.All, Link.NotConfigured, Link.None, null, null)]
-        [InlineData(Link.All, Link.All, Link.NotConfigured, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.All, Link.All, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.All, Link.Self, _relSelf, null)]
-        [InlineData(Link.All, Link.All, Link.Related, null, _relRelated)]
-        [InlineData(Link.All, Link.All, Link.None, null, null)]
-        [InlineData(Link.All, Link.Self, Link.NotConfigured, _relSelf, null)]
-        [InlineData(Link.All, Link.Self, Link.All, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.Self, Link.Self, _relSelf, null)]
-        [InlineData(Link.All, Link.Self, Link.Related, null, _relRelated)]
-        [InlineData(Link.All, Link.Self, Link.None, null, null)]
-        [InlineData(Link.All, Link.Related, Link.NotConfigured, null, _relRelated)]
-        [InlineData(Link.All, Link.Related, Link.All, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.Related, Link.Self, _relSelf, null)]
-        [InlineData(Link.All, Link.Related, Link.Related, null, _relRelated)]
-        [InlineData(Link.All, Link.Related, Link.None, null, null)]
-        [InlineData(Link.All, Link.None, Link.NotConfigured, null, null)]
-        [InlineData(Link.All, Link.None, Link.All, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.None, Link.Self, _relSelf, null)]
-        [InlineData(Link.All, Link.None, Link.Related, null, _relRelated)]
-        [InlineData(Link.All, Link.None, Link.None, null, null)]
-        public void BuildRelationshipLinks_GlobalResourceAndAttrConfiguration_ExpectedLinks(Link global,
-                                                                                                Link resource,
-                                                                                                Link relationship,
-                                                                                                object expectedSelfLink,
-                                                                                                object expectedRelatedLink)
+        [InlineData(LinkTypes.All, LinkTypes.NotConfigured, LinkTypes.NotConfigured, _relSelf, _relRelated)]
+        [InlineData(LinkTypes.All, LinkTypes.NotConfigured, LinkTypes.All, _relSelf, _relRelated)]
+        [InlineData(LinkTypes.All, LinkTypes.NotConfigured, LinkTypes.Self, _relSelf, null)]
+        [InlineData(LinkTypes.All, LinkTypes.NotConfigured, LinkTypes.Related, null, _relRelated)]
+        [InlineData(LinkTypes.All, LinkTypes.NotConfigured, LinkTypes.None, null, null)]
+        [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.NotConfigured, _relSelf, _relRelated)]
+        [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.All, _relSelf, _relRelated)]
+        [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.Self, _relSelf, null)]
+        [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.Related, null, _relRelated)]
+        [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.None, null, null)]
+        [InlineData(LinkTypes.All, LinkTypes.Self, LinkTypes.NotConfigured, _relSelf, null)]
+        [InlineData(LinkTypes.All, LinkTypes.Self, LinkTypes.All, _relSelf, _relRelated)]
+        [InlineData(LinkTypes.All, LinkTypes.Self, LinkTypes.Self, _relSelf, null)]
+        [InlineData(LinkTypes.All, LinkTypes.Self, LinkTypes.Related, null, _relRelated)]
+        [InlineData(LinkTypes.All, LinkTypes.Self, LinkTypes.None, null, null)]
+        [InlineData(LinkTypes.All, LinkTypes.Related, LinkTypes.NotConfigured, null, _relRelated)]
+        [InlineData(LinkTypes.All, LinkTypes.Related, LinkTypes.All, _relSelf, _relRelated)]
+        [InlineData(LinkTypes.All, LinkTypes.Related, LinkTypes.Self, _relSelf, null)]
+        [InlineData(LinkTypes.All, LinkTypes.Related, LinkTypes.Related, null, _relRelated)]
+        [InlineData(LinkTypes.All, LinkTypes.Related, LinkTypes.None, null, null)]
+        [InlineData(LinkTypes.All, LinkTypes.None, LinkTypes.NotConfigured, null, null)]
+        [InlineData(LinkTypes.All, LinkTypes.None, LinkTypes.All, _relSelf, _relRelated)]
+        [InlineData(LinkTypes.All, LinkTypes.None, LinkTypes.Self, _relSelf, null)]
+        [InlineData(LinkTypes.All, LinkTypes.None, LinkTypes.Related, null, _relRelated)]
+        [InlineData(LinkTypes.All, LinkTypes.None, LinkTypes.None, null, null)]
+        public void BuildRelationshipLinks_GlobalResourceAndAttrConfiguration_ExpectedLinks(
+            LinkTypes global, LinkTypes resource, LinkTypes relationship, object expectedSelfLink, object expectedRelatedLink)
         {
             // Arrange
             var config = GetConfiguration(relationshipLinks: global);
             var primaryResource = GetArticleResourceContext(relationshipLinks: resource);
             _provider.Setup(m => m.GetResourceContext(typeof(Article))).Returns(primaryResource);
-            var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object, _queryStringAccessor);
-            var attr = new HasOneAttribute(links: relationship) { RightType = typeof(Author), PublicRelationshipName = "author" };
+            var builder = new LinkBuilder(config, GetRequestManager(), new PaginationContext(), _provider.Object, _queryStringAccessor);
+            var attr = new HasOneAttribute { Links = relationship, RightType = typeof(Author), PublicName = "author" };
 
             // Act
-            var links = builder.GetRelationshipLinks(attr, new Article { Id = _baseId });
+            var links = builder.GetRelationshipLinks(attr, new Article { Id = _primaryId });
 
             // Assert
             if (expectedSelfLink == null && expectedRelatedLink == null)
@@ -118,49 +112,47 @@ namespace UnitTests
         }
 
         [Theory]
-        [InlineData(Link.All, Link.NotConfigured, _topSelf, true)]
-        [InlineData(Link.All, Link.All, _topSelf, true)]
-        [InlineData(Link.All, Link.Self, _topSelf, false)]
-        [InlineData(Link.All, Link.Paging, null, true)]
-        [InlineData(Link.All, Link.None, null, false)]
-        [InlineData(Link.Self, Link.NotConfigured, _topSelf, false)]
-        [InlineData(Link.Self, Link.All, _topSelf, true)]
-        [InlineData(Link.Self, Link.Self, _topSelf, false)]
-        [InlineData(Link.Self, Link.Paging, null, true)]
-        [InlineData(Link.Self, Link.None, null, false)]
-        [InlineData(Link.Paging, Link.NotConfigured, null, true)]
-        [InlineData(Link.Paging, Link.All, _topSelf, true)]
-        [InlineData(Link.Paging, Link.Self, _topSelf, false)]
-        [InlineData(Link.Paging, Link.Paging, null, true)]
-        [InlineData(Link.Paging, Link.None, null, false)]
-        [InlineData(Link.None, Link.NotConfigured, null, false)]
-        [InlineData(Link.None, Link.All, _topSelf, true)]
-        [InlineData(Link.None, Link.Self, _topSelf, false)]
-        [InlineData(Link.None, Link.Paging, null, true)]
-        [InlineData(Link.None, Link.None, null, false)]
-        [InlineData(Link.All, Link.Self, _topResourceSelf, false)]
-        [InlineData(Link.Self, Link.Self, _topResourceSelf, false)]
-        [InlineData(Link.Paging, Link.Self, _topResourceSelf, false)]
-        [InlineData(Link.None, Link.Self, _topResourceSelf, false)]
-        [InlineData(Link.All, Link.Self, _topRelatedSelf, false)]
-        [InlineData(Link.Self, Link.Self, _topRelatedSelf, false)]
-        [InlineData(Link.Paging, Link.Self, _topRelatedSelf, false)]
-        [InlineData(Link.None, Link.Self, _topRelatedSelf, false)]
-        public void BuildTopLevelLinks_GlobalAndResourceConfiguration_ExpectedLinks(Link global,
-                                                                                    Link resource,
-                                                                                    string expectedSelfLink,
-                                                                                    bool pages)
+        [InlineData(LinkTypes.All, LinkTypes.NotConfigured, _topSelf, true)]
+        [InlineData(LinkTypes.All, LinkTypes.All, _topSelf, true)]
+        [InlineData(LinkTypes.All, LinkTypes.Self, _topSelf, false)]
+        [InlineData(LinkTypes.All, LinkTypes.Paging, null, true)]
+        [InlineData(LinkTypes.All, LinkTypes.None, null, false)]
+        [InlineData(LinkTypes.Self, LinkTypes.NotConfigured, _topSelf, false)]
+        [InlineData(LinkTypes.Self, LinkTypes.All, _topSelf, true)]
+        [InlineData(LinkTypes.Self, LinkTypes.Self, _topSelf, false)]
+        [InlineData(LinkTypes.Self, LinkTypes.Paging, null, true)]
+        [InlineData(LinkTypes.Self, LinkTypes.None, null, false)]
+        [InlineData(LinkTypes.Paging, LinkTypes.NotConfigured, null, true)]
+        [InlineData(LinkTypes.Paging, LinkTypes.All, _topSelf, true)]
+        [InlineData(LinkTypes.Paging, LinkTypes.Self, _topSelf, false)]
+        [InlineData(LinkTypes.Paging, LinkTypes.Paging, null, true)]
+        [InlineData(LinkTypes.Paging, LinkTypes.None, null, false)]
+        [InlineData(LinkTypes.None, LinkTypes.NotConfigured, null, false)]
+        [InlineData(LinkTypes.None, LinkTypes.All, _topSelf, true)]
+        [InlineData(LinkTypes.None, LinkTypes.Self, _topSelf, false)]
+        [InlineData(LinkTypes.None, LinkTypes.Paging, null, true)]
+        [InlineData(LinkTypes.None, LinkTypes.None, null, false)]
+        [InlineData(LinkTypes.All, LinkTypes.Self, _topResourceSelf, false)]
+        [InlineData(LinkTypes.Self, LinkTypes.Self, _topResourceSelf, false)]
+        [InlineData(LinkTypes.Paging, LinkTypes.Self, _topResourceSelf, false)]
+        [InlineData(LinkTypes.None, LinkTypes.Self, _topResourceSelf, false)]
+        [InlineData(LinkTypes.All, LinkTypes.Self, _topRelatedSelf, false)]
+        [InlineData(LinkTypes.Self, LinkTypes.Self, _topRelatedSelf, false)]
+        [InlineData(LinkTypes.Paging, LinkTypes.Self, _topRelatedSelf, false)]
+        [InlineData(LinkTypes.None, LinkTypes.Self, _topRelatedSelf, false)]
+        public void BuildTopLevelLinks_GlobalAndResourceConfiguration_ExpectedLinks(
+            LinkTypes global, LinkTypes resource, string expectedSelfLink, bool pages)
         {
             // Arrange
             var config = GetConfiguration(topLevelLinks: global);
             var primaryResource = GetArticleResourceContext(topLevelLinks: resource);
             _provider.Setup(m => m.GetResourceContext<Article>()).Returns(primaryResource);
 
-            bool useBaseId = expectedSelfLink != _topSelf;
+            bool usePrimaryId = expectedSelfLink != _topSelf;
             string relationshipName = expectedSelfLink == _topRelatedSelf ? _relationshipName : null;
-            ICurrentRequest currentRequest = GetRequestManager(primaryResource, useBaseId, relationshipName);
+            IJsonApiRequest request = GetRequestManager(primaryResource, usePrimaryId, relationshipName);
 
-            var builder = new LinkBuilder(config, currentRequest, _pageService, _provider.Object, _queryStringAccessor);
+            var builder = new LinkBuilder(config, request, _paginationContext, _provider.Object, _queryStringAccessor);
 
             // Act
             var links = builder.GetTopLevelLinks();
@@ -172,58 +164,58 @@ namespace UnitTests
             }
             else
             {
-                Assert.True(CheckLinks(links, pages, expectedSelfLink));
+                if (pages)
+                {
+                    Assert.Equal($"{_host}/articles?foo=bar&page[size]=10&page[number]=2", links.Self);
+                    Assert.Equal($"{_host}/articles?foo=bar&page[size]=10&page[number]=1", links.First);
+                    Assert.Equal($"{_host}/articles?foo=bar&page[size]=10&page[number]=1", links.Prev);
+                    Assert.Equal($"{_host}/articles?foo=bar&page[size]=10&page[number]=3", links.Next);
+                    Assert.Equal($"{_host}/articles?foo=bar&page[size]=10&page[number]=3", links.Last);
+                }
+                else
+                {
+                    Assert.Equal(links.Self , expectedSelfLink);
+                    Assert.Null(links.First);
+                    Assert.Null(links.Prev);
+                    Assert.Null(links.Next);
+                    Assert.Null(links.Last);
+                }
             }
         }
 
-        private bool CheckLinks(TopLevelLinks links, bool pages, string expectedSelfLink)
+        private IJsonApiRequest GetRequestManager(ResourceContext resourceContext = null, bool usePrimaryId = false, string relationshipName = null)
         {
-            if (pages)
-            {
-                return links.Self == $"{_host}/articles?foo=bar&page[size]=10&page[number]=2"
-                    && links.First == $"{_host}/articles?foo=bar&page[size]=10&page[number]=1"
-                    && links.Prev == $"{_host}/articles?foo=bar&page[size]=10&page[number]=1"
-                    && links.Next == $"{_host}/articles?foo=bar&page[size]=10&page[number]=3"
-                    && links.Last == $"{_host}/articles?foo=bar&page[size]=10&page[number]=3";
-            }
-
-            return links.Self == expectedSelfLink && links.First == null && links.Prev == null && links.Next == null && links.Last == null;
-        }
-
-        private ICurrentRequest GetRequestManager(ResourceContext resourceContext = null, bool useBaseId = false, string relationshipName = null)
-        {
-            var mock = new Mock<ICurrentRequest>();
+            var mock = new Mock<IJsonApiRequest>();
             mock.Setup(m => m.BasePath).Returns(_host);
-            mock.Setup(m => m.BaseId).Returns(useBaseId ? _baseId.ToString() : null);
-            mock.Setup(m => m.RequestRelationship).Returns(relationshipName != null ? new HasOneAttribute(relationshipName) : null);
-            mock.Setup(m => m.GetRequestResource()).Returns(resourceContext);
+            mock.Setup(m => m.PrimaryId).Returns(usePrimaryId ? _primaryId.ToString() : null);
+            mock.Setup(m => m.Relationship).Returns(relationshipName != null ? new HasOneAttribute {PublicName = relationshipName} : null);
+            mock.Setup(m => m.PrimaryResource).Returns(resourceContext);
             return mock.Object;
         }
 
-        private ILinksConfiguration GetConfiguration(Link resourceLinks = Link.All,
-                                                           Link topLevelLinks = Link.All,
-                                                           Link relationshipLinks = Link.All)
+        private IJsonApiOptions GetConfiguration(LinkTypes resourceLinks = LinkTypes.All, LinkTypes topLevelLinks = LinkTypes.All, LinkTypes relationshipLinks = LinkTypes.All)
         {
-            var config = new Mock<ILinksConfiguration>();
+            var config = new Mock<IJsonApiOptions>();
             config.Setup(m => m.TopLevelLinks).Returns(topLevelLinks);
             config.Setup(m => m.ResourceLinks).Returns(resourceLinks);
             config.Setup(m => m.RelationshipLinks).Returns(relationshipLinks);
+            config.Setup(m => m.DefaultPageSize).Returns(new PageSize(25));
             return config.Object;
         }
 
-        private IPageService GetPageManager()
+        private IPaginationContext GetPaginationContext()
         {
-            var mock = new Mock<IPageService>();
-            mock.Setup(m => m.CanPaginate).Returns(true);
-            mock.Setup(m => m.CurrentPage).Returns(2);
-            mock.Setup(m => m.TotalPages).Returns(3);
-            mock.Setup(m => m.PageSize).Returns(10);
+            var mock = new Mock<IPaginationContext>();
+            mock.Setup(x => x.PageNumber).Returns(new PageNumber(2));
+            mock.Setup(x => x.PageSize).Returns(new PageSize(10));
+            mock.Setup(x => x.TotalPageCount).Returns(3);
+
             return mock.Object;
         }
 
-        private ResourceContext GetArticleResourceContext(Link resourceLinks = Link.NotConfigured,
-            Link topLevelLinks = Link.NotConfigured,
-            Link relationshipLinks = Link.NotConfigured)
+        private ResourceContext GetArticleResourceContext(LinkTypes resourceLinks = LinkTypes.NotConfigured,
+            LinkTypes topLevelLinks = LinkTypes.NotConfigured,
+            LinkTypes relationshipLinks = LinkTypes.NotConfigured)
         {
             return new ResourceContext
             {

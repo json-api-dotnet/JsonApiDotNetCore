@@ -1,37 +1,37 @@
+using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Hooks.Internal;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.RequestServices;
 
 namespace JsonApiDotNetCoreExample.Services
 {
-    public class CustomArticleService : DefaultResourceService<Article>
+    public class CustomArticleService : JsonApiResourceService<Article>
     {
         public CustomArticleService(
-            IEnumerable<IQueryParameterService> queryParameters,
+            IResourceRepository<Article> repository,
+            IQueryLayerComposer queryLayerComposer,
+            IPaginationContext paginationContext,
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
-            IResourceRepository<Article, int> repository,
-            IResourceContextProvider provider,
+            IJsonApiRequest request,
             IResourceChangeTracker<Article> resourceChangeTracker,
             IResourceFactory resourceFactory,
             IResourceHookExecutor hookExecutor = null)
-            : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, resourceFactory, hookExecutor)
+            : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
+                resourceChangeTracker, resourceFactory, hookExecutor)
         { }
 
         public override async Task<Article> GetAsync(int id)
         {
-            var newEntity = await base.GetAsync(id);
-            newEntity.Name = "None for you Glen Coco";
-            return newEntity;
+            var resource = await base.GetAsync(id);
+            resource.Caption = "None for you Glen Coco";
+            return resource;
         }
     }
 }

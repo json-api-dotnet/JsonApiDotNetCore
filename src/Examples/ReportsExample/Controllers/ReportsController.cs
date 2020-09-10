@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCore.Configuration;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ReportsExample.Models;
 
@@ -12,10 +12,10 @@ namespace ReportsExample.Controllers
     public class ReportsController : BaseJsonApiController<Report> 
     {
         public ReportsController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IGetAllService<Report> getAll)
-            : base(jsonApiOptions, loggerFactory, getAll)
+            : base(options, loggerFactory, getAll)
         { }
 
         [HttpGet]

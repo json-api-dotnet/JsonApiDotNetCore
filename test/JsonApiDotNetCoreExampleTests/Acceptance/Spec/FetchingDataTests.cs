@@ -2,14 +2,16 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -40,10 +42,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            context.TodoItems.RemoveRange(context.TodoItems);
+            await context.ClearTableAsync<TodoItem>();
             await context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems";
@@ -54,7 +56,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var result = _fixture.GetDeserializer().DeserializeList<TodoItem>(body);
+            var result = _fixture.GetDeserializer().DeserializeMany<TodoItem>(body);
             var items = result.Data;
             var meta = result.Meta;
 
@@ -62,12 +64,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(HeaderConstants.MediaType, response.Content.Headers.ContentType.ToString());
             Assert.Empty(items);
-            Assert.Equal(0, int.Parse(meta["total-records"].ToString()));
+            Assert.Equal(0, int.Parse(meta["totalResources"].ToString()));
             context.Dispose();
         }
 
         [Fact]
-        public async Task Included_Records_Contain_Relationship_Links()
+        public async Task Included_Resources_Contain_Relationship_Links()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
@@ -77,7 +79,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner";
@@ -104,25 +106,29 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            context.TodoItems.RemoveRange(context.TodoItems);
+            await context.ClearTableAsync<TodoItem>();
             await context.SaveChangesAsync();
 
             var todoItems = _todoItemFaker.Generate(20);
             context.TodoItems.AddRange(todoItems);
             await context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
-                .UseStartup<NoDefaultPageSizeStartup>();
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
+
+            var options = (JsonApiOptions)server.Services.GetRequiredService<IJsonApiOptions>();
+            options.DefaultPageSize = null;
+
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var result = _fixture.GetDeserializer().DeserializeList<TodoItem>(body);
+            var result = _fixture.GetDeserializer().DeserializeMany<TodoItem>(body);
 
             // Assert
             Assert.True(result.Data.Count == 20);
@@ -133,11 +139,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            context.TodoItems.RemoveRange(context.TodoItems);
+            await context.ClearTableAsync<TodoItem>();
             await context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
-                .UseStartup<NoDefaultPageSizeStartup>();
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems/123";
             var server = new TestServer(builder);
@@ -155,7 +161,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("Resource of type 'todoItems' with id '123' does not exist.", errorDocument.Errors[0].Detail);
+            Assert.Equal("Resource of type 'todoItems' with ID '123' does not exist.", errorDocument.Errors[0].Detail);
         }
     }
 }

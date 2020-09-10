@@ -1,17 +1,21 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExample.Models
 {
     public sealed class Article : Identifiable
     {
         [Attr]
-        public string Name { get; set; }
+        [IsRequired(AllowEmptyStrings = true)]
+        public string Caption { get; set; }
+
+        [Attr]
+        public string Url { get; set; }
 
         [HasOne]
         public Author Author { get; set; }
-        public int AuthorId { get; set; }
 
         [NotMapped]
         [HasManyThrough(nameof(ArticleTags))]
@@ -22,5 +26,11 @@ namespace JsonApiDotNetCoreExample.Models
         [HasManyThrough(nameof(IdentifiableArticleTags))]
         public ICollection<Tag> IdentifiableTags { get; set; }
         public ICollection<IdentifiableArticleTag> IdentifiableArticleTags { get; set; }
+
+        [HasMany]
+        public ICollection<Revision> Revisions { get; set; }
+
+        [HasOne]
+        public Blog Blog { get; set; }
     }
 }

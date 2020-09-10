@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Hooks.Internal.Execution;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
@@ -32,11 +32,11 @@ namespace JsonApiDotNetCoreExample.Definitions
             resourcesByRelationship.GetByRelationship<Person>().ToList().ForEach(kvp => DoesNotTouchLockedPassports(kvp.Value));
         }
 
-        private void DoesNotTouchLockedPassports(IEnumerable<Passport> entities)
+        private void DoesNotTouchLockedPassports(IEnumerable<Passport> resources)
         {
-            foreach (var entity in entities ?? Enumerable.Empty<Passport>())
+            foreach (var passport in resources ?? Enumerable.Empty<Passport>())
             {
-                if (entity.IsLocked)
+                if (passport.IsLocked)
                 {
                     throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
                     {

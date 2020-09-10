@@ -1,5 +1,5 @@
-using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
 using UnitTests.Internal;
 using Xunit;
 

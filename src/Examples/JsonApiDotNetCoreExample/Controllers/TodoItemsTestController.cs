@@ -2,8 +2,9 @@ using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Controllers.Annotations;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     : BaseJsonApiController<T> where T : class, IIdentifiable<int>
     {
         protected AbstractTodoItemsController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<T, int> service)
-            : base(jsonApiOptions, loggerFactory, service)
+            : base(options, loggerFactory, service)
         { }
     }
 
@@ -27,10 +28,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     public class TodoItemsTestController : AbstractTodoItemsController<TodoItem>
     {
         public TodoItemsTestController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<TodoItem> service)
-            : base(jsonApiOptions, loggerFactory, service)
+            : base(options, loggerFactory, service)
         { }
 
         [HttpGet]
@@ -40,15 +41,15 @@ namespace JsonApiDotNetCoreExample.Controllers
         public override async Task<IActionResult> GetAsync(int id) => await base.GetAsync(id);
 
         [HttpGet("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> GetRelationshipsAsync(int id, string relationshipName)
-            => await base.GetRelationshipsAsync(id, relationshipName);
-
-        [HttpGet("{id}/{relationshipName}")]
         public override async Task<IActionResult> GetRelationshipAsync(int id, string relationshipName)
             => await base.GetRelationshipAsync(id, relationshipName);
 
+        [HttpGet("{id}/{relationshipName}")]
+        public override async Task<IActionResult> GetSecondaryAsync(int id, string relationshipName)
+            => await base.GetSecondaryAsync(id, relationshipName);
+
         [HttpPost]
-        public override async Task<IActionResult> PostAsync(TodoItem entity)
+        public override async Task<IActionResult> PostAsync(TodoItem resource)
         {
             await Task.Yield();
 
@@ -59,7 +60,7 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpPatch("{id}")]
-        public override async Task<IActionResult> PatchAsync(int id, [FromBody] TodoItem entity)
+        public override async Task<IActionResult> PatchAsync(int id, [FromBody] TodoItem resource)
         {
             await Task.Yield();
 
@@ -67,9 +68,9 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> PatchRelationshipsAsync(
+        public override async Task<IActionResult> PatchRelationshipAsync(
             int id, string relationshipName, [FromBody] object relationships)
-            => await base.PatchRelationshipsAsync(id, relationshipName, relationships);
+            => await base.PatchRelationshipAsync(id, relationshipName, relationships);
 
         [HttpDelete("{id}")]
         public override async Task<IActionResult> DeleteAsync(int id)

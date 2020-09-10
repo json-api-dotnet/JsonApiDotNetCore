@@ -1,7 +1,6 @@
 <Project>
   <PropertyGroup>
     <NetCoreAppVersion>netcoreapp3.1</NetCoreAppVersion>
-    <NetStandardVersion>netstandard2.1</NetStandardVersion>
     <AspNetCoreVersion>3.1.*</AspNetCoreVersion>
     <EFCoreVersion>3.1.*</EFCoreVersion>
     <NpgsqlPostgreSQLVersion>3.1.*</NpgsqlPostgreSQLVersion>
@@ -10,11 +9,13 @@
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <NoWarn>$(NoWarn);1591</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <!-- Test Project Dependencies -->
   <PropertyGroup>
     <XUnitVersion>2.4.1</XUnitVersion>
+    <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
     <BogusVersion>29.0.1</BogusVersion>
     <MoqVersion>4.13.1</MoqVersion>
   </PropertyGroup>

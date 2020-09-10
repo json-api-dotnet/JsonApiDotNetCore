@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,25 +17,25 @@ namespace JsonApiDotNetCoreExample.Controllers
         private readonly IDbContextResolver _dbResolver;
 
         public TodoCollectionsController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IDbContextResolver contextResolver,
             IResourceService<TodoItemCollection, Guid> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         {
             _dbResolver = contextResolver;
         }
 
         [HttpPatch("{id}")]
-        public override async Task<IActionResult> PatchAsync(Guid id, [FromBody] TodoItemCollection entity)
+        public override async Task<IActionResult> PatchAsync(Guid id, [FromBody] TodoItemCollection resource)
         {
-            if (entity.Name == "PRE-ATTACH-TEST")
+            if (resource.Name == "PRE-ATTACH-TEST")
             {
-                var targetTodoId = entity.TodoItems.First().Id;
+                var targetTodoId = resource.TodoItems.First().Id;
                 var todoItemContext = _dbResolver.GetContext().Set<TodoItem>();
                 await todoItemContext.Where(ti => ti.Id == targetTodoId).FirstOrDefaultAsync();
             }
-            return await base.PatchAsync(id, entity);
+            return await base.PatchAsync(id, resource);
         }
 
     }

@@ -11,6 +11,7 @@ namespace JsonApiDotNetCoreExample.Data
 
         public DbSet<TodoItem> TodoItems { get; set; }
         public DbSet<Passport> Passports { get; set; }
+        public DbSet<Visa> Visas { get; set; }
         public DbSet<Person> People { get; set; }
         public DbSet<TodoItemCollection> TodoItemCollections { get; set; }
         public DbSet<KebabCasedModel> KebabCasedModels { get; set; }
@@ -20,6 +21,7 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<PersonRole> PersonRoles { get; set; }
         public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options, ISystemClock systemClock) : base(options)
         {
@@ -80,6 +82,11 @@ namespace JsonApiDotNetCoreExample.Data
                 .HasOne(p => p.OneToOnePerson)
                 .WithOne(p => p.OneToOneTodoItem)
                 .HasForeignKey<TodoItem>(p => p.OneToOnePersonId);
+
+            modelBuilder.Entity<TodoItemCollection>()
+                .HasOne(p => p.Owner)
+                .WithMany(p => p.TodoCollections)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Person>()
                 .HasOne(p => p.OneToOneTodoItem)

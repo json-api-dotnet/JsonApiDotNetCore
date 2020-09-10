@@ -10,7 +10,7 @@
             "dest": "api",
             "disableGitFeatures": false,
             "properties": {
-                "targetFramework": "netstandard2.0"
+                "targetFramework": "netcoreapp3.1"
             }
         }
     ],
@@ -25,6 +25,7 @@
                     "getting-started/**/toc.yml",
                     "usage/**.md",
                     "request-examples/**.md",
+                    "internals/**.md",
                     "toc.yml",
                     "*.md"
                 ]

@@ -45,11 +45,11 @@ GET /articles/1?include=comments HTTP/1.1
 }
 ```
 
-## Deeply Nested Inclusions
+## Nested Inclusions
 
 _since v3.0.0_
 
-JsonApiDotNetCore also supports deeply nested inclusions.
+JsonApiDotNetCore also supports nested inclusions.
 This allows you to include data across relationships by using a period-delimited relationship path, for example:
 
 ```http

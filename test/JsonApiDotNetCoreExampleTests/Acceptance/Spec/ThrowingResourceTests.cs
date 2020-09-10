@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var throwingResource = new ThrowingResource();
             _dbContext.Add(throwingResource);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             // Act
             var (body, response) = await Get($"/api/v1/throwingResources/{throwingResource.Id}");

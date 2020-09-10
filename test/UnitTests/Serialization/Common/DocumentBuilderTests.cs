@@ -1,26 +1,28 @@
 using System.Collections.Generic;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Building;
+using JsonApiDotNetCore.Serialization.Objects;
 using Moq;
-using Xunit;
 using UnitTests.TestModels;
+using Xunit;
 
 namespace UnitTests.Serialization.Serializer
 {
     public sealed class BaseDocumentBuilderTests : SerializerTestsSetup
     {
-        private readonly TestDocumentBuilder _builder;
+        private readonly TestSerializer _builder;
 
         public BaseDocumentBuilderTests()
         {
             var mock = new Mock<IResourceObjectBuilder>();
-            mock.Setup(m => m.Build(It.IsAny<IIdentifiable>(), It.IsAny<IEnumerable<AttrAttribute>>(), It.IsAny<IEnumerable<RelationshipAttribute>>())).Returns(new ResourceObject());
-            _builder = new TestDocumentBuilder(mock.Object);
+            mock.Setup(m => m.Build(It.IsAny<IIdentifiable>(), It.IsAny<IReadOnlyCollection<AttrAttribute>>(), It.IsAny<IReadOnlyCollection<RelationshipAttribute>>())).Returns(new ResourceObject());
+            _builder = new TestSerializer(mock.Object);
         }
 
 
         [Fact]
-        public void EntityToDocument_NullEntity_CanBuild()
+        public void ResourceToDocument_NullResource_CanBuild()
         {
             // Act
             var document = _builder.Build((TestResource) null);
@@ -32,13 +34,13 @@ namespace UnitTests.Serialization.Serializer
 
 
         [Fact]
-        public void EntityToDocument_EmptyList_CanBuild()
+        public void ResourceToDocument_EmptyList_CanBuild()
         {
             // Arrange
-            var entities = new List<TestResource>();
+            var resources = new List<TestResource>();
 
             // Act
-            var document = _builder.Build(entities);
+            var document = _builder.Build(resources);
 
             // Assert
             Assert.NotNull(document.Data);
@@ -47,7 +49,7 @@ namespace UnitTests.Serialization.Serializer
 
 
         [Fact]
-        public void EntityToDocument_SingleEntity_CanBuild()
+        public void ResourceToDocument_SingleResource_CanBuild()
         {
             // Arrange
             IIdentifiable dummy = new DummyResource();
@@ -61,13 +63,13 @@ namespace UnitTests.Serialization.Serializer
         }
 
         [Fact]
-        public void EntityToDocument_EntityList_CanBuild()
+        public void ResourceToDocument_ResourceList_CanBuild()
         {
             // Arrange
-            var entities = new List<IIdentifiable> { new DummyResource(), new DummyResource() };
+            var resources = new List<IIdentifiable> { new DummyResource(), new DummyResource() };
 
             // Act
-            var document = _builder.Build(entities);
+            var document = _builder.Build(resources);
             var data = (List<ResourceObject>)document.Data;
 
             // Assert

@@ -6,14 +6,13 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    [DisableQuery(StandardQueryStringParameters.Sort | StandardQueryStringParameters.Page)]
     public sealed class ArticlesController : JsonApiController<Article>
     {
         public ArticlesController(
-            IJsonApiOptions jsonApiOptions,
+            IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<Article> resourceService)
-            : base(jsonApiOptions, loggerFactory, resourceService)
+            : base(options, loggerFactory, resourceService)
         { }
     }
 }

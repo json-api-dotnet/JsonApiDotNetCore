@@ -97,6 +97,9 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+# MacOS file systems
+**/.DS_STORE
+
 # Chutzpah Test files
 _Chutzpah*
 
@@ -130,6 +133,9 @@ $tf/
 _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
+
+# JetBrains Rider
+.idea/
 
 # TeamCity is a build add-in
 _TeamCity*

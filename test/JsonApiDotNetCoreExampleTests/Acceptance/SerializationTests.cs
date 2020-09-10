@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Acceptance.Spec;
+using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -30,9 +31,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 Category = "Family"
             };
 
-            _dbContext.People.RemoveRange(_dbContext.People);
+            await _dbContext.ClearTableAsync<Person>();
             _dbContext.People.Add(person);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/people/" + person.Id);
 
@@ -43,10 +44,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var bodyText = await response.Content.ReadAsStringAsync();
-            var token = JsonConvert.DeserializeObject<JToken>(bodyText);
-            var bodyFormatted = NormalizeLineEndings(token.ToString());
+            var json = JsonConvert.DeserializeObject<JToken>(bodyText).ToString();
 
-            var expectedText = NormalizeLineEndings(@"{
+            var expected = @"{
   ""meta"": {
     ""copyright"": ""Copyright 2015 Example Corp."",
     ""authors"": [
@@ -123,13 +123,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
       ""self"": ""http://localhost/api/v1/people/123""
     }
   }
-}");
-            Assert.Equal(expectedText, bodyFormatted);
-        }
-
-        private static string NormalizeLineEndings(string text)
-        {
-            return text.Replace("\r\n", "\n").Replace("\r", "\n");
+}";
+            Assert.Equal(expected.NormalizeLineEndings(), json.NormalizeLineEndings());
         }
     }
 }

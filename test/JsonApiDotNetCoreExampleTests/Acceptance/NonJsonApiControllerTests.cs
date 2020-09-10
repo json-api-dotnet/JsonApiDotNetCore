@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using JsonApiDotNetCoreExample;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
@@ -17,7 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             const string route = "testValues";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, route);
@@ -39,7 +40,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             const string route = "testValues?name=Jack";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Post, route) {Content = new StringContent("XXX")};
@@ -62,7 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             const string route = "testValues?name=Jack";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Patch, route) {Content = new StringContent("XXX")};
@@ -84,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             const string route = "testValues";
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Delete, route);

@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Models;
 using Newtonsoft.Json;
 using Xunit;
@@ -22,13 +22,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var person = new Person();
 
             _dbContext.People.Add(person);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var route = "/api/v1/people/" + person.StringId;
             var request = new HttpRequestMessage(HttpMethod.Get, route);
 
             var options = (JsonApiOptions) _factory.GetService<IJsonApiOptions>();
-            options.RelativeLinks = true;
+            options.UseRelativeLinks = true;
 
             // Act
             var response = await _factory.Client.SendAsync(request);
@@ -47,13 +47,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var person = new Person();
 
             _dbContext.People.Add(person);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var route = "/api/v1/people/" + person.StringId;
             var request = new HttpRequestMessage(HttpMethod.Get, route);
 
             var options = (JsonApiOptions) _factory.GetService<IJsonApiOptions>();
-            options.RelativeLinks = false;
+            options.UseRelativeLinks = false;
 
             // Act
             var response = await _factory.Client.SendAsync(request);
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal($"http://localhost/api/v1/people/" + person.StringId, document.Links.Self);
+            Assert.Equal("http://localhost/api/v1/people/" + person.StringId, document.Links.Self);
         }
     }
 }

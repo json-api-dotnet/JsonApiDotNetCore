@@ -1,9 +1,9 @@
 using System;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Exceptions;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Logging;
 using Xunit;
 
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             Assert.Contains("Access is denied.", loggerFactory.Logger.Messages[0].Text);
         }
 
-        public class CustomExceptionHandler : DefaultExceptionHandler
+        public class CustomExceptionHandler : ExceptionHandler
         {
             public CustomExceptionHandler(ILoggerFactory loggerFactory, IJsonApiOptions options)
                 : base(loggerFactory, options)

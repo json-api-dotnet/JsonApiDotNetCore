@@ -1,12 +1,11 @@
 using System;
 using BenchmarkDotNet.Attributes;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers;
-using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Server;
-using JsonApiDotNetCore.Serialization.Server.Builders;
+using JsonApiDotNetCore.Serialization.Building;
 using Moq;
 
 namespace Benchmarks.Serialization
@@ -14,7 +13,7 @@ namespace Benchmarks.Serialization
     [MarkdownExporter]
     public class JsonApiSerializerBenchmarks
     {
-        private static readonly BenchmarkResource Content = new BenchmarkResource
+        private static readonly BenchmarkResource _content = new BenchmarkResource
         {
             Id = 123,
             Name = Guid.NewGuid().ToString()
@@ -40,14 +39,19 @@ namespace Benchmarks.Serialization
 
         private static FieldsToSerialize CreateFieldsToSerialize(IResourceGraph resourceGraph)
         {
+            var request = new JsonApiRequest();
+
+            var constraintProviders = new IQueryConstraintProvider[]
+            {
+                new SparseFieldSetQueryStringParameterReader(request, resourceGraph)
+            };
+
             var resourceDefinitionProvider = DependencyFactory.CreateResourceDefinitionProvider(resourceGraph);
-            var currentRequest = new CurrentRequest();
-            var sparseFieldsService = new SparseFieldsService(resourceGraph, currentRequest);
-            
-            return new FieldsToSerialize(resourceGraph, sparseFieldsService, resourceDefinitionProvider);
+
+            return new FieldsToSerialize(resourceGraph, constraintProviders, resourceDefinitionProvider);
         }
 
         [Benchmark]
-        public object SerializeSimpleObject() => _jsonApiSerializer.Serialize(Content);
+        public object SerializeSimpleObject() => _jsonApiSerializer.Serialize(_content);
     }
 }

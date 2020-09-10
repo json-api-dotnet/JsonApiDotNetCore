@@ -5,13 +5,13 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore;
-using JsonApiDotNetCore.Formatters;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -50,16 +50,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var dbContext = PrepareTest<TestStartup>();
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
 
             var clock = server.Host.Services.GetRequiredService<ISystemClock>();
 
-            var serializer = TestFixture<TestStartup>.GetSerializer<SuperUser>(server.Host.Services, e => new { e.SecurityLevel, e.Username, e.Password });
-            var superUser = new SuperUser(_context) { SecurityLevel = 1337, Username = "Super", Password = "User", LastPasswordChange = clock.UtcNow.LocalDateTime.AddMinutes(-15) };
+            var serializer = TestFixture<TestStartup>.GetSerializer<SuperUser>(server.Host.Services, e => new { e.SecurityLevel, e.UserName, e.Password });
+            var superUser = new SuperUser(_context) { SecurityLevel = 1337, UserName = "Super", Password = "User", LastPasswordChange = clock.UtcNow.LocalDateTime.AddMinutes(-15) };
             dbContext.Set<SuperUser>().Add(superUser);
-            dbContext.SaveChanges();
-            var su = new SuperUser(_context) { Id = superUser.Id, SecurityLevel = 2674, Username = "Power", Password = "secret" };
+            await dbContext.SaveChangesAsync();
+
+            var su = new SuperUser(_context) { Id = superUser.Id, SecurityLevel = 2674, UserName = "Power", Password = "secret" };
             var content = serializer.Serialize(su);
 
             // Act
@@ -69,15 +70,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             AssertEqualStatusCode(HttpStatusCode.OK, response);
             var updated = _deserializer.DeserializeSingle<SuperUser>(body).Data;
             Assert.Equal(su.SecurityLevel, updated.SecurityLevel);
-            Assert.Equal(su.Username, updated.Username);
-            Assert.Equal(su.Password, updated.Password);
+            Assert.Equal(su.UserName, updated.UserName);
+            Assert.Null(updated.Password);
         }
 
         [Fact]
         public async Task Response422IfUpdatingNotSettableAttribute()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
 
             var loggerFactory = new FakeLoggerFactory();
             builder.ConfigureLogging(options =>
@@ -93,7 +94,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var todoItem = _todoItemFaker.Generate();
             _context.TodoItems.Add(todoItem);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, ti => new { ti.CalculatedValue });
             var content = serializer.Serialize(todoItem);
@@ -122,16 +123,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Respond_404_If_EntityDoesNotExist()
+        public async Task Respond_404_If_ResourceDoesNotExist()
         {
             // Arrange
-            _context.TodoItems.RemoveRange(_context.TodoItems);
+            await _context.ClearTableAsync<TodoItem>();
             await _context.SaveChangesAsync();
 
             var todoItem = _todoItemFaker.Generate();
             todoItem.Id = 100;
             todoItem.CreatedDate = new DateTime(2002, 2,2);
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -152,7 +153,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("Resource of type 'todoItems' with id '100' does not exist.", errorDocument.Errors[0].Detail);
+            Assert.Equal("Resource of type 'todoItems' with ID '100' does not exist.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -162,7 +163,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var maxPersonId = _context.TodoItems.ToList().LastOrDefault()?.Id ?? 0;
             var todoItem = _todoItemFaker.Generate();
             todoItem.CreatedDate = new DateTime(2002, 2,2);
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -183,7 +184,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var error = document.Errors.Single();
             Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
-            Assert.Equal("Failed to deserialize request body: Payload must include id attribute.", error.Title);
+            Assert.Equal("Failed to deserialize request body: Payload must include 'id' element.", error.Title);
             Assert.StartsWith("Request body: <<", error.Detail);
         }
 
@@ -195,11 +196,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todoItem.CreatedDate = new DateTime(2002, 2,2);
 
             _context.TodoItems.Add(todoItem);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var wrongTodoItemId = todoItem.Id + 1;
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, ti => new {ti.Description, ti.Ordinal, ti.CreatedDate});
@@ -218,22 +219,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var error = document.Errors.Single();
             Assert.Equal(HttpStatusCode.Conflict, error.StatusCode);
-            Assert.Equal("Resource id mismatch between request body and endpoint URL.", error.Title);
-            Assert.Equal($"Expected resource id '{wrongTodoItemId}' in PATCH request body at endpoint 'http://localhost/api/v1/todoItems/{wrongTodoItemId}', instead of '{todoItem.Id}'.", error.Detail);
+            Assert.Equal("Resource ID mismatch between request body and endpoint URL.", error.Title);
+            Assert.Equal($"Expected resource ID '{wrongTodoItemId}' in PATCH request body at endpoint 'http://localhost/api/v1/todoItems/{wrongTodoItemId}', instead of '{todoItem.Id}'.", error.Detail);
         }
 
         [Fact]
         public async Task Respond_422_If_Broken_JSON_Payload()
         {
             // Arrange
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            
+
             var content = "{ \"data\" {";
-            var request = PrepareRequest("POST", $"/api/v1/todoItems", content);
+            var request = PrepareRequest("POST", "/api/v1/todoItems", content);
 
             // Act
             var response = await client.SendAsync(request);
@@ -252,23 +253,23 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Can_Patch_Entity()
+        public async Task Can_Patch_Resource()
         {
             // Arrange
-            _context.RemoveRange(_context.TodoItemCollections);
-            _context.RemoveRange(_context.TodoItems);
-            _context.RemoveRange(_context.People);
-            _context.SaveChanges();
+            await _context.ClearTableAsync<TodoItemCollection>();
+            await _context.ClearTableAsync<TodoItem>();
+            await _context.ClearTableAsync<Person>();
+            await _context.SaveChangesAsync();
 
             var todoItem = _todoItemFaker.Generate();
             var person = _personFaker.Generate();
             todoItem.Owner = person;
             _context.TodoItems.Add(todoItem);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var newTodoItem = _todoItemFaker.Generate();
             newTodoItem.Id = todoItem.Id;
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, p => new { p.Description, p.Ordinal });
@@ -300,23 +301,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Patch_Entity_With_HasMany_Does_Not_Include_Relationships()
+        public async Task Patch_Resource_With_HasMany_Does_Not_Include_Relationships()
         {
             // Arrange
             var todoItem = _todoItemFaker.Generate();
-            var person = _personFaker.Generate();
-            todoItem.Owner = person;
+            todoItem.Owner = _personFaker.Generate();
             _context.TodoItems.Add(todoItem);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             var newPerson = _personFaker.Generate();
-            newPerson.Id = person.Id;
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            newPerson.Id = todoItem.Owner.Id;
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var serializer = TestFixture<TestStartup>.GetSerializer<Person>(server.Host.Services, p => new { p.LastName, p.FirstName });
 
-            var request = PrepareRequest("PATCH", $"/api/v1/people/{person.Id}", serializer.Serialize(newPerson));
+            var request = PrepareRequest("PATCH", $"/api/v1/people/{todoItem.Owner.Id}", serializer.Serialize(newPerson));
 
             // Act
             var response = await client.SendAsync(request);
@@ -335,7 +335,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Can_Patch_Entity_And_HasOne_Relationships()
+        public async Task Can_Patch_Resource_And_HasOne_Relationships()
         {
             // Arrange
             var todoItem = _todoItemFaker.Generate();
@@ -343,10 +343,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var person = _personFaker.Generate();
             _context.TodoItems.Add(todoItem);
             _context.People.Add(person);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             todoItem.Owner = person;
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();

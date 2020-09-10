@@ -1,7 +1,7 @@
-using JsonApiDotNetCore.Hooks;
+using System.Collections.Generic;
+using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
-using System.Collections.Generic;
 using Xunit;
 
 namespace UnitTests.ResourceHooks
@@ -23,7 +23,7 @@ namespace UnitTests.ResourceHooks
             // Act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
             // Assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IEntityHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IResourceHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<Person>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -41,7 +41,7 @@ namespace UnitTests.ResourceHooks
             // Act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
             // Assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IEntityHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Never());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IResourceHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Never());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<Person>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -58,7 +58,7 @@ namespace UnitTests.ResourceHooks
             // Act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
             // Assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IEntityHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IResourceHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
         [Fact]

@@ -4,11 +4,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
@@ -40,7 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         public async Task NonJsonApiControllers_DoNotUse_Dasherized_Routes()
         {
             // Arrange
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "testValues";
@@ -60,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         public async Task CustomRouteControllers_Uses_Dasherized_Collection_Route()
         {
             // Arrange
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/custom/route/todoItems";
@@ -87,7 +88,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = $"/custom/route/todoItems/{todoItem.Id}";
@@ -114,7 +115,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var httpMethod = new HttpMethod("GET");
             var route = $"/custom/route/todoItems/{todoItem.Id}";
 
@@ -139,7 +140,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         public async Task ApiController_attribute_transforms_NotFound_action_result_without_arguments_into_ProblemDetails()
         {
             // Arrange
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var route = "/custom/route/todoItems/99999999";
 
             var requestBody = new

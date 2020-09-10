@@ -1,40 +1,42 @@
-# Entity Repositories
+# Resource Repositories
 
-If you want to use Entity Framework Core, but need additional data access logic (such as authorization), you can implement custom methods for accessing the data by creating an implementation of IResourceRepository<TResource, TId>. If you only need minor changes you can override the methods defined in DefaultResourceRepository<TResource, TId>.
+If you want to use a data access technology other than Entity Framework Core, you can create an implementation of IResourceRepository<TResource, TId>.
+If you only need minor changes you can override the methods defined in EntityFrameworkCoreRepository<TResource, TId>.
 
 The repository should then be added to the service collection in Startup.cs.
 
 ```c#
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddScoped<IResourceRepository<Article>, AuthorizedArticleRepository>();
+    services.AddScoped<IResourceRepository<Article>, ArticleRepository>();
     // ...
 }
 ```
 
-A sample implementation that performs data authorization might look like this.
+A sample implementation that performs authorization might look like this.
 
-All of the methods in the DefaultResourceRepository will use the Get() method to get the DbSet<TEntity>, so this is a good method to apply scoped filters such as user or tenant authorization.
+All of the methods in EntityFrameworkCoreRepository will use the GetAll() method to get the DbSet<TResource>, so this is a good method to apply filters such as user or tenant authorization.
 
 ```c#
-public class AuthorizedArticleRepository : DefaultResourceRepository<Article>
+public class ArticleRepository : EntityFrameworkCoreRepository<Article>
 {
     private readonly IAuthenticationService _authenticationService;
 
-    public AuthorizedArticleRepository(
+    public ArticleRepository(
         IAuthenticationService authenticationService,
         ITargetedFields targetedFields,
         IDbContextResolver contextResolver,
         IResourceGraph resourceGraph,
         IGenericServiceFactory genericServiceFactory,
         IResourceFactory resourceFactory,
+        IEnumerable<IQueryConstraintProvider> constraintProviders,
         ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory)
+        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory) 
     {
         _authenticationService = authenticationService;
     }
 
-    public override IQueryable<Article> Get()
+    public override IQueryable<Article> GetAll()
     {
         return base.Get().Where(article => article.UserId == _authenticationService.UserId);
     }
@@ -83,7 +85,7 @@ services.AddScoped<DbContextAResolver>();
 services.AddScoped<DbContextBResolver>();
 
 
-public class DbContextARepository<TResource> : DefaultResourceRepository<TResource>
+public class DbContextARepository<TResource> : EntityFrameworkCoreRepository<TResource>
     where TResource : class, IIdentifiable<int>
 {
     public DbContextARepository(
@@ -92,8 +94,9 @@ public class DbContextARepository<TResource> : DefaultResourceRepository<TResour
         IResourceGraph resourceGraph,
         IGenericServiceFactory genericServiceFactory,
         IResourceFactory resourceFactory,
+        IEnumerable<IQueryConstraintProvider> constraintProviders,
         ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory)
+        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory) 
     { }
 }
 

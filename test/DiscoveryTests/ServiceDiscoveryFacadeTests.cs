@@ -1,18 +1,11 @@
 using System.Collections.Generic;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Generics;
-using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Query;
-using JsonApiDotNetCore.RequestServices;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Server.Builders;
+using JsonApiDotNetCore.Hooks.Internal;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -40,13 +33,16 @@ namespace DiscoveryTests
             _services.AddSingleton<IJsonApiOptions>(options);
             _services.AddSingleton<ILoggerFactory>(new LoggerFactory());
             _services.AddScoped(_ => new Mock<ILinkBuilder>().Object);
-            _services.AddScoped(_ => new Mock<ICurrentRequest>().Object);
+            _services.AddScoped(_ => new Mock<IJsonApiRequest>().Object);
             _services.AddScoped(_ => new Mock<ITargetedFields>().Object);
             _services.AddScoped(_ => new Mock<IResourceGraph>().Object);
             _services.AddScoped(_ => new Mock<IGenericServiceFactory>().Object);
             _services.AddScoped(_ => new Mock<IResourceContextProvider>().Object);
-            _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(DefaultResourceChangeTracker<>));
+            _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
             _services.AddScoped(_ => new Mock<IResourceFactory>().Object);
+            _services.AddScoped(_ => new Mock<IPaginationContext>().Object);
+            _services.AddScoped(_ => new Mock<IQueryLayerComposer>().Object);
+            _services.AddTransient(_ => new Mock<IResourceDefinitionProvider>().Object);
 
             _resourceGraphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
         }
@@ -63,11 +59,9 @@ namespace DiscoveryTests
             var resourceGraph = _resourceGraphBuilder.Build();
             var personResource = resourceGraph.GetResourceContext(typeof(Person));
             var articleResource = resourceGraph.GetResourceContext(typeof(Article));
-            var modelResource = resourceGraph.GetResourceContext(typeof(Model));
 
             Assert.NotNull(personResource);
             Assert.NotNull(articleResource);
-            Assert.NotNull(modelResource);
         }
 
         [Fact]
@@ -107,22 +101,25 @@ namespace DiscoveryTests
 
         public sealed class TestModel : Identifiable { }
 
-        public class TestModelService : DefaultResourceService<TestModel>
+        public class TestModelService : JsonApiResourceService<TestModel>
         {
             public TestModelService(
-                IEnumerable<IQueryParameterService> queryParameters,
+                IResourceRepository<TestModel> repository,
+                IQueryLayerComposer queryLayerComposer,
+                IPaginationContext paginationContext,
                 IJsonApiOptions options,
                 ILoggerFactory loggerFactory,
-                IResourceRepository<TestModel, int> repository,
-                IResourceContextProvider provider,
+                IJsonApiRequest request,
                 IResourceChangeTracker<TestModel> resourceChangeTracker,
                 IResourceFactory resourceFactory,
                 IResourceHookExecutor hookExecutor = null)
-                : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, resourceFactory, hookExecutor)
-            { }
+                : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
+                    resourceChangeTracker, resourceFactory, hookExecutor)
+            {
+            }
         }
 
-        public class TestModelRepository : DefaultResourceRepository<TestModel>
+        public class TestModelRepository : EntityFrameworkCoreRepository<TestModel>
         {
             internal static IDbContextResolver _dbContextResolver;
 
@@ -131,8 +128,9 @@ namespace DiscoveryTests
                 IResourceGraph resourceGraph,
                 IGenericServiceFactory genericServiceFactory,
                 IResourceFactory resourceFactory,
+                IEnumerable<IQueryConstraintProvider> constraintProviders,
                 ILoggerFactory loggerFactory)
-                : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory, resourceFactory, loggerFactory)
+                : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory)
             { }
         }
     }

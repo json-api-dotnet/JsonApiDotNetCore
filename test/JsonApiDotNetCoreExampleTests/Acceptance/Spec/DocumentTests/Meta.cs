@@ -3,11 +3,13 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using JsonApiDotNetCore;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
@@ -27,15 +29,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         }
 
         [Fact]
-        public async Task Total_Record_Count_Included()
+        public async Task Total_Resource_Count_Included()
         {
             // Arrange
-            _context.TodoItems.RemoveRange(_context.TodoItems);
+            await _context.ClearTableAsync<TodoItem>();
             _context.TodoItems.Add(new TodoItem());
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             var expectedCount = 1;
-            var builder = new WebHostBuilder()
-                .UseStartup<MetaStartup>();
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems";
@@ -52,17 +54,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(documents.Meta);
-            Assert.Equal(expectedCount, (long)documents.Meta["total-records"]);
+            Assert.Equal(expectedCount, (long)documents.Meta["totalResources"]);
         }
 
         [Fact]
-        public async Task Total_Record_Count_Included_When_None()
+        public async Task Total_Resource_Count_Included_When_None()
         {
             // Arrange
-            _context.TodoItems.RemoveRange(_context.TodoItems);
-            _context.SaveChanges();
-            var builder = new WebHostBuilder()
-                .UseStartup<MetaStartup>();
+            await _context.ClearTableAsync<TodoItem>();
+            await _context.SaveChangesAsync();
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems";
@@ -79,17 +81,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(documents.Meta);
-            Assert.Equal(0, (long)documents.Meta["total-records"]);
+            Assert.Equal(0, (long)documents.Meta["totalResources"]);
         }
 
         [Fact]
-        public async Task Total_Record_Count_Not_Included_In_POST_Response()
+        public async Task Total_Resource_Count_Not_Included_In_POST_Response()
         {
             // Arrange
-            _context.TodoItems.RemoveRange(_context.TodoItems);
-            _context.SaveChanges();
-            var builder = new WebHostBuilder()
-                .UseStartup<MetaStartup>();
+            await _context.ClearTableAsync<TodoItem>();
+            await _context.SaveChangesAsync();
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("POST");
             var route = "/api/v1/todoItems";
@@ -104,7 +106,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                     type = "todoItems",
                     attributes = new
                     {
-                        description = "New Description",
+                        description = "New Description"
                     }
                 }
             };
@@ -119,19 +121,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // Assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-            Assert.False(documents.Meta.ContainsKey("total-records"));
+            Assert.True(documents.Meta == null || !documents.Meta.ContainsKey("totalResources"));
         }
 
         [Fact]
-        public async Task Total_Record_Count_Not_Included_In_PATCH_Response()
+        public async Task Total_Resource_Count_Not_Included_In_PATCH_Response()
         {
             // Arrange
-            _context.TodoItems.RemoveRange(_context.TodoItems);
+            await _context.ClearTableAsync<TodoItem>();
             TodoItem todoItem = new TodoItem();
             _context.TodoItems.Add(todoItem);
-            _context.SaveChanges();
-            var builder = new WebHostBuilder()
-                .UseStartup<MetaStartup>();
+            await _context.SaveChangesAsync();
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todoItems/{todoItem.Id}";
@@ -147,7 +149,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                     id = todoItem.Id,
                     attributes = new
                     {
-                        description = "New Description",
+                        description = "New Description"
                     }
                 }
             };
@@ -162,15 +164,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.False(documents.Meta.ContainsKey("total-records"));
+            Assert.True(documents.Meta == null || !documents.Meta.ContainsKey("totalResources"));
         }
 
         [Fact]
-        public async Task EntityThatImplements_IHasMeta_Contains_MetaData()
+        public async Task ResourceThatImplements_IHasMeta_Contains_MetaData()
         {
             // Arrange
-            var builder = new WebHostBuilder()
-                .UseStartup<MetaStartup>();
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
 
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/people";

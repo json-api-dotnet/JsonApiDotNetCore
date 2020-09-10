@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace GettingStarted.Models
 {

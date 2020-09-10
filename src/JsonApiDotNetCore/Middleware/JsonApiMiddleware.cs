@@ -1,16 +1,15 @@
-using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -20,7 +19,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
-    /// Intercepts HTTP requests to populate injected <see cref="ICurrentRequest"/> instance for json:api requests.
+    /// Intercepts HTTP requests to populate injected <see cref="IJsonApiRequest"/> instance for json:api requests.
     /// </summary>
     public sealed class JsonApiMiddleware
     {
@@ -34,13 +33,19 @@ namespace JsonApiDotNetCore.Middleware
         public async Task Invoke(HttpContext httpContext, 
             IControllerResourceMapping controllerResourceMapping, 
             IJsonApiOptions options, 
-            ICurrentRequest currentRequest, 
-            IResourceGraph resourceGraph)
+            IJsonApiRequest request, 
+            IResourceContextProvider resourceContextProvider)
         {
+            if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
+            if (controllerResourceMapping == null) throw new ArgumentNullException(nameof(controllerResourceMapping));
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (resourceContextProvider == null) throw new ArgumentNullException(nameof(resourceContextProvider));
+
             var routeValues = httpContext.GetRouteData().Values;
 
-            var resourceContext = CreateResourceContext(routeValues, controllerResourceMapping, resourceGraph);
-            if (resourceContext != null)
+            var primaryResourceContext = CreatePrimaryResourceContext(routeValues, controllerResourceMapping, resourceContextProvider);
+            if (primaryResourceContext != null)
             {
                 if (!await ValidateContentTypeHeaderAsync(httpContext, options.SerializerSettings) || 
                     !await ValidateAcceptHeaderAsync(httpContext, options.SerializerSettings))
@@ -48,25 +53,28 @@ namespace JsonApiDotNetCore.Middleware
                     return;
                 }
 
-                SetupCurrentRequest(currentRequest, resourceContext, routeValues, options, httpContext.Request);
+                SetupRequest((JsonApiRequest)request, primaryResourceContext, routeValues, options, resourceContextProvider, httpContext.Request);
 
-                httpContext.SetJsonApiRequest();
+                httpContext.RegisterJsonApiRequest();
             }
 
             await _next(httpContext);
         }
 
-        private static ResourceContext CreateResourceContext(RouteValueDictionary routeValues,
-            IControllerResourceMapping controllerResourceMapping, IResourceContextProvider resourceGraph)
+        private static ResourceContext CreatePrimaryResourceContext(RouteValueDictionary routeValues,
+            IControllerResourceMapping controllerResourceMapping, IResourceContextProvider resourceContextProvider)
         {
             var controllerName = (string) routeValues["controller"];
-            if (controllerName == null)
+            if (controllerName != null)
             {
-                return null;
+                var resourceType = controllerResourceMapping.GetAssociatedResource(controllerName);
+                if (resourceType != null)
+                {
+                    return resourceContextProvider.GetResourceContext(resourceType);
+                }
             }
 
-            var resourceType = controllerResourceMapping.GetAssociatedResource(controllerName);
-            return resourceGraph.GetResourceContext(resourceType);
+            return null;
         }
 
         private static async Task<bool> ValidateContentTypeHeaderAsync(HttpContext httpContext, JsonSerializerSettings serializerSettings)
@@ -149,24 +157,36 @@ namespace JsonApiDotNetCore.Middleware
             await httpResponse.Body.FlushAsync();
         }
 
-        private static void SetupCurrentRequest(ICurrentRequest currentRequest, ResourceContext resourceContext,
-            RouteValueDictionary routeValues, IJsonApiOptions options, HttpRequest httpRequest)
+        private static void SetupRequest(JsonApiRequest request, ResourceContext primaryResourceContext,
+            RouteValueDictionary routeValues, IJsonApiOptions options, IResourceContextProvider resourceContextProvider,
+            HttpRequest httpRequest)
         {
-            currentRequest.SetRequestResource(resourceContext);
-            currentRequest.BaseId = GetBaseId(routeValues);
-            currentRequest.BasePath = GetBasePath(resourceContext.ResourceName, options, httpRequest);
-            currentRequest.IsRelationshipPath = GetIsRelationshipPath(routeValues);
-            currentRequest.RelationshipId = GetRelationshipId(currentRequest.IsRelationshipPath, httpRequest.Path.Value, options.Namespace);
+            request.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method;
+            request.Kind = EndpointKind.Primary;
+            request.PrimaryResource = primaryResourceContext;
+            request.PrimaryId = GetPrimaryRequestId(routeValues);
+            request.BasePath = GetBasePath(primaryResourceContext.ResourceName, options, httpRequest);
 
-            if (routeValues.TryGetValue("relationshipName", out object relationshipName))
+            var relationshipName = GetRelationshipNameForSecondaryRequest(routeValues);
+            if (relationshipName != null)
             {
-                currentRequest.RequestRelationship =
-                    resourceContext.Relationships.SingleOrDefault(relationship =>
-                        relationship.PublicRelationshipName == (string) relationshipName);
+                request.Kind = IsRouteForRelationship(routeValues) ? EndpointKind.Relationship : EndpointKind.Secondary;
+
+                var requestRelationship =
+                    primaryResourceContext.Relationships.SingleOrDefault(relationship =>
+                        relationship.PublicName == relationshipName);
+
+                if (requestRelationship != null)
+                {
+                    request.Relationship = requestRelationship;
+                    request.SecondaryResource = resourceContextProvider.GetResourceContext(requestRelationship.RightType);
+                }
             }
+
+            request.IsCollection = request.PrimaryId == null || request.Relationship is HasManyAttribute;
         }
 
-        private static string GetBaseId(RouteValueDictionary routeValues)
+        private static string GetPrimaryRequestId(RouteValueDictionary routeValues)
         {
             return routeValues.TryGetValue("id", out var id) ? (string) id : null;
         }
@@ -175,7 +195,7 @@ namespace JsonApiDotNetCore.Middleware
         {
             var builder = new StringBuilder();
 
-            if (!options.RelativeLinks)
+            if (!options.UseRelativeLinks)
             {
                 builder.Append(httpRequest.Scheme);
                 builder.Append("://");
@@ -213,30 +233,15 @@ namespace JsonApiDotNetCore.Middleware
             return null;
         }
 
-        private static bool GetIsRelationshipPath(RouteValueDictionary routeValues)
+        private static string GetRelationshipNameForSecondaryRequest(RouteValueDictionary routeValues)
+        {
+            return routeValues.TryGetValue("relationshipName", out object routeValue) ? (string) routeValue : null;
+        }
+
+        private static bool IsRouteForRelationship(RouteValueDictionary routeValues)
         {
             var actionName = (string)routeValues["action"];
-            return actionName.ToLowerInvariant().Contains("relationships");
-        }
-
-        private static string GetRelationshipId(bool currentRequestIsRelationshipPath, string requestPath,
-            string apiNamespace)
-        {
-            if (!currentRequestIsRelationshipPath)
-            {
-                return null;
-            }
-
-            var components = SplitCurrentPath(requestPath, apiNamespace);
-            return components.ElementAtOrDefault(4);
-        }
-
-        private static IEnumerable<string> SplitCurrentPath(string requestPath, string apiNamespace)
-        {
-            var namespacePrefix = $"/{apiNamespace}";
-            var nonNameSpaced = requestPath.Replace(namespacePrefix, "");
-            nonNameSpaced = nonNameSpaced.Trim('/');
-            return nonNameSpaced.Split('/');
+            return actionName.EndsWith("Relationship", StringComparison.Ordinal);
         }
     }
 }

@@ -3,11 +3,11 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
@@ -24,12 +24,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         public IgnoreDefaultValuesTests(TestFixture<TestStartup> fixture)
         {
             _dbContext = fixture.GetService<AppDbContext>();
-            var todoItem = new TodoItem
+            _todoItem = new TodoItem
             {
                 CreatedDate = default,
                 Owner = new Person { Age = default }
             };
-            _todoItem = _dbContext.TodoItems.Add(todoItem).Entity;
+            _dbContext.TodoItems.Add(_todoItem);
         }
 
         public async Task InitializeAsync()
@@ -90,12 +90,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         [InlineData(DefaultValueHandling.Include, true, "", null)]
         public async Task CheckBehaviorCombination(DefaultValueHandling? defaultValue, bool? allowQueryStringOverride, string queryStringValue, DefaultValueHandling? expected)
         {
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
             var server = new TestServer(builder);
             var services = server.Host.Services;
             var client = server.CreateClient();
 
-            var options = (IJsonApiOptions)services.GetService(typeof(IJsonApiOptions));
+            var options = (JsonApiOptions)services.GetService(typeof(IJsonApiOptions));
 
             if (defaultValue != null)
             {
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var body = await response.Content.ReadAsStringAsync();
 
             var isQueryStringValueEmpty = queryStringValue == string.Empty;
-            var isDisallowedOverride = options.AllowQueryStringOverrideForSerializerDefaultValueHandling == false && queryStringValue != null;
+            var isDisallowedOverride = !options.AllowQueryStringOverrideForSerializerDefaultValueHandling && queryStringValue != null;
             var isQueryStringInvalid = queryStringValue != null && !bool.TryParse(queryStringValue, out _);
 
             if (isQueryStringValueEmpty)
@@ -149,8 +149,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
                 var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
                 Assert.Single(errorDocument.Errors);
                 Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
-                Assert.Equal("The specified query string value must be 'true' or 'false'.", errorDocument.Errors[0].Title);
-                Assert.Equal("The value 'unknown' for parameter 'defaults' is not a valid boolean value.", errorDocument.Errors[0].Detail);
+                Assert.Equal("The specified defaults is invalid.", errorDocument.Errors[0].Title);
+                Assert.Equal("The value 'unknown' must be 'true' or 'false'.", errorDocument.Errors[0].Detail);
                 Assert.Equal("defaults", errorDocument.Errors[0].Source.Parameter);
             }
             else

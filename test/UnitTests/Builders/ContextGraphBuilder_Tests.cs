@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -37,7 +35,7 @@ namespace UnitTests
             services.AddLogging();
             services.AddDbContext<TestContext>();
             
-            services.AddJsonApi<TestContext>(resources: builder => builder.AddResource<NonDbResource>("nonDbResources"));
+            services.AddJsonApi<TestContext>(resources: builder => builder.Add<NonDbResource>("nonDbResources"));
 
             // Act
             var container = services.BuildServiceProvider();
@@ -56,7 +54,7 @@ namespace UnitTests
         {
             // Arrange
             var builder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
-            builder.AddResource<TestResource>();
+            builder.Add<TestResource>();
 
             // Act
             var resourceGraph = builder.Build();
@@ -71,14 +69,14 @@ namespace UnitTests
         {
             // Arrange
             var builder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
-            builder.AddResource<TestResource>();
+            builder.Add<TestResource>();
 
             // Act
             var resourceGraph = builder.Build();
 
             // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compoundAttribute");
+            Assert.Contains(resource.Attributes, (i) => i.PublicName == "compoundAttribute");
         }
 
         [Fact]
@@ -86,15 +84,15 @@ namespace UnitTests
         {
             // Arrange
             var builder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
-            builder.AddResource<TestResource>();
+            builder.Add<TestResource>();
 
             // Act
             var resourceGraph = builder.Build();
 
             // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("relatedResource", resource.Relationships.Single(r => r is HasOneAttribute).PublicRelationshipName);
-            Assert.Equal("relatedResources", resource.Relationships.Single(r => !(r is HasOneAttribute)).PublicRelationshipName);
+            Assert.Equal("relatedResource", resource.Relationships.Single(r => r is HasOneAttribute).PublicName);
+            Assert.Equal("relatedResources", resource.Relationships.Single(r => !(r is HasOneAttribute)).PublicName);
         }
 
         public sealed class TestResource : Identifiable

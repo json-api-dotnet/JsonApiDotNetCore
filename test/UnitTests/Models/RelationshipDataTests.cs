@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json.Linq;
 using Xunit;
 

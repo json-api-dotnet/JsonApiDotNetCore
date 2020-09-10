@@ -13,13 +13,15 @@ public class Person : Identifiable
 ## Public name
 
 There are two ways the public attribute name is determined:
-1. By convention, specified by @JsonApiDotNetCore.Configuration.JsonApiOptions#JsonApiDotNetCore_Configuration_JsonApiOptions_SerializerSettings
+
+1. By convention, specified in @JsonApiDotNetCore.Configuration.JsonApiOptions#JsonApiDotNetCore_Configuration_JsonApiOptions_SerializerSettings
 ```c#
 options.SerializerSettings.ContractResolver = new DefaultContractResolver
 {
-    NamingStrategy = new CamelCaseNamingStrategy()
+    NamingStrategy = new KebabCaseNamingStrategy() // default: CamelCaseNamingStrategy
 };
 ```
+
 2. Individually using the attribute's constructor
 ```c#
 public class Person : Identifiable
@@ -33,7 +35,7 @@ public class Person : Identifiable
 
 _since v4.0_
 
-Default json:api attribute capabilities are specified by @JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities:
+Default json:api attribute capabilities are specified in @JsonApiDotNetCore.Configuration.JsonApiOptions#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities:
 
 ```c#
 options.DefaultAttrCapabilities = AttrCapabilities.None; // default: All
@@ -41,7 +43,19 @@ options.DefaultAttrCapabilities = AttrCapabilities.None; // default: All
 
 This can be overridden per attribute.
 
-# Mutability
+### Viewability
+
+Attributes can be marked to allow returning their value in responses. When not allowed and requested using `?fields=`, it results in an HTTP 400 response.
+
+```c#
+public class User : Identifiable<int>
+{
+    [Attr(~AttrCapabilities.AllowView)]
+    public string Password { get; set; }
+}
+```
+
+### Mutability
 
 Attributes can be marked as mutable, which will allow `PATCH` requests to update them. When immutable, an HTTP 422 response is returned.
 
@@ -53,7 +67,7 @@ public class Person : Identifiable<int>
 }
 ```
 
-# Filter/Sort-ability
+### Filter/Sort-ability
 
 Attributes can be marked to allow filtering and/or sorting. When not allowed, it results in an HTTP 400 response.
 
@@ -68,7 +82,7 @@ public class Person : Identifiable<int>
 ## Complex Attributes
 
 Models may contain complex attributes.
-Serialization of these types is done by Newtonsoft.Json,
+Serialization of these types is done by [Newtonsoft.Json](https://www.newtonsoft.com/json),
 so you should use their APIs to specify serialization formats.
 You can also use global options to specify `JsonSerializer` configuration.
 

@@ -3,21 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
-using Xunit;
 using UnitTests.TestModels;
+using Xunit;
 
 namespace UnitTests.Serialization.Deserializer
 {
     public sealed class BaseDocumentParserTests : DeserializerTestsSetup
     {
-        private readonly TestDocumentParser _deserializer;
+        private readonly TestDeserializer _deserializer;
 
         public BaseDocumentParserTests()
         {
-            _deserializer = new TestDocumentParser(_resourceGraph, new DefaultResourceFactory(new ServiceContainer()));
+            _deserializer = new TestDeserializer(_resourceGraph, new ResourceFactory(new ServiceContainer()));
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace UnitTests.Serialization.Deserializer
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = (List<IIdentifiable>)_deserializer.Deserialize(body);
+            var result = (IIdentifiable[])_deserializer.Deserialize(body);
 
             // Assert
             Assert.Equal("1", result.First().StringId);
@@ -130,11 +130,11 @@ namespace UnitTests.Serialization.Deserializer
             }
 
             // Act
-            var entity = (TestResource)_deserializer.Deserialize(body);
+            var resource = (TestResource)_deserializer.Deserialize(body);
 
             // Assert
-            var pi = _resourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicAttributeName == member).PropertyInfo;
-            var deserializedValue = pi.GetValue(entity);
+            var pi = _resourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicName == member).Property;
+            var deserializedValue = pi.GetValue(resource);
 
             if (member == "intField")
             {

@@ -2,16 +2,14 @@ using System;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -28,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public readonly IServiceProvider ServiceProvider;
         public TestFixture()
         {
-            var builder = new WebHostBuilder().UseStartup<TStartup>();
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TStartup>();
             _server = new TestServer(builder);
             ServiceProvider = _server.Host.Services;
 
@@ -62,18 +60,18 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var options = GetService<IJsonApiOptions>();
 
             var resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
-                .AddResource<PersonRole>()
-                .AddResource<Article>()
-                .AddResource<Tag>()
-                .AddResource<KebabCasedModel>()
-                .AddResource<User>()
-                .AddResource<SuperUser>()
-                .AddResource<Person>()
-                .AddResource<Author>()
-                .AddResource<Passport>()
-                .AddResource<TodoItemClient>("todoItems")
-                .AddResource<TodoItemCollectionClient, Guid>().Build();
-            return new ResponseDeserializer(resourceGraph, new DefaultResourceFactory(ServiceProvider));
+                .Add<PersonRole>()
+                .Add<Article>()
+                .Add<Tag>()
+                .Add<KebabCasedModel>()
+                .Add<User>()
+                .Add<SuperUser>()
+                .Add<Person>()
+                .Add<Author>()
+                .Add<Passport>()
+                .Add<TodoItemClient>("todoItems")
+                .Add<TodoItemCollectionClient, Guid>().Build();
+            return new ResponseDeserializer(resourceGraph, new ResourceFactory(ServiceProvider));
         }
 
         public T GetService<T>() => (T)ServiceProvider.GetService(typeof(T));

@@ -1,133 +1,73 @@
-using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Resources.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
-    /// <summary>
-    /// Global options
-    /// </summary>
-    public class JsonApiOptions : IJsonApiOptions
+    /// <inheritdoc />
+    public sealed class JsonApiOptions : IJsonApiOptions
     {
-        /// <inheritdoc/>
-        public bool RelativeLinks { get; set; } = false;
-
-        /// <inheritdoc/>
-        public Link TopLevelLinks { get; set; } = Link.All;
-
-        /// <inheritdoc/>
-        public Link ResourceLinks { get; set; } = Link.All;
-
-        /// <inheritdoc/>
-        public Link RelationshipLinks { get; set; } = Link.All;
-
-        /// <summary>
-        /// Provides an interface for formatting relationship id properties given the navigation property name
-        /// </summary>
-        public static IRelatedIdMapper RelatedIdMapper { get; set; } = new DefaultRelatedIdMapper();
-
-        /// <inheritdoc/>
-        public bool IncludeExceptionStackTraceInErrors { get; set; } = false;
-
-        /// <summary>
-        /// Whether or not resource hooks are enabled.
-        /// This is currently an experimental feature and defaults to <see langword="false"/>.
-        /// </summary>
-        public bool EnableResourceHooks { get; set; } = false;
-
-        /// <summary>
-        /// Whether or not database values should be included by default
-        /// for resource hooks. Ignored if EnableResourceHooks is set false.
-        ///
-        /// Defaults to <see langword="false"/>.
-        /// </summary>
-        public bool LoadDatabaseValues { get; set; }
-
-        /// <summary>
-        /// The base URL Namespace
-        /// </summary>
-        /// <example>
-        /// <code>options.Namespace = "api/v1";</code>
-        /// </example>
+        /// <inheritdoc />
         public string Namespace { get; set; }
 
-        /// <inheritdoc/>
-        public bool AllowQueryStringOverrideForSerializerNullValueHandling { get; set; }
-
-        /// <inheritdoc/>
-        public bool AllowQueryStringOverrideForSerializerDefaultValueHandling { get; set; }
-
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public AttrCapabilities DefaultAttrCapabilities { get; set; } = AttrCapabilities.All;
 
-        /// <summary>
-        /// The default page size for all resources. The value zero means: no paging.
-        /// </summary>
-        /// <example>
-        /// <code>options.DefaultPageSize = 10;</code>
-        /// </example>
-        public int DefaultPageSize { get; set; } = 10;
+        /// <inheritdoc />
+        public bool IncludeExceptionStackTraceInErrors { get; set; }
 
-        /// <summary>
-        /// Optional. When set, limits the maximum page size for all resources.
-        /// </summary>
-        /// <example>
-        /// <code>options.MaximumPageSize = 50;</code>
-        /// </example>
-        public int? MaximumPageSize { get; set; }
+        /// <inheritdoc />
+        public bool UseRelativeLinks { get; set; }
 
-        /// <summary>
-        /// Optional. When set, limits the maximum page number for all resources.
-        /// </summary>
-        /// <example>
-        /// <code>options.MaximumPageNumber = 100;</code>
-        /// </example>
-        public int? MaximumPageNumber { get; set; }
+        /// <inheritdoc />
+        public LinkTypes TopLevelLinks { get; set; } = LinkTypes.All;
 
-        /// <summary>
-        /// Whether or not the total-record count should be included in all document
-        /// level meta objects.
-        /// Defaults to false.
-        /// </summary>
-        /// <example>
-        /// <code>options.IncludeTotalRecordCount = true;</code>
-        /// </example>
-        public bool IncludeTotalRecordCount { get; set; }
+        /// <inheritdoc />
+        public LinkTypes ResourceLinks { get; set; } = LinkTypes.All;
 
-        /// <summary>
-        /// Whether or not clients can provide ids when creating resources.
-        /// Defaults to false.  When disabled the application will respond
-        /// with a 403 Forbidden response if a client attempts to create a
-        /// resource with a defined id.
-        /// </summary>
-        /// <example>
-        /// <code>options.AllowClientGeneratedIds = true;</code>
-        /// </example>
-        public bool AllowClientGeneratedIds { get; set; }
+        /// <inheritdoc />
+        public LinkTypes RelationshipLinks { get; set; } = LinkTypes.All;
 
-        /// <summary>
-        /// Whether or not to allow all custom query string parameters.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// options.AllowCustomQueryStringParameters = true;
-        /// </code>
-        /// </example>
-        public bool AllowCustomQueryStringParameters { get; set; }
+        /// <inheritdoc />
+        public bool IncludeTotalResourceCount { get; set; }
 
-        /// <summary>
-        /// Whether or not to validate model state.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// options.ValidateModelState = true;
-        /// </code>
-        /// </example>
+        /// <inheritdoc />
+        public PageSize DefaultPageSize { get; set; } = new PageSize(10);
+
+        /// <inheritdoc />
+        public PageSize MaximumPageSize { get; set; }
+
+        /// <inheritdoc />
+        public PageNumber MaximumPageNumber { get; set; }
+
+        /// <inheritdoc />
         public bool ValidateModelState { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
+        public bool AllowClientGeneratedIds { get; set; }
+
+        /// <inheritdoc />
+        public bool EnableResourceHooks { get; set; }
+
+        /// <inheritdoc />
+        public bool LoadDatabaseValues { get; set; }
+
+        /// <inheritdoc />
+        public bool AllowUnknownQueryStringParameters { get; set; }
+
+        /// <inheritdoc />
+        public bool EnableLegacyFilterNotation { get; set; }
+
+        /// <inheritdoc />
+        public bool AllowQueryStringOverrideForSerializerNullValueHandling { get; set; }
+
+        /// <inheritdoc />
+        public bool AllowQueryStringOverrideForSerializerDefaultValueHandling { get; set; }
+
+        /// <inheritdoc />
+        public int? MaximumIncludeDepth { get; set; }
+
+        /// <inheritdoc />
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings
         {
             ContractResolver = new DefaultContractResolver
@@ -135,5 +75,14 @@ namespace JsonApiDotNetCore.Configuration
                 NamingStrategy = new CamelCaseNamingStrategy()
             }
         };
+
+        /// <summary>
+        /// Provides an interface for formatting relationship ID properties given the navigation property name.
+        /// </summary>
+        public static IRelatedIdMapper RelatedIdMapper { get; set; } = new RelatedIdMapper();
+
+        // Workaround for https://github.com/dotnet/efcore/issues/21026
+        internal bool DisableTopPagination { get; set; }
+        internal bool DisableChildrenPagination { get; set; }
     }
 }

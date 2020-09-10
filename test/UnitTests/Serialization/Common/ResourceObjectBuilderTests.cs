@@ -2,10 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
-using Xunit;
+using JsonApiDotNetCore.Serialization.Building;
+using JsonApiDotNetCore.Serialization.Objects;
 using UnitTests.TestModels;
+using Xunit;
 
 namespace UnitTests.Serialization.Serializer
 {
@@ -19,13 +19,13 @@ namespace UnitTests.Serialization.Serializer
         }
 
         [Fact]
-        public void EntityToResourceObject_EmptyResource_CanBuild()
+        public void ResourceToResourceObject_EmptyResource_CanBuild()
         {
             // Arrange
-            var entity = new TestResource();
+            var resource = new TestResource();
 
             // Act
-            var resourceObject = _builder.Build(entity);
+            var resourceObject = _builder.Build(resource);
 
             // Assert
             Assert.Null(resourceObject.Attributes);
@@ -35,13 +35,13 @@ namespace UnitTests.Serialization.Serializer
         }
 
         [Fact]
-        public void EntityToResourceObject_ResourceWithId_CanBuild()
+        public void ResourceToResourceObject_ResourceWithId_CanBuild()
         {
             // Arrange
-            var entity = new TestResource { Id = 1 };
+            var resource = new TestResource { Id = 1 };
 
             // Act
-            var resourceObject = _builder.Build(entity);
+            var resourceObject = _builder.Build(resource);
 
             // Assert
             Assert.Equal("1", resourceObject.Id);
@@ -53,14 +53,14 @@ namespace UnitTests.Serialization.Serializer
         [Theory]
         [InlineData(null, null)]
         [InlineData("string field", 1)]
-        public void EntityToResourceObject_ResourceWithIncludedAttrs_CanBuild(string stringFieldValue, int? intFieldValue)
+        public void ResourceToResourceObject_ResourceWithIncludedAttrs_CanBuild(string stringFieldValue, int? intFieldValue)
         {
             // Arrange
-            var entity = new TestResource { StringField = stringFieldValue, NullableIntField = intFieldValue };
+            var resource = new TestResource { StringField = stringFieldValue, NullableIntField = intFieldValue };
             var attrs = _resourceGraph.GetAttributes<TestResource>(tr => new { tr.StringField, tr.NullableIntField });
 
             // Act
-            var resourceObject = _builder.Build(entity, attrs);
+            var resourceObject = _builder.Build(resource, attrs);
 
             // Assert
             Assert.NotNull(resourceObject.Attributes);
@@ -70,13 +70,13 @@ namespace UnitTests.Serialization.Serializer
         }
 
         [Fact]
-        public void EntityWithRelationshipsToResourceObject_EmptyResource_CanBuild()
+        public void ResourceWithRelationshipsToResourceObject_EmptyResource_CanBuild()
         {
             // Arrange
-            var entity = new MultipleRelationshipsPrincipalPart();
+            var resource = new MultipleRelationshipsPrincipalPart();
 
             // Act
-            var resourceObject = _builder.Build(entity);
+            var resourceObject = _builder.Build(resource);
 
             // Assert
             Assert.Null(resourceObject.Attributes);
@@ -86,16 +86,16 @@ namespace UnitTests.Serialization.Serializer
         }
 
         [Fact]
-        public void EntityWithRelationshipsToResourceObject_ResourceWithId_CanBuild()
+        public void ResourceWithRelationshipsToResourceObject_ResourceWithId_CanBuild()
         {
             // Arrange
-            var entity = new MultipleRelationshipsPrincipalPart
+            var resource = new MultipleRelationshipsPrincipalPart
             {
                 PopulatedToOne = new OneToOneDependent { Id = 10 },
             };
 
             // Act
-            var resourceObject = _builder.Build(entity);
+            var resourceObject = _builder.Build(resource);
 
             // Assert
             Assert.Null(resourceObject.Attributes);
@@ -105,10 +105,10 @@ namespace UnitTests.Serialization.Serializer
         }
 
         [Fact]
-        public void EntityWithRelationshipsToResourceObject_WithIncludedRelationshipsAttributes_CanBuild()
+        public void ResourceWithRelationshipsToResourceObject_WithIncludedRelationshipsAttributes_CanBuild()
         {
             // Arrange
-            var entity = new MultipleRelationshipsPrincipalPart
+            var resource = new MultipleRelationshipsPrincipalPart
             {
                 PopulatedToOne = new OneToOneDependent { Id = 10 },
                 PopulatedToManies = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
@@ -116,7 +116,7 @@ namespace UnitTests.Serialization.Serializer
             var relationships = _resourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>(tr => new { tr.PopulatedToManies, tr.PopulatedToOne, tr.EmptyToOne, tr.EmptyToManies });
 
             // Act
-            var resourceObject = _builder.Build(entity, relationships: relationships);
+            var resourceObject = _builder.Build(resource, relationships: relationships);
 
             // Assert
             Assert.Equal(4, resourceObject.Relationships.Count);
@@ -133,14 +133,14 @@ namespace UnitTests.Serialization.Serializer
         }
 
         [Fact]
-        public void EntityWithRelationshipsToResourceObject_DeviatingForeignKeyWhileRelationshipIncluded_IgnoresForeignKeyDuringBuild()
+        public void ResourceWithRelationshipsToResourceObject_DeviatingForeignKeyWhileRelationshipIncluded_IgnoresForeignKeyDuringBuild()
         {
             // Arrange
-            var entity = new OneToOneDependent { Principal = new OneToOnePrincipal { Id = 10 }, PrincipalId = 123 };
+            var resource = new OneToOneDependent { Principal = new OneToOnePrincipal { Id = 10 }, PrincipalId = 123 };
             var relationships = _resourceGraph.GetRelationships<OneToOneDependent>(tr => tr.Principal);
 
             // Act
-            var resourceObject = _builder.Build(entity, relationships: relationships);
+            var resourceObject = _builder.Build(resource, relationships: relationships);
 
             // Assert
             Assert.Single(resourceObject.Relationships);
@@ -150,28 +150,28 @@ namespace UnitTests.Serialization.Serializer
         }
 
         [Fact]
-        public void EntityWithRelationshipsToResourceObject_DeviatingForeignKeyAndNoNavigationWhileRelationshipIncluded_IgnoresForeignKeyDuringBuild()
+        public void ResourceWithRelationshipsToResourceObject_DeviatingForeignKeyAndNoNavigationWhileRelationshipIncluded_IgnoresForeignKeyDuringBuild()
         {
             // Arrange
-            var entity = new OneToOneDependent { Principal = null, PrincipalId = 123 };
+            var resource = new OneToOneDependent { Principal = null, PrincipalId = 123 };
             var relationships = _resourceGraph.GetRelationships<OneToOneDependent>(tr => tr.Principal);
 
             // Act
-            var resourceObject = _builder.Build(entity, relationships: relationships);
+            var resourceObject = _builder.Build(resource, relationships: relationships);
 
             // Assert
             Assert.Null(resourceObject.Relationships["principal"].Data);
         }
 
         [Fact]
-        public void EntityWithRequiredRelationshipsToResourceObject_DeviatingForeignKeyWhileRelationshipIncluded_IgnoresForeignKeyDuringBuild()
+        public void ResourceWithRequiredRelationshipsToResourceObject_DeviatingForeignKeyWhileRelationshipIncluded_IgnoresForeignKeyDuringBuild()
         {
             // Arrange
-            var entity = new OneToOneRequiredDependent { Principal = new OneToOnePrincipal { Id = 10 }, PrincipalId = 123 };
+            var resource = new OneToOneRequiredDependent { Principal = new OneToOnePrincipal { Id = 10 }, PrincipalId = 123 };
             var relationships = _resourceGraph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
 
             // Act
-            var resourceObject = _builder.Build(entity, relationships: relationships);
+            var resourceObject = _builder.Build(resource, relationships: relationships);
 
             // Assert
             Assert.Single(resourceObject.Relationships);
@@ -181,25 +181,25 @@ namespace UnitTests.Serialization.Serializer
         }
 
         [Fact]
-        public void EntityWithRequiredRelationshipsToResourceObject_DeviatingForeignKeyAndNoNavigationWhileRelationshipIncluded_ThrowsNotSupportedException()
+        public void ResourceWithRequiredRelationshipsToResourceObject_DeviatingForeignKeyAndNoNavigationWhileRelationshipIncluded_ThrowsNotSupportedException()
         {
             // Arrange
-            var entity = new OneToOneRequiredDependent { Principal = null, PrincipalId = 123 };
+            var resource = new OneToOneRequiredDependent { Principal = null, PrincipalId = 123 };
             var relationships = _resourceGraph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
 
             // Act & assert
-            Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(entity, relationships: relationships));
+            Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(resource, relationships: relationships));
         }
 
         [Fact]
-        public void EntityWithRequiredRelationshipsToResourceObject_EmptyResourceWhileRelationshipIncluded_ThrowsNotSupportedException()
+        public void ResourceWithRequiredRelationshipsToResourceObject_EmptyResourceWhileRelationshipIncluded_ThrowsNotSupportedException()
         {
             // Arrange
-            var entity = new OneToOneRequiredDependent();
+            var resource = new OneToOneRequiredDependent();
             var relationships = _resourceGraph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
 
             // Act & assert
-            Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(entity, relationships: relationships));
+            Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(resource, relationships: relationships));
         }
     }
 }

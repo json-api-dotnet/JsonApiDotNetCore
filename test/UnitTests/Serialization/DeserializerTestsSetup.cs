@@ -1,41 +1,50 @@
-using System;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Http;
+using Moq;
 
 namespace UnitTests.Serialization
 {
     public class DeserializerTestsSetup : SerializationTestsSetupBase
     {
-        protected sealed class TestDocumentParser : BaseDocumentParser
-        {
-            public TestDocumentParser(IResourceGraph resourceGraph, IResourceFactory resourceFactory) : base(resourceGraph, resourceFactory) { }
+        public Mock<IHttpContextAccessor> _mockHttpContextAccessor;
 
-            public new object Deserialize(string body)
+        public DeserializerTestsSetup()
+        {
+            _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            _mockHttpContextAccessor.Setup(mock => mock.HttpContext).Returns(new DefaultHttpContext());
+        }
+        protected sealed class TestDeserializer : BaseDeserializer
+        {
+            public TestDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory) : base(resourceGraph, resourceFactory) { }
+
+            public object Deserialize(string body)
             {
-                return base.Deserialize(body);
+                return DeserializeBody(body);
             }
 
-            protected override void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipEntry data = null) { }
+            protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null) { }
         }
 
-        protected Document CreateDocumentWithRelationships(string mainType, string relationshipMemberName, string relatedType = null, bool isToManyData = false)
+        protected Document CreateDocumentWithRelationships(string primaryType, string relationshipMemberName, string relatedType = null, bool isToManyData = false)
         {
-            var content = CreateDocumentWithRelationships(mainType);
+            var content = CreateDocumentWithRelationships(primaryType);
             content.SingleData.Relationships.Add(relationshipMemberName, CreateRelationshipData(relatedType, isToManyData));
             return content;
         }
 
-        protected Document CreateDocumentWithRelationships(string mainType)
+        protected Document CreateDocumentWithRelationships(string primaryType)
         {
             return new Document
             {
                 Data = new ResourceObject
                 {
                     Id = "1",
-                    Type = mainType,
+                    Type = primaryType,
                     Relationships = new Dictionary<string, RelationshipEntry>()
                 }
             };

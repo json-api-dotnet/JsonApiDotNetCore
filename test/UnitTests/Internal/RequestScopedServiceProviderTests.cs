@@ -1,6 +1,6 @@
 using System;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Http;
 using Xunit;
@@ -13,17 +13,17 @@ namespace UnitTests.Internal
         public void When_http_context_is_unavailable_it_must_fail()
         {
             // Arrange
+            var serviceType = typeof(IIdentifiable<Tag>);
+
             var provider = new RequestScopedServiceProvider(new HttpContextAccessor());
 
             // Act
-            Action action = () => provider.GetService(typeof(IIdentifiable<Tag>));
+            Action action = () => provider.GetService(serviceType);
 
             // Assert
             var exception = Assert.Throws<InvalidOperationException>(action);
 
-            Assert.StartsWith("Cannot resolve scoped service " +
-                "'JsonApiDotNetCore.Models.IIdentifiable`1[[JsonApiDotNetCoreExample.Models.Tag, JsonApiDotNetCoreExample, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]' " +
-                "outside the context of an HTTP request.", exception.Message);
+            Assert.StartsWith("Cannot resolve scoped service " + $"'{serviceType.FullName}' outside the context of an HTTP request.", exception.Message);
         }
     }
 }

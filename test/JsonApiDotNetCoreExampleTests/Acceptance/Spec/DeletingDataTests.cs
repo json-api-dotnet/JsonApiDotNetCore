@@ -1,9 +1,11 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
@@ -22,13 +24,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Respond_404_If_EntityDoesNotExist()
+        public async Task Respond_404_If_ResourceDoesNotExist()
         {
             // Arrange
-            _context.TodoItems.RemoveRange(_context.TodoItems);
+            await _context.ClearTableAsync<TodoItem>();
             await _context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 
             var server = new TestServer(builder);
@@ -49,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("Resource of type 'todoItems' with id '123' does not exist.",errorDocument.Errors[0].Detail);
+            Assert.Equal("Resource of type 'todoItems' with ID '123' does not exist.",errorDocument.Errors[0].Detail);
         }
     }
 }
