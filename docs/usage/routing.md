@@ -30,7 +30,7 @@ The public name of the resource ([which can be customized](./resource-graph.md#p
 
 ### Non-json:api controllers
 
-If a controller does not inherit from `JsonApiController<TResource>`, the [configured casing convention](./options.md#custom-serializer-settings) is applied to the name of the controller.
+If a controller does not inherit from `JsonApiController<TResource>`, the [configured naming convention](./options.md#custom-serializer-settings) is applied to the name of the controller.
 ```c#
 public class OrderLineController : ControllerBase { /* .... */ }
 ```

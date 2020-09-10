@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
     /// The default routing convention registers the name of the resource as the route
-    /// using the serializer casing convention. The default for this is
+    /// using the serializer naming convention. The default for this is
     /// a camel case formatter. If the controller directly inherits from <see cref="CoreJsonApiController"/> and there is no
     /// resource directly associated, it uses the name of the controller instead of the name of the type.
     /// </summary>
@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Middleware
     ///
     /// public class RandomNameController<SomeResource> : JsonApiController<SomeResource> { } // => /someResources/relationship/relatedResource
     ///
-    /// // when using kebab-case casing convention:
+    /// // when using kebab-case naming convention:
     /// public class SomeResourceController<SomeResource> : JsonApiController<SomeResource> { } // => /some-resources/relationship/related-resource
     ///
     /// public class SomeVeryCustomController<SomeResource> : CoreJsonApiController { } // => /someVeryCustoms/relationship/relatedResource

@@ -95,10 +95,10 @@ services.AddJsonApi(resources: builder =>
 public class MyModel : Identifiable { /* ... */ }
 ```
 
-3. The configured casing convention (by default this is camel-case).
+3. The configured naming convention (by default this is camel-case).
 ```c#
 // this will be registered as "myModels"
 public class MyModel : Identifiable { /* ... */ }
 ```
 
-The default casing convention can be changed in [options](./options.md#custom-serializer-settings).
+The default naming convention can be changed in [options](./options.md#custom-serializer-settings).

@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <typeparam name="TResource">The resource model type.</typeparam>
         /// <param name="publicName">
         /// The name under which the resource is publicly exposed by the API. 
-        /// If nothing is specified, the configured casing convention formatter will be applied.
+        /// If nothing is specified, the configured naming convention formatter will be applied.
         /// </param>
         public ResourceGraphBuilder Add<TResource>(string publicName = null) where TResource : class, IIdentifiable<int>
             => Add<TResource, int>(publicName);
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <typeparam name="TId">The resource model identifier type.</typeparam>
         /// <param name="publicName">
         /// The name under which the resource is publicly exposed by the API. 
-        /// If nothing is specified, the configured casing convention formatter will be applied.
+        /// If nothing is specified, the configured naming convention formatter will be applied.
         /// </param>
         public ResourceGraphBuilder Add<TResource, TId>(string publicName = null) where TResource : class, IIdentifiable<TId>
             => Add(typeof(TResource), typeof(TId), publicName);
@@ -76,7 +76,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <param name="idType">The resource model identifier type.</param>
         /// <param name="publicName">
         /// The name under which the resource is publicly exposed by the API. 
-        /// If nothing is specified, the configured casing convention formatter will be applied.
+        /// If nothing is specified, the configured naming convention formatter will be applied.
         /// </param>
         public ResourceGraphBuilder Add(Type resourceType, Type idType = null, string publicName = null)
         {
