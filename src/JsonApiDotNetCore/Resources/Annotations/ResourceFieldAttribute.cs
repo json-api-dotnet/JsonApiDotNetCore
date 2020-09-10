@@ -37,5 +37,27 @@ namespace JsonApiDotNetCore.Resources.Annotations
         {
             return PublicName ?? (Property != null ? Property.Name : base.ToString());
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (ResourceFieldAttribute) obj;
+
+            return PublicName == other.PublicName && Property == other.Property;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(PublicName, Property);
+        }
     }
 }

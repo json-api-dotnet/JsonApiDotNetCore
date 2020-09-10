@@ -70,5 +70,27 @@ namespace JsonApiDotNetCore.Resources.Annotations
             var convertedValue = TypeHelper.ConvertType(newValue, Property.PropertyType);
             Property.SetValue(resource, convertedValue);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (AttrAttribute) obj;
+
+            return Capabilities == other.Capabilities && base.Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Capabilities, base.GetHashCode());
+        }
     }
 }

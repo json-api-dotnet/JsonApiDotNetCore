@@ -1,3 +1,4 @@
+using System;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -15,6 +16,26 @@ namespace JsonApiDotNetCore.Queries.Expressions
         public override string ToString()
         {
             return Keywords.Null;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return new HashCode().ToHashCode();
         }
     }
 }
