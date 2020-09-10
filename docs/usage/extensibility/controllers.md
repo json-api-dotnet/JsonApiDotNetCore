@@ -1,6 +1,6 @@
 # Controllers
 
-You need to create controllers that inherit from `JsonApiController<T>`
+You need to create controllers that inherit from `JsonApiController<TResource>`
 
 ```c#
 public class ArticlesController : JsonApiController<Article>

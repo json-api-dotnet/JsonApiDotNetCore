@@ -40,7 +40,7 @@ The easiest way to do this is to inherit from `Identifiable`
 ```c#
 public class Person : Identifiable
 {
-    [Attr("name")]
+    [Attr]
     public string Name { get; set; }
 }
 ```
@@ -61,7 +61,7 @@ public class AppDbContext : DbContext
 
 ### Define Controllers
 
-You need to create controllers that inherit from `JsonApiController<T>` or `JsonApiController<T, TId>`
+You need to create controllers that inherit from `JsonApiController<TResource>` or `JsonApiController<TResource, TId>`
 where `T` is the model that inherits from `Identifiable<TId>`
 
 ```c#
