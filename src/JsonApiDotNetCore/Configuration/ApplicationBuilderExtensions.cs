@@ -1,6 +1,7 @@
 using System;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -22,6 +23,23 @@ namespace JsonApiDotNetCore.Configuration
         public static void UseJsonApi(this IApplicationBuilder builder)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
+            
+            using var scope = builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            var inverseRelationshipResolver = scope.ServiceProvider.GetRequiredService<IInverseRelationships>();
+            inverseRelationshipResolver.Resolve();
+            
+            var jsonApiApplicationBuilder =  builder.ApplicationServices.GetRequiredService<IJsonApiApplicationBuilder>();
+            jsonApiApplicationBuilder.ConfigureMvcOptions = options =>
+            {
+                var inputFormatter = builder.ApplicationServices.GetRequiredService<IJsonApiInputFormatter>();
+                options.InputFormatters.Insert(0, inputFormatter);
+
+                var outputFormatter = builder.ApplicationServices.GetRequiredService<IJsonApiOutputFormatter>();
+                options.OutputFormatters.Insert(0, outputFormatter);
+
+                var routingConvention = builder.ApplicationServices.GetRequiredService<IJsonApiRoutingConvention>();
+                options.Conventions.Insert(0, routingConvention);
+            };
 
             builder.UseMiddleware<JsonApiMiddleware>();
         }

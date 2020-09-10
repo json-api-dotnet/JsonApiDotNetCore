@@ -176,7 +176,7 @@ namespace JsonApiDotNetCore.Configuration
         /// Specifies the settings that are used by the <see cref="JsonSerializer"/>.
         /// Note that at some places a few settings are ignored, to ensure json:api spec compliance.
         /// <example>
-        /// The next example changes the casing convention to kebab casing.
+        /// The next example changes the naming convention to kebab casing.
         /// <code><![CDATA[
         /// options.SerializerSettings.ContractResolver = new DefaultContractResolver
         /// {

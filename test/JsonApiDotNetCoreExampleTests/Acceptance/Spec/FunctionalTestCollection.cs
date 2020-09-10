@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 {
                     continue;
                 }
-                builder.Add(rc.ResourceType, rc.IdentityType, rc.ResourceName);
+                builder.Add(rc.ResourceType, rc.IdentityType, rc.PublicName);
             }
             builder.Add<TodoItemClient>(formatter.FormatResourceName(typeof(TodoItem)));
             builder.Add<TodoItemCollectionClient, Guid>(formatter.FormatResourceName(typeof(TodoItemCollection)));

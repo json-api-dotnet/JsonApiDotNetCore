@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             var builder = new StringBuilder();
             builder.Append(_request.BasePath);
             builder.Append("/");
-            builder.Append(resourceContext.ResourceName);
+            builder.Append(resourceContext.PublicName);
 
             string resourceId = _request.PrimaryId;
             if (resourceId != null)
@@ -121,7 +121,7 @@ namespace JsonApiDotNetCore.Serialization.Building
                 parameters["page[number]"] = pageOffset.ToString();
             });
 
-            return $"{_request.BasePath}/{resourceContext.ResourceName}" + queryString;
+            return $"{_request.BasePath}/{resourceContext.PublicName}" + queryString;
         }
 
         private string BuildQueryString(Action<Dictionary<string, string>> updateAction)
@@ -164,13 +164,13 @@ namespace JsonApiDotNetCore.Serialization.Building
             RelationshipLinks links = null;
             if (ShouldAddRelationshipLink(parentResourceContext, relationship, LinkTypes.Related))
             {
-                links = new RelationshipLinks { Related = GetRelatedRelationshipLink(parentResourceContext.ResourceName, parent.StringId, childNavigation) };
+                links = new RelationshipLinks { Related = GetRelatedRelationshipLink(parentResourceContext.PublicName, parent.StringId, childNavigation) };
             }
 
             if (ShouldAddRelationshipLink(parentResourceContext, relationship, LinkTypes.Self))
             {
                 links ??= new RelationshipLinks();
-                links.Self = GetSelfRelationshipLink(parentResourceContext.ResourceName, parent.StringId, childNavigation);
+                links.Self = GetSelfRelationshipLink(parentResourceContext.PublicName, parent.StringId, childNavigation);
             }
 
             return links;
