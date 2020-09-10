@@ -1,11 +1,16 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
+using System.Linq;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
@@ -16,17 +21,20 @@ namespace JsonApiDotNetCore.Serialization
     public class JsonApiReader : IJsonApiReader
     {
         private readonly IJsonApiDeserializer _deserializer;
-        private readonly IJsonApiRequest _request;
+        private readonly IJsonApiRequest _jsonApiRequest;
+        private readonly IResourceContextProvider _resourceContextProvider;
         private readonly TraceLogWriter<JsonApiReader> _traceWriter;
 
         public JsonApiReader(IJsonApiDeserializer deserializer,
-            IJsonApiRequest request,
+            IJsonApiRequest jsonApiRequest,
+            IResourceContextProvider resourceContextProvider,
             ILoggerFactory loggerFactory)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 
             _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
+            _jsonApiRequest = jsonApiRequest ?? throw new ArgumentNullException(nameof(jsonApiRequest));
+            _resourceContextProvider = resourceContextProvider;
             _traceWriter = new TraceLogWriter<JsonApiReader>(loggerFactory);
         }
 
@@ -63,12 +71,36 @@ namespace JsonApiDotNetCore.Serialization
 
             ValidatePatchRequestIncludesId(context, model, body);
 
+            ValidateIncomingResourceType(context, model);
+            
             return await InputFormatterResult.SuccessAsync(model);
+        }
+
+        private void ValidateIncomingResourceType(InputFormatterContext context, object model)
+        {
+            if (context.HttpContext.IsJsonApiRequest() && IsPatchOrPostRequest(context.HttpContext.Request))
+            {
+                var endPointResourceTypes = GetEndpointResourceType();
+                var bodyResourceTypes = GetBodyResourceTypes(model);
+
+                foreach (var bodyResourceType in bodyResourceTypes)
+                {
+                    if (bodyResourceType != null && endPointResourceTypes != null && bodyResourceType != endPointResourceTypes)
+                    {
+                        var resourceFromEndpoint = _resourceContextProvider.GetResourceContext(endPointResourceTypes);
+                        var resourceFromBody = _resourceContextProvider.GetResourceContext(bodyResourceType);
+
+                        throw new ResourceTypeMismatchException(new HttpMethod(context.HttpContext.Request.Method),
+                            context.HttpContext.Request.Path,
+                            resourceFromEndpoint, resourceFromBody);
+                    }
+                }
+            }
         }
 
         private void ValidatePatchRequestIncludesId(InputFormatterContext context, object model, string body)
         {
-            if (context.HttpContext.Request.Method == "PATCH")
+            if (context.HttpContext.Request.Method == HttpMethods.Patch)
             {
                 bool hasMissingId = model is IList list ? HasMissingId(list) : HasMissingId(model);
                 if (hasMissingId)
@@ -76,9 +108,9 @@ namespace JsonApiDotNetCore.Serialization
                     throw new InvalidRequestBodyException("Payload must include 'id' element.", null, body);
                 }
 
-                if (_request.Kind == EndpointKind.Primary && TryGetId(model, out var bodyId) && bodyId != _request.PrimaryId)
+                if (_jsonApiRequest.Kind == EndpointKind.Primary && TryGetId(model, out var bodyId) && bodyId != _jsonApiRequest.PrimaryId)
                 {
-                    throw new ResourceIdMismatchException(bodyId, _request.PrimaryId, context.HttpContext.Request.GetDisplayUrl());
+                    throw new ResourceIdMismatchException(bodyId, _jsonApiRequest.PrimaryId, context.HttpContext.Request.GetDisplayUrl());
                 }
             }
         }
@@ -133,6 +165,28 @@ namespace JsonApiDotNetCore.Serialization
             // Synchronous IO operations are 
             // https://github.com/aspnet/AspNetCore/issues/7644
             return await reader.ReadToEndAsync();
+        }
+        
+        private bool IsPatchOrPostRequest(HttpRequest request)
+        {
+            return request.Method == HttpMethods.Patch || request.Method == HttpMethods.Post;
+        }
+
+        private IEnumerable<Type> GetBodyResourceTypes(object model)
+        {
+            if (model is ICollection<IIdentifiable> resourceCollection)
+            {
+                return resourceCollection.Select(r => r.GetType()).Distinct();
+            }
+
+            return model == null ? new Type[0] : new[] { model.GetType() };
+        }
+
+        private Type GetEndpointResourceType()
+        {
+            return _jsonApiRequest.Kind == EndpointKind.Primary
+                ? _jsonApiRequest.PrimaryResource.ResourceType 
+                : _jsonApiRequest.SecondaryResource?.ResourceType;
         }
     }
 }
