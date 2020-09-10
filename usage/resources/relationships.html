@@ -76,10 +76,10 @@ they should be labeled with the appropriate attribute (either <code>HasOne</code
 For example, a TodoItem may have an Owner and so the Id attribute should be OwnerId.</p>
 <pre><code class="lang-c#">public class TodoItem : Identifiable&lt;int&gt;
 {
-    [Attr(&quot;description&quot;)]
+    [Attr]
     public string Description { get; set; }
 
-    [HasOne(&quot;owner&quot;)]
+    [HasOne]
     public Person Owner { get; set; }
     public int OwnerId { get; set; }
 }
@@ -88,10 +88,10 @@ the <a class="xref" href="../../api/JsonApiDotNetCore.Configuration.JsonApiOptio
 <h2 id="hasmany">HasMany</h2>
 <pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
-    [Attr(&quot;first-name&quot;)]
+    [Attr(PublicName = &quot;first-name&quot;)]
     public string FirstName { get; set; }
 
-    [HasMany(&quot;todo-items&quot;)]
+    [HasMany(PublicName = &quot;todo-items&quot;)]
     public ICollection&lt;TodoItem&gt; TodoItems { get; set; }
 }
 </code></pre><h2 id="hasmanythrough">HasManyThrough</h2>

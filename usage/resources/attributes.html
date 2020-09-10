@@ -83,7 +83,7 @@
 <li><p>Individually using the attribute&#39;s constructor</p>
 <pre><code class="lang-c#">public class Person : Identifiable
 {
- [Attr(&quot;first-name&quot;)]
+ [Attr(PublicName = &quot;first-name&quot;)]
  public string FirstName { get; set; }
 }
 </code></pre></li>
@@ -97,21 +97,21 @@
 <p>Attributes can be marked to allow returning their value in responses. When not allowed and requested using <code>?fields=</code>, it results in an HTTP 400 response.</p>
 <pre><code class="lang-c#">public class User : Identifiable&lt;int&gt;
 {
-    [Attr(~AttrCapabilities.AllowView)]
+    [Attr(Capabilities = ~AttrCapabilities.AllowView)]
     public string Password { get; set; }
 }
 </code></pre><h3 id="mutability">Mutability</h3>
 <p>Attributes can be marked as mutable, which will allow <code>PATCH</code> requests to update them. When immutable, an HTTP 422 response is returned.</p>
 <pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
-    [Attr(AttrCapabilities.AllowMutate)]
+    [Attr(Capabilities = AttrCapabilities.AllowChange)]
     public string FirstName { get; set; }
 }
 </code></pre><h3 id="filtersort-ability">Filter/Sort-ability</h3>
 <p>Attributes can be marked to allow filtering and/or sorting. When not allowed, it results in an HTTP 400 response.</p>
 <pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
-    [Attr(AttrCapabilities.AllowSort | AttrCapabilities.AllowFilter)]
+    [Attr(Capabilities = AttrCapabilities.AllowSort | AttrCapabilities.AllowFilter)]
     public string FirstName { get; set; }
 }
 </code></pre><h2 id="complex-attributes">Complex Attributes</h2>
