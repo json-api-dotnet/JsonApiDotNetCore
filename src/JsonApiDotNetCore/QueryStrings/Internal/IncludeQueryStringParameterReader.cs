@@ -34,8 +34,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                 throw new InvalidQueryStringParameterException(_lastParameterName,
                     "Including the requested relationship is not allowed.",
                     path == relationship.PublicName
-                        ? $"Including the relationship '{relationship.PublicName}' on '{resourceContext.ResourceName}' is not allowed."
-                        : $"Including the relationship '{relationship.PublicName}' in '{path}' on '{resourceContext.ResourceName}' is not allowed.");
+                        ? $"Including the relationship '{relationship.PublicName}' on '{resourceContext.PublicName}' is not allowed."
+                        : $"Including the relationship '{relationship.PublicName}' in '{path}' on '{resourceContext.PublicName}' is not allowed.");
             }
         }
 

@@ -180,8 +180,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             if (lastField is HasManyAttribute)
             {
                 throw new QueryParseException(path == lastName
-                    ? $"Field '{lastName}' must be an attribute or a to-one relationship on resource '{resourceContext.ResourceName}'."
-                    : $"Field '{lastName}' in '{path}' must be an attribute or a to-one relationship on resource '{resourceContext.ResourceName}'.");
+                    ? $"Field '{lastName}' must be an attribute or a to-one relationship on resource '{resourceContext.PublicName}'."
+                    : $"Field '{lastName}' in '{path}' must be an attribute or a to-one relationship on resource '{resourceContext.PublicName}'.");
             }
 
             validateCallback?.Invoke(lastField, resourceContext, path);
@@ -197,8 +197,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             if (relationship == null)
             {
                 throw new QueryParseException(path == publicName
-                    ? $"Relationship '{publicName}' does not exist on resource '{resourceContext.ResourceName}'."
-                    : $"Relationship '{publicName}' in '{path}' does not exist on resource '{resourceContext.ResourceName}'.");
+                    ? $"Relationship '{publicName}' does not exist on resource '{resourceContext.PublicName}'."
+                    : $"Relationship '{publicName}' in '{path}' does not exist on resource '{resourceContext.PublicName}'.");
             }
 
             return relationship;
@@ -211,8 +211,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             if (!(relationship is HasManyAttribute))
             {
                 throw new QueryParseException(path == publicName
-                    ? $"Relationship '{publicName}' must be a to-many relationship on resource '{resourceContext.ResourceName}'."
-                    : $"Relationship '{publicName}' in '{path}' must be a to-many relationship on resource '{resourceContext.ResourceName}'.");
+                    ? $"Relationship '{publicName}' must be a to-many relationship on resource '{resourceContext.PublicName}'."
+                    : $"Relationship '{publicName}' in '{path}' must be a to-many relationship on resource '{resourceContext.PublicName}'.");
             }
 
             return relationship;
@@ -225,8 +225,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             if (!(relationship is HasOneAttribute))
             {
                 throw new QueryParseException(path == publicName
-                    ? $"Relationship '{publicName}' must be a to-one relationship on resource '{resourceContext.ResourceName}'."
-                    : $"Relationship '{publicName}' in '{path}' must be a to-one relationship on resource '{resourceContext.ResourceName}'.");
+                    ? $"Relationship '{publicName}' must be a to-one relationship on resource '{resourceContext.PublicName}'."
+                    : $"Relationship '{publicName}' in '{path}' must be a to-one relationship on resource '{resourceContext.PublicName}'.");
             }
 
             return relationship;
@@ -239,8 +239,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             if (attribute == null)
             {
                 throw new QueryParseException(path == publicName
-                    ? $"Attribute '{publicName}' does not exist on resource '{resourceContext.ResourceName}'."
-                    : $"Attribute '{publicName}' in '{path}' does not exist on resource '{resourceContext.ResourceName}'.");
+                    ? $"Attribute '{publicName}' does not exist on resource '{resourceContext.PublicName}'."
+                    : $"Attribute '{publicName}' in '{path}' does not exist on resource '{resourceContext.PublicName}'.");
             }
 
             return attribute;
@@ -253,8 +253,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             if (field == null)
             {
                 throw new QueryParseException(path == publicName
-                    ? $"Field '{publicName}' does not exist on resource '{resourceContext.ResourceName}'."
-                    : $"Field '{publicName}' in '{path}' does not exist on resource '{resourceContext.ResourceName}'.");
+                    ? $"Field '{publicName}' does not exist on resource '{resourceContext.PublicName}'."
+                    : $"Field '{publicName}' in '{path}' does not exist on resource '{resourceContext.PublicName}'.");
             }
 
             return field;

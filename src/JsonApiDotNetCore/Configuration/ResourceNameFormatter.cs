@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Gets the publicly visible resource name for the internal type name using the configured casing convention.
+        /// Gets the publicly visible resource name for the internal type name using the configured naming convention.
         /// </summary>
         public string FormatResourceName(Type resourceType)
         {

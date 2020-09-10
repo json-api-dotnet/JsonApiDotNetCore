@@ -9,7 +9,6 @@ namespace JsonApiDotNetCore.Controllers
     /// <summary>
     /// Provides helper methods to raise json:api compliant errors from controller actions.
     /// </summary>
-    [ServiceFilter(typeof(IQueryStringActionFilter))]
     public abstract class CoreJsonApiController : ControllerBase
     {
         protected IActionResult Error(Error error)

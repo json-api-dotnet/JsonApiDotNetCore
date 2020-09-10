@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     {
         /// <summary>
         /// The publicly exposed name of this resource type.
-        /// When not explicitly assigned, the configured casing convention is applied on the pluralized resource class name.
+        /// When not explicitly assigned, the configured naming convention is applied on the pluralized resource class name.
         /// </summary>
         public string PublicName { get; }
 

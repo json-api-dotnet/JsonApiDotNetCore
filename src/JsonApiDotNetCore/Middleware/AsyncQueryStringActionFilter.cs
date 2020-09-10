@@ -7,23 +7,28 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    public sealed class QueryStringActionFilter : IAsyncActionFilter, IQueryStringActionFilter
+    /// <inheritdoc />
+    public sealed class AsyncQueryStringActionFilter : IAsyncQueryStringActionFilter
     {
         private readonly IQueryStringReader _queryStringReader;
-
-        public QueryStringActionFilter(IQueryStringReader queryStringReader)
+    
+        public AsyncQueryStringActionFilter(IQueryStringReader queryStringReader)
         {
             _queryStringReader = queryStringReader ?? throw new ArgumentNullException(nameof(queryStringReader));
         }
 
+        /// <inheritdoc />
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             if (next == null) throw new ArgumentNullException(nameof(next));
 
-            DisableQueryStringAttribute disableQueryStringAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryStringAttribute>();
+            if (context.HttpContext.IsJsonApiRequest())
+            {
+                var disableQueryStringAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryStringAttribute>();
+                _queryStringReader.ReadAll(disableQueryStringAttribute);
+            }
 
-            _queryStringReader.ReadAll(disableQueryStringAttribute);
             await next();
         }
     }
