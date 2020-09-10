@@ -57,6 +57,9 @@ namespace JsonApiDotNetCore.Configuration
             configureOptions?.Invoke(_options);
         }
         
+        /// <summary>
+        /// Executes the action provided by the user to configure <see cref="ServiceDiscoveryFacade"/>.
+        /// </summary>
         public void ConfigureAutoDiscovery(Action<ServiceDiscoveryFacade> configureAutoDiscovery)
         {
             configureAutoDiscovery?.Invoke(_serviceDiscoveryFacade);
@@ -67,13 +70,17 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public void AddResourceGraph(Type dbContextType, Action<ResourceGraphBuilder> configureResourceGraph)
         {
-            AutoDiscoverResources(_serviceDiscoveryFacade);
+            _serviceDiscoveryFacade.DiscoverResources();
+            
             if (dbContextType != null)
             {
                 AddResourcesFromDbContext((DbContext)_intermediateProvider.GetService(dbContextType), _resourceGraphBuilder);
             }
-            ExecuteManualConfigurationOfResources(configureResourceGraph, _resourceGraphBuilder);
-            _services.AddSingleton(_resourceGraphBuilder.Build());
+            
+            configureResourceGraph?.Invoke(_resourceGraphBuilder);
+
+            var resourceGraph = _resourceGraphBuilder.Build();
+            _services.AddSingleton(resourceGraph);
         }
 
         /// <summary>
@@ -216,30 +223,23 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IPaginationQueryStringParameterReader, PaginationQueryStringParameterReader>();
             _services.AddScoped<IDefaultsQueryStringParameterReader, DefaultsQueryStringParameterReader>();
             _services.AddScoped<INullsQueryStringParameterReader, NullsQueryStringParameterReader>();
-            _services
-                .AddScoped<IResourceDefinitionQueryableParameterReader, ResourceDefinitionQueryableParameterReader>();
+            _services.AddScoped<IResourceDefinitionQueryableParameterReader, ResourceDefinitionQueryableParameterReader>();
 
             _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IIncludeQueryStringParameterReader>());
             _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IFilterQueryStringParameterReader>());
             _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<ISortQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp =>
-                sp.GetService<ISparseFieldSetQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp =>
-                sp.GetService<IPaginationQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp =>
-                sp.GetService<IDefaultsQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<ISparseFieldSetQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IPaginationQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IDefaultsQueryStringParameterReader>());
             _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<INullsQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp =>
-                sp.GetService<IResourceDefinitionQueryableParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IResourceDefinitionQueryableParameterReader>());
 
             _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<IIncludeQueryStringParameterReader>());
             _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<IFilterQueryStringParameterReader>());
             _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<ISortQueryStringParameterReader>());
-            _services.AddScoped<IQueryConstraintProvider>(sp =>
-                sp.GetService<ISparseFieldSetQueryStringParameterReader>());
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<ISparseFieldSetQueryStringParameterReader>());
             _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<IPaginationQueryStringParameterReader>());
-            _services.AddScoped<IQueryConstraintProvider>(
-                sp => sp.GetService<IResourceDefinitionQueryableParameterReader>());
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<IResourceDefinitionQueryableParameterReader>());
 
             _services.AddScoped<IQueryStringReader, QueryStringReader>();
             _services.AddSingleton<IRequestQueryStringAccessor, RequestQueryStringAccessor>();
@@ -273,20 +273,6 @@ namespace JsonApiDotNetCore.Configuration
             {
                 builder.Add(entityType.ClrType);
             }
-        }
-        
-        private void AutoDiscoverResources(ServiceDiscoveryFacade serviceDiscoveryFacade)
-        {
-            serviceDiscoveryFacade.DiscoverResources();
-        }
-
-        /// <summary>
-        /// Executes the action provided by the user to configure the resources using <see cref="ResourceGraphBuilder"/>
-        /// </summary>
-        private void ExecuteManualConfigurationOfResources(Action<ResourceGraphBuilder> configureResources,
-            ResourceGraphBuilder resourceGraphBuilder)
-        {
-            configureResources?.Invoke(resourceGraphBuilder);
         }
         
         public void Dispose()
