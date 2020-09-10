@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
@@ -8,7 +7,7 @@ namespace JsonApiDotNetCoreExampleTests
 {
     public static class AppDbContextExtensions
     {
-        public static async Task ClearTableAsync<TEntity>(this AppDbContext dbContext) where TEntity : class
+        public static async Task ClearTableAsync<TEntity>(this DbContext dbContext) where TEntity : class
         {
             var entityType = dbContext.Model.FindEntityType(typeof(TEntity));
             if (entityType == null)
@@ -30,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests
             }
         }
 
-        public static void ClearTable<TEntity>(this AppDbContext dbContext) where TEntity : class
+        public static void ClearTable<TEntity>(this DbContext dbContext) where TEntity : class
         {
             var entityType = dbContext.Model.FindEntityType(typeof(TEntity));
             if (entityType == null)

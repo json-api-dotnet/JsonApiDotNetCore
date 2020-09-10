@@ -189,10 +189,12 @@ namespace JsonApiDotNetCore.Queries.Internal
             primaryProjection[secondaryRelationship] = secondaryLayer;
             primaryProjection[primaryIdAttribute] = null;
 
+            var primaryFilter = GetFilter(Array.Empty<QueryExpression>(), primaryResourceContext);
+
             return new QueryLayer(primaryResourceContext)
             {
                 Include = RewriteIncludeForSecondaryEndpoint(innerInclude, secondaryRelationship),
-                Filter = CreateFilterById(primaryId, primaryResourceContext),
+                Filter = IncludeFilterById(primaryId, primaryResourceContext, primaryFilter),
                 Projection = primaryProjection
             };
         }
@@ -206,12 +208,16 @@ namespace JsonApiDotNetCore.Queries.Internal
             return new IncludeExpression(new[] {parentElement});
         }
 
-        private FilterExpression CreateFilterById<TId>(TId id, ResourceContext resourceContext)
+        private FilterExpression IncludeFilterById<TId>(TId id, ResourceContext resourceContext, FilterExpression existingFilter)
         {
             var primaryIdAttribute = resourceContext.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
 
-            return new ComparisonExpression(ComparisonOperator.Equals,
+            FilterExpression filterById = new ComparisonExpression(ComparisonOperator.Equals,
                 new ResourceFieldChainExpression(primaryIdAttribute), new LiteralConstantExpression(id.ToString()));
+
+            return existingFilter == null
+                ? filterById
+                : new LogicalExpression(LogicalOperator.And, new[] {filterById, existingFilter});
         }
 
         public IDictionary<ResourceFieldAttribute, QueryLayer> GetSecondaryProjectionForRelationshipEndpoint(ResourceContext secondaryResourceContext)

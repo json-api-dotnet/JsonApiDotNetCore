@@ -32,9 +32,9 @@ namespace JsonApiDotNetCore.Repositories
         Task UpdateAsync(TResource requestResource, TResource databaseResource);
 
         /// <summary>
-        /// Updates relationships in the underlying data store.
+        /// Updates a relationship in the underlying data store.
         /// </summary>
-        Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds);
+        Task UpdateRelationshipAsync(object parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds);
 
         /// <summary>
         /// Deletes a resource from the underlying data store.
