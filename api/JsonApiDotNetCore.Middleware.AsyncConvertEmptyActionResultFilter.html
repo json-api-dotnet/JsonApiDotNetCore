@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class JsonApiTypeMatchFilterProvider
+    <title>Class AsyncConvertEmptyActionResultFilter
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class JsonApiTypeMatchFilterProvider
+    <meta name="title" content="Class AsyncConvertEmptyActionResultFilter
    ">
     <meta name="generator" content="docfx 2.56.2.0">
     
@@ -68,24 +68,28 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Middleware.JsonApiTypeMatchFilterProvider">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Middleware.AsyncConvertEmptyActionResultFilter">
   
   
-  <h1 id="JsonApiDotNetCore_Middleware_JsonApiTypeMatchFilterProvider" data-uid="JsonApiDotNetCore.Middleware.JsonApiTypeMatchFilterProvider" class="text-break">Class JsonApiTypeMatchFilterProvider
+  <h1 id="JsonApiDotNetCore_Middleware_AsyncConvertEmptyActionResultFilter" data-uid="JsonApiDotNetCore.Middleware.AsyncConvertEmptyActionResultFilter" class="text-break">Class AsyncConvertEmptyActionResultFilter
   </h1>
-  <div class="markdown level0 summary"><p>Provides the type of the global action filter that is configured in MVC during startup.
-This can be overridden to let JADNC use your own action filter. The default action filter used
-is <a class="xref" href="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.html">IncomingTypeMatchFilter</a>.</p>
+  <div class="markdown level0 summary"><p>Converts action result without parameters into action result with null parameter.
+For example: return NotFound() -&gt; return NotFound(null)
+This ensures our formatter is invoked, where we&apos;ll build a json:api compliant response.
+For details, see: <a href="https://github.com/dotnet/aspnetcore/issues/16969">https://github.com/dotnet/aspnetcore/issues/16969</a></p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">JsonApiTypeMatchFilterProvider</span></div>
+    <div class="level1"><span class="xref">AsyncConvertEmptyActionResultFilter</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiTypeMatchFilterProvider.html">IJsonApiTypeMatchFilterProvider</a></div>
+    <div><a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncConvertEmptyActionResultFilter.html">IAsyncConvertEmptyActionResultFilter</a></div>
+    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncAlwaysRunResultFilter</span></div>
+    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncResultFilter</span></div>
+    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -113,27 +117,49 @@ is <a class="xref" href="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.ht
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Middleware.html">JsonApiDotNetCore.Middleware</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Middleware_JsonApiTypeMatchFilterProvider_syntax">Syntax</h5>
+  <h5 id="JsonApiDotNetCore_Middleware_AsyncConvertEmptyActionResultFilter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class JsonApiTypeMatchFilterProvider : IJsonApiTypeMatchFilterProvider</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class AsyncConvertEmptyActionResultFilter : IAsyncConvertEmptyActionResultFilter, IAsyncAlwaysRunResultFilter, IAsyncResultFilter, IFilterMetadata</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_JsonApiTypeMatchFilterProvider_Get.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.JsonApiTypeMatchFilterProvider.Get%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_AsyncConvertEmptyActionResultFilter_OnResultExecutionAsync_Microsoft_AspNetCore_Mvc_Filters_ResultExecutingContext_Microsoft_AspNetCore_Mvc_Filters_ResultExecutionDelegate_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.AsyncConvertEmptyActionResultFilter.OnResultExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext%2CMicrosoft.AspNetCore.Mvc.Filters.ResultExecutionDelegate)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiTypeMatchFilterProvider.cs/#L8">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/AsyncConvertEmptyActionResultFilter.cs/#L13">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Middleware_JsonApiTypeMatchFilterProvider_Get_" data-uid="JsonApiDotNetCore.Middleware.JsonApiTypeMatchFilterProvider.Get*"></a>
-  <h4 id="JsonApiDotNetCore_Middleware_JsonApiTypeMatchFilterProvider_Get" data-uid="JsonApiDotNetCore.Middleware.JsonApiTypeMatchFilterProvider.Get">Get()</h4>
+  <a id="JsonApiDotNetCore_Middleware_AsyncConvertEmptyActionResultFilter_OnResultExecutionAsync_" data-uid="JsonApiDotNetCore.Middleware.AsyncConvertEmptyActionResultFilter.OnResultExecutionAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Middleware_AsyncConvertEmptyActionResultFilter_OnResultExecutionAsync_Microsoft_AspNetCore_Mvc_Filters_ResultExecutingContext_Microsoft_AspNetCore_Mvc_Filters_ResultExecutionDelegate_" data-uid="JsonApiDotNetCore.Middleware.AsyncConvertEmptyActionResultFilter.OnResultExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext,Microsoft.AspNetCore.Mvc.Filters.ResultExecutionDelegate)">OnResultExecutionAsync(ResultExecutingContext, ResultExecutionDelegate)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Type Get()</code></pre>
+    <pre><code class="lang-csharp hljs">public Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)</code></pre>
   </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext</span></td>
+        <td><span class="parametername">context</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.AspNetCore.Mvc.Filters.ResultExecutionDelegate</span></td>
+        <td><span class="parametername">next</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -144,14 +170,23 @@ is <a class="xref" href="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.ht
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Type</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiTypeMatchFilterProvider.html">IJsonApiTypeMatchFilterProvider</a>
+      <a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncConvertEmptyActionResultFilter.html">IAsyncConvertEmptyActionResultFilter</a>
+  </div>
+  <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncAlwaysRunResultFilter</span>
+  </div>
+  <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncResultFilter</span>
+  </div>
+  <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata</span>
   </div>
 </article>
           </div>
@@ -161,10 +196,10 @@ is <a class="xref" href="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.ht
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_JsonApiTypeMatchFilterProvider.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.JsonApiTypeMatchFilterProvider%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_AsyncConvertEmptyActionResultFilter.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.AsyncConvertEmptyActionResultFilter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiTypeMatchFilterProvider.cs/#L6" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/AsyncConvertEmptyActionResultFilter.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

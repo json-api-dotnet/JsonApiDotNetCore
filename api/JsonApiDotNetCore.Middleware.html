@@ -77,9 +77,20 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.ConvertEmptyActionResultFilter.html">ConvertEmptyActionResultFilter</a></h4>
-      <section><p>Transforms <span class="xref">Microsoft.AspNetCore.Mvc.ActionResult</span>s without parameters for correct internal handling.
-For example: return NotFound() -&gt; return NotFound(null)</p>
+      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncConvertEmptyActionResultFilter.html">AsyncConvertEmptyActionResultFilter</a></h4>
+      <section><p>Converts action result without parameters into action result with null parameter.
+For example: return NotFound() -&gt; return NotFound(null)
+This ensures our formatter is invoked, where we&apos;ll build a json:api compliant response.
+For details, see: <a href="https://github.com/dotnet/aspnetcore/issues/16969">https://github.com/dotnet/aspnetcore/issues/16969</a></p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncJsonApiExceptionFilter.html">AsyncJsonApiExceptionFilter</a></h4>
+      <section><p>Application-wide exception filter that invokes <a class="xref" href="JsonApiDotNetCore.Middleware.IExceptionHandler.html">IExceptionHandler</a> for json:api requests.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncQueryStringActionFilter.html">AsyncQueryStringActionFilter</a></h4>
+      <section><p>Application-wide entry point for processing json:api request query strings.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.html">AsyncResourceTypeMatchFilter</a></h4>
+      <section><p>Verifies the incoming resource type in json:api request body matches the resource type at the current endpoint URL.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.ExceptionHandler.html">ExceptionHandler</a></h4>
       <section><p>Central place to handle all exceptions. Log them and translate into Error response.</p>
@@ -88,54 +99,52 @@ For example: return NotFound() -&gt; return NotFound(null)</p>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.HttpContextExtensions.html">HttpContextExtensions</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.html">IncomingTypeMatchFilter</a></h4>
-      <section><p>Action filter used to verify the incoming resource type matches the target type, else return a 409.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiExceptionFilter.html">JsonApiExceptionFilter</a></h4>
-      <section><p>Global exception filter that wraps any thrown error with a JsonApiException.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiExceptionFilterProvider.html">JsonApiExceptionFilterProvider</a></h4>
-      <section><p>Provides the type of the global exception filter that is configured in MVC during startup.
-This can be overridden to let JADNC use your own exception filter. The default exception filter used
-is <a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiExceptionFilter.html">JsonApiExceptionFilter</a>.</p>
-</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiInputFormatter.html">JsonApiInputFormatter</a></h4>
-      <section><p>Extensibility point for reading incoming HTTP request.</p>
+      <section><p>Application-wide entry point for reading json:api request bodies.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiMiddleware.html">JsonApiMiddleware</a></h4>
       <section><p>Intercepts HTTP requests to populate injected <a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiRequest.html">IJsonApiRequest</a> instance for json:api requests.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiOutputFormatter.html">JsonApiOutputFormatter</a></h4>
-      <section><p>Extensibility point for writing outgoing HTTP response.</p>
+      <section><p>Application-wide entry point for writing json:api response bodies.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiRequest.html">JsonApiRequest</a></h4>
       <section><p>Metadata associated with the json:api request that is currently being processed.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html">JsonApiRoutingConvention</a></h4>
       <section><p>The default routing convention registers the name of the resource as the route
-using the serializer casing convention. The default for this is
+using the serializer naming convention. The default for this is
 a camel case formatter. If the controller directly inherits from <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html">CoreJsonApiController</a> and there is no
 resource directly associated, it uses the name of the controller instead of the name of the type.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiTypeMatchFilterProvider.html">JsonApiTypeMatchFilterProvider</a></h4>
-      <section><p>Provides the type of the global action filter that is configured in MVC during startup.
-This can be overridden to let JADNC use your own action filter. The default action filter used
-is <a class="xref" href="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.html">IncomingTypeMatchFilter</a>.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.QueryStringActionFilter.html">QueryStringActionFilter</a></h4>
-      <section></section>
     <h3 id="interfaces">Interfaces
   </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncConvertEmptyActionResultFilter.html">IAsyncConvertEmptyActionResultFilter</a></h4>
+      <section><p>Converts action result without parameters into action result with null parameter.
+For example: return NotFound() -&gt; return NotFound(null)
+This ensures our formatter is invoked, where we&apos;ll build a json:api compliant response.
+For details, see: <a href="https://github.com/dotnet/aspnetcore/issues/16969">https://github.com/dotnet/aspnetcore/issues/16969</a></p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncJsonApiExceptionFilter.html">IAsyncJsonApiExceptionFilter</a></h4>
+      <section><p>Application-wide exception filter that invokes <a class="xref" href="JsonApiDotNetCore.Middleware.IExceptionHandler.html">IExceptionHandler</a> for json:api requests.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncQueryStringActionFilter.html">IAsyncQueryStringActionFilter</a></h4>
+      <section><p>Application-wide entry point for processing json:api request query strings.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncResourceTypeMatchFilter.html">IAsyncResourceTypeMatchFilter</a></h4>
+      <section><p>Verifies the incoming resource type in json:api request body matches the resource type at the current endpoint URL.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IControllerResourceMapping.html">IControllerResourceMapping</a></h4>
       <section><p>Registry of which resource type is associated with which controller.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IExceptionHandler.html">IExceptionHandler</a></h4>
       <section><p>Central place to handle all exceptions. Log them and translate into Error response.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiExceptionFilterProvider.html">IJsonApiExceptionFilterProvider</a></h4>
-      <section><p>Provides the type of the global exception filter that is configured in MVC during startup.
-This can be overridden to let JADNC use your own exception filter. The default exception filter used
-is <a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiExceptionFilter.html">JsonApiExceptionFilter</a>.</p>
+      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiInputFormatter.html">IJsonApiInputFormatter</a></h4>
+      <section><p>Application-wide entry point for reading json:api request bodies.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiOutputFormatter.html">IJsonApiOutputFormatter</a></h4>
+      <section><p>Application-wide entry point for writing json:api response bodies.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiRequest.html">IJsonApiRequest</a></h4>
       <section><p>Metadata associated with the json:api request that is currently being processed.</p>
@@ -143,14 +152,6 @@ is <a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiExceptionFilter.htm
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiRoutingConvention.html">IJsonApiRoutingConvention</a></h4>
       <section><p>Service for specifying which routing convention to use. This can be overridden to customize
 the relation between controllers and mapped routes.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiTypeMatchFilterProvider.html">IJsonApiTypeMatchFilterProvider</a></h4>
-      <section><p>Provides the type of the global action filter that is configured in MVC during startup.
-This can be overridden to let JADNC use your own action filter. The default action filter used
-is <a class="xref" href="JsonApiDotNetCore.Middleware.IncomingTypeMatchFilter.html">IncomingTypeMatchFilter</a>.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IQueryStringActionFilter.html">IQueryStringActionFilter</a></h4>
-      <section><p>Extensibility point for processing request query strings.</p>
 </section>
     <h3 id="enums">Enums
   </h3>

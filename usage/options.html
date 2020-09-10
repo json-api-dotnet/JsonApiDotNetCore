@@ -121,6 +121,8 @@ If you want to change the default serializer settings, you can:</p>
 <pre><code class="lang-c#">options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 options.SerializerSettings.Converters.Add(new StringEnumConverter());
 options.SerializerSettings.Formatting = Formatting.Indented;
+</code></pre><p>The default naming convention (as used in the routes and public resources names) is also determined here, and can be changed (default is camel-case):</p>
+<pre><code class="lang-c#">options.SerializerSettings.ContractResolver = new DefaultContractResolver { NamingStrategy = new KebabCaseNamingStrategy() };
 </code></pre><p>Because we copy resource properties into an intermediate object before serialization, Newtonsoft.Json annotations on properties are ignored.</p>
 <h2 id="enable-modelstate-validation">Enable ModelState Validation</h2>
 <p>If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set <code>ValidateModelState = true</code>. By default, no model validation is performed.</p>

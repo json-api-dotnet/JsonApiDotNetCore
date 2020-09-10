@@ -5,17 +5,19 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Middleware </title>
+    <title>Interface IAsyncJsonApiExceptionFilter
+   </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Middleware ">
+    <meta name="title" content="Interface IAsyncJsonApiExceptionFilter
+   ">
     <meta name="generator" content="docfx 2.56.2.0">
     
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     
     
@@ -34,8 +36,8 @@
                 <span class="icon-bar"></span>
               </button>
               
-              <a class="navbar-brand" href="../../index.html">
-                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -66,40 +68,27 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="">
-<h1 id="middleware">Middleware</h1>
-
-<p>It is possible to replace JsonApiDotNetCore middleware components by configuring the IoC container and by configuring <code>MvcOptions</code>. </p>
-<h2 id="configuring-the-ioc-container">Configuring the IoC container</h2>
-<p>The following example replaces the internal exception filter with a custom implementation.</p>
-<pre><code class="lang-c#">/// In Startup.ConfigureServices
-services.AddService&lt;IAsyncJsonApiExceptionFilter, CustomAsyncExceptionFilter&gt;()
-</code></pre><h2 id="configuring-mvcoptions">Configuring <code>MvcOptions</code></h2>
-<p>The following example replaces all internal filters with a custom filter.</p>
-<pre><code class="lang-c#">/// In Startup.ConfigureServices
-services.AddSingleton&lt;CustomAsyncQueryStringActionFilter&gt;();
-
-var builder = services.AddMvcCore();
-services.AddJsonApi&lt;AppDbContext&gt;(mvcBuilder: builder);
-
-// Ensure this call is placed after the AddJsonApi call.
-builder.AddMvcOptions(mvcOptions =&gt;
-{
-    _postConfigureMvcOptions?.Invoke(mvcOptions);
-});
-
-/// In Startup.Configure
-app.UseJsonApi();
-
-// Ensure this call is placed before the UseEndpoints call.
-_postConfigureMvcOptions = mvcOptions =&gt; 
-{ 
-    mvcOptions.Filters.Clear();
-    mvcOptions.Filters.Insert(0, app.ApplicationServices.GetService&lt;CustomAsyncQueryStringActionFilter&gt;());
-};
-
-app.UseEndpoints(endpoints =&gt; endpoints.MapControllers());
-</code></pre></article>
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Middleware.IAsyncJsonApiExceptionFilter">
+  
+  
+  <h1 id="JsonApiDotNetCore_Middleware_IAsyncJsonApiExceptionFilter" data-uid="JsonApiDotNetCore.Middleware.IAsyncJsonApiExceptionFilter" class="text-break">Interface IAsyncJsonApiExceptionFilter
+  </h1>
+  <div class="markdown level0 summary"><p>Application-wide exception filter that invokes <a class="xref" href="JsonApiDotNetCore.Middleware.IExceptionHandler.html">IExceptionHandler</a> for json:api requests.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncExceptionFilter.OnExceptionAsync(Microsoft.AspNetCore.Mvc.Filters.ExceptionContext)</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Middleware.html">JsonApiDotNetCore.Middleware</a></h6>
+  <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
+  <h5 id="JsonApiDotNetCore_Middleware_IAsyncJsonApiExceptionFilter_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IAsyncJsonApiExceptionFilter : IAsyncExceptionFilter, IFilterMetadata</code></pre>
+  </div>
+</article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
@@ -107,7 +96,10 @@ app.UseEndpoints(endpoints =&gt; endpoints.MapControllers());
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/extensibility/middleware.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_IAsyncJsonApiExceptionFilter.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.IAsyncJsonApiExceptionFilter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IAsyncJsonApiExceptionFilter.cs/#L8" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
@@ -133,8 +125,8 @@ app.UseEndpoints(endpoints =&gt; endpoints.MapControllers());
       </footer>
     </div>
     
-    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="../../styles/docfx.js"></script>
-    <script type="text/javascript" src="../../styles/main.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
   </body>
 </html>

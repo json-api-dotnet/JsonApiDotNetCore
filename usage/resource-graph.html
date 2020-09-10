@@ -79,9 +79,12 @@
 <li>Specifying an entire DbContext</li>
 <li>Manually specifying each resource</li>
 </ol>
-<h3 id="auto-discovery">Auto-Discovery</h3>
+<p>It is also possible to combine the three of them at once. Be aware that some configuration might overlap, 
+for example one could manually add a resource to the graph which is also auto-discovered. In such a scenario, the configuration
+is prioritized by the list above in descending order.</p>
+<h3 id="auto-discovery">Auto-discovery</h3>
 <p>Auto-discovery refers to the process of reflecting on an assembly and
-detecting all of the json:api resources and services.</p>
+detecting all of the json:api resources, resource definitions, resource services and repositories.</p>
 <p>The following command will build the resource graph using all <code>IIdentifiable</code>
 implementations. It also injects resource definitions and service layer overrides which we will
 cover in a later section. You can enable auto-discovery for the
@@ -93,14 +96,14 @@ public void ConfigureServices(IServiceCollection services)
         options =&gt; { /* ... */ },
         discovery =&gt; discovery.AddCurrentAssembly());
 }
-</code></pre><h3 id="entity-framework-core-dbcontext">Entity Framework Core DbContext</h3>
-<p>If you are using Entity Framework Core as your ORM, you can add an entire <code>DbContext</code> with one line.</p>
+</code></pre><h3 id="specifying-an-entity-framework-core-dbcontext">Specifying an Entity Framework Core DbContext</h3>
+<p>If you are using Entity Framework Core as your ORM, you can add all the models of a <code>DbContext</code>  to the resource graph.</p>
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddJsonApi&lt;AppDbContext&gt;();
 }
-</code></pre><p>Be aware that the previous command does not inject resource definitions and service layer overrides. You can combine it with auto-discovery to register them.</p>
+</code></pre><p>Be aware that this does not register resource definitions, resource services and repositories. You can combine it with auto-discovery to achieve this.</p>
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
@@ -109,20 +112,26 @@ public void ConfigureServices(IServiceCollection services)
         discovery =&gt; discovery.AddCurrentAssembly());
 }
 </code></pre><h3 id="manual-specification">Manual Specification</h3>
-<p>You can also manually construct the graph.</p>
+<p>You can manually construct the graph.</p>
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddJsonApi(resources: builder =&gt;
     {
-        builder.AddResource&lt;Person&gt;();
+        builder.Add&lt;Person&gt;();
     });
 }
-</code></pre><h3 id="public-resource-type-name">Public Resource Type Name</h3>
-<p>The public resource type name is determined by the following criteria (in order of priority):</p>
+</code></pre><h2 id="public-resource-name">Public Resource Name</h2>
+<p>The public resource name is exposed through the <code>type</code> member in the json:api payload. This can be configured by the following approaches (in order of priority):</p>
 <ol>
+<li><p>The <code>publicName</code> parameter when manually adding a resource to the graph</p>
+<pre><code class="lang-c#">services.AddJsonApi(resources: builder =&gt;
+{
+ builder.Add&lt;Person&gt;(publicName: &quot;people&quot;);
+});
+</code></pre></li>
 <li><p>The model is decorated with a <code>ResourceAttribute</code></p>
-<pre><code class="lang-c#">[Resource(&quot;my-models&quot;)]
+<pre><code class="lang-c#">[Resource(&quot;myResources&quot;)]
 public class MyModel : Identifiable { /* ... */ }
 </code></pre></li>
 <li><p>The configured naming convention (by default this is camel-case).</p>
@@ -130,6 +139,7 @@ public class MyModel : Identifiable { /* ... */ }
 public class MyModel : Identifiable { /* ... */ }
 </code></pre></li>
 </ol>
+<p>The default naming convention can be changed in <a href="options.html#custom-serializer-settings">options</a>.</p>
 </article>
           </div>
           

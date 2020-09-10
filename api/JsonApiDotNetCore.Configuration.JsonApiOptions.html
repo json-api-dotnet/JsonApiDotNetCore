@@ -708,7 +708,7 @@ adding a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceL
   <div class="markdown level1 summary"><p>Specifies the settings that are used by the <span class="xref">Newtonsoft.Json.JsonSerializer</span>.
 Note that at some places a few settings are ignored, to ensure json:api spec compliance.
 <example>
-The next example changes the casing convention to kebab casing.<p>
+The next example changes the naming convention to kebab casing.<p>
 <pre><code>options.SerializerSettings.ContractResolver = new DefaultContractResolver
 {
     NamingStrategy = new KebabCaseNamingStrategy()
