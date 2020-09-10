@@ -80,14 +80,14 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (context.HttpContext.IsJsonApiRequest() && IsPatchOrPostRequest(context.HttpContext.Request))
             {
-                var endPointResourceTypes = GetEndpointResourceType();
+                var endPointResourceType = GetEndpointResourceType();
                 var bodyResourceTypes = GetBodyResourceTypes(model);
 
                 foreach (var bodyResourceType in bodyResourceTypes)
                 {
-                    if (bodyResourceType != null && endPointResourceTypes != null && bodyResourceType != endPointResourceTypes)
+                    if (bodyResourceType != null && endPointResourceType != null && bodyResourceType != endPointResourceType)
                     {
-                        var resourceFromEndpoint = _resourceContextProvider.GetResourceContext(endPointResourceTypes);
+                        var resourceFromEndpoint = _resourceContextProvider.GetResourceContext(endPointResourceType);
                         var resourceFromBody = _resourceContextProvider.GetResourceContext(bodyResourceType);
 
                         throw new ResourceTypeMismatchException(new HttpMethod(context.HttpContext.Request.Method),
