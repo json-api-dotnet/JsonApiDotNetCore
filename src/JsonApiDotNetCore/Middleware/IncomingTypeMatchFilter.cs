@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Middleware
                 {
                     ResourceContext resourceFromEndpoint = _provider.GetResourceContext(targetType);
                     ResourceContext resourceFromBody = _provider.GetResourceContext(deserializedType);
-            
+
                     throw new ResourceTypeMismatchException(new HttpMethod(request.Method), request.Path, resourceFromEndpoint, resourceFromBody);
                 }
             }
