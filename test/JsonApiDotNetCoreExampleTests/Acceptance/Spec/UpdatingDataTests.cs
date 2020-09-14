@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -250,6 +251,51 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
             Assert.Equal("Failed to deserialize request body.", error.Title);
             Assert.StartsWith("Invalid character after parsing", error.Detail);
+        }
+
+        [Fact]
+        public async Task Respond_422_If_Blocked_For_Update()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+            await _context.SaveChangesAsync();
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    id = todoItem.StringId,
+                    attributes = new Dictionary<string, object>
+                    {
+                        { "offsetDate", "2000-01-01" }
+                    }
+                }
+            };
+            
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var requestBody = JsonConvert.SerializeObject(content);
+            var request = PrepareRequest(HttpMethod.Patch.Method, "/api/v1/todoItems/" + todoItem.StringId, requestBody);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(responseBody);
+            Assert.Single(errorDocument.Errors);
+
+            var error = errorDocument.Errors.Single();
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("Failed to deserialize request body: Changing the value of the requested attribute is not allowed.", error.Title);
+            Assert.StartsWith("Changing the value of 'offsetDate' is not allowed. - Request body:", error.Detail);
         }
 
         [Fact]

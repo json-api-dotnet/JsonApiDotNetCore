@@ -50,9 +50,21 @@ public class User : Identifiable<int>
 }
 ```
 
-### Mutability
+### Createability
 
-Attributes can be marked as mutable, which will allow `PATCH` requests to update them. When immutable, an HTTP 422 response is returned.
+Attributes can be marked as creatable, which will allow `POST` requests to assign a value to them. When sent but not allowed, an HTTP 422 response is returned.
+
+```c#
+public class Person : Identifiable<int>
+{
+    [Attr(Capabilities = AttrCapabilities.AllowCreate)]
+    public string CreatorName { get; set; }
+}
+```
+
+### Changeability
+
+Attributes can be marked as changeable, which will allow `PATCH` requests to update them. When sent but not allowed, an HTTP 422 response is returned.
 
 ```c#
 public class Person : Identifiable<int>
