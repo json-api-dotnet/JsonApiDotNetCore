@@ -21,20 +21,20 @@ namespace JsonApiDotNetCore.Serialization
     public class JsonApiReader : IJsonApiReader
     {
         private readonly IJsonApiDeserializer _deserializer;
-        private readonly IJsonApiRequest _jsonApiRequest;
+        private readonly IJsonApiRequest _request;
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly TraceLogWriter<JsonApiReader> _traceWriter;
 
         public JsonApiReader(IJsonApiDeserializer deserializer,
-            IJsonApiRequest jsonApiRequest,
+            IJsonApiRequest request,
             IResourceContextProvider resourceContextProvider,
             ILoggerFactory loggerFactory)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 
             _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
-            _jsonApiRequest = jsonApiRequest ?? throw new ArgumentNullException(nameof(jsonApiRequest));
-            _resourceContextProvider = resourceContextProvider;
+            _request = request ?? throw new ArgumentNullException(nameof(request));
+            _resourceContextProvider = resourceContextProvider ??  throw new ArgumentNullException(nameof(resourceContextProvider));
             _traceWriter = new TraceLogWriter<JsonApiReader>(loggerFactory);
         }
 
@@ -80,14 +80,18 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (context.HttpContext.IsJsonApiRequest() && IsPatchOrPostRequest(context.HttpContext.Request))
             {
-                var endPointResourceType = GetEndpointResourceType();
+                var endpointResourceType = GetEndpointResourceType();
+                if (endpointResourceType == null)
+                {
+                    return;
+                }
+                
                 var bodyResourceTypes = GetBodyResourceTypes(model);
-
                 foreach (var bodyResourceType in bodyResourceTypes)
                 {
-                    if (bodyResourceType != null && endPointResourceType != null && bodyResourceType != endPointResourceType)
+                    if (bodyResourceType != endpointResourceType)
                     {
-                        var resourceFromEndpoint = _resourceContextProvider.GetResourceContext(endPointResourceType);
+                        var resourceFromEndpoint = _resourceContextProvider.GetResourceContext(endpointResourceType);
                         var resourceFromBody = _resourceContextProvider.GetResourceContext(bodyResourceType);
 
                         throw new ResourceTypeMismatchException(new HttpMethod(context.HttpContext.Request.Method),
@@ -108,9 +112,9 @@ namespace JsonApiDotNetCore.Serialization
                     throw new InvalidRequestBodyException("Payload must include 'id' element.", null, body);
                 }
 
-                if (_jsonApiRequest.Kind == EndpointKind.Primary && TryGetId(model, out var bodyId) && bodyId != _jsonApiRequest.PrimaryId)
+                if (_request.Kind == EndpointKind.Primary && TryGetId(model, out var bodyId) && bodyId != _request.PrimaryId)
                 {
-                    throw new ResourceIdMismatchException(bodyId, _jsonApiRequest.PrimaryId, context.HttpContext.Request.GetDisplayUrl());
+                    throw new ResourceIdMismatchException(bodyId, _request.PrimaryId, context.HttpContext.Request.GetDisplayUrl());
                 }
             }
         }
@@ -184,9 +188,9 @@ namespace JsonApiDotNetCore.Serialization
 
         private Type GetEndpointResourceType()
         {
-            return _jsonApiRequest.Kind == EndpointKind.Primary
-                ? _jsonApiRequest.PrimaryResource.ResourceType 
-                : _jsonApiRequest.SecondaryResource?.ResourceType;
+            return _request.Kind == EndpointKind.Primary
+                ? _request.PrimaryResource.ResourceType 
+                : _request.SecondaryResource?.ResourceType;
         }
     }
 }
