@@ -64,9 +64,27 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             _lastParameterName = parameterName;
 
-            foreach (string parameterValue in parameterValues)
+            foreach (string parameterValue in ExtractParameterValues(parameterName, parameterValues))
             {
                 ReadSingleValue(parameterName, parameterValue);
+            }
+        }
+
+        private IEnumerable<string> ExtractParameterValues(string parameterName, StringValues parameterValues)
+        {
+            foreach (string parameterValue in parameterValues)
+            {
+                if (_options.EnableLegacyFilterNotation)
+                {
+                    foreach (string condition in _legacyConverter.ExtractConditions(parameterName, parameterValue))
+                    {
+                        yield return condition;
+                    }
+                }
+                else
+                {
+                    yield return parameterValue;
+                }
             }
         }
 
