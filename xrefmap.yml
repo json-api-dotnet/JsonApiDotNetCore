@@ -9905,6 +9905,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.Convert
   nameWithType: LegacyFilterNotationConverter.Convert
+- uid: JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.ExtractConditions(System.String,System.String)
+  name: ExtractConditions(String, String)
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.html#JsonApiDotNetCore_QueryStrings_Internal_LegacyFilterNotationConverter_ExtractConditions_System_String_System_String_
+  commentId: M:JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.ExtractConditions(System.String,System.String)
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.ExtractConditions(System.String, System.String)
+  nameWithType: LegacyFilterNotationConverter.ExtractConditions(String, String)
+- uid: JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.ExtractConditions*
+  name: ExtractConditions
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.html#JsonApiDotNetCore_QueryStrings_Internal_LegacyFilterNotationConverter_ExtractConditions_
+  commentId: Overload:JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.ExtractConditions
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.ExtractConditions
+  nameWithType: LegacyFilterNotationConverter.ExtractConditions
 - uid: JsonApiDotNetCore.QueryStrings.Internal.NullsQueryStringParameterReader
   name: NullsQueryStringParameterReader
   href: api/JsonApiDotNetCore.QueryStrings.Internal.NullsQueryStringParameterReader.html
