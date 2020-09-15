@@ -11,7 +11,6 @@ namespace JsonApiDotNetCoreExample.Models
         public string FirstName { get; set; }
 
         [Attr]
-        [IsRequired(AllowEmptyStrings = true)]
         public string LastName { get; set; }
 
         [Attr]
