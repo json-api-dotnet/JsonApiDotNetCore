@@ -4028,38 +4028,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.AsyncQueryStringActionFilter.OnActionExecutionAsync
   nameWithType: AsyncQueryStringActionFilter.OnActionExecutionAsync
-- uid: JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter
-  name: AsyncResourceTypeMatchFilter
-  href: api/JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.html
-  commentId: T:JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter
-  fullName: JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter
-  nameWithType: AsyncResourceTypeMatchFilter
-- uid: JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider)
-  name: AsyncResourceTypeMatchFilter(IResourceContextProvider)
-  href: api/JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.html#JsonApiDotNetCore_Middleware_AsyncResourceTypeMatchFilter__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_
-  commentId: M:JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider)
-  fullName: JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.AsyncResourceTypeMatchFilter(JsonApiDotNetCore.Configuration.IResourceContextProvider)
-  nameWithType: AsyncResourceTypeMatchFilter.AsyncResourceTypeMatchFilter(IResourceContextProvider)
-- uid: JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.#ctor*
-  name: AsyncResourceTypeMatchFilter
-  href: api/JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.html#JsonApiDotNetCore_Middleware_AsyncResourceTypeMatchFilter__ctor_
-  commentId: Overload:JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.AsyncResourceTypeMatchFilter
-  nameWithType: AsyncResourceTypeMatchFilter.AsyncResourceTypeMatchFilter
-- uid: JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.OnActionExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext,Microsoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate)
-  name: OnActionExecutionAsync(ActionExecutingContext, ActionExecutionDelegate)
-  href: api/JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.html#JsonApiDotNetCore_Middleware_AsyncResourceTypeMatchFilter_OnActionExecutionAsync_Microsoft_AspNetCore_Mvc_Filters_ActionExecutingContext_Microsoft_AspNetCore_Mvc_Filters_ActionExecutionDelegate_
-  commentId: M:JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.OnActionExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext,Microsoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate)
-  fullName: JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.OnActionExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext, Microsoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate)
-  nameWithType: AsyncResourceTypeMatchFilter.OnActionExecutionAsync(ActionExecutingContext, ActionExecutionDelegate)
-- uid: JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.OnActionExecutionAsync*
-  name: OnActionExecutionAsync
-  href: api/JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.html#JsonApiDotNetCore_Middleware_AsyncResourceTypeMatchFilter_OnActionExecutionAsync_
-  commentId: Overload:JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.OnActionExecutionAsync
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.OnActionExecutionAsync
-  nameWithType: AsyncResourceTypeMatchFilter.OnActionExecutionAsync
 - uid: JsonApiDotNetCore.Middleware.EndpointKind
   name: EndpointKind
   href: api/JsonApiDotNetCore.Middleware.EndpointKind.html
@@ -4204,12 +4172,6 @@ references:
   commentId: T:JsonApiDotNetCore.Middleware.IAsyncQueryStringActionFilter
   fullName: JsonApiDotNetCore.Middleware.IAsyncQueryStringActionFilter
   nameWithType: IAsyncQueryStringActionFilter
-- uid: JsonApiDotNetCore.Middleware.IAsyncResourceTypeMatchFilter
-  name: IAsyncResourceTypeMatchFilter
-  href: api/JsonApiDotNetCore.Middleware.IAsyncResourceTypeMatchFilter.html
-  commentId: T:JsonApiDotNetCore.Middleware.IAsyncResourceTypeMatchFilter
-  fullName: JsonApiDotNetCore.Middleware.IAsyncResourceTypeMatchFilter
-  nameWithType: IAsyncResourceTypeMatchFilter
 - uid: JsonApiDotNetCore.Middleware.IControllerResourceMapping
   name: IControllerResourceMapping
   href: api/JsonApiDotNetCore.Middleware.IControllerResourceMapping.html
@@ -14185,12 +14147,12 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.JsonApiReader
   fullName: JsonApiDotNetCore.Serialization.JsonApiReader
   nameWithType: JsonApiReader
-- uid: JsonApiDotNetCore.Serialization.JsonApiReader.#ctor(JsonApiDotNetCore.Serialization.IJsonApiDeserializer,JsonApiDotNetCore.Middleware.IJsonApiRequest,Microsoft.Extensions.Logging.ILoggerFactory)
-  name: JsonApiReader(IJsonApiDeserializer, IJsonApiRequest, ILoggerFactory)
-  href: api/JsonApiDotNetCore.Serialization.JsonApiReader.html#JsonApiDotNetCore_Serialization_JsonApiReader__ctor_JsonApiDotNetCore_Serialization_IJsonApiDeserializer_JsonApiDotNetCore_Middleware_IJsonApiRequest_Microsoft_Extensions_Logging_ILoggerFactory_
-  commentId: M:JsonApiDotNetCore.Serialization.JsonApiReader.#ctor(JsonApiDotNetCore.Serialization.IJsonApiDeserializer,JsonApiDotNetCore.Middleware.IJsonApiRequest,Microsoft.Extensions.Logging.ILoggerFactory)
-  fullName: JsonApiDotNetCore.Serialization.JsonApiReader.JsonApiReader(JsonApiDotNetCore.Serialization.IJsonApiDeserializer, JsonApiDotNetCore.Middleware.IJsonApiRequest, Microsoft.Extensions.Logging.ILoggerFactory)
-  nameWithType: JsonApiReader.JsonApiReader(IJsonApiDeserializer, IJsonApiRequest, ILoggerFactory)
+- uid: JsonApiDotNetCore.Serialization.JsonApiReader.#ctor(JsonApiDotNetCore.Serialization.IJsonApiDeserializer,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IResourceContextProvider,Microsoft.Extensions.Logging.ILoggerFactory)
+  name: JsonApiReader(IJsonApiDeserializer, IJsonApiRequest, IResourceContextProvider, ILoggerFactory)
+  href: api/JsonApiDotNetCore.Serialization.JsonApiReader.html#JsonApiDotNetCore_Serialization_JsonApiReader__ctor_JsonApiDotNetCore_Serialization_IJsonApiDeserializer_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Configuration_IResourceContextProvider_Microsoft_Extensions_Logging_ILoggerFactory_
+  commentId: M:JsonApiDotNetCore.Serialization.JsonApiReader.#ctor(JsonApiDotNetCore.Serialization.IJsonApiDeserializer,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IResourceContextProvider,Microsoft.Extensions.Logging.ILoggerFactory)
+  fullName: JsonApiDotNetCore.Serialization.JsonApiReader.JsonApiReader(JsonApiDotNetCore.Serialization.IJsonApiDeserializer, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Configuration.IResourceContextProvider, Microsoft.Extensions.Logging.ILoggerFactory)
+  nameWithType: JsonApiReader.JsonApiReader(IJsonApiDeserializer, IJsonApiRequest, IResourceContextProvider, ILoggerFactory)
 - uid: JsonApiDotNetCore.Serialization.JsonApiReader.#ctor*
   name: JsonApiReader
   href: api/JsonApiDotNetCore.Serialization.JsonApiReader.html#JsonApiDotNetCore_Serialization_JsonApiReader__ctor_

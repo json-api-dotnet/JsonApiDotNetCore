@@ -1073,18 +1073,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Middleware.AsyncResourceTypeMatchFilter.html",
-          "hash": "MGO6fnpQiRmRosQ3UNk1Fw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Middleware.EndpointKind.yml",
       "output": {
         ".html": {
@@ -1162,18 +1150,6 @@
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.IAsyncQueryStringActionFilter.html",
           "hash": "YJS9Ioknstpa8Tq0vc3nLg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Middleware.IAsyncResourceTypeMatchFilter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Middleware.IAsyncResourceTypeMatchFilter.html",
-          "hash": "aC7LxjXEHjs39Y9kl+5Wdw=="
         }
       },
       "is_incremental": false,
@@ -1317,7 +1293,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.html",
-          "hash": "E9Dd00PCMr3cA8+VjevRfg=="
+          "hash": "967KWsMwuVvHcUhp2p3fzg=="
         }
       },
       "is_incremental": false,
@@ -3297,7 +3273,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.JsonApiReader.html",
-          "hash": "hXZbBbJuW+yj5VotFfMsgw=="
+          "hash": "2O8qfz8S5mNW8MaU8ml+wQ=="
         }
       },
       "is_incremental": false,
@@ -3849,7 +3825,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "SSLSp/on5WAW81fkZPHzmQ=="
+          "hash": "elUXwj6QNPgftlST//CFhg=="
         }
       },
       "is_incremental": false,
@@ -4281,7 +4257,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 318,
+          "total_file_count": 316,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
