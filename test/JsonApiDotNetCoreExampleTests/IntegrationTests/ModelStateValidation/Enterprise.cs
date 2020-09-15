@@ -21,5 +21,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 
         [HasMany]
         public ICollection<EnterprisePartner> Partners { get; set; }
+
+        [HasOne]
+        public Enterprise Parent { get; set; }
     }
 }

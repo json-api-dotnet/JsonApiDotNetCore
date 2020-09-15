@@ -5,6 +5,9 @@ namespace JsonApiDotNetCore.Middleware
 {
     public static class HttpContextExtensions
     {
+        private const string _isJsonApiRequestKey = "JsonApiDotNetCore_IsJsonApiRequest";
+        private const string _disableRequiredValidatorKey = "JsonApiDotNetCore_DisableRequiredValidator";
+
         /// <summary>
         /// Indicates whether the currently executing HTTP request is being handled by JsonApiDotNetCore.
         /// </summary>
@@ -12,7 +15,7 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
 
-            string value = httpContext.Items["IsJsonApiRequest"] as string;
+            string value = httpContext.Items[_isJsonApiRequestKey] as string;
             return value == bool.TrueString;
         }
 
@@ -20,27 +23,26 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
 
-            httpContext.Items["IsJsonApiRequest"] = bool.TrueString;
+            httpContext.Items[_isJsonApiRequestKey] = bool.TrueString;
         }
 
-        internal static void DisableValidator(this HttpContext httpContext, string propertyName, string model)
+        internal static void DisableRequiredValidator(this HttpContext httpContext, string propertyName, string model)
         {
             if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var itemKey = $"JsonApiDotNetCore_DisableValidation_{model}_{propertyName}";
+            var itemKey = _disableRequiredValidatorKey + $"_{model}_{propertyName}";
             httpContext.Items[itemKey] = true;
         }
 
-        internal static bool IsValidatorDisabled(this HttpContext httpContext, string propertyName, string model)
+        internal static bool IsRequiredValidatorDisabled(this HttpContext httpContext, string propertyName, string model)
         {
             if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return httpContext.Items.ContainsKey($"JsonApiDotNetCore_DisableValidation_{model}_{propertyName}") ||
-                   httpContext.Items.ContainsKey($"JsonApiDotNetCore_DisableValidation_{model}_Relation");
+            return httpContext.Items.ContainsKey(_disableRequiredValidatorKey + $"_{model}_{propertyName}");
         }
     }
 }
