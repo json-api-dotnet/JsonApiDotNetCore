@@ -92,7 +92,6 @@ namespace JsonApiDotNetCore.Configuration
             {
                 options.EnableEndpointRouting = true;
                 options.Filters.AddService<IAsyncJsonApiExceptionFilter>();
-                options.Filters.AddService<IAsyncResourceTypeMatchFilter>();
                 options.Filters.AddService<IAsyncQueryStringActionFilter>();
                 options.Filters.AddService<IAsyncConvertEmptyActionResultFilter>();
                 ConfigureMvcOptions?.Invoke(options);
@@ -159,7 +158,6 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddSingleton<IJsonApiApplicationBuilder>(this);
             _services.TryAddSingleton<IExceptionHandler, ExceptionHandler>();
             _services.TryAddScoped<IAsyncJsonApiExceptionFilter, AsyncJsonApiExceptionFilter>();
-            _services.TryAddScoped<IAsyncResourceTypeMatchFilter, AsyncResourceTypeMatchFilter>();
             _services.TryAddScoped<IAsyncQueryStringActionFilter, AsyncQueryStringActionFilter>();
             _services.TryAddScoped<IAsyncConvertEmptyActionResultFilter, AsyncConvertEmptyActionResultFilter>();
             _services.TryAddSingleton<IJsonApiInputFormatter, JsonApiInputFormatter>();

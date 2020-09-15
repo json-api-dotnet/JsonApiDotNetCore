@@ -275,31 +275,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task CreateResource_ResourceTypeMismatch_IsConflict()
-        {
-            // Arrange
-            string content = JsonConvert.SerializeObject(new
-            {
-                data = new
-                {
-                    type = "people"
-                }
-            });
-
-            // Act
-            var (body, response) = await Post("/api/v1/todoItems", content);
-
-            // Assert
-            AssertEqualStatusCode(HttpStatusCode.Conflict, response);
-
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-            Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.Conflict, errorDocument.Errors[0].StatusCode);
-            Assert.Equal("Resource type mismatch between request body and endpoint URL.", errorDocument.Errors[0].Title);
-            Assert.Equal("Expected resource of type 'todoItems' in POST request body at endpoint '/api/v1/todoItems', instead of 'people'.", errorDocument.Errors[0].Detail);
-        }
-
-        [Fact]
         public async Task CreateResource_UnknownResourceType_Fails()
         {
             // Arrange

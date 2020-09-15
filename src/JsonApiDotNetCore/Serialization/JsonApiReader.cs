@@ -1,11 +1,16 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
+using System.Linq;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
@@ -17,16 +22,19 @@ namespace JsonApiDotNetCore.Serialization
     {
         private readonly IJsonApiDeserializer _deserializer;
         private readonly IJsonApiRequest _request;
+        private readonly IResourceContextProvider _resourceContextProvider;
         private readonly TraceLogWriter<JsonApiReader> _traceWriter;
 
         public JsonApiReader(IJsonApiDeserializer deserializer,
             IJsonApiRequest request,
+            IResourceContextProvider resourceContextProvider,
             ILoggerFactory loggerFactory)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 
             _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
             _request = request ?? throw new ArgumentNullException(nameof(request));
+            _resourceContextProvider = resourceContextProvider ??  throw new ArgumentNullException(nameof(resourceContextProvider));
             _traceWriter = new TraceLogWriter<JsonApiReader>(loggerFactory);
         }
 
@@ -63,12 +71,40 @@ namespace JsonApiDotNetCore.Serialization
 
             ValidatePatchRequestIncludesId(context, model, body);
 
+            ValidateIncomingResourceType(context, model);
+            
             return await InputFormatterResult.SuccessAsync(model);
+        }
+
+        private void ValidateIncomingResourceType(InputFormatterContext context, object model)
+        {
+            if (context.HttpContext.IsJsonApiRequest() && IsPatchOrPostRequest(context.HttpContext.Request))
+            {
+                var endpointResourceType = GetEndpointResourceType();
+                if (endpointResourceType == null)
+                {
+                    return;
+                }
+                
+                var bodyResourceTypes = GetBodyResourceTypes(model);
+                foreach (var bodyResourceType in bodyResourceTypes)
+                {
+                    if (bodyResourceType != endpointResourceType)
+                    {
+                        var resourceFromEndpoint = _resourceContextProvider.GetResourceContext(endpointResourceType);
+                        var resourceFromBody = _resourceContextProvider.GetResourceContext(bodyResourceType);
+
+                        throw new ResourceTypeMismatchException(new HttpMethod(context.HttpContext.Request.Method),
+                            context.HttpContext.Request.Path,
+                            resourceFromEndpoint, resourceFromBody);
+                    }
+                }
+            }
         }
 
         private void ValidatePatchRequestIncludesId(InputFormatterContext context, object model, string body)
         {
-            if (context.HttpContext.Request.Method == "PATCH")
+            if (context.HttpContext.Request.Method == HttpMethods.Patch)
             {
                 bool hasMissingId = model is IList list ? HasMissingId(list) : HasMissingId(model);
                 if (hasMissingId)
@@ -133,6 +169,28 @@ namespace JsonApiDotNetCore.Serialization
             // Synchronous IO operations are 
             // https://github.com/aspnet/AspNetCore/issues/7644
             return await reader.ReadToEndAsync();
+        }
+        
+        private bool IsPatchOrPostRequest(HttpRequest request)
+        {
+            return request.Method == HttpMethods.Patch || request.Method == HttpMethods.Post;
+        }
+
+        private IEnumerable<Type> GetBodyResourceTypes(object model)
+        {
+            if (model is IEnumerable<IIdentifiable> resourceCollection)
+            {
+                return resourceCollection.Select(r => r.GetType()).Distinct();
+            }
+
+            return model == null ? new Type[0] : new[] { model.GetType() };
+        }
+
+        private Type GetEndpointResourceType()
+        {
+            return _request.Kind == EndpointKind.Primary
+                ? _request.PrimaryResource.ResourceType 
+                : _request.SecondaryResource?.ResourceType;
         }
     }
 }
