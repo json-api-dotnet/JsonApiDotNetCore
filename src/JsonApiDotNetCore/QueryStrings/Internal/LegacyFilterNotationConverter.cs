@@ -25,6 +25,23 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             ["like:"] = Keywords.Contains
         };
 
+        public IEnumerable<string> ExtractConditions(string parameterName, string parameterValue)
+        {
+            if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal) ||
+                parameterValue.StartsWith(InPrefix, StringComparison.Ordinal) ||
+                parameterValue.StartsWith(NotInPrefix, StringComparison.Ordinal))
+            {
+                yield return parameterValue;
+            }
+            else
+            {
+                foreach (string condition in parameterValue.Split(','))
+                {
+                    yield return condition;
+                }
+            }
+        }
+
         public (string parameterName, string parameterValue) Convert(string parameterName, string parameterValue)
         {
             if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));

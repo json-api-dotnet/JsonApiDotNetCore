@@ -56,7 +56,6 @@ namespace UnitTests.QueryStringParameters
 
         [Theory]
         [InlineData("filter[caption]", "Brian O'Quote", "equals(caption,'Brian O''Quote')")]
-        [InlineData("filter[caption]", "using,comma", "equals(caption,'using,comma')")]
         [InlineData("filter[caption]", "am&per-sand", "equals(caption,'am&per-sand')")]
         [InlineData("filter[caption]", "2017-08-15T22:43:47.0156350-05:00", "equals(caption,'2017-08-15T22:43:47.0156350-05:00')")]
         [InlineData("filter[caption]", "eq:1", "equals(caption,'1')")]
@@ -77,6 +76,9 @@ namespace UnitTests.QueryStringParameters
         [InlineData("filter", "expr:equals(author,null)", "equals(author,null)")]
         [InlineData("filter", "expr:has(author.articles)", "has(author.articles)")]
         [InlineData("filter", "expr:equals(count(author.articles),'1')", "equals(count(author.articles),'1')")]
+        [InlineData("filter[caption]", "using,comma", "or(equals(caption,'using'),equals(caption,'comma'))")]
+        [InlineData("filter[caption]", "like:First,Second", "or(contains(caption,'First'),equals(caption,'Second'))")]
+        [InlineData("filter[caption]", "like:First,like:Second", "or(contains(caption,'First'),contains(caption,'Second'))")]
         public void Reader_Read_Succeeds(string parameterName, string parameterValue, string expressionExpected)
         {
             // Act
