@@ -178,7 +178,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private IEnumerable<Type> GetBodyResourceTypes(object model)
         {
-            if (model is ICollection<IIdentifiable> resourceCollection)
+            if (model is IEnumerable<IIdentifiable> resourceCollection)
             {
                 return resourceCollection.Select(r => r.GetType()).Distinct();
             }
