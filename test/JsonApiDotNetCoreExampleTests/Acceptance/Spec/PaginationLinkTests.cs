@@ -56,7 +56,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                                  "&fields[owner]=firstName&include=owner&sort=ordinal&foo=bar,baz";
             string route = pageNumber != 1
                 ? routePrefix + $"&page[size]={_defaultPageSize}&page[number]={pageNumber}"
-                : routePrefix;
+                : routePrefix + $"&page[size]={_defaultPageSize}";
 
             // Act
             var response = await _client.GetAsync(route);
@@ -67,12 +67,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var body = await response.Content.ReadAsStringAsync();
             var links = JsonConvert.DeserializeObject<Document>(body).Links;
 
-            Assert.EndsWith($"{routePrefix}&page[size]={_defaultPageSize}&page[number]={selfLink}", links.Self);
+            Assert.EndsWith($"{routePrefix}{GetPageNumberInQueryString(selfLink)}", links.Self);
 
             if (firstLink.HasValue)
             {
-                Assert.EndsWith($"{routePrefix}&page[size]={_defaultPageSize}&page[number]={firstLink.Value}",
-                    links.First);
+                var expected = $"{routePrefix}{GetPageNumberInQueryString(firstLink.Value)}";
+                Assert.EndsWith(expected, links.First);
             }
             else
             {
@@ -81,7 +81,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             if (prevLink.HasValue)
             {
-                Assert.EndsWith($"{routePrefix}&page[size]={_defaultPageSize}&page[number]={prevLink}", links.Prev);
+                var expected = $"{routePrefix}{GetPageNumberInQueryString(prevLink.Value)}";
+                Assert.EndsWith(expected, links.Prev);
             }
             else
             {
@@ -90,7 +91,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             if (nextLink.HasValue)
             {
-                Assert.EndsWith($"{routePrefix}&page[size]={_defaultPageSize}&page[number]={nextLink}", links.Next);
+                var expected = $"{routePrefix}{GetPageNumberInQueryString(nextLink.Value)}";
+                Assert.EndsWith(expected, links.Next);
             }
             else
             {
@@ -99,12 +101,18 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             if (lastLink.HasValue)
             {
-                Assert.EndsWith($"{routePrefix}&page[size]={_defaultPageSize}&page[number]={lastLink}", links.Last);
+                var expected = $"{routePrefix}{GetPageNumberInQueryString(lastLink.Value)}";
+                Assert.EndsWith(expected, links.Last);
             }
             else
             {
                 Assert.Null(links.Last);
             }
+        }
+
+        private static string GetPageNumberInQueryString(int offset)
+        {
+            return offset == 1 ? string.Empty : $"&page[number]={offset}";
         }
     }
 }

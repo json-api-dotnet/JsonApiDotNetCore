@@ -117,8 +117,23 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             string queryString = BuildQueryString(parameters =>
             {
-                parameters["page[size]"] = pageSize.ToString();
-                parameters["page[number]"] = pageOffset.ToString();
+                if (pageSize == null || pageSize.Equals(_options.DefaultPageSize))
+                {
+                    parameters.Remove("page[size]");
+                }
+                else
+                {
+                    parameters["page[size]"] = pageSize.ToString();
+                }
+
+                if (pageOffset == 1)
+                {
+                    parameters.Remove("page[number]");
+                }
+                else
+                {
+                    parameters["page[number]"] = pageOffset.ToString();
+                }
             });
 
             return $"{_request.BasePath}/{resourceContext.PublicName}" + queryString;

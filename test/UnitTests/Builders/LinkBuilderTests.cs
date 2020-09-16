@@ -14,7 +14,7 @@ namespace UnitTests
 {
     public sealed class LinkBuilderTests
     {
-        private readonly IPaginationContext _paginationContext;
+        private readonly IPaginationContext _paginationContext = GetPaginationContext();
         private readonly Mock<IResourceGraph> _provider = new Mock<IResourceGraph>();
         private readonly IRequestQueryStringAccessor _queryStringAccessor = new FakeRequestQueryStringAccessor("?foo=bar");
         private const string _host = "http://www.example.com";
@@ -26,11 +26,6 @@ namespace UnitTests
         private const string _resourceSelf = "http://www.example.com/articles/123";
         private const string _relSelf = "http://www.example.com/articles/123/relationships/author";
         private const string _relRelated = "http://www.example.com/articles/123/author";
-
-        public LinkBuilderTests()
-        {
-            _paginationContext = GetPaginationContext();
-        }
 
         [Theory]
         [InlineData(LinkTypes.All, LinkTypes.NotConfigured, _resourceSelf)]
@@ -167,8 +162,8 @@ namespace UnitTests
                 if (pages)
                 {
                     Assert.Equal($"{_host}/articles?foo=bar&page[size]=10&page[number]=2", links.Self);
-                    Assert.Equal($"{_host}/articles?foo=bar&page[size]=10&page[number]=1", links.First);
-                    Assert.Equal($"{_host}/articles?foo=bar&page[size]=10&page[number]=1", links.Prev);
+                    Assert.Equal($"{_host}/articles?foo=bar&page[size]=10", links.First);
+                    Assert.Equal($"{_host}/articles?foo=bar&page[size]=10", links.Prev);
                     Assert.Equal($"{_host}/articles?foo=bar&page[size]=10&page[number]=3", links.Next);
                     Assert.Equal($"{_host}/articles?foo=bar&page[size]=10&page[number]=3", links.Last);
                 }
@@ -203,7 +198,7 @@ namespace UnitTests
             return config.Object;
         }
 
-        private IPaginationContext GetPaginationContext()
+        private static IPaginationContext GetPaginationContext()
         {
             var mock = new Mock<IPaginationContext>();
             mock.Setup(x => x.PageNumber).Returns(new PageNumber(2));
