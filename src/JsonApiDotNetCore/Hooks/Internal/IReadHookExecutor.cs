@@ -13,9 +13,8 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <summary>
         /// Executes the Before Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{T}.BeforeRead"/>
-        /// hook where T = <typeparamref name="TResource"/> for the requested 
-        /// resources as well as any related relationship.
+        /// Fires the <see cref="ResourceHooksDefinition{TResource}.BeforeRead"/>
+        /// hook for the requested resources as well as any related relationship.
         /// </summary>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <param name="stringId">StringId of the requested resource in the case of
@@ -25,7 +24,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <summary>
         /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{T}.AfterRead"/> for every unique
+        /// Fires the <see cref="ResourceHooksDefinition{TResource}.AfterRead"/> for every unique
         /// resource type occurring in parameter <paramref name="resources"/>.
         /// </summary>
         /// <param name="resources">Target resources for the Before cycle.</param>

@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <para />
         /// If by the deletion of these resources any other resources are affected 
         /// implicitly by the removal of their relationships (eg
-        /// in the case of an one-to-one relationship), the <see cref="ResourceDefinition{T}.BeforeImplicitUpdateRelationship"/>
+        /// in the case of an one-to-one relationship), the <see cref="ResourceHooksDefinition{TResource}.BeforeImplicitUpdateRelationship"/>
         /// hook is fired for these resources.
         /// </summary>
         /// <returns>The transformed resource set</returns>

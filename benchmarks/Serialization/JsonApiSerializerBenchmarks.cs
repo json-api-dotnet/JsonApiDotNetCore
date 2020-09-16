@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.QueryStrings.Internal;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Building;
 using Moq;
@@ -46,9 +47,9 @@ namespace Benchmarks.Serialization
                 new SparseFieldSetQueryStringParameterReader(request, resourceGraph)
             };
 
-            var resourceDefinitionProvider = DependencyFactory.CreateResourceDefinitionProvider(resourceGraph);
+            var accessor = new Mock<IResourceDefinitionAccessor>().Object;
 
-            return new FieldsToSerialize(resourceGraph, constraintProviders, resourceDefinitionProvider);
+            return new FieldsToSerialize(resourceGraph, constraintProviders, accessor);
         }
 
         [Benchmark]

@@ -49,6 +49,11 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IResourceReadRepository<,>)
         };
 
+        private static readonly HashSet<Type> _resourceDefinitionInterfaces = new HashSet<Type> {
+            typeof(IResourceDefinition<>),
+            typeof(IResourceDefinition<,>)
+        };
+
         private readonly ILogger<ServiceDiscoveryFacade> _logger;
         private readonly IServiceCollection _services;
         private readonly ResourceGraphBuilder _resourceGraphBuilder;
@@ -96,7 +101,7 @@ namespace JsonApiDotNetCore.Configuration
 
                 foreach (var descriptor in resourceDescriptors)
                 {
-                    AddResource(assembly, descriptor);
+                    AddResource(descriptor);
                 }
             }
         }
@@ -111,9 +116,10 @@ namespace JsonApiDotNetCore.Configuration
 
                 foreach (var descriptor in resourceDescriptors)
                 {
-                    AddResourceDefinition(assembly, descriptor);
                     AddServices(assembly, descriptor);
                     AddRepositories(assembly, descriptor);
+                    AddResourceDefinitions(assembly, descriptor);
+                    AddResourceHookDefinitions(assembly, descriptor);
                 }
             }
         }
@@ -128,26 +134,26 @@ namespace JsonApiDotNetCore.Configuration
             }
         }
         
-        private void AddResource(Assembly assembly, ResourceDescriptor resourceDescriptor)
+        private void AddResource(ResourceDescriptor resourceDescriptor)
         {
             _resourceGraphBuilder.Add(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
         }
 
-        private void AddResourceDefinition(Assembly assembly, ResourceDescriptor identifiable)
+        private void AddResourceHookDefinitions(Assembly assembly, ResourceDescriptor identifiable)
         {
             try
             {
-                var resourceDefinition = TypeLocator.GetDerivedGenericTypes(assembly, typeof(ResourceDefinition<>), identifiable.ResourceType)
+                var resourceDefinition = TypeLocator.GetDerivedGenericTypes(assembly, typeof(ResourceHooksDefinition<>), identifiable.ResourceType)
                     .SingleOrDefault();
 
                 if (resourceDefinition != null)
                 {
-                    _services.AddScoped(typeof(ResourceDefinition<>).MakeGenericType(identifiable.ResourceType), resourceDefinition);
+                    _services.AddScoped(typeof(ResourceHooksDefinition<>).MakeGenericType(identifiable.ResourceType), resourceDefinition);
                 }
             }
             catch (InvalidOperationException e)
             {
-                throw new InvalidConfigurationException($"Cannot define multiple ResourceDefinition<> implementations for '{identifiable.ResourceType}'", e);
+                throw new InvalidConfigurationException($"Cannot define multiple ResourceHooksDefinition<> implementations for '{identifiable.ResourceType}'", e);
             }
         }
 
@@ -155,24 +161,28 @@ namespace JsonApiDotNetCore.Configuration
         {
             foreach (var serviceInterface in ServiceInterfaces)
             {
-                RegisterServiceImplementations(assembly, serviceInterface, resourceDescriptor);
+                RegisterImplementations(assembly, serviceInterface, resourceDescriptor);
             }
         }
 
         private void AddRepositories(Assembly assembly, ResourceDescriptor resourceDescriptor)
         {
-            foreach (var serviceInterface in _repositoryInterfaces)
+            foreach (var repositoryInterface in _repositoryInterfaces)
             {
-                RegisterServiceImplementations(assembly, serviceInterface, resourceDescriptor);
+                RegisterImplementations(assembly, repositoryInterface, resourceDescriptor);
+            }
+        }
+        
+        private void AddResourceDefinitions(Assembly assembly, ResourceDescriptor resourceDescriptor)
+        {
+            foreach (var resourceDefinitionInterface in _resourceDefinitionInterfaces)
+            {
+                RegisterImplementations(assembly, resourceDefinitionInterface, resourceDescriptor);
             }
         }
 
-        private void RegisterServiceImplementations(Assembly assembly, Type interfaceType, ResourceDescriptor resourceDescriptor)
+        private void RegisterImplementations(Assembly assembly, Type interfaceType, ResourceDescriptor resourceDescriptor)
         {
-            if (resourceDescriptor.IdType == typeof(Guid) && interfaceType.GetTypeInfo().GenericTypeParameters.Length == 1)
-            {
-                return;
-            }
             var genericArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2 ? new[] { resourceDescriptor.ResourceType, resourceDescriptor.IdType } : new[] { resourceDescriptor.ResourceType };
             var (implementation, registrationInterface) = TypeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);
 

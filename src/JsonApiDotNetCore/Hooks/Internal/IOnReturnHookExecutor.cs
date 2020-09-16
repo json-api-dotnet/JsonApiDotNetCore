@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <summary>
         /// Executes the On Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{T}.OnReturn"/> for every unique
+        /// Fires the <see cref="ResourceHooksDefinition{TResource}.OnReturn"/> for every unique
         /// resource type occurring in parameter <paramref name="resources"/>.
         /// </summary>
         /// <returns>The transformed set</returns>

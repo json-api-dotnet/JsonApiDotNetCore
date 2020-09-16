@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         private readonly IHasMeta _resourceMeta;
 
         public MetaBuilder(IPaginationContext paginationContext, IJsonApiOptions options, IRequestMeta requestMeta = null,
-            ResourceDefinition<TResource> resourceDefinition = null)
+            ResourceHooksDefinition<TResource> resourceDefinition = null)
         {
             _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
             _options = options ?? throw new ArgumentNullException(nameof(options));

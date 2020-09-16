@@ -9,7 +9,7 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public abstract class LockableDefinition<T> : ResourceDefinition<T> where T : class, IIsLockable, IIdentifiable
+    public abstract class LockableDefinition<T> : ResourceHooksDefinition<T> where T : class, IIsLockable, IIdentifiable
     {
         protected LockableDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 

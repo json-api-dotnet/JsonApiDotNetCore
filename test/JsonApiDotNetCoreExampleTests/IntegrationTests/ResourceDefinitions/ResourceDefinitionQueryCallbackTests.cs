@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddScoped<ResourceDefinition<CallableResource>, CallableResourceDefinition>();
+                services.AddScoped<IResourceDefinition<CallableResource>, CallableResourceDefinition>();
                 services.AddSingleton<IUserRolesService, FakeUserRolesService>();
             });
         }

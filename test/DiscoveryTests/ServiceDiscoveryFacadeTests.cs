@@ -28,11 +28,10 @@ namespace DiscoveryTests
 
             var dbResolverMock = new Mock<IDbContextResolver>();
             dbResolverMock.Setup(m => m.GetContext()).Returns(new Mock<DbContext>().Object);
-            TestModelRepository._dbContextResolver = dbResolverMock.Object;
+            _services.AddScoped(_ => dbResolverMock.Object);
 
             _services.AddSingleton<IJsonApiOptions>(options);
             _services.AddSingleton<ILoggerFactory>(new LoggerFactory());
-            _services.AddScoped(_ => new Mock<ILinkBuilder>().Object);
             _services.AddScoped(_ => new Mock<IJsonApiRequest>().Object);
             _services.AddScoped(_ => new Mock<ITargetedFields>().Object);
             _services.AddScoped(_ => new Mock<IResourceGraph>().Object);
@@ -42,7 +41,6 @@ namespace DiscoveryTests
             _services.AddScoped(_ => new Mock<IResourceFactory>().Object);
             _services.AddScoped(_ => new Mock<IPaginationContext>().Object);
             _services.AddScoped(_ => new Mock<IQueryLayerComposer>().Object);
-            _services.AddTransient(_ => new Mock<IResourceDefinitionProvider>().Object);
 
             _resourceGraphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
         }
@@ -124,8 +122,24 @@ namespace DiscoveryTests
 
             // Assert
             var services = _services.BuildServiceProvider();
-            Assert.IsType<TestModelResourceDefinition>(services.GetService<ResourceDefinition<TestModel>>());
+            Assert.IsType<TestModelResourceDefinition>(services.GetService<IResourceDefinition<TestModel>>());
         }
+
+        [Fact]
+        public void AddCurrentAssembly_Adds_Resource_Hooks_Definitions_From_Current_Assembly_To_Container()
+        {
+            // Arrange
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
+            facade.AddCurrentAssembly();
+            
+            // Act
+            facade.DiscoverInjectables();
+
+            // Assert
+            var services = _services.BuildServiceProvider();
+            Assert.IsType<TestModelResourceHooksDefinition>(services.GetService<ResourceHooksDefinition<TestModel>>());
+        }
+
         public sealed class TestModel : Identifiable { }
 
         public class TestModelService : JsonApiResourceService<TestModel>
@@ -148,20 +162,24 @@ namespace DiscoveryTests
 
         public class TestModelRepository : EntityFrameworkCoreRepository<TestModel>
         {
-            internal static IDbContextResolver _dbContextResolver;
-
             public TestModelRepository(
                 ITargetedFields targetedFields,
+                IDbContextResolver contextResolver,
                 IResourceGraph resourceGraph,
                 IGenericServiceFactory genericServiceFactory,
                 IResourceFactory resourceFactory,
                 IEnumerable<IQueryConstraintProvider> constraintProviders,
                 ILoggerFactory loggerFactory)
-                : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory)
+                : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory)
             { }
         }
         
-        public class TestModelResourceDefinition : ResourceDefinition<TestModel>
+        public class TestModelResourceHooksDefinition : ResourceHooksDefinition<TestModel>
+        {
+            public TestModelResourceHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        }
+
+        public class TestModelResourceDefinition : JsonApiResourceDefinition<TestModel>
         {
             public TestModelResourceDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
         }

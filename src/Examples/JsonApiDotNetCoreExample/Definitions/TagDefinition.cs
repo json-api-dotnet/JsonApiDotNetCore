@@ -7,7 +7,7 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class TagDefinition : ResourceDefinition<Tag>
+    public class TagDefinition : ResourceHooksDefinition<Tag>
     {
         public TagDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 

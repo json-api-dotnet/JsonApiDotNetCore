@@ -10,7 +10,7 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class PassportDefinition : ResourceDefinition<Passport>
+    public class PassportDefinition : ResourceHooksDefinition<Passport>
     {
         public PassportDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
         {

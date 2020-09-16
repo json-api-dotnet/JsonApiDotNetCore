@@ -180,7 +180,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
-            var expectedMeta = (_fixture.GetService<ResourceDefinition<Person>>() as IHasMeta).GetMeta();
+            var expectedMeta = (_fixture.GetService<ResourceHooksDefinition<Person>>() as IHasMeta).GetMeta();
 
             // Act
             var response = await client.SendAsync(request);

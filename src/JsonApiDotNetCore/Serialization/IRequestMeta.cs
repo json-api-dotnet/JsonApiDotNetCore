@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
     /// Service to add global top-level metadata to a <see cref="Document"/>.
-    /// Use <see cref="IHasMeta"/> on <see cref="ResourceDefinition{TResource}"/>
+    /// Use <see cref="IHasMeta"/> on <see cref="ResourceHooksDefinition{TResource}"/>
     /// to specify top-level metadata per resource type.
     /// </summary>
     public interface IRequestMeta

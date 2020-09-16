@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace UnitTests.Internal
@@ -18,7 +19,7 @@ namespace UnitTests.Internal
             var provider = new RequestScopedServiceProvider(new HttpContextAccessor());
 
             // Act
-            Action action = () => provider.GetService(serviceType);
+            Action action = () => provider.GetRequiredService(serviceType);
 
             // Assert
             var exception = Assert.Throws<InvalidOperationException>(action);
