@@ -108,13 +108,13 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public void DiscoverInjectables()
         {
-            _serviceDiscoveryFacade.DiscoverInjectables();
+            _serviceDiscoveryFacade.DiscoverInjectables(_options.EnableResourceHooks);
         }
 
         /// <summary>
         /// Registers the remaining internals.
         /// </summary>
-        public void ConfigureServices(Type dbContextType)
+        public void ConfigureServiceContainer(Type dbContextType)
         {
             if (dbContextType != null)
             {

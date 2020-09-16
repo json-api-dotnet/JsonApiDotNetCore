@@ -69,7 +69,7 @@ namespace DiscoveryTests
             // Arrange
             ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
             facade.AddCurrentAssembly();
-            
+
             // Act
             facade.DiscoverResources();
             
@@ -87,8 +87,8 @@ namespace DiscoveryTests
             facade.AddCurrentAssembly();
             
             // Act
-            facade.DiscoverInjectables();
-            
+            facade.DiscoverInjectables(false);
+
             // Assert
             var services = _services.BuildServiceProvider();
             var service = services.GetService<IResourceService<TestModel>>();
@@ -101,9 +101,9 @@ namespace DiscoveryTests
             // Arrange
             ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
             facade.AddCurrentAssembly();
-            
+
             // Act
-            facade.DiscoverInjectables();
+            facade.DiscoverInjectables(false);
 
             // Assert
             var services = _services.BuildServiceProvider();
@@ -116,9 +116,9 @@ namespace DiscoveryTests
             // Arrange
             ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
             facade.AddCurrentAssembly();
-            
+
             // Act
-            facade.DiscoverInjectables();
+            facade.DiscoverInjectables(false);
 
             // Assert
             var services = _services.BuildServiceProvider();
@@ -131,9 +131,9 @@ namespace DiscoveryTests
             // Arrange
             ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, NullLoggerFactory.Instance);
             facade.AddCurrentAssembly();
-            
+
             // Act
-            facade.DiscoverInjectables();
+            facade.DiscoverInjectables(true);
 
             // Assert
             var services = _services.BuildServiceProvider();

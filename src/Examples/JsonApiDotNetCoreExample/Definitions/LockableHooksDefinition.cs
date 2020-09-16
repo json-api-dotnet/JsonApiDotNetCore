@@ -9,9 +9,9 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public abstract class LockableDefinition<T> : ResourceHooksDefinition<T> where T : class, IIsLockable, IIdentifiable
+    public abstract class LockableHooksDefinition<T> : ResourceHooksDefinition<T> where T : class, IIsLockable, IIdentifiable
     {
-        protected LockableDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        protected LockableHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
         protected void DisallowLocked(IEnumerable<T> resources)
         {

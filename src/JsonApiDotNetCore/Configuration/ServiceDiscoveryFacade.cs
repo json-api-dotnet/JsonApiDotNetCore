@@ -105,8 +105,8 @@ namespace JsonApiDotNetCore.Configuration
                 }
             }
         }
-        
-        internal void DiscoverInjectables()
+
+        internal void DiscoverInjectables(bool enableResourceHooks)
         {
             foreach (var (assembly, discoveredResourceDescriptors) in  _resourceDescriptorsPerAssemblyCache.ToArray())
             {
@@ -119,7 +119,11 @@ namespace JsonApiDotNetCore.Configuration
                     AddServices(assembly, descriptor);
                     AddRepositories(assembly, descriptor);
                     AddResourceDefinitions(assembly, descriptor);
-                    AddResourceHookDefinitions(assembly, descriptor);
+
+                    if (enableResourceHooks)
+                    {
+                        AddResourceHookDefinitions(assembly, descriptor);
+                    }
                 }
             }
         }

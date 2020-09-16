@@ -7,9 +7,9 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class TagDefinition : ResourceHooksDefinition<Tag>
+    public class TagHooksDefinition : ResourceHooksDefinition<Tag>
     {
-        public TagDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        public TagHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
         public override IEnumerable<Tag> BeforeCreate(IResourceHashSet<Tag> affected, ResourcePipeline pipeline)
         {

@@ -113,5 +113,10 @@ namespace JsonApiDotNetCore.Resources
         /// ]]></code>
         /// </example>
         QueryStringParameterHandlers<TResource> OnRegisterQueryableHandlersForQueryStringParameters();
+
+        /// <summary>
+        /// Enables to add json:api meta information, specific to this resource type.
+        /// </summary>
+        IReadOnlyDictionary<string, object> GetMeta();
     }
 }

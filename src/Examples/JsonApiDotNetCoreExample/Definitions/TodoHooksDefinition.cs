@@ -9,9 +9,9 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class TodoDefinition : LockableDefinition<TodoItem>
+    public class TodoHooksDefinition : LockableHooksDefinition<TodoItem>
     {
-        public TodoDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        public TodoHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
         public override void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null)
         {

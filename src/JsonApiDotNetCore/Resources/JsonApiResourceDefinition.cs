@@ -102,12 +102,10 @@ namespace JsonApiDotNetCore.Resources
             return null;
         }
 
-        public object GetQueryableHandlerForQueryStringParameter(string parameterName)
+        /// <inheritdoc />
+        public virtual IReadOnlyDictionary<string, object> GetMeta()
         {
-            if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
-
-            var handlers = OnRegisterQueryableHandlersForQueryStringParameters();
-            return handlers != null && handlers.ContainsKey(parameterName) ? handlers[parameterName] : null;
+            return null;
         }
 
         /// <summary>

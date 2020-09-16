@@ -75,6 +75,15 @@ namespace JsonApiDotNetCore.Resources
             return handlers != null && handlers.ContainsKey(parameterName) ? handlers[parameterName] : null;
         }
 
+        /// <inheritdoc />
+        public IReadOnlyDictionary<string, object> GetMeta(Type resourceType)
+        {
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+
+            dynamic resourceDefinition = GetResourceDefinition(resourceType);
+            return resourceDefinition.GetMeta();
+        }
+
         private object GetResourceDefinition(Type resourceType)
         {
             var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);

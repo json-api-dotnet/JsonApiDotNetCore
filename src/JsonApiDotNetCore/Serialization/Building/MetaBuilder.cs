@@ -10,19 +10,19 @@ namespace JsonApiDotNetCore.Serialization.Building
     /// <inheritdoc />
     public class MetaBuilder<TResource> : IMetaBuilder<TResource> where TResource : class, IIdentifiable
     {
-        private Dictionary<string, object> _meta = new Dictionary<string, object>();
         private readonly IPaginationContext _paginationContext;
         private readonly IJsonApiOptions _options;
+        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly IRequestMeta _requestMeta;
-        private readonly IHasMeta _resourceMeta;
 
-        public MetaBuilder(IPaginationContext paginationContext, IJsonApiOptions options, IRequestMeta requestMeta = null,
-            ResourceHooksDefinition<TResource> resourceDefinition = null)
+        private Dictionary<string, object> _meta = new Dictionary<string, object>();
+
+        public MetaBuilder(IPaginationContext paginationContext, IJsonApiOptions options, IResourceDefinitionAccessor resourceDefinitionAccessor, IRequestMeta requestMeta = null)
         {
             _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
             _options = options ?? throw new ArgumentNullException(nameof(options));
+            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
             _requestMeta = requestMeta;
-            _resourceMeta = resourceDefinition as IHasMeta;
         }
 
         /// <inheritdoc />
@@ -59,9 +59,12 @@ namespace JsonApiDotNetCore.Serialization.Building
                 Add(_requestMeta.GetMeta());
             }
 
-            if (_resourceMeta != null)
+            // TODO: This looks wrong. We should be adding resource-level meta to each individual resource, instead of once at the top.
+
+            var resourceMeta = _resourceDefinitionAccessor.GetMeta(typeof(TResource));
+            if (resourceMeta != null)
             {
-                Add(_resourceMeta.GetMeta());
+                Add(resourceMeta);
             }
 
             return _meta.Any() ? _meta : null;
