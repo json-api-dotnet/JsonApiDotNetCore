@@ -104,9 +104,15 @@ Attempts to update when disabled will return an HTTP 422 response.</p>
 </td>
       </tr>
       <tr>
+        <td id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowCreate">AllowCreate</td>
+        <td><p>Whether or not POST requests can assign the attribute value.
+Attempts to assign when disabled will return an HTTP 422 response.</p>
+</td>
+      </tr>
+      <tr>
         <td id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowFilter">AllowFilter</td>
         <td><p>Whether or not an attribute can be filtered on via a query string parameter.
-Attempts to sort when disabled will return an HTTP 400 response.</p>
+Attempts to filter when disabled will return an HTTP 400 response.</p>
 </td>
       </tr>
       <tr>
@@ -117,8 +123,8 @@ Attempts to sort when disabled will return an HTTP 400 response.</p>
       </tr>
       <tr>
         <td id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowView">AllowView</td>
-        <td><p>Whether or not GET requests can return the attribute.
-Attempts to retrieve when disabled will return an HTTP 422 response.</p>
+        <td><p>Whether or not GET requests can retrieve the attribute.
+Attempts to retrieve when disabled will return an HTTP 400 response.</p>
 </td>
       </tr>
       <tr>

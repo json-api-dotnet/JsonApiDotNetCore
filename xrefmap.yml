@@ -11270,6 +11270,12 @@ references:
   commentId: F:JsonApiDotNetCore.Resources.Annotations.AttrCapabilities.AllowChange
   fullName: JsonApiDotNetCore.Resources.Annotations.AttrCapabilities.AllowChange
   nameWithType: AttrCapabilities.AllowChange
+- uid: JsonApiDotNetCore.Resources.Annotations.AttrCapabilities.AllowCreate
+  name: AllowCreate
+  href: api/JsonApiDotNetCore.Resources.Annotations.AttrCapabilities.html#JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowCreate
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.AttrCapabilities.AllowCreate
+  fullName: JsonApiDotNetCore.Resources.Annotations.AttrCapabilities.AllowCreate
+  nameWithType: AttrCapabilities.AllowCreate
 - uid: JsonApiDotNetCore.Resources.Annotations.AttrCapabilities.AllowFilter
   name: AllowFilter
   href: api/JsonApiDotNetCore.Resources.Annotations.AttrCapabilities.html#JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowFilter

@@ -100,8 +100,15 @@
     [Attr(Capabilities = ~AttrCapabilities.AllowView)]
     public string Password { get; set; }
 }
-</code></pre><h3 id="mutability">Mutability</h3>
-<p>Attributes can be marked as mutable, which will allow <code>PATCH</code> requests to update them. When immutable, an HTTP 422 response is returned.</p>
+</code></pre><h3 id="creatability">Creatability</h3>
+<p>Attributes can be marked as creatable, which will allow <code>POST</code> requests to assign a value to them. When sent but not allowed, an HTTP 422 response is returned.</p>
+<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
+{
+    [Attr(Capabilities = AttrCapabilities.AllowCreate)]
+    public string CreatorName { get; set; }
+}
+</code></pre><h3 id="changeability">Changeability</h3>
+<p>Attributes can be marked as changeable, which will allow <code>PATCH</code> requests to update them. When sent but not allowed, an HTTP 422 response is returned.</p>
 <pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
     [Attr(Capabilities = AttrCapabilities.AllowChange)]
