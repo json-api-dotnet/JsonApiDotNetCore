@@ -41,7 +41,7 @@ public class ResponseMetaService : IResponseMeta
 
 ## Resource Meta
 
-Resource-specific metadata can be added by implementing `IResourceDefinition<TResource, TId>.GetMeta` (or overriding it on JsonApiResourceDefinition):
+Resource-specific metadata can be added by implementing `IResourceDefinition<TResource, TId>.GetMeta` (or overriding it on `JsonApiResourceDefinition`):
 
 ```c#
 public class PersonDefinition : JsonApiResourceDefinition<Person>
