@@ -28,7 +28,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                     type = "enterprises",
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = "!@#$%^&*().-"
+                        ["companyName"] = "!@#$%^&*().-",
+                        ["cityOfResidence"] = "Cambridge"
                     }
                 }
             };
@@ -52,7 +53,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             // Arrange
             var enterprise = new Enterprise
             {
-                CompanyName = "Massive Dynamic"
+                CompanyName = "Massive Dynamic",
+                CityOfResidence = "Cambridge"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
