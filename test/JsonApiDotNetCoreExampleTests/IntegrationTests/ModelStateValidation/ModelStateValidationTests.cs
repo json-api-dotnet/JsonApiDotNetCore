@@ -25,17 +25,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
+                    type = "systemDirectories",
                     attributes = new Dictionary<string, object>
                     {
-                        ["industry"] = "Transport",
-                        ["cityOfResidence"] = "Cambridge"
+                        ["isCaseSensitive"] = "true"
                     }
                 }
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises";
+            string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -46,8 +45,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The CompanyName field is required.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/companyName");
+            responseDocument.Errors[0].Detail.Should().Be("The Name field is required.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/name");
         }
 
         [Fact]
@@ -58,18 +57,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
+                    type = "systemDirectories",
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = null,
-                        ["industry"] = "Transport",
-                        ["cityOfResidence"] = "Cambridge"
+                        ["name"] = null,
+                        ["isCaseSensitive"] = "true"
                     }
                 }
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises";
+            string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -80,8 +78,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The CompanyName field is required.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/companyName");
+            responseDocument.Errors[0].Detail.Should().Be("The Name field is required.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/name");
         }
 
         [Fact]
@@ -92,17 +90,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
+                    type = "systemDirectories",
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = "!@#$%^&*().-",
-                        ["cityOfResidence"] = "Cambridge"
+                        ["name"] = "!@#$%^&*().-",
+                        ["isCaseSensitive"] = "true"
                     }
                 }
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises";
+            string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -113,8 +111,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The field CompanyName must match the regular expression '^[\\w\\s]+$'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/companyName");
+            responseDocument.Errors[0].Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/name");
         }
 
         [Fact]
@@ -125,17 +123,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
+                    type = "systemDirectories",
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = "Massive Dynamic",
-                        ["cityOfResidence"] = "Cambridge"
+                        ["name"] = "Projects",
+                        ["isCaseSensitive"] = "true"
                     }
                 }
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises";
+            string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -144,8 +142,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["companyName"].Should().Be("Massive Dynamic");
-            responseDocument.SingleData.Attributes["cityOfResidence"].Should().Be("Cambridge");
+            responseDocument.SingleData.Attributes["name"].Should().Be("Projects");
+            responseDocument.SingleData.Attributes["isCaseSensitive"].Should().Be(true);
         }
 
         [Fact]
@@ -156,16 +154,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "postalAddresses",
+                    type = "systemDirectories",
                     attributes = new Dictionary<string, object>
                     {
-                        ["addressLine2"] = "X"
+                        ["sizeInBytes"] = "-1"
                     }
                 }
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/postalAddresses";
+            string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -173,58 +171,50 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(4);
+            responseDocument.Errors.Should().HaveCount(3);
 
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The City field is required.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/city");
+            responseDocument.Errors[0].Detail.Should().Be("The Name field is required.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/name");
 
             responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[1].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[1].Detail.Should().Be("The Region field is required.");
-            responseDocument.Errors[1].Source.Pointer.Should().Be("/data/attributes/region");
+            responseDocument.Errors[1].Detail.Should().Be("The field SizeInBytes must be between 0 and 9223372036854775807.");
+            responseDocument.Errors[1].Source.Pointer.Should().Be("/data/attributes/sizeInBytes");
 
             responseDocument.Errors[2].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[2].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[2].Detail.Should().Be("The ZipCode field is required.");
-            responseDocument.Errors[2].Source.Pointer.Should().Be("/data/attributes/zipCode");
-
-            responseDocument.Errors[3].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[3].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[3].Detail.Should().Be("The StreetAddress field is required.");
-            responseDocument.Errors[3].Source.Pointer.Should().Be("/data/attributes/streetAddress");
+            responseDocument.Errors[2].Detail.Should().Be("The IsCaseSensitive field is required.");
+            responseDocument.Errors[2].Source.Pointer.Should().Be("/data/attributes/isCaseSensitive");
         }
 
         [Fact]
         public async Task When_posting_resource_with_annotated_relationships_it_must_succeed()
         {
             // Arrange
-            var mailAddress = new PostalAddress
+            var parentDirectory = new SystemDirectory
             {
-                StreetAddress = "3555 S Las Vegas Blvd",
-                City = "Las Vegas",
-                Region = "Nevada",
-                ZipCode = "89109"
+                Name = "Shared",
+                IsCaseSensitive = true
             };
 
-            var partner = new EnterprisePartner
+            var subdirectory = new SystemDirectory
             {
-                Name = "Flamingo Casino",
-                Classification = EnterprisePartnerClassification.Platinum,
-                PrimaryMailAddress = mailAddress
+                Name = "Open Source",
+                IsCaseSensitive = true
             };
 
-            var parent = new Enterprise
+            var file = new SystemFile
             {
-                CompanyName = "Caesars Entertainment",
-                CityOfResidence = "Las Vegas"
+                FileName = "Main.cs",
+                SizeInBytes = 100
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.EnterprisePartners.Add(partner);
-                dbContext.Enterprises.Add(parent);
+                dbContext.Directories.AddRange(parentDirectory, subdirectory);
+                dbContext.Files.Add(file);
 
                 await dbContext.SaveChangesAsync();
             });
@@ -233,30 +223,33 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
+                    type = "systemDirectories",
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = "Flamingo Hotel",
-                        ["cityOfResidence"] = "Las Vegas"
+                        ["name"] = "Projects",
+                        ["isCaseSensitive"] = "true"
                     },
                     relationships = new Dictionary<string, object>
                     {
-                        ["mailAddress"] = new
-                        {
-                            data = new
-                            {
-                                type = "postalAddresses",
-                                id = mailAddress.StringId
-                            }
-                        },
-                        ["partners"] = new
+                        ["subdirectories"] = new
                         {
                             data = new[]
                             {
                                 new
                                 {
-                                    type = "partners",
-                                    id = partner.StringId
+                                    type = "systemDirectories",
+                                    id = subdirectory.StringId
+                                }
+                            }
+                        },
+                        ["files"] = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "systemFiles",
+                                    id = file.StringId
                                 }
                             }
                         },
@@ -264,8 +257,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                         {
                             data = new
                             {
-                                type = "enterprises",
-                                id = parent.StringId
+                                type = "systemDirectories",
+                                id = parentDirectory.StringId
                             }
                         }
                     }
@@ -273,7 +266,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises";
+            string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -282,23 +275,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["companyName"].Should().Be("Flamingo Hotel");
+            responseDocument.SingleData.Attributes["name"].Should().Be("Projects");
+            responseDocument.SingleData.Attributes["isCaseSensitive"].Should().Be(true);
         }
 
         [Fact]
         public async Task When_patching_resource_with_omitted_required_attribute_value_it_must_succeed()
         {
             // Arrange
-            var enterprise = new Enterprise
+            var directory = new SystemDirectory
             {
-                CompanyName = "Massive Dynamic",
-                CityOfResidence = "Cambridge",
-                Industry = "Manufacturing"
+                Name = "Projects",
+                IsCaseSensitive = true
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Enterprises.Add(enterprise);
+                dbContext.Directories.Add(directory);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -306,17 +299,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
-                    id = enterprise.StringId,
+                    type = "systemDirectories",
+                    id = directory.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        ["industry"] = "Electronics"
+                        ["sizeInBytes"] = "100"
                     }
                 }
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises/" + enterprise.StringId;
+            string route = "/systemDirectories/" + directory.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -331,15 +324,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task When_patching_resource_with_null_for_required_attribute_value_it_must_fail()
         {
             // Arrange
-            var enterprise = new Enterprise
+            var directory = new SystemDirectory
             {
-                CompanyName = "Massive Dynamic",
-                CityOfResidence = "Cambridge"
+                Name = "Projects",
+                IsCaseSensitive = true
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Enterprises.Add(enterprise);
+                dbContext.Directories.Add(directory);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -347,17 +340,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
-                    id = enterprise.StringId,
+                    type = "systemDirectories",
+                    id = directory.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = null
+                        ["name"] = null
                     }
                 }
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises/" + enterprise.StringId;
+            string route = "/systemDirectories/" + directory.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -368,23 +361,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The CompanyName field is required.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/companyName");
+            responseDocument.Errors[0].Detail.Should().Be("The Name field is required.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/name");
         }
 
         [Fact]
         public async Task When_patching_resource_with_invalid_attribute_value_it_must_fail()
         {
             // Arrange
-            var enterprise = new Enterprise
+            var directory = new SystemDirectory
             {
-                CompanyName = "Massive Dynamic",
-                CityOfResidence = "Cambridge"
+                Name = "Projects",
+                IsCaseSensitive = true
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Enterprises.Add(enterprise);
+                dbContext.Directories.Add(directory);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -392,17 +385,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
-                    id = enterprise.StringId,
+                    type = "systemDirectories",
+                    id = directory.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = "!@#$%^&*().-"
+                        ["name"] = "!@#$%^&*().-"
                     }
                 }
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises/" + enterprise.StringId;
+            string route = "/systemDirectories/" + directory.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -413,24 +406,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The field CompanyName must match the regular expression '^[\\w\\s]+$'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/companyName");
+            responseDocument.Errors[0].Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/name");
         }
 
         [Fact]
         public async Task When_patching_resource_with_valid_attribute_value_it_must_succeed()
         {
             // Arrange
-            var enterprise = new Enterprise
+            var directory = new SystemDirectory
             {
-                CompanyName = "Massive Dynamic",
-                CityOfResidence = "Cambridge",
-                Industry = "Manufacturing"
+                Name = "Projects",
+                IsCaseSensitive = true
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Enterprises.Add(enterprise);
+                dbContext.Directories.Add(directory);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -438,17 +430,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
-                    id = enterprise.StringId,
+                    type = "systemDirectories",
+                    id = directory.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = "Umbrella Corporation"
+                        ["name"] = "Repositories"
                     }
                 }
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises/" + enterprise.StringId;
+            string route = "/systemDirectories/" + directory.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -463,60 +455,53 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task When_patching_resource_with_annotated_relationships_it_must_succeed()
         {
             // Arrange
-            var mailAddress = new PostalAddress
+            var directory = new SystemDirectory
             {
-                StreetAddress = "Massachusetts Hall",
-                City = "Cambridge",
-                Region = "Massachusetts",
-                ZipCode = "02138"
-            };
-
-            var enterprise = new Enterprise
-            {
-                CompanyName = "Bell Medics",
-                CityOfResidence = "Cambridge",
-                MailAddress = mailAddress,
-                Partners = new List<EnterprisePartner>
+                Name = "Projects",
+                IsCaseSensitive = false,
+                Subdirectories = new List<SystemDirectory>
                 {
-                    new EnterprisePartner
+                    new SystemDirectory
                     {
-                        Name = "Harvard Laboratory",
-                        Classification = EnterprisePartnerClassification.Silver,
-                        PrimaryMailAddress = mailAddress
+                        Name = "C#",
+                        IsCaseSensitive = false
                     }
                 },
-                Parent = new Enterprise
+                Files = new List<SystemFile>
                 {
-                    CompanyName = "Global Inc",
-                    CityOfResidence = "New York"
+                    new SystemFile
+                    {
+                        FileName = "readme.txt"
+                    }
+                },
+                Parent = new SystemDirectory
+                {
+                    Name = "Data",
+                    IsCaseSensitive = false
                 }
             };
 
-            var otherMailAddress = new PostalAddress
+            var otherParent = new SystemDirectory
             {
-                StreetAddress = "2381  Burke Street",
-                City = "Cambridge",
-                Region = "Massachusetts",
-                ZipCode = "02141"
+                Name = "Shared",
+                IsCaseSensitive = false
             };
 
-            var otherPartner = new EnterprisePartner
+            var otherSubdirectory = new SystemDirectory
             {
-                Name = "FBI",
-                Classification = EnterprisePartnerClassification.Gold
+                Name = "Shared",
+                IsCaseSensitive = false
             };
 
-            var otherParent = new Enterprise
+            var otherFile = new SystemFile
             {
-                CompanyName = "World Inc",
-                CityOfResidence = "New York"
+                FileName = "readme.md"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Enterprises.AddRange(enterprise, otherParent);
-                dbContext.PostalAddresses.Add(otherMailAddress);
-                dbContext.EnterprisePartners.Add(otherPartner);
+                dbContext.Directories.AddRange(directory, otherParent, otherSubdirectory);
+                dbContext.Files.Add(otherFile);
 
                 await dbContext.SaveChangesAsync();
             });
@@ -525,30 +510,33 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
-                    id = enterprise.StringId,
+                    type = "systemDirectories",
+                    id = directory.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = "Massive Dynamic"
+                        ["name"] = "Project Files"
                     },
                     relationships = new Dictionary<string, object>
                     {
-                        ["mailAddress"] = new
-                        {
-                            data = new
-                            {
-                                type = "postalAddresses",
-                                id = otherMailAddress.StringId
-                            }
-                        },
-                        ["partners"] = new
+                        ["subdirectories"] = new
                         {
                             data = new[]
                             {
                                 new
                                 {
-                                    type = "partners",
-                                    id = otherPartner.StringId
+                                    type = "systemDirectories",
+                                    id = otherSubdirectory.StringId
+                                }
+                            }
+                        },
+                        ["files"] = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "systemFiles",
+                                    id = otherFile.StringId
                                 }
                             }
                         },
@@ -556,7 +544,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                         {
                             data = new
                             {
-                                type = "enterprises",
+                                type = "systemDirectories",
                                 id = otherParent.StringId
                             }
                         }
@@ -565,7 +553,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises/" + enterprise.StringId;
+            string route = "/systemDirectories/" + directory.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -580,20 +568,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task When_patching_resource_with_multiple_self_references_it_must_succeed()
         {
             // Arrange
-            var enterprise = new Enterprise
+            var directory = new SystemDirectory
             {
-                CompanyName = "Bell Medics",
-                CityOfResidence = "Cambridge",
-                Parent = new Enterprise
-                {
-                    CompanyName = "Global Inc",
-                    CityOfResidence = "New York"
-                }
+                Name = "Projects",
+                IsCaseSensitive = false
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Enterprises.Add(enterprise);
+                dbContext.Directories.Add(directory);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -601,11 +584,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
-                    id = enterprise.StringId,
+                    type = "systemDirectories",
+                    id = directory.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = "Massive Dynamic"
+                        ["name"] = "Project files"
                     },
                     relationships = new Dictionary<string, object>
                     {
@@ -613,16 +596,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                         {
                             data = new
                             {
-                                type = "enterprises",
-                                id = enterprise.StringId
+                                type = "systemDirectories",
+                                id = directory.StringId
                             }
                         },
                         ["alsoSelf"] = new
                         {
                             data = new
                             {
-                                type = "enterprises",
-                                id = enterprise.StringId
+                                type = "systemDirectories",
+                                id = directory.StringId
                             }
                         }
                     }
@@ -630,7 +613,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises/" + enterprise.StringId;
+            string route = "/systemDirectories/" + directory.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -645,26 +628,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task When_patching_annotated_ToOne_relationship_it_must_succeed()
         {
             // Arrange
-            var enterprise = new Enterprise
+            var directory = new SystemDirectory
             {
-                CompanyName = "Bell Medics",
-                CityOfResidence = "Cambridge",
-                Parent = new Enterprise
+                Name = "Projects",
+                IsCaseSensitive = true,
+                Parent = new SystemDirectory
                 {
-                    CompanyName = "Global Inc",
-                    CityOfResidence = "New York"
+                    Name = "Data",
+                    IsCaseSensitive = true
                 }
             };
 
-            var otherParent = new Enterprise
+            var otherParent = new SystemDirectory
             {
-                CompanyName = "World Inc",
-                CityOfResidence = "New York"
+                Name = "Data files",
+                IsCaseSensitive = true
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Enterprises.AddRange(enterprise, otherParent);
+                dbContext.Directories.AddRange(directory, otherParent);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -672,13 +655,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
+                    type = "systemDirectories",
                     id = otherParent.StringId
                 }
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises/" + enterprise.StringId + "/relationships/parent";
+            string route = "/systemDirectories/" + directory.StringId + "/relationships/parent";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -693,30 +676,32 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task When_patching_annotated_ToMany_relationship_it_must_succeed()
         {
             // Arrange
-            var enterprise = new Enterprise
+            var directory = new SystemDirectory
             {
-                CompanyName = "Bell Medics",
-                CityOfResidence = "Cambridge",
-                Partners = new List<EnterprisePartner>
+                Name = "Projects",
+                IsCaseSensitive = true,
+                Files = new List<SystemFile>
                 {
-                    new EnterprisePartner
+                    new SystemFile
                     {
-                        Name = "Harvard Laboratory",
-                        Classification = EnterprisePartnerClassification.Silver,
+                        FileName = "Main.cs"
+                    },
+                    new SystemFile
+                    {
+                        FileName = "Program.cs"
                     }
                 }
             };
 
-            var otherPartner = new EnterprisePartner
+            var otherFile = new SystemFile
             {
-                Name = "FBI",
-                Classification = EnterprisePartnerClassification.Gold
+                FileName = "EntryPoint.cs"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Enterprises.Add(enterprise);
-                dbContext.EnterprisePartners.Add(otherPartner);
+                dbContext.Directories.Add(directory);
+                dbContext.Files.Add(otherFile);
 
                 await dbContext.SaveChangesAsync();
             });
@@ -727,14 +712,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     new
                     {
-                        type = "enterprisePartners",
-                        id = otherPartner.StringId
+                        type = "systemFiles",
+                        id = otherFile.StringId
                     }
                 }
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises/" + enterprise.StringId + "/relationships/partners";
+            string route = "/systemDirectories/" + directory.StringId + "/relationships/files";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);

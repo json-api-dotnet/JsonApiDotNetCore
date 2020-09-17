@@ -5,10 +5,10 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 {
-    public sealed class EnterprisePartnersController : JsonApiController<EnterprisePartner>
+    public sealed class SystemFilesController : JsonApiController<SystemFile>
     {
-        public EnterprisePartnersController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<EnterprisePartner> resourceService)
+        public SystemFilesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
+            IResourceService<SystemFile> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

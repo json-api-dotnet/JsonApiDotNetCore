@@ -25,17 +25,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
+                    type = "systemDirectories",
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = "!@#$%^&*().-",
-                        ["cityOfResidence"] = "Cambridge"
+                        ["name"] = "!@#$%^&*().-",
+                        ["isCaseSensitive"] = "false"
                     }
                 }
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises";
+            string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -44,22 +44,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["companyName"].Should().Be("!@#$%^&*().-");
+            responseDocument.SingleData.Attributes["name"].Should().Be("!@#$%^&*().-");
         }
 
         [Fact]
         public async Task When_patching_resource_with_invalid_attribute_value_it_must_succeed()
         {
             // Arrange
-            var enterprise = new Enterprise
+            var directory = new SystemDirectory
             {
-                CompanyName = "Massive Dynamic",
-                CityOfResidence = "Cambridge"
+                Name = "Projects",
+                IsCaseSensitive = false
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Enterprises.Add(enterprise);
+                dbContext.Directories.Add(directory);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -67,17 +67,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 data = new
                 {
-                    type = "enterprises",
-                    id = enterprise.StringId,
+                    type = "systemDirectories",
+                    id = directory.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = "!@#$%^&*().-"
+                        ["name"] = "!@#$%^&*().-"
                     }
                 }
             };
 
             string requestBody = JsonConvert.SerializeObject(content);
-            string route = "/enterprises/" + enterprise.StringId;
+            string route = "/systemDirectories/" + directory.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);

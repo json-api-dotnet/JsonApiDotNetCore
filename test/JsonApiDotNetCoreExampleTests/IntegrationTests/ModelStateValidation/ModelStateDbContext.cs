@@ -4,22 +4,25 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 {
     public sealed class ModelStateDbContext : DbContext
     {
-        public DbSet<Enterprise> Enterprises { get; set; }
-        public DbSet<EnterprisePartner> EnterprisePartners { get; set; }
-        public DbSet<PostalAddress> PostalAddresses { get; set; }
+        public DbSet<SystemDirectory> Directories { get; set; }
+        public DbSet<SystemFile> Files { get; set; }
 
         public ModelStateDbContext(DbContextOptions<ModelStateDbContext> options) : base(options)
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.Entity<Enterprise>()
-                .HasOne(enterprise => enterprise.Self)
+            builder.Entity<SystemDirectory>()
+                .HasMany(systemDirectory => systemDirectory.Subdirectories)
+                .WithOne(x => x.Parent);
+
+            builder.Entity<SystemDirectory>()
+                .HasOne(systemDirectory => systemDirectory.Self)
                 .WithOne();
 
-            modelBuilder.Entity<Enterprise>()
-                .HasOne(enterprise => enterprise.AlsoSelf)
+            builder.Entity<SystemDirectory>()
+                .HasOne(systemDirectory => systemDirectory.AlsoSelf)
                 .WithOne();
         }
     }

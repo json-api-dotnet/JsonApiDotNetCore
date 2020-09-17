@@ -4,18 +4,16 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 {
-    public sealed class EnterprisePartner : Identifiable
+    public sealed class SystemFile : Identifiable
     {
         [Attr]
         [IsRequired]
-        [MinLength(3)]
-        public string Name { get; set; }
-
-        [HasOne]
-        public PostalAddress PrimaryMailAddress { get; set; }
+        [MinLength(1)]
+        public string FileName { get; set; }
 
         [Attr]
         [IsRequired]
-        public EnterprisePartnerClassification Classification { get; set; }
+        [Range(typeof(long), "0", "9223372036854775807")]
+        public long SizeInBytes { get; set; }
     }
 }
