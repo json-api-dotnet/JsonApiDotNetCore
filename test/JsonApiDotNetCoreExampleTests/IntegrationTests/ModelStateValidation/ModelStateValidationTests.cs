@@ -562,7 +562,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             responseDocument.Data.Should().BeNull();
         }
 
-        [Fact(Skip = "TODO: There seems no way from inside validator attribute to know where in the object graph we are.")]
+        [Fact]
         public async Task When_patching_resource_with_self_reference_it_must_succeed()
         {
             // Arrange

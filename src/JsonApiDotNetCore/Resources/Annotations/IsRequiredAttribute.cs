@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +14,9 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// </summary>
     public sealed class IsRequiredAttribute : RequiredAttribute
     {
+        // TODO: We need put this cache in some context, as it is not thread-safe (parallel requests) and grows indefinitely.
+        private static readonly HashSet<IIdentifiable> _selfReferencingEntitiesCache = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
+
         public override bool RequiresValidationContext => true;
 
         /// <inheritdoc />
@@ -43,11 +49,46 @@ namespace JsonApiDotNetCore.Resources.Annotations
                     return true;
                 }
 
-                if (validationContext.ObjectInstance is IIdentifiable identifiable &&
-                    identifiable.StringId != request.PrimaryId)
+                if (validationContext.ObjectInstance is IIdentifiable identifiable)
                 {
-                    return true;
+                    if (identifiable.StringId != request.PrimaryId)
+                    {
+                        return true;
+                    }
+
+                    if (ResourceIsSelfReferencing(validationContext, identifiable))
+                    {
+                        _selfReferencingEntitiesCache.Add(identifiable);
+
+                        return false;
+                    }
+
+                    if (_selfReferencingEntitiesCache.Contains(identifiable))
+                    {
+                        return true;
+                    }
                 }
+            }
+            
+            return false;
+        }
+
+        private bool ResourceIsSelfReferencing(ValidationContext validationContext, IIdentifiable identifiable)
+        {
+            var provider = validationContext.GetRequiredService<IResourceContextProvider>();
+            var relationships = provider.GetResourceContext(validationContext.ObjectType).Relationships;
+
+            foreach (var relationship in relationships)
+            {
+                if (relationship is HasOneAttribute hasOne)
+                {
+                    var relationshipValue = (IIdentifiable) hasOne.GetValue(identifiable);
+                    if (IdentifiableComparer.Instance.Equals(identifiable, relationshipValue))
+                    {
+                        return true;
+                    }
+                }
+
             }
 
             return false;
