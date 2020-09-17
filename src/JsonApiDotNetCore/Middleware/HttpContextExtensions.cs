@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Middleware
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            var itemKey = _disableRequiredValidatorKey + $"_{model}_{propertyName}";
+            var itemKey = $"{_disableRequiredValidatorKey}_{model}_{propertyName}";
             httpContext.Items[itemKey] = true;
         }
 
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Middleware
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
             if (model == null) throw new ArgumentNullException(nameof(model));
 
-            return httpContext.Items.ContainsKey(_disableRequiredValidatorKey + $"_{model}_{propertyName}");
+            return httpContext.Items.ContainsKey($"{_disableRequiredValidatorKey}_{model}_{propertyName}");
         }
     }
 }

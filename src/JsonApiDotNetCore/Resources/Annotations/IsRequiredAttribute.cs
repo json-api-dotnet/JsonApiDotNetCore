@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
             return base.IsValid(value, validationContext);
         }
 
-        private static bool ShouldSkipValidationForResource(ValidationContext validationContext, IJsonApiRequest request)
+        private bool ShouldSkipValidationForResource(ValidationContext validationContext, IJsonApiRequest request)
         {
             if (request.Kind == EndpointKind.Primary)
             {
@@ -53,7 +53,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
             return false;
         }
 
-        private static bool ShouldSkipValidationForProperty(ValidationContext validationContext, HttpContext httpContext)
+        private bool ShouldSkipValidationForProperty(ValidationContext validationContext, HttpContext httpContext)
         {
             return httpContext.IsRequiredValidatorDisabled(validationContext.MemberName,
                 validationContext.ObjectType.Name);
