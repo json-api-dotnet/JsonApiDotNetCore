@@ -13,16 +13,16 @@ namespace JsonApiDotNetCore.Serialization.Building
         private readonly IPaginationContext _paginationContext;
         private readonly IJsonApiOptions _options;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
-        private readonly IRequestMeta _requestMeta;
+        private readonly IResponseMeta _responseMeta;
 
         private Dictionary<string, object> _meta = new Dictionary<string, object>();
 
-        public MetaBuilder(IPaginationContext paginationContext, IJsonApiOptions options, IResourceDefinitionAccessor resourceDefinitionAccessor, IRequestMeta requestMeta = null)
+        public MetaBuilder(IPaginationContext paginationContext, IJsonApiOptions options, IResourceDefinitionAccessor resourceDefinitionAccessor, IResponseMeta responseMeta = null)
         {
             _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
-            _requestMeta = requestMeta;
+            _responseMeta = responseMeta;
         }
 
         /// <inheritdoc />
@@ -54,12 +54,10 @@ namespace JsonApiDotNetCore.Serialization.Building
                 _meta.Add(key, _paginationContext.TotalResourceCount);
             }
 
-            if (_requestMeta != null)
+            if (_responseMeta != null)
             {
-                Add(_requestMeta.GetMeta());
+                Add(_responseMeta.GetMeta());
             }
-
-            // TODO: This looks wrong. We should be adding resource-level meta to each individual resource, instead of once at the top.
 
             var resourceMeta = _resourceDefinitionAccessor.GetMeta(typeof(TResource));
             if (resourceMeta != null)

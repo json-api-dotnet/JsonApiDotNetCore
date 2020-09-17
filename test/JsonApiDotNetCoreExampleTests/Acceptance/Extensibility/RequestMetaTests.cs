@@ -21,12 +21,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
             testContext.ConfigureServicesBeforeStartup(services =>
             {
-                services.AddScoped<IRequestMeta, TestRequestMeta>();
+                services.AddScoped<IResponseMeta, TestResponseMeta>();
             });
         }
 
         [Fact]
-        public async Task Injecting_IRequestMeta_Adds_Meta_Data()
+        public async Task Injecting_IResponseMeta_Adds_Meta_Data()
         {
             // Arrange
             var route = "/api/v1/people";
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         }
     }
 
-    public sealed class TestRequestMeta : IRequestMeta
+    public sealed class TestResponseMeta : IResponseMeta
     {
         public IReadOnlyDictionary<string, object> GetMeta()
         {

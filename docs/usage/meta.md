@@ -1,34 +1,16 @@
 # Metadata
 
-Non-standard metadata can be added to your API responses in two ways: Resource and Request Meta. In the event of a key collision, the Request Meta will take precendence.
+Top-level custom metadata can be added to your API responses in two ways: globally and per resource type. In the event of a key collision, the resource meta will take precendence.
 
-## Resource Meta
+## Global Meta
 
-Resource Meta is metadata defined on the resource itself by implementing the `IHasMeta` interface.
-
-```c#
-public class Person : Identifiable, IHasMeta
-{
-    public Dictionary<string, object> GetMeta()
-    {
-        return new Dictionary<string, object>
-        {
-            {"copyright", "Copyright 2018 Example Corp."},
-            {"authors", new[] {"John Doe"}}
-        };
-    }
-}
-```
-
-## Request Meta
-
-Request Meta can be added by injecting a service that implements `IRequestMeta`.
+Global metadata can be added by injecting a service that implements `IResponseMeta`.
 This is useful if you need access to other injected services to build the meta object.
 
 ```c#
-public class RequestMetaService : IRequestMeta
+public class ResponseMetaService : IResponseMeta
 {
-    public RequestMetaService(/*...other dependencies here */) {
+    public ResponseMetaService(/*...other dependencies here */) {
         // ...
     }
 
@@ -50,6 +32,38 @@ public class RequestMetaService : IRequestMeta
     "authors": [
       "John Doe"
     ]
+  },
+  "data": {
+    // ...
+  }
+}
+```
+
+## Resource Meta
+
+Resource-specific metadata can be added by implementing `IResourceDefinition<TResource, TId>.GetMeta` (or overriding it on JsonApiResourceDefinition):
+
+```c#
+public class PersonDefinition : JsonApiResourceDefinition<Person>
+{
+    public PersonDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    {
+    }
+
+    public override IReadOnlyDictionary<string, object> GetMeta()
+    {
+        return new Dictionary<string, object>
+        {
+            ["notice"] = "Check our intranet at http://www.example.com for personal details."
+        };
+    }
+}
+```
+
+```json
+{
+  "meta": {
+    "notice": "Check our intranet at http://www.example.com for personal details."
   },
   "data": {
     // ...
