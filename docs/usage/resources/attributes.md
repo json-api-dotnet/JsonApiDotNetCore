@@ -50,7 +50,7 @@ public class User : Identifiable<int>
 }
 ```
 
-### Createability
+### Creatability
 
 Attributes can be marked as creatable, which will allow `POST` requests to assign a value to them. When sent but not allowed, an HTTP 422 response is returned.
 
