@@ -40,8 +40,7 @@ namespace UnitTests.Serialization.Client
                      ""intField"":0,
                      ""nullableIntField"":123,
                      ""guidField"":""00000000-0000-0000-0000-000000000000"",
-                     ""complexField"":null,
-                     ""immutable"":null
+                     ""complexField"":null
                   }
                }
             }";

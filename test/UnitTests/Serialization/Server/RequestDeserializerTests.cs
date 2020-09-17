@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
-using System.Net;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
@@ -35,33 +33,6 @@ namespace UnitTests.Serialization.Server
             // Assert
             Assert.Equal(5, attributesToUpdate.Count);
             Assert.Empty(relationshipsToUpdate);
-        }
-
-        [Fact]
-        public void DeserializeAttributes_UpdatedImmutableMember_ThrowsInvalidOperationException()
-        {
-            // Arrange
-            SetupFieldsManager(out _, out _);
-            var content = new Document
-            {
-                Data = new ResourceObject
-                {
-                    Type = "testResource",
-                    Id = "1",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        { "immutable", "some string" },
-                    }
-                }
-            };
-            var body = JsonConvert.SerializeObject(content);
-
-            // Act, assert
-            var exception = Assert.Throws<InvalidRequestBodyException>(() => _deserializer.Deserialize(body));
-
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, exception.Error.StatusCode);
-            Assert.Equal("Failed to deserialize request body: Changing the value of the requested attribute is not allowed.", exception.Error.Title);
-            Assert.Equal("Changing the value of 'immutable' is not allowed.", exception.Error.Detail);
         }
 
         [Fact]

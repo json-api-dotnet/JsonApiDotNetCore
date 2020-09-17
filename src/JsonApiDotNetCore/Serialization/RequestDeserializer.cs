@@ -46,16 +46,23 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (field is AttrAttribute attr)
             {
-                if (attr.Capabilities.HasFlag(AttrCapabilities.AllowChange))
+                if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Post.Method &&
+                    !attr.Capabilities.HasFlag(AttrCapabilities.AllowCreate))
                 {
-                    _targetedFields.Attributes.Add(attr);
+                    throw new InvalidRequestBodyException(
+                        "Assigning to the requested attribute is not allowed.",
+                        $"Assigning to '{attr.PublicName}' is not allowed.", null);
                 }
-                else
+
+                if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Patch.Method &&
+                    !attr.Capabilities.HasFlag(AttrCapabilities.AllowChange))
                 {
                     throw new InvalidRequestBodyException(
                         "Changing the value of the requested attribute is not allowed.",
                         $"Changing the value of '{attr.PublicName}' is not allowed.", null);
                 }
+
+                _targetedFields.Attributes.Add(attr);
             }
             else if (field is RelationshipAttribute relationship)
                 _targetedFields.Relationships.Add(relationship);

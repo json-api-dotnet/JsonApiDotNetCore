@@ -301,6 +301,39 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
+        public async Task CreateResource_Blocked_Fails()
+        {
+            // Arrange
+            var content = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    attributes = new Dictionary<string, object>
+                    {
+                        { "alwaysChangingValue", "X" }
+                    }
+                }
+            };
+
+            var requestBody = JsonConvert.SerializeObject(content);
+
+            // Act
+            var (body, response) = await Post("/api/v1/todoItems", requestBody);
+
+            // Assert
+            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+
+            var error = errorDocument.Errors.Single();
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("Failed to deserialize request body: Assigning to the requested attribute is not allowed.", error.Title);
+            Assert.StartsWith("Assigning to 'alwaysChangingValue' is not allowed. - Request body:", error.Detail);
+        }
+
+        [Fact]
         public async Task CreateRelationship_ToOneWithImplicitRemove_IsCreated()
         {
             // Arrange

@@ -23,7 +23,7 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public Guid GuidProperty { get; set; }
 
-        [Attr]
+        [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowCreate)]
         public string AlwaysChangingValue
         {
             get => Guid.NewGuid().ToString();
@@ -39,10 +39,10 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public DateTime? UpdatedDate { get; set; }
 
-        [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowChange)]
+        [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
         public string CalculatedValue => "calculated";
 
-        [Attr]
+        [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowChange)]
         public DateTimeOffset? OffsetDate { get; set; }
  
         public int? OwnerId { get; set; }
