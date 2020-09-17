@@ -13,6 +13,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public string CompanyName { get; set; }
 
         [Attr]
+        [IsRequired]
+        public string CityOfResidence { get; set; }
+
+        [Attr]
         [MinLength(5)]
         public string Industry { get; set; }
 
@@ -24,5 +28,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 
         [HasOne]
         public Enterprise Parent { get; set; }
+
+        [HasOne]
+        public Enterprise Self { get; set; }
+
+        [HasOne]
+        public Enterprise AlsoSelf { get; set; }
     }
 }

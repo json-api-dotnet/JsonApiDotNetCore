@@ -11,5 +11,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public ModelStateDbContext(DbContextOptions<ModelStateDbContext> options) : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Enterprise>()
+                .HasOne(enterprise => enterprise.Self)
+                .WithOne();
+
+            modelBuilder.Entity<Enterprise>()
+                .HasOne(enterprise => enterprise.AlsoSelf)
+                .WithOne();
+        }
     }
 }

@@ -17,6 +17,5 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         [Attr]
         [IsRequired]
         public EnterprisePartnerClassification Classification { get; set; }
-
     }
 }

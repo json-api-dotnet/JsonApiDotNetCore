@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Http;
@@ -14,8 +12,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// </summary>
     public sealed class IsRequiredAttribute : RequiredAttribute
     {
-        // TODO: We need put this cache in some context, as it is not thread-safe (parallel requests) and grows indefinitely.
-        private static readonly HashSet<IIdentifiable> _selfReferencingEntitiesCache = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
+        private const string _isSelfReferencingResourceKey = "JsonApiDotNetCore_IsSelfReferencingResource";
 
         public override bool RequiresValidationContext => true;
 
@@ -27,7 +24,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
             var request = validationContext.GetRequiredService<IJsonApiRequest>();
             var httpContextAccessor = validationContext.GetRequiredService<IHttpContextAccessor>();
 
-            if (ShouldSkipValidationForResource(validationContext, request) ||
+            if (ShouldSkipValidationForResource(validationContext, request, httpContextAccessor.HttpContext) ||
                 ShouldSkipValidationForProperty(validationContext, httpContextAccessor.HttpContext))
             {
                 return ValidationResult.Success;
@@ -36,7 +33,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
             return base.IsValid(value, validationContext);
         }
 
-        private bool ShouldSkipValidationForResource(ValidationContext validationContext, IJsonApiRequest request)
+        private bool ShouldSkipValidationForResource(ValidationContext validationContext, IJsonApiRequest request,
+            HttpContext httpContext)
         {
             if (request.Kind == EndpointKind.Primary)
             {
@@ -56,14 +54,18 @@ namespace JsonApiDotNetCore.Resources.Annotations
                         return true;
                     }
 
-                    if (ResourceIsSelfReferencing(validationContext, identifiable))
-                    {
-                        _selfReferencingEntitiesCache.Add(identifiable);
+                    var isSelfReferencingResource = (bool?) httpContext.Items[_isSelfReferencingResourceKey];
 
-                        return false;
+                    if (isSelfReferencingResource == null)
+                    {
+                        // When processing a request, the first time we get here is for the top-level resource.
+                        // Subsequent validations for related resources inspect the cache to know that their validation can be skipped.
+
+                        isSelfReferencingResource = IsSelfReferencingResource(identifiable, validationContext);
+                        httpContext.Items[_isSelfReferencingResourceKey] = isSelfReferencingResource;
                     }
 
-                    if (_selfReferencingEntitiesCache.Contains(identifiable))
+                    if (isSelfReferencingResource.Value)
                     {
                         return true;
                     }
@@ -73,7 +75,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
             return false;
         }
 
-        private bool ResourceIsSelfReferencing(ValidationContext validationContext, IIdentifiable identifiable)
+        private bool IsSelfReferencingResource(IIdentifiable identifiable, ValidationContext validationContext)
         {
             var provider = validationContext.GetRequiredService<IResourceContextProvider>();
             var relationships = provider.GetResourceContext(validationContext.ObjectType).Relationships;
@@ -88,7 +90,6 @@ namespace JsonApiDotNetCore.Resources.Annotations
                         return true;
                     }
                 }
-
             }
 
             return false;

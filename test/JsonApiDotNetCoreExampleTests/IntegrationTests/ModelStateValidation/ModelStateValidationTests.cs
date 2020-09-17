@@ -28,7 +28,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                     type = "enterprises",
                     attributes = new Dictionary<string, object>
                     {
-                        ["industry"] = "Transport"
+                        ["industry"] = "Transport",
+                        ["cityOfResidence"] = "Cambridge"
                     }
                 }
             };
@@ -61,7 +62,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                     attributes = new Dictionary<string, object>
                     {
                         ["companyName"] = null,
-                        ["industry"] = "Transport"
+                        ["industry"] = "Transport",
+                        ["cityOfResidence"] = "Cambridge"
                     }
                 }
             };
@@ -93,7 +95,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                     type = "enterprises",
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = "!@#$%^&*().-"
+                        ["companyName"] = "!@#$%^&*().-",
+                        ["cityOfResidence"] = "Cambridge"
                     }
                 }
             };
@@ -125,7 +128,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                     type = "enterprises",
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = "Massive Dynamic"
+                        ["companyName"] = "Massive Dynamic",
+                        ["cityOfResidence"] = "Cambridge"
                     }
                 }
             };
@@ -141,6 +145,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Attributes["companyName"].Should().Be("Massive Dynamic");
+            responseDocument.SingleData.Attributes["cityOfResidence"].Should().Be("Cambridge");
         }
 
         [Fact]
@@ -212,7 +217,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 
             var parent = new Enterprise
             {
-                CompanyName = "Caesars Entertainment"
+                CompanyName = "Caesars Entertainment",
+                CityOfResidence = "Las Vegas"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -230,7 +236,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                     type = "enterprises",
                     attributes = new Dictionary<string, object>
                     {
-                        ["companyName"] = "Flamingo Hotel"
+                        ["companyName"] = "Flamingo Hotel",
+                        ["cityOfResidence"] = "Las Vegas"
                     },
                     relationships = new Dictionary<string, object>
                     {
@@ -285,6 +292,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             var enterprise = new Enterprise
             {
                 CompanyName = "Massive Dynamic",
+                CityOfResidence = "Cambridge",
                 Industry = "Manufacturing"
             };
 
@@ -325,7 +333,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             // Arrange
             var enterprise = new Enterprise
             {
-                CompanyName = "Massive Dynamic"
+                CompanyName = "Massive Dynamic",
+                CityOfResidence = "Cambridge"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -369,7 +378,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             // Arrange
             var enterprise = new Enterprise
             {
-                CompanyName = "Massive Dynamic"
+                CompanyName = "Massive Dynamic",
+                CityOfResidence = "Cambridge"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -414,6 +424,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             var enterprise = new Enterprise
             {
                 CompanyName = "Massive Dynamic",
+                CityOfResidence = "Cambridge",
                 Industry = "Manufacturing"
             };
 
@@ -463,6 +474,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             var enterprise = new Enterprise
             {
                 CompanyName = "Bell Medics",
+                CityOfResidence = "Cambridge",
                 MailAddress = mailAddress,
                 Partners = new List<EnterprisePartner>
                 {
@@ -475,7 +487,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 },
                 Parent = new Enterprise
                 {
-                    CompanyName = "Global Inc"
+                    CompanyName = "Global Inc",
+                    CityOfResidence = "New York"
                 }
             };
 
@@ -495,7 +508,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 
             var otherParent = new Enterprise
             {
-                CompanyName = "World Inc"
+                CompanyName = "World Inc",
+                CityOfResidence = "New York"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -563,21 +577,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_patching_resource_with_self_reference_it_must_succeed()
+        public async Task When_patching_resource_with_multiple_self_references_it_must_succeed()
         {
             // Arrange
             var enterprise = new Enterprise
             {
                 CompanyName = "Bell Medics",
+                CityOfResidence = "Cambridge",
                 Parent = new Enterprise
                 {
-                    CompanyName = "Global Inc"
+                    CompanyName = "Global Inc",
+                    CityOfResidence = "New York"
                 }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Enterprises.AddRange(enterprise);
+                dbContext.Enterprises.Add(enterprise);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -593,7 +609,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                     },
                     relationships = new Dictionary<string, object>
                     {
-                        ["parent"] = new
+                        ["self"] = new
+                        {
+                            data = new
+                            {
+                                type = "enterprises",
+                                id = enterprise.StringId
+                            }
+                        },
+                        ["alsoSelf"] = new
                         {
                             data = new
                             {
@@ -624,15 +648,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             var enterprise = new Enterprise
             {
                 CompanyName = "Bell Medics",
+                CityOfResidence = "Cambridge",
                 Parent = new Enterprise
                 {
-                    CompanyName = "Global Inc"
+                    CompanyName = "Global Inc",
+                    CityOfResidence = "New York"
                 }
             };
 
             var otherParent = new Enterprise
             {
-                CompanyName = "World Inc"
+                CompanyName = "World Inc",
+                CityOfResidence = "New York"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -669,6 +696,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             var enterprise = new Enterprise
             {
                 CompanyName = "Bell Medics",
+                CityOfResidence = "Cambridge",
                 Partners = new List<EnterprisePartner>
                 {
                     new EnterprisePartner
