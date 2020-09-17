@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace JsonApiDotNetCore.Resources
 {
     /// <inheritdoc />
-    public sealed class ResourceDefinitionAccessor : IResourceDefinitionAccessor
+    public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IServiceProvider _serviceProvider;
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCore.Resources
             return resourceDefinition.GetMeta();
         }
 
-        private object GetResourceDefinition(Type resourceType)
+        protected object GetResourceDefinition(Type resourceType)
         {
             var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
 
