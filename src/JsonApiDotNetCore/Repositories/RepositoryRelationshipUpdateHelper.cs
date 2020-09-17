@@ -114,6 +114,7 @@ namespace JsonApiDotNetCore.Repositories
 
             var newLinks = relationshipIds.Select(x =>
             {
+                // TODO: [#696] Potential location where we crash if the relationship targets an abstract base class.
                 var link = _resourceFactory.CreateInstance(relationship.ThroughType);
                 relationship.LeftIdProperty.SetValue(link, TypeHelper.ConvertType(parentId, relationship.LeftIdProperty.PropertyType));
                 relationship.RightIdProperty.SetValue(link, TypeHelper.ConvertType(x, relationship.RightIdProperty.PropertyType));

@@ -87,6 +87,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         /// </summary>
         private IIdentifiable ParseIncludedRelationship(RelationshipAttribute relationshipAttr, ResourceIdentifierObject relatedResourceIdentifier)
         {
+            // TODO: [#696] Potential location where we crash if the relationship targets an abstract base class.
             var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(relationshipAttr.RightType);
             relatedInstance.StringId = relatedResourceIdentifier.Id;
 

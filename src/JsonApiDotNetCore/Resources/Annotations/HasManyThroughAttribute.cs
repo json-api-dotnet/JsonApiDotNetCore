@@ -137,6 +137,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
                 List<object> throughResources = new List<object>();
                 foreach (IIdentifiable identifiable in (IEnumerable)newValue)
                 {
+                    // TODO: [#696] Potential location where we crash if the relationship targets an abstract base class.
                     object throughResource = resourceFactory.CreateInstance(ThroughType);
                     LeftProperty.SetValue(throughResource, resource);
                     RightProperty.SetValue(throughResource, identifiable);

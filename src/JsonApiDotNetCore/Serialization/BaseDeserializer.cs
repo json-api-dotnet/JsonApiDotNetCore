@@ -237,6 +237,7 @@ namespace JsonApiDotNetCore.Serialization
             {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
                 var relatedResources = relationshipData.ManyData.Select(rio =>
                 {
+                    // TODO: [#696] Potential location where we crash if the relationship targets an abstract base class.
                     var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(attr.RightType);
                     relatedInstance.StringId = rio.Id;
                     return relatedInstance;
