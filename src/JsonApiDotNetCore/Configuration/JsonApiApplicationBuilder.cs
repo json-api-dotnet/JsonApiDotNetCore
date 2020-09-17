@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Configuration
             var loggerFactory = _intermediateProvider.GetService<ILoggerFactory>();
             
             _resourceGraphBuilder = new ResourceGraphBuilder(_options, loggerFactory);
-            _serviceDiscoveryFacade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, loggerFactory);
+            _serviceDiscoveryFacade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, loggerFactory);
         }
         
         /// <summary>
@@ -108,7 +108,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public void DiscoverInjectables()
         {
-            _serviceDiscoveryFacade.DiscoverInjectables(_options.EnableResourceHooks);
+            _serviceDiscoveryFacade.DiscoverInjectables();
         }
 
         /// <summary>

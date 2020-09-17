@@ -57,10 +57,11 @@ namespace JsonApiDotNetCore.Configuration
         private readonly ILogger<ServiceDiscoveryFacade> _logger;
         private readonly IServiceCollection _services;
         private readonly ResourceGraphBuilder _resourceGraphBuilder;
+        private readonly IJsonApiOptions _options;
         private readonly IdentifiableTypeCache _typeCache = new IdentifiableTypeCache();
         private readonly Dictionary<Assembly, IList<ResourceDescriptor>> _resourceDescriptorsPerAssemblyCache = new Dictionary<Assembly, IList<ResourceDescriptor>>();
 
-        public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, ILoggerFactory loggerFactory)
+        public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
             if (loggerFactory == null)
             {
@@ -70,6 +71,7 @@ namespace JsonApiDotNetCore.Configuration
             _logger = loggerFactory.CreateLogger<ServiceDiscoveryFacade>();
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _resourceGraphBuilder = resourceGraphBuilder ?? throw new ArgumentNullException(nameof(resourceGraphBuilder));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         /// <summary>
@@ -106,7 +108,7 @@ namespace JsonApiDotNetCore.Configuration
             }
         }
 
-        internal void DiscoverInjectables(bool enableResourceHooks)
+        internal void DiscoverInjectables()
         {
             foreach (var (assembly, discoveredResourceDescriptors) in  _resourceDescriptorsPerAssemblyCache.ToArray())
             {
@@ -120,7 +122,7 @@ namespace JsonApiDotNetCore.Configuration
                     AddRepositories(assembly, descriptor);
                     AddResourceDefinitions(assembly, descriptor);
 
-                    if (enableResourceHooks)
+                    if (_options.EnableResourceHooks)
                     {
                         AddResourceHookDefinitions(assembly, descriptor);
                     }
