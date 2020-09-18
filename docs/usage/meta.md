@@ -1,11 +1,11 @@
 # Metadata
 
-Top-level custom metadata can be added to your API responses in two ways: globally and per resource type. In the event of a key collision, the resource meta will take precendence.
+Top-level metadata can be added to your API responses in two ways: globally and per resource type. In the event of a key collision, the resource meta will take precendence.
 
 ## Global Meta
 
-Global metadata can be added by injecting a service that implements `IResponseMeta`.
-This is useful if you need access to other injected services to build the meta object.
+Global metadata can be added by registering a service that implements `IResponseMeta`.
+This is useful if you need access to other registered services to build the meta object.
 
 ```c#
 public class ResponseMetaService : IResponseMeta
