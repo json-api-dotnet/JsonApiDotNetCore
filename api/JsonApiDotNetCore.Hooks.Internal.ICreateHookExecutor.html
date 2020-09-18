@@ -94,10 +94,10 @@
   <h4 id="JsonApiDotNetCore_Hooks_Internal_ICreateHookExecutor_AfterCreate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.Internal.ICreateHookExecutor.AfterCreate``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)">AfterCreate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</h4>
   <div class="markdown level1 summary"><p>Executes the After Cycle by firing the appropriate hooks if they are implemented. 
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_AfterCreate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">AfterCreate(HashSet&lt;TResource&gt;, ResourcePipeline)</a>
-hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">resources</code>.
+Fires the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterCreate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">AfterCreate(HashSet&lt;TResource&gt;, ResourcePipeline)</a>
+hook for values in parameter <code data-dev-comment-type="paramref" class="paramref">resources</code>.
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">AfterUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
+Fires the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">AfterUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
 hook for any secondary (nested) resource for values within parameter <code data-dev-comment-type="paramref" class="paramref">resources</code></p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -158,10 +158,10 @@ hook for any secondary (nested) resource for values within parameter <code data-
   <div class="markdown level1 summary"><p>Executes the Before Cycle by firing the appropriate hooks if they are implemented. 
 The returned set will be used in the actual operation in <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a>.
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeCreate_JsonApiDotNetCore_Hooks_Internal_Execution_IResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeCreate(IResourceHashSet&lt;TResource&gt;, ResourcePipeline)</a>
-hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">resources</code>.
+Fires the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeCreate_JsonApiDotNetCore_Hooks_Internal_Execution_IResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeCreate(IResourceHashSet&lt;TResource&gt;, ResourcePipeline)</a>
+hook for values in parameter <code data-dev-comment-type="paramref" class="paramref">resources</code>.
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeUpdateRelationship(HashSet&lt;String&gt;, IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
+Fires the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeUpdateRelationship(HashSet&lt;String&gt;, IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
 hook for any secondary (nested) resource for values within parameter <code data-dev-comment-type="paramref" class="paramref">resources</code></p>
 </div>
   <div class="markdown level1 conceptual"></div>

@@ -119,18 +119,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryLayerComposer__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Resources_IResourceDefinitionProvider_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Queries_IPaginationContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.%23ctor(System.Collections.Generic.IEnumerable%7BJsonApiDotNetCore.Queries.IQueryConstraintProvider%7D%2CJsonApiDotNetCore.Configuration.IResourceContextProvider%2CJsonApiDotNetCore.Resources.IResourceDefinitionProvider%2CJsonApiDotNetCore.Configuration.IJsonApiOptions%2CJsonApiDotNetCore.Queries.IPaginationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryLayerComposer__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Queries_IPaginationContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.%23ctor(System.Collections.Generic.IEnumerable%7BJsonApiDotNetCore.Queries.IQueryConstraintProvider%7D%2CJsonApiDotNetCore.Configuration.IResourceContextProvider%2CJsonApiDotNetCore.Resources.IResourceDefinitionAccessor%2CJsonApiDotNetCore.Configuration.IJsonApiOptions%2CJsonApiDotNetCore.Queries.IPaginationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryLayerComposer.cs/#L20">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer__ctor_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Resources_IResourceDefinitionProvider_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Queries_IPaginationContext_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Resources.IResourceDefinitionProvider,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Queries.IPaginationContext)">QueryLayerComposer(IEnumerable&lt;IQueryConstraintProvider&gt;, IResourceContextProvider, IResourceDefinitionProvider, IJsonApiOptions, IPaginationContext)</h4>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Queries_IPaginationContext_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Queries.IPaginationContext)">QueryLayerComposer(IEnumerable&lt;IQueryConstraintProvider&gt;, IResourceContextProvider, IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public QueryLayerComposer(IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders, IResourceContextProvider resourceContextProvider, IResourceDefinitionProvider resourceDefinitionProvider, IJsonApiOptions options, IPaginationContext paginationContext)</code></pre>
+    <pre><code class="lang-csharp hljs">public QueryLayerComposer(IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders, IResourceContextProvider resourceContextProvider, IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiOptions options, IPaginationContext paginationContext)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -153,8 +153,8 @@
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinitionProvider.html">IResourceDefinitionProvider</a></td>
-        <td><span class="parametername">resourceDefinitionProvider</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html">IResourceDefinitionAccessor</a></td>
+        <td><span class="parametername">resourceDefinitionAccessor</span></td>
         <td></td>
       </tr>
       <tr>
@@ -224,7 +224,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetFilter_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_QueryExpression__JsonApiDotNetCore_Configuration_ResourceContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetFilter(System.Collections.Generic.IReadOnlyCollection%7BJsonApiDotNetCore.Queries.Expressions.QueryExpression%7D%2CJsonApiDotNetCore.Configuration.ResourceContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryLayerComposer.cs/#L247">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryLayerComposer.cs/#L242">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetFilter_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetFilter*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetFilter_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_QueryExpression__JsonApiDotNetCore_Configuration_ResourceContext_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetFilter(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.QueryExpression},JsonApiDotNetCore.Configuration.ResourceContext)">GetFilter(IReadOnlyCollection&lt;QueryExpression&gt;, ResourceContext)</h4>
@@ -328,7 +328,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetPagination_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_QueryExpression__JsonApiDotNetCore_Configuration_ResourceContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetPagination(System.Collections.Generic.IReadOnlyCollection%7BJsonApiDotNetCore.Queries.Expressions.QueryExpression%7D%2CJsonApiDotNetCore.Configuration.ResourceContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryLayerComposer.cs/#L286">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryLayerComposer.cs/#L272">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetPagination_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetPagination*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetPagination_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_QueryExpression__JsonApiDotNetCore_Configuration_ResourceContext_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetPagination(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.QueryExpression},JsonApiDotNetCore.Configuration.ResourceContext)">GetPagination(IReadOnlyCollection&lt;QueryExpression&gt;, ResourceContext)</h4>
@@ -427,7 +427,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSort_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_QueryExpression__JsonApiDotNetCore_Configuration_ResourceContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSort(System.Collections.Generic.IReadOnlyCollection%7BJsonApiDotNetCore.Queries.Expressions.QueryExpression%7D%2CJsonApiDotNetCore.Configuration.ResourceContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryLayerComposer.cs/#L264">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryLayerComposer.cs/#L254">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSort_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSort*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSort_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_QueryExpression__JsonApiDotNetCore_Configuration_ResourceContext_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSort(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.QueryExpression},JsonApiDotNetCore.Configuration.ResourceContext)">GetSort(IReadOnlyCollection&lt;QueryExpression&gt;, ResourceContext)</h4>
@@ -479,7 +479,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSparseFieldSetProjection_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_QueryExpression__JsonApiDotNetCore_Configuration_ResourceContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSparseFieldSetProjection(System.Collections.Generic.IReadOnlyCollection%7BJsonApiDotNetCore.Queries.Expressions.QueryExpression%7D%2CJsonApiDotNetCore.Configuration.ResourceContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryLayerComposer.cs/#L304">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryLayerComposer.cs/#L286">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSparseFieldSetProjection_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSparseFieldSetProjection*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSparseFieldSetProjection_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_QueryExpression__JsonApiDotNetCore_Configuration_ResourceContext_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSparseFieldSetProjection(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.QueryExpression},JsonApiDotNetCore.Configuration.ResourceContext)">GetSparseFieldSetProjection(IReadOnlyCollection&lt;QueryExpression&gt;, ResourceContext)</h4>

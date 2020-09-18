@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class ResourceDefinition&lt;TResource&gt;.QueryStringParameterHandlers
+    <title>Class QueryStringParameterHandlers&lt;TResource&gt;
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class ResourceDefinition&lt;TResource&gt;.QueryStringParameterHandlers
+    <meta name="title" content="Class QueryStringParameterHandlers&lt;TResource&gt;
    ">
     <meta name="generator" content="docfx 2.56.2.0">
     
@@ -68,20 +68,20 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Resources.ResourceDefinition`1.QueryStringParameterHandlers">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Resources.QueryStringParameterHandlers`1">
   
   
-  <h1 id="JsonApiDotNetCore_Resources_ResourceDefinition_1_QueryStringParameterHandlers" data-uid="JsonApiDotNetCore.Resources.ResourceDefinition`1.QueryStringParameterHandlers" class="text-break">Class ResourceDefinition&lt;TResource&gt;.QueryStringParameterHandlers
+  <h1 id="JsonApiDotNetCore_Resources_QueryStringParameterHandlers_1" data-uid="JsonApiDotNetCore.Resources.QueryStringParameterHandlers`1" class="text-break">Class QueryStringParameterHandlers&lt;TResource&gt;
   </h1>
   <div class="markdown level0 summary"><p>This is an alias type intended to simplify the implementation&apos;s method signature.
-See <a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnRegisterQueryableHandlersForQueryStringParameters">OnRegisterQueryableHandlersForQueryStringParameters()</a> for usage details.</p>
+See <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnRegisterQueryableHandlersForQueryStringParameters">OnRegisterQueryableHandlersForQueryStringParameters()</a> for usage details.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Func</span>&lt;<span class="xref">System.Linq.IQueryable</span>&lt;TResource&gt;, <span class="xref">Microsoft.Extensions.Primitives.StringValues</span>, <span class="xref">System.Linq.IQueryable</span>&lt;TResource&gt;&gt;&gt;</div>
-    <div class="level2"><span class="xref">ResourceDefinition&lt;TResource&gt;.QueryStringParameterHandlers</span></div>
+    <div class="level2"><span class="xref">QueryStringParameterHandlers&lt;TResource&gt;</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -254,10 +254,25 @@ See <a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinition-1.html#
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Resources.html">JsonApiDotNetCore.Resources</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Resources_ResourceDefinition_1_QueryStringParameterHandlers_syntax">Syntax</h5>
+  <h5 id="JsonApiDotNetCore_Resources_QueryStringParameterHandlers_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class QueryStringParameterHandlers : Dictionary&lt;string, Func&lt;IQueryable&lt;TResource&gt;, StringValues, IQueryable&lt;TResource&gt;&gt;&gt;, IDictionary&lt;string, Func&lt;IQueryable&lt;TResource&gt;, StringValues, IQueryable&lt;TResource&gt;&gt;&gt;, ICollection&lt;KeyValuePair&lt;string, Func&lt;IQueryable&lt;TResource&gt;, StringValues, IQueryable&lt;TResource&gt;&gt;&gt;&gt;, IReadOnlyDictionary&lt;string, Func&lt;IQueryable&lt;TResource&gt;, StringValues, IQueryable&lt;TResource&gt;&gt;&gt;, IReadOnlyCollection&lt;KeyValuePair&lt;string, Func&lt;IQueryable&lt;TResource&gt;, StringValues, IQueryable&lt;TResource&gt;&gt;&gt;&gt;, IEnumerable&lt;KeyValuePair&lt;string, Func&lt;IQueryable&lt;TResource&gt;, StringValues, IQueryable&lt;TResource&gt;&gt;&gt;&gt;, IDictionary, ICollection, IEnumerable, IDeserializationCallback, ISerializable</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class QueryStringParameterHandlers&lt;TResource&gt; : Dictionary&lt;string, Func&lt;IQueryable&lt;TResource&gt;, StringValues, IQueryable&lt;TResource&gt;&gt;&gt;, IDictionary&lt;string, Func&lt;IQueryable&lt;TResource&gt;, StringValues, IQueryable&lt;TResource&gt;&gt;&gt;, ICollection&lt;KeyValuePair&lt;string, Func&lt;IQueryable&lt;TResource&gt;, StringValues, IQueryable&lt;TResource&gt;&gt;&gt;&gt;, IReadOnlyDictionary&lt;string, Func&lt;IQueryable&lt;TResource&gt;, StringValues, IQueryable&lt;TResource&gt;&gt;&gt;, IReadOnlyCollection&lt;KeyValuePair&lt;string, Func&lt;IQueryable&lt;TResource&gt;, StringValues, IQueryable&lt;TResource&gt;&gt;&gt;&gt;, IEnumerable&lt;KeyValuePair&lt;string, Func&lt;IQueryable&lt;TResource&gt;, StringValues, IQueryable&lt;TResource&gt;&gt;&gt;&gt;, IDictionary, ICollection, IEnumerable, IDeserializationCallback, ISerializable</code></pre>
   </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TResource</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <span class="xref">System.Collections.Generic.IDictionary&lt;TKey, TValue&gt;</span>
@@ -297,10 +312,10 @@ See <a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinition-1.html#
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceDefinition_1_QueryStringParameterHandlers.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceDefinition%601.QueryStringParameterHandlers%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_QueryStringParameterHandlers_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.QueryStringParameterHandlers%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceDefinition.cs/#L239" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/QueryStringParameterHandlers.cs/#L12" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

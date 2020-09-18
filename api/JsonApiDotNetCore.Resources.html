@@ -83,30 +83,38 @@
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html">Identifiable&lt;TId&gt;</a></h4>
       <section><p>A convenient basic implementation of <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a> that provides conversion between <a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_Id">Id</a> and <a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_StringId">StringId</a>.</p>
 </section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-1.html">JsonApiResourceDefinition&lt;TResource&gt;</a></h4>
+      <section><p>Provides a resource-centric extensibility point for executing custom code when something happens with a resource.
+The goal here is to reduce the need for overriding the service and repository layers.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html">JsonApiResourceDefinition&lt;TResource, TId&gt;</a></h4>
+      <section><p>Provides a resource-centric extensibility point for executing custom code when something happens with a resource.
+The goal here is to reduce the need for overriding the service and repository layers.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.PropertySortOrder.html">JsonApiResourceDefinition&lt;TResource, TId&gt;.PropertySortOrder</a></h4>
+      <section><p>This is an alias type intended to simplify the implementation&apos;s method signature.
+See <a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_CreateSortExpressionFromLambda_JsonApiDotNetCore_Resources_JsonApiResourceDefinition__0__1__PropertySortOrder_">CreateSortExpressionFromLambda(JsonApiResourceDefinition&lt;TResource, TId&gt;.PropertySortOrder)</a> for usage details.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.QueryStringParameterHandlers-1.html">QueryStringParameterHandlers&lt;TResource&gt;</a></h4>
+      <section><p>This is an alias type intended to simplify the implementation&apos;s method signature.
+See <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnRegisterQueryableHandlersForQueryStringParameters">OnRegisterQueryableHandlersForQueryStringParameters()</a> for usage details.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.ResourceChangeTracker-1.html">ResourceChangeTracker&lt;TResource&gt;</a></h4>
       <section><p>Used to determine whether additional changes to a resource, not specified in a PATCH request, have been applied.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinition-1.html">ResourceDefinition&lt;TResource&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html">ResourceDefinitionAccessor</a></h4>
+      <section><p>Retrieves a <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html">IResourceDefinition&lt;TResource, TId&gt;</a> instance from the D/I container and invokes a callback on it.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html">ResourceHooksDefinition&lt;TResource&gt;</a></h4>
       <section><p>Provides a resource-specific extensibility point for API developers to be notified of various events and influence behavior using custom code.
 It is intended to improve the developer experience and reduce boilerplate for commonly required features.
 The goal of this class is to reduce the frequency with which developers have to override the service and repository layers.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinition-1.PropertySortOrder.html">ResourceDefinition&lt;TResource&gt;.PropertySortOrder</a></h4>
-      <section><p>This is an alias type intended to simplify the implementation&apos;s method signature.
-See <a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_CreateSortExpressionFromLambda_JsonApiDotNetCore_Resources_ResourceDefinition__0__PropertySortOrder_">CreateSortExpressionFromLambda(ResourceDefinition&lt;TResource&gt;.PropertySortOrder)</a> for usage details.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinition-1.QueryStringParameterHandlers.html">ResourceDefinition&lt;TResource&gt;.QueryStringParameterHandlers</a></h4>
-      <section><p>This is an alias type intended to simplify the implementation&apos;s method signature.
-See <a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnRegisterQueryableHandlersForQueryStringParameters">OnRegisterQueryableHandlersForQueryStringParameters()</a> for usage details.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.TargetedFields.html">TargetedFields</a></h4>
       <section><p>Container to register which resource attributes and relationships are targeted by a request.</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IHasMeta.html">IHasMeta</a></h4>
-      <section><p>When implemented by a class, indicates it provides json:api meta key/value pairs.</p>
-</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a></h4>
       <section><p>When implemented by a class, indicates to JsonApiDotNetCore that the class represents a json:api resource.
 Note that JsonApiDotNetCore also assumes that a property named &apos;Id&apos; exists.</p>
@@ -117,13 +125,16 @@ Note that JsonApiDotNetCore also assumes that a property named &apos;Id&apos; ex
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceChangeTracker-1.html">IResourceChangeTracker&lt;TResource&gt;</a></h4>
       <section><p>Used to determine whether additional changes to a resource, not specified in a PATCH request, have been applied.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition.html">IResourceDefinition</a></h4>
-      <section><p>Used internally to track resource extensibility endpoints. Do not implement this interface directly.</p>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-1.html">IResourceDefinition&lt;TResource&gt;</a></h4>
+      <section><p>Provides a resource-centric extensibility point for executing custom code when something happens with a resource.
+The goal here is to reduce the need for overriding the service and repository layers.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinitionProvider.html">IResourceDefinitionProvider</a></h4>
-      <section><p>Retrieves a <a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinition-1.html">ResourceDefinition&lt;TResource&gt;</a> from the DI container.
-Abstracts away the creation of the corresponding generic type and usage
-of the service provider to do so.</p>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html">IResourceDefinition&lt;TResource, TId&gt;</a></h4>
+      <section><p>Provides a resource-centric extensibility point for executing custom code when something happens with a resource.
+The goal here is to reduce the need for overriding the service and repository layers.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html">IResourceDefinitionAccessor</a></h4>
+      <section><p>Retrieves a <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html">IResourceDefinition&lt;TResource, TId&gt;</a> instance from the D/I container and invokes a callback on it.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceFactory.html">IResourceFactory</a></h4>
       <section><p>Creates object instances for resource classes, which may have injectable dependencies.</p>

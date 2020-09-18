@@ -69,26 +69,13 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="metadata">Metadata</h1>
 
-<p>Non-standard metadata can be added to your API responses in two ways: Resource and Request Meta. In the event of a key collision, the Request Meta will take precendence.</p>
-<h2 id="resource-meta">Resource Meta</h2>
-<p>Resource Meta is metadata defined on the resource itself by implementing the <code>IHasMeta</code> interface.</p>
-<pre><code class="lang-c#">public class Person : Identifiable, IHasMeta
+<p>Top-level metadata can be added to your API responses in two ways: globally and per resource type. In the event of a key collision, the resource meta will take precendence.</p>
+<h2 id="global-meta">Global Meta</h2>
+<p>Global metadata can be added by registering a service that implements <code>IResponseMeta</code>.
+This is useful if you need access to other registered services to build the meta object.</p>
+<pre><code class="lang-c#">public class ResponseMetaService : IResponseMeta
 {
-    public Dictionary&lt;string, object&gt; GetMeta()
-    {
-        return new Dictionary&lt;string, object&gt;
-        {
-            {&quot;copyright&quot;, &quot;Copyright 2018 Example Corp.&quot;},
-            {&quot;authors&quot;, new[] {&quot;John Doe&quot;}}
-        };
-    }
-}
-</code></pre><h2 id="request-meta">Request Meta</h2>
-<p>Request Meta can be added by injecting a service that implements <code>IRequestMeta</code>.
-This is useful if you need access to other injected services to build the meta object.</p>
-<pre><code class="lang-c#">public class RequestMetaService : IRequestMeta
-{
-    public RequestMetaService(/*...other dependencies here */) {
+    public ResponseMetaService(/*...other dependencies here */) {
         // ...
     }
 
@@ -107,6 +94,30 @@ This is useful if you need access to other injected services to build the meta o
     &quot;authors&quot;: [
       &quot;John Doe&quot;
     ]
+  },
+  &quot;data&quot;: {
+    // ...
+  }
+}
+</code></pre><h2 id="resource-meta">Resource Meta</h2>
+<p>Resource-specific metadata can be added by implementing <code>IResourceDefinition&lt;TResource, TId&gt;.GetMeta</code> (or overriding it on <code>JsonApiResourceDefinition</code>):</p>
+<pre><code class="lang-c#">public class PersonDefinition : JsonApiResourceDefinition&lt;Person&gt;
+{
+    public PersonDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    {
+    }
+
+    public override IReadOnlyDictionary&lt;string, object&gt; GetMeta()
+    {
+        return new Dictionary&lt;string, object&gt;
+        {
+            [&quot;notice&quot;] = &quot;Check our intranet at http://www.example.com for personal details.&quot;
+        };
+    }
+}
+</code></pre><pre><code class="lang-json">{
+  &quot;meta&quot;: {
+    &quot;notice&quot;: &quot;Check our intranet at http://www.example.com for personal details.&quot;
   },
   &quot;data&quot;: {
     // ...

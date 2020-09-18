@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IHasMeta
+    <title>Interface IResponseMeta
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IHasMeta
+    <meta name="title" content="Interface IResponseMeta
    ">
     <meta name="generator" content="docfx 2.56.2.0">
     
@@ -68,31 +68,32 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Resources.IHasMeta">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Serialization.IResponseMeta">
   
   
-  <h1 id="JsonApiDotNetCore_Resources_IHasMeta" data-uid="JsonApiDotNetCore.Resources.IHasMeta" class="text-break">Interface IHasMeta
+  <h1 id="JsonApiDotNetCore_Serialization_IResponseMeta" data-uid="JsonApiDotNetCore.Serialization.IResponseMeta" class="text-break">Interface IResponseMeta
   </h1>
-  <div class="markdown level0 summary"><p>When implemented by a class, indicates it provides json:api meta key/value pairs.</p>
+  <div class="markdown level0 summary"><p>Service to add global top-level json:api meta to a response <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a>.
+Use <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_GetMeta">GetMeta()</a> to specify top-level metadata per resource type.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Resources.html">JsonApiDotNetCore.Resources</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Serialization.html">JsonApiDotNetCore.Serialization</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Resources_IHasMeta_syntax">Syntax</h5>
+  <h5 id="JsonApiDotNetCore_Serialization_IResponseMeta_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IHasMeta</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IResponseMeta</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IHasMeta_GetMeta.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IHasMeta.GetMeta%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_IResponseMeta_GetMeta.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.IResponseMeta.GetMeta%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IHasMeta.cs/#L10">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/IResponseMeta.cs/#L13">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Resources_IHasMeta_GetMeta_" data-uid="JsonApiDotNetCore.Resources.IHasMeta.GetMeta*"></a>
-  <h4 id="JsonApiDotNetCore_Resources_IHasMeta_GetMeta" data-uid="JsonApiDotNetCore.Resources.IHasMeta.GetMeta">GetMeta()</h4>
+  <a id="JsonApiDotNetCore_Serialization_IResponseMeta_GetMeta_" data-uid="JsonApiDotNetCore.Serialization.IResponseMeta.GetMeta*"></a>
+  <h4 id="JsonApiDotNetCore_Serialization_IResponseMeta_GetMeta" data-uid="JsonApiDotNetCore.Serialization.IResponseMeta.GetMeta">GetMeta()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -122,10 +123,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IHasMeta.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IHasMeta%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_IResponseMeta.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.IResponseMeta%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IHasMeta.cs/#L8" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/IResponseMeta.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

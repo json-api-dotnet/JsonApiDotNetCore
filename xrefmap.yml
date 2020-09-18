@@ -1188,19 +1188,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.ResourceContext.Relationships
   nameWithType: ResourceContext.Relationships
-- uid: JsonApiDotNetCore.Configuration.ResourceContext.ResourceDefinitionType
-  name: ResourceDefinitionType
-  href: api/JsonApiDotNetCore.Configuration.ResourceContext.html#JsonApiDotNetCore_Configuration_ResourceContext_ResourceDefinitionType
-  commentId: P:JsonApiDotNetCore.Configuration.ResourceContext.ResourceDefinitionType
-  fullName: JsonApiDotNetCore.Configuration.ResourceContext.ResourceDefinitionType
-  nameWithType: ResourceContext.ResourceDefinitionType
-- uid: JsonApiDotNetCore.Configuration.ResourceContext.ResourceDefinitionType*
-  name: ResourceDefinitionType
-  href: api/JsonApiDotNetCore.Configuration.ResourceContext.html#JsonApiDotNetCore_Configuration_ResourceContext_ResourceDefinitionType_
-  commentId: Overload:JsonApiDotNetCore.Configuration.ResourceContext.ResourceDefinitionType
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.ResourceContext.ResourceDefinitionType
-  nameWithType: ResourceContext.ResourceDefinitionType
 - uid: JsonApiDotNetCore.Configuration.ResourceContext.ResourceLinks
   name: ResourceLinks
   href: api/JsonApiDotNetCore.Configuration.ResourceContext.html#JsonApiDotNetCore_Configuration_ResourceContext_ResourceLinks
@@ -1524,12 +1511,12 @@ references:
   commentId: T:JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade
   fullName: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade
   nameWithType: ServiceDiscoveryFacade
-- uid: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,JsonApiDotNetCore.Configuration.ResourceGraphBuilder,Microsoft.Extensions.Logging.ILoggerFactory)
-  name: ServiceDiscoveryFacade(IServiceCollection, ResourceGraphBuilder, ILoggerFactory)
-  href: api/JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.html#JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade__ctor_Microsoft_Extensions_DependencyInjection_IServiceCollection_JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Microsoft_Extensions_Logging_ILoggerFactory_
-  commentId: M:JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,JsonApiDotNetCore.Configuration.ResourceGraphBuilder,Microsoft.Extensions.Logging.ILoggerFactory)
-  fullName: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.ServiceDiscoveryFacade(Microsoft.Extensions.DependencyInjection.IServiceCollection, JsonApiDotNetCore.Configuration.ResourceGraphBuilder, Microsoft.Extensions.Logging.ILoggerFactory)
-  nameWithType: ServiceDiscoveryFacade.ServiceDiscoveryFacade(IServiceCollection, ResourceGraphBuilder, ILoggerFactory)
+- uid: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,JsonApiDotNetCore.Configuration.ResourceGraphBuilder,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory)
+  name: ServiceDiscoveryFacade(IServiceCollection, ResourceGraphBuilder, IJsonApiOptions, ILoggerFactory)
+  href: api/JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.html#JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade__ctor_Microsoft_Extensions_DependencyInjection_IServiceCollection_JsonApiDotNetCore_Configuration_ResourceGraphBuilder_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_
+  commentId: M:JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,JsonApiDotNetCore.Configuration.ResourceGraphBuilder,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory)
+  fullName: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.ServiceDiscoveryFacade(Microsoft.Extensions.DependencyInjection.IServiceCollection, JsonApiDotNetCore.Configuration.ResourceGraphBuilder, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory)
+  nameWithType: ServiceDiscoveryFacade.ServiceDiscoveryFacade(IServiceCollection, ResourceGraphBuilder, IJsonApiOptions, ILoggerFactory)
 - uid: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor*
   name: ServiceDiscoveryFacade
   href: api/JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.html#JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade__ctor_
@@ -9205,15 +9192,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer
   fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer
   nameWithType: QueryLayerComposer
-- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Resources.IResourceDefinitionProvider,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Queries.IPaginationContext)
-  name: QueryLayerComposer(IEnumerable<IQueryConstraintProvider>, IResourceContextProvider, IResourceDefinitionProvider, IJsonApiOptions, IPaginationContext)
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Resources_IResourceDefinitionProvider_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Queries_IPaginationContext_
-  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Resources.IResourceDefinitionProvider,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Queries.IPaginationContext)
-  name.vb: QueryLayerComposer(IEnumerable(Of IQueryConstraintProvider), IResourceContextProvider, IResourceDefinitionProvider, IJsonApiOptions, IPaginationContext)
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.QueryLayerComposer(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, JsonApiDotNetCore.Configuration.IResourceContextProvider, JsonApiDotNetCore.Resources.IResourceDefinitionProvider, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Queries.IPaginationContext)
-  fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.QueryLayerComposer(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), JsonApiDotNetCore.Configuration.IResourceContextProvider, JsonApiDotNetCore.Resources.IResourceDefinitionProvider, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Queries.IPaginationContext)
-  nameWithType: QueryLayerComposer.QueryLayerComposer(IEnumerable<IQueryConstraintProvider>, IResourceContextProvider, IResourceDefinitionProvider, IJsonApiOptions, IPaginationContext)
-  nameWithType.vb: QueryLayerComposer.QueryLayerComposer(IEnumerable(Of IQueryConstraintProvider), IResourceContextProvider, IResourceDefinitionProvider, IJsonApiOptions, IPaginationContext)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Queries.IPaginationContext)
+  name: QueryLayerComposer(IEnumerable<IQueryConstraintProvider>, IResourceContextProvider, IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Queries_IPaginationContext_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Queries.IPaginationContext)
+  name.vb: QueryLayerComposer(IEnumerable(Of IQueryConstraintProvider), IResourceContextProvider, IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.QueryLayerComposer(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, JsonApiDotNetCore.Configuration.IResourceContextProvider, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Queries.IPaginationContext)
+  fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.QueryLayerComposer(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), JsonApiDotNetCore.Configuration.IResourceContextProvider, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Queries.IPaginationContext)
+  nameWithType: QueryLayerComposer.QueryLayerComposer(IEnumerable<IQueryConstraintProvider>, IResourceContextProvider, IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext)
+  nameWithType.vb: QueryLayerComposer.QueryLayerComposer(IEnumerable(Of IQueryConstraintProvider), IResourceContextProvider, IResourceDefinitionAccessor, IJsonApiOptions, IPaginationContext)
 - uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.#ctor*
   name: QueryLayerComposer
   href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer__ctor_
@@ -10185,12 +10172,12 @@ references:
   commentId: T:JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader
   fullName: JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader
   nameWithType: ResourceDefinitionQueryableParameterReader
-- uid: JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceDefinitionProvider)
-  name: ResourceDefinitionQueryableParameterReader(IJsonApiRequest, IResourceDefinitionProvider)
-  href: api/JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_ResourceDefinitionQueryableParameterReader__ctor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_IResourceDefinitionProvider_
-  commentId: M:JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceDefinitionProvider)
-  fullName: JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.ResourceDefinitionQueryableParameterReader(JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceDefinitionProvider)
-  nameWithType: ResourceDefinitionQueryableParameterReader.ResourceDefinitionQueryableParameterReader(IJsonApiRequest, IResourceDefinitionProvider)
+- uid: JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  name: ResourceDefinitionQueryableParameterReader(IJsonApiRequest, IResourceDefinitionAccessor)
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_ResourceDefinitionQueryableParameterReader__ctor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_
+  commentId: M:JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.ResourceDefinitionQueryableParameterReader(JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  nameWithType: ResourceDefinitionQueryableParameterReader.ResourceDefinitionQueryableParameterReader(IJsonApiRequest, IResourceDefinitionAccessor)
 - uid: JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.#ctor*
   name: ResourceDefinitionQueryableParameterReader
   href: api/JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_ResourceDefinitionQueryableParameterReader__ctor_
@@ -12012,25 +11999,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Resources.Identifiable(Of TId).StringId
   nameWithType: Identifiable<TId>.StringId
   nameWithType.vb: Identifiable(Of TId).StringId
-- uid: JsonApiDotNetCore.Resources.IHasMeta
-  name: IHasMeta
-  href: api/JsonApiDotNetCore.Resources.IHasMeta.html
-  commentId: T:JsonApiDotNetCore.Resources.IHasMeta
-  fullName: JsonApiDotNetCore.Resources.IHasMeta
-  nameWithType: IHasMeta
-- uid: JsonApiDotNetCore.Resources.IHasMeta.GetMeta
-  name: GetMeta()
-  href: api/JsonApiDotNetCore.Resources.IHasMeta.html#JsonApiDotNetCore_Resources_IHasMeta_GetMeta
-  commentId: M:JsonApiDotNetCore.Resources.IHasMeta.GetMeta
-  fullName: JsonApiDotNetCore.Resources.IHasMeta.GetMeta()
-  nameWithType: IHasMeta.GetMeta()
-- uid: JsonApiDotNetCore.Resources.IHasMeta.GetMeta*
-  name: GetMeta
-  href: api/JsonApiDotNetCore.Resources.IHasMeta.html#JsonApiDotNetCore_Resources_IHasMeta_GetMeta_
-  commentId: Overload:JsonApiDotNetCore.Resources.IHasMeta.GetMeta
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.IHasMeta.GetMeta
-  nameWithType: IHasMeta.GetMeta
 - uid: JsonApiDotNetCore.Resources.IIdentifiable
   name: IIdentifiable
   href: api/JsonApiDotNetCore.Resources.IIdentifiable.html
@@ -12153,112 +12121,244 @@ references:
   fullName.vb: JsonApiDotNetCore.Resources.IResourceChangeTracker(Of TResource).SetRequestedAttributeValues
   nameWithType: IResourceChangeTracker<TResource>.SetRequestedAttributeValues
   nameWithType.vb: IResourceChangeTracker(Of TResource).SetRequestedAttributeValues
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition
-  name: IResourceDefinition
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition.html
-  commentId: T:JsonApiDotNetCore.Resources.IResourceDefinition
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition
-  nameWithType: IResourceDefinition
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition.GetQueryableHandlerForQueryStringParameter(System.String)
-  name: GetQueryableHandlerForQueryStringParameter(String)
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition.html#JsonApiDotNetCore_Resources_IResourceDefinition_GetQueryableHandlerForQueryStringParameter_System_String_
-  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinition.GetQueryableHandlerForQueryStringParameter(System.String)
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition.GetQueryableHandlerForQueryStringParameter(System.String)
-  nameWithType: IResourceDefinition.GetQueryableHandlerForQueryStringParameter(String)
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition.GetQueryableHandlerForQueryStringParameter*
-  name: GetQueryableHandlerForQueryStringParameter
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition.html#JsonApiDotNetCore_Resources_IResourceDefinition_GetQueryableHandlerForQueryStringParameter_
-  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinition.GetQueryableHandlerForQueryStringParameter
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`1
+  name: IResourceDefinition<TResource>
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-1.html
+  commentId: T:JsonApiDotNetCore.Resources.IResourceDefinition`1
+  name.vb: IResourceDefinition(Of TResource)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource>
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource)
+  nameWithType: IResourceDefinition<TResource>
+  nameWithType.vb: IResourceDefinition(Of TResource)
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2
+  name: IResourceDefinition<TResource, TId>
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html
+  commentId: T:JsonApiDotNetCore.Resources.IResourceDefinition`2
+  name.vb: IResourceDefinition(Of TResource, TId)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId)
+  nameWithType: IResourceDefinition<TResource, TId>
+  nameWithType.vb: IResourceDefinition(Of TResource, TId)
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.GetMeta
+  name: GetMeta()
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_GetMeta
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinition`2.GetMeta
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.GetMeta()
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).GetMeta()
+  nameWithType: IResourceDefinition<TResource, TId>.GetMeta()
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).GetMeta()
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.GetMeta*
+  name: GetMeta
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_GetMeta_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinition`2.GetMeta
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition.GetQueryableHandlerForQueryStringParameter
-  nameWithType: IResourceDefinition.GetQueryableHandlerForQueryStringParameter
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.GetMeta
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).GetMeta
+  nameWithType: IResourceDefinition<TResource, TId>.GetMeta
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).GetMeta
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
   name: OnApplyFilter(FilterExpression)
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition.html#JsonApiDotNetCore_Resources_IResourceDefinition_OnApplyFilter_JsonApiDotNetCore_Queries_Expressions_FilterExpression_
-  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
-  nameWithType: IResourceDefinition.OnApplyFilter(FilterExpression)
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyFilter*
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyFilter_JsonApiDotNetCore_Queries_Expressions_FilterExpression_
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  nameWithType: IResourceDefinition<TResource, TId>.OnApplyFilter(FilterExpression)
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).OnApplyFilter(FilterExpression)
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyFilter*
   name: OnApplyFilter
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition.html#JsonApiDotNetCore_Resources_IResourceDefinition_OnApplyFilter_
-  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyFilter
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyFilter_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyFilter
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyFilter
-  nameWithType: IResourceDefinition.OnApplyFilter
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.OnApplyFilter
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).OnApplyFilter
+  nameWithType: IResourceDefinition<TResource, TId>.OnApplyFilter
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).OnApplyFilter
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})
   name: OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression>)
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition.html#JsonApiDotNetCore_Resources_IResourceDefinition_OnApplyIncludes_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__
-  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})
   name.vb: OnApplyIncludes(IReadOnlyCollection(Of IncludeElementExpression))
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression>)
-  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression))
-  nameWithType: IResourceDefinition.OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression>)
-  nameWithType.vb: IResourceDefinition.OnApplyIncludes(IReadOnlyCollection(Of IncludeElementExpression))
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyIncludes*
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression>)
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression))
+  nameWithType: IResourceDefinition<TResource, TId>.OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression>)
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).OnApplyIncludes(IReadOnlyCollection(Of IncludeElementExpression))
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyIncludes*
   name: OnApplyIncludes
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition.html#JsonApiDotNetCore_Resources_IResourceDefinition_OnApplyIncludes_
-  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyIncludes
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyIncludes
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyIncludes
-  nameWithType: IResourceDefinition.OnApplyIncludes
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.OnApplyIncludes
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).OnApplyIncludes
+  nameWithType: IResourceDefinition<TResource, TId>.OnApplyIncludes
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).OnApplyIncludes
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
   name: OnApplyPagination(PaginationExpression)
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition.html#JsonApiDotNetCore_Resources_IResourceDefinition_OnApplyPagination_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_
-  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
-  nameWithType: IResourceDefinition.OnApplyPagination(PaginationExpression)
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyPagination*
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyPagination_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  nameWithType: IResourceDefinition<TResource, TId>.OnApplyPagination(PaginationExpression)
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).OnApplyPagination(PaginationExpression)
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyPagination*
   name: OnApplyPagination
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition.html#JsonApiDotNetCore_Resources_IResourceDefinition_OnApplyPagination_
-  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyPagination
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyPagination_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyPagination
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplyPagination
-  nameWithType: IResourceDefinition.OnApplyPagination
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.OnApplyPagination
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).OnApplyPagination
+  nameWithType: IResourceDefinition<TResource, TId>.OnApplyPagination
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).OnApplyPagination
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
   name: OnApplySort(SortExpression)
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition.html#JsonApiDotNetCore_Resources_IResourceDefinition_OnApplySort_JsonApiDotNetCore_Queries_Expressions_SortExpression_
-  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinition.OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
-  nameWithType: IResourceDefinition.OnApplySort(SortExpression)
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplySort*
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplySort_JsonApiDotNetCore_Queries_Expressions_SortExpression_
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  nameWithType: IResourceDefinition<TResource, TId>.OnApplySort(SortExpression)
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).OnApplySort(SortExpression)
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplySort*
   name: OnApplySort
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition.html#JsonApiDotNetCore_Resources_IResourceDefinition_OnApplySort_
-  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinition.OnApplySort
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplySort_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplySort
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplySort
-  nameWithType: IResourceDefinition.OnApplySort
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.OnApplySort
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).OnApplySort
+  nameWithType: IResourceDefinition<TResource, TId>.OnApplySort
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).OnApplySort
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
   name: OnApplySparseFieldSet(SparseFieldSetExpression)
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition.html#JsonApiDotNetCore_Resources_IResourceDefinition_OnApplySparseFieldSet_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_
-  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinition.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
-  nameWithType: IResourceDefinition.OnApplySparseFieldSet(SparseFieldSetExpression)
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplySparseFieldSet*
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplySparseFieldSet_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  nameWithType: IResourceDefinition<TResource, TId>.OnApplySparseFieldSet(SparseFieldSetExpression)
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).OnApplySparseFieldSet(SparseFieldSetExpression)
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplySparseFieldSet*
   name: OnApplySparseFieldSet
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition.html#JsonApiDotNetCore_Resources_IResourceDefinition_OnApplySparseFieldSet_
-  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinition.OnApplySparseFieldSet
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplySparseFieldSet_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplySparseFieldSet
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition.OnApplySparseFieldSet
-  nameWithType: IResourceDefinition.OnApplySparseFieldSet
-- uid: JsonApiDotNetCore.Resources.IResourceDefinitionProvider
-  name: IResourceDefinitionProvider
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionProvider.html
-  commentId: T:JsonApiDotNetCore.Resources.IResourceDefinitionProvider
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionProvider
-  nameWithType: IResourceDefinitionProvider
-- uid: JsonApiDotNetCore.Resources.IResourceDefinitionProvider.Get(System.Type)
-  name: Get(Type)
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionProvider.html#JsonApiDotNetCore_Resources_IResourceDefinitionProvider_Get_System_Type_
-  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinitionProvider.Get(System.Type)
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionProvider.Get(System.Type)
-  nameWithType: IResourceDefinitionProvider.Get(Type)
-- uid: JsonApiDotNetCore.Resources.IResourceDefinitionProvider.Get*
-  name: Get
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionProvider.html#JsonApiDotNetCore_Resources_IResourceDefinitionProvider_Get_
-  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinitionProvider.Get
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.OnApplySparseFieldSet
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).OnApplySparseFieldSet
+  nameWithType: IResourceDefinition<TResource, TId>.OnApplySparseFieldSet
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).OnApplySparseFieldSet
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.OnRegisterQueryableHandlersForQueryStringParameters
+  name: OnRegisterQueryableHandlersForQueryStringParameters()
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnRegisterQueryableHandlersForQueryStringParameters
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinition`2.OnRegisterQueryableHandlersForQueryStringParameters
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.OnRegisterQueryableHandlersForQueryStringParameters()
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).OnRegisterQueryableHandlersForQueryStringParameters()
+  nameWithType: IResourceDefinition<TResource, TId>.OnRegisterQueryableHandlersForQueryStringParameters()
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).OnRegisterQueryableHandlersForQueryStringParameters()
+- uid: JsonApiDotNetCore.Resources.IResourceDefinition`2.OnRegisterQueryableHandlersForQueryStringParameters*
+  name: OnRegisterQueryableHandlersForQueryStringParameters
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnRegisterQueryableHandlersForQueryStringParameters_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinition`2.OnRegisterQueryableHandlersForQueryStringParameters
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionProvider.Get
-  nameWithType: IResourceDefinitionProvider.Get
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource, TId>.OnRegisterQueryableHandlersForQueryStringParameters
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource, TId).OnRegisterQueryableHandlersForQueryStringParameters
+  nameWithType: IResourceDefinition<TResource, TId>.OnRegisterQueryableHandlersForQueryStringParameters
+  nameWithType.vb: IResourceDefinition(Of TResource, TId).OnRegisterQueryableHandlersForQueryStringParameters
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor
+  name: IResourceDefinitionAccessor
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html
+  commentId: T:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor
+  nameWithType: IResourceDefinitionAccessor
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetMeta(System.Type)
+  name: GetMeta(Type)
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_GetMeta_System_Type_
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetMeta(System.Type)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetMeta(System.Type)
+  nameWithType: IResourceDefinitionAccessor.GetMeta(Type)
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetMeta*
+  name: GetMeta
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_GetMeta_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetMeta
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetMeta
+  nameWithType: IResourceDefinitionAccessor.GetMeta
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(System.Type,System.String)
+  name: GetQueryableHandlerForQueryStringParameter(Type, String)
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_GetQueryableHandlerForQueryStringParameter_System_Type_System_String_
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(System.Type,System.String)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(System.Type, System.String)
+  nameWithType: IResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(Type, String)
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter*
+  name: GetQueryableHandlerForQueryStringParameter
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_GetQueryableHandlerForQueryStringParameter_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
+  nameWithType: IResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyFilter(System.Type,JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  name: OnApplyFilter(Type, FilterExpression)
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplyFilter_System_Type_JsonApiDotNetCore_Queries_Expressions_FilterExpression_
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyFilter(System.Type,JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyFilter(System.Type, JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  nameWithType: IResourceDefinitionAccessor.OnApplyFilter(Type, FilterExpression)
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyFilter*
+  name: OnApplyFilter
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplyFilter_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyFilter
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyFilter
+  nameWithType: IResourceDefinitionAccessor.OnApplyFilter
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyIncludes(System.Type,System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})
+  name: OnApplyIncludes(Type, IReadOnlyCollection<IncludeElementExpression>)
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplyIncludes_System_Type_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyIncludes(System.Type,System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})
+  name.vb: OnApplyIncludes(Type, IReadOnlyCollection(Of IncludeElementExpression))
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyIncludes(System.Type, System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression>)
+  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyIncludes(System.Type, System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression))
+  nameWithType: IResourceDefinitionAccessor.OnApplyIncludes(Type, IReadOnlyCollection<IncludeElementExpression>)
+  nameWithType.vb: IResourceDefinitionAccessor.OnApplyIncludes(Type, IReadOnlyCollection(Of IncludeElementExpression))
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyIncludes*
+  name: OnApplyIncludes
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplyIncludes_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyIncludes
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyIncludes
+  nameWithType: IResourceDefinitionAccessor.OnApplyIncludes
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyPagination(System.Type,JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  name: OnApplyPagination(Type, PaginationExpression)
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplyPagination_System_Type_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyPagination(System.Type,JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyPagination(System.Type, JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  nameWithType: IResourceDefinitionAccessor.OnApplyPagination(Type, PaginationExpression)
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyPagination*
+  name: OnApplyPagination
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplyPagination_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyPagination
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyPagination
+  nameWithType: IResourceDefinitionAccessor.OnApplyPagination
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySort(System.Type,JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  name: OnApplySort(Type, SortExpression)
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplySort_System_Type_JsonApiDotNetCore_Queries_Expressions_SortExpression_
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySort(System.Type,JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySort(System.Type, JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  nameWithType: IResourceDefinitionAccessor.OnApplySort(Type, SortExpression)
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySort*
+  name: OnApplySort
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplySort_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySort
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySort
+  nameWithType: IResourceDefinitionAccessor.OnApplySort
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySparseFieldSet(System.Type,JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  name: OnApplySparseFieldSet(Type, SparseFieldSetExpression)
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplySparseFieldSet_System_Type_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_
+  commentId: M:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySparseFieldSet(System.Type,JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySparseFieldSet(System.Type, JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  nameWithType: IResourceDefinitionAccessor.OnApplySparseFieldSet(Type, SparseFieldSetExpression)
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySparseFieldSet*
+  name: OnApplySparseFieldSet
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplySparseFieldSet_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySparseFieldSet
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySparseFieldSet
+  nameWithType: IResourceDefinitionAccessor.OnApplySparseFieldSet
 - uid: JsonApiDotNetCore.Resources.IResourceFactory
   name: IResourceFactory
   href: api/JsonApiDotNetCore.Resources.IResourceFactory.html
@@ -12332,6 +12432,231 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.ITargetedFields.Relationships
   nameWithType: ITargetedFields.Relationships
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`1
+  name: JsonApiResourceDefinition<TResource>
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-1.html
+  commentId: T:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`1
+  name.vb: JsonApiResourceDefinition(Of TResource)
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource>
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource)
+  nameWithType: JsonApiResourceDefinition<TResource>
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource)
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`1.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph)
+  name: JsonApiResourceDefinition(IResourceGraph)
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-1.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_1__ctor_JsonApiDotNetCore_Configuration_IResourceGraph_
+  commentId: M:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`1.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph)
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource>.JsonApiResourceDefinition(JsonApiDotNetCore.Configuration.IResourceGraph)
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource).JsonApiResourceDefinition(JsonApiDotNetCore.Configuration.IResourceGraph)
+  nameWithType: JsonApiResourceDefinition<TResource>.JsonApiResourceDefinition(IResourceGraph)
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource).JsonApiResourceDefinition(IResourceGraph)
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`1.#ctor*
+  name: JsonApiResourceDefinition
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-1.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_1__ctor_
+  commentId: Overload:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`1.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource>.JsonApiResourceDefinition
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource).JsonApiResourceDefinition
+  nameWithType: JsonApiResourceDefinition<TResource>.JsonApiResourceDefinition
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource).JsonApiResourceDefinition
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2
+  name: JsonApiResourceDefinition<TResource, TId>
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html
+  commentId: T:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2
+  name.vb: JsonApiResourceDefinition(Of TResource, TId)
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId)
+  nameWithType: JsonApiResourceDefinition<TResource, TId>
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId)
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph)
+  name: JsonApiResourceDefinition(IResourceGraph)
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2__ctor_JsonApiDotNetCore_Configuration_IResourceGraph_
+  commentId: M:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph)
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.JsonApiResourceDefinition(JsonApiDotNetCore.Configuration.IResourceGraph)
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).JsonApiResourceDefinition(JsonApiDotNetCore.Configuration.IResourceGraph)
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.JsonApiResourceDefinition(IResourceGraph)
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).JsonApiResourceDefinition(IResourceGraph)
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.#ctor*
+  name: JsonApiResourceDefinition
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2__ctor_
+  commentId: Overload:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.JsonApiResourceDefinition
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).JsonApiResourceDefinition
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.JsonApiResourceDefinition
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).JsonApiResourceDefinition
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.CreateSortExpressionFromLambda(JsonApiDotNetCore.Resources.JsonApiResourceDefinition{`0,`1}.PropertySortOrder)
+  name: CreateSortExpressionFromLambda(JsonApiResourceDefinition<TResource, TId>.PropertySortOrder)
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_CreateSortExpressionFromLambda_JsonApiDotNetCore_Resources_JsonApiResourceDefinition__0__1__PropertySortOrder_
+  commentId: M:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.CreateSortExpressionFromLambda(JsonApiDotNetCore.Resources.JsonApiResourceDefinition{`0,`1}.PropertySortOrder)
+  name.vb: CreateSortExpressionFromLambda(JsonApiResourceDefinition(Of TResource, TId).PropertySortOrder)
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.CreateSortExpressionFromLambda(JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.PropertySortOrder)
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).CreateSortExpressionFromLambda(JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).PropertySortOrder)
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.CreateSortExpressionFromLambda(JsonApiResourceDefinition<TResource, TId>.PropertySortOrder)
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).CreateSortExpressionFromLambda(JsonApiResourceDefinition(Of TResource, TId).PropertySortOrder)
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.CreateSortExpressionFromLambda*
+  name: CreateSortExpressionFromLambda
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_CreateSortExpressionFromLambda_
+  commentId: Overload:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.CreateSortExpressionFromLambda
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.CreateSortExpressionFromLambda
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).CreateSortExpressionFromLambda
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.CreateSortExpressionFromLambda
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).CreateSortExpressionFromLambda
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.GetMeta
+  name: GetMeta()
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_GetMeta
+  commentId: M:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.GetMeta
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.GetMeta()
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).GetMeta()
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.GetMeta()
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).GetMeta()
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.GetMeta*
+  name: GetMeta
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_GetMeta_
+  commentId: Overload:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.GetMeta
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.GetMeta
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).GetMeta
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.GetMeta
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).GetMeta
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  name: OnApplyFilter(FilterExpression)
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_OnApplyFilter_JsonApiDotNetCore_Queries_Expressions_FilterExpression_
+  commentId: M:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.OnApplyFilter(FilterExpression)
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).OnApplyFilter(FilterExpression)
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplyFilter*
+  name: OnApplyFilter
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_OnApplyFilter_
+  commentId: Overload:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplyFilter
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.OnApplyFilter
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).OnApplyFilter
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.OnApplyFilter
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).OnApplyFilter
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})
+  name: OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression>)
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_OnApplyIncludes_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__
+  commentId: M:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})
+  name.vb: OnApplyIncludes(IReadOnlyCollection(Of IncludeElementExpression))
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression>)
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression))
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression>)
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).OnApplyIncludes(IReadOnlyCollection(Of IncludeElementExpression))
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplyIncludes*
+  name: OnApplyIncludes
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_OnApplyIncludes_
+  commentId: Overload:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplyIncludes
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.OnApplyIncludes
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).OnApplyIncludes
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.OnApplyIncludes
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).OnApplyIncludes
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  name: OnApplyPagination(PaginationExpression)
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_OnApplyPagination_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_
+  commentId: M:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.OnApplyPagination(PaginationExpression)
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).OnApplyPagination(PaginationExpression)
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplyPagination*
+  name: OnApplyPagination
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_OnApplyPagination_
+  commentId: Overload:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplyPagination
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.OnApplyPagination
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).OnApplyPagination
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.OnApplyPagination
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).OnApplyPagination
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  name: OnApplySort(SortExpression)
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_OnApplySort_JsonApiDotNetCore_Queries_Expressions_SortExpression_
+  commentId: M:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.OnApplySort(SortExpression)
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).OnApplySort(SortExpression)
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplySort*
+  name: OnApplySort
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_OnApplySort_
+  commentId: Overload:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplySort
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.OnApplySort
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).OnApplySort
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.OnApplySort
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).OnApplySort
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  name: OnApplySparseFieldSet(SparseFieldSetExpression)
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_OnApplySparseFieldSet_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_
+  commentId: M:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.OnApplySparseFieldSet(SparseFieldSetExpression)
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).OnApplySparseFieldSet(SparseFieldSetExpression)
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplySparseFieldSet*
+  name: OnApplySparseFieldSet
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_OnApplySparseFieldSet_
+  commentId: Overload:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnApplySparseFieldSet
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.OnApplySparseFieldSet
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).OnApplySparseFieldSet
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.OnApplySparseFieldSet
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).OnApplySparseFieldSet
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnRegisterQueryableHandlersForQueryStringParameters
+  name: OnRegisterQueryableHandlersForQueryStringParameters()
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_OnRegisterQueryableHandlersForQueryStringParameters
+  commentId: M:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnRegisterQueryableHandlersForQueryStringParameters
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.OnRegisterQueryableHandlersForQueryStringParameters()
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).OnRegisterQueryableHandlersForQueryStringParameters()
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.OnRegisterQueryableHandlersForQueryStringParameters()
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).OnRegisterQueryableHandlersForQueryStringParameters()
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnRegisterQueryableHandlersForQueryStringParameters*
+  name: OnRegisterQueryableHandlersForQueryStringParameters
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_OnRegisterQueryableHandlersForQueryStringParameters_
+  commentId: Overload:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.OnRegisterQueryableHandlersForQueryStringParameters
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.OnRegisterQueryableHandlersForQueryStringParameters
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).OnRegisterQueryableHandlersForQueryStringParameters
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.OnRegisterQueryableHandlersForQueryStringParameters
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).OnRegisterQueryableHandlersForQueryStringParameters
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.PropertySortOrder
+  name: JsonApiResourceDefinition<TResource, TId>.PropertySortOrder
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.PropertySortOrder.html
+  commentId: T:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.PropertySortOrder
+  name.vb: JsonApiResourceDefinition(Of TResource, TId).PropertySortOrder
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.PropertySortOrder
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).PropertySortOrder
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.PropertySortOrder
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).PropertySortOrder
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.ResourceGraph
+  name: ResourceGraph
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_ResourceGraph
+  commentId: P:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.ResourceGraph
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.ResourceGraph
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).ResourceGraph
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.ResourceGraph
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).ResourceGraph
+- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.ResourceGraph*
+  name: ResourceGraph
+  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_ResourceGraph_
+  commentId: Overload:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.ResourceGraph
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource, TId>.ResourceGraph
+  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).ResourceGraph
+  nameWithType: JsonApiResourceDefinition<TResource, TId>.ResourceGraph
+  nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).ResourceGraph
+- uid: JsonApiDotNetCore.Resources.QueryStringParameterHandlers`1
+  name: QueryStringParameterHandlers<TResource>
+  href: api/JsonApiDotNetCore.Resources.QueryStringParameterHandlers-1.html
+  commentId: T:JsonApiDotNetCore.Resources.QueryStringParameterHandlers`1
+  name.vb: QueryStringParameterHandlers(Of TResource)
+  fullName: JsonApiDotNetCore.Resources.QueryStringParameterHandlers<TResource>
+  fullName.vb: JsonApiDotNetCore.Resources.QueryStringParameterHandlers(Of TResource)
+  nameWithType: QueryStringParameterHandlers<TResource>
+  nameWithType.vb: QueryStringParameterHandlers(Of TResource)
 - uid: JsonApiDotNetCore.Resources.ResourceChangeTracker`1
   name: ResourceChangeTracker<TResource>
   href: api/JsonApiDotNetCore.Resources.ResourceChangeTracker-1.html
@@ -12426,420 +12751,390 @@ references:
   fullName.vb: JsonApiDotNetCore.Resources.ResourceChangeTracker(Of TResource).SetRequestedAttributeValues
   nameWithType: ResourceChangeTracker<TResource>.SetRequestedAttributeValues
   nameWithType.vb: ResourceChangeTracker(Of TResource).SetRequestedAttributeValues
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1
-  name: ResourceDefinition<TResource>
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html
-  commentId: T:JsonApiDotNetCore.Resources.ResourceDefinition`1
-  name.vb: ResourceDefinition(Of TResource)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource)
-  nameWithType: ResourceDefinition<TResource>
-  nameWithType.vb: ResourceDefinition(Of TResource)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph)
-  name: ResourceDefinition(IResourceGraph)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1__ctor_JsonApiDotNetCore_Configuration_IResourceGraph_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.ResourceDefinition(JsonApiDotNetCore.Configuration.IResourceGraph)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).ResourceDefinition(JsonApiDotNetCore.Configuration.IResourceGraph)
-  nameWithType: ResourceDefinition<TResource>.ResourceDefinition(IResourceGraph)
-  nameWithType.vb: ResourceDefinition(Of TResource).ResourceDefinition(IResourceGraph)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.#ctor*
-  name: ResourceDefinition
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1__ctor_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.#ctor
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor
+  name: ResourceDefinitionAccessor
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html
+  commentId: T:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor
+  nameWithType: ResourceDefinitionAccessor
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,System.IServiceProvider)
+  name: ResourceDefinitionAccessor(IResourceContextProvider, IServiceProvider)
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_System_IServiceProvider_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,System.IServiceProvider)
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.ResourceDefinitionAccessor(JsonApiDotNetCore.Configuration.IResourceContextProvider, System.IServiceProvider)
+  nameWithType: ResourceDefinitionAccessor.ResourceDefinitionAccessor(IResourceContextProvider, IServiceProvider)
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.#ctor*
+  name: ResourceDefinitionAccessor
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor__ctor_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.#ctor
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.ResourceDefinition
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).ResourceDefinition
-  nameWithType: ResourceDefinition<TResource>.ResourceDefinition
-  nameWithType.vb: ResourceDefinition(Of TResource).ResourceDefinition
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterCreate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name: AfterCreate(HashSet<TResource>, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_AfterCreate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterCreate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name.vb: AfterCreate(HashSet(Of TResource), ResourcePipeline)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.AfterCreate(System.Collections.Generic.HashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).AfterCreate(System.Collections.Generic.HashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  nameWithType: ResourceDefinition<TResource>.AfterCreate(HashSet<TResource>, ResourcePipeline)
-  nameWithType.vb: ResourceDefinition(Of TResource).AfterCreate(HashSet(Of TResource), ResourcePipeline)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterCreate*
-  name: AfterCreate
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_AfterCreate_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterCreate
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.ResourceDefinitionAccessor
+  nameWithType: ResourceDefinitionAccessor.ResourceDefinitionAccessor
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetMeta(System.Type)
+  name: GetMeta(Type)
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_GetMeta_System_Type_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetMeta(System.Type)
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetMeta(System.Type)
+  nameWithType: ResourceDefinitionAccessor.GetMeta(Type)
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetMeta*
+  name: GetMeta
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_GetMeta_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetMeta
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.AfterCreate
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).AfterCreate
-  nameWithType: ResourceDefinition<TResource>.AfterCreate
-  nameWithType.vb: ResourceDefinition(Of TResource).AfterCreate
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterDelete(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean)
-  name: AfterDelete(HashSet<TResource>, ResourcePipeline, Boolean)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_AfterDelete_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterDelete(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean)
-  name.vb: AfterDelete(HashSet(Of TResource), ResourcePipeline, Boolean)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.AfterDelete(System.Collections.Generic.HashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline, System.Boolean)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).AfterDelete(System.Collections.Generic.HashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline, System.Boolean)
-  nameWithType: ResourceDefinition<TResource>.AfterDelete(HashSet<TResource>, ResourcePipeline, Boolean)
-  nameWithType.vb: ResourceDefinition(Of TResource).AfterDelete(HashSet(Of TResource), ResourcePipeline, Boolean)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterDelete*
-  name: AfterDelete
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_AfterDelete_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterDelete
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.AfterDelete
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).AfterDelete
-  nameWithType: ResourceDefinition<TResource>.AfterDelete
-  nameWithType.vb: ResourceDefinition(Of TResource).AfterDelete
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterRead(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean)
-  name: AfterRead(HashSet<TResource>, ResourcePipeline, Boolean)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_AfterRead_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterRead(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean)
-  name.vb: AfterRead(HashSet(Of TResource), ResourcePipeline, Boolean)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.AfterRead(System.Collections.Generic.HashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline, System.Boolean)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).AfterRead(System.Collections.Generic.HashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline, System.Boolean)
-  nameWithType: ResourceDefinition<TResource>.AfterRead(HashSet<TResource>, ResourcePipeline, Boolean)
-  nameWithType.vb: ResourceDefinition(Of TResource).AfterRead(HashSet(Of TResource), ResourcePipeline, Boolean)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterRead*
-  name: AfterRead
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_AfterRead_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterRead
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.AfterRead
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).AfterRead
-  nameWithType: ResourceDefinition<TResource>.AfterRead
-  nameWithType.vb: ResourceDefinition(Of TResource).AfterRead
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterUpdate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name: AfterUpdate(HashSet<TResource>, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_AfterUpdate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterUpdate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name.vb: AfterUpdate(HashSet(Of TResource), ResourcePipeline)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.AfterUpdate(System.Collections.Generic.HashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).AfterUpdate(System.Collections.Generic.HashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  nameWithType: ResourceDefinition<TResource>.AfterUpdate(HashSet<TResource>, ResourcePipeline)
-  nameWithType.vb: ResourceDefinition(Of TResource).AfterUpdate(HashSet(Of TResource), ResourcePipeline)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterUpdate*
-  name: AfterUpdate
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_AfterUpdate_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterUpdate
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.AfterUpdate
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).AfterUpdate
-  nameWithType: ResourceDefinition<TResource>.AfterUpdate
-  nameWithType.vb: ResourceDefinition(Of TResource).AfterUpdate
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name: AfterUpdateRelationship(IRelationshipsDictionary<TResource>, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name.vb: AfterUpdateRelationship(IRelationshipsDictionary(Of TResource), ResourcePipeline)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).AfterUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  nameWithType: ResourceDefinition<TResource>.AfterUpdateRelationship(IRelationshipsDictionary<TResource>, ResourcePipeline)
-  nameWithType.vb: ResourceDefinition(Of TResource).AfterUpdateRelationship(IRelationshipsDictionary(Of TResource), ResourcePipeline)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterUpdateRelationship*
-  name: AfterUpdateRelationship
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_AfterUpdateRelationship_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.AfterUpdateRelationship
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.AfterUpdateRelationship
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).AfterUpdateRelationship
-  nameWithType: ResourceDefinition<TResource>.AfterUpdateRelationship
-  nameWithType.vb: ResourceDefinition(Of TResource).AfterUpdateRelationship
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeCreate(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name: BeforeCreate(IResourceHashSet<TResource>, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeCreate_JsonApiDotNetCore_Hooks_Internal_Execution_IResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeCreate(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name.vb: BeforeCreate(IResourceHashSet(Of TResource), ResourcePipeline)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.BeforeCreate(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).BeforeCreate(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  nameWithType: ResourceDefinition<TResource>.BeforeCreate(IResourceHashSet<TResource>, ResourcePipeline)
-  nameWithType.vb: ResourceDefinition(Of TResource).BeforeCreate(IResourceHashSet(Of TResource), ResourcePipeline)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeCreate*
-  name: BeforeCreate
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeCreate_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeCreate
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.BeforeCreate
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).BeforeCreate
-  nameWithType: ResourceDefinition<TResource>.BeforeCreate
-  nameWithType.vb: ResourceDefinition(Of TResource).BeforeCreate
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeDelete(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name: BeforeDelete(IResourceHashSet<TResource>, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeDelete_JsonApiDotNetCore_Hooks_Internal_Execution_IResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeDelete(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name.vb: BeforeDelete(IResourceHashSet(Of TResource), ResourcePipeline)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.BeforeDelete(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).BeforeDelete(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  nameWithType: ResourceDefinition<TResource>.BeforeDelete(IResourceHashSet<TResource>, ResourcePipeline)
-  nameWithType.vb: ResourceDefinition(Of TResource).BeforeDelete(IResourceHashSet(Of TResource), ResourcePipeline)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeDelete*
-  name: BeforeDelete
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeDelete_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeDelete
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.BeforeDelete
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).BeforeDelete
-  nameWithType: ResourceDefinition<TResource>.BeforeDelete
-  nameWithType.vb: ResourceDefinition(Of TResource).BeforeDelete
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeImplicitUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name: BeforeImplicitUpdateRelationship(IRelationshipsDictionary<TResource>, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeImplicitUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name.vb: BeforeImplicitUpdateRelationship(IRelationshipsDictionary(Of TResource), ResourcePipeline)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.BeforeImplicitUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).BeforeImplicitUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  nameWithType: ResourceDefinition<TResource>.BeforeImplicitUpdateRelationship(IRelationshipsDictionary<TResource>, ResourcePipeline)
-  nameWithType.vb: ResourceDefinition(Of TResource).BeforeImplicitUpdateRelationship(IRelationshipsDictionary(Of TResource), ResourcePipeline)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeImplicitUpdateRelationship*
-  name: BeforeImplicitUpdateRelationship
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeImplicitUpdateRelationship_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeImplicitUpdateRelationship
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.BeforeImplicitUpdateRelationship
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).BeforeImplicitUpdateRelationship
-  nameWithType: ResourceDefinition<TResource>.BeforeImplicitUpdateRelationship
-  nameWithType.vb: ResourceDefinition(Of TResource).BeforeImplicitUpdateRelationship
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeRead(JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean,System.String)
-  name: BeforeRead(ResourcePipeline, Boolean, String)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeRead_JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_System_String_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeRead(JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean,System.String)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.BeforeRead(JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline, System.Boolean, System.String)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).BeforeRead(JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline, System.Boolean, System.String)
-  nameWithType: ResourceDefinition<TResource>.BeforeRead(ResourcePipeline, Boolean, String)
-  nameWithType.vb: ResourceDefinition(Of TResource).BeforeRead(ResourcePipeline, Boolean, String)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeRead*
-  name: BeforeRead
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeRead_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeRead
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.BeforeRead
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).BeforeRead
-  nameWithType: ResourceDefinition<TResource>.BeforeRead
-  nameWithType.vb: ResourceDefinition(Of TResource).BeforeRead
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.Internal.Execution.IDiffableResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name: BeforeUpdate(IDiffableResourceHashSet<TResource>, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_Internal_Execution_IDiffableResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.Internal.Execution.IDiffableResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name.vb: BeforeUpdate(IDiffableResourceHashSet(Of TResource), ResourcePipeline)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.BeforeUpdate(JsonApiDotNetCore.Hooks.Internal.Execution.IDiffableResourceHashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).BeforeUpdate(JsonApiDotNetCore.Hooks.Internal.Execution.IDiffableResourceHashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  nameWithType: ResourceDefinition<TResource>.BeforeUpdate(IDiffableResourceHashSet<TResource>, ResourcePipeline)
-  nameWithType.vb: ResourceDefinition(Of TResource).BeforeUpdate(IDiffableResourceHashSet(Of TResource), ResourcePipeline)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeUpdate*
-  name: BeforeUpdate
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeUpdate_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeUpdate
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.BeforeUpdate
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).BeforeUpdate
-  nameWithType: ResourceDefinition<TResource>.BeforeUpdate
-  nameWithType.vb: ResourceDefinition(Of TResource).BeforeUpdate
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeUpdateRelationship(System.Collections.Generic.HashSet{System.String},JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name: BeforeUpdateRelationship(HashSet<String>, IRelationshipsDictionary<TResource>, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeUpdateRelationship(System.Collections.Generic.HashSet{System.String},JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name.vb: BeforeUpdateRelationship(HashSet(Of String), IRelationshipsDictionary(Of TResource), ResourcePipeline)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.BeforeUpdateRelationship(System.Collections.Generic.HashSet<System.String>, JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).BeforeUpdateRelationship(System.Collections.Generic.HashSet(Of System.String), JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  nameWithType: ResourceDefinition<TResource>.BeforeUpdateRelationship(HashSet<String>, IRelationshipsDictionary<TResource>, ResourcePipeline)
-  nameWithType.vb: ResourceDefinition(Of TResource).BeforeUpdateRelationship(HashSet(Of String), IRelationshipsDictionary(Of TResource), ResourcePipeline)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeUpdateRelationship*
-  name: BeforeUpdateRelationship
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_BeforeUpdateRelationship_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.BeforeUpdateRelationship
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.BeforeUpdateRelationship
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).BeforeUpdateRelationship
-  nameWithType: ResourceDefinition<TResource>.BeforeUpdateRelationship
-  nameWithType.vb: ResourceDefinition(Of TResource).BeforeUpdateRelationship
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.CreateSortExpressionFromLambda(JsonApiDotNetCore.Resources.ResourceDefinition{`0}.PropertySortOrder)
-  name: CreateSortExpressionFromLambda(ResourceDefinition<TResource>.PropertySortOrder)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_CreateSortExpressionFromLambda_JsonApiDotNetCore_Resources_ResourceDefinition__0__PropertySortOrder_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.CreateSortExpressionFromLambda(JsonApiDotNetCore.Resources.ResourceDefinition{`0}.PropertySortOrder)
-  name.vb: CreateSortExpressionFromLambda(ResourceDefinition(Of TResource).PropertySortOrder)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.CreateSortExpressionFromLambda(JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.PropertySortOrder)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).CreateSortExpressionFromLambda(JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).PropertySortOrder)
-  nameWithType: ResourceDefinition<TResource>.CreateSortExpressionFromLambda(ResourceDefinition<TResource>.PropertySortOrder)
-  nameWithType.vb: ResourceDefinition(Of TResource).CreateSortExpressionFromLambda(ResourceDefinition(Of TResource).PropertySortOrder)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.CreateSortExpressionFromLambda*
-  name: CreateSortExpressionFromLambda
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_CreateSortExpressionFromLambda_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.CreateSortExpressionFromLambda
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.CreateSortExpressionFromLambda
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).CreateSortExpressionFromLambda
-  nameWithType: ResourceDefinition<TResource>.CreateSortExpressionFromLambda
-  nameWithType.vb: ResourceDefinition(Of TResource).CreateSortExpressionFromLambda
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.GetQueryableHandlerForQueryStringParameter(System.String)
-  name: GetQueryableHandlerForQueryStringParameter(String)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_GetQueryableHandlerForQueryStringParameter_System_String_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.GetQueryableHandlerForQueryStringParameter(System.String)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.GetQueryableHandlerForQueryStringParameter(System.String)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).GetQueryableHandlerForQueryStringParameter(System.String)
-  nameWithType: ResourceDefinition<TResource>.GetQueryableHandlerForQueryStringParameter(String)
-  nameWithType.vb: ResourceDefinition(Of TResource).GetQueryableHandlerForQueryStringParameter(String)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.GetQueryableHandlerForQueryStringParameter*
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetMeta
+  nameWithType: ResourceDefinitionAccessor.GetMeta
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(System.Type,System.String)
+  name: GetQueryableHandlerForQueryStringParameter(Type, String)
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_GetQueryableHandlerForQueryStringParameter_System_Type_System_String_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(System.Type,System.String)
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(System.Type, System.String)
+  nameWithType: ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(Type, String)
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter*
   name: GetQueryableHandlerForQueryStringParameter
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_GetQueryableHandlerForQueryStringParameter_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.GetQueryableHandlerForQueryStringParameter
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_GetQueryableHandlerForQueryStringParameter_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.GetQueryableHandlerForQueryStringParameter
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).GetQueryableHandlerForQueryStringParameter
-  nameWithType: ResourceDefinition<TResource>.GetQueryableHandlerForQueryStringParameter
-  nameWithType.vb: ResourceDefinition(Of TResource).GetQueryableHandlerForQueryStringParameter
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
-  name: OnApplyFilter(FilterExpression)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnApplyFilter_JsonApiDotNetCore_Queries_Expressions_FilterExpression_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnApplyFilter(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
-  nameWithType: ResourceDefinition<TResource>.OnApplyFilter(FilterExpression)
-  nameWithType.vb: ResourceDefinition(Of TResource).OnApplyFilter(FilterExpression)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplyFilter*
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
+  nameWithType: ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetResourceDefinition(System.Type)
+  name: GetResourceDefinition(Type)
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_GetResourceDefinition_System_Type_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetResourceDefinition(System.Type)
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetResourceDefinition(System.Type)
+  nameWithType: ResourceDefinitionAccessor.GetResourceDefinition(Type)
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetResourceDefinition*
+  name: GetResourceDefinition
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_GetResourceDefinition_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetResourceDefinition
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetResourceDefinition
+  nameWithType: ResourceDefinitionAccessor.GetResourceDefinition
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyFilter(System.Type,JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  name: OnApplyFilter(Type, FilterExpression)
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_OnApplyFilter_System_Type_JsonApiDotNetCore_Queries_Expressions_FilterExpression_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyFilter(System.Type,JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyFilter(System.Type, JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  nameWithType: ResourceDefinitionAccessor.OnApplyFilter(Type, FilterExpression)
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyFilter*
   name: OnApplyFilter
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnApplyFilter_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplyFilter
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_OnApplyFilter_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyFilter
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnApplyFilter
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnApplyFilter
-  nameWithType: ResourceDefinition<TResource>.OnApplyFilter
-  nameWithType.vb: ResourceDefinition(Of TResource).OnApplyFilter
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})
-  name: OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression>)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnApplyIncludes_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})
-  name.vb: OnApplyIncludes(IReadOnlyCollection(Of IncludeElementExpression))
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression>)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression))
-  nameWithType: ResourceDefinition<TResource>.OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression>)
-  nameWithType.vb: ResourceDefinition(Of TResource).OnApplyIncludes(IReadOnlyCollection(Of IncludeElementExpression))
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplyIncludes*
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyFilter
+  nameWithType: ResourceDefinitionAccessor.OnApplyFilter
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyIncludes(System.Type,System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})
+  name: OnApplyIncludes(Type, IReadOnlyCollection<IncludeElementExpression>)
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_OnApplyIncludes_System_Type_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__
+  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyIncludes(System.Type,System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})
+  name.vb: OnApplyIncludes(Type, IReadOnlyCollection(Of IncludeElementExpression))
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyIncludes(System.Type, System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression>)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyIncludes(System.Type, System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression))
+  nameWithType: ResourceDefinitionAccessor.OnApplyIncludes(Type, IReadOnlyCollection<IncludeElementExpression>)
+  nameWithType.vb: ResourceDefinitionAccessor.OnApplyIncludes(Type, IReadOnlyCollection(Of IncludeElementExpression))
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyIncludes*
   name: OnApplyIncludes
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnApplyIncludes_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplyIncludes
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_OnApplyIncludes_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyIncludes
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnApplyIncludes
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnApplyIncludes
-  nameWithType: ResourceDefinition<TResource>.OnApplyIncludes
-  nameWithType.vb: ResourceDefinition(Of TResource).OnApplyIncludes
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
-  name: OnApplyPagination(PaginationExpression)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnApplyPagination_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnApplyPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
-  nameWithType: ResourceDefinition<TResource>.OnApplyPagination(PaginationExpression)
-  nameWithType.vb: ResourceDefinition(Of TResource).OnApplyPagination(PaginationExpression)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplyPagination*
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyIncludes
+  nameWithType: ResourceDefinitionAccessor.OnApplyIncludes
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyPagination(System.Type,JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  name: OnApplyPagination(Type, PaginationExpression)
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_OnApplyPagination_System_Type_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyPagination(System.Type,JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyPagination(System.Type, JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  nameWithType: ResourceDefinitionAccessor.OnApplyPagination(Type, PaginationExpression)
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyPagination*
   name: OnApplyPagination
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnApplyPagination_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplyPagination
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_OnApplyPagination_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyPagination
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnApplyPagination
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnApplyPagination
-  nameWithType: ResourceDefinition<TResource>.OnApplyPagination
-  nameWithType.vb: ResourceDefinition(Of TResource).OnApplyPagination
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
-  name: OnApplySort(SortExpression)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnApplySort_JsonApiDotNetCore_Queries_Expressions_SortExpression_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnApplySort(JsonApiDotNetCore.Queries.Expressions.SortExpression)
-  nameWithType: ResourceDefinition<TResource>.OnApplySort(SortExpression)
-  nameWithType.vb: ResourceDefinition(Of TResource).OnApplySort(SortExpression)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplySort*
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyPagination
+  nameWithType: ResourceDefinitionAccessor.OnApplyPagination
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplySort(System.Type,JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  name: OnApplySort(Type, SortExpression)
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_OnApplySort_System_Type_JsonApiDotNetCore_Queries_Expressions_SortExpression_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplySort(System.Type,JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplySort(System.Type, JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  nameWithType: ResourceDefinitionAccessor.OnApplySort(Type, SortExpression)
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplySort*
   name: OnApplySort
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnApplySort_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplySort
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_OnApplySort_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplySort
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnApplySort
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnApplySort
-  nameWithType: ResourceDefinition<TResource>.OnApplySort
-  nameWithType.vb: ResourceDefinition(Of TResource).OnApplySort
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
-  name: OnApplySparseFieldSet(SparseFieldSetExpression)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnApplySparseFieldSet_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnApplySparseFieldSet(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
-  nameWithType: ResourceDefinition<TResource>.OnApplySparseFieldSet(SparseFieldSetExpression)
-  nameWithType.vb: ResourceDefinition(Of TResource).OnApplySparseFieldSet(SparseFieldSetExpression)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplySparseFieldSet*
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplySort
+  nameWithType: ResourceDefinitionAccessor.OnApplySort
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplySparseFieldSet(System.Type,JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  name: OnApplySparseFieldSet(Type, SparseFieldSetExpression)
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_OnApplySparseFieldSet_System_Type_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplySparseFieldSet(System.Type,JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplySparseFieldSet(System.Type, JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)
+  nameWithType: ResourceDefinitionAccessor.OnApplySparseFieldSet(Type, SparseFieldSetExpression)
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplySparseFieldSet*
   name: OnApplySparseFieldSet
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnApplySparseFieldSet_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnApplySparseFieldSet
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_OnApplySparseFieldSet_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplySparseFieldSet
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnApplySparseFieldSet
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnApplySparseFieldSet
-  nameWithType: ResourceDefinition<TResource>.OnApplySparseFieldSet
-  nameWithType.vb: ResourceDefinition(Of TResource).OnApplySparseFieldSet
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnRegisterQueryableHandlersForQueryStringParameters
-  name: OnRegisterQueryableHandlersForQueryStringParameters()
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnRegisterQueryableHandlersForQueryStringParameters
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnRegisterQueryableHandlersForQueryStringParameters
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnRegisterQueryableHandlersForQueryStringParameters()
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnRegisterQueryableHandlersForQueryStringParameters()
-  nameWithType: ResourceDefinition<TResource>.OnRegisterQueryableHandlersForQueryStringParameters()
-  nameWithType.vb: ResourceDefinition(Of TResource).OnRegisterQueryableHandlersForQueryStringParameters()
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnRegisterQueryableHandlersForQueryStringParameters*
-  name: OnRegisterQueryableHandlersForQueryStringParameters
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnRegisterQueryableHandlersForQueryStringParameters_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnRegisterQueryableHandlersForQueryStringParameters
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplySparseFieldSet
+  nameWithType: ResourceDefinitionAccessor.OnApplySparseFieldSet
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1
+  name: ResourceHooksDefinition<TResource>
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html
+  commentId: T:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1
+  name.vb: ResourceHooksDefinition(Of TResource)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource)
+  nameWithType: ResourceHooksDefinition<TResource>
+  nameWithType.vb: ResourceHooksDefinition(Of TResource)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph)
+  name: ResourceHooksDefinition(IResourceGraph)
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1__ctor_JsonApiDotNetCore_Configuration_IResourceGraph_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.ResourceHooksDefinition(JsonApiDotNetCore.Configuration.IResourceGraph)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).ResourceHooksDefinition(JsonApiDotNetCore.Configuration.IResourceGraph)
+  nameWithType: ResourceHooksDefinition<TResource>.ResourceHooksDefinition(IResourceGraph)
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).ResourceHooksDefinition(IResourceGraph)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.#ctor*
+  name: ResourceHooksDefinition
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1__ctor_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.#ctor
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnRegisterQueryableHandlersForQueryStringParameters
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnRegisterQueryableHandlersForQueryStringParameters
-  nameWithType: ResourceDefinition<TResource>.OnRegisterQueryableHandlersForQueryStringParameters
-  nameWithType.vb: ResourceDefinition(Of TResource).OnRegisterQueryableHandlersForQueryStringParameters
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnReturn(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.ResourceHooksDefinition
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).ResourceHooksDefinition
+  nameWithType: ResourceHooksDefinition<TResource>.ResourceHooksDefinition
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).ResourceHooksDefinition
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterCreate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name: AfterCreate(HashSet<TResource>, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterCreate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterCreate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name.vb: AfterCreate(HashSet(Of TResource), ResourcePipeline)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.AfterCreate(System.Collections.Generic.HashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).AfterCreate(System.Collections.Generic.HashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  nameWithType: ResourceHooksDefinition<TResource>.AfterCreate(HashSet<TResource>, ResourcePipeline)
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).AfterCreate(HashSet(Of TResource), ResourcePipeline)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterCreate*
+  name: AfterCreate
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterCreate_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterCreate
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.AfterCreate
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).AfterCreate
+  nameWithType: ResourceHooksDefinition<TResource>.AfterCreate
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).AfterCreate
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterDelete(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean)
+  name: AfterDelete(HashSet<TResource>, ResourcePipeline, Boolean)
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterDelete_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterDelete(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean)
+  name.vb: AfterDelete(HashSet(Of TResource), ResourcePipeline, Boolean)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.AfterDelete(System.Collections.Generic.HashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline, System.Boolean)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).AfterDelete(System.Collections.Generic.HashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline, System.Boolean)
+  nameWithType: ResourceHooksDefinition<TResource>.AfterDelete(HashSet<TResource>, ResourcePipeline, Boolean)
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).AfterDelete(HashSet(Of TResource), ResourcePipeline, Boolean)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterDelete*
+  name: AfterDelete
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterDelete_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterDelete
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.AfterDelete
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).AfterDelete
+  nameWithType: ResourceHooksDefinition<TResource>.AfterDelete
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).AfterDelete
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterRead(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean)
+  name: AfterRead(HashSet<TResource>, ResourcePipeline, Boolean)
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterRead_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterRead(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean)
+  name.vb: AfterRead(HashSet(Of TResource), ResourcePipeline, Boolean)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.AfterRead(System.Collections.Generic.HashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline, System.Boolean)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).AfterRead(System.Collections.Generic.HashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline, System.Boolean)
+  nameWithType: ResourceHooksDefinition<TResource>.AfterRead(HashSet<TResource>, ResourcePipeline, Boolean)
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).AfterRead(HashSet(Of TResource), ResourcePipeline, Boolean)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterRead*
+  name: AfterRead
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterRead_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterRead
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.AfterRead
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).AfterRead
+  nameWithType: ResourceHooksDefinition<TResource>.AfterRead
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).AfterRead
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterUpdate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name: AfterUpdate(HashSet<TResource>, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterUpdate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name.vb: AfterUpdate(HashSet(Of TResource), ResourcePipeline)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.AfterUpdate(System.Collections.Generic.HashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).AfterUpdate(System.Collections.Generic.HashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  nameWithType: ResourceHooksDefinition<TResource>.AfterUpdate(HashSet<TResource>, ResourcePipeline)
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).AfterUpdate(HashSet(Of TResource), ResourcePipeline)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterUpdate*
+  name: AfterUpdate
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdate_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterUpdate
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.AfterUpdate
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).AfterUpdate
+  nameWithType: ResourceHooksDefinition<TResource>.AfterUpdate
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).AfterUpdate
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name: AfterUpdateRelationship(IRelationshipsDictionary<TResource>, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name.vb: AfterUpdateRelationship(IRelationshipsDictionary(Of TResource), ResourcePipeline)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).AfterUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  nameWithType: ResourceHooksDefinition<TResource>.AfterUpdateRelationship(IRelationshipsDictionary<TResource>, ResourcePipeline)
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).AfterUpdateRelationship(IRelationshipsDictionary(Of TResource), ResourcePipeline)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterUpdateRelationship*
+  name: AfterUpdateRelationship
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdateRelationship_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterUpdateRelationship
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.AfterUpdateRelationship
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).AfterUpdateRelationship
+  nameWithType: ResourceHooksDefinition<TResource>.AfterUpdateRelationship
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).AfterUpdateRelationship
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeCreate(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name: BeforeCreate(IResourceHashSet<TResource>, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeCreate_JsonApiDotNetCore_Hooks_Internal_Execution_IResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeCreate(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name.vb: BeforeCreate(IResourceHashSet(Of TResource), ResourcePipeline)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.BeforeCreate(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).BeforeCreate(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  nameWithType: ResourceHooksDefinition<TResource>.BeforeCreate(IResourceHashSet<TResource>, ResourcePipeline)
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).BeforeCreate(IResourceHashSet(Of TResource), ResourcePipeline)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeCreate*
+  name: BeforeCreate
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeCreate_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeCreate
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.BeforeCreate
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).BeforeCreate
+  nameWithType: ResourceHooksDefinition<TResource>.BeforeCreate
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).BeforeCreate
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeDelete(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name: BeforeDelete(IResourceHashSet<TResource>, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeDelete_JsonApiDotNetCore_Hooks_Internal_Execution_IResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeDelete(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name.vb: BeforeDelete(IResourceHashSet(Of TResource), ResourcePipeline)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.BeforeDelete(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).BeforeDelete(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  nameWithType: ResourceHooksDefinition<TResource>.BeforeDelete(IResourceHashSet<TResource>, ResourcePipeline)
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).BeforeDelete(IResourceHashSet(Of TResource), ResourcePipeline)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeDelete*
+  name: BeforeDelete
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeDelete_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeDelete
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.BeforeDelete
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).BeforeDelete
+  nameWithType: ResourceHooksDefinition<TResource>.BeforeDelete
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).BeforeDelete
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeImplicitUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name: BeforeImplicitUpdateRelationship(IRelationshipsDictionary<TResource>, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeImplicitUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name.vb: BeforeImplicitUpdateRelationship(IRelationshipsDictionary(Of TResource), ResourcePipeline)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.BeforeImplicitUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).BeforeImplicitUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  nameWithType: ResourceHooksDefinition<TResource>.BeforeImplicitUpdateRelationship(IRelationshipsDictionary<TResource>, ResourcePipeline)
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).BeforeImplicitUpdateRelationship(IRelationshipsDictionary(Of TResource), ResourcePipeline)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeImplicitUpdateRelationship*
+  name: BeforeImplicitUpdateRelationship
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeImplicitUpdateRelationship_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeImplicitUpdateRelationship
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.BeforeImplicitUpdateRelationship
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).BeforeImplicitUpdateRelationship
+  nameWithType: ResourceHooksDefinition<TResource>.BeforeImplicitUpdateRelationship
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).BeforeImplicitUpdateRelationship
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeRead(JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean,System.String)
+  name: BeforeRead(ResourcePipeline, Boolean, String)
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeRead_JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_System_String_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeRead(JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean,System.String)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.BeforeRead(JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline, System.Boolean, System.String)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).BeforeRead(JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline, System.Boolean, System.String)
+  nameWithType: ResourceHooksDefinition<TResource>.BeforeRead(ResourcePipeline, Boolean, String)
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).BeforeRead(ResourcePipeline, Boolean, String)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeRead*
+  name: BeforeRead
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeRead_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeRead
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.BeforeRead
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).BeforeRead
+  nameWithType: ResourceHooksDefinition<TResource>.BeforeRead
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).BeforeRead
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.Internal.Execution.IDiffableResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name: BeforeUpdate(IDiffableResourceHashSet<TResource>, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_Internal_Execution_IDiffableResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.Internal.Execution.IDiffableResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name.vb: BeforeUpdate(IDiffableResourceHashSet(Of TResource), ResourcePipeline)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.BeforeUpdate(JsonApiDotNetCore.Hooks.Internal.Execution.IDiffableResourceHashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).BeforeUpdate(JsonApiDotNetCore.Hooks.Internal.Execution.IDiffableResourceHashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  nameWithType: ResourceHooksDefinition<TResource>.BeforeUpdate(IDiffableResourceHashSet<TResource>, ResourcePipeline)
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).BeforeUpdate(IDiffableResourceHashSet(Of TResource), ResourcePipeline)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeUpdate*
+  name: BeforeUpdate
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdate_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeUpdate
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.BeforeUpdate
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).BeforeUpdate
+  nameWithType: ResourceHooksDefinition<TResource>.BeforeUpdate
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).BeforeUpdate
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeUpdateRelationship(System.Collections.Generic.HashSet{System.String},JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name: BeforeUpdateRelationship(HashSet<String>, IRelationshipsDictionary<TResource>, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeUpdateRelationship(System.Collections.Generic.HashSet{System.String},JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name.vb: BeforeUpdateRelationship(HashSet(Of String), IRelationshipsDictionary(Of TResource), ResourcePipeline)
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.BeforeUpdateRelationship(System.Collections.Generic.HashSet<System.String>, JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).BeforeUpdateRelationship(System.Collections.Generic.HashSet(Of System.String), JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  nameWithType: ResourceHooksDefinition<TResource>.BeforeUpdateRelationship(HashSet<String>, IRelationshipsDictionary<TResource>, ResourcePipeline)
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).BeforeUpdateRelationship(HashSet(Of String), IRelationshipsDictionary(Of TResource), ResourcePipeline)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeUpdateRelationship*
+  name: BeforeUpdateRelationship
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdateRelationship_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeUpdateRelationship
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.BeforeUpdateRelationship
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).BeforeUpdateRelationship
+  nameWithType: ResourceHooksDefinition<TResource>.BeforeUpdateRelationship
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).BeforeUpdateRelationship
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.OnReturn(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
   name: OnReturn(HashSet<TResource>, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnReturn_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnReturn(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_OnReturn_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.OnReturn(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
   name.vb: OnReturn(HashSet(Of TResource), ResourcePipeline)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnReturn(System.Collections.Generic.HashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnReturn(System.Collections.Generic.HashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  nameWithType: ResourceDefinition<TResource>.OnReturn(HashSet<TResource>, ResourcePipeline)
-  nameWithType.vb: ResourceDefinition(Of TResource).OnReturn(HashSet(Of TResource), ResourcePipeline)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.OnReturn*
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.OnReturn(System.Collections.Generic.HashSet<TResource>, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).OnReturn(System.Collections.Generic.HashSet(Of TResource), JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  nameWithType: ResourceHooksDefinition<TResource>.OnReturn(HashSet<TResource>, ResourcePipeline)
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).OnReturn(HashSet(Of TResource), ResourcePipeline)
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.OnReturn*
   name: OnReturn
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_OnReturn_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.OnReturn
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_OnReturn_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.OnReturn
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.OnReturn
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).OnReturn
-  nameWithType: ResourceDefinition<TResource>.OnReturn
-  nameWithType.vb: ResourceDefinition(Of TResource).OnReturn
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.PropertySortOrder
-  name: ResourceDefinition<TResource>.PropertySortOrder
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.PropertySortOrder.html
-  commentId: T:JsonApiDotNetCore.Resources.ResourceDefinition`1.PropertySortOrder
-  name.vb: ResourceDefinition(Of TResource).PropertySortOrder
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.PropertySortOrder
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).PropertySortOrder
-  nameWithType: ResourceDefinition<TResource>.PropertySortOrder
-  nameWithType.vb: ResourceDefinition(Of TResource).PropertySortOrder
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.QueryStringParameterHandlers
-  name: ResourceDefinition<TResource>.QueryStringParameterHandlers
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.QueryStringParameterHandlers.html
-  commentId: T:JsonApiDotNetCore.Resources.ResourceDefinition`1.QueryStringParameterHandlers
-  name.vb: ResourceDefinition(Of TResource).QueryStringParameterHandlers
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.QueryStringParameterHandlers
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).QueryStringParameterHandlers
-  nameWithType: ResourceDefinition<TResource>.QueryStringParameterHandlers
-  nameWithType.vb: ResourceDefinition(Of TResource).QueryStringParameterHandlers
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.ResourceGraph
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.OnReturn
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).OnReturn
+  nameWithType: ResourceHooksDefinition<TResource>.OnReturn
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).OnReturn
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.ResourceGraph
   name: ResourceGraph
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_ResourceGraph
-  commentId: P:JsonApiDotNetCore.Resources.ResourceDefinition`1.ResourceGraph
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.ResourceGraph
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).ResourceGraph
-  nameWithType: ResourceDefinition<TResource>.ResourceGraph
-  nameWithType.vb: ResourceDefinition(Of TResource).ResourceGraph
-- uid: JsonApiDotNetCore.Resources.ResourceDefinition`1.ResourceGraph*
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_ResourceGraph
+  commentId: P:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.ResourceGraph
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.ResourceGraph
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).ResourceGraph
+  nameWithType: ResourceHooksDefinition<TResource>.ResourceGraph
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).ResourceGraph
+- uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.ResourceGraph*
   name: ResourceGraph
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinition-1.html#JsonApiDotNetCore_Resources_ResourceDefinition_1_ResourceGraph_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinition`1.ResourceGraph
+  href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_ResourceGraph_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.ResourceGraph
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinition<TResource>.ResourceGraph
-  fullName.vb: JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource).ResourceGraph
-  nameWithType: ResourceDefinition<TResource>.ResourceGraph
-  nameWithType.vb: ResourceDefinition(Of TResource).ResourceGraph
+  fullName: JsonApiDotNetCore.Resources.ResourceHooksDefinition<TResource>.ResourceGraph
+  fullName.vb: JsonApiDotNetCore.Resources.ResourceHooksDefinition(Of TResource).ResourceGraph
+  nameWithType: ResourceHooksDefinition<TResource>.ResourceGraph
+  nameWithType.vb: ResourceHooksDefinition(Of TResource).ResourceGraph
 - uid: JsonApiDotNetCore.Resources.TargetedFields
   name: TargetedFields
   href: api/JsonApiDotNetCore.Resources.TargetedFields.html
@@ -13374,15 +13669,14 @@ references:
   fullName.vb: JsonApiDotNetCore.Serialization.Building.MetaBuilder(Of TResource)
   nameWithType: MetaBuilder<TResource>
   nameWithType.vb: MetaBuilder(Of TResource)
-- uid: JsonApiDotNetCore.Serialization.Building.MetaBuilder`1.#ctor(JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.IRequestMeta,JsonApiDotNetCore.Resources.ResourceDefinition{`0})
-  name: MetaBuilder(IPaginationContext, IJsonApiOptions, IRequestMeta, ResourceDefinition<TResource>)
-  href: api/JsonApiDotNetCore.Serialization.Building.MetaBuilder-1.html#JsonApiDotNetCore_Serialization_Building_MetaBuilder_1__ctor_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Serialization_IRequestMeta_JsonApiDotNetCore_Resources_ResourceDefinition__0__
-  commentId: M:JsonApiDotNetCore.Serialization.Building.MetaBuilder`1.#ctor(JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.IRequestMeta,JsonApiDotNetCore.Resources.ResourceDefinition{`0})
-  name.vb: MetaBuilder(IPaginationContext, IJsonApiOptions, IRequestMeta, ResourceDefinition(Of TResource))
-  fullName: JsonApiDotNetCore.Serialization.Building.MetaBuilder<TResource>.MetaBuilder(JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.IRequestMeta, JsonApiDotNetCore.Resources.ResourceDefinition<TResource>)
-  fullName.vb: JsonApiDotNetCore.Serialization.Building.MetaBuilder(Of TResource).MetaBuilder(JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.IRequestMeta, JsonApiDotNetCore.Resources.ResourceDefinition(Of TResource))
-  nameWithType: MetaBuilder<TResource>.MetaBuilder(IPaginationContext, IJsonApiOptions, IRequestMeta, ResourceDefinition<TResource>)
-  nameWithType.vb: MetaBuilder(Of TResource).MetaBuilder(IPaginationContext, IJsonApiOptions, IRequestMeta, ResourceDefinition(Of TResource))
+- uid: JsonApiDotNetCore.Serialization.Building.MetaBuilder`1.#ctor(JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Serialization.IResponseMeta)
+  name: MetaBuilder(IPaginationContext, IJsonApiOptions, IResourceDefinitionAccessor, IResponseMeta)
+  href: api/JsonApiDotNetCore.Serialization.Building.MetaBuilder-1.html#JsonApiDotNetCore_Serialization_Building_MetaBuilder_1__ctor_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Serialization_IResponseMeta_
+  commentId: M:JsonApiDotNetCore.Serialization.Building.MetaBuilder`1.#ctor(JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Serialization.IResponseMeta)
+  fullName: JsonApiDotNetCore.Serialization.Building.MetaBuilder<TResource>.MetaBuilder(JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Serialization.IResponseMeta)
+  fullName.vb: JsonApiDotNetCore.Serialization.Building.MetaBuilder(Of TResource).MetaBuilder(JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Serialization.IResponseMeta)
+  nameWithType: MetaBuilder<TResource>.MetaBuilder(IPaginationContext, IJsonApiOptions, IResourceDefinitionAccessor, IResponseMeta)
+  nameWithType.vb: MetaBuilder(Of TResource).MetaBuilder(IPaginationContext, IJsonApiOptions, IResourceDefinitionAccessor, IResponseMeta)
 - uid: JsonApiDotNetCore.Serialization.Building.MetaBuilder`1.#ctor*
   name: MetaBuilder
   href: api/JsonApiDotNetCore.Serialization.Building.MetaBuilder-1.html#JsonApiDotNetCore_Serialization_Building_MetaBuilder_1__ctor_
@@ -13979,15 +14273,15 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.FieldsToSerialize
   fullName: JsonApiDotNetCore.Serialization.FieldsToSerialize
   nameWithType: FieldsToSerialize
-- uid: JsonApiDotNetCore.Serialization.FieldsToSerialize.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionProvider)
-  name: FieldsToSerialize(IResourceGraph, IEnumerable<IQueryConstraintProvider>, IResourceDefinitionProvider)
-  href: api/JsonApiDotNetCore.Serialization.FieldsToSerialize.html#JsonApiDotNetCore_Serialization_FieldsToSerialize__ctor_JsonApiDotNetCore_Configuration_IResourceGraph_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionProvider_
-  commentId: M:JsonApiDotNetCore.Serialization.FieldsToSerialize.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionProvider)
-  name.vb: FieldsToSerialize(IResourceGraph, IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionProvider)
-  fullName: JsonApiDotNetCore.Serialization.FieldsToSerialize.FieldsToSerialize(JsonApiDotNetCore.Configuration.IResourceGraph, System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, JsonApiDotNetCore.Resources.IResourceDefinitionProvider)
-  fullName.vb: JsonApiDotNetCore.Serialization.FieldsToSerialize.FieldsToSerialize(JsonApiDotNetCore.Configuration.IResourceGraph, System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), JsonApiDotNetCore.Resources.IResourceDefinitionProvider)
-  nameWithType: FieldsToSerialize.FieldsToSerialize(IResourceGraph, IEnumerable<IQueryConstraintProvider>, IResourceDefinitionProvider)
-  nameWithType.vb: FieldsToSerialize.FieldsToSerialize(IResourceGraph, IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionProvider)
+- uid: JsonApiDotNetCore.Serialization.FieldsToSerialize.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  name: FieldsToSerialize(IResourceGraph, IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor)
+  href: api/JsonApiDotNetCore.Serialization.FieldsToSerialize.html#JsonApiDotNetCore_Serialization_FieldsToSerialize__ctor_JsonApiDotNetCore_Configuration_IResourceGraph_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_
+  commentId: M:JsonApiDotNetCore.Serialization.FieldsToSerialize.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  name.vb: FieldsToSerialize(IResourceGraph, IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor)
+  fullName: JsonApiDotNetCore.Serialization.FieldsToSerialize.FieldsToSerialize(JsonApiDotNetCore.Configuration.IResourceGraph, System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  fullName.vb: JsonApiDotNetCore.Serialization.FieldsToSerialize.FieldsToSerialize(JsonApiDotNetCore.Configuration.IResourceGraph, System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  nameWithType: FieldsToSerialize.FieldsToSerialize(IResourceGraph, IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor)
+  nameWithType.vb: FieldsToSerialize.FieldsToSerialize(IResourceGraph, IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor)
 - uid: JsonApiDotNetCore.Serialization.FieldsToSerialize.#ctor*
   name: FieldsToSerialize
   href: api/JsonApiDotNetCore.Serialization.FieldsToSerialize.html#JsonApiDotNetCore_Serialization_FieldsToSerialize__ctor_
@@ -14148,25 +14442,25 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.IJsonApiWriter.WriteAsync
   nameWithType: IJsonApiWriter.WriteAsync
-- uid: JsonApiDotNetCore.Serialization.IRequestMeta
-  name: IRequestMeta
-  href: api/JsonApiDotNetCore.Serialization.IRequestMeta.html
-  commentId: T:JsonApiDotNetCore.Serialization.IRequestMeta
-  fullName: JsonApiDotNetCore.Serialization.IRequestMeta
-  nameWithType: IRequestMeta
-- uid: JsonApiDotNetCore.Serialization.IRequestMeta.GetMeta
+- uid: JsonApiDotNetCore.Serialization.IResponseMeta
+  name: IResponseMeta
+  href: api/JsonApiDotNetCore.Serialization.IResponseMeta.html
+  commentId: T:JsonApiDotNetCore.Serialization.IResponseMeta
+  fullName: JsonApiDotNetCore.Serialization.IResponseMeta
+  nameWithType: IResponseMeta
+- uid: JsonApiDotNetCore.Serialization.IResponseMeta.GetMeta
   name: GetMeta()
-  href: api/JsonApiDotNetCore.Serialization.IRequestMeta.html#JsonApiDotNetCore_Serialization_IRequestMeta_GetMeta
-  commentId: M:JsonApiDotNetCore.Serialization.IRequestMeta.GetMeta
-  fullName: JsonApiDotNetCore.Serialization.IRequestMeta.GetMeta()
-  nameWithType: IRequestMeta.GetMeta()
-- uid: JsonApiDotNetCore.Serialization.IRequestMeta.GetMeta*
+  href: api/JsonApiDotNetCore.Serialization.IResponseMeta.html#JsonApiDotNetCore_Serialization_IResponseMeta_GetMeta
+  commentId: M:JsonApiDotNetCore.Serialization.IResponseMeta.GetMeta
+  fullName: JsonApiDotNetCore.Serialization.IResponseMeta.GetMeta()
+  nameWithType: IResponseMeta.GetMeta()
+- uid: JsonApiDotNetCore.Serialization.IResponseMeta.GetMeta*
   name: GetMeta
-  href: api/JsonApiDotNetCore.Serialization.IRequestMeta.html#JsonApiDotNetCore_Serialization_IRequestMeta_GetMeta_
-  commentId: Overload:JsonApiDotNetCore.Serialization.IRequestMeta.GetMeta
+  href: api/JsonApiDotNetCore.Serialization.IResponseMeta.html#JsonApiDotNetCore_Serialization_IResponseMeta_GetMeta_
+  commentId: Overload:JsonApiDotNetCore.Serialization.IResponseMeta.GetMeta
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Serialization.IRequestMeta.GetMeta
-  nameWithType: IRequestMeta.GetMeta
+  fullName: JsonApiDotNetCore.Serialization.IResponseMeta.GetMeta
+  nameWithType: IResponseMeta.GetMeta
 - uid: JsonApiDotNetCore.Serialization.JsonApiReader
   name: JsonApiReader
   href: api/JsonApiDotNetCore.Serialization.JsonApiReader.html
