@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Http;
@@ -86,6 +89,17 @@ namespace JsonApiDotNetCore.Resources.Annotations
                 {
                     var relationshipValue = (IIdentifiable) hasOne.GetValue(identifiable);
                     if (IdentifiableComparer.Instance.Equals(identifiable, relationshipValue))
+                    {
+                        return true;
+                    }
+                }
+
+                if (relationship is HasManyAttribute hasMany)
+                {
+                    var collection = (IEnumerable) hasMany.GetValue(identifiable);
+
+                    if (collection != null && collection.OfType<IIdentifiable>().Any(resource =>
+                        IdentifiableComparer.Instance.Equals(identifiable, resource)))
                     {
                         return true;
                     }

@@ -625,6 +625,61 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
+        public async Task When_patching_resource_with_collection_of_self_references_it_must_succeed()
+        {
+            // Arrange
+            var directory = new SystemDirectory
+            {
+                Name = "Projects",
+                IsCaseSensitive = false
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Directories.Add(directory);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "systemDirectories",
+                    id = directory.StringId,
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["name"] = "Project files"
+                    },
+                    relationships = new Dictionary<string, object>
+                    {
+                        ["subdirectories"] = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "systemDirectories",
+                                    id = directory.StringId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            string requestBody = JsonConvert.SerializeObject(content);
+            string route = "/systemDirectories/" + directory.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Data.Should().BeNull();
+        }
+
+        [Fact]
         public async Task When_patching_annotated_ToOne_relationship_it_must_succeed()
         {
             // Arrange
