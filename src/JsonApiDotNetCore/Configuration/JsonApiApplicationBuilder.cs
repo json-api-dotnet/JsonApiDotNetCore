@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Configuration
             var loggerFactory = _intermediateProvider.GetService<ILoggerFactory>();
             
             _resourceGraphBuilder = new ResourceGraphBuilder(_options, loggerFactory);
-            _serviceDiscoveryFacade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, loggerFactory);
+            _serviceDiscoveryFacade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, loggerFactory);
         }
         
         /// <summary>
@@ -114,7 +114,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Registers the remaining internals.
         /// </summary>
-        public void ConfigureServices(Type dbContextType)
+        public void ConfigureServiceContainer(Type dbContextType)
         {
             if (dbContextType != null)
             {
@@ -127,28 +127,23 @@ namespace JsonApiDotNetCore.Configuration
                 _services.AddSingleton(new DbContextOptionsBuilder().Options);
             }
 
+            AddResourceLayer();
             AddRepositoryLayer();
             AddServiceLayer();
             AddMiddlewareLayer();
+            AddSerializationLayer();
+            AddQueryStringLayer();
 
-            _services.AddSingleton<IResourceContextProvider>(sp => sp.GetRequiredService<IResourceGraph>());
-            
-            _services.AddScoped<IGenericServiceFactory, GenericServiceFactory>();
-            _services.AddScoped(typeof(RepositoryRelationshipUpdateHelper<>));
-            _services.AddScoped<IResourceDefinitionProvider, ResourceDefinitionProvider>();
-            _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
-            _services.AddScoped<IResourceFactory, ResourceFactory>();
-            _services.AddScoped<IPaginationContext, PaginationContext>();
-            _services.AddScoped<IQueryLayerComposer, QueryLayerComposer>();
-
-            AddServerSerialization();
-            AddQueryStringParameterServices();
-            
             if (_options.EnableResourceHooks)
             {
                 AddResourceHooks();
             }
 
+            _services.AddScoped<IGenericServiceFactory, GenericServiceFactory>();
+            _services.AddScoped(typeof(RepositoryRelationshipUpdateHelper<>));
+            _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
+            _services.AddScoped<IPaginationContext, PaginationContext>();
+            _services.AddScoped<IQueryLayerComposer, QueryLayerComposer>();
             _services.TryAddScoped<IInverseRelationships, InverseRelationships>();
         }
 
@@ -171,6 +166,17 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IJsonApiReader, JsonApiReader>();
             _services.AddScoped<ITargetedFields, TargetedFields>();
             _services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
+        }
+
+        private void AddResourceLayer()
+        {
+            _services.AddScoped(typeof(IResourceDefinition<>), typeof(JsonApiResourceDefinition<>));
+            _services.AddScoped(typeof(IResourceDefinition<,>), typeof(JsonApiResourceDefinition<,>));
+            _services.AddScoped<IResourceDefinitionAccessor, ResourceDefinitionAccessor>();
+
+            _services.AddScoped<IResourceFactory, ResourceFactory>();
+
+            _services.AddSingleton<IResourceContextProvider>(sp => sp.GetRequiredService<IResourceGraph>());
         }
 
         private void AddRepositoryLayer()
@@ -208,11 +214,14 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped(typeof(IResourceService<>), typeof(JsonApiResourceService<>));
             _services.AddScoped(typeof(IResourceService<,>), typeof(JsonApiResourceService<,>));
 
+            _services.AddScoped(typeof(IResourceQueryService<>), typeof(JsonApiResourceService<>));
             _services.AddScoped(typeof(IResourceQueryService<,>), typeof(JsonApiResourceService<,>));
+            
+            _services.AddScoped(typeof(IResourceCommandService<>), typeof(JsonApiResourceService<>));
             _services.AddScoped(typeof(IResourceCommandService<,>), typeof(JsonApiResourceService<,>));
         }
 
-        private void AddQueryStringParameterServices()
+        private void AddQueryStringLayer()
         {
             _services.AddScoped<IIncludeQueryStringParameterReader, IncludeQueryStringParameterReader>();
             _services.AddScoped<IFilterQueryStringParameterReader, FilterQueryStringParameterReader>();
@@ -246,13 +255,13 @@ namespace JsonApiDotNetCore.Configuration
         private void AddResourceHooks()
         {
             _services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));
-            _services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceDefinition<>));
+            _services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceHooksDefinition<>));
             _services.AddTransient(typeof(IResourceHookExecutor), typeof(ResourceHookExecutor));
             _services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
             _services.AddTransient<ITraversalHelper, TraversalHelper>();
         }
 
-        private void AddServerSerialization()
+        private void AddSerializationLayer()
         {
             _services.AddScoped<IIncludedResourceObjectBuilder, IncludedResourceObjectBuilder>();
             _services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();

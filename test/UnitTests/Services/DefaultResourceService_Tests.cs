@@ -74,9 +74,9 @@ namespace UnitTests.Services
             var changeTracker = new ResourceChangeTracker<TodoItem>(options, _resourceGraph, new TargetedFields());
             var serviceProvider = new ServiceContainer();
             var resourceFactory = new ResourceFactory(serviceProvider);
-            var resourceDefinitionProvider = new ResourceDefinitionProvider(_resourceGraph, new TestScopedServiceProvider(serviceProvider));
+            var resourceDefinitionAccessor = new Mock<IResourceDefinitionAccessor>().Object;
             var paginationContext = new PaginationContext();
-            var composer = new QueryLayerComposer(new List<IQueryConstraintProvider>(), _resourceGraph, resourceDefinitionProvider, options, paginationContext);
+            var composer = new QueryLayerComposer(new List<IQueryConstraintProvider>(), _resourceGraph, resourceDefinitionAccessor, options, paginationContext);
             var request = new JsonApiRequest
             {
                 PrimaryResource = _resourceGraph.GetResourceContext<TodoItem>(),

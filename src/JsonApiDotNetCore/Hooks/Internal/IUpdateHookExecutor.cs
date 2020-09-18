@@ -14,13 +14,13 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// Executes the Before Cycle by firing the appropriate hooks if they are implemented. 
         /// The returned set will be used in the actual operation in <see cref="JsonApiResourceService{TResource}"/>.
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{TResource}.BeforeUpdate(IDiffableResourceHashSet{TResource}, ResourcePipeline)"/>
-        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="resources"/>.
+        /// Fires the <see cref="ResourceHooksDefinition{TResource}.BeforeUpdate(IDiffableResourceHashSet{TResource}, ResourcePipeline)"/>
+        /// hook for values in parameter <paramref name="resources"/>.
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{U}.BeforeUpdateRelationship"/>
+        /// Fires the <see cref="ResourceHooksDefinition{TResource}.BeforeUpdateRelationship"/>
         /// hook for any secondary (nested) resource for values within parameter <paramref name="resources"/>
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{U}.BeforeImplicitUpdateRelationship"/>
+        /// Fires the <see cref="ResourceHooksDefinition{TResource}.BeforeImplicitUpdateRelationship"/>
         /// hook for any resources that are indirectly (implicitly) affected by this operation.
         /// Eg: when updating a one-to-one relationship of a resource which already 
         /// had this relationship populated, then this update will indirectly affect 
@@ -34,10 +34,10 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <summary>
         /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{T}.AfterUpdate"/>
-        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="resources"/>.
+        /// Fires the <see cref="ResourceHooksDefinition{TResource}.AfterUpdate"/>
+        /// hook for values in parameter <paramref name="resources"/>.
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{U}.AfterUpdateRelationship"/>
+        /// Fires the <see cref="ResourceHooksDefinition{TResource}.AfterUpdateRelationship"/>
         /// hook for any secondary (nested) resource for values within parameter <paramref name="resources"/>
         /// </summary>
         /// <param name="resources">Target resources for the Before cycle.</param>

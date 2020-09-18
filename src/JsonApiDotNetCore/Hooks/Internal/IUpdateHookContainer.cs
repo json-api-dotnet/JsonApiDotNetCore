@@ -25,12 +25,12 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <para />
         /// If new relationships are to be created with the to-be-updated resources,
         /// this will be reflected by the corresponding NavigationProperty being set. 
-        /// For each of these relationships, the <see cref="ResourceDefinition{T}.BeforeUpdateRelationship"/>
+        /// For each of these relationships, the <see cref="ResourceHooksDefinition{TResource}.BeforeUpdateRelationship"/>
         /// hook is fired after the execution of this hook.
         /// <para />
         /// If by the creation of these relationships, any other relationships (eg
         /// in the case of an already populated one-to-one relationship) are implicitly 
-        /// affected, the <see cref="ResourceDefinition{T}.BeforeImplicitUpdateRelationship"/>
+        /// affected, the <see cref="ResourceHooksDefinition{TResource}.BeforeImplicitUpdateRelationship"/>
         /// hook is fired for these.
         /// </summary>
         /// <returns>The transformed resource set</returns>
@@ -65,7 +65,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <para />
         /// If relationships were updated with the updated resources, this will
         /// be reflected by the corresponding NavigationProperty being set. 
-        /// For each of these relationships, the <see cref="ResourceDefinition{T}.AfterUpdateRelationship(IRelationshipsDictionary{T}, ResourcePipeline)"/>
+        /// For each of these relationships, the <see cref="ResourceHooksDefinition{TResource}.AfterUpdateRelationship(IRelationshipsDictionary{TResource}, ResourcePipeline)"/>
         /// hook is fired after the execution of this hook.
         /// </summary>
         /// <param name="resources">The unique set of affected resources.</param>
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// and by this the relationship to a different Person was implicitly removed, 
         /// this hook will be fired for the latter Person.
         /// <para />
-        /// See <see cref="ResourceDefinition{TResource}.BeforeUpdate(IDiffableResourceHashSet{TResource},ResourcePipeline)"/> for information about
+        /// See <see cref="ResourceHooksDefinition{TResource}.BeforeUpdate(IDiffableResourceHashSet{TResource},ResourcePipeline)"/> for information about
         /// when this hook is fired.
         /// <para />
         /// </summary>

@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Discovery
     /// </summary>
     public class HooksDiscovery<TResource> : IHooksDiscovery<TResource> where TResource : class, IIdentifiable
     {
-        private readonly Type _boundResourceDefinitionType = typeof(ResourceDefinition<TResource>);
+        private readonly Type _boundResourceDefinitionType = typeof(ResourceHooksDefinition<TResource>);
         private readonly ResourceHook[] _allHooks;
         private readonly ResourceHook[] _databaseValuesAttributeAllowed =
         {
