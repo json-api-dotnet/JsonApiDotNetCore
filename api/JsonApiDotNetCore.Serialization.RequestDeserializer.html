@@ -101,6 +101,9 @@
       <a class="xref" href="JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_DeserializeBody_System_String_">BaseDeserializer.DeserializeBody(String)</a>
     </div>
     <div>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_SetRelationships_JsonApiDotNetCore_Resources_IIdentifiable_System_Collections_Generic_IDictionary_System_String_JsonApiDotNetCore_Serialization_Objects_RelationshipEntry__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute__">BaseDeserializer.SetRelationships(IIdentifiable, IDictionary&lt;String, RelationshipEntry&gt;, IReadOnlyCollection&lt;RelationshipAttribute&gt;)</a>
+    </div>
+    <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
     <div>
@@ -338,65 +341,6 @@ from <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ExposableData
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_SetAttributes_JsonApiDotNetCore_Resources_IIdentifiable_System_Collections_Generic_IDictionary_System_String_System_Object__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_AttrAttribute__">BaseDeserializer.SetAttributes(IIdentifiable, IDictionary&lt;String, Object&gt;, IReadOnlyCollection&lt;AttrAttribute&gt;)</a></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_RequestDeserializer_SetRelationships_JsonApiDotNetCore_Resources_IIdentifiable_System_Collections_Generic_IDictionary_System_String_JsonApiDotNetCore_Serialization_Objects_RelationshipEntry__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.RequestDeserializer.SetRelationships(JsonApiDotNetCore.Resources.IIdentifiable%2CSystem.Collections.Generic.IDictionary%7BSystem.String%2CJsonApiDotNetCore.Serialization.Objects.RelationshipEntry%7D%2CSystem.Collections.Generic.IReadOnlyCollection%7BJsonApiDotNetCore.Resources.Annotations.RelationshipAttribute%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/RequestDeserializer.cs/#L96">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Serialization_RequestDeserializer_SetRelationships_" data-uid="JsonApiDotNetCore.Serialization.RequestDeserializer.SetRelationships*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_RequestDeserializer_SetRelationships_JsonApiDotNetCore_Resources_IIdentifiable_System_Collections_Generic_IDictionary_System_String_JsonApiDotNetCore_Serialization_Objects_RelationshipEntry__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute__" data-uid="JsonApiDotNetCore.Serialization.RequestDeserializer.SetRelationships(JsonApiDotNetCore.Resources.IIdentifiable,System.Collections.Generic.IDictionary{System.String,JsonApiDotNetCore.Serialization.Objects.RelationshipEntry},System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute})">SetRelationships(IIdentifiable, IDictionary&lt;String, RelationshipEntry&gt;, IReadOnlyCollection&lt;RelationshipAttribute&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected override IIdentifiable SetRelationships(IIdentifiable resource, IDictionary&lt;string, RelationshipEntry&gt; relationshipsValues, IReadOnlyCollection&lt;RelationshipAttribute&gt; relationshipAttributes)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a></td>
-        <td><span class="parametername">resource</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.RelationshipEntry.html">RelationshipEntry</a>&gt;</td>
-        <td><span class="parametername">relationshipsValues</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
-        <td><span class="parametername">relationshipAttributes</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_SetRelationships_JsonApiDotNetCore_Resources_IIdentifiable_System_Collections_Generic_IDictionary_System_String_JsonApiDotNetCore_Serialization_Objects_RelationshipEntry__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute__">BaseDeserializer.SetRelationships(IIdentifiable, IDictionary&lt;String, RelationshipEntry&gt;, IReadOnlyCollection&lt;RelationshipAttribute&gt;)</a></div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="JsonApiDotNetCore.Serialization.IJsonApiDeserializer.html">IJsonApiDeserializer</a>

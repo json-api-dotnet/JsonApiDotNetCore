@@ -11577,12 +11577,6 @@ references:
   commentId: T:JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute
   fullName: JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute
   nameWithType: IsRequiredAttribute
-- uid: JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.IsValid(System.Object)
-  name: IsValid(Object)
-  href: api/JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.html#JsonApiDotNetCore_Resources_Annotations_IsRequiredAttribute_IsValid_System_Object_
-  commentId: M:JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.IsValid(System.Object)
-  fullName: JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.IsValid(System.Object)
-  nameWithType: IsRequiredAttribute.IsValid(Object)
 - uid: JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)
   name: IsValid(Object, ValidationContext)
   href: api/JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.html#JsonApiDotNetCore_Resources_Annotations_IsRequiredAttribute_IsValid_System_Object_System_ComponentModel_DataAnnotations_ValidationContext_
@@ -11596,6 +11590,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.IsValid
   nameWithType: IsRequiredAttribute.IsValid
+- uid: JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.RequiresValidationContext
+  name: RequiresValidationContext
+  href: api/JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.html#JsonApiDotNetCore_Resources_Annotations_IsRequiredAttribute_RequiresValidationContext
+  commentId: P:JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.RequiresValidationContext
+  fullName: JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.RequiresValidationContext
+  nameWithType: IsRequiredAttribute.RequiresValidationContext
+- uid: JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.RequiresValidationContext*
+  name: RequiresValidationContext
+  href: api/JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.html#JsonApiDotNetCore_Resources_Annotations_IsRequiredAttribute_RequiresValidationContext_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.RequiresValidationContext
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.RequiresValidationContext
+  nameWithType: IsRequiredAttribute.RequiresValidationContext
 - uid: JsonApiDotNetCore.Resources.Annotations.LinkTypes
   name: LinkTypes
   href: api/JsonApiDotNetCore.Resources.Annotations.LinkTypes.html
@@ -15097,22 +15104,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.RequestDeserializer.SetAttributes
   nameWithType: RequestDeserializer.SetAttributes
-- uid: JsonApiDotNetCore.Serialization.RequestDeserializer.SetRelationships(JsonApiDotNetCore.Resources.IIdentifiable,System.Collections.Generic.IDictionary{System.String,JsonApiDotNetCore.Serialization.Objects.RelationshipEntry},System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute})
-  name: SetRelationships(IIdentifiable, IDictionary<String, RelationshipEntry>, IReadOnlyCollection<RelationshipAttribute>)
-  href: api/JsonApiDotNetCore.Serialization.RequestDeserializer.html#JsonApiDotNetCore_Serialization_RequestDeserializer_SetRelationships_JsonApiDotNetCore_Resources_IIdentifiable_System_Collections_Generic_IDictionary_System_String_JsonApiDotNetCore_Serialization_Objects_RelationshipEntry__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute__
-  commentId: M:JsonApiDotNetCore.Serialization.RequestDeserializer.SetRelationships(JsonApiDotNetCore.Resources.IIdentifiable,System.Collections.Generic.IDictionary{System.String,JsonApiDotNetCore.Serialization.Objects.RelationshipEntry},System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute})
-  name.vb: SetRelationships(IIdentifiable, IDictionary(Of String, RelationshipEntry), IReadOnlyCollection(Of RelationshipAttribute))
-  fullName: JsonApiDotNetCore.Serialization.RequestDeserializer.SetRelationships(JsonApiDotNetCore.Resources.IIdentifiable, System.Collections.Generic.IDictionary<System.String, JsonApiDotNetCore.Serialization.Objects.RelationshipEntry>, System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute>)
-  fullName.vb: JsonApiDotNetCore.Serialization.RequestDeserializer.SetRelationships(JsonApiDotNetCore.Resources.IIdentifiable, System.Collections.Generic.IDictionary(Of System.String, JsonApiDotNetCore.Serialization.Objects.RelationshipEntry), System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute))
-  nameWithType: RequestDeserializer.SetRelationships(IIdentifiable, IDictionary<String, RelationshipEntry>, IReadOnlyCollection<RelationshipAttribute>)
-  nameWithType.vb: RequestDeserializer.SetRelationships(IIdentifiable, IDictionary(Of String, RelationshipEntry), IReadOnlyCollection(Of RelationshipAttribute))
-- uid: JsonApiDotNetCore.Serialization.RequestDeserializer.SetRelationships*
-  name: SetRelationships
-  href: api/JsonApiDotNetCore.Serialization.RequestDeserializer.html#JsonApiDotNetCore_Serialization_RequestDeserializer_SetRelationships_
-  commentId: Overload:JsonApiDotNetCore.Serialization.RequestDeserializer.SetRelationships
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Serialization.RequestDeserializer.SetRelationships
-  nameWithType: RequestDeserializer.SetRelationships
 - uid: JsonApiDotNetCore.Serialization.ResponseSerializer`1
   name: ResponseSerializer<TResource>
   href: api/JsonApiDotNetCore.Serialization.ResponseSerializer-1.html

@@ -87,6 +87,9 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
+      <span class="xref">System.ComponentModel.DataAnnotations.RequiredAttribute.IsValid(System.Object)</span>
+    </div>
+    <div>
       <span class="xref">System.ComponentModel.DataAnnotations.RequiredAttribute.AllowEmptyStrings</span>
     </div>
     <div>
@@ -112,9 +115,6 @@
     </div>
     <div>
       <span class="xref">System.ComponentModel.DataAnnotations.ValidationAttribute.ErrorMessageString</span>
-    </div>
-    <div>
-      <span class="xref">System.ComponentModel.DataAnnotations.ValidationAttribute.RequiresValidationContext</span>
     </div>
     <div>
       <span class="xref">System.Attribute.Equals(System.Object)</span>
@@ -249,41 +249,24 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public sealed class IsRequiredAttribute : RequiredAttribute</code></pre>
   </div>
-  <h3 id="methods">Methods
+  <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_IsRequiredAttribute_IsValid_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.IsValid(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_IsRequiredAttribute_RequiresValidationContext.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.RequiresValidationContext%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/IsRequiredAttribute.cs/#L17">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/IsRequiredAttribute.cs/#L20">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Resources_Annotations_IsRequiredAttribute_IsValid_" data-uid="JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.IsValid*"></a>
-  <h4 id="JsonApiDotNetCore_Resources_Annotations_IsRequiredAttribute_IsValid_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.IsValid(System.Object)">IsValid(Object)</h4>
+  <a id="JsonApiDotNetCore_Resources_Annotations_IsRequiredAttribute_RequiresValidationContext_" data-uid="JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.RequiresValidationContext*"></a>
+  <h4 id="JsonApiDotNetCore_Resources_Annotations_IsRequiredAttribute_RequiresValidationContext" data-uid="JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.RequiresValidationContext">RequiresValidationContext</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override bool IsValid(object value)</code></pre>
+    <pre><code class="lang-csharp hljs">public override bool RequiresValidationContext { get; }</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">value</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -299,7 +282,9 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.ComponentModel.DataAnnotations.RequiredAttribute.IsValid(System.Object)</span></div>
+  <div><span class="xref">System.ComponentModel.DataAnnotations.ValidationAttribute.RequiresValidationContext</span></div>
+  <h3 id="methods">Methods
+  </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_IsRequiredAttribute_IsValid_System_Object_System_ComponentModel_DataAnnotations_ValidationContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute.IsValid(System.Object%2CSystem.ComponentModel.DataAnnotations.ValidationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -365,7 +350,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_IsRequiredAttribute.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.IsRequiredAttribute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/IsRequiredAttribute.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/IsRequiredAttribute.cs/#L16" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
