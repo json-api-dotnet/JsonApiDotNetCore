@@ -4,14 +4,15 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 {
-    public class Article : Identifiable
+    public sealed class Company : Identifiable
     {
-        [Attr(PublicName = "article-prop")]
-        public string ArticleProp { get; set; }
+        [Attr]
+        public string Name { get; set; }
 
-        public int AuthorId { get; set; }
+        [Attr]
+        public bool IsSoftDeleted { get; set; }
 
-        [HasOne(PublicName = "author")]
-        public Person Author{ get; set; }
+        [HasMany]
+        public ICollection<Department> Departments { get; set; }
     }
 }
