@@ -8,6 +8,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             : base(options) { }
         
         public DbSet<Placeholder> Placeholders { get; set; }
+        
         public DbSet<Person> Persons { get; set; }
         
         public DbSet<Male> Males { get; set; }

@@ -23,6 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
     {
         [HasOne]
         public Person OneToOnePerson { get; set; }
+        
         public int? OneToOnePersonId { get; set; }
         
         [HasMany]
@@ -31,15 +32,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         [NotMapped]
         [HasManyThrough(nameof(PlaceholderPersons))]
         public List<Person> ManyToManyPersons { get; set; }
+        
         public List<PlaceholderPerson> PlaceholderPersons { get; set; }
     }
     
     public sealed class PlaceholderPerson
     {
         public int PlaceHolderId { get; set; }
+        
         public Placeholder PlaceHolder { get; set; }
 
         public int PersonId { get; set; }
+        
         public Person Person { get; set; }
     }
 }
