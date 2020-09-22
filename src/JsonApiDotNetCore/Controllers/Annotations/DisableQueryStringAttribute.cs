@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
                 if (value != StandardQueryStringParameters.None && value != StandardQueryStringParameters.All &&
                     parameters.HasFlag(value))
                 {
-                    parameterNames.Add(value.ToString().ToLowerInvariant());
+                    parameterNames.Add(value.ToString());
                 }
             }
 
@@ -51,12 +51,12 @@ namespace JsonApiDotNetCore.Controllers.Annotations
         {
             if (parameterNames == null) throw new ArgumentNullException(nameof(parameterNames));
 
-            ParameterNames = parameterNames.Split(",").Select(x => x.Trim().ToLowerInvariant()).ToList();
+            ParameterNames = parameterNames.Split(",").ToList();
         }
 
         public bool ContainsParameter(StandardQueryStringParameters parameter)
         {
-            var name = parameter.ToString().ToLowerInvariant();
+            var name = parameter.ToString();
             return ParameterNames.Contains(name);
         }
     }
