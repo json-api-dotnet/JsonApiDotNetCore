@@ -58,8 +58,7 @@ namespace JsonApiDotNetCore.Configuration
         private readonly IServiceCollection _services;
         private readonly ResourceGraphBuilder _resourceGraphBuilder;
         private readonly IJsonApiOptions _options;
-        private readonly IdentifiableTypeCache _typeCache = new IdentifiableTypeCache();
-        private readonly Dictionary<Assembly, IList<ResourceDescriptor>> _resourceDescriptorsPerAssemblyCache = new Dictionary<Assembly, IList<ResourceDescriptor>>();
+        private readonly ResourceDescriptorAssemblyCache _assemblyCache = new ResourceDescriptorAssemblyCache();
 
         public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
@@ -89,42 +88,38 @@ namespace JsonApiDotNetCore.Configuration
                 throw new ArgumentNullException(nameof(assembly));
             }
             
-            _resourceDescriptorsPerAssemblyCache.Add(assembly, null);
+            _assemblyCache.RegisterAssembly(assembly);
             _logger.LogDebug($"Registering assembly '{assembly.FullName}' for discovery of resources and injectables.");
 
             return this;
         }
-        
+
         internal void DiscoverResources()
         {
-            foreach (var (assembly, discoveredResourceDescriptors) in  _resourceDescriptorsPerAssemblyCache.ToArray())
+            foreach (var (_, resourceDescriptors) in _assemblyCache.GetResourceDescriptorsPerAssembly())
             {
-                var resourceDescriptors = GetResourceDescriptorsFromCache(discoveredResourceDescriptors, assembly);
-
-                foreach (var descriptor in resourceDescriptors)
+                foreach (var resourceDescriptor in resourceDescriptors)
                 {
-                    AddResource(descriptor);
+                    AddResource(resourceDescriptor);
                 }
             }
         }
 
         internal void DiscoverInjectables()
         {
-            foreach (var (assembly, discoveredResourceDescriptors) in  _resourceDescriptorsPerAssemblyCache.ToArray())
+            foreach (var (assembly, resourceDescriptors) in _assemblyCache.GetResourceDescriptorsPerAssembly())
             {
                 AddDbContextResolvers(assembly);
 
-                var resourceDescriptors = GetResourceDescriptorsFromCache(discoveredResourceDescriptors, assembly);
-
-                foreach (var descriptor in resourceDescriptors)
+                foreach (var resourceDescriptor in resourceDescriptors)
                 {
-                    AddServices(assembly, descriptor);
-                    AddRepositories(assembly, descriptor);
-                    AddResourceDefinitions(assembly, descriptor);
+                    AddServices(assembly, resourceDescriptor);
+                    AddRepositories(assembly, resourceDescriptor);
+                    AddResourceDefinitions(assembly, resourceDescriptor);
 
                     if (_options.EnableResourceHooks)
                     {
-                        AddResourceHookDefinitions(assembly, descriptor);
+                        AddResourceHookDefinitions(assembly, resourceDescriptor);
                     }
                 }
             }
@@ -196,22 +191,6 @@ namespace JsonApiDotNetCore.Configuration
             {
                 _services.AddScoped(registrationInterface, implementation);
             }
-        }
-        
-        private IList<ResourceDescriptor> GetResourceDescriptorsFromCache(IList<ResourceDescriptor> discoveredResourceDescriptors, Assembly assembly)
-        {
-            IList<ResourceDescriptor> resourceDescriptors;
-            if (discoveredResourceDescriptors == null)
-            {
-                resourceDescriptors = (IList<ResourceDescriptor>)_typeCache.GetIdentifiableTypes(assembly);
-                _resourceDescriptorsPerAssemblyCache[assembly] = resourceDescriptors;
-            }
-            else
-            {
-                resourceDescriptors = discoveredResourceDescriptors;
-            }
-
-            return resourceDescriptors;
         }
     }
 }

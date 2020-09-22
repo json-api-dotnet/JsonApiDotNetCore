@@ -58,13 +58,12 @@ namespace UnitTests.Internal
         {
             // Arrange
             var type = typeof(Model);
-            var expectedIdType = typeof(int);
 
             // Act
-            var idType = TypeLocator.GetIdType(type);
+            var idType = TypeLocator.TryGetIdType(type);
 
             // Assert
-            Assert.Equal(expectedIdType, idType);
+            Assert.Equal(typeof(int), idType);
         }
 
         [Fact]
@@ -72,26 +71,25 @@ namespace UnitTests.Internal
         {
             // Arrange
             var type = typeof(DerivedType);
-            Type expectedIdType = null;
 
             // Act
-            var idType = TypeLocator.GetIdType(type);
+            var idType = TypeLocator.TryGetIdType(type);
 
             // Assert
-            Assert.Equal(expectedIdType, idType);
+            Assert.Null(idType);
         }
 
         [Fact]
-        public void TryGetResourceDescriptor_Returns_True_If_Type_Is_IIdentifiable()
+        public void TryGetResourceDescriptor_Returns_Type_If_Type_Is_IIdentifiable()
         {
             // Arrange
             var resourceType = typeof(Model);
 
             // Act
-            var isJsonApiResource = TypeLocator.TryGetResourceDescriptor(resourceType, out var descriptor);
+            var descriptor = TypeLocator.TryGetResourceDescriptor(resourceType);
 
             // Assert
-            Assert.True(isJsonApiResource);
+            Assert.NotNull(descriptor);
             Assert.Equal(resourceType, descriptor.ResourceType);
             Assert.Equal(typeof(int), descriptor.IdType);
         }
@@ -103,17 +101,15 @@ namespace UnitTests.Internal
             var resourceType = typeof(String);
 
             // Act
-            var isJsonApiResource = TypeLocator.TryGetResourceDescriptor(resourceType, out var _);
+            var descriptor = TypeLocator.TryGetResourceDescriptor(resourceType);
 
             // Assert
-            Assert.False(isJsonApiResource);
+            Assert.Null(descriptor);
         }
     }
-
     
     public interface IGenericInterface<T> { }
     public sealed class Implementation : IGenericInterface<int> { }
-
 
     public class BaseType<T> { }
     public sealed class DerivedType : BaseType<int> { }

@@ -45,62 +45,53 @@ public class ArticleRepository : EntityFrameworkCoreRepository<Article>
 
 ## Multiple DbContexts
 
-If you need to use multiple Entity Framework Core DbContexts, first add each DbContext to the ResourceGraphBuilder.
-
-Then, create an implementation of IDbContextResolver for each context.
-
-Register each of the new IDbContextResolver implementations in Startup.cs.
-
-You can then create a general repository for each context and inject it per resource type. This example shows a single DbContextARepository for all entities that are members of DbContextA.
-
-Then inject the repository for the correct entity, in this case Foo is a member of DbContextA.
+If you need to use multiple Entity Framework Core DbContexts, first create an implementation of `IDbContextResolver` for each context.
 
 ```c#
-// Startup.cs
-services.AddJsonApi(resources: builder =>
+public sealed class DbContextAResolver : IDbContextResolver
 {
-    // Add both contexts using the builder
-    builder.AddDbContext<DbContextA>();
-    builder.AddDbContext<DbContextB>();
-});
+    private readonly DbContextA _dbContextA;
 
-public class DbContextAResolver : IDbContextResolver
-{
-    private readonly DbContextA _context;
-
-    public DbContextAResolver(DbContextA context)
+    public DbContextAResolver(DbContextA dbContextA)
     {
-        _context = context;
+        _dbContextA = dbContextA;
     }
 
     public DbContext GetContext()
     {
-        return _context;
+        return _dbContextA;
     }
 }
+```
 
+Next, create a repository for each context and inject its resolver per resource type. This example shows a single `DbContextARepository` for all entities that are members of `DbContextA`.
 
-// Startup.cs
-services.AddScoped<DbContextAResolver>();
-services.AddScoped<DbContextBResolver>();
-
-
+```c#
 public class DbContextARepository<TResource> : EntityFrameworkCoreRepository<TResource>
     where TResource : class, IIdentifiable<int>
 {
-    public DbContextARepository(
-        ITargetedFields targetedFields,
-        DbContextAResolver contextResolver,
-        IResourceGraph resourceGraph,
-        IGenericServiceFactory genericServiceFactory,
-        IResourceFactory resourceFactory,
-        IEnumerable<IQueryConstraintProvider> constraintProviders,
+    public DbContextARepository(ITargetedFields targetedFields, DbContextAResolver contextResolver,
+        //                                                      ^^^^^^^^^^^^^^^^^^
+        IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
+        IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders,
         ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory) 
-    { }
+        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory,
+            constraintProviders, loggerFactory)
+    {
+    }
 }
 
+```
 
-// Startup.cs
-services.AddScoped<IResourceRepository<Foo>, DbContextARepository<Foo>>();
+Then register the added types and use the non-generic overload of `AddJsonApi` to add their resources to the graph.
+
+```c#
+// Startup.ConfigureServices
+services.AddScoped<DbContextAResolver>();
+services.AddScoped<DbContextBResolver>();
+
+services.AddScoped<IResourceRepository<ResourceA>, DbContextARepository<ResourceA>>();
+services.AddScoped<IResourceRepository<ResourceB>, DbContextBRepository<ResourceB>>();
+
+services.AddJsonApi(dbContextTypes: new[] {typeof(DbContextA), typeof(DbContextB)});
 ```
