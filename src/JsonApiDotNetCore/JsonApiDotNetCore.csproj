@@ -16,6 +16,11 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <Version>0.2.0</Version>
+    <PackageId>LANDR.JsonApiDotNetCore</PackageId>
+    <Company>LANDR</Company>
+    <Authors>LANDR</Authors>
+    <Product>LANDR.JsonApiDotNetCore</Product>
   </PropertyGroup>
 
   <ItemGroup>
