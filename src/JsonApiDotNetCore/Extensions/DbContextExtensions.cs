@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
@@ -105,6 +106,21 @@ namespace JsonApiDotNetCore.Extensions
         
         /// <inheritdoc />
         public void Dispose() => Proxy(t => t.Dispose());
+
+        public Task CommitAsync(CancellationToken cancellationToken = default)
+        {
+            return _transaction.CommitAsync(cancellationToken);
+        }
+
+        public Task RollbackAsync(CancellationToken cancellationToken = default)
+        {
+            return _transaction.RollbackAsync(cancellationToken);
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return _transaction.DisposeAsync();
+        }
 
         private void Proxy(Action<IDbContextTransaction> func)
         {
