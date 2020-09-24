@@ -3,10 +3,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
@@ -164,7 +162,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public async Task Can_patch_one_to_many_relationship_that_has_inheritance_through_relationship_endpoint()
         {
             // Arrange            
-            
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<PlaceholderPerson>();

@@ -190,7 +190,7 @@ namespace JsonApiDotNetCore.Serialization
 
         /// <summary>
         /// Sets the dependent side of a HasOne relationship, which means that a
-        /// foreign key also will to be populated.
+        /// foreign key also will be populated.
         /// </summary>
         private void SetForeignKey(IIdentifiable resource, PropertyInfo foreignKey, HasOneAttribute attr, string id,
             Type relationshipType)
