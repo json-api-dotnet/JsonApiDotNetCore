@@ -269,9 +269,11 @@ namespace JsonApiDotNetCore.Repositories
             {
                 var tracked = AttachOrGetTracked(pointer);
                 if (tracked != null) newWasAlreadyAttached = true;
+    
+                var trackedPointer = tracked ?? pointer;
                 
-                // we should recalculate the target type for every iteration because types may vary. This is possible with resource inheritance
-                return Convert.ChangeType(tracked ?? pointer, (tracked ?? pointer).GetType());
+                // We should recalculate the target type for every iteration because types may vary. This is possible with resource inheritance.
+                return Convert.ChangeType(trackedPointer, trackedPointer.GetType());
             }), relationshipAttr.Property.PropertyType);
 
             if (newWasAlreadyAttached) wasAlreadyAttached = true;

@@ -169,7 +169,7 @@ namespace JsonApiDotNetCore.Serialization
             var rio = (ResourceIdentifierObject)relationshipData.Data;
             var relatedId = rio?.Id;
 
-            var relatedResourceType = relationshipData.SingleData == null
+            var relationshipType = relationshipData.SingleData == null
                 ? attr.RightType
                 : ResourceContextProvider.GetResourceContext(relationshipData.SingleData.Type).ResourceType;
 
@@ -179,9 +179,9 @@ namespace JsonApiDotNetCore.Serialization
             if (foreignKeyProperty != null)
                 // there is a FK from the current resource pointing to the related object,
                 // i.e. we're populating the relationship from the dependent side.
-                SetForeignKey(resource, foreignKeyProperty, attr, relatedId, relatedResourceType);
+                SetForeignKey(resource, foreignKeyProperty, attr, relatedId, relationshipType);
 
-            SetNavigation(resource, attr, relatedId, relatedResourceType);
+            SetNavigation(resource, attr, relatedId, relationshipType);
 
             // depending on if this base parser is used client-side or server-side,
             // different additional processing per field needs to be executed.
@@ -239,8 +239,8 @@ namespace JsonApiDotNetCore.Serialization
             {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
                 var relatedResources = relationshipData.ManyData.Select(rio =>
                 {
-                    var relatedResourceType = ResourceContextProvider.GetResourceContext(rio.Type).ResourceType;
-                    var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(relatedResourceType);
+                    var relationshipType = ResourceContextProvider.GetResourceContext(rio.Type).ResourceType;
+                    var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(relationshipType);
                     relatedInstance.StringId = rio.Id;
                     
                     return relatedInstance;
