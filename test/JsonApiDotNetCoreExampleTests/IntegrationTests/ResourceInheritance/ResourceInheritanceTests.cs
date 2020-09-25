@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             // Arrange
             var person = new Male()
             {
-                Pet = new Cat(),
+                Pet = new Cat()
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -57,12 +57,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["pet"].Should().NotBeNull();
-            responseDocument.SingleData.Relationships["pet"].SingleData.Type.Should().Be("cats");
-            responseDocument.SingleData.Relationships["pet"].SingleData.Id.Should().Be(person.Pet.StringId);
+            responseDocument.ManyData[0].Relationships["pet"].HasResource.Should().BeTrue();
+            responseDocument.ManyData[0].Relationships["pet"].SingleData.Type.Should().Be("cats");
+            responseDocument.ManyData[0].Relationships["pet"].SingleData.Id.Should().Be(person.Pet.StringId);
         }
         
         [Fact]
@@ -86,12 +86,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(3);
-            responseDocument.ManyData[0].Relationships["parents"].Should().NotBeNull();
-            responseDocument.ManyData[1].Relationships["parents"].Should().BeNull();
-            responseDocument.ManyData[2].Relationships["parents"].Should().BeNull();
+            responseDocument.ManyData[0].Relationships["parents"].HasResource.Should().BeTrue();
+            responseDocument.ManyData[1].Relationships["parents"].HasResource.Should().BeFalse();
+            responseDocument.ManyData[2].Relationships["parents"].HasResource.Should().BeFalse();
             responseDocument.ManyData[0].Relationships["parents"].ManyData.Should().HaveCount(2);
             responseDocument.ManyData[0].Relationships["parents"].ManyData[0].Id.Should().Be(person.Parents[0].StringId);
             responseDocument.ManyData[0].Relationships["parents"].ManyData[0].Type.Should().Be("males");
@@ -124,10 +124,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Relationships["favoriteLiterature"].Should().NotBeNull();
+            responseDocument.ManyData[0].Relationships["favoriteLiterature"].HasResource.Should().BeTrue();
             responseDocument.ManyData[0].Relationships["favoriteLiterature"].ManyData.Should().HaveCount(2);
             responseDocument.ManyData[0].Relationships["favoriteLiterature"].ManyData[0].Id.Should().Be(person.PersonLiterature[0].Literature.StringId);
             responseDocument.ManyData[0].Relationships["favoriteLiterature"].ManyData[0].Type.Should().Be("fictionBooks");

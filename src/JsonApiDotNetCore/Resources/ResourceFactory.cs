@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Resources
         public NewExpression CreateNewExpression(Type resourceType)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
-
+            
             if (HasSingleConstructorWithoutParameters(resourceType))
             {
                 return Expression.New(resourceType);
