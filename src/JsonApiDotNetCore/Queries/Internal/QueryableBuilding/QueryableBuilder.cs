@@ -64,10 +64,10 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
                 expression = ApplyPagination(expression, layer.Pagination);
             }
 
-            // if (layer.Projection != null && layer.Projection.Any())
-            // {
-            //     expression = ApplyProjection(expression, layer.Projection, layer.ResourceContext);
-            // }
+            if (layer.Projection != null && layer.Projection.Any())
+            {
+                expression = ApplyProjection(expression, layer.Projection, layer.ResourceContext);
+            }
 
             return expression;
         }
