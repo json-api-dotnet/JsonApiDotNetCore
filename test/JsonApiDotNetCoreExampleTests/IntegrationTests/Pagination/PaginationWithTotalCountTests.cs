@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Bogus;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
@@ -11,12 +12,16 @@ using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
+using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
 {
     public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
     {
+        private const int _defaultPageSize = 5;
+
         private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly Faker<TodoItem> _todoItemFaker = new Faker<TodoItem>();
 
         public PaginationWithTotalCountTests(IntegrationTestContext<Startup, AppDbContext> testContext)
         {
@@ -24,9 +29,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
 
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.IncludeTotalResourceCount = true;
-            options.DefaultPageSize = new PageSize(5);
+            options.DefaultPageSize = new PageSize(_defaultPageSize);
             options.MaximumPageSize = null;
             options.MaximumPageNumber = null;
+            options.AllowUnknownQueryStringParameters = true;
 
             options.DisableTopPagination = false;
             options.DisableChildrenPagination = false;
@@ -549,6 +555,93 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().Be($"http://localhost/api/v1/blogs/{blog.StringId}/articles?page[number]=2");
+        }
+
+        [Theory]
+        [InlineData(1, 1, 4, null, 2)]
+        [InlineData(2, 1, 4, 1, 3)]
+        [InlineData(3, 1, 4, 2, 4)]
+        [InlineData(4, 1, 4, 3, null)]
+        public async Task Renders_correct_top_level_links_for_page_number(int pageNumber, int? firstLink, int? lastLink, int? prevLink, int? nextLink)
+        {
+            // Arrange
+            var person = new Person
+            {
+                LastName = "&Ampersand"
+            };
+
+            const int totalCount = 3 * _defaultPageSize + 3;
+            var todoItems = _todoItemFaker.Generate(totalCount);
+            
+            foreach (var todoItem in todoItems)
+            {
+                todoItem.Owner = person;
+            }
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<TodoItem>();
+                dbContext.TodoItems.AddRange(todoItems);
+
+                await dbContext.SaveChangesAsync();
+            });
+
+            var routePrefix = "/api/v1/todoItems?filter=equals(owner.lastName,'" + WebUtility.UrlEncode(person.LastName) + "')" +
+                        $"&fields[owner]=firstName&include=owner&sort=ordinal&foo=bar,baz";
+            var route = routePrefix + $"&page[number]={pageNumber}";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            Assert.Equal("http://localhost" + route, responseDocument.Links.Self);
+
+            if (firstLink != null)
+            {
+                var expected = "http://localhost" + SetPageNumberInUrl(routePrefix, firstLink.Value);
+                Assert.Equal(expected, responseDocument.Links.First);
+            }
+            else
+            {
+                Assert.Null(responseDocument.Links.First);
+            }
+
+            if (prevLink != null)
+            {
+                var expected = "http://localhost" + SetPageNumberInUrl(routePrefix, prevLink.Value);
+                Assert.Equal(expected, responseDocument.Links.Prev);
+            }
+            else
+            {
+                Assert.Null(responseDocument.Links.Prev);
+            }
+
+            if (nextLink != null)
+            {
+                var expected = "http://localhost" + SetPageNumberInUrl(routePrefix, nextLink.Value);
+                Assert.Equal(expected, responseDocument.Links.Next);
+            }
+            else
+            {
+                Assert.Null(responseDocument.Links.Next);
+            }
+
+            if (lastLink != null)
+            {
+                var expected = "http://localhost" + SetPageNumberInUrl(routePrefix, lastLink.Value);
+                Assert.Equal(expected, responseDocument.Links.Last);
+            }
+            else
+            {
+                Assert.Null(responseDocument.Links.Last);
+            }
+
+            static string SetPageNumberInUrl(string url, int pageNumber)
+            {
+                return pageNumber != 1 ? url + "&page[number]=" + pageNumber : url;
+            }
         }
     }
 }
