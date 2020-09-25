@@ -98,7 +98,31 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             responseDocument.ManyData[0].Relationships["parents"].ManyData[1].Id.Should().Be(person.Parents[1].StringId);
             responseDocument.ManyData[0].Relationships["parents"].ManyData[1].Type.Should().Be("females");
         }
-        
+
+        [Fact]
+        public async Task Can_filter_in_primary_resources()
+        {
+            // Arrange
+            var animals = new List<Animal> { new Cat { Meows = false }, new Cat { Meows = true }, new Dog() };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+               await dbContext.AddRangeAsync(animals);
+               await dbContext.SaveChangesAsync();
+            });
+
+            var route = "/animals?filter=equals(meows,'false')";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Id.Should().Be(animals[0].StringId);
+        }
+
         [Fact]
         public async Task When_including_many_to_many_relationship_should_be_successful()
         {
