@@ -46,15 +46,17 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private object GetQueryableHandler(string parameterName)
         {
-            if (_request.Kind != EndpointKind.Primary)
+            var resourceType = _request.PrimaryResource.ResourceType;
+            var handler = _resourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(resourceType, parameterName);
+
+            if (handler != null && _request.Kind != EndpointKind.Primary)
             {
                 throw new InvalidQueryStringParameterException(parameterName,
                     "Custom query string parameters cannot be used on nested resource endpoints.",
                     $"Query string parameter '{parameterName}' cannot be used on a nested resource endpoint.");
             }
 
-            var resourceType = _request.PrimaryResource.ResourceType;
-            return _resourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(resourceType, parameterName);
+            return handler;
         }
 
         /// <inheritdoc />

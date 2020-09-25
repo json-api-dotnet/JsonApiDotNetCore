@@ -14,15 +14,16 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
 {
-    public sealed class PaginationTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
+    public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
     {
         private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
 
-        public PaginationTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        public PaginationWithTotalCountTests(IntegrationTestContext<Startup, AppDbContext> testContext)
         {
             _testContext = testContext;
 
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.IncludeTotalResourceCount = true;
             options.DefaultPageSize = new PageSize(5);
             options.MaximumPageSize = null;
             options.MaximumPageNumber = null;
@@ -65,6 +66,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(articles[1].StringId);
+
+            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.First.Should().Be("http://localhost/api/v1/articles?page[size]=1");
+            responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
+            responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
+            responseDocument.Links.Next.Should().BeNull();
         }
 
         [Fact]
@@ -134,6 +142,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(blog.Articles[1].StringId);
+
+            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.First.Should().Be($"http://localhost/api/v1/blogs/{blog.StringId}/articles?page[size]=1");
+            responseDocument.Links.Last.Should().BeNull();
+            responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
+            responseDocument.Links.Next.Should().Be($"http://localhost/api/v1/blogs/{blog.StringId}/articles?page[number]=3&page[size]=1");
         }
 
         [Fact]
@@ -200,7 +215,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
                             Caption = "Second"
                         }
                     }
-                }
+                },
+                new Blog()
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -211,7 +227,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/blogs?include=articles&page[number]=articles:2&page[size]=articles:1";
+            var route = "/api/v1/blogs?include=articles&page[number]=articles:2&page[size]=2,articles:1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -224,6 +240,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
 
             responseDocument.Included[0].Id.Should().Be(blogs[0].Articles[1].StringId);
             responseDocument.Included[1].Id.Should().Be(blogs[1].Articles[1].StringId);
+
+            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.First.Should().Be("http://localhost/api/v1/blogs?include=articles&page[size]=2,articles:1");
+            responseDocument.Links.Last.Should().Be("http://localhost/api/v1/blogs?include=articles&page[number]=2&page[size]=2,articles:1");
+            responseDocument.Links.Prev.Should().BeNull();
+            responseDocument.Links.Next.Should().Be(responseDocument.Links.Last);
         }
 
         [Fact]
@@ -267,6 +290,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Id.Should().Be(blog.Owner.Articles[1].StringId);
+
+            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.First.Should().BeNull();
+            responseDocument.Links.Last.Should().BeNull();
+            responseDocument.Links.Prev.Should().BeNull();
+            responseDocument.Links.Next.Should().BeNull();
         }
 
         [Fact]
@@ -345,6 +375,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
 
             responseDocument.Included[0].Id.Should().Be(articles[0].ArticleTags.Skip(1).First().Tag.StringId);
             responseDocument.Included[1].Id.Should().Be(articles[1].ArticleTags.Skip(1).First().Tag.StringId);
+
+            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.First.Should().Be("http://localhost/api/v1/articles?include=tags&page[size]=tags:1");
+            responseDocument.Links.Last.Should().Be(responseDocument.Links.First);
+            responseDocument.Links.Prev.Should().BeNull();
+            responseDocument.Links.Next.Should().BeNull();
         }
 
         [Fact]
@@ -414,6 +451,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
             responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
             responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Articles[1].StringId);
             responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Articles[1].Revisions.Skip(1).First().StringId);
+
+            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.First.Should().Be("http://localhost/api/v1/blogs?include=owner.articles.revisions&page[size]=1,owner.articles:1,owner.articles.revisions:1");
+            responseDocument.Links.Last.Should().Be("http://localhost/api/v1/blogs?include=owner.articles.revisions&page[size]=1,owner.articles:1,owner.articles.revisions:1&page[number]=2");
+            responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
+            responseDocument.Links.Next.Should().BeNull();
         }
 
         [Fact]
@@ -498,6 +542,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
             responseDocument.ManyData.Should().HaveCount(2);
             responseDocument.ManyData[0].Id.Should().Be(blog.Articles[0].StringId);
             responseDocument.ManyData[1].Id.Should().Be(blog.Articles[1].StringId);
+
+            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
+            responseDocument.Links.Last.Should().BeNull();
+            responseDocument.Links.Prev.Should().BeNull();
+            responseDocument.Links.Next.Should().Be($"http://localhost/api/v1/blogs/{blog.StringId}/articles?page[number]=2");
         }
     }
 }

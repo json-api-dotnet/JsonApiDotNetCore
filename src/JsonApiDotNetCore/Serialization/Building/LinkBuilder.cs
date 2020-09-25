@@ -5,6 +5,8 @@ using System.Text;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.Internal.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -15,6 +17,9 @@ namespace JsonApiDotNetCore.Serialization.Building
 {
     public class LinkBuilder : ILinkBuilder
     {
+        private const string _pageSizeParameterName = "page[size]";
+        private const string _pageNumberParameterName = "page[number]";
+
         private readonly IResourceContextProvider _provider;
         private readonly IRequestQueryStringAccessor _queryStringAccessor;
         private readonly IJsonApiOptions _options;
@@ -42,10 +47,10 @@ namespace JsonApiDotNetCore.Serialization.Building
             TopLevelLinks topLevelLinks = null;
             if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Self))
             {
-                topLevelLinks = new TopLevelLinks { Self = GetSelfTopLevelLink(resourceContext) };
+                topLevelLinks = new TopLevelLinks {Self = GetSelfTopLevelLink(resourceContext, null)};
             }
 
-            if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Paging) && _paginationContext.PageSize != null)
+            if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Paging) && _paginationContext.PageSize != null && _request.IsCollection)
             {   
                 SetPageLinks(resourceContext, topLevelLinks ??= new TopLevelLinks());
             }
@@ -70,36 +75,38 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private void SetPageLinks(ResourceContext resourceContext, TopLevelLinks links)
         {
+            links.First = GetPageLink(resourceContext, 1, _paginationContext.PageSize);
+
+            if (_paginationContext.TotalPageCount > 0)
+            {
+                links.Last = GetPageLink(resourceContext, _paginationContext.TotalPageCount.Value, _paginationContext.PageSize);
+            }
+
             if (_paginationContext.PageNumber.OneBasedValue > 1)
             {
                 links.Prev = GetPageLink(resourceContext, _paginationContext.PageNumber.OneBasedValue - 1, _paginationContext.PageSize);
             }
 
-            if (_paginationContext.PageNumber.OneBasedValue < _paginationContext.TotalPageCount)
+            bool hasNextPage = _paginationContext.PageNumber.OneBasedValue < _paginationContext.TotalPageCount;
+            bool possiblyHasNextPage = _paginationContext.TotalPageCount == null && _paginationContext.IsPageFull;
+
+            if (hasNextPage || possiblyHasNextPage)
             {
                 links.Next = GetPageLink(resourceContext, _paginationContext.PageNumber.OneBasedValue + 1, _paginationContext.PageSize);
             }
-
-            if (_paginationContext.TotalPageCount > 0)
-            {
-                links.Self = GetPageLink(resourceContext, _paginationContext.PageNumber.OneBasedValue, _paginationContext.PageSize);
-                links.First = GetPageLink(resourceContext, 1, _paginationContext.PageSize);
-                links.Last = GetPageLink(resourceContext, _paginationContext.TotalPageCount.Value, _paginationContext.PageSize);
-            }
         }
 
-        private string GetSelfTopLevelLink(ResourceContext resourceContext)
+        private string GetSelfTopLevelLink(ResourceContext resourceContext, Action<Dictionary<string, string>> queryStringUpdateAction)
         {
             var builder = new StringBuilder();
             builder.Append(_request.BasePath);
             builder.Append("/");
             builder.Append(resourceContext.PublicName);
 
-            string resourceId = _request.PrimaryId;
-            if (resourceId != null)
+            if (_request.PrimaryId != null)
             {
                 builder.Append("/");
-                builder.Append(resourceId);
+                builder.Append(_request.PrimaryId);
             }
 
             if (_request.Relationship != null)
@@ -108,41 +115,16 @@ namespace JsonApiDotNetCore.Serialization.Building
                 builder.Append(_request.Relationship.PublicName);
             }
 
-            builder.Append(DecodeSpecialCharacters(_queryStringAccessor.QueryString.Value));
+            string queryString = BuildQueryString(queryStringUpdateAction);
+            builder.Append(queryString);
 
             return builder.ToString();
-        }
-
-        private string GetPageLink(ResourceContext resourceContext, int pageOffset, PageSize pageSize)
-        {
-            string queryString = BuildQueryString(parameters =>
-            {
-                if (pageSize == null || pageSize.Equals(_options.DefaultPageSize))
-                {
-                    parameters.Remove("page[size]");
-                }
-                else
-                {
-                    parameters["page[size]"] = pageSize.ToString();
-                }
-
-                if (pageOffset == 1)
-                {
-                    parameters.Remove("page[number]");
-                }
-                else
-                {
-                    parameters["page[number]"] = pageOffset.ToString();
-                }
-            });
-
-            return $"{_request.BasePath}/{resourceContext.PublicName}" + queryString;
         }
 
         private string BuildQueryString(Action<Dictionary<string, string>> updateAction)
         {
             var parameters = _queryStringAccessor.Query.ToDictionary(pair => pair.Key, pair => pair.Value.ToString());
-            updateAction(parameters);
+            updateAction?.Invoke(parameters);
             string queryString = QueryString.Create(parameters).Value;
 
             return DecodeSpecialCharacters(queryString);
@@ -150,7 +132,85 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private static string DecodeSpecialCharacters(string uri)
         {
-            return uri.Replace("%5B", "[").Replace("%5D", "]").Replace("%27", "'");
+            return uri.Replace("%5B", "[").Replace("%5D", "]").Replace("%27", "'").Replace("%3A", ":");
+        }
+
+        private string GetPageLink(ResourceContext resourceContext, int pageOffset, PageSize pageSize)
+        {
+            return GetSelfTopLevelLink(resourceContext, parameters =>
+            {
+                var existingPageSizeParameterValue = parameters.ContainsKey(_pageSizeParameterName)
+                    ? parameters[_pageSizeParameterName]
+                    : null;
+
+                PageSize newTopPageSize = Equals(pageSize, _options.DefaultPageSize) ? null : pageSize;
+
+                string newPageSizeParameterValue = ChangeTopPageSize(existingPageSizeParameterValue, newTopPageSize);
+                if (newPageSizeParameterValue == null)
+                {
+                    parameters.Remove(_pageSizeParameterName);
+                }
+                else
+                {
+                    parameters[_pageSizeParameterName] = newPageSizeParameterValue;
+                }
+
+                if (pageOffset == 1)
+                {
+                    parameters.Remove(_pageNumberParameterName);
+                }
+                else
+                {
+                    parameters[_pageNumberParameterName] = pageOffset.ToString();
+                }
+            });
+        }
+
+        private string ChangeTopPageSize(string pageSizeParameterValue, PageSize topPageSize)
+        {
+            var elements = ParsePageSizeExpression(pageSizeParameterValue);
+            var elementInTopScopeIndex = elements.FindIndex(expression => expression.Scope == null);
+
+            if (topPageSize != null)
+            {
+                var topPageSizeElement = new PaginationElementQueryStringValueExpression(null, topPageSize.Value);
+
+                if (elementInTopScopeIndex != -1)
+                {
+                    elements[elementInTopScopeIndex] = topPageSizeElement;
+                }
+                else
+                {
+                    elements.Insert(0, topPageSizeElement);
+                }
+            }
+            else
+            {
+                if (elementInTopScopeIndex != -1)
+                {
+                    elements.RemoveAt(elementInTopScopeIndex);
+                }
+            }
+
+            var parameterValue = string.Join(',',
+                elements.Select(expression => expression.Scope == null ? expression.Value.ToString() : $"{expression.Scope}:{expression.Value}"));
+
+            return parameterValue == string.Empty ? null : parameterValue;
+        }
+
+        private List<PaginationElementQueryStringValueExpression> ParsePageSizeExpression(string pageSizeParameterValue)
+        {
+            if (pageSizeParameterValue == null)
+            {
+                return new List<PaginationElementQueryStringValueExpression>();
+            }
+
+            var requestResource = _request.SecondaryResource ?? _request.PrimaryResource;
+
+            var parser = new PaginationParser(_provider);
+            var paginationExpression = parser.Parse(pageSizeParameterValue, requestResource);
+
+            return new List<PaginationElementQueryStringValueExpression>(paginationExpression.Elements);
         }
 
         /// <inheritdoc />

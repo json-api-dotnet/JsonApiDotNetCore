@@ -27,12 +27,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Theory]
-        [InlineData(1, 1, 1, null, 2, 4)]
-        [InlineData(2, 2, 1, 1, 3, 4)]
-        [InlineData(3, 3, 1, 2, 4, 4)]
-        [InlineData(4, 4, 1, 3, null, 4)]
+        [InlineData(1, 1, null, 2, 4)]
+        [InlineData(2, 1, 1, 3, 4)]
+        [InlineData(3, 1, 2, 4, 4)]
+        [InlineData(4, 1, 3, null, 4)]
         public async Task When_page_number_is_specified_it_must_display_correct_top_level_links(int pageNumber,
-            int selfLink, int? firstLink, int? prevLink, int? nextLink, int? lastLink)
+            int? firstLink, int? prevLink, int? nextLink, int? lastLink)
         {
             // Arrange
             const int totalCount = 18;
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var body = await response.Content.ReadAsStringAsync();
             var links = JsonConvert.DeserializeObject<Document>(body).Links;
 
-            Assert.EndsWith($"{routePrefix}{GetPageNumberInQueryString(selfLink)}", links.Self);
+            Assert.Equal("http://localhost" + route, links.Self);
 
             if (firstLink.HasValue)
             {
