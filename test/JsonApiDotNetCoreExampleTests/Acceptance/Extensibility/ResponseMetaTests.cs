@@ -2,11 +2,14 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
@@ -23,23 +26,46 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             {
                 services.AddScoped<IResponseMeta, TestResponseMeta>();
             });
+
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.IncludeTotalResourceCount = false;
         }
 
         [Fact]
         public async Task Injecting_IResponseMeta_Adds_Meta_Data()
         {
             // Arrange
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<Person>();
+            });
+            
             var route = "/api/v1/people";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<JToken>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Meta.Should().NotBeNull();
-            responseDocument.Meta.ContainsKey("request-meta").Should().BeTrue();
-            responseDocument.Meta["request-meta"].Should().Be("request-meta-value");
+            var expected = @"{
+  ""meta"": {
+    ""license"": ""MIT"",
+    ""projectUrl"": ""https://github.com/json-api-dotnet/JsonApiDotNetCore/"",
+    ""versions"": [
+      ""v4.0.0"",
+      ""v3.1.0"",
+      ""v2.5.2"",
+      ""v1.3.1""
+    ]
+  },
+  ""links"": {
+    ""self"": ""http://localhost/api/v1/people""
+  },
+  ""data"": []
+}";
+
+            responseDocument.ToString().NormalizeLineEndings().Should().Be(expected.NormalizeLineEndings());
         }
     }
 
@@ -49,7 +75,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         {
             return new Dictionary<string, object>
             {
-                {"request-meta", "request-meta-value"}
+                ["license"] = "MIT",
+                ["projectUrl"] = "https://github.com/json-api-dotnet/JsonApiDotNetCore/",
+                ["versions"] = new[]
+                {
+                    "v4.0.0",
+                    "v3.1.0",
+                    "v2.5.2",
+                    "v1.3.1"
+                }
             };
         }
     }
