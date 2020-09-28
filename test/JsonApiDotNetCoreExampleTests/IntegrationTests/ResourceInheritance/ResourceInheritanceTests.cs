@@ -61,129 +61,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         }
         
         [Fact]
-        public async Task Can_apply_sparse_field_selection_on_base_attributes_in_primary_resource()
-        {
-            // Arrange
-            var animals = new List<Animal> { new Cat { IsDomesticated = true }, new Dog { Feline = false } };
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-               await dbContext.AddRangeAsync(animals);
-               await dbContext.SaveChangesAsync();
-            });
-
-            var route = "/animals?fields=feline";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Attributes.Should().HaveCount(2);
-        }
-        
-        [Fact]
-        public async Task Can_include_to_one_relationship()
-        {
-            // Arrange
-            var person = new Male()
-            {
-                Pet = new Cat { Meows = true }
-            };
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.AddAsync(person);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var route = "/people?include=pet";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Relationships["pet"].HasResource.Should().BeTrue();
-            responseDocument.ManyData[0].Relationships["pet"].SingleData.Type.Should().Be("cats");
-            responseDocument.ManyData[0].Relationships["pet"].SingleData.Id.Should().Be(person.Pet.StringId);
-        }
-        
-        [Fact]
-        public async Task Can_include_to_many_relationship()
-        {
-            // Arrange
-            var person = new Male()
-            {
-                Parents = new List<Person> { new Male(), new Female() },
-            };
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.AddAsync(person);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var route = "/people?include=parents";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.ManyData.Should().HaveCount(3);
-            responseDocument.ManyData[0].Relationships["parents"].HasResource.Should().BeTrue();
-            responseDocument.ManyData[1].Relationships["parents"].HasResource.Should().BeFalse();
-            responseDocument.ManyData[2].Relationships["parents"].HasResource.Should().BeFalse();
-            responseDocument.ManyData[0].Relationships["parents"].ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Relationships["parents"].ManyData[0].Id.Should().Be(person.Parents[0].StringId);
-            responseDocument.ManyData[0].Relationships["parents"].ManyData[0].Type.Should().Be("males");
-            responseDocument.ManyData[0].Relationships["parents"].ManyData[1].Id.Should().Be(person.Parents[1].StringId);
-            responseDocument.ManyData[0].Relationships["parents"].ManyData[1].Type.Should().Be("females");
-        }
-        
-        [Fact]
-        public async Task Can_include_many_to_many_relationship()
-        {
-            // Arrange
-            var person = new Male()
-            {
-                PersonLiterature = new List<LiteraturePerson>
-                {
-                    new LiteraturePerson { Literature = new FictionBook() },
-                    new LiteraturePerson { Literature = new NonFictionBook() }
-                }
-            };
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.AddAsync(person);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var route = "/people?include=favoriteLiterature";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Relationships["favoriteLiterature"].HasResource.Should().BeTrue();
-            responseDocument.ManyData[0].Relationships["favoriteLiterature"].ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Relationships["favoriteLiterature"].ManyData[0].Id.Should().Be(person.PersonLiterature[0].Literature.StringId);
-            responseDocument.ManyData[0].Relationships["favoriteLiterature"].ManyData[0].Type.Should().Be("fictionBooks");
-            responseDocument.ManyData[0].Relationships["favoriteLiterature"].ManyData[1].Id.Should().Be(person.PersonLiterature[1].Literature.StringId);
-            responseDocument.ManyData[0].Relationships["favoriteLiterature"].ManyData[1].Type.Should().Be("nonFictionBooks");
-        }
-
-        [Fact]
         public async Task Can_create_resource_with_to_one_relationship()
         {
             // Arrange
@@ -457,6 +334,129 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 favoriteLiterature.Should().ContainSingle(p => p is FictionBook);
                 favoriteLiterature.Should().ContainSingle(p => p is NonFictionBook);
             });
+        }
+        
+        [Fact(Skip = "Resource inheritance is currently not fully supported, see https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/844")]
+        public async Task Can_apply_sparse_field_selection_on_base_attributes_in_primary_resource()
+        {
+            // Arrange
+            var animals = new List<Animal> { new Cat { IsDomesticated = true }, new Dog { Feline = false } };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+               await dbContext.AddRangeAsync(animals);
+               await dbContext.SaveChangesAsync();
+            });
+
+            var route = "/animals?fields=feline";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.ManyData[0].Attributes.Should().HaveCount(2);
+        }
+        
+        [Fact(Skip = "Resource inheritance is currently not fully supported, see https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/844")]
+        public async Task Can_include_to_one_relationship()
+        {
+            // Arrange
+            var person = new Male()
+            {
+                Pet = new Cat { Meows = true }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.AddAsync(person);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var route = "/people?include=pet";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Relationships["pet"].HasResource.Should().BeTrue();
+            responseDocument.ManyData[0].Relationships["pet"].SingleData.Type.Should().Be("cats");
+            responseDocument.ManyData[0].Relationships["pet"].SingleData.Id.Should().Be(person.Pet.StringId);
+        }
+        
+        [Fact(Skip = "Resource inheritance is currently not fully supported, see https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/844")]
+        public async Task Can_include_to_many_relationship()
+        {
+            // Arrange
+            var person = new Male()
+            {
+                Parents = new List<Person> { new Male(), new Female() },
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.AddAsync(person);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var route = "/people?include=parents";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(3);
+            responseDocument.ManyData[0].Relationships["parents"].HasResource.Should().BeTrue();
+            responseDocument.ManyData[1].Relationships["parents"].HasResource.Should().BeFalse();
+            responseDocument.ManyData[2].Relationships["parents"].HasResource.Should().BeFalse();
+            responseDocument.ManyData[0].Relationships["parents"].ManyData.Should().HaveCount(2);
+            responseDocument.ManyData[0].Relationships["parents"].ManyData[0].Id.Should().Be(person.Parents[0].StringId);
+            responseDocument.ManyData[0].Relationships["parents"].ManyData[0].Type.Should().Be("males");
+            responseDocument.ManyData[0].Relationships["parents"].ManyData[1].Id.Should().Be(person.Parents[1].StringId);
+            responseDocument.ManyData[0].Relationships["parents"].ManyData[1].Type.Should().Be("females");
+        }
+        
+        [Fact(Skip = "Resource inheritance is currently not fully supported, see https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/844")]
+        public async Task Can_include_many_to_many_relationship()
+        {
+            // Arrange
+            var person = new Male()
+            {
+                PersonLiterature = new List<LiteraturePerson>
+                {
+                    new LiteraturePerson { Literature = new FictionBook() },
+                    new LiteraturePerson { Literature = new NonFictionBook() }
+                }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.AddAsync(person);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var route = "/people?include=favoriteLiterature";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Relationships["favoriteLiterature"].HasResource.Should().BeTrue();
+            responseDocument.ManyData[0].Relationships["favoriteLiterature"].ManyData.Should().HaveCount(2);
+            responseDocument.ManyData[0].Relationships["favoriteLiterature"].ManyData[0].Id.Should().Be(person.PersonLiterature[0].Literature.StringId);
+            responseDocument.ManyData[0].Relationships["favoriteLiterature"].ManyData[0].Type.Should().Be("fictionBooks");
+            responseDocument.ManyData[0].Relationships["favoriteLiterature"].ManyData[1].Id.Should().Be(person.PersonLiterature[1].Literature.StringId);
+            responseDocument.ManyData[0].Relationships["favoriteLiterature"].ManyData[1].Type.Should().Be("nonFictionBooks");
         }
     }
 }
