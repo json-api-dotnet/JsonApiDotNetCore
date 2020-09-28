@@ -7,5 +7,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
     {
         [Attr]
         public bool Feline { get; set; } 
+        
+        [Attr]
+        public bool IsDomesticated { get; set; } 
     }
 }

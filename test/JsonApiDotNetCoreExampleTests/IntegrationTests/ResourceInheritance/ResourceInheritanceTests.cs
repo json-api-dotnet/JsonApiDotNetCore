@@ -37,7 +37,55 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         }
         
         [Fact]
-        public async Task When_including_to_one_relationship_should_be_successful()
+        public async Task Can_filter_on_base_attribute_in_primary_resource()
+        {
+            // Arrange
+            var animals = new List<Animal> { new Cat { Meows = false }, new Cat { Meows = true }, new Dog() };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+               await dbContext.AddRangeAsync(animals);
+               await dbContext.SaveChangesAsync();
+            });
+
+            var route = "/animals?filter=equals(feline,'false')";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Id.Should().Be(animals[2].StringId);
+        }
+        
+        [Fact]
+        public async Task Can_apply_sparse_field_selection_on_base_attributes_in_primary_resource()
+        {
+            // Arrange
+            var animals = new List<Animal> { new Cat { IsDomesticated = true }, new Dog { Feline = false } };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+               await dbContext.AddRangeAsync(animals);
+               await dbContext.SaveChangesAsync();
+            });
+
+            var route = "/animals?fields=feline";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.ManyData[0].Attributes.Should().HaveCount(2);
+        }
+        
+        [Fact]
+        public async Task Can_include_to_one_relationship()
         {
             // Arrange
             var person = new Male()
@@ -66,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         }
         
         [Fact]
-        public async Task When_including_to_many_relationship_should_be_successful()
+        public async Task Can_include_to_many_relationship()
         {
             // Arrange
             var person = new Male()
@@ -98,33 +146,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             responseDocument.ManyData[0].Relationships["parents"].ManyData[1].Id.Should().Be(person.Parents[1].StringId);
             responseDocument.ManyData[0].Relationships["parents"].ManyData[1].Type.Should().Be("females");
         }
-
+        
         [Fact]
-        public async Task Can_filter_in_primary_resources()
-        {
-            // Arrange
-            var animals = new List<Animal> { new Cat { Meows = false }, new Cat { Meows = true }, new Dog() };
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-               await dbContext.AddRangeAsync(animals);
-               await dbContext.SaveChangesAsync();
-            });
-
-            var route = "/animals?filter=equals(feline,'false')";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(animals[2].StringId);
-        }
-
-        [Fact]
-        public async Task When_including_many_to_many_relationship_should_be_successful()
+        public async Task Can_include_many_to_many_relationship()
         {
             // Arrange
             var person = new Male()
@@ -160,7 +184,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         }
 
         [Fact]
-        public async Task When_creating_resource_with_to_one_relationship_should_be_successful()
+        public async Task Can_create_resource_with_to_one_relationship()
         {
             // Arrange
             var cat = new Cat();
@@ -207,7 +231,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
 
         [Fact]
-        public async Task When_patching_resource_with_to_one_relationship_through_relationship_link_should_be_successful()
+        public async Task Can_patch_resource_with_to_one_relationship_through_relationship_link()
         {
             // Arrange
             var person = new Male();
@@ -244,7 +268,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
 
         [Fact]
-        public async Task When_creating_resource_with_to_many_relationship_should_be_successful()
+        public async Task Can_create_resource_with_to_many_relationship()
         {
             // Arrange
             var father = new Male();
@@ -297,7 +321,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         }
 
         [Fact]
-        public async Task When_patching_resource_with_to_many_relationship_through_relationship_link_should_be_successful()
+        public async Task Can_patch_resource_with_to_many_relationship_through_relationship_link()
         {
             // Arrange   
             var child = new Male();
@@ -339,7 +363,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         }
 
         [Fact]
-        public async Task When_creating_resource_with_many_to_many_relationship_should_be_successful()
+        public async Task Can_create_resource_with_many_to_many_relationship()
         {
             // Arrange
             var fiction = new FictionBook();
@@ -392,7 +416,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         }
 
         [Fact]
-        public async Task When_patching_resource_with_many_to_many_relationship_through_relationship_link_should_be_successful()
+        public async Task Can_patch_resource_with_many_to_many_relationship_through_relationship_link()
         {
             // Arrange
             var fiction = new FictionBook();

@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
     public abstract class Person : Identifiable
     {
         [Attr]
-        public string Name { get; set; }
+        public bool Retired { get; set; }
         
         [HasOne]
         public Animal Pet { get; set; }
