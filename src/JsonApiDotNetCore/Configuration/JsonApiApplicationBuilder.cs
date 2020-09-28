@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Configuration
             _mvcBuilder = mvcBuilder ?? throw new ArgumentNullException(nameof(mvcBuilder));
             
             _intermediateProvider = services.BuildServiceProvider();
-            var loggerFactory = _intermediateProvider.GetService<ILoggerFactory>();
+            var loggerFactory = _intermediateProvider.GetRequiredService<ILoggerFactory>();
             
             _resourceGraphBuilder = new ResourceGraphBuilder(_options, loggerFactory);
             _serviceDiscoveryFacade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, loggerFactory);
@@ -74,7 +74,7 @@ namespace JsonApiDotNetCore.Configuration
             
             if (dbContextType != null)
             {
-                AddResourcesFromDbContext((DbContext)_intermediateProvider.GetService(dbContextType), _resourceGraphBuilder);
+                AddResourcesFromDbContext((DbContext)_intermediateProvider.GetRequiredService(dbContextType), _resourceGraphBuilder);
             }
             
             configureResourceGraph?.Invoke(_resourceGraphBuilder);
@@ -158,7 +158,7 @@ namespace JsonApiDotNetCore.Configuration
             _services.TryAddSingleton<IJsonApiInputFormatter, JsonApiInputFormatter>();
             _services.TryAddSingleton<IJsonApiOutputFormatter, JsonApiOutputFormatter>();
             _services.TryAddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
-            _services.AddSingleton<IControllerResourceMapping>(sp => sp.GetService<IJsonApiRoutingConvention>());
+            _services.AddSingleton<IControllerResourceMapping>(sp => sp.GetRequiredService<IJsonApiRoutingConvention>());
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             _services.AddScoped<IRequestScopedServiceProvider, RequestScopedServiceProvider>();
             _services.AddScoped<IJsonApiRequest, JsonApiRequest>();
@@ -232,21 +232,21 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<INullsQueryStringParameterReader, NullsQueryStringParameterReader>();
             _services.AddScoped<IResourceDefinitionQueryableParameterReader, ResourceDefinitionQueryableParameterReader>();
 
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IIncludeQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IFilterQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<ISortQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<ISparseFieldSetQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IPaginationQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IDefaultsQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<INullsQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<IResourceDefinitionQueryableParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<IIncludeQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<IFilterQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<ISortQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<ISparseFieldSetQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<IPaginationQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<IDefaultsQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<INullsQueryStringParameterReader>());
+            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<IResourceDefinitionQueryableParameterReader>());
 
-            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<IIncludeQueryStringParameterReader>());
-            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<IFilterQueryStringParameterReader>());
-            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<ISortQueryStringParameterReader>());
-            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<ISparseFieldSetQueryStringParameterReader>());
-            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<IPaginationQueryStringParameterReader>());
-            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetService<IResourceDefinitionQueryableParameterReader>());
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetRequiredService<IIncludeQueryStringParameterReader>());
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetRequiredService<IFilterQueryStringParameterReader>());
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetRequiredService<ISortQueryStringParameterReader>());
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetRequiredService<ISparseFieldSetQueryStringParameterReader>());
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetRequiredService<IPaginationQueryStringParameterReader>());
+            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetRequiredService<IResourceDefinitionQueryableParameterReader>());
 
             _services.AddScoped<IQueryStringReader, QueryStringReader>();
             _services.AddSingleton<IRequestQueryStringAccessor, RequestQueryStringAccessor>();

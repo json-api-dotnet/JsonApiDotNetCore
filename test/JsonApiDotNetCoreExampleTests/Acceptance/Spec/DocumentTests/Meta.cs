@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Definitions;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -26,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public Meta(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
-            _context = fixture.GetService<AppDbContext>();
+            _context = fixture.GetRequiredService<AppDbContext>();
         }
 
         [Fact]
@@ -181,7 +180,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
-            var expectedMeta = _fixture.GetService<IResourceDefinition<Person>>().GetMeta();
+            var expectedMeta = _fixture.GetRequiredService<IResourceDefinition<Person>>().GetMeta();
 
             // Act
             var response = await client.SendAsync(request);

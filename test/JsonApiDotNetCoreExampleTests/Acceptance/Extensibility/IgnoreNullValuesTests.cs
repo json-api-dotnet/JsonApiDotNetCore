@@ -10,6 +10,7 @@ using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -23,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
         public IgnoreNullValuesTests(TestFixture<TestStartup> fixture)
         {
-            _dbContext = fixture.GetService<AppDbContext>();
+            _dbContext = fixture.GetRequiredService<AppDbContext>();
             _todoItem = new TodoItem
             {
                 Description = null,
@@ -98,7 +99,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var services = server.Host.Services;
             var client = server.CreateClient();
 
-            var options = (JsonApiOptions)services.GetService(typeof(IJsonApiOptions));
+            var options = (JsonApiOptions)services.GetRequiredService(typeof(IJsonApiOptions));
 
             if (defaultValue != null)
             {

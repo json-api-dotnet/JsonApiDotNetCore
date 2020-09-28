@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
         public AppDbContext GetDbContext()
         {
-            return _fixture.GetService<AppDbContext>();
+            return _fixture.GetRequiredService<AppDbContext>();
         }
 
         public async Task<(string, HttpResponseMessage)> SendRequest(string method, string route, string content = null)

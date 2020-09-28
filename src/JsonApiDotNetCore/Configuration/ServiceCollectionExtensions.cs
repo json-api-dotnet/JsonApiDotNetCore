@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Configuration
             services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
             services.AddScoped<IRequestSerializer>(sp =>
             {
-                var graph = sp.GetService<IResourceGraph>();
+                var graph = sp.GetRequiredService<IResourceGraph>();
                 return new RequestSerializer(graph, new ResourceObjectBuilder(graph, new ResourceObjectBuilderSettings()));
             });
             return services;

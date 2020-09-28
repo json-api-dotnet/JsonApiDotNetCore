@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var route = "/api/v1/people/" + person.StringId;
             var request = new HttpRequestMessage(HttpMethod.Get, route);
 
-            var options = (JsonApiOptions) _factory.GetService<IJsonApiOptions>();
+            var options = (JsonApiOptions) _factory.GetRequiredService<IJsonApiOptions>();
             options.UseRelativeLinks = true;
 
             // Act
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var route = "/api/v1/people/" + person.StringId;
             var request = new HttpRequestMessage(HttpMethod.Get, route);
 
-            var options = (JsonApiOptions) _factory.GetService<IJsonApiOptions>();
+            var options = (JsonApiOptions) _factory.GetRequiredService<IJsonApiOptions>();
             options.UseRelativeLinks = false;
 
             // Act

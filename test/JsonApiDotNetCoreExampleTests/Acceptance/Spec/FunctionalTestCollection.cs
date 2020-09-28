@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             _factory = factory;
             _client = _factory.CreateClient();
-            _dbContext = _factory.GetService<AppDbContext>();
+            _dbContext = _factory.GetRequiredService<AppDbContext>();
             _deserializer = GetDeserializer();
             ClearDbContext();
         }
@@ -83,7 +83,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
         protected AppDbContext GetDbContext() => GetService<AppDbContext>();
 
-        protected T GetService<T>() => _factory.GetService<T>();
+        protected T GetService<T>() => _factory.GetRequiredService<T>();
 
         protected void AssertEqualStatusCode(HttpStatusCode expected, HttpResponseMessage response)
         {
