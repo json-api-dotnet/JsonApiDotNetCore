@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -119,6 +120,11 @@ namespace JsonApiDotNetCore.Services
             {
                 var topFilter = _queryLayerComposer.GetTopFilter();
                 _paginationContext.TotalResourceCount = await _repository.CountAsync(topFilter);
+
+                if (_paginationContext.TotalResourceCount == 0)
+                {
+                    return Array.Empty<TResource>();
+                }
             }
 
             var queryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
@@ -128,6 +134,11 @@ namespace JsonApiDotNetCore.Services
             {
                 _hookExecutor.AfterRead(resources, ResourcePipeline.Get);
                 return _hookExecutor.OnReturn(resources, ResourcePipeline.Get).ToArray();
+            }
+
+            if (queryLayer.Pagination?.PageSize != null && queryLayer.Pagination.PageSize.Value == resources.Count)
+            {
+                _paginationContext.IsPageFull = true;
             }
 
             return resources;
@@ -233,6 +244,14 @@ namespace JsonApiDotNetCore.Services
             var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
             var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
 
+            if (_request.IsCollection && _options.IncludeTotalResourceCount)
+            {
+                // TODO: Consider support for pagination links on secondary resource collection. This requires to call Count() on the inverse relationship (which may not exist).
+                // For /blogs/1/articles we need to execute Count(Articles.Where(article => article.Blog.Id == 1 && article.Blog.existingFilter))) to determine TotalResourceCount.
+                // This also means we need to invoke ResourceRepository<Article>.CountAsync() from ResourceService<Blog>.
+                // And we should call BlogResourceDefinition.OnApplyFilter to filter out soft-deleted blogs and translate from equals('IsDeleted','false') to equals('Blog.IsDeleted','false')
+            }
+
             var primaryResources = await _repository.GetAsync(primaryLayer);
             
             var primaryResource = primaryResources.SingleOrDefault();
@@ -244,7 +263,15 @@ namespace JsonApiDotNetCore.Services
                 primaryResource = _hookExecutor.OnReturn(AsList(primaryResource), ResourcePipeline.GetRelationship).Single();
             }
 
-            return _request.Relationship.GetValue(primaryResource);
+            var secondaryResource = _request.Relationship.GetValue(primaryResource);
+
+            if (secondaryResource is ICollection secondaryResources && 
+                secondaryLayer.Pagination?.PageSize != null && secondaryLayer.Pagination.PageSize.Value == secondaryResources.Count)
+            {
+                _paginationContext.IsPageFull = true;
+            }
+
+            return secondaryResource;
         }
 
         /// <inheritdoc />
