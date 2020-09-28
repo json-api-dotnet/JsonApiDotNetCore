@@ -20,12 +20,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public LinksWithoutNamespaceTests(IntegrationTestContext<NoNamespaceStartup, AppDbContext> testContext)
         {
             _testContext = testContext;
-
-            testContext.ConfigureServicesAfterStartup(services =>
-            {
-                var part = new AssemblyPart(typeof(EmptyStartup).Assembly);
-                services.AddMvcCore().ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part));
-            });
         }
 
         [Fact]

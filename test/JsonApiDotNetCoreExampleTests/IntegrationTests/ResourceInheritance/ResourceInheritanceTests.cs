@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             // Arrange
             var person = new Male()
             {
-                Pet = new Cat()
+                Pet = new Cat { Meows = true }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                await dbContext.SaveChangesAsync();
             });
 
-            var route = "/animals?filter=equals(meows,'false')";
+            var route = "/animals?filter=equals(feline,'false')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -120,7 +120,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(animals[0].StringId);
+            responseDocument.ManyData[0].Id.Should().Be(animals[2].StringId);
         }
 
         [Fact]

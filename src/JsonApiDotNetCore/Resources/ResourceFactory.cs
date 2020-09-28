@@ -117,6 +117,11 @@ namespace JsonApiDotNetCore.Resources
         {
             ConstructorInfo[] constructors = type.GetConstructors().Where(c => !c.IsStatic).ToArray();
 
+            if (constructors.Length == 0)
+            {
+                throw new InvalidOperationException($"No public constructors found for '{type.FullName}'.");
+            }
+
             ConstructorInfo bestMatch = constructors[0];
             int maxParameterLength = constructors[0].GetParameters().Length;
 
