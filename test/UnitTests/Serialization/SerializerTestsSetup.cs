@@ -41,12 +41,12 @@ namespace UnitTests.Serialization
 
         protected ResponseSerializer<T> GetResponseSerializer<T>(List<List<RelationshipAttribute>> inclusionChains = null, Dictionary<string, object> metaDict = null, TopLevelLinks topLinks = null, ResourceLinks resourceLinks = null, RelationshipLinks relationshipLinks = null) where T : class, IIdentifiable
         {
-            var meta = GetMetaBuilder<T>(metaDict);
+            var meta = GetMetaBuilder(metaDict);
             var link = GetLinkBuilder(topLinks, resourceLinks, relationshipLinks);
             var includeConstraints = GetIncludeConstraints(inclusionChains);
             var includedBuilder = GetIncludedBuilder();
             var fieldsToSerialize = GetSerializableFields();
-            ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, _resourceGraph, GetSerializerSettingsProvider());
+            ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, _resourceGraph, GetResourceDefinitionAccessor(), GetSerializerSettingsProvider());
             return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, new JsonApiOptions());
         }
 
@@ -55,12 +55,12 @@ namespace UnitTests.Serialization
             var link = GetLinkBuilder(null, resourceLinks, relationshipLinks);
             var includeConstraints = GetIncludeConstraints(inclusionChains);
             var includedBuilder = GetIncludedBuilder();
-            return new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, _resourceGraph, GetSerializerSettingsProvider());
+            return new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, _resourceGraph, GetResourceDefinitionAccessor(), GetSerializerSettingsProvider());
         }
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder()
         {
-            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, GetSerializerSettingsProvider());
+            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, GetResourceDefinitionAccessor(), GetSerializerSettingsProvider());
         }
 
         protected IResourceObjectBuilderSettingsProvider GetSerializerSettingsProvider()
@@ -70,10 +70,16 @@ namespace UnitTests.Serialization
             return mock.Object;
         }
 
-        protected IMetaBuilder<T> GetMetaBuilder<T>(Dictionary<string, object> meta = null) where T : class, IIdentifiable
+        protected IResourceDefinitionAccessor GetResourceDefinitionAccessor()
         {
-            var mock = new Mock<IMetaBuilder<T>>();
-            mock.Setup(m => m.GetMeta()).Returns(meta);
+            var mock = new Mock<IResourceDefinitionAccessor>();
+            return mock.Object;
+        }
+
+        protected IMetaBuilder GetMetaBuilder(Dictionary<string, object> meta = null)
+        {
+            var mock = new Mock<IMetaBuilder>();
+            mock.Setup(m => m.Build()).Returns(meta);
             return mock.Object;
         }
 
@@ -120,14 +126,14 @@ namespace UnitTests.Serialization
         {
             public TestSerializer(IResourceObjectBuilder resourceObjectBuilder) : base(resourceObjectBuilder) { }
 
-            public new Document Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
+            public new Document Build(IIdentifiable resource, bool includeResourceMeta, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
             {
-                return base.Build(resource, attributes, relationships);
+                return base.Build(resource, true, attributes, relationships);
             }
 
-            public new Document Build(IReadOnlyCollection<IIdentifiable> resources, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
+            public new Document Build(IReadOnlyCollection<IIdentifiable> resources, bool includeResourceMeta, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
             {
-                return base.Build(resources, attributes, relationships);
+                return base.Build(resources, true, attributes, relationships);
             }
         }
     }

@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
     public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
     {
@@ -22,24 +22,21 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         {
             _testContext = testContext;
 
-            testContext.ConfigureServicesBeforeStartup(services =>
+            testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddScoped<IResponseMeta, TestResponseMeta>();
+                services.AddSingleton<IResponseMeta, TestResponseMeta>();
             });
 
-            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.IncludeTotalResourceCount = false;
         }
 
         [Fact]
-        public async Task Injecting_IResponseMeta_Adds_Meta_Data()
+        public async Task Registered_IResponseMeta_Adds_TopLevel_Meta()
         {
             // Arrange
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Person>();
-            });
-            
+            await _testContext.RunOnDatabaseAsync(async dbContext => { await dbContext.ClearTableAsync<Person>(); });
+
             var route = "/api/v1/people";
 
             // Act

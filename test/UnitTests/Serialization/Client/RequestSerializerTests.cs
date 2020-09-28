@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Building;
@@ -14,7 +15,8 @@ namespace UnitTests.Serialization.Client
 
         public RequestSerializerTests()
         {
-            var builder = new ResourceObjectBuilder(_resourceGraph, new ResourceObjectBuilderSettings());
+            var accessor = new ResourceDefinitionAccessor(_resourceGraph, new ServiceContainer());
+            var builder = new ResourceObjectBuilder(_resourceGraph, accessor, new ResourceObjectBuilderSettings());
             _serializer = new RequestSerializer(_resourceGraph, builder);
         }
 

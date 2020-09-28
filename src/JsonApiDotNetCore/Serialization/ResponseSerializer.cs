@@ -29,12 +29,12 @@ namespace JsonApiDotNetCore.Serialization
         
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IJsonApiOptions _options;
-        private readonly IMetaBuilder<TResource> _metaBuilder;
+        private readonly IMetaBuilder _metaBuilder;
         private readonly Type _primaryResourceType;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
 
-        public ResponseSerializer(IMetaBuilder<TResource> metaBuilder,
+        public ResponseSerializer(IMetaBuilder metaBuilder,
             ILinkBuilder linkBuilder,
             IIncludedResourceObjectBuilder includedBuilder,
             IFieldsToSerialize fieldsToSerialize,
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             var (attributes, relationships) = GetFieldsToSerialize();
-            var document = Build(resource, attributes, relationships);
+            var document = Build(resource, true, attributes, relationships);
             var resourceObject = document.SingleData;
             if (resourceObject != null)
                 resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCore.Serialization
         internal string SerializeMany(IReadOnlyCollection<IIdentifiable> resources)
         {
             var (attributes, relationships) = GetFieldsToSerialize();
-            var document = Build(resources, attributes, relationships);
+            var document = Build(resources, true, attributes, relationships);
             foreach (ResourceObject resourceObject in document.ManyData)
             {
                 var links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCore.Serialization
         private void AddTopLevelObjects(Document document)
         {
             document.Links = _linkBuilder.GetTopLevelLinks();
-            document.Meta = _metaBuilder.GetMeta();
+            document.Meta = _metaBuilder.Build();
             document.Included = _includedBuilder.Build();
         }
     }

@@ -18,8 +18,9 @@ namespace JsonApiDotNetCore.Serialization.Building
         public IncludedResourceObjectBuilder(IFieldsToSerialize fieldsToSerialize,
                                              ILinkBuilder linkBuilder,
                                              IResourceContextProvider resourceContextProvider,
+                                             IResourceDefinitionAccessor resourceDefinitionAccessor,
                                              IResourceObjectBuilderSettingsProvider settingsProvider)
-            : base(resourceContextProvider, settingsProvider.Get())
+            : base(resourceContextProvider, resourceDefinitionAccessor, settingsProvider.Get())
         {
             _included = new HashSet<ResourceObject>(ResourceIdentifierObjectComparer.Instance);
             _fieldsToSerialize = fieldsToSerialize ?? throw new ArgumentNullException(nameof(fieldsToSerialize));
@@ -126,7 +127,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             var entry = _included.SingleOrDefault(ro => ro.Type == resourceName && ro.Id == parent.StringId);
             if (entry == null)
             {
-                entry = Build(parent, _fieldsToSerialize.GetAttributes(type, relationship), _fieldsToSerialize.GetRelationships(type));
+                entry = Build(parent, true, _fieldsToSerialize.GetAttributes(type, relationship), _fieldsToSerialize.GetRelationships(type));
                 _included.Add(entry);
             }
             return entry;

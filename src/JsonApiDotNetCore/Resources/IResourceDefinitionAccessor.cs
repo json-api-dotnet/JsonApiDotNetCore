@@ -42,8 +42,8 @@ namespace JsonApiDotNetCore.Resources
         object GetQueryableHandlerForQueryStringParameter(Type resourceType, string parameterName);
 
         /// <summary>
-        /// Invokes <see cref="IResourceDefinition{TResource,TId}.GetMeta"/> for the specified resource type.
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.GetMeta"/> for the specified resource.
         /// </summary>
-        IReadOnlyDictionary<string, object> GetMeta(Type resourceType);
+        IDictionary<string, object> GetMeta(Type resourceType, IIdentifiable resourceInstance);
     }
 }

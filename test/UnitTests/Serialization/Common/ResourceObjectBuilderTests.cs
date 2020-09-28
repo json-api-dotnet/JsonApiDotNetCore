@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
 using UnitTests.TestModels;
@@ -15,7 +17,8 @@ namespace UnitTests.Serialization.Serializer
 
         public ResourceObjectBuilderTests()
         {
-            _builder = new ResourceObjectBuilder(_resourceGraph, new ResourceObjectBuilderSettings());
+            var accessor = new ResourceDefinitionAccessor(_resourceGraph, new ServiceContainer());
+            _builder = new ResourceObjectBuilder(_resourceGraph, accessor, new ResourceObjectBuilderSettings());
         }
 
         [Fact]
@@ -25,7 +28,7 @@ namespace UnitTests.Serialization.Serializer
             var resource = new TestResource();
 
             // Act
-            var resourceObject = _builder.Build(resource);
+            var resourceObject = _builder.Build(resource, false);
 
             // Assert
             Assert.Null(resourceObject.Attributes);
@@ -41,7 +44,7 @@ namespace UnitTests.Serialization.Serializer
             var resource = new TestResource { Id = 1 };
 
             // Act
-            var resourceObject = _builder.Build(resource);
+            var resourceObject = _builder.Build(resource, false);
 
             // Assert
             Assert.Equal("1", resourceObject.Id);
@@ -60,7 +63,7 @@ namespace UnitTests.Serialization.Serializer
             var attrs = _resourceGraph.GetAttributes<TestResource>(tr => new { tr.StringField, tr.NullableIntField });
 
             // Act
-            var resourceObject = _builder.Build(resource, attrs);
+            var resourceObject = _builder.Build(resource, false, attrs);
 
             // Assert
             Assert.NotNull(resourceObject.Attributes);
@@ -76,7 +79,7 @@ namespace UnitTests.Serialization.Serializer
             var resource = new MultipleRelationshipsPrincipalPart();
 
             // Act
-            var resourceObject = _builder.Build(resource);
+            var resourceObject = _builder.Build(resource, false);
 
             // Assert
             Assert.Null(resourceObject.Attributes);
@@ -95,7 +98,7 @@ namespace UnitTests.Serialization.Serializer
             };
 
             // Act
-            var resourceObject = _builder.Build(resource);
+            var resourceObject = _builder.Build(resource, false);
 
             // Assert
             Assert.Null(resourceObject.Attributes);
@@ -116,7 +119,7 @@ namespace UnitTests.Serialization.Serializer
             var relationships = _resourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>(tr => new { tr.PopulatedToManies, tr.PopulatedToOne, tr.EmptyToOne, tr.EmptyToManies });
 
             // Act
-            var resourceObject = _builder.Build(resource, relationships: relationships);
+            var resourceObject = _builder.Build(resource, false, relationships: relationships);
 
             // Assert
             Assert.Equal(4, resourceObject.Relationships.Count);
@@ -140,7 +143,7 @@ namespace UnitTests.Serialization.Serializer
             var relationships = _resourceGraph.GetRelationships<OneToOneDependent>(tr => tr.Principal);
 
             // Act
-            var resourceObject = _builder.Build(resource, relationships: relationships);
+            var resourceObject = _builder.Build(resource, false, relationships: relationships);
 
             // Assert
             Assert.Single(resourceObject.Relationships);
@@ -157,7 +160,7 @@ namespace UnitTests.Serialization.Serializer
             var relationships = _resourceGraph.GetRelationships<OneToOneDependent>(tr => tr.Principal);
 
             // Act
-            var resourceObject = _builder.Build(resource, relationships: relationships);
+            var resourceObject = _builder.Build(resource, false, relationships: relationships);
 
             // Assert
             Assert.Null(resourceObject.Relationships["principal"].Data);
@@ -171,7 +174,7 @@ namespace UnitTests.Serialization.Serializer
             var relationships = _resourceGraph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
 
             // Act
-            var resourceObject = _builder.Build(resource, relationships: relationships);
+            var resourceObject = _builder.Build(resource, false, relationships: relationships);
 
             // Assert
             Assert.Single(resourceObject.Relationships);
@@ -188,7 +191,7 @@ namespace UnitTests.Serialization.Serializer
             var relationships = _resourceGraph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
 
             // Act & assert
-            Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(resource, relationships: relationships));
+            Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(resource, false, relationships: relationships));
         }
 
         [Fact]
@@ -199,7 +202,7 @@ namespace UnitTests.Serialization.Serializer
             var relationships = _resourceGraph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
 
             // Act & assert
-            Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(resource, relationships: relationships));
+            Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(resource, false, relationships: relationships));
         }
     }
 }

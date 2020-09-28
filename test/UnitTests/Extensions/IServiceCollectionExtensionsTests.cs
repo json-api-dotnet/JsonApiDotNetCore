@@ -48,7 +48,7 @@ namespace UnitTests.Extensions
             Assert.NotNull(provider.GetService(typeof(IResourceRepository<TodoItem>)));
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IHttpContextAccessor>());
-            Assert.NotNull(provider.GetService<IMetaBuilder<TodoItem>>());
+            Assert.NotNull(provider.GetService<IMetaBuilder>());
             Assert.NotNull(provider.GetService<IJsonApiSerializerFactory>());
             Assert.NotNull(provider.GetService<IJsonApiWriter>());
             Assert.NotNull(provider.GetService<IJsonApiReader>());

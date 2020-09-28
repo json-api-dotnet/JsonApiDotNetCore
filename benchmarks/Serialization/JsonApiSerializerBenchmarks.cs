@@ -28,14 +28,15 @@ namespace Benchmarks.Serialization
             IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
             IFieldsToSerialize fieldsToSerialize = CreateFieldsToSerialize(resourceGraph);
 
-            var metaBuilderMock = new Mock<IMetaBuilder<BenchmarkResource>>();
-            var linkBuilderMock = new Mock<ILinkBuilder>();
-            var includeBuilderMock = new Mock<IIncludedResourceObjectBuilder>();
+            var metaBuilder = new Mock<IMetaBuilder>().Object;
+            var linkBuilder = new Mock<ILinkBuilder>().Object;
+            var includeBuilder = new Mock<IIncludedResourceObjectBuilder>().Object;
+            var accessor = new Mock<IResourceDefinitionAccessor>().Object;
 
-            var resourceObjectBuilder = new ResourceObjectBuilder(resourceGraph, new ResourceObjectBuilderSettings());
+            var resourceObjectBuilder = new ResourceObjectBuilder(resourceGraph, accessor, new ResourceObjectBuilderSettings());
 
-            _jsonApiSerializer = new ResponseSerializer<BenchmarkResource>(metaBuilderMock.Object, linkBuilderMock.Object,
-                includeBuilderMock.Object, fieldsToSerialize, resourceObjectBuilder, options);
+            _jsonApiSerializer = new ResponseSerializer<BenchmarkResource>(metaBuilder, linkBuilder,
+                includeBuilder, fieldsToSerialize, resourceObjectBuilder, options);
         }
 
         private static FieldsToSerialize CreateFieldsToSerialize(IResourceGraph resourceGraph)

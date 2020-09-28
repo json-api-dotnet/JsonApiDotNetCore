@@ -31,12 +31,12 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         {
             if (resource == null)
             {
-                var empty = Build((IIdentifiable) null, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
+                var empty = Build((IIdentifiable) null, false, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
                 return SerializeObject(empty, _jsonSerializerSettings);
             }
 
             _currentTargetedResource = resource.GetType();
-            var document = Build(resource, GetAttributesToSerialize(resource), GetRelationshipsToSerialize(resource));
+            var document = Build(resource, false, GetAttributesToSerialize(resource), GetRelationshipsToSerialize(resource));
             _currentTargetedResource = null;
 
             return SerializeObject(document, _jsonSerializerSettings);
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
             Document document;
             if (firstResource == null)
             {
-                document = Build(resources, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
+                document = Build(resources, false, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
             }
             else
             {
@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
                 var attributes = GetAttributesToSerialize(firstResource);
                 var relationships = GetRelationshipsToSerialize(firstResource);
 
-                document = Build(resources, attributes, relationships);
+                document = Build(resources, false, attributes, relationships);
                 _currentTargetedResource = null;
             }
 

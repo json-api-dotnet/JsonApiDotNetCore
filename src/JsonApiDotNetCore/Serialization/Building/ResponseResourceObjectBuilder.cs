@@ -22,8 +22,9 @@ namespace JsonApiDotNetCore.Serialization.Building
                                              IIncludedResourceObjectBuilder includedBuilder,
                                              IEnumerable<IQueryConstraintProvider> constraintProviders,
                                              IResourceContextProvider resourceContextProvider,
+                                             IResourceDefinitionAccessor resourceDefinitionAccessor,
                                              IResourceObjectBuilderSettingsProvider settingsProvider)
-            : base(resourceContextProvider, settingsProvider.Get())
+            : base(resourceContextProvider, resourceDefinitionAccessor, settingsProvider.Get())
         {
             _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
             _includedBuilder = includedBuilder ?? throw new ArgumentNullException(nameof(includedBuilder));
