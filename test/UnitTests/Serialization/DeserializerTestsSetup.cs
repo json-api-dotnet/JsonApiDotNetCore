@@ -50,14 +50,14 @@ namespace UnitTests.Serialization
             };
         }
 
-        protected RelationshipEntry CreateRelationshipData(string relatedType = null, bool isToManyData = false)
+        protected RelationshipEntry CreateRelationshipData(string relatedType = null, bool isToManyData = false, string id = "10")
         {
             var data = new RelationshipEntry();
-            var rio = relatedType == null ? null : new ResourceIdentifierObject { Id = "10", Type = relatedType };
+            var rio = relatedType == null ? null : new ResourceIdentifierObject { Id = id, Type = relatedType };
 
             if (isToManyData)
             {
-                data.Data = new List<ResourceIdentifierObject>();
+                data.Data =  new List<ResourceIdentifierObject>();
                 if (relatedType != null) ((List<ResourceIdentifierObject>)data.Data).Add(rio);
             }
             else

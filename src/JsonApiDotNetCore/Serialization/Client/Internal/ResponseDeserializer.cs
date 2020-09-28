@@ -87,19 +87,20 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         /// </summary>
         private IIdentifiable ParseIncludedRelationship(RelationshipAttribute relationshipAttr, ResourceIdentifierObject relatedResourceIdentifier)
         {
-            var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(relationshipAttr.RightType);
+            var relatedResourceContext = ResourceContextProvider.GetResourceContext(relatedResourceIdentifier.Type);
+            
+            var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(relatedResourceContext.ResourceType);
             relatedInstance.StringId = relatedResourceIdentifier.Id;
 
             var includedResource = GetLinkedResource(relatedResourceIdentifier);
             if (includedResource == null)
                 return relatedInstance;
 
-            var resourceContext = ResourceContextProvider.GetResourceContext(relatedResourceIdentifier.Type);
-            if (resourceContext == null)
+            if (relatedResourceContext == null)
                 throw new InvalidOperationException($"Included type '{relationshipAttr.RightType}' is not a registered json:api resource.");
 
-            SetAttributes(relatedInstance, includedResource.Attributes, resourceContext.Attributes);
-            SetRelationships(relatedInstance, includedResource.Relationships, resourceContext.Relationships);
+            SetAttributes(relatedInstance, includedResource.Attributes, relatedResourceContext.Attributes);
+            SetRelationships(relatedInstance, includedResource.Relationships, relatedResourceContext.Relationships);
             return relatedInstance;
         }
 
