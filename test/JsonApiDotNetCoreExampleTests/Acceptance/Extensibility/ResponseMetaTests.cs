@@ -11,11 +11,11 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
-    public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
+    public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
     {
         private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
 
-        public RequestMetaTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        public ResponseMetaTests(IntegrationTestContext<Startup, AppDbContext> testContext)
         {
             _testContext = testContext;
 
