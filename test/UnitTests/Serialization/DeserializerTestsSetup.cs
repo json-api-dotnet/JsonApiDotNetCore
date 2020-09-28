@@ -57,7 +57,7 @@ namespace UnitTests.Serialization
 
             if (isToManyData)
             {
-                data.Data =  new List<ResourceIdentifierObject>();
+                data.Data = new List<ResourceIdentifierObject>();
                 if (relatedType != null) ((List<ResourceIdentifierObject>)data.Data).Add(rio);
             }
             else
