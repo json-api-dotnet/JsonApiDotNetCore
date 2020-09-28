@@ -9349,6 +9349,19 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.IPaginationContext
   fullName: JsonApiDotNetCore.Queries.IPaginationContext
   nameWithType: IPaginationContext
+- uid: JsonApiDotNetCore.Queries.IPaginationContext.IsPageFull
+  name: IsPageFull
+  href: api/JsonApiDotNetCore.Queries.IPaginationContext.html#JsonApiDotNetCore_Queries_IPaginationContext_IsPageFull
+  commentId: P:JsonApiDotNetCore.Queries.IPaginationContext.IsPageFull
+  fullName: JsonApiDotNetCore.Queries.IPaginationContext.IsPageFull
+  nameWithType: IPaginationContext.IsPageFull
+- uid: JsonApiDotNetCore.Queries.IPaginationContext.IsPageFull*
+  name: IsPageFull
+  href: api/JsonApiDotNetCore.Queries.IPaginationContext.html#JsonApiDotNetCore_Queries_IPaginationContext_IsPageFull_
+  commentId: Overload:JsonApiDotNetCore.Queries.IPaginationContext.IsPageFull
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.IPaginationContext.IsPageFull
+  nameWithType: IPaginationContext.IsPageFull
 - uid: JsonApiDotNetCore.Queries.IPaginationContext.PageNumber
   name: PageNumber
   href: api/JsonApiDotNetCore.Queries.IPaginationContext.html#JsonApiDotNetCore_Queries_IPaginationContext_PageNumber
