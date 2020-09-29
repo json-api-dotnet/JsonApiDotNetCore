@@ -5,12 +5,10 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 {
-    public sealed class NonFictionBooksController : JsonApiController<Video>
+    public sealed class VideosController : JsonApiController<Video>
     {
-        public NonFictionBooksController(IJsonApiOptions options, ILoggerFactory loggerFactory,
+        public VideosController(IJsonApiOptions options, ILoggerFactory loggerFactory,
             IResourceService<Video> resourceService)
-            : base(options, loggerFactory, resourceService)
-        {
-        }
+            : base(options, loggerFactory, resourceService) { }
     }
 }

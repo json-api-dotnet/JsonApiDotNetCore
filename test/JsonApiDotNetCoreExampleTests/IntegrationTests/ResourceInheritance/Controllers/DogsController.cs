@@ -9,8 +9,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
     {
         public DogsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
             IResourceService<Dog> resourceService)
-            : base(options, loggerFactory, resourceService)
-        {
-        }
+            : base(options, loggerFactory, resourceService) { }
     }
 }

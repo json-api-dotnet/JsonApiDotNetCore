@@ -17,9 +17,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         
         public DbSet<Male> Males { get; set; }
         
-        public DbSet<Book> FictionBooks { get; set; }
+        public DbSet<Book> Books { get; set; }
         
-        public DbSet<Video> NonFictionBooks { get; set; }
+        public DbSet<Video> Videos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,13 +36,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 .HasValue<Dog>(2);
             
             modelBuilder.Entity<Content>()
-                .ToTable("Books")
+                .ToTable("Content")
                 .HasDiscriminator<int>("Type")
                 .HasValue<Video>(1)
                 .HasValue<Book>(2);
             
             modelBuilder.Entity<ContentPerson>()
-                .HasKey(pp => new { LiteratureId = pp.ContentId, pp.PersonId });
+                .HasKey(pp => new { ContentPersonId = pp.ContentId, pp.PersonId });
         }
     }
 }
