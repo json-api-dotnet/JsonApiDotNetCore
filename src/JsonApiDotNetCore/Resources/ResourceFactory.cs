@@ -119,9 +119,9 @@ namespace JsonApiDotNetCore.Resources
 
             if (constructors.Length == 0)
             {
-                throw new InvalidOperationException($"No public constructors found for '{type.FullName}'.");
+                throw new InvalidOperationException($"No public constructor was found for '{type.FullName}'.");
             }
-
+            
             ConstructorInfo bestMatch = constructors[0];
             int maxParameterLength = constructors[0].GetParameters().Length;
 

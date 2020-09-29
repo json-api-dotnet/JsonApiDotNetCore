@@ -72,11 +72,11 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
             {
                 // add attributes and relationships of a parsed HasOne relationship
                 var rio = data.SingleData;
-                hasOneAttr.SetValue(resource, rio == null ? null : ParseIncludedRelationship(hasOneAttr, rio), ResourceFactory);
+                hasOneAttr.SetValue(resource, rio == null ? null : ParseIncludedRelationship(rio), ResourceFactory);
             }
             else if (field is HasManyAttribute hasManyAttr)
             {  // add attributes and relationships of a parsed HasMany relationship
-                var items = data.ManyData.Select(rio => ParseIncludedRelationship(hasManyAttr, rio));
+                var items = data.ManyData.Select(rio => ParseIncludedRelationship(rio));
                 var values = TypeHelper.CopyToTypedCollection(items, hasManyAttr.Property.PropertyType);
                 hasManyAttr.SetValue(resource, values, ResourceFactory);
             }
@@ -85,22 +85,26 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         /// <summary>
         /// Searches for and parses the included relationship.
         /// </summary>
-        private IIdentifiable ParseIncludedRelationship(RelationshipAttribute relationshipAttr, ResourceIdentifierObject relatedResourceIdentifier)
+        private IIdentifiable ParseIncludedRelationship(ResourceIdentifierObject relatedResourceIdentifier)
         {
             var relatedResourceContext = ResourceContextProvider.GetResourceContext(relatedResourceIdentifier.Type);
+
+            if (relatedResourceContext == null)
+            {
+                throw new InvalidOperationException($"Included type '{relatedResourceIdentifier.Type}' is not a registered json:api resource.");
+            }
             
             var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(relatedResourceContext.ResourceType);
             relatedInstance.StringId = relatedResourceIdentifier.Id;
 
             var includedResource = GetLinkedResource(relatedResourceIdentifier);
-            if (includedResource == null)
-                return relatedInstance;
 
-            if (relatedResourceContext == null)
-                throw new InvalidOperationException($"Included type '{relationshipAttr.RightType}' is not a registered json:api resource.");
-
-            SetAttributes(relatedInstance, includedResource.Attributes, relatedResourceContext.Attributes);
-            SetRelationships(relatedInstance, includedResource.Relationships, relatedResourceContext.Relationships);
+            if (includedResource != null)
+            {
+                SetAttributes(relatedInstance, includedResource.Attributes, relatedResourceContext.Attributes);
+                SetRelationships(relatedInstance, includedResource.Relationships, relatedResourceContext.Relationships);
+            }
+            
             return relatedInstance;
         }
 
