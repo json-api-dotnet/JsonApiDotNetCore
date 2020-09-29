@@ -2,9 +2,9 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 {
-    public class Dog : Animal
+    public sealed class Book : Content
     {
         [Attr]
-        public bool RespondsToName { get; set; }
+        public int PageCount { get; set; }
     }
 }

@@ -5,10 +5,10 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 {
-    public sealed class FictionBooksController : JsonApiController<FictionBook>
+    public sealed class FictionBooksController : JsonApiController<Book>
     {
         public FictionBooksController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<FictionBook> resourceService)
+            IResourceService<Book> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

@@ -13,17 +13,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         [HasOne]
         public Animal Pet { get; set; }
         
-        [HasOne]
-        public Cat FavCat { get; set; }
-
         [HasMany]
         public List<Person> Parents { get; set; }
         
         [NotMapped]
-        [HasManyThrough(nameof(PersonLiterature))]
-        public List<Literature> FavoriteLiterature { get; set; }
+        [HasManyThrough(nameof(ContentPersons))]
+        public List<Content> FavoriteContent { get; set; }
         
-        public List<LiteraturePerson> PersonLiterature { get; set; }
+        public List<ContentPerson> ContentPersons { get; set; }
     }
 }
     

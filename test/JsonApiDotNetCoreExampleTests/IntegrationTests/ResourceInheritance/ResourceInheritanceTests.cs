@@ -24,9 +24,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<LiteraturePerson>();
-                await dbContext.ClearTableAsync<FictionBook>();
-                await dbContext.ClearTableAsync<NonFictionBook>();
+                await dbContext.ClearTableAsync<ContentPerson>();
+                await dbContext.ClearTableAsync<Book>();
+                await dbContext.ClearTableAsync<Video>();
                 await dbContext.ClearTableAsync<Cat>();
                 await dbContext.ClearTableAsync<Dog>();
                 await dbContext.ClearTableAsync<Female>();
@@ -104,7 +104,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             };
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -219,16 +219,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public async Task Can_create_resource_with_many_to_many_relationship()
         {
             // Arrange
-            var fiction = new FictionBook();
-            var nonFiction = new NonFictionBook();
+            var book = new Book();
+            var video = new Video();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.AddRangeAsync(fiction, nonFiction);
+                await dbContext.AddRangeAsync(book, video);
                 await dbContext.SaveChangesAsync();
             });
         
-            var route = "/males?include=favoriteLiterature";
+            var route = "/males?include=favoriteContent";
             var requestBody = new
             {
                 data = new
@@ -237,12 +237,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                     relationships = new Dictionary<string, object>
                     {
                         {
-                            "favoriteLiterature", new
+                            "favoriteContent", new
                             {
                                 data = new[]
                                 {
-                                    new { type = "fictionBooks", id = fiction.StringId },
-                                    new { type = "nonFictionBooks", id = nonFiction.StringId }
+                                    new { type = "books", id = book.StringId },
+                                    new { type = "videos", id = video.StringId }
                                 }
                             }
                         }
@@ -256,15 +256,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             // Assert
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var favoriteLiterature = (await dbContext.People
-                        .Include(p => p.PersonLiterature)
-                        .ThenInclude(pp => pp.Literature)
+                var favoriteContent = (await dbContext.People
+                        .Include(p => p.ContentPersons)
+                        .ThenInclude(pp => pp.Content)
                         .Where(p => p.Id.Equals(int.Parse(responseDocument.SingleData.Id))).FirstAsync())
-                    .PersonLiterature.Select(pp => pp.Literature).ToList();
+                    .ContentPersons.Select(pp => pp.Content).ToList();
                 
-                favoriteLiterature.Should().HaveCount(2);
-                favoriteLiterature.Should().ContainSingle(p => p is FictionBook);
-                favoriteLiterature.Should().ContainSingle(p => p is NonFictionBook);
+                favoriteContent.Should().HaveCount(2);
+                favoriteContent.Should().ContainSingle(p => p is Book);
+                favoriteContent.Should().ContainSingle(p => p is Video);
             });
         }
 
@@ -272,23 +272,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public async Task Can_patch_resource_with_many_to_many_relationship_through_relationship_link()
         {
             // Arrange
-            var fiction = new FictionBook();
-            var nonFiction = new NonFictionBook();
+            var book = new Book();
+            var video = new Video();
             var person = new Male();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.AddRangeAsync(fiction, nonFiction, person);
+                await dbContext.AddRangeAsync(book, video, person);
                 await dbContext.SaveChangesAsync();
             });
         
-            var route = $"/people/{person.Id}/relationships/favoriteLiterature";
+            var route = $"/people/{person.Id}/relationships/favoriteContent";
             var requestBody = new
             {
                 data = new[]
                 {
-                    new { type = "fictionBooks", id = fiction.StringId },
-                    new { type = "nonFictionBooks", id = nonFiction.StringId }
+                    new { type = "books", id = book.StringId },
+                    new { type = "videos", id = video.StringId }
                 }
             };
         
@@ -300,15 +300,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var favoriteLiterature = (await dbContext.Males
-                        .Include(p => p.PersonLiterature)
-                        .ThenInclude(pp => pp.Literature)
+                var favoriteContent = (await dbContext.Males
+                        .Include(p => p.ContentPersons)
+                        .ThenInclude(pp => pp.Content)
                         .Where(p => p.Id.Equals(person.Id)).FirstAsync())
-                    .PersonLiterature.Select(pp => pp.Literature).ToList();
+                    .ContentPersons.Select(pp => pp.Content).ToList();
         
-                favoriteLiterature.Should().HaveCount(2);
-                favoriteLiterature.Should().ContainSingle(p => p is FictionBook);
-                favoriteLiterature.Should().ContainSingle(p => p is NonFictionBook);
+                favoriteContent.Should().HaveCount(2);
+                favoriteContent.Should().ContainSingle(p => p is Book);
+                favoriteContent.Should().ContainSingle(p => p is Video);
             });
         }
     }

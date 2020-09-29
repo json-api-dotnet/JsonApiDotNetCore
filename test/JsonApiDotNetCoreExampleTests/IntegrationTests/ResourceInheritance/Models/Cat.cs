@@ -11,6 +11,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         }
 
         [Attr]
-        public bool Meows { get; set; }
+        public bool ScaredOfDogs { get; set; }
     }
 }

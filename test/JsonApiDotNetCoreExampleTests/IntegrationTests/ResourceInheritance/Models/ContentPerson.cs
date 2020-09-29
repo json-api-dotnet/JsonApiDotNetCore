@@ -1,10 +1,10 @@
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 {
-    public sealed class LiteraturePerson
+    public sealed class ContentPerson
     {
-        public int LiteratureId { get; set; }
+        public int ContentId { get; set; }
         
-        public Literature Literature { get; set; }
+        public Content Content { get; set; }
 
         public int PersonId { get; set; }
         
