@@ -19,9 +19,6 @@ namespace MultiDbContextExample
             services.AddDbContext<DbContextA>(options => options.UseSqlite("Data Source=A.db"));
             services.AddDbContext<DbContextB>(options => options.UseSqlite("Data Source=B.db"));
 
-            services.AddScoped<DbContextAResolver>();
-            services.AddScoped<DbContextBResolver>();
-
             services.AddScoped<IResourceRepository<ResourceA>, DbContextARepository<ResourceA>>();
             services.AddScoped<IResourceRepository<ResourceB>, DbContextBRepository<ResourceB>>();
 

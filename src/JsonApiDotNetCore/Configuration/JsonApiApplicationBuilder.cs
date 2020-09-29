@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
@@ -118,10 +119,15 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public void ConfigureServiceContainer(ICollection<Type> dbContextTypes)
         {
-            foreach (var dbContextType in dbContextTypes)
+            if (dbContextTypes.Any())
             {
-                var contextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
-                _services.AddScoped(typeof(IDbContextResolver), contextResolverType);
+                _services.AddScoped(typeof(DbContextResolver<>));
+
+                foreach (var dbContextType in dbContextTypes)
+                {
+                    var contextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
+                    _services.AddScoped(typeof(IDbContextResolver), contextResolverType);
+                }
             }
 
             AddResourceLayer();

@@ -41,11 +41,7 @@ namespace JsonApiDotNetCore.Configuration
             IMvcCoreBuilder mvcBuilder = null)
             where TDbContext : DbContext
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-
-            SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, new[] {typeof(TDbContext)});
-
-            return services;
+            return AddJsonApi(services, options, discovery, resources, mvcBuilder, new[] {typeof(TDbContext)});
         }
 
         private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> configureOptions,

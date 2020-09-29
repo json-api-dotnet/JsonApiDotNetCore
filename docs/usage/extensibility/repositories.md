@@ -45,33 +45,15 @@ public class ArticleRepository : EntityFrameworkCoreRepository<Article>
 
 ## Multiple DbContexts
 
-If you need to use multiple Entity Framework Core DbContexts, first create an implementation of `IDbContextResolver` for each context.
-
-```c#
-public sealed class DbContextAResolver : IDbContextResolver
-{
-    private readonly DbContextA _dbContextA;
-
-    public DbContextAResolver(DbContextA dbContextA)
-    {
-        _dbContextA = dbContextA;
-    }
-
-    public DbContext GetContext()
-    {
-        return _dbContextA;
-    }
-}
-```
-
-Next, create a repository for each context and inject its resolver per resource type. This example shows a single `DbContextARepository` for all entities that are members of `DbContextA`.
+If you need to use multiple Entity Framework Core DbContexts, first create a repository for each context and inject its typed resolver.
+This example shows a single `DbContextARepository` for all entities that are members of `DbContextA`.
 
 ```c#
 public class DbContextARepository<TResource> : EntityFrameworkCoreRepository<TResource>
     where TResource : class, IIdentifiable<int>
 {
-    public DbContextARepository(ITargetedFields targetedFields, DbContextAResolver contextResolver,
-        //                                                      ^^^^^^^^^^^^^^^^^^
+    public DbContextARepository(ITargetedFields targetedFields, DbContextResolver<DbContextA> contextResolver,
+        //                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
         IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders,
         ILoggerFactory loggerFactory)
@@ -80,15 +62,15 @@ public class DbContextARepository<TResource> : EntityFrameworkCoreRepository<TRe
     {
     }
 }
-
 ```
 
 Then register the added types and use the non-generic overload of `AddJsonApi` to add their resources to the graph.
 
 ```c#
-// Startup.ConfigureServices
-services.AddScoped<DbContextAResolver>();
-services.AddScoped<DbContextBResolver>();
+// In Startup.ConfigureServices
+
+services.AddDbContext<DbContextA>(options => options.UseSqlite("Data Source=A.db"));
+services.AddDbContext<DbContextB>(options => options.UseSqlite("Data Source=B.db"));
 
 services.AddScoped<IResourceRepository<ResourceA>, DbContextARepository<ResourceA>>();
 services.AddScoped<IResourceRepository<ResourceB>, DbContextBRepository<ResourceB>>();
