@@ -13,20 +13,20 @@ namespace JsonApiDotNetCore.Queries.Internal
     {
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly IResourceContextProvider _resourceContextProvider;
-        private readonly IResourceDefinitionProvider _resourceDefinitionProvider;
+        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly IJsonApiOptions _options;
         private readonly IPaginationContext _paginationContext;
 
         public QueryLayerComposer(
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             IResourceContextProvider resourceContextProvider,
-            IResourceDefinitionProvider resourceDefinitionProvider, 
+            IResourceDefinitionAccessor resourceDefinitionAccessor, 
             IJsonApiOptions options,
             IPaginationContext paginationContext)
         {
             _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _resourceDefinitionProvider = resourceDefinitionProvider ?? throw new ArgumentNullException(nameof(resourceDefinitionProvider));
+            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
         }
@@ -235,12 +235,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         {
             if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
 
-            var resourceDefinition = _resourceDefinitionProvider.Get(resourceContext.ResourceType);
-            if (resourceDefinition != null)
-            {
-                includeElements = resourceDefinition.OnApplyIncludes(includeElements);
-            }
-
+            includeElements = _resourceDefinitionAccessor.OnApplyIncludes(resourceContext.ResourceType, includeElements);
             return includeElements;
         }
 
@@ -252,12 +247,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             var filters = expressionsInScope.OfType<FilterExpression>().ToArray();
             var filter = filters.Length > 1 ? new LogicalExpression(LogicalOperator.And, filters) : filters.FirstOrDefault();
 
-            var resourceDefinition = _resourceDefinitionProvider.Get(resourceContext.ResourceType);
-            if (resourceDefinition != null)
-            {
-                filter = resourceDefinition.OnApplyFilter(filter);
-            }
-
+            filter = _resourceDefinitionAccessor.OnApplyFilter(resourceContext.ResourceType, filter);
             return filter;
         }
 
@@ -267,12 +257,8 @@ namespace JsonApiDotNetCore.Queries.Internal
             if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
 
             var sort = expressionsInScope.OfType<SortExpression>().FirstOrDefault();
-
-            var resourceDefinition = _resourceDefinitionProvider.Get(resourceContext.ResourceType);
-            if (resourceDefinition != null)
-            {
-                sort = resourceDefinition.OnApplySort(sort);
-            }
+            
+            sort = _resourceDefinitionAccessor.OnApplySort(resourceContext.ResourceType, sort);
 
             if (sort == null)
             {
@@ -289,12 +275,8 @@ namespace JsonApiDotNetCore.Queries.Internal
             if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
 
             var pagination = expressionsInScope.OfType<PaginationExpression>().FirstOrDefault();
-
-            var resourceDefinition = _resourceDefinitionProvider.Get(resourceContext.ResourceType);
-            if (resourceDefinition != null)
-            {
-                pagination = resourceDefinition.OnApplyPagination(pagination);
-            }
+            
+            pagination = _resourceDefinitionAccessor.OnApplyPagination(resourceContext.ResourceType, pagination);
 
             pagination ??= new PaginationExpression(PageNumber.ValueOne, _options.DefaultPageSize);
 
@@ -308,14 +290,10 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             var attributes = expressionsInScope.OfType<SparseFieldSetExpression>().SelectMany(sparseFieldSet => sparseFieldSet.Attributes).ToHashSet();
 
-            var resourceDefinition = _resourceDefinitionProvider.Get(resourceContext.ResourceType);
-            if (resourceDefinition != null)
-            {
-                var tempExpression = attributes.Any() ? new SparseFieldSetExpression(attributes) : null;
-                tempExpression = resourceDefinition.OnApplySparseFieldSet(tempExpression);
+            var tempExpression = attributes.Any() ? new SparseFieldSetExpression(attributes) : null;
+            tempExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceContext.ResourceType, tempExpression);
 
-                attributes = tempExpression == null ? new HashSet<AttrAttribute>() : tempExpression.Attributes.ToHashSet();
-            }
+            attributes = tempExpression == null ? new HashSet<AttrAttribute>() : tempExpression.Attributes.ToHashSet();
 
             if (!attributes.Any())
             {

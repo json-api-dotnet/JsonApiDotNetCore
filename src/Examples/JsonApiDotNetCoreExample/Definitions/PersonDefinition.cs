@@ -1,32 +1,29 @@
 using System.Collections.Generic;
-using System.Linq;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class PersonDefinition : LockableDefinition<Person>, IHasMeta
+    public class PersonDefinition : JsonApiResourceDefinition<Person>
     {
-        public PersonDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
-
-        public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<Person> resourcesByRelationship, ResourcePipeline pipeline)
+        public PersonDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
         {
-            BeforeImplicitUpdateRelationship(resourcesByRelationship, pipeline);
-            return ids;
         }
 
-        public override void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<Person> resourcesByRelationship, ResourcePipeline pipeline)
+        public override IReadOnlyDictionary<string, object> GetMeta()
         {
-            resourcesByRelationship.GetByRelationship<Passport>().ToList().ForEach(kvp => DisallowLocked(kvp.Value));
-        }
-
-        public IReadOnlyDictionary<string, object> GetMeta()
-        {
-            return new Dictionary<string, object> {
-                { "copyright", "Copyright 2015 Example Corp." },
-                { "authors", new[] { "Jared Nance", "Maurits Moeys", "Harro van der Kroft" } }
+            return new Dictionary<string, object>
+            {
+                ["license"] = "MIT",
+                ["projectUrl"] = "https://github.com/json-api-dotnet/JsonApiDotNetCore/",
+                ["versions"] = new[]
+                {
+                    "v4.0.0",
+                    "v3.1.0",
+                    "v2.5.2",
+                    "v1.3.1"
+                }
             };
         }
     }

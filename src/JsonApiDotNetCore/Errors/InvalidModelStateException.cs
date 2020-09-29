@@ -34,10 +34,7 @@ namespace JsonApiDotNetCore.Errors
 
             foreach (var (propertyName, entry) in modelState.Where(x => x.Value.Errors.Any()))
             {
-                PropertyInfo property = resourceType.GetProperty(propertyName);
-
-                string attributeName =
-                    property.GetCustomAttribute<AttrAttribute>().PublicName ?? namingStrategy.GetPropertyName(property.Name, false);
+                string attributeName = GetDisplayNameForProperty(propertyName, resourceType, namingStrategy);
 
                 foreach (var modelError in entry.Errors)
                 {
@@ -53,6 +50,19 @@ namespace JsonApiDotNetCore.Errors
             }
 
             return errors;
+        }
+
+        private static string GetDisplayNameForProperty(string propertyName, Type resourceType,
+            NamingStrategy namingStrategy)
+        {
+            PropertyInfo property = resourceType.GetProperty(propertyName);
+            if (property != null)
+            {
+                var attrAttribute = property.GetCustomAttribute<AttrAttribute>();
+                return attrAttribute?.PublicName ?? namingStrategy.GetPropertyName(property.Name, false);
+            }
+
+            return propertyName;
         }
 
         private static Error FromModelError(ModelError modelError, string attributeName,

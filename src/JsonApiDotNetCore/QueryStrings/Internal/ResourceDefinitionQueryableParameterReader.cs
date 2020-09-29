@@ -14,13 +14,13 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
     public class ResourceDefinitionQueryableParameterReader : IResourceDefinitionQueryableParameterReader
     {
         private readonly IJsonApiRequest _request;
-        private readonly IResourceDefinitionProvider _resourceDefinitionProvider;
+        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly List<ExpressionInScope> _constraints = new List<ExpressionInScope>();
 
-        public ResourceDefinitionQueryableParameterReader(IJsonApiRequest request, IResourceDefinitionProvider resourceDefinitionProvider)
+        public ResourceDefinitionQueryableParameterReader(IJsonApiRequest request, IResourceDefinitionAccessor resourceDefinitionAccessor)
         {
             _request = request ?? throw new ArgumentNullException(nameof(request));
-            _resourceDefinitionProvider = resourceDefinitionProvider ?? throw new ArgumentNullException(nameof(resourceDefinitionProvider));
+            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
         }
 
         /// <inheritdoc />
@@ -46,16 +46,17 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private object GetQueryableHandler(string parameterName)
         {
-            if (_request.Kind != EndpointKind.Primary)
+            var resourceType = _request.PrimaryResource.ResourceType;
+            var handler = _resourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(resourceType, parameterName);
+
+            if (handler != null && _request.Kind != EndpointKind.Primary)
             {
                 throw new InvalidQueryStringParameterException(parameterName,
                     "Custom query string parameters cannot be used on nested resource endpoints.",
                     $"Query string parameter '{parameterName}' cannot be used on a nested resource endpoint.");
             }
 
-            var resourceType = _request.PrimaryResource.ResourceType;
-            var resourceDefinition = _resourceDefinitionProvider.Get(resourceType);
-            return resourceDefinition?.GetQueryableHandlerForQueryStringParameter(parameterName);
+            return handler;
         }
 
         /// <inheritdoc />

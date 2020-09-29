@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Configuration
@@ -25,12 +24,6 @@ namespace JsonApiDotNetCore.Configuration
         /// The identity type of the resource.
         /// </summary>
         public Type IdentityType { get; set; }
-
-        /// <summary>
-        /// The concrete <see cref="ResourceDefinition{TResource}"/> type.
-        /// We store this so that we don't need to re-compute the generic type.
-        /// </summary>
-        public Type ResourceDefinitionType { get; set; }
 
         /// <summary>
         /// Exposed resource attributes.

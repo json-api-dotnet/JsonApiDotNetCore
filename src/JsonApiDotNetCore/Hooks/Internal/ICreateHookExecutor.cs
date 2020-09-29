@@ -11,10 +11,10 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// Executes the Before Cycle by firing the appropriate hooks if they are implemented. 
         /// The returned set will be used in the actual operation in <see cref="JsonApiResourceService{TResource}"/>.
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{T}.BeforeCreate"/>
-        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="resources"/>.
+        /// Fires the <see cref="ResourceHooksDefinition{TResource}.BeforeCreate"/>
+        /// hook for values in parameter <paramref name="resources"/>.
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{U}.BeforeUpdateRelationship"/>
+        /// Fires the <see cref="ResourceHooksDefinition{TResource}.BeforeUpdateRelationship"/>
         /// hook for any secondary (nested) resource for values within parameter <paramref name="resources"/>
         /// </summary>
         /// <returns>The transformed set</returns>
@@ -25,10 +25,10 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <summary>
         /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{T}.AfterCreate"/>
-        /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="resources"/>.
+        /// Fires the <see cref="ResourceHooksDefinition{TResource}.AfterCreate"/>
+        /// hook for values in parameter <paramref name="resources"/>.
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{U}.AfterUpdateRelationship"/>
+        /// Fires the <see cref="ResourceHooksDefinition{TResource}.AfterUpdateRelationship"/>
         /// hook for any secondary (nested) resource for values within parameter <paramref name="resources"/>
         /// </summary>
         /// <param name="resources">Target resources for the Before cycle.</param>

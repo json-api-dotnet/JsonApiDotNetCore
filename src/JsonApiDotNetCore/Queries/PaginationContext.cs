@@ -13,6 +13,9 @@ namespace JsonApiDotNetCore.Queries
         public PageSize PageSize { get; set; }
 
         /// <inheritdoc />
+        public bool IsPageFull { get; set; }
+
+        /// <inheritdoc />
         public int? TotalResourceCount { get; set; }
 
         /// <inheritdoc />

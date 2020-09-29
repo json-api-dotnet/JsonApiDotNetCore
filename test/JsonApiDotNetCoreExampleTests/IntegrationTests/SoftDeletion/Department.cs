@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 {
-    public sealed class Department : Identifiable
+    public sealed class Department : Identifiable, ISoftDeletable
     {
         [Attr]
         public string Name { get; set; }

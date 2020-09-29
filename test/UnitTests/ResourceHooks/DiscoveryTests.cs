@@ -14,7 +14,7 @@ namespace UnitTests.ResourceHooks
     public sealed class DiscoveryTests
     {
         public class Dummy : Identifiable { }
-        public sealed class DummyResourceDefinition : ResourceDefinition<Dummy>
+        public sealed class DummyResourceDefinition : ResourceHooksDefinition<Dummy>
         {
             public DummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<Dummy>().Build()) { }
 
@@ -25,7 +25,7 @@ namespace UnitTests.ResourceHooks
         private IServiceProvider MockProvider<TResource>(object service) where TResource : class, IIdentifiable
         {
             var services = new ServiceCollection();
-            services.AddScoped((_) => (ResourceDefinition<TResource>)service);
+            services.AddScoped((_) => (ResourceHooksDefinition<TResource>)service);
             return services.BuildServiceProvider();
         }
 
@@ -40,7 +40,7 @@ namespace UnitTests.ResourceHooks
         }
 
         public class AnotherDummy : Identifiable { }
-        public abstract class ResourceDefinitionBase<T> : ResourceDefinition<T> where T : class, IIdentifiable
+        public abstract class ResourceDefinitionBase<T> : ResourceHooksDefinition<T> where T : class, IIdentifiable
         {
             protected ResourceDefinitionBase(IResourceGraph resourceGraph) : base(resourceGraph) { }
             public override IEnumerable<T> BeforeDelete(IResourceHashSet<T> resources, ResourcePipeline pipeline) { return resources; }
@@ -63,7 +63,7 @@ namespace UnitTests.ResourceHooks
         }
 
         public class YetAnotherDummy : Identifiable { }
-        public sealed class YetAnotherDummyResourceDefinition : ResourceDefinition<YetAnotherDummy>
+        public sealed class YetAnotherDummyResourceDefinition : ResourceHooksDefinition<YetAnotherDummy>
         {
             public YetAnotherDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<YetAnotherDummy>().Build()) { }
 
@@ -95,7 +95,7 @@ namespace UnitTests.ResourceHooks
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
         }
 
-        public sealed class GenericDummyResourceDefinition<TResource> : ResourceDefinition<TResource> where TResource : class, IIdentifiable<int>
+        public sealed class GenericDummyResourceDefinition<TResource> : ResourceHooksDefinition<TResource> where TResource : class, IIdentifiable<int>
         {
             public GenericDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TResource>().Build()) { }
 

@@ -20,8 +20,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddScoped<ResourceDefinition<Company>, CompanyResourceDefinition>();
-                services.AddScoped<ResourceDefinition<Department>, DepartmentResourceDefinition>();
+                services.AddScoped<IResourceDefinition<Company>, SoftDeletionResourceDefinition<Company>>();
+                services.AddScoped<IResourceDefinition<Department>, SoftDeletionResourceDefinition<Department>>();
             });
         }
 

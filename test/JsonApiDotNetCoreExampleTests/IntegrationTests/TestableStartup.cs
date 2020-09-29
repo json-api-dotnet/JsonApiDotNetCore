@@ -10,7 +10,7 @@ using Newtonsoft.Json.Converters;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests
 {
-    public sealed class TestableStartup<TDbContext> : EmptyStartup
+    public class TestableStartup<TDbContext> : EmptyStartup
         where TDbContext : DbContext
     {
         public TestableStartup(IConfiguration configuration) : base(configuration)
@@ -19,12 +19,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.AddJsonApi<TDbContext>(options =>
-            {
-                options.IncludeExceptionStackTraceInErrors = true;
-                options.SerializerSettings.Formatting = Formatting.Indented;
-                options.SerializerSettings.Converters.Add(new StringEnumConverter());
-            });
+            services.AddJsonApi<TDbContext>(SetJsonApiOptions);
+        }
+
+        protected virtual void SetJsonApiOptions(JsonApiOptions options)
+        {
+            options.IncludeExceptionStackTraceInErrors = true;
+            options.SerializerSettings.Formatting = Formatting.Indented;
+            options.SerializerSettings.Converters.Add(new StringEnumConverter());
         }
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment environment)

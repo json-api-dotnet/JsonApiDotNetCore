@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             // so we need not even bother.
             if (!_hookContainers.TryGetValue(targetResource, out IResourceHookContainer container))
             {
-                container = _genericProcessorFactory.Get<IResourceHookContainer>(typeof(ResourceDefinition<>), targetResource);
+                container = _genericProcessorFactory.Get<IResourceHookContainer>(typeof(ResourceHooksDefinition<>), targetResource);
                 _hookContainers[targetResource] = container;
             }
             if (container == null) return null;

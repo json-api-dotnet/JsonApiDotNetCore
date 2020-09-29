@@ -46,7 +46,6 @@ namespace UnitTests
             var nonDbResource = resourceGraph.GetResourceContext("nonDbResources");
             Assert.Equal(typeof(DbResource), dbResource.ResourceType);
             Assert.Equal(typeof(NonDbResource), nonDbResource.ResourceType);
-            Assert.Equal(typeof(ResourceDefinition<NonDbResource>), nonDbResource.ResourceDefinitionType);
         }
 
         [Fact]

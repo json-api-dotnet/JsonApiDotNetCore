@@ -7,7 +7,6 @@ using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Client.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -57,7 +56,7 @@ namespace JsonApiDotNetCore.Configuration
             applicationBuilder.AddResourceGraph(dbContextType, configureResourceGraph);
             applicationBuilder.ConfigureMvc();
             applicationBuilder.DiscoverInjectables();
-            applicationBuilder.ConfigureServices(dbContextType);
+            applicationBuilder.ConfigureServiceContainer(dbContextType);
         }
         
         /// <summary>

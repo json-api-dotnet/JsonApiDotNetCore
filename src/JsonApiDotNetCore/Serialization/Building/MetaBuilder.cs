@@ -10,19 +10,19 @@ namespace JsonApiDotNetCore.Serialization.Building
     /// <inheritdoc />
     public class MetaBuilder<TResource> : IMetaBuilder<TResource> where TResource : class, IIdentifiable
     {
-        private Dictionary<string, object> _meta = new Dictionary<string, object>();
         private readonly IPaginationContext _paginationContext;
         private readonly IJsonApiOptions _options;
-        private readonly IRequestMeta _requestMeta;
-        private readonly IHasMeta _resourceMeta;
+        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
+        private readonly IResponseMeta _responseMeta;
 
-        public MetaBuilder(IPaginationContext paginationContext, IJsonApiOptions options, IRequestMeta requestMeta = null,
-            ResourceDefinition<TResource> resourceDefinition = null)
+        private Dictionary<string, object> _meta = new Dictionary<string, object>();
+
+        public MetaBuilder(IPaginationContext paginationContext, IJsonApiOptions options, IResourceDefinitionAccessor resourceDefinitionAccessor, IResponseMeta responseMeta = null)
         {
             _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
             _options = options ?? throw new ArgumentNullException(nameof(options));
-            _requestMeta = requestMeta;
-            _resourceMeta = resourceDefinition as IHasMeta;
+            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
+            _responseMeta = responseMeta;
         }
 
         /// <inheritdoc />
@@ -54,14 +54,15 @@ namespace JsonApiDotNetCore.Serialization.Building
                 _meta.Add(key, _paginationContext.TotalResourceCount);
             }
 
-            if (_requestMeta != null)
+            if (_responseMeta != null)
             {
-                Add(_requestMeta.GetMeta());
+                Add(_responseMeta.GetMeta());
             }
 
-            if (_resourceMeta != null)
+            var resourceMeta = _resourceDefinitionAccessor.GetMeta(typeof(TResource));
+            if (resourceMeta != null)
             {
-                Add(_resourceMeta.GetMeta());
+                Add(resourceMeta);
             }
 
             return _meta.Any() ? _meta : null;

@@ -16,7 +16,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         bool AllowIncludeOwner { get; }
     }
 
-    public sealed class CallableResourceDefinition : ResourceDefinition<CallableResource>
+    public sealed class CallableResourceDefinition : JsonApiResourceDefinition<CallableResource>
     {
         private readonly IUserRolesService _userRolesService;
         private static readonly PageSize _maxPageSize = new PageSize(5);
@@ -98,11 +98,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 .Excluding<CallableResource>(resource => resource.RiskLevel, ResourceGraph);
         }
 
-        protected override QueryStringParameterHandlers OnRegisterQueryableHandlersForQueryStringParameters()
+        public override QueryStringParameterHandlers<CallableResource> OnRegisterQueryableHandlersForQueryStringParameters()
         {
             // Use case: 'isHighRisk' query string parameter can be used to add extra filter on IQueryable<TResource>.
 
-            return new QueryStringParameterHandlers
+            return new QueryStringParameterHandlers<CallableResource>
             {
                 ["isHighRisk"] = FilterByHighRisk
             };
