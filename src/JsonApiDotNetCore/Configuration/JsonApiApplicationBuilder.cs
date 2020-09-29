@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
@@ -68,15 +70,16 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Configures and builds the resource graph with resources from the provided sources and adds it to the DI container. 
         /// </summary>
-        public void AddResourceGraph(Type dbContextType, Action<ResourceGraphBuilder> configureResourceGraph)
+        public void AddResourceGraph(ICollection<Type> dbContextTypes, Action<ResourceGraphBuilder> configureResourceGraph)
         {
             _serviceDiscoveryFacade.DiscoverResources();
-            
-            if (dbContextType != null)
+
+            foreach (var dbContextType in dbContextTypes)
             {
-                AddResourcesFromDbContext((DbContext)_intermediateProvider.GetRequiredService(dbContextType), _resourceGraphBuilder);
+                var dbContext = (DbContext)_intermediateProvider.GetRequiredService(dbContextType);
+                AddResourcesFromDbContext(dbContext, _resourceGraphBuilder);
             }
-            
+
             configureResourceGraph?.Invoke(_resourceGraphBuilder);
 
             var resourceGraph = _resourceGraphBuilder.Build();
@@ -114,17 +117,17 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Registers the remaining internals.
         /// </summary>
-        public void ConfigureServiceContainer(Type dbContextType)
+        public void ConfigureServiceContainer(ICollection<Type> dbContextTypes)
         {
-            if (dbContextType != null)
+            if (dbContextTypes.Any())
             {
-                var contextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
-                _services.TryAddScoped(typeof(IDbContextResolver), contextResolverType);
-            }
-            else
-            {
-                _services.AddScoped<DbContext>();
-                _services.AddSingleton(new DbContextOptionsBuilder().Options);
+                _services.AddScoped(typeof(DbContextResolver<>));
+
+                foreach (var dbContextType in dbContextTypes)
+                {
+                    var contextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
+                    _services.AddScoped(typeof(IDbContextResolver), contextResolverType);
+                }
             }
 
             AddResourceLayer();

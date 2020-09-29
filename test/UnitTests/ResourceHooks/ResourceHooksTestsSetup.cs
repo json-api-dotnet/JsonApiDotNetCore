@@ -384,7 +384,9 @@ namespace UnitTests.ResourceHooks
 
         private void ResolveInverseRelationships(AppDbContext context)
         {
-            new InverseRelationships(_resourceGraph, new DbContextResolver<AppDbContext>(context)).Resolve();
+            var dbContextResolvers = new[] {new DbContextResolver<AppDbContext>(context)};
+            var inverseRelationships = new InverseRelationships(_resourceGraph, dbContextResolvers);
+            inverseRelationships.Resolve();
         }
 
         private Mock<IResourceHookContainer<TModel>> CreateResourceDefinition

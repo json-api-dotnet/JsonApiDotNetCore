@@ -12,63 +12,61 @@ namespace JsonApiDotNetCore.Configuration
     internal static class TypeLocator
     {
         /// <summary>
-        /// Determine whether or not this is a json:api resource by checking if it implements <see cref="IIdentifiable{TId}"/>.
+        /// Attempts to lookup the ID type of the specified resource type. Returns <c>null</c> if it does not implement <see cref="IIdentifiable{TId}"/>.
         /// </summary>
-        public static Type GetIdType(Type resourceType)
+        public static Type TryGetIdType(Type resourceType)
         {
             var identifiableInterface = resourceType.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIdentifiable<>));
             return identifiableInterface?.GetGenericArguments()[0];
         }
 
         /// <summary>
-        /// Attempts to get a descriptor for the resource type.
+        /// Attempts to get a descriptor for the specified resource type.
         /// </summary>
-        /// <returns>
-        /// <c>true</c> if the type is a valid json:api type (must implement <see cref="IIdentifiable"/>); <c>false</c>, otherwise.
-        /// </returns>
-        internal static bool TryGetResourceDescriptor(Type type, out ResourceDescriptor descriptor)
+        public static ResourceDescriptor TryGetResourceDescriptor(Type type)
         {
             if (TypeHelper.IsOrImplementsInterface(type, typeof(IIdentifiable)))
             {
-                descriptor = new ResourceDescriptor(type, GetIdType(type));
-                return true;
+                var idType = TryGetIdType(type);
+                if (idType != null)
+                {
+                    return new ResourceDescriptor(type, idType);
+                }
             }
-            descriptor = ResourceDescriptor.Empty;
-            return false;
+
+            return null;
         }
+
         /// <summary>
         /// Gets all implementations of the generic interface.
         /// </summary>
         /// <param name="assembly">The assembly to search.</param>
-        /// <param name="openGenericInterfaceType">The open generic type, e.g. `typeof(IResourceService&lt;&gt;)`.</param>
+        /// <param name="openGenericInterface">The open generic type, e.g. `typeof(IResourceService&lt;&gt;)`.</param>
         /// <param name="genericInterfaceArguments">Parameters to the generic type.</param>
         /// <example>
         /// <code><![CDATA[
         /// GetGenericInterfaceImplementation(assembly, typeof(IResourceService<>), typeof(Article), typeof(Guid));
         /// ]]></code>
         /// </example>
-        public static (Type implementation, Type registrationInterface) GetGenericInterfaceImplementation(Assembly assembly, Type openGenericInterfaceType, params Type[] genericInterfaceArguments)
+        public static (Type implementation, Type registrationInterface) GetGenericInterfaceImplementation(Assembly assembly, Type openGenericInterface, params Type[] genericInterfaceArguments)
         {
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
-            if (openGenericInterfaceType == null) throw new ArgumentNullException(nameof(openGenericInterfaceType));
+            if (openGenericInterface == null) throw new ArgumentNullException(nameof(openGenericInterface));
             if (genericInterfaceArguments == null) throw new ArgumentNullException(nameof(genericInterfaceArguments));
             if (genericInterfaceArguments.Length == 0) throw new ArgumentException("No arguments supplied for the generic interface.", nameof(genericInterfaceArguments));
-            if (!openGenericInterfaceType.IsGenericType) throw new ArgumentException("Requested type is not a generic type.", nameof(openGenericInterfaceType));
+            if (!openGenericInterface.IsGenericType) throw new ArgumentException("Requested type is not a generic type.", nameof(openGenericInterface));
 
             foreach (var type in assembly.GetTypes())
             {
                 var interfaces = type.GetInterfaces();
-                foreach (var interfaceType in interfaces)
+                foreach (var @interface in interfaces)
                 {
-                    if (interfaceType.IsGenericType)
+                    if (@interface.IsGenericType)
                     {
-                        var genericTypeDefinition = interfaceType.GetGenericTypeDefinition();
-                        if (interfaceType.GetGenericArguments().First() == genericInterfaceArguments.First() &&genericTypeDefinition == openGenericInterfaceType.GetGenericTypeDefinition())
+                        var genericTypeDefinition = @interface.GetGenericTypeDefinition();
+                        if (@interface.GetGenericArguments().First() == genericInterfaceArguments.First() &&genericTypeDefinition == openGenericInterface.GetGenericTypeDefinition())
                         {
-                            return (
-                                type,
-                                genericTypeDefinition.MakeGenericType(genericInterfaceArguments)
-                            );
+                            return (type, genericTypeDefinition.MakeGenericType(genericInterfaceArguments));
                         }
                     }
                 }

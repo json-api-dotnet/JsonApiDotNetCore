@@ -16,13 +16,13 @@ namespace UnitTests
     {
         private readonly IPaginationContext _paginationContext = GetPaginationContext();
         private readonly Mock<IResourceGraph> _provider = new Mock<IResourceGraph>();
-        private readonly IRequestQueryStringAccessor _queryStringAccessor = new FakeRequestQueryStringAccessor("?foo=bar");
+        private readonly IRequestQueryStringAccessor _queryStringAccessor = new FakeRequestQueryStringAccessor("?foo=bar&page[size]=10&page[number]=2");
         private const string _host = "http://www.example.com";
         private const int _primaryId = 123;
         private const string _relationshipName = "author";
-        private const string _topSelf = "http://www.example.com/articles?foo=bar";
-        private const string _topResourceSelf = "http://www.example.com/articles/123?foo=bar";
-        private const string _topRelatedSelf = "http://www.example.com/articles/123/author?foo=bar";
+        private const string _topSelf = "http://www.example.com/articles?foo=bar&page[size]=10&page[number]=2";
+        private const string _topResourceSelf = "http://www.example.com/articles/123?foo=bar&page[size]=10&page[number]=2";
+        private const string _topRelatedSelf = "http://www.example.com/articles/123/author?foo=bar&page[size]=10&page[number]=2";
         private const string _resourceSelf = "http://www.example.com/articles/123";
         private const string _relSelf = "http://www.example.com/articles/123/relationships/author";
         private const string _relRelated = "http://www.example.com/articles/123/author";
@@ -143,7 +143,7 @@ namespace UnitTests
             var primaryResource = GetArticleResourceContext(topLevelLinks: resource);
             _provider.Setup(m => m.GetResourceContext<Article>()).Returns(primaryResource);
 
-            bool usePrimaryId = expectedSelfLink != _topSelf;
+            bool usePrimaryId = expectedSelfLink != null && expectedSelfLink.Contains("123");
             string relationshipName = expectedSelfLink == _topRelatedSelf ? _relationshipName : null;
             IJsonApiRequest request = GetRequestManager(primaryResource, usePrimaryId, relationshipName);
 
@@ -159,9 +159,10 @@ namespace UnitTests
             }
             else
             {
+                Assert.Equal(links.Self, expectedSelfLink);
+
                 if (pages)
                 {
-                    Assert.Equal($"{_host}/articles?foo=bar&page[size]=10&page[number]=2", links.Self);
                     Assert.Equal($"{_host}/articles?foo=bar&page[size]=10", links.First);
                     Assert.Equal($"{_host}/articles?foo=bar&page[size]=10", links.Prev);
                     Assert.Equal($"{_host}/articles?foo=bar&page[size]=10&page[number]=3", links.Next);
@@ -169,7 +170,6 @@ namespace UnitTests
                 }
                 else
                 {
-                    Assert.Equal(links.Self , expectedSelfLink);
                     Assert.Null(links.First);
                     Assert.Null(links.Prev);
                     Assert.Null(links.Next);
@@ -185,6 +185,7 @@ namespace UnitTests
             mock.Setup(m => m.PrimaryId).Returns(usePrimaryId ? _primaryId.ToString() : null);
             mock.Setup(m => m.Relationship).Returns(relationshipName != null ? new HasOneAttribute {PublicName = relationshipName} : null);
             mock.Setup(m => m.PrimaryResource).Returns(resourceContext);
+            mock.Setup(m => m.IsCollection).Returns(true);
             return mock.Object;
         }
 
