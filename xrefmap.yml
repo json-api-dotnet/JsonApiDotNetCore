@@ -405,12 +405,15 @@ references:
   commentId: T:JsonApiDotNetCore.Configuration.InverseRelationships
   fullName: JsonApiDotNetCore.Configuration.InverseRelationships
   nameWithType: InverseRelationships
-- uid: JsonApiDotNetCore.Configuration.InverseRelationships.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Repositories.IDbContextResolver)
-  name: InverseRelationships(IResourceContextProvider, IDbContextResolver)
-  href: api/JsonApiDotNetCore.Configuration.InverseRelationships.html#JsonApiDotNetCore_Configuration_InverseRelationships__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Repositories_IDbContextResolver_
-  commentId: M:JsonApiDotNetCore.Configuration.InverseRelationships.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Repositories.IDbContextResolver)
-  fullName: JsonApiDotNetCore.Configuration.InverseRelationships.InverseRelationships(JsonApiDotNetCore.Configuration.IResourceContextProvider, JsonApiDotNetCore.Repositories.IDbContextResolver)
-  nameWithType: InverseRelationships.InverseRelationships(IResourceContextProvider, IDbContextResolver)
+- uid: JsonApiDotNetCore.Configuration.InverseRelationships.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Repositories.IDbContextResolver})
+  name: InverseRelationships(IResourceContextProvider, IEnumerable<IDbContextResolver>)
+  href: api/JsonApiDotNetCore.Configuration.InverseRelationships.html#JsonApiDotNetCore_Configuration_InverseRelationships__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Repositories_IDbContextResolver__
+  commentId: M:JsonApiDotNetCore.Configuration.InverseRelationships.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Repositories.IDbContextResolver})
+  name.vb: InverseRelationships(IResourceContextProvider, IEnumerable(Of IDbContextResolver))
+  fullName: JsonApiDotNetCore.Configuration.InverseRelationships.InverseRelationships(JsonApiDotNetCore.Configuration.IResourceContextProvider, System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Repositories.IDbContextResolver>)
+  fullName.vb: JsonApiDotNetCore.Configuration.InverseRelationships.InverseRelationships(JsonApiDotNetCore.Configuration.IResourceContextProvider, System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Repositories.IDbContextResolver))
+  nameWithType: InverseRelationships.InverseRelationships(IResourceContextProvider, IEnumerable<IDbContextResolver>)
+  nameWithType.vb: InverseRelationships.InverseRelationships(IResourceContextProvider, IEnumerable(Of IDbContextResolver))
 - uid: JsonApiDotNetCore.Configuration.InverseRelationships.#ctor*
   name: InverseRelationships
   href: api/JsonApiDotNetCore.Configuration.InverseRelationships.html#JsonApiDotNetCore_Configuration_InverseRelationships__ctor_
@@ -1464,15 +1467,15 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.AddClientSerialization
   nameWithType: ServiceCollectionExtensions.AddClientSerialization
-- uid: JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.AddJsonApi(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{JsonApiDotNetCore.Configuration.JsonApiOptions},System.Action{JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade},System.Action{JsonApiDotNetCore.Configuration.ResourceGraphBuilder},Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)
-  name: AddJsonApi(IServiceCollection, Action<JsonApiOptions>, Action<ServiceDiscoveryFacade>, Action<ResourceGraphBuilder>, IMvcCoreBuilder)
-  href: api/JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.html#JsonApiDotNetCore_Configuration_ServiceCollectionExtensions_AddJsonApi_Microsoft_Extensions_DependencyInjection_IServiceCollection_System_Action_JsonApiDotNetCore_Configuration_JsonApiOptions__System_Action_JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade__System_Action_JsonApiDotNetCore_Configuration_ResourceGraphBuilder__Microsoft_Extensions_DependencyInjection_IMvcCoreBuilder_
-  commentId: M:JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.AddJsonApi(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{JsonApiDotNetCore.Configuration.JsonApiOptions},System.Action{JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade},System.Action{JsonApiDotNetCore.Configuration.ResourceGraphBuilder},Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)
-  name.vb: AddJsonApi(IServiceCollection, Action(Of JsonApiOptions), Action(Of ServiceDiscoveryFacade), Action(Of ResourceGraphBuilder), IMvcCoreBuilder)
-  fullName: JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.AddJsonApi(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<JsonApiDotNetCore.Configuration.JsonApiOptions>, System.Action<JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade>, System.Action<JsonApiDotNetCore.Configuration.ResourceGraphBuilder>, Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)
-  fullName.vb: JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.AddJsonApi(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action(Of JsonApiDotNetCore.Configuration.JsonApiOptions), System.Action(Of JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade), System.Action(Of JsonApiDotNetCore.Configuration.ResourceGraphBuilder), Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)
-  nameWithType: ServiceCollectionExtensions.AddJsonApi(IServiceCollection, Action<JsonApiOptions>, Action<ServiceDiscoveryFacade>, Action<ResourceGraphBuilder>, IMvcCoreBuilder)
-  nameWithType.vb: ServiceCollectionExtensions.AddJsonApi(IServiceCollection, Action(Of JsonApiOptions), Action(Of ServiceDiscoveryFacade), Action(Of ResourceGraphBuilder), IMvcCoreBuilder)
+- uid: JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.AddJsonApi(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{JsonApiDotNetCore.Configuration.JsonApiOptions},System.Action{JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade},System.Action{JsonApiDotNetCore.Configuration.ResourceGraphBuilder},Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder,System.Collections.Generic.ICollection{System.Type})
+  name: AddJsonApi(IServiceCollection, Action<JsonApiOptions>, Action<ServiceDiscoveryFacade>, Action<ResourceGraphBuilder>, IMvcCoreBuilder, ICollection<Type>)
+  href: api/JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.html#JsonApiDotNetCore_Configuration_ServiceCollectionExtensions_AddJsonApi_Microsoft_Extensions_DependencyInjection_IServiceCollection_System_Action_JsonApiDotNetCore_Configuration_JsonApiOptions__System_Action_JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade__System_Action_JsonApiDotNetCore_Configuration_ResourceGraphBuilder__Microsoft_Extensions_DependencyInjection_IMvcCoreBuilder_System_Collections_Generic_ICollection_System_Type__
+  commentId: M:JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.AddJsonApi(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{JsonApiDotNetCore.Configuration.JsonApiOptions},System.Action{JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade},System.Action{JsonApiDotNetCore.Configuration.ResourceGraphBuilder},Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder,System.Collections.Generic.ICollection{System.Type})
+  name.vb: AddJsonApi(IServiceCollection, Action(Of JsonApiOptions), Action(Of ServiceDiscoveryFacade), Action(Of ResourceGraphBuilder), IMvcCoreBuilder, ICollection(Of Type))
+  fullName: JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.AddJsonApi(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<JsonApiDotNetCore.Configuration.JsonApiOptions>, System.Action<JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade>, System.Action<JsonApiDotNetCore.Configuration.ResourceGraphBuilder>, Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder, System.Collections.Generic.ICollection<System.Type>)
+  fullName.vb: JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.AddJsonApi(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action(Of JsonApiDotNetCore.Configuration.JsonApiOptions), System.Action(Of JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade), System.Action(Of JsonApiDotNetCore.Configuration.ResourceGraphBuilder), Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder, System.Collections.Generic.ICollection(Of System.Type))
+  nameWithType: ServiceCollectionExtensions.AddJsonApi(IServiceCollection, Action<JsonApiOptions>, Action<ServiceDiscoveryFacade>, Action<ResourceGraphBuilder>, IMvcCoreBuilder, ICollection<Type>)
+  nameWithType.vb: ServiceCollectionExtensions.AddJsonApi(IServiceCollection, Action(Of JsonApiOptions), Action(Of ServiceDiscoveryFacade), Action(Of ResourceGraphBuilder), IMvcCoreBuilder, ICollection(Of Type))
 - uid: JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.AddJsonApi*
   name: AddJsonApi
   href: api/JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.html#JsonApiDotNetCore_Configuration_ServiceCollectionExtensions_AddJsonApi_
@@ -10685,6 +10688,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.DbContextResolver(Of TDbContext).GetContext
   nameWithType: DbContextResolver<TDbContext>.GetContext
   nameWithType.vb: DbContextResolver(Of TDbContext).GetContext
+- uid: JsonApiDotNetCore.Repositories.DbContextResolver`1.GetTypedContext
+  name: GetTypedContext()
+  href: api/JsonApiDotNetCore.Repositories.DbContextResolver-1.html#JsonApiDotNetCore_Repositories_DbContextResolver_1_GetTypedContext
+  commentId: M:JsonApiDotNetCore.Repositories.DbContextResolver`1.GetTypedContext
+  fullName: JsonApiDotNetCore.Repositories.DbContextResolver<TDbContext>.GetTypedContext()
+  fullName.vb: JsonApiDotNetCore.Repositories.DbContextResolver(Of TDbContext).GetTypedContext()
+  nameWithType: DbContextResolver<TDbContext>.GetTypedContext()
+  nameWithType.vb: DbContextResolver(Of TDbContext).GetTypedContext()
+- uid: JsonApiDotNetCore.Repositories.DbContextResolver`1.GetTypedContext*
+  name: GetTypedContext
+  href: api/JsonApiDotNetCore.Repositories.DbContextResolver-1.html#JsonApiDotNetCore_Repositories_DbContextResolver_1_GetTypedContext_
+  commentId: Overload:JsonApiDotNetCore.Repositories.DbContextResolver`1.GetTypedContext
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.DbContextResolver<TDbContext>.GetTypedContext
+  fullName.vb: JsonApiDotNetCore.Repositories.DbContextResolver(Of TDbContext).GetTypedContext
+  nameWithType: DbContextResolver<TDbContext>.GetTypedContext
+  nameWithType.vb: DbContextResolver(Of TDbContext).GetTypedContext
 - uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`1
   name: EntityFrameworkCoreRepository<TResource>
   href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-1.html
@@ -15853,15 +15873,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource)
   nameWithType: JsonApiResourceService<TResource>
   nameWithType.vb: JsonApiResourceService(Of TResource)
-- uid: JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor(JsonApiDotNetCore.Repositories.IResourceRepository{`0,System.Int32},JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutor)
-  name: JsonApiResourceService(IResourceRepository<TResource, Int32>, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker<TResource>, IResourceFactory, IResourceHookExecutor)
-  href: api/JsonApiDotNetCore.Services.JsonApiResourceService-1.html#JsonApiDotNetCore_Services_JsonApiResourceService_1__ctor_JsonApiDotNetCore_Repositories_IResourceRepository__0_System_Int32__JsonApiDotNetCore_Queries_IQueryLayerComposer_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_IResourceChangeTracker__0__JsonApiDotNetCore_Resources_IResourceFactory_JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutor_
-  commentId: M:JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor(JsonApiDotNetCore.Repositories.IResourceRepository{`0,System.Int32},JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutor)
-  name.vb: JsonApiResourceService(IResourceRepository(Of TResource, Int32), IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker(Of TResource), IResourceFactory, IResourceHookExecutor)
-  fullName: JsonApiDotNetCore.Services.JsonApiResourceService<TResource>.JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepository<TResource, System.Int32>, JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker<TResource>, JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutor)
-  fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource).JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepository(Of TResource, System.Int32), JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker(Of TResource), JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutor)
-  nameWithType: JsonApiResourceService<TResource>.JsonApiResourceService(IResourceRepository<TResource, Int32>, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker<TResource>, IResourceFactory, IResourceHookExecutor)
-  nameWithType.vb: JsonApiResourceService(Of TResource).JsonApiResourceService(IResourceRepository(Of TResource, Int32), IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker(Of TResource), IResourceFactory, IResourceHookExecutor)
+- uid: JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor(JsonApiDotNetCore.Repositories.IResourceRepository{`0},JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutor)
+  name: JsonApiResourceService(IResourceRepository<TResource>, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker<TResource>, IResourceFactory, IResourceHookExecutor)
+  href: api/JsonApiDotNetCore.Services.JsonApiResourceService-1.html#JsonApiDotNetCore_Services_JsonApiResourceService_1__ctor_JsonApiDotNetCore_Repositories_IResourceRepository__0__JsonApiDotNetCore_Queries_IQueryLayerComposer_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_IResourceChangeTracker__0__JsonApiDotNetCore_Resources_IResourceFactory_JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutor_
+  commentId: M:JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor(JsonApiDotNetCore.Repositories.IResourceRepository{`0},JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutor)
+  name.vb: JsonApiResourceService(IResourceRepository(Of TResource), IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker(Of TResource), IResourceFactory, IResourceHookExecutor)
+  fullName: JsonApiDotNetCore.Services.JsonApiResourceService<TResource>.JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepository<TResource>, JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker<TResource>, JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutor)
+  fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource).JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepository(Of TResource), JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker(Of TResource), JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutor)
+  nameWithType: JsonApiResourceService<TResource>.JsonApiResourceService(IResourceRepository<TResource>, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker<TResource>, IResourceFactory, IResourceHookExecutor)
+  nameWithType.vb: JsonApiResourceService(Of TResource).JsonApiResourceService(IResourceRepository(Of TResource), IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker(Of TResource), IResourceFactory, IResourceHookExecutor)
 - uid: JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor*
   name: JsonApiResourceService
   href: api/JsonApiDotNetCore.Services.JsonApiResourceService-1.html#JsonApiDotNetCore_Services_JsonApiResourceService_1__ctor_
