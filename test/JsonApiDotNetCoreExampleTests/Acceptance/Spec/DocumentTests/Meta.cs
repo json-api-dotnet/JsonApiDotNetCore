@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Definitions;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
