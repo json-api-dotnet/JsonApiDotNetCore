@@ -79,34 +79,17 @@ namespace JsonApiDotNetCore.Serialization
                 {
                     if (attr.Property.GetCustomAttribute<IsRequiredAttribute>() != null)
                     {
-                        bool disableValidator = attributeValues == null || attributeValues.Count == 0 ||
-                                                !attributeValues.TryGetValue(attr.PublicName, out _);
+                        bool disableValidator = attributeValues == null || !attributeValues.ContainsKey(attr.PublicName);
 
                         if (disableValidator)
                         {
-                            _httpContextAccessor.HttpContext.DisableValidator(attr.Property.Name, resource.GetType().Name);
+                            _httpContextAccessor.HttpContext.DisableRequiredValidator(attr.Property.Name, resource.GetType().Name);
                         }
                     }
                 }
             }
 
             return base.SetAttributes(resource, attributeValues, attributes);
-        }
-
-        protected override IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipEntry> relationshipsValues, IReadOnlyCollection<RelationshipAttribute> relationshipAttributes)
-        {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (relationshipAttributes == null) throw new ArgumentNullException(nameof(relationshipAttributes));
-
-            // If there is a relationship included in the data of the POST or PATCH, then the 'IsRequired' attribute will be disabled for any
-            // property within that object. For instance, a new article is posted and has a relationship included to an author. In this case,
-            // the author name (which has the 'IsRequired' attribute) will not be included in the POST. Unless disabled, the POST will fail.
-            foreach (RelationshipAttribute attr in relationshipAttributes)
-            {
-                _httpContextAccessor.HttpContext.DisableValidator("Relation", attr.Property.Name);
-            }
-
-            return base.SetRelationships(resource, relationshipsValues, relationshipAttributes);
         }
     }
 }

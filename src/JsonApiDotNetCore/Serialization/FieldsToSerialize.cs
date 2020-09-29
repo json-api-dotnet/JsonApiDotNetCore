@@ -14,16 +14,16 @@ namespace JsonApiDotNetCore.Serialization
     {
         private readonly IResourceGraph _resourceGraph;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
-        private readonly IResourceDefinitionProvider _resourceDefinitionProvider;
+        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
 
         public FieldsToSerialize(
             IResourceGraph resourceGraph,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IResourceDefinitionProvider resourceDefinitionProvider)
+            IResourceDefinitionAccessor resourceDefinitionAccessor)
         {
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
             _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
-            _resourceDefinitionProvider = resourceDefinitionProvider ?? throw new ArgumentNullException(nameof(resourceDefinitionProvider));
+            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
         }
 
         /// <inheritdoc />
@@ -46,20 +46,16 @@ namespace JsonApiDotNetCore.Serialization
                 sparseFieldSetAttributes = GetViewableAttributes(resourceType);
             }
 
-            var resourceDefinition = _resourceDefinitionProvider.Get(resourceType);
-            if (resourceDefinition != null)
-            {
-                var inputExpression = sparseFieldSetAttributes.Any() ? new SparseFieldSetExpression(sparseFieldSetAttributes) : null;
-                var outputExpression = resourceDefinition.OnApplySparseFieldSet(inputExpression);
+            var inputExpression = sparseFieldSetAttributes.Any() ? new SparseFieldSetExpression(sparseFieldSetAttributes) : null;
+            var outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
 
-                if (outputExpression == null)
-                {
-                    sparseFieldSetAttributes = GetViewableAttributes(resourceType);
-                }
-                else
-                {
-                    sparseFieldSetAttributes.IntersectWith(outputExpression.Attributes);
-                }
+            if (outputExpression == null)
+            {
+                sparseFieldSetAttributes = GetViewableAttributes(resourceType);
+            }
+            else
+            {
+                sparseFieldSetAttributes.IntersectWith(outputExpression.Attributes);
             }
 
             return sparseFieldSetAttributes;

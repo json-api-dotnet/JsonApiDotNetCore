@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <para />
         /// If new relationships are to be created with the to-be-created resources,
         /// this will be reflected by the corresponding NavigationProperty being set. 
-        /// For each of these relationships, the <see cref="ResourceDefinition{T}.BeforeUpdateRelationship"/>
+        /// For each of these relationships, the <see cref="ResourceHooksDefinition{TResource}.BeforeUpdateRelationship"/>
         /// hook is fired after the execution of this hook.
         /// </summary>
         /// <returns>The transformed resource set</returns>
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <para />
         /// If relationships were created with the created resources, this will
         /// be reflected by the corresponding NavigationProperty being set. 
-        /// For each of these relationships, the <see cref="ResourceDefinition{T}.AfterUpdateRelationship(IRelationshipsDictionary{T}, ResourcePipeline)"/>
+        /// For each of these relationships, the <see cref="ResourceHooksDefinition{TResource}.AfterUpdateRelationship(IRelationshipsDictionary{TResource}, ResourcePipeline)"/>
         /// hook is fired after the execution of this hook.
         /// </summary>
         /// <returns>The transformed resource set</returns>

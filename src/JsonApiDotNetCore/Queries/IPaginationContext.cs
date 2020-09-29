@@ -20,6 +20,12 @@ namespace JsonApiDotNetCore.Queries
         PageSize PageSize { get; set; }
 
         /// <summary>
+        /// Indicates whether the number of resources on the current page equals the page size.
+        /// When <c>true</c>, a subsequent page might exist (assuming <see cref="TotalResourceCount"/> is unknown).
+        /// </summary>
+        bool IsPageFull { get; set; }
+
+        /// <summary>
         /// The total number of resources.
         /// <c>null</c> when <see cref="IJsonApiOptions.IncludeTotalResourceCount"/> is set to <c>false</c>.
         /// </summary>

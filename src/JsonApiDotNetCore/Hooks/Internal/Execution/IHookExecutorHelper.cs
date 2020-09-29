@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
     {
         /// <summary>
         /// For a particular ResourceHook and for a given model type, checks if 
-        /// the ResourceDefinition has an implementation for the hook
+        /// the ResourceHooksDefinition has an implementation for the hook
         /// and if so, return it.
         /// 
         /// Also caches the retrieves containers so we don't need to reflectively
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
 
         /// <summary>
         /// For a particular ResourceHook and for a given model type, checks if 
-        /// the ResourceDefinition has an implementation for the hook
+        /// the ResourceHooksDefinition has an implementation for the hook
         /// and if so, return it.
         /// 
         /// Also caches the retrieves containers so we don't need to reflectively

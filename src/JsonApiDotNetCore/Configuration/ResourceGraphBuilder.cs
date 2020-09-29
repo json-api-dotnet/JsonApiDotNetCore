@@ -108,7 +108,6 @@ namespace JsonApiDotNetCore.Configuration
             Attributes = GetAttributes(resourceType),
             Relationships = GetRelationships(resourceType),
             EagerLoads = GetEagerLoads(resourceType),
-            ResourceDefinitionType = GetResourceDefinitionType(resourceType)
         };
 
         private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
@@ -268,8 +267,6 @@ namespace JsonApiDotNetCore.Configuration
 
             return interfaces.Length == 1 ? interfaces.Single().GenericTypeArguments[0] : type;
         }
-
-        private Type GetResourceDefinitionType(Type resourceType) => typeof(ResourceDefinition<>).MakeGenericType(resourceType);
 
         private string FormatResourceName(Type resourceType)
         {

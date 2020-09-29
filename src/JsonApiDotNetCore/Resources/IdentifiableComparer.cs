@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCore.Hooks.Internal
+namespace JsonApiDotNetCore.Resources
 {
     /// <summary>
-    /// Compares `IIdentifiable` with each other based on ID
+    /// Compares `IIdentifiable` instances with each other based on StringId.
     /// </summary>
     internal sealed class IdentifiableComparer : IEqualityComparer<IIdentifiable>
     {

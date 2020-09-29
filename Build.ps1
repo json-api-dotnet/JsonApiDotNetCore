@@ -48,7 +48,7 @@ If($env:APPVEYOR_REPO_TAG -eq $true) {
     }
 }
 Else {
-    $packageVersionSuffix="alpha5-$revision"
+    $packageVersionSuffix="beta1-$revision"
     Write-Output "VERSION-SUFFIX: $packageVersionSuffix"
     Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$packageVersionSuffix"
                           dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$packageVersionSuffix

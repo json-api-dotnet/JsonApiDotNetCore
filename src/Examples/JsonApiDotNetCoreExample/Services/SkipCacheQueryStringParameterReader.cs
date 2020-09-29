@@ -14,7 +14,7 @@ namespace JsonApiDotNetCoreExample.Services
 
         public bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            return !disableQueryStringAttribute.ParameterNames.Contains(_skipCacheParameterName.ToLowerInvariant());
+            return !disableQueryStringAttribute.ParameterNames.Contains(_skipCacheParameterName);
         }
 
         public bool CanRead(string parameterName)

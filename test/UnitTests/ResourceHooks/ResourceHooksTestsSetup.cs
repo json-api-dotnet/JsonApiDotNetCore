@@ -342,7 +342,7 @@ namespace UnitTests.ResourceHooks
         )
         where TModel : class, IIdentifiable<int>
         {
-            processorFactory.Setup(c => c.Get<IResourceHookContainer>(typeof(ResourceDefinition<>), typeof(TModel)))
+            processorFactory.Setup(c => c.Get<IResourceHookContainer>(typeof(ResourceHooksDefinition<>), typeof(TModel)))
             .Returns(modelResource);
 
             processorFactory.Setup(c => c.Get<IHooksDiscovery>(typeof(IHooksDiscovery<>), typeof(TModel)))

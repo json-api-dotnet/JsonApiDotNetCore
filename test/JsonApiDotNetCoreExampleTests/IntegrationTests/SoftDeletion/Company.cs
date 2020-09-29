@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 {
-    public sealed class Company : Identifiable
+    public sealed class Company : Identifiable, ISoftDeletable
     {
         [Attr]
         public string Name { get; set; }
