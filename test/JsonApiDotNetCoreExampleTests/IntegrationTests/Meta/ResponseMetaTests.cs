@@ -57,7 +57,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
     ]
   },
   ""links"": {
-    ""self"": ""http://localhost/api/v1/people""
+    ""self"": ""http://localhost/api/v1/people"",
+    ""first"": ""http://localhost/api/v1/people""
   },
   ""data"": []
 }";
