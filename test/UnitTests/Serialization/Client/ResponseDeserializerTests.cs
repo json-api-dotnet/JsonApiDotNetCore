@@ -361,7 +361,7 @@ namespace UnitTests.Serialization.Client
                 {
                     Type = "cats",
                     Id = "20",
-                    Attributes = new Dictionary<string, object> { {"feline", "true" }, { "meows", "true" } }
+                    Attributes = new Dictionary<string, object> { {"feline", "true" }, { "scaredOfDogs", "true" } }
                 },
             };
             var body = JsonConvert.SerializeObject(content);
@@ -375,7 +375,7 @@ namespace UnitTests.Serialization.Client
             Assert.NotNull(resource.Pet);
             Assert.True(resource.Pet.Feline);
             Assert.True(resource.Pet is Cat);
-            Assert.True(((Cat)resource.Pet).Meows);
+            Assert.True(((Cat)resource.Pet).ScaredOfDogs);
             
             Assert.NotEmpty(resource.Parents);
             var father = resource.Parents[0];
