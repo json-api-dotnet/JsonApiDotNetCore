@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Configuration
         
         public void CreateValidators(ModelValidatorProviderContext context)
         {
-            foreach (var item in context.Results)
+            foreach (var item in context.Results) 
             {
                 if (item.ValidatorMetadata.GetType() == typeof(RequiredAttribute))
                 {
