@@ -8,12 +8,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
     public sealed class SystemDirectory : Identifiable
     {
         [Attr]
-        [IsRequired]
+        [Required]
         [RegularExpression(@"^[\w\s]+$")]
         public string Name { get; set; }
 
         [Attr]
-        [IsRequired]
+        [Required]
         public bool? IsCaseSensitive { get; set; }
 
         [Attr]

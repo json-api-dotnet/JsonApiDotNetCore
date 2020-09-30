@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
@@ -77,10 +78,10 @@ namespace JsonApiDotNetCore.Serialization
             {
                 foreach (AttrAttribute attr in attributes)
                 {
-                    if (attr.Property.GetCustomAttribute<IsRequiredAttribute>() != null)
+                    if (attr.Property.GetCustomAttribute<RequiredAttribute>() != null)
                     {
                         bool disableValidator = attributeValues == null || !attributeValues.ContainsKey(attr.PublicName);
-
+            
                         if (disableValidator)
                         {
                             _httpContextAccessor.HttpContext.DisableRequiredValidator(attr.Property.Name, resource.GetType().Name);

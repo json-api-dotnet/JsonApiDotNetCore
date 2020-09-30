@@ -518,28 +518,28 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                     },
                     relationships = new Dictionary<string, object>
                     {
-                        ["subdirectories"] = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "systemDirectories",
-                                    id = otherSubdirectory.StringId
-                                }
-                            }
-                        },
-                        ["files"] = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "systemFiles",
-                                    id = otherFile.StringId
-                                }
-                            }
-                        },
+                        // ["subdirectories"] = new
+                        // {
+                        //     data = new[]
+                        //     {
+                        //         new
+                        //         {
+                        //             type = "systemDirectories",
+                        //             id = otherSubdirectory.StringId
+                        //         }
+                        //     }
+                        // },
+                        // ["files"] = new
+                        // {
+                        //     data = new[]
+                        //     {
+                        //         new
+                        //         {
+                        //             type = "systemFiles",
+                        //             id = otherFile.StringId
+                        //         }
+                        //     }
+                        // },
                         ["parent"] = new
                         {
                             data = new

@@ -5,6 +5,7 @@ using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources.Annotations
@@ -12,7 +13,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// <summary>
     /// Used with model state validation as a replacement for the built-in <see cref="RequiredAttribute"/> to support partial updates.
     /// </summary>
-    public sealed class IsRequiredAttribute : RequiredAttribute
+    public sealed class JsonApiRequiredAttribute : RequiredAttribute
     {
         private const string _isSelfReferencingResourceKey = "JsonApiDotNetCore_IsSelfReferencingResource";
 
@@ -31,7 +32,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
             {
                 return ValidationResult.Success;
             }
-
+            
             return base.IsValid(value, validationContext);
         }
 
