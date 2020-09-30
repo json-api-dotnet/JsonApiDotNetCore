@@ -7,13 +7,17 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace JsonApiDotNetCore.Configuration
 {
-    public sealed class JsonApiModelValidationProvider : IMetadataBasedModelValidatorProvider
+    /// <summary>
+    /// This model validator provider does not create any validators, but is used to indirectly change the behavior of
+    /// the internal <see cref="DataAnnotationsModelValidatorProvider"/> through the shared <see cref="ModelValidatorProviderContext"/> object.
+    /// </summary>
+    internal sealed class JsonApiModelValidationProvider : IMetadataBasedModelValidatorProvider
     {
         private static readonly FieldInfo _validatorMetadataBackingField;
+        
         static JsonApiModelValidationProvider()
         {
-           _validatorMetadataBackingField = typeof(ValidatorItem).GetField("<ValidatorMetadata>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
-
+           _validatorMetadataBackingField = typeof(ValidatorItem).GetField($"<{nameof(ValidatorItem.ValidatorMetadata)}>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic);
         }   
         
         public void CreateValidators(ModelValidatorProviderContext context)
@@ -27,6 +31,9 @@ namespace JsonApiDotNetCore.Configuration
             }
         }
 
+        /// <summary>
+        /// Returns false to prevent any additional validation from being executed as a result of this provider.
+        /// </summary>
         public bool HasValidators(Type modelType, IList<object> validatorMetadata) => false;
     }
 }
