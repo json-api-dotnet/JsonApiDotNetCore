@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Configuration
                 var routingConvention = builder.ApplicationServices.GetRequiredService<IJsonApiRoutingConvention>();
                 options.Conventions.Insert(0, routingConvention);
 
-                options.ModelValidatorProviders.Insert(0, new JsonApiModelValidationProvider());
+                options.ModelValidatorProviders.Add(new JsonApiModelValidationProvider());
             };
 
             builder.UseMiddleware<JsonApiMiddleware>();

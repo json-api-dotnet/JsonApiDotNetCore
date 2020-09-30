@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -5,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace JsonApiDotNetCore.Configuration
 {
-    public sealed class JsonApiModelValidationProvider : IModelValidatorProvider
+    public sealed class JsonApiModelValidationProvider : IMetadataBasedModelValidatorProvider
     {
         private static readonly FieldInfo _validatorMetadataBackingField;
         static JsonApiModelValidationProvider()
@@ -24,5 +26,7 @@ namespace JsonApiDotNetCore.Configuration
                 }
             }
         }
+
+        public bool HasValidators(Type modelType, IList<object> validatorMetadata) => false;
     }
 }

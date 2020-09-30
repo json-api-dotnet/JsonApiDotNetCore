@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// <summary>
     /// Used with model state validation as a replacement for the built-in <see cref="RequiredAttribute"/> to support partial updates.
     /// </summary>
-    public sealed class JsonApiRequiredAttribute : RequiredAttribute
+    internal sealed class JsonApiRequiredAttribute : RequiredAttribute
     {
         private const string _isSelfReferencingResourceKey = "JsonApiDotNetCore_IsSelfReferencingResource";
 
