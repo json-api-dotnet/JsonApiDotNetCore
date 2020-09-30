@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.Serialization
                     if (attr.Property.GetCustomAttribute<RequiredAttribute>() != null)
                     {
                         bool disableValidator = attributeValues == null || !attributeValues.ContainsKey(attr.PublicName);
-            
+
                         if (disableValidator)
                         {
                             _httpContextAccessor.HttpContext.DisableRequiredValidator(attr.Property.Name, resource.GetType().Name);
