@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +40,8 @@ namespace JsonApiDotNetCore.Configuration
 
                 var routingConvention = builder.ApplicationServices.GetRequiredService<IJsonApiRoutingConvention>();
                 options.Conventions.Insert(0, routingConvention);
+
+                options.ModelValidatorProviders[0] = new JsonApiModelValidationProvider(options.ModelValidatorProviders[0]);
             };
 
             builder.UseMiddleware<JsonApiMiddleware>();
