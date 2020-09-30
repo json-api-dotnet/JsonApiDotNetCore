@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
     /// This model validator provider does not create any validators, but is used to indirectly change the behavior of
-    /// the internal <see cref="DataAnnotationsModelValidatorProvider"/> through the shared <see cref="ModelValidatorProviderContext"/> object.
+    /// the internal DataAnnotationsModelValidatorProvider through the shared <see cref="ModelValidatorProviderContext"/> object.
     /// See https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/847 for more info.
     /// </summary>
     internal sealed class JsonApiModelValidationProvider : IMetadataBasedModelValidatorProvider
