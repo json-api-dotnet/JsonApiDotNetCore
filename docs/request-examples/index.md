@@ -1,63 +1,66 @@
-# Examples
+# Example requests
 
 These requests have been generated against the "GettingStarted" application and are updated on every deployment.
 
 All of these requests have been created using out-of-the-box features.
 
-## Simple CRUD
+_Note that cURL requires "[" and "]" in URLs to be escaped._
+
+# Reading data
+
+### Get all
+
+[!code-ps[REQUEST](001_GET_Books.ps1)]
+[!code-json[RESPONSE](001_GET_Books_Response.json)]
+
+### Get by ID
+
+[!code-ps[REQUEST](002_GET_Person-by-ID.ps1)]
+[!code-json[RESPONSE](002_GET_Person-by-ID_Response.json)]
+
+### Get with relationship
+
+[!code-ps[REQUEST](003_GET_Books-including-Author.ps1)]
+[!code-json[RESPONSE](003_GET_Books-including-Author_Response.json)]
+
+### Get sparse fieldset
+
+[!code-ps[REQUEST](004_GET_Books-PublishYear.ps1)]
+[!code-json[RESPONSE](004_GET_Books-PublishYear_Response.json)]
+
+### Filter on partial match
+
+[!code-ps[REQUEST](005_GET_People-Filter_Partial.ps1)]
+[!code-json[RESPONSE](005_GET_People-Filter_Partial_Response.json)]
+
+### Sorting
+
+[!code-ps[REQUEST](006_GET_Books-sorted-by-PublishYear-descending.ps1)]
+[!code-json[RESPONSE](006_GET_Books-sorted-by-PublishYear-descending_Response.json)]
+
+### Pagination
+
+[!code-ps[REQUEST](007_GET_Books-paginated.ps1)]
+[!code-json[RESPONSE](007_GET_Books-paginated_Response.json)]
+
+# Writing data
 
 ### Create
 
-[!code-sh[CREATE](000-CREATE_Person.sh)]
-[!code-json[CREATE](000-CREATE_Person-Response.json)]
+[!code-ps[REQUEST](010_CREATE_Person.ps1)]
+[!code-json[RESPONSE](010_CREATE_Person_Response.json)]
 
-### Create with Relationship
+### Create with relationship
 
-[!code-sh[CREATE](001-CREATE_Article.sh)]
-[!code-json[CREATE](001-CREATE_Article-Response.json)]
-
-
-### Get All
-
-[!code-sh[GET Request](002-GET_Articles.sh)]
-[!code-json[GET Response](002-GET_Articles-Response.json)]
-
-### Get By Id
-
-[!code-sh[GET Request](003-GET_Article.sh)]
-[!code-json[GET Response](003-GET_Article-Response.json)]
-
-### Get with Relationship
-
-[!code-sh[GET Request](004-GET_Articles_With_Authors.sh)]
-[!code-json[GET Response](004-GET_Articles_With_Authors-Response.json)]
+[!code-ps[REQUEST](011_CREATE_Book-with-Author.ps1)]
+[!code-json[RESPONSE](011_CREATE_Book-with-Author_Response.json)]
 
 ### Update
 
-[!code-sh[PATCH Request](005-PATCH_Article.sh)]
-[!code-json[PATCH Response](005-PATCH_Article-Response.json)]
+[!code-ps[REQUEST](012_PATCH_Book.ps1)]
+[!code-json[RESPONSE](012_PATCH_Book_Response.json)]
 
 ### Delete
 
-[!code-sh[DELETE Request](006-DELETE_Article.sh)]
-[!code-json[DELETE Response](006-DELETE_Article-Response.json)]
-
-## Filters
-
-_Note that cURL requires URLs to be escaped._
-
-### Equality
-
-[!code-sh[GET Request](008-GET_Articles_With_Filter_Eq.sh)]
-[!code-json[GET Response](008-GET_Articles_With_Filter_Eq-Response.json)]
-
-### Like
-
-[!code-sh[GET Request](009-GET_Articles_With_Filter_Like.sh)]
-[!code-json[GET Response](009-GET_Articles_With_Filter_Like-Response.json)]
-
-## Sorting
-
-# See Also
-
-- Customizing QuerySet
+[!code-ps[REQUEST](013_DELETE_Book.ps1)]
+[!code-json[RESPONSE](013_DELETE_Book_Response.json)]
