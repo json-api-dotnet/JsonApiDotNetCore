@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Returns false to prevent any additional validation from being executed as a result of this provider.
+        /// Returns false to ensure no further validation is executed through this provider.
         /// </summary>
         public bool HasValidators(Type modelType, IList<object> validatorMetadata) => false;
     }
