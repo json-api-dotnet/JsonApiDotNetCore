@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             ServiceProvider = _server.Host.Services;
 
             Client = _server.CreateClient();
-            Context = GetService<IDbContextResolver>().GetContext() as AppDbContext;
+            Context = GetRequiredService<IDbContextResolver>().GetContext() as AppDbContext;
         }
 
         public HttpClient Client { get; set; }
@@ -39,8 +39,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         public static IRequestSerializer GetSerializer<TResource>(IServiceProvider serviceProvider, Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
         {
-            var serializer = (IRequestSerializer)serviceProvider.GetService(typeof(IRequestSerializer));
-            var graph = (IResourceGraph)serviceProvider.GetService(typeof(IResourceGraph));
+            var serializer = (IRequestSerializer)serviceProvider.GetRequiredService(typeof(IRequestSerializer));
+            var graph = (IResourceGraph)serviceProvider.GetRequiredService(typeof(IResourceGraph));
             serializer.AttributesToSerialize = attributes != null ? graph.GetAttributes(attributes) : null;
             serializer.RelationshipsToSerialize = relationships != null ? graph.GetRelationships(relationships) : null;
             return serializer;
@@ -48,8 +48,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         public IRequestSerializer GetSerializer<TResource>(Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
         {
-            var serializer = GetService<IRequestSerializer>();
-            var graph = GetService<IResourceGraph>();
+            var serializer = GetRequiredService<IRequestSerializer>();
+            var graph = GetRequiredService<IResourceGraph>();
             serializer.AttributesToSerialize = attributes != null ? graph.GetAttributes(attributes) : null;
             serializer.RelationshipsToSerialize = relationships != null ? graph.GetRelationships(relationships) : null;
             return serializer;
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         public IResponseDeserializer GetDeserializer()
         {
-            var options = GetService<IJsonApiOptions>();
+            var options = GetRequiredService<IJsonApiOptions>();
 
             var resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
                 .Add<PersonRole>()
@@ -74,12 +74,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             return new ResponseDeserializer(resourceGraph, new ResourceFactory(ServiceProvider));
         }
 
-        public T GetService<T>() => (T)ServiceProvider.GetService(typeof(T));
+        public T GetRequiredService<T>() => (T)ServiceProvider.GetRequiredService(typeof(T));
 
         public void ReloadDbContext()
         {
             ISystemClock systemClock = ServiceProvider.GetRequiredService<ISystemClock>();
-            DbContextOptions<AppDbContext> options = GetService<DbContextOptions<AppDbContext>>();
+            DbContextOptions<AppDbContext> options = GetRequiredService<DbContextOptions<AppDbContext>>();
             
             Context = new AppDbContext(options, systemClock);
         }

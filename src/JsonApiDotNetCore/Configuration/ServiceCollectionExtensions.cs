@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCore.Services;
@@ -70,7 +72,7 @@ namespace JsonApiDotNetCore.Configuration
             services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
             services.AddScoped<IRequestSerializer>(sp =>
             {
-                var graph = sp.GetService<IResourceGraph>();
+                var graph = sp.GetRequiredService<IResourceGraph>();
                 return new RequestSerializer(graph, new ResourceObjectBuilder(graph, new ResourceObjectBuilderSettings()));
             });
             return services;

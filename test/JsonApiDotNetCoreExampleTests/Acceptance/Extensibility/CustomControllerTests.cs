@@ -81,7 +81,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         public async Task CustomRouteControllers_Uses_Dasherized_Item_Route()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var todoItem = _todoItemFaker.Generate();
             var person = _personFaker.Generate();
             todoItem.Owner = person;
@@ -108,7 +108,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         public async Task CustomRouteControllers_Creates_Proper_Relationship_Links()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var todoItem = _todoItemFaker.Generate();
             var person = _personFaker.Generate();
             todoItem.Owner = person;

@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public ManyToManyTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
 
             _authorFaker = new Faker<Author>()
                 .RuleFor(a => a.LastName, f => f.Random.Words(2));
@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Fetch_Many_To_Many_Through_Id()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
             var articleTag = new ArticleTag
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Fetch_Many_To_Many_Through_GetById_Relationship_Link()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
             var articleTag = new ArticleTag
@@ -126,7 +126,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Fetch_Many_To_Many_Through_Relationship_Link()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
             var articleTag = new ArticleTag
@@ -164,7 +164,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Fetch_Many_To_Many_Without_Include()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
             var articleTag = new ArticleTag
@@ -197,7 +197,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Create_Many_To_Many()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var tag = _tagFaker.Generate();
             var author = _authorFaker.Generate();
             context.Tags.Add(tag);
@@ -267,7 +267,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Update_Many_To_Many()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var tag = _tagFaker.Generate();
             var article = _articleFaker.Generate();
             context.Tags.Add(tag);
@@ -327,7 +327,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Update_Many_To_Many_With_Complete_Replacement()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var firstTag = _tagFaker.Generate();
             var article = _articleFaker.Generate();
             var articleTag = new ArticleTag
@@ -391,7 +391,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Update_Many_To_Many_With_Complete_Replacement_With_Overlap()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var firstTag = _tagFaker.Generate();
             var article = _articleFaker.Generate();
             var articleTag = new ArticleTag
@@ -459,7 +459,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Update_Many_To_Many_Through_Relationship_Link()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var tag = _tagFaker.Generate();
             var article = _articleFaker.Generate();
             context.Tags.Add(tag);

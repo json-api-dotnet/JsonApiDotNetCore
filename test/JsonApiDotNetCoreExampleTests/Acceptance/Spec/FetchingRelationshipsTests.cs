@@ -40,7 +40,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = new Person();
 
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 }
             };
 
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             context.AuthorDifferentDbContextName.Add(author);
             await context.SaveChangesAsync();
 
@@ -140,7 +140,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = null;
 
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
@@ -161,16 +161,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var json = JsonConvert.DeserializeObject<JObject>(body).ToString();
 
             var expected = @"{
-  ""meta"": {
-    ""license"": ""MIT"",
-    ""projectUrl"": ""https://github.com/json-api-dotnet/JsonApiDotNetCore/"",
-    ""versions"": [
-      ""v4.0.0"",
-      ""v3.1.0"",
-      ""v2.5.2"",
-      ""v1.3.1""
-    ]
-  },
   ""links"": {
     ""self"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/owner""
   },
@@ -187,7 +177,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = null;
 
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
@@ -217,7 +207,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = _todoItemFaker.Generate();
             todoItem.ChildrenTodos = new List<TodoItem>();
 
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
@@ -247,7 +237,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = _todoItemFaker.Generate();
             todoItem.ChildrenTodos = new List<TodoItem>();
 
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
@@ -324,7 +314,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var todoItem = _todoItemFaker.Generate();
 
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
@@ -354,7 +344,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var todoItem = _todoItemFaker.Generate();
 
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 

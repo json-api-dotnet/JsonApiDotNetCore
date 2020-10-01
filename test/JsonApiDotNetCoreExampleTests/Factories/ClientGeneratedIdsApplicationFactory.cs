@@ -1,4 +1,3 @@
-using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -24,8 +23,9 @@ namespace JsonApiDotNetCoreExampleTests
                     options.DefaultPageSize = new PageSize(5);
                     options.IncludeTotalResourceCount = true;
                     options.AllowClientGeneratedIds = true;
+                    options.IncludeExceptionStackTraceInErrors = true;
                 },
-                discovery => discovery.AddAssembly(Assembly.Load(nameof(JsonApiDotNetCoreExample))));
+                discovery => discovery.AddAssembly(typeof(JsonApiDotNetCoreExample.Program).Assembly));
             });
         }
     }
