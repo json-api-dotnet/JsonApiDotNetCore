@@ -85,6 +85,10 @@ and constructs instances of the resource(s) in the document body.</p>
       <section><p>Abstract base class for serialization.
 Uses <a class="xref" href="JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilder.html">IResourceObjectBuilder</a> to convert resources into <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceObject.html">ResourceObject</a>s and wraps them in a <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a>.</p>
 </section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.EmptyResponseMeta.html">EmptyResponseMeta</a></h4>
+      <section><p>Provides a method to obtain global json:api meta, which is added at top-level to a response <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a>.
+Use <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_GetMeta__0_">GetMeta(TResource)</a> to specify nested metadata per individual resource.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.FieldsToSerialize.html">FieldsToSerialize</a></h4>
       <section><p>Responsible for getting the set of fields that are to be included for a
 given type in the serialization result. Typically combines various sources
@@ -130,8 +134,8 @@ to process <code>FromBody</code>.</p>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.IJsonApiWriter.html">IJsonApiWriter</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.IResponseMeta.html">IResponseMeta</a></h4>
-      <section><p>Service to add global top-level json:api meta to a response <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a>.
-Use <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_GetMeta">GetMeta()</a> to specify top-level metadata per resource type.</p>
+      <section><p>Provides a method to obtain global json:api meta, which is added at top-level to a response <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a>.
+Use <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_GetMeta__0_">GetMeta(TResource)</a> to specify nested metadata per individual resource.</p>
 </section>
 </article>
           </div>

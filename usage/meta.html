@@ -69,35 +69,33 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="metadata">Metadata</h1>
 
-<p>Top-level metadata can be added to your API responses in two ways: globally and per resource type. In the event of a key collision, the resource meta will take precendence.</p>
+<p>We support two ways to add json:api meta to your responses: global and per resource.</p>
 <h2 id="global-meta">Global Meta</h2>
-<p>Global metadata can be added by registering a service that implements <code>IResponseMeta</code>.
+<p>Global metadata can be added to the root of the response document by registering a service that implements <code>IResponseMeta</code>.
 This is useful if you need access to other registered services to build the meta object.</p>
-<pre><code class="lang-c#">public class ResponseMetaService : IResponseMeta
-{
-    public ResponseMetaService(/*...other dependencies here */) {
-        // ...
-    }
+<pre><code class="lang-c#">// In Startup.ConfigureServices
+services.AddSingleton&lt;IResponseMeta, CopyrightResponseMeta&gt;();
 
-    public Dictionary&lt;string, object&gt; GetMeta()
+public sealed class CopyrightResponseMeta : IResponseMeta
+{
+    public IReadOnlyDictionary&lt;string, object&gt; GetMeta()
     {
         return new Dictionary&lt;string, object&gt;
         {
-            {&quot;copyright&quot;, &quot;Copyright 2018 Example Corp.&quot;},
-            {&quot;authors&quot;, new string[] {&quot;John Doe&quot;}}
+            [&quot;copyright&quot;] = &quot;Copyright (C) 2002 Umbrella Corporation.&quot;,
+            [&quot;authors&quot;] = new[] {&quot;Alice&quot;, &quot;Red Queen&quot;}
         };
     }
 }
 </code></pre><pre><code class="lang-json">{
   &quot;meta&quot;: {
-    &quot;copyright&quot;: &quot;Copyright 2018 Example Corp.&quot;,
+    &quot;copyright&quot;: &quot;Copyright (C) 2002 Umbrella Corporation.&quot;,
     &quot;authors&quot;: [
-      &quot;John Doe&quot;
+      &quot;Alice&quot;,
+      &quot;Red Queen&quot;
     ]
   },
-  &quot;data&quot;: {
-    // ...
-  }
+  &quot;data&quot;: []
 }
 </code></pre><h2 id="resource-meta">Resource Meta</h2>
 <p>Resource-specific metadata can be added by implementing <code>IResourceDefinition&lt;TResource, TId&gt;.GetMeta</code> (or overriding it on <code>JsonApiResourceDefinition</code>):</p>
@@ -107,21 +105,32 @@ This is useful if you need access to other registered services to build the meta
     {
     }
 
-    public override IReadOnlyDictionary&lt;string, object&gt; GetMeta()
+    public override IReadOnlyDictionary&lt;string, object&gt; GetMeta(Person person)
     {
-        return new Dictionary&lt;string, object&gt;
+        if (person.IsEmployee)
         {
-            [&quot;notice&quot;] = &quot;Check our intranet at http://www.example.com for personal details.&quot;
-        };
+            return new Dictionary&lt;string, object&gt;
+            {
+                [&quot;notice&quot;] = &quot;Check our intranet at http://www.example.com/employees/&quot; + person.StringId + &quot; for personal details.&quot;
+            };
+        }
+
+        return null;
     }
 }
 </code></pre><pre><code class="lang-json">{
-  &quot;meta&quot;: {
-    &quot;notice&quot;: &quot;Check our intranet at http://www.example.com for personal details.&quot;
-  },
-  &quot;data&quot;: {
-    // ...
-  }
+  &quot;data&quot;: [
+    {
+      &quot;type&quot;: &quot;people&quot;,
+      &quot;id&quot;: &quot;1&quot;,
+      &quot;attributes&quot;: {
+        ...
+      },
+      &quot;meta&quot;: {
+        &quot;notice&quot;: &quot;Check our intranet at http://www.example.com/employees/1 for personal details.&quot;
+      }
+    }
+  ]
 }
 </code></pre></article>
           </div>
