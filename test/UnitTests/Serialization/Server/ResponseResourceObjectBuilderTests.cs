@@ -24,7 +24,7 @@ namespace UnitTests.Serialization.Server
             var builder = GetResponseResourceObjectBuilder(relationshipLinks: _dummyRelationshipLinks);
 
             // Act
-            var resourceObject = builder.Build(resource, false, relationships: _relationshipsForBuild);
+            var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
             Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));
@@ -41,7 +41,7 @@ namespace UnitTests.Serialization.Server
             var builder = GetResponseResourceObjectBuilder();
 
             // Act
-            var resourceObject = builder.Build(resource, false, relationships: _relationshipsForBuild);
+            var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
             Assert.Null(resourceObject.Relationships);
@@ -55,7 +55,7 @@ namespace UnitTests.Serialization.Server
             var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild } );
 
             // Act
-            var resourceObject = builder.Build(resource, false, relationships: _relationshipsForBuild);
+            var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
             Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));
@@ -72,7 +72,7 @@ namespace UnitTests.Serialization.Server
             var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild }, relationshipLinks: _dummyRelationshipLinks);
 
             // Act
-            var resourceObject = builder.Build(resource, false, relationships: _relationshipsForBuild);
+            var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
             Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));

@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             var (attributes, relationships) = GetFieldsToSerialize();
-            var document = Build(resource, true, attributes, relationships);
+            var document = Build(resource, attributes, relationships);
             var resourceObject = document.SingleData;
             if (resourceObject != null)
                 resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCore.Serialization
         internal string SerializeMany(IReadOnlyCollection<IIdentifiable> resources)
         {
             var (attributes, relationships) = GetFieldsToSerialize();
-            var document = Build(resources, true, attributes, relationships);
+            var document = Build(resources, attributes, relationships);
             foreach (ResourceObject resourceObject in document.ManyData)
             {
                 var links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);

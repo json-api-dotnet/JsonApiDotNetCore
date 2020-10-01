@@ -16,7 +16,7 @@ namespace UnitTests.Serialization.Serializer
         public BaseDocumentBuilderTests()
         {
             var mock = new Mock<IResourceObjectBuilder>();
-            mock.Setup(m => m.Build(It.IsAny<IIdentifiable>(), It.IsAny<bool>(), It.IsAny<IReadOnlyCollection<AttrAttribute>>(), It.IsAny<IReadOnlyCollection<RelationshipAttribute>>())).Returns(new ResourceObject());
+            mock.Setup(m => m.Build(It.IsAny<IIdentifiable>(), It.IsAny<IReadOnlyCollection<AttrAttribute>>(), It.IsAny<IReadOnlyCollection<RelationshipAttribute>>())).Returns(new ResourceObject());
             _builder = new TestSerializer(mock.Object);
         }
 
@@ -25,7 +25,7 @@ namespace UnitTests.Serialization.Serializer
         public void ResourceToDocument_NullResource_CanBuild()
         {
             // Act
-            var document = _builder.Build((TestResource) null, false);
+            var document = _builder.Build((TestResource) null);
 
             // Assert
             Assert.Null(document.Data);
@@ -40,7 +40,7 @@ namespace UnitTests.Serialization.Serializer
             var resources = new List<TestResource>();
 
             // Act
-            var document = _builder.Build(resources, false);
+            var document = _builder.Build(resources);
 
             // Assert
             Assert.NotNull(document.Data);
@@ -55,7 +55,7 @@ namespace UnitTests.Serialization.Serializer
             IIdentifiable dummy = new DummyResource();
 
             // Act
-            var document = _builder.Build(dummy, false);
+            var document = _builder.Build(dummy);
 
             // Assert
             Assert.NotNull(document.Data);
@@ -69,7 +69,7 @@ namespace UnitTests.Serialization.Serializer
             var resources = new List<IIdentifiable> { new DummyResource(), new DummyResource() };
 
             // Act
-            var document = _builder.Build(resources, false);
+            var document = _builder.Build(resources);
             var data = (List<ResourceObject>)document.Data;
 
             // Assert

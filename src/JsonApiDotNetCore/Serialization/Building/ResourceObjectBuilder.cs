@@ -14,18 +14,16 @@ namespace JsonApiDotNetCore.Serialization.Building
     public class ResourceObjectBuilder : IResourceObjectBuilder
     {
         protected IResourceContextProvider ResourceContextProvider { get; }
-        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly ResourceObjectBuilderSettings _settings;
 
-        public ResourceObjectBuilder(IResourceContextProvider resourceContextProvider, IResourceDefinitionAccessor resourceDefinitionAccessor, ResourceObjectBuilderSettings settings)
+        public ResourceObjectBuilder(IResourceContextProvider resourceContextProvider, ResourceObjectBuilderSettings settings)
         {
             ResourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
 
         /// <inheritdoc /> 
-        public ResourceObject Build(IIdentifiable resource, bool includeResourceMeta, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
+        public virtual ResourceObject Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
@@ -41,11 +39,6 @@ namespace JsonApiDotNetCore.Serialization.Building
             // populating the top-level "relationship" member of a resource object.
             if (relationships != null)
                 ProcessRelationships(resource, relationships, resourceObject);
-
-            if (includeResourceMeta)
-            {
-                resourceObject.Meta = _resourceDefinitionAccessor.GetMeta(resource.GetType(), resource);
-            }
 
             return resourceObject;
         }

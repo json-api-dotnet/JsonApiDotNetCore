@@ -31,9 +31,8 @@ namespace Benchmarks.Serialization
             var metaBuilder = new Mock<IMetaBuilder>().Object;
             var linkBuilder = new Mock<ILinkBuilder>().Object;
             var includeBuilder = new Mock<IIncludedResourceObjectBuilder>().Object;
-            var accessor = new Mock<IResourceDefinitionAccessor>().Object;
 
-            var resourceObjectBuilder = new ResourceObjectBuilder(resourceGraph, accessor, new ResourceObjectBuilderSettings());
+            var resourceObjectBuilder = new ResourceObjectBuilder(resourceGraph, new ResourceObjectBuilderSettings());
 
             _jsonApiSerializer = new ResponseSerializer<BenchmarkResource>(metaBuilder, linkBuilder,
                 includeBuilder, fieldsToSerialize, resourceObjectBuilder, options);
