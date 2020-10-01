@@ -64,17 +64,153 @@
 
 <p>To update these requests:</p>
 <ol>
-<li><p>Add a bash (.sh) file prefixed by a number that is used to determine the order the scripts are executed. The bash script should execute a request and output the response. Example:</p>
-<pre><code>curl -vs http://localhost:5001/api/articles
+<li><p>Add a PowerShell (.ps1) script prefixed by a number that is used to determine the order the scripts are executed. The script should execute a request and output the response. Example:</p>
+<pre><code>curl -s http://localhost:14141/api/books
 </code></pre></li>
 <li><p>Add the example to <code>index.md</code>. Example:</p>
-<pre><code>## Get Article with Author
+<pre><code>### Get with relationship
 </code></pre></li>
 </ol>
-<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles?include=author
-</code></pre><!-- Can not find reference 004-GET_Articles_With_Authors-Response.json -->
-<pre><code>
-3. Run `./generate.sh`
+<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?include=author
+</code></pre><pre><code class="lang-json" name="RESPONSE">{
+  &quot;meta&quot;: {
+    &quot;totalResources&quot;: 3
+  },
+  &quot;links&quot;: {
+    &quot;self&quot;: &quot;/api/books?include=author&quot;,
+    &quot;first&quot;: &quot;/api/books?include=author&quot;,
+    &quot;last&quot;: &quot;/api/books?include=author&quot;
+  },
+  &quot;data&quot;: [
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;1&quot;,
+      &quot;attributes&quot;: {
+        &quot;title&quot;: &quot;Frankenstein&quot;,
+        &quot;publishYear&quot;: 1818
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/1/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/1/author&quot;
+          },
+          &quot;data&quot;: {
+            &quot;type&quot;: &quot;people&quot;,
+            &quot;id&quot;: &quot;1&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/1&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;2&quot;,
+      &quot;attributes&quot;: {
+        &quot;title&quot;: &quot;Robinson Crusoe&quot;,
+        &quot;publishYear&quot;: 1719
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/2/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/2/author&quot;
+          },
+          &quot;data&quot;: {
+            &quot;type&quot;: &quot;people&quot;,
+            &quot;id&quot;: &quot;2&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/2&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;3&quot;,
+      &quot;attributes&quot;: {
+        &quot;title&quot;: &quot;Gulliver&#39;s Travels&quot;,
+        &quot;publishYear&quot;: 1726
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/3/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/3/author&quot;
+          },
+          &quot;data&quot;: {
+            &quot;type&quot;: &quot;people&quot;,
+            &quot;id&quot;: &quot;3&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/3&quot;
+      }
+    }
+  ],
+  &quot;included&quot;: [
+    {
+      &quot;type&quot;: &quot;people&quot;,
+      &quot;id&quot;: &quot;1&quot;,
+      &quot;attributes&quot;: {
+        &quot;name&quot;: &quot;Mary Shelley&quot;
+      },
+      &quot;relationships&quot;: {
+        &quot;books&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/people/1/relationships/books&quot;,
+            &quot;related&quot;: &quot;/api/people/1/books&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/people/1&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;people&quot;,
+      &quot;id&quot;: &quot;2&quot;,
+      &quot;attributes&quot;: {
+        &quot;name&quot;: &quot;Daniel Defoe&quot;
+      },
+      &quot;relationships&quot;: {
+        &quot;books&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/people/2/relationships/books&quot;,
+            &quot;related&quot;: &quot;/api/people/2/books&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/people/2&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;people&quot;,
+      &quot;id&quot;: &quot;3&quot;,
+      &quot;attributes&quot;: {
+        &quot;name&quot;: &quot;Jonathan Swift&quot;
+      },
+      &quot;relationships&quot;: {
+        &quot;books&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/people/3/relationships/books&quot;,
+            &quot;related&quot;: &quot;/api/people/3/books&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/people/3&quot;
+      }
+    }
+  ]
+}
+</code></pre><pre><code>
+3. Run `./generate-examples.ps1`
 4. Verify the results by running `docfx --serve`
 </code></pre></article>
           </div>

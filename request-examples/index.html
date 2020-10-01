@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Examples </title>
+    <title>Example requests </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Examples ">
+    <meta name="title" content="Example requests ">
     <meta name="generator" content="docfx 2.56.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -60,83 +60,557 @@
         <div class="article row grid">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="examples">Examples</h1>
+<h1 id="example-requests">Example requests</h1>
 
 <p>These requests have been generated against the &quot;GettingStarted&quot; application and are updated on every deployment.</p>
 <p>All of these requests have been created using out-of-the-box features.</p>
-<h2 id="simple-crud">Simple CRUD</h2>
+<p><em>Note that cURL requires &quot;[&quot; and &quot;]&quot; in URLs to be escaped.</em></p>
+<h1 id="reading-data">Reading data</h1>
+<h3 id="get-all">Get all</h3>
+<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books
+</code></pre><pre><code class="lang-json" name="RESPONSE">{
+  &quot;meta&quot;: {
+    &quot;totalResources&quot;: 3
+  },
+  &quot;links&quot;: {
+    &quot;self&quot;: &quot;/api/books&quot;,
+    &quot;first&quot;: &quot;/api/books&quot;,
+    &quot;last&quot;: &quot;/api/books&quot;
+  },
+  &quot;data&quot;: [
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;1&quot;,
+      &quot;attributes&quot;: {
+        &quot;title&quot;: &quot;Frankenstein&quot;,
+        &quot;publishYear&quot;: 1818
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/1/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/1/author&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/1&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;2&quot;,
+      &quot;attributes&quot;: {
+        &quot;title&quot;: &quot;Robinson Crusoe&quot;,
+        &quot;publishYear&quot;: 1719
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/2/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/2/author&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/2&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;3&quot;,
+      &quot;attributes&quot;: {
+        &quot;title&quot;: &quot;Gulliver&#39;s Travels&quot;,
+        &quot;publishYear&quot;: 1726
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/3/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/3/author&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/3&quot;
+      }
+    }
+  ]
+}
+</code></pre><h3 id="get-by-id">Get by ID</h3>
+<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/people/1
+</code></pre><pre><code class="lang-json" name="RESPONSE">{
+  &quot;links&quot;: {
+    &quot;self&quot;: &quot;/api/people/1&quot;
+  },
+  &quot;data&quot;: {
+    &quot;type&quot;: &quot;people&quot;,
+    &quot;id&quot;: &quot;1&quot;,
+    &quot;attributes&quot;: {
+      &quot;name&quot;: &quot;Mary Shelley&quot;
+    },
+    &quot;relationships&quot;: {
+      &quot;books&quot;: {
+        &quot;links&quot;: {
+          &quot;self&quot;: &quot;/api/people/1/relationships/books&quot;,
+          &quot;related&quot;: &quot;/api/people/1/books&quot;
+        }
+      }
+    },
+    &quot;links&quot;: {
+      &quot;self&quot;: &quot;/api/people/1&quot;
+    }
+  }
+}
+</code></pre><h3 id="get-with-relationship">Get with relationship</h3>
+<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?include=author
+</code></pre><pre><code class="lang-json" name="RESPONSE">{
+  &quot;meta&quot;: {
+    &quot;totalResources&quot;: 3
+  },
+  &quot;links&quot;: {
+    &quot;self&quot;: &quot;/api/books?include=author&quot;,
+    &quot;first&quot;: &quot;/api/books?include=author&quot;,
+    &quot;last&quot;: &quot;/api/books?include=author&quot;
+  },
+  &quot;data&quot;: [
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;1&quot;,
+      &quot;attributes&quot;: {
+        &quot;title&quot;: &quot;Frankenstein&quot;,
+        &quot;publishYear&quot;: 1818
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/1/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/1/author&quot;
+          },
+          &quot;data&quot;: {
+            &quot;type&quot;: &quot;people&quot;,
+            &quot;id&quot;: &quot;1&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/1&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;2&quot;,
+      &quot;attributes&quot;: {
+        &quot;title&quot;: &quot;Robinson Crusoe&quot;,
+        &quot;publishYear&quot;: 1719
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/2/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/2/author&quot;
+          },
+          &quot;data&quot;: {
+            &quot;type&quot;: &quot;people&quot;,
+            &quot;id&quot;: &quot;2&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/2&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;3&quot;,
+      &quot;attributes&quot;: {
+        &quot;title&quot;: &quot;Gulliver&#39;s Travels&quot;,
+        &quot;publishYear&quot;: 1726
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/3/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/3/author&quot;
+          },
+          &quot;data&quot;: {
+            &quot;type&quot;: &quot;people&quot;,
+            &quot;id&quot;: &quot;3&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/3&quot;
+      }
+    }
+  ],
+  &quot;included&quot;: [
+    {
+      &quot;type&quot;: &quot;people&quot;,
+      &quot;id&quot;: &quot;1&quot;,
+      &quot;attributes&quot;: {
+        &quot;name&quot;: &quot;Mary Shelley&quot;
+      },
+      &quot;relationships&quot;: {
+        &quot;books&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/people/1/relationships/books&quot;,
+            &quot;related&quot;: &quot;/api/people/1/books&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/people/1&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;people&quot;,
+      &quot;id&quot;: &quot;2&quot;,
+      &quot;attributes&quot;: {
+        &quot;name&quot;: &quot;Daniel Defoe&quot;
+      },
+      &quot;relationships&quot;: {
+        &quot;books&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/people/2/relationships/books&quot;,
+            &quot;related&quot;: &quot;/api/people/2/books&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/people/2&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;people&quot;,
+      &quot;id&quot;: &quot;3&quot;,
+      &quot;attributes&quot;: {
+        &quot;name&quot;: &quot;Jonathan Swift&quot;
+      },
+      &quot;relationships&quot;: {
+        &quot;books&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/people/3/relationships/books&quot;,
+            &quot;related&quot;: &quot;/api/people/3/books&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/people/3&quot;
+      }
+    }
+  ]
+}
+</code></pre><h3 id="get-sparse-fieldset">Get sparse fieldset</h3>
+<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?fields=publishYear
+</code></pre><pre><code class="lang-json" name="RESPONSE">{
+  &quot;meta&quot;: {
+    &quot;totalResources&quot;: 3
+  },
+  &quot;links&quot;: {
+    &quot;self&quot;: &quot;/api/books?fields=publishYear&quot;,
+    &quot;first&quot;: &quot;/api/books?fields=publishYear&quot;,
+    &quot;last&quot;: &quot;/api/books?fields=publishYear&quot;
+  },
+  &quot;data&quot;: [
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;1&quot;,
+      &quot;attributes&quot;: {
+        &quot;publishYear&quot;: 1818
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/1/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/1/author&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/1&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;2&quot;,
+      &quot;attributes&quot;: {
+        &quot;publishYear&quot;: 1719
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/2/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/2/author&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/2&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;3&quot;,
+      &quot;attributes&quot;: {
+        &quot;publishYear&quot;: 1726
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/3/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/3/author&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/3&quot;
+      }
+    }
+  ]
+}
+</code></pre><h3 id="filter-on-partial-match">Filter on partial match</h3>
+<pre><code class="lang-ps" name="REQUEST">curl -s -f &quot;http://localhost:14141/api/people?filter=contains(name,&#39;Shell&#39;)&quot;
+</code></pre><pre><code class="lang-json" name="RESPONSE">{
+  &quot;meta&quot;: {
+    &quot;totalResources&quot;: 1
+  },
+  &quot;links&quot;: {
+    &quot;self&quot;: &quot;/api/people?filter=contains(name,&#39;Shell&#39;)&quot;,
+    &quot;first&quot;: &quot;/api/people?filter=contains(name,&#39;Shell&#39;)&quot;,
+    &quot;last&quot;: &quot;/api/people?filter=contains(name,&#39;Shell&#39;)&quot;
+  },
+  &quot;data&quot;: [
+    {
+      &quot;type&quot;: &quot;people&quot;,
+      &quot;id&quot;: &quot;1&quot;,
+      &quot;attributes&quot;: {
+        &quot;name&quot;: &quot;Mary Shelley&quot;
+      },
+      &quot;relationships&quot;: {
+        &quot;books&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/people/1/relationships/books&quot;,
+            &quot;related&quot;: &quot;/api/people/1/books&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/people/1&quot;
+      }
+    }
+  ]
+}
+</code></pre><h3 id="sorting">Sorting</h3>
+<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?sort=-publishYear
+</code></pre><pre><code class="lang-json" name="RESPONSE">{
+  &quot;meta&quot;: {
+    &quot;totalResources&quot;: 3
+  },
+  &quot;links&quot;: {
+    &quot;self&quot;: &quot;/api/books?sort=-publishYear&quot;,
+    &quot;first&quot;: &quot;/api/books?sort=-publishYear&quot;,
+    &quot;last&quot;: &quot;/api/books?sort=-publishYear&quot;
+  },
+  &quot;data&quot;: [
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;1&quot;,
+      &quot;attributes&quot;: {
+        &quot;title&quot;: &quot;Frankenstein&quot;,
+        &quot;publishYear&quot;: 1818
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/1/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/1/author&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/1&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;3&quot;,
+      &quot;attributes&quot;: {
+        &quot;title&quot;: &quot;Gulliver&#39;s Travels&quot;,
+        &quot;publishYear&quot;: 1726
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/3/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/3/author&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/3&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;2&quot;,
+      &quot;attributes&quot;: {
+        &quot;title&quot;: &quot;Robinson Crusoe&quot;,
+        &quot;publishYear&quot;: 1719
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/2/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/2/author&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/2&quot;
+      }
+    }
+  ]
+}
+</code></pre><h3 id="pagination">Pagination</h3>
+<pre><code class="lang-ps" name="REQUEST">curl -s -f &quot;http://localhost:14141/api/books?page%5Bsize%5D=1&amp;page%5Bnumber%5D=2&quot;
+</code></pre><pre><code class="lang-json" name="RESPONSE">{
+  &quot;meta&quot;: {
+    &quot;totalResources&quot;: 3
+  },
+  &quot;links&quot;: {
+    &quot;self&quot;: &quot;/api/books?page[size]=1&amp;page[number]=2&quot;,
+    &quot;first&quot;: &quot;/api/books?page[size]=1&quot;,
+    &quot;last&quot;: &quot;/api/books?page[size]=1&amp;page[number]=3&quot;,
+    &quot;prev&quot;: &quot;/api/books?page[size]=1&quot;,
+    &quot;next&quot;: &quot;/api/books?page[size]=1&amp;page[number]=3&quot;
+  },
+  &quot;data&quot;: [
+    {
+      &quot;type&quot;: &quot;books&quot;,
+      &quot;id&quot;: &quot;2&quot;,
+      &quot;attributes&quot;: {
+        &quot;title&quot;: &quot;Robinson Crusoe&quot;,
+        &quot;publishYear&quot;: 1719
+      },
+      &quot;relationships&quot;: {
+        &quot;author&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/api/books/2/relationships/author&quot;,
+            &quot;related&quot;: &quot;/api/books/2/author&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/api/books/2&quot;
+      }
+    }
+  ]
+}
+</code></pre><h1 id="writing-data">Writing data</h1>
 <h3 id="create">Create</h3>
-<pre><code class="lang-sh" name="CREATE">curl -vs http://localhost:5001/api/people           \
-    -H &quot;Content-Type: application/vnd.api+json&quot;     \
+<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/people        `
+    -H &quot;Content-Type: application/vnd.api+json&quot;     `
     -d &#39;{
-            &quot;data&quot;: {
-                &quot;type&quot;: &quot;people&quot;,
-                &quot;attributes&quot;: {
-                    &quot;name&quot;: &quot;Alice&quot;
+            \&quot;data\&quot;: {
+                \&quot;type\&quot;: \&quot;people\&quot;,
+                \&quot;attributes\&quot;: {
+                    \&quot;name\&quot;: \&quot;Alice\&quot;
                 }
             }
         }&#39;
-</code></pre><!-- Can not find reference 000-CREATE_Person-Response.json -->
-<h3 id="create-with-relationship">Create with Relationship</h3>
-<pre><code class="lang-sh" name="CREATE">curl -vs http://localhost:5001/api/articles         \
-    -H &quot;Content-Type: application/vnd.api+json&quot;     \
+</code></pre><pre><code class="lang-json" name="RESPONSE">{
+  &quot;links&quot;: {
+    &quot;self&quot;: &quot;/api/people&quot;,
+    &quot;first&quot;: &quot;/api/people&quot;
+  },
+  &quot;data&quot;: {
+    &quot;type&quot;: &quot;people&quot;,
+    &quot;id&quot;: &quot;4&quot;,
+    &quot;attributes&quot;: {
+      &quot;name&quot;: &quot;Alice&quot;
+    },
+    &quot;relationships&quot;: {
+      &quot;books&quot;: {
+        &quot;links&quot;: {
+          &quot;self&quot;: &quot;/api/people/4/relationships/books&quot;,
+          &quot;related&quot;: &quot;/api/people/4/books&quot;
+        }
+      }
+    },
+    &quot;links&quot;: {
+      &quot;self&quot;: &quot;/api/people/4&quot;
+    }
+  }
+}
+</code></pre><h3 id="create-with-relationship">Create with relationship</h3>
+<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books         `
+    -H &quot;Content-Type: application/vnd.api+json&quot;     `
     -d &#39;{
-            &quot;data&quot;: {
-                &quot;type&quot;: &quot;articles&quot;,
-                &quot;attributes&quot;: {
-                    &quot;title&quot;: &quot;Moby&quot;
+            \&quot;data\&quot;: {
+                \&quot;type\&quot;: \&quot;books\&quot;,
+                \&quot;attributes\&quot;: {
+                    \&quot;title\&quot;: \&quot;Valperga\&quot;,
+                    \&quot;publishYear\&quot;: 1823
                 },
-                &quot;relationships&quot;: {
-                    &quot;author&quot;: {
-                        &quot;data&quot;: {
-                            &quot;type&quot;: &quot;people&quot;,
-                            &quot;id&quot;: &quot;1&quot;
+                \&quot;relationships\&quot;: {
+                    \&quot;author\&quot;: {
+                        \&quot;data\&quot;: {
+                            \&quot;type\&quot;: \&quot;people\&quot;,
+                            \&quot;id\&quot;: \&quot;1\&quot;
                         }
                     }
                 }
             }
         }&#39;
-</code></pre><!-- Can not find reference 001-CREATE_Article-Response.json -->
-<h3 id="get-all">Get All</h3>
-<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles
-</code></pre><!-- Can not find reference 002-GET_Articles-Response.json -->
-<h3 id="get-by-id">Get By Id</h3>
-<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles/1
-</code></pre><!-- Can not find reference 003-GET_Article-Response.json -->
-<h3 id="get-with-relationship">Get with Relationship</h3>
-<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles?include=author
-</code></pre><!-- Can not find reference 004-GET_Articles_With_Authors-Response.json -->
-<h3 id="update">Update</h3>
-<pre><code class="lang-sh" name="PATCH Request">curl -vs http://localhost:5001/api/people/1         \
-    -H &quot;Content-Type: application/vnd.api+json&quot;     \
-    -X PATCH                                        \
+</code></pre><pre><code class="lang-json" name="RESPONSE">{
+  &quot;links&quot;: {
+    &quot;self&quot;: &quot;/api/books&quot;,
+    &quot;first&quot;: &quot;/api/books&quot;
+  },
+  &quot;data&quot;: {
+    &quot;type&quot;: &quot;books&quot;,
+    &quot;id&quot;: &quot;4&quot;,
+    &quot;attributes&quot;: {
+      &quot;title&quot;: &quot;Valperga&quot;,
+      &quot;publishYear&quot;: 1823
+    },
+    &quot;relationships&quot;: {
+      &quot;author&quot;: {
+        &quot;links&quot;: {
+          &quot;self&quot;: &quot;/api/books/4/relationships/author&quot;,
+          &quot;related&quot;: &quot;/api/books/4/author&quot;
+        }
+      }
+    },
+    &quot;links&quot;: {
+      &quot;self&quot;: &quot;/api/books/4&quot;
+    }
+  }
+}
+</code></pre><h3 id="update">Update</h3>
+<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books/1       `
+    -H &quot;Content-Type: application/vnd.api+json&quot;     `
+    -X PATCH                                        `
     -d &#39;{
-            &quot;data&quot;: {
-                &quot;type&quot;: &quot;people&quot;,
-                &quot;attributes&quot;: {
-                    &quot;name&quot;: &quot;Bob&quot;
+            \&quot;data\&quot;: {
+                \&quot;type\&quot;: \&quot;books\&quot;,
+                \&quot;id\&quot;: &quot;1&quot;,
+                \&quot;attributes\&quot;: {
+                    \&quot;publishYear\&quot;: 1820
                 }
             }
         }&#39;
-</code></pre><!-- Can not find reference 005-PATCH_Article-Response.json -->
-<h3 id="delete">Delete</h3>
-<pre><code class="lang-sh" name="DELETE Request">curl -vs http://localhost:5001/api/articles/1     \
+</code></pre><pre><code class="lang-json" name="RESPONSE">{
+  &quot;links&quot;: {
+    &quot;self&quot;: &quot;/api/books/1&quot;
+  },
+  &quot;data&quot;: null
+}
+</code></pre><h3 id="delete">Delete</h3>
+<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books/1       `
     -X DELETE
-</code></pre><!-- Can not find reference 006-DELETE_Article-Response.json -->
-<h2 id="filters">Filters</h2>
-<p><em>Note that cURL requires URLs to be escaped.</em></p>
-<h3 id="equality">Equality</h3>
-<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles?filter%5Btitle%5D=Moby
-</code></pre><!-- Can not find reference 008-GET_Articles_With_Filter_Eq-Response.json -->
-<h3 id="like">Like</h3>
-<pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/people?filter%5Bname%5D=like:Al
-</code></pre><!-- Can not find reference 009-GET_Articles_With_Filter_Like-Response.json -->
-<h2 id="sorting">Sorting</h2>
-<h1 id="see-also">See Also</h1>
-<ul>
-<li>Customizing QuerySet</li>
-</ul>
-</article>
+</code></pre><pre><code class="lang-json" name="RESPONSE"></code></pre></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
