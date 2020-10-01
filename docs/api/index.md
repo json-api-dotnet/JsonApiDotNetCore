@@ -6,4 +6,4 @@ This section documents the package API and is generated from the XML source comm
 
 - [`JsonApiOptions`](JsonApiDotNetCore.Configuration.JsonApiOptions.yml)
 - [`IResourceGraph`](JsonApiDotNetCore.Configuration.IResourceGraph.yml)
-- [`ResourceDefinition<TResource>`](JsonApiDotNetCore.Resources.ResourceDefinition-1.yml)
+- [`JsonApiResourceDefinition<TResource>`](JsonApiDotNetCore.Resources.JsonApiResourceDefinition-1.yml)

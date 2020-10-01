@@ -6,13 +6,11 @@ using Microsoft.Extensions.Logging;
 
 namespace GettingStarted.Controllers
 {
-    public sealed class ArticlesController : JsonApiController<Article>
+    public sealed class BooksController : JsonApiController<Book>
     {
-        public ArticlesController(
-            IJsonApiOptions options,
-            ILoggerFactory loggerFactory,
-            IResourceService<Article> resourceService)
+        public BooksController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Book> resourceService)
             : base(options, loggerFactory, resourceService)
-        { }
+        {
+        }
     }
 }
