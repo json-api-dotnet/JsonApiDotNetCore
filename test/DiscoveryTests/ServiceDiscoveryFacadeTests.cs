@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -90,7 +89,7 @@ namespace DiscoveryTests
 
             // Assert
             var services = _services.BuildServiceProvider();
-            var service = services.GetService<IResourceService<TestModel>>();
+            var service = services.GetRequiredService<IResourceService<TestModel>>();
             Assert.IsType<TestModelService>(service);
         }
 
@@ -106,7 +105,7 @@ namespace DiscoveryTests
 
             // Assert
             var services = _services.BuildServiceProvider();
-            Assert.IsType<TestModelRepository>(services.GetService<IResourceRepository<TestModel>>());
+            Assert.IsType<TestModelRepository>(services.GetRequiredService<IResourceRepository<TestModel>>());
         }
 
         [Fact]
@@ -121,7 +120,7 @@ namespace DiscoveryTests
 
             // Assert
             var services = _services.BuildServiceProvider();
-            Assert.IsType<TestModelResourceDefinition>(services.GetService<IResourceDefinition<TestModel>>());
+            Assert.IsType<TestModelResourceDefinition>(services.GetRequiredService<IResourceDefinition<TestModel>>());
         }
 
         [Fact]
@@ -138,7 +137,7 @@ namespace DiscoveryTests
 
             // Assert
             var services = _services.BuildServiceProvider();
-            Assert.IsType<TestModelResourceHooksDefinition>(services.GetService<ResourceHooksDefinition<TestModel>>());
+            Assert.IsType<TestModelResourceHooksDefinition>(services.GetRequiredService<ResourceHooksDefinition<TestModel>>());
         }
 
         public sealed class TestModel : Identifiable { }

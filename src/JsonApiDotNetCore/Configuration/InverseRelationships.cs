@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
@@ -9,37 +10,43 @@ namespace JsonApiDotNetCore.Configuration
     /// <inheritdoc />
     public class InverseRelationships : IInverseRelationships
     {
-        private readonly IResourceContextProvider _provider;
-        private readonly IDbContextResolver _resolver;
+        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IEnumerable<IDbContextResolver> _dbContextResolvers;
 
-        public InverseRelationships(IResourceContextProvider provider, IDbContextResolver resolver = null)
+        public InverseRelationships(IResourceContextProvider resourceContextProvider,
+            IEnumerable<IDbContextResolver> dbContextResolvers)
         {
-            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-            _resolver = resolver;
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            _dbContextResolvers = dbContextResolvers ?? throw new ArgumentNullException(nameof(dbContextResolvers));
         }
 
         /// <inheritdoc />
         public void Resolve()
         {
-            if (IsEntityFrameworkCoreEnabled())
+            foreach (var dbContextResolver in _dbContextResolvers)
             {
-                DbContext context = _resolver.GetContext();
+                DbContext dbContext = dbContextResolver.GetContext();
+                Resolve(dbContext);
+            }
+        }
 
-                foreach (ResourceContext ce in _provider.GetResourceContexts())
+        private void Resolve(DbContext dbContext)
+        {
+            foreach (ResourceContext resourceContext in _resourceContextProvider.GetResourceContexts())
+            {
+                IEntityType entityType = dbContext.Model.FindEntityType(resourceContext.ResourceType);
+                if (entityType != null)
                 {
-                    IEntityType meta = context.Model.FindEntityType(ce.ResourceType);
-                    if (meta == null) continue;
-                    foreach (var attr in ce.Relationships)
+                    foreach (var relationship in resourceContext.Relationships)
                     {
-                        if (attr is HasManyThroughAttribute) continue;
-                        INavigation inverseNavigation = meta.FindNavigation(attr.Property.Name)?.FindInverse();
-                        attr.InverseNavigation = inverseNavigation?.Name;
+                        if (!(relationship is HasManyThroughAttribute))
+                        {
+                            INavigation inverseNavigation = entityType.FindNavigation(relationship.Property.Name)?.FindInverse();
+                            relationship.InverseNavigation = inverseNavigation?.Name;
+                        }
                     }
                 }
             }
         }
-
-        // If EF Core is not being used, we're expecting the resolver to not be registered.
-        private bool IsEntityFrameworkCoreEnabled() => _resolver != null;
     }
 }

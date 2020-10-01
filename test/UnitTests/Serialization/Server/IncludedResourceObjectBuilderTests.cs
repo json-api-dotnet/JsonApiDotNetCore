@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
+using Moq;
 using UnitTests.TestModels;
 using Xunit;
 
@@ -167,8 +169,9 @@ namespace UnitTests.Serialization.Server
         {
             var fields = GetSerializableFields();
             var links = GetLinkBuilder();
-            return new IncludedResourceObjectBuilder(fields, links, _resourceGraph, GetSerializerSettingsProvider());
-        }
 
+            var accessor = new Mock<IResourceDefinitionAccessor>().Object;
+            return new IncludedResourceObjectBuilder(fields, links, _resourceGraph, accessor, GetSerializerSettingsProvider());
+        }
     }
 }

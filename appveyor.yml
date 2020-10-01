@@ -9,20 +9,20 @@ environment:
 
 # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
 before_build:
-  - ps: |
-        if(-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
-        {
+  - pwsh: |
+        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
+            # https://dotnet.github.io/docfx/tutorial/docfx_getting_started.html
             git checkout $env:APPVEYOR_REPO_BRANCH -q
             choco install docfx -y
         }
 
 after_build:
-  - ps: |
-        CD ./docs
-        if(-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
-        {
+  - pwsh: |
+        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
+            CD ./docs
+            & ./generate-examples.ps1
             & docfx docfx.json
-            if ($lastexitcode -ne 0){
+            if ($lastexitcode -ne 0) {
               throw [System.Exception] "docfx build failed with exit code $lastexitcode."
             }
             
@@ -61,8 +61,8 @@ services:
   - postgresql96
 
 build_script:
-- ps: dotnet --version
-- ps: .\Build.ps1
+- pwsh: dotnet --version
+- pwsh: .\Build.ps1
 
 test: off
 

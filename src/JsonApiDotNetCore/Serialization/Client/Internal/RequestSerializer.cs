@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         {
             if (resource == null)
             {
-                var empty = Build((IIdentifiable) null, Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
+                var empty = Build((IIdentifiable) null,  Array.Empty<AttrAttribute>(), Array.Empty<RelationshipAttribute>());
                 return SerializeObject(empty, _jsonSerializerSettings);
             }
 

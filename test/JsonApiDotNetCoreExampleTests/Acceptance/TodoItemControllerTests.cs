@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public TodoItemControllerTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
-            _context = fixture.GetService<AppDbContext>();
+            _context = fixture.GetRequiredService<AppDbContext>();
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             await _context.ClearTableAsync<TodoItem>();
             await _context.SaveChangesAsync();
-            var expectedResourcesPerPage = _fixture.GetService<IJsonApiOptions>().DefaultPageSize.Value;
+            var expectedResourcesPerPage = _fixture.GetRequiredService<IJsonApiOptions>().DefaultPageSize.Value;
             var person = new Person();
             var todoItems = _todoItemFaker.Generate(expectedResourcesPerPage + 1);
 

@@ -29,12 +29,12 @@ namespace JsonApiDotNetCore.Serialization
         
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IJsonApiOptions _options;
-        private readonly IMetaBuilder<TResource> _metaBuilder;
+        private readonly IMetaBuilder _metaBuilder;
         private readonly Type _primaryResourceType;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
 
-        public ResponseSerializer(IMetaBuilder<TResource> metaBuilder,
+        public ResponseSerializer(IMetaBuilder metaBuilder,
             ILinkBuilder linkBuilder,
             IIncludedResourceObjectBuilder includedBuilder,
             IFieldsToSerialize fieldsToSerialize,
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCore.Serialization
         private void AddTopLevelObjects(Document document)
         {
             document.Links = _linkBuilder.GetTopLevelLinks();
-            document.Meta = _metaBuilder.GetMeta();
+            document.Meta = _metaBuilder.Build();
             document.Included = _includedBuilder.Build();
         }
     }

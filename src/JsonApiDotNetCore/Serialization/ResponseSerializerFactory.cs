@@ -1,6 +1,7 @@
 using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -28,7 +29,7 @@ namespace JsonApiDotNetCore.Serialization
             var targetType = GetDocumentType();
 
             var serializerType = typeof(ResponseSerializer<>).MakeGenericType(targetType);
-            var serializer = (IResponseSerializer)_provider.GetService(serializerType);
+            var serializer = (IResponseSerializer)_provider.GetRequiredService(serializerType);
             if (_request.Kind == EndpointKind.Relationship && _request.Relationship != null)
                 serializer.RequestRelationship = _request.Relationship;
 

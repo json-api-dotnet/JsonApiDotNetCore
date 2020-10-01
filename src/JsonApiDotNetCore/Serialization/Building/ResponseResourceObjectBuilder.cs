@@ -15,6 +15,7 @@ namespace JsonApiDotNetCore.Serialization.Building
     {
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
+        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly ILinkBuilder _linkBuilder;
         private RelationshipAttribute _requestRelationship;
 
@@ -22,12 +23,14 @@ namespace JsonApiDotNetCore.Serialization.Building
                                              IIncludedResourceObjectBuilder includedBuilder,
                                              IEnumerable<IQueryConstraintProvider> constraintProviders,
                                              IResourceContextProvider resourceContextProvider,
+                                             IResourceDefinitionAccessor resourceDefinitionAccessor,
                                              IResourceObjectBuilderSettingsProvider settingsProvider)
             : base(resourceContextProvider, settingsProvider.Get())
         {
             _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
             _includedBuilder = includedBuilder ?? throw new ArgumentNullException(nameof(includedBuilder));
             _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
+            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
         }
 
         public RelationshipEntry Build(IIdentifiable resource, RelationshipAttribute requestRelationship)
@@ -36,6 +39,17 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             _requestRelationship = requestRelationship ?? throw new ArgumentNullException(nameof(requestRelationship));
             return GetRelationshipData(requestRelationship, resource);
+        }
+
+        /// <inheritdoc /> 
+        public override ResourceObject Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null,
+            IReadOnlyCollection<RelationshipAttribute> relationships = null)
+        {
+            var resourceObject = base.Build(resource, attributes, relationships);
+
+            resourceObject.Meta = _resourceDefinitionAccessor.GetMeta(resource.GetType(), resource);
+
+            return resourceObject;
         }
 
         /// <summary>

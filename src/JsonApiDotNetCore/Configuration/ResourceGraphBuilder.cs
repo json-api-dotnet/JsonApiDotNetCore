@@ -87,7 +87,7 @@ namespace JsonApiDotNetCore.Configuration
                 if (TypeHelper.IsOrImplementsInterface(resourceType, typeof(IIdentifiable)))
                 {
                     publicName ??= FormatResourceName(resourceType);
-                    idType ??= TypeLocator.GetIdType(resourceType);
+                    idType ??= TypeLocator.TryGetIdType(resourceType);
                     var resourceContext = CreateResourceContext(publicName, resourceType, idType);
                     _resources.Add(resourceContext);
                 }

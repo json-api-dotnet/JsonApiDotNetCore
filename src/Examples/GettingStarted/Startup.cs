@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace GettingStarted
 {
@@ -16,7 +17,13 @@ namespace GettingStarted
                 options => options.UseSqlite("Data Source=sample.db"));
 
             services.AddJsonApi<SampleDbContext>(
-                options => options.Namespace = "api");
+                options =>
+                {
+                    options.Namespace = "api";
+                    options.UseRelativeLinks = true;
+                    options.IncludeTotalResourceCount = true;
+                    options.SerializerSettings.Formatting = Formatting.Indented;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,19 +40,31 @@ namespace GettingStarted
 
         private static void CreateSampleData(SampleDbContext context)
         {
-            context.Articles.AddRange(new Article
+            // Note: The generate-examples.ps1 script (to create example requests in documentation) depends on these.
+
+            context.Books.AddRange(new Book
             {
-                Title = "What's new in JsonApiDotNetCore",
+                Title = "Frankenstein",
+                PublishYear = 1818,
                 Author = new Person
                 {
-                    Name = "John Doe"
+                    Name = "Mary Shelley"
                 }
-            }, new Article
+            }, new Book
             {
-                Title = ".NET Core Best Practices",
+                Title = "Robinson Crusoe",
+                PublishYear = 1719,
                 Author = new Person
                 {
-                    Name = "Microsoft"
+                    Name = "Daniel Defoe"
+                }
+            }, new Book
+            {
+                Title = "Gulliver's Travels",
+                PublishYear = 1726,
+                Author = new Person
+                {
+                    Name = "Jonathan Swift"
                 }
             });
 
