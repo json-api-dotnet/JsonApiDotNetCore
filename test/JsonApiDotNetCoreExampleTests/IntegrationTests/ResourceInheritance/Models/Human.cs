@@ -14,12 +14,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
         public HealthInsurance HealthInsurance { get; set; }
         
         [HasMany]
-        public List<Human> Parents { get; set; }
+        public ICollection<Human> Parents { get; set; }
         
         [NotMapped]
         [HasManyThrough(nameof(HumanFavoriteContentItems))]
-        public List<ContentItem> FavoriteContent { get; set; }
+        public ICollection<ContentItem> FavoriteContent { get; set; }
         
-        public List<HumanFavoriteContentItem> HumanFavoriteContentItems { get; set; }
+        public ICollection<HumanFavoriteContentItem> HumanFavoriteContentItems { get; set; }
     }
 }

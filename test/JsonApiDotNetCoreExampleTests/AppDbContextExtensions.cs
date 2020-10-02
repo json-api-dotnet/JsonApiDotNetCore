@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreExampleTests
             await ClearTablesAsync(dbContext, typeof(TEntity1), typeof(TEntity2), typeof(TEntity3), typeof(TEntity4));
         }
         
-        public static async Task ClearTablesAsync(this DbContext dbContext, params Type[] models)
+        private static async Task ClearTablesAsync(this DbContext dbContext, params Type[] models)
         {
             foreach (var model in models)
             {
