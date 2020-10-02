@@ -62,7 +62,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                     .Include(h => h.HealthInsurance)
                     .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id));
                 
-                assertMan.HealthInsurance.GetType().Should().Be(insurance.GetType());
+                assertMan.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
             });
         }
         
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                     .Include(h => h.HealthInsurance)
                     .SingleAsync(h => h.Id.Equals(man.Id));
 
-                assertMan.HealthInsurance.GetType().Should().Be(insurance.GetType());
+                assertMan.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
             });
         }
 
@@ -295,15 +295,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var favoriteContent = (await dbContext.Males
-                        .Include(h => h.HumanFavoriteContentItems)
-                            .ThenInclude(hp => hp.ContentItem)
-                        .SingleAsync(h => h.Id.Equals(man.Id)))
-                    .HumanFavoriteContentItems.Select(hp => hp.ContentItem).ToList();
-        
-                favoriteContent.Should().HaveCount(2);
-                favoriteContent.Should().ContainSingle(h => h is Book);
-                favoriteContent.Should().ContainSingle(h => h is Video);
+                var contentItems = await dbContext.HumanFavoriteContentItems
+                    .Where(x => x.Human.Id == man.Id)
+                    .Select(x => x.ContentItem)
+                    .ToListAsync();
+
+                contentItems.Should().HaveCount(2);
+                contentItems.Should().ContainSingle(h => h is Book);
+                contentItems.Should().ContainSingle(h => h is Video);
             });
         }
     }

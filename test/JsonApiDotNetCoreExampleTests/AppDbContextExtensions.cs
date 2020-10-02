@@ -9,31 +9,31 @@ namespace JsonApiDotNetCoreExampleTests
     {
         public static async Task ClearTableAsync<TEntity>(this DbContext dbContext) where TEntity : class
         {
-            await ClearTableAsync(dbContext,typeof(TEntity));
+            await ClearTablesAsync(dbContext,typeof(TEntity));
         }
         
-        public static async Task ClearTableAsync<TEntity1, TEntity2>(this DbContext dbContext) where TEntity1 : class
+        public static async Task ClearTablesAsync<TEntity1, TEntity2>(this DbContext dbContext) where TEntity1 : class
             where TEntity2 : class
         {
-            await ClearTableAsync(dbContext,typeof(TEntity1), typeof(TEntity2));
+            await ClearTablesAsync(dbContext,typeof(TEntity1), typeof(TEntity2));
         }
         
-        public static async Task ClearTableAsync<TEntity1, TEntity2, TEntity3>(this DbContext dbContext) where TEntity1 : class
+        public static async Task ClearTablesAsync<TEntity1, TEntity2, TEntity3>(this DbContext dbContext) where TEntity1 : class
             where TEntity2 : class
             where TEntity3 : class
         {
-            await ClearTableAsync(dbContext,typeof(TEntity1), typeof(TEntity2), typeof(TEntity3));
+            await ClearTablesAsync(dbContext,typeof(TEntity1), typeof(TEntity2), typeof(TEntity3));
         }
         
-        public static async Task ClearTableAsync<TEntity1, TEntity2, TEntity3, TEntity4>(this DbContext dbContext) where TEntity1 : class
+        public static async Task ClearTablesAsync<TEntity1, TEntity2, TEntity3, TEntity4>(this DbContext dbContext) where TEntity1 : class
             where TEntity2 : class
             where TEntity3 : class
             where TEntity4 : class
         {
-            await ClearTableAsync(dbContext,typeof(TEntity1), typeof(TEntity2), typeof(TEntity3), typeof(TEntity4));
+            await ClearTablesAsync(dbContext, typeof(TEntity1), typeof(TEntity2), typeof(TEntity3), typeof(TEntity4));
         }
         
-        public static async Task ClearTableAsync(this DbContext dbContext, params Type[] models)
+        public static async Task ClearTablesAsync(this DbContext dbContext, params Type[] models)
         {
             foreach (var model in models)
             {

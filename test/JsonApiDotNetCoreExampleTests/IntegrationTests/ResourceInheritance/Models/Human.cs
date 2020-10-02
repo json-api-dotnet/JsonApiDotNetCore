@@ -23,7 +23,3 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
         public List<HumanFavoriteContentItem> HumanFavoriteContentItems { get; set; }
     }
 }
-    
-
-    
-
