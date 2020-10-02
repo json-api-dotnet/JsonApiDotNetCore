@@ -82,7 +82,7 @@ namespace JsonApiDotNetCore.Controllers
     }
 
     /// <inheritdoc />
-    public class JsonApiController<TResource> : JsonApiController<TResource, int> where TResource : class
+    public class JsonApiController<TResource> : JsonApiController<TResource, int> where TResource : class, IIdentifiable<int>
     {
         /// <inheritdoc />
         public JsonApiController(
