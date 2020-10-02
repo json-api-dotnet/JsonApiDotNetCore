@@ -40,7 +40,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+#pragma warning disable 4014
                 dbContext.AddAsync(cat);
+#pragma warning restore 4014
                 await dbContext.SaveChangesAsync();
             });
 
