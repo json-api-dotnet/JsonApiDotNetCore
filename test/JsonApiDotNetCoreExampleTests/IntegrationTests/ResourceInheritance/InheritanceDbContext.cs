@@ -7,8 +7,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
     {
         public InheritanceDbContext(DbContextOptions<InheritanceDbContext> options) : base(options) { }
         
+        public DbSet<Human> Humans { get; set; }
+        
         public DbSet<Man> Men { get; set; }
         
+        public DbSet<CompanyHealthInsurance> CompanyHealthInsurances { get; set; }
+
+        public DbSet<Man> ContentItems { get; set; }
+
         public DbSet<HumanFavoriteContentItem> HumanFavoriteContentItems { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
