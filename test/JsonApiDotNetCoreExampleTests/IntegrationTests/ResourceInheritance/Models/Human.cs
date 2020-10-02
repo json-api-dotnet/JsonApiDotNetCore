@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
         
         [NotMapped]
         [HasManyThrough(nameof(HumanFavoriteContentItems))]
-        public List<Content> FavoriteContent { get; set; }
+        public List<ContentItem> FavoriteContent { get; set; }
         
         public List<HumanFavoriteContentItem> HumanFavoriteContentItems { get; set; }
     }

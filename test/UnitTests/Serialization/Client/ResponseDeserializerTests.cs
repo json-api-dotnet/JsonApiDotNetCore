@@ -4,8 +4,6 @@ using System.Linq;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models;
 using Newtonsoft.Json;
 using UnitTests.TestModels;
 using Xunit;

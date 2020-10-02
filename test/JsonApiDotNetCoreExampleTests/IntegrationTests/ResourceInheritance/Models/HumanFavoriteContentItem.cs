@@ -2,9 +2,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
 {
     public sealed class HumanFavoriteContentItem
     {
-        public int ContentId { get; set; }
+        public int ContentItemId { get; set; }
         
-        public Content Content { get; set; }
+        public ContentItem ContentItem { get; set; }
 
         public int HumanId { get; set; }
         

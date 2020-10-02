@@ -253,9 +253,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             {
                 var favoriteContent = (await dbContext.Males
                         .Include(h => h.HumanFavoriteContentItems)
-                            .ThenInclude(hp => hp.Content)
+                            .ThenInclude(hp => hp.ContentItem)
                         .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id)))
-                    .HumanFavoriteContentItems.Select(hp => hp.Content).ToList();
+                    .HumanFavoriteContentItems.Select(hp => hp.ContentItem).ToList();
                 
                 favoriteContent.Should().HaveCount(2);
                 favoriteContent.Should().ContainSingle(h => h is Book);
@@ -299,9 +299,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             {
                 var favoriteContent = (await dbContext.Males
                         .Include(h => h.HumanFavoriteContentItems)
-                            .ThenInclude(hp => hp.Content)
+                            .ThenInclude(hp => hp.ContentItem)
                         .SingleAsync(h => h.Id.Equals(man.Id)))
-                    .HumanFavoriteContentItems.Select(hp => hp.Content).ToList();
+                    .HumanFavoriteContentItems.Select(hp => hp.ContentItem).ToList();
         
                 favoriteContent.Should().HaveCount(2);
                 favoriteContent.Should().ContainSingle(h => h is Book);

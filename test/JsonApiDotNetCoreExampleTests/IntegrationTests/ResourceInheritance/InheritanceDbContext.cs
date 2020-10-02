@@ -23,14 +23,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 .HasValue<Cat>(1)
                 .HasValue<Dog>(2);
             
-            modelBuilder.Entity<Content>()
+            modelBuilder.Entity<ContentItem>()
                 .ToTable("Content")
                 .HasDiscriminator<int>("Type")
                 .HasValue<Video>(1)
                 .HasValue<Book>(2);
             
             modelBuilder.Entity<HumanFavoriteContentItem>()
-                .HasKey(pp => new { ContentPersonId = pp.ContentId, PersonId = pp.HumanId });
+                .HasKey(pp => new { ContentPersonId = pp.ContentItemId, PersonId = pp.HumanId });
         }
     }
 }
