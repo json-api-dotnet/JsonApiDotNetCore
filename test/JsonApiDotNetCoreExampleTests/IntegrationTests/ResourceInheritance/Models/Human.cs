@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models
 {
-    public abstract class Person : Identifiable
+    public abstract class Human : Identifiable
     {
         [Attr]
         public bool Retired { get; set; }
@@ -14,13 +14,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public Animal Pet { get; set; }
         
         [HasMany]
-        public List<Person> Parents { get; set; }
+        public List<Human> Parents { get; set; }
         
         [NotMapped]
-        [HasManyThrough(nameof(ContentPersons))]
+        [HasManyThrough(nameof(HumanContentItems))]
         public List<Content> FavoriteContent { get; set; }
         
-        public List<ContentPerson> ContentPersons { get; set; }
+        public List<HumanContentItem> HumanContentItems { get; set; }
     }
 }
     

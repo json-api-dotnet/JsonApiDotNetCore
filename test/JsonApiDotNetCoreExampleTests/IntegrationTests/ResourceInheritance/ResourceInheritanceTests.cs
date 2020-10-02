@@ -4,27 +4,23 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 {
-    public sealed class ResourceInheritanceTests : IClassFixture<IntegrationTestContext<
-        TestableStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext>>
+    public sealed class ResourceInheritanceTests : IClassFixture<IntegrationTestContext<TestableStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext>>
     {
-        private readonly
-            IntegrationTestContext<TestableStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext>
-            _testContext;
+        private readonly IntegrationTestContext<TestableStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> _testContext;
 
-        public ResourceInheritanceTests(
-            IntegrationTestContext<TestableStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext>
-                testContext)
+        public ResourceInheritanceTests(IntegrationTestContext<TestableStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext)
         {
             _testContext = testContext;
 
             _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<ContentPerson>();
+                await dbContext.ClearTableAsync<HumanContentItem>();
                 await dbContext.ClearTableAsync<Book>();
                 await dbContext.ClearTableAsync<Video>();
                 await dbContext.ClearTableAsync<Cat>();
@@ -44,11 +40,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.AddAsync(cat);
+                dbContext.AddAsync(cat);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/people";
+            var route = "/males";
             var requestBody = new
             {
                 data = new
@@ -74,9 +70,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertPerson = await dbContext.People
-                    .Include(p => p.Pet)
-                    .Where(p => p.Id.Equals(int.Parse(responseDocument.SingleData.Id))).FirstAsync();
+                var assertPerson = await dbContext.Males
+                    .Include(h => h.Pet)
+                    .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id));
                 
                 assertPerson.Pet.GetType().Should().Be(cat.GetType());
             });
@@ -96,7 +92,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 await dbContext.SaveChangesAsync();
             });
             
-            var route = $"/people/{person.Id}/relationships/pet";
+            var route = $"/males/{person.Id}/relationships/pet";
 
             var requestBody = new
             {
@@ -111,9 +107,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertPerson = await dbContext.People
-                    .Include(p => p.Pet)
-                    .Where(p => p.Id.Equals(person.Id)).FirstAsync();
+                var assertPerson = await dbContext.Males
+                    .Include(h => h.Pet)
+                    .SingleAsync(h => h.Id.Equals(person.Id));
 
                 assertPerson.Pet.GetType().Should().Be(cat.GetType());
             });
@@ -133,7 +129,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/people";
+            var route = "/males";
             var requestBody = new
             {
                 data = new
@@ -163,13 +159,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertPerson = await dbContext.People
-                    .Include(p => p.Parents)
-                    .Where(p => p.Id.Equals(int.Parse(responseDocument.SingleData.Id))).FirstAsync();
+                var assertPerson = await dbContext.Males
+                    .Include(h => h.Parents)
+                    .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id));
 
                 assertPerson.Parents.Should().HaveCount(2);
-                assertPerson.Parents.Should().ContainSingle(p => p is Male);
-                assertPerson.Parents.Should().ContainSingle(p => p is Female);
+                assertPerson.Parents.Should().ContainSingle(h => h is Male);
+                assertPerson.Parents.Should().ContainSingle(h => h is Female);
             });
         }
 
@@ -187,7 +183,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 await dbContext.SaveChangesAsync();
             });
         
-            var route = $"/people/{child.StringId}/relationships/parents";
+            var route = $"/males/{child.StringId}/relationships/parents";
             var requestBody = new
             {
                 data = new[]
@@ -206,12 +202,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var assertChild = await dbContext.Males
-                    .Include(p => p.Parents)
-                    .Where(p => p.Id.Equals(child.Id)).FirstAsync();
-        
+                    .Include(h => h.Parents)
+                    .SingleAsync(h => h.Id == child.Id);
+                
                 assertChild.Parents.Should().HaveCount(2);
-                assertChild.Parents.Should().ContainSingle(p => p is Male);
-                assertChild.Parents.Should().ContainSingle(p => p is Female);
+                assertChild.Parents.Should().ContainSingle(h => h is Male);
+                assertChild.Parents.Should().ContainSingle(h => h is Female);
             });
         }
 
@@ -228,7 +224,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 await dbContext.SaveChangesAsync();
             });
         
-            var route = "/males?include=favoriteContent";
+            var route = "/males";
             var requestBody = new
             {
                 data = new
@@ -251,20 +247,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             };
         
             // Act
-            var (_, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
         
             // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var favoriteContent = (await dbContext.People
-                        .Include(p => p.ContentPersons)
-                        .ThenInclude(pp => pp.Content)
-                        .Where(p => p.Id.Equals(int.Parse(responseDocument.SingleData.Id))).FirstAsync())
-                    .ContentPersons.Select(pp => pp.Content).ToList();
+                var favoriteContent = (await dbContext.Males
+                        .Include(h => h.HumanContentItems)
+                        .ThenInclude(hp => hp.Content)
+                        .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id)))
+                    .HumanContentItems.Select(hp => hp.Content).ToList();
                 
                 favoriteContent.Should().HaveCount(2);
-                favoriteContent.Should().ContainSingle(p => p is Book);
-                favoriteContent.Should().ContainSingle(p => p is Video);
+                favoriteContent.Should().ContainSingle(h => h is Book);
+                favoriteContent.Should().ContainSingle(h => h is Video);
             });
         }
 
@@ -282,7 +280,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 await dbContext.SaveChangesAsync();
             });
         
-            var route = $"/people/{person.Id}/relationships/favoriteContent";
+            var route = $"/males/{person.Id}/relationships/favoriteContent";
             var requestBody = new
             {
                 data = new[]
@@ -301,14 +299,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var favoriteContent = (await dbContext.Males
-                        .Include(p => p.ContentPersons)
-                        .ThenInclude(pp => pp.Content)
-                        .Where(p => p.Id.Equals(person.Id)).FirstAsync())
-                    .ContentPersons.Select(pp => pp.Content).ToList();
+                        .Include(h => h.HumanContentItems)
+                        .ThenInclude(hp => hp.Content)
+                        .SingleAsync(h => h.Id.Equals(person.Id)))
+                    .HumanContentItems.Select(hp => hp.Content).ToList();
         
                 favoriteContent.Should().HaveCount(2);
-                favoriteContent.Should().ContainSingle(p => p is Book);
-                favoriteContent.Should().ContainSingle(p => p is Video);
+                favoriteContent.Should().ContainSingle(h => h is Book);
+                favoriteContent.Should().ContainSingle(h => h is Video);
             });
         }
     }

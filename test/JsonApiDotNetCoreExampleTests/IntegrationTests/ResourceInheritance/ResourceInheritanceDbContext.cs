@@ -1,3 +1,4 @@
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
@@ -7,7 +8,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public ResourceInheritanceDbContext(DbContextOptions<ResourceInheritanceDbContext> options)
             : base(options) { }
         
-        public DbSet<Person> People  { get; set; }
+        public DbSet<Human> Humans  { get; set; }
         
         public DbSet<Cat> Cats { get; set; }
         
@@ -23,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Person>()
+            modelBuilder.Entity<Human>()
                 .ToTable("Persons")
                 .HasDiscriminator<int>("Type")
                 .HasValue<Male>(1)
@@ -41,8 +42,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 .HasValue<Video>(1)
                 .HasValue<Book>(2);
             
-            modelBuilder.Entity<ContentPerson>()
-                .HasKey(pp => new { ContentPersonId = pp.ContentId, pp.PersonId });
+            modelBuilder.Entity<HumanContentItem>()
+                .HasKey(pp => new { ContentPersonId = pp.ContentId, PersonId = pp.HumanId });
         }
     }
 }
