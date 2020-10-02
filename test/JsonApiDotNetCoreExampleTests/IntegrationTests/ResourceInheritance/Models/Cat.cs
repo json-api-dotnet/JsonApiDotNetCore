@@ -5,12 +5,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
 {
     public class Cat : Animal
     {
-        public Cat()
-        {
-            Feline = true;
-        }
-
         [Attr]
-        public bool ScaredOfDogs { get; set; }
+        public bool UsesLitterBox { get; set; }
     }
 }

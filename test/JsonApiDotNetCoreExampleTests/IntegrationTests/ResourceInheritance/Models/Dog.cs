@@ -5,6 +5,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
     public class Dog : Animal
     {
         [Attr]
-        public bool RespondsToName { get; set; }
+        public bool IsGuardDog { get; set; }
     }
 }
