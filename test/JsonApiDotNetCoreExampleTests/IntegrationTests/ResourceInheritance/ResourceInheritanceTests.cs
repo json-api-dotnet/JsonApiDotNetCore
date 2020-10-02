@@ -256,7 +256,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             {
                 var favoriteContent = (await dbContext.Males
                         .Include(h => h.HumanContentItems)
-                        .ThenInclude(hp => hp.Content)
+                            .ThenInclude(hp => hp.Content)
                         .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id)))
                     .HumanContentItems.Select(hp => hp.Content).ToList();
                 
@@ -300,7 +300,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             {
                 var favoriteContent = (await dbContext.Males
                         .Include(h => h.HumanContentItems)
-                        .ThenInclude(hp => hp.Content)
+                            .ThenInclude(hp => hp.Content)
                         .SingleAsync(h => h.Id.Equals(person.Id)))
                     .HumanContentItems.Select(hp => hp.Content).ToList();
         

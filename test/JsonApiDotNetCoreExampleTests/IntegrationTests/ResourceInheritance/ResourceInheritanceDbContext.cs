@@ -5,23 +5,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 {
     public sealed class ResourceInheritanceDbContext : DbContext
     {
-        public ResourceInheritanceDbContext(DbContextOptions<ResourceInheritanceDbContext> options)
-            : base(options) { }
-        
-        public DbSet<Human> Humans  { get; set; }
-        
-        public DbSet<Cat> Cats { get; set; }
-        
-        public DbSet<Dog> Dogs { get; set; }
-        
-        public DbSet<Female> Females { get; set; }
+        public ResourceInheritanceDbContext(DbContextOptions<ResourceInheritanceDbContext> options) : base(options) { }
         
         public DbSet<Male> Males { get; set; }
         
-        public DbSet<Book> Books { get; set; }
-        
-        public DbSet<Video> Videos { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Human>()

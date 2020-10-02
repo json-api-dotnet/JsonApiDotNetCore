@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models;
 using Newtonsoft.Json;
 using UnitTests.TestModels;
 using Xunit;
@@ -340,7 +341,7 @@ namespace UnitTests.Serialization.Client
         {
             // Arrange
             var content = CreateDocumentWithRelationships("males");
-            content.SingleData.Relationships.Add("parents", CreateRelationshipData("males", isToManyData:true, id: "10"));
+            content.SingleData.Relationships.Add("parents", CreateRelationshipData("males", isToManyData: true, id: "10"));
             content.SingleData.Relationships["parents"].ManyData.Add(CreateRelationshipData("females", id: "10").SingleData);
             content.SingleData.Relationships.Add("pet", CreateRelationshipData("cats", id: "20"));
             content.Included = new List<ResourceObject>
@@ -361,7 +362,7 @@ namespace UnitTests.Serialization.Client
                 {
                     Type = "cats",
                     Id = "20",
-                    Attributes = new Dictionary<string, object> { {"feline", "true" }, { "scaredOfDogs", "true" } }
+                    Attributes = new Dictionary<string, object> { { "feline", "true" }, { "scaredOfDogs", "true" } }
                 },
             };
             var body = JsonConvert.SerializeObject(content);
