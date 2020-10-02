@@ -33,10 +33,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             {
                 services.AddSingleton<ResourceCaptureStore>();
 
-                services.AddScoped<IResourceRepository<Blog, int>, ResultCapturingRepository<Blog>>();
-                services.AddScoped<IResourceRepository<Article, int>, ResultCapturingRepository<Article>>();
-                services.AddScoped<IResourceRepository<Author, int>, ResultCapturingRepository<Author>>();
-                services.AddScoped<IResourceRepository<TodoItem, int>, ResultCapturingRepository<TodoItem>>();
+                services.AddScoped<IResourceRepository<Blog>, ResultCapturingRepository<Blog>>();
+                services.AddScoped<IResourceRepository<Article>, ResultCapturingRepository<Article>>();
+                services.AddScoped<IResourceRepository<Author>, ResultCapturingRepository<Author>>();
+                services.AddScoped<IResourceRepository<TodoItem>, ResultCapturingRepository<TodoItem>>();
 
                 services.AddScoped<IResourceService<Article>, JsonApiResourceService<Article>>();
             });

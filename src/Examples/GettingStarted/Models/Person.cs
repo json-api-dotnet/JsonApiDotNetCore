@@ -10,6 +10,6 @@ namespace GettingStarted.Models
         public string Name { get; set; }
 
         [HasMany]
-        public ICollection<Article> Articles { get; set; }
+        public ICollection<Book> Books { get; set; }
     }
 }

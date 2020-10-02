@@ -380,7 +380,7 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<int>
     {
         public JsonApiResourceService(
-            IResourceRepository<TResource, int> repository,
+            IResourceRepository<TResource> repository,
             IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext,
             IJsonApiOptions options,

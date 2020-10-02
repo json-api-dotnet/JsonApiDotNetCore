@@ -1,25 +1,24 @@
 # Metadata
 
-Top-level metadata can be added to your API responses in two ways: globally and per resource type. In the event of a key collision, the resource meta will take precendence.
+We support two ways to add json:api meta to your responses: global and per resource.
 
 ## Global Meta
 
-Global metadata can be added by registering a service that implements `IResponseMeta`.
+Global metadata can be added to the root of the response document by registering a service that implements `IResponseMeta`.
 This is useful if you need access to other registered services to build the meta object.
 
 ```c#
-public class ResponseMetaService : IResponseMeta
-{
-    public ResponseMetaService(/*...other dependencies here */) {
-        // ...
-    }
+// In Startup.ConfigureServices
+services.AddSingleton<IResponseMeta, CopyrightResponseMeta>();
 
-    public Dictionary<string, object> GetMeta()
+public sealed class CopyrightResponseMeta : IResponseMeta
+{
+    public IReadOnlyDictionary<string, object> GetMeta()
     {
         return new Dictionary<string, object>
         {
-            {"copyright", "Copyright 2018 Example Corp."},
-            {"authors", new string[] {"John Doe"}}
+            ["copyright"] = "Copyright (C) 2002 Umbrella Corporation.",
+            ["authors"] = new[] {"Alice", "Red Queen"}
         };
     }
 }
@@ -28,14 +27,13 @@ public class ResponseMetaService : IResponseMeta
 ```json
 {
   "meta": {
-    "copyright": "Copyright 2018 Example Corp.",
+    "copyright": "Copyright (C) 2002 Umbrella Corporation.",
     "authors": [
-      "John Doe"
+      "Alice",
+      "Red Queen"
     ]
   },
-  "data": {
-    // ...
-  }
+  "data": []
 }
 ```
 
@@ -50,23 +48,34 @@ public class PersonDefinition : JsonApiResourceDefinition<Person>
     {
     }
 
-    public override IReadOnlyDictionary<string, object> GetMeta()
+    public override IReadOnlyDictionary<string, object> GetMeta(Person person)
     {
-        return new Dictionary<string, object>
+        if (person.IsEmployee)
         {
-            ["notice"] = "Check our intranet at http://www.example.com for personal details."
-        };
+            return new Dictionary<string, object>
+            {
+                ["notice"] = "Check our intranet at http://www.example.com/employees/" + person.StringId + " for personal details."
+            };
+        }
+
+        return null;
     }
 }
 ```
 
 ```json
 {
-  "meta": {
-    "notice": "Check our intranet at http://www.example.com for personal details."
-  },
-  "data": {
-    // ...
-  }
+  "data": [
+    {
+      "type": "people",
+      "id": "1",
+      "attributes": {
+        ...
+      },
+      "meta": {
+        "notice": "Check our intranet at http://www.example.com/employees/1 for personal details."
+      }
+    }
+  ]
 }
 ```

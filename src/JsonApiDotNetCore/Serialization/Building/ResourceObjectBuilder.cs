@@ -23,24 +23,24 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <inheritdoc /> 
-        public ResourceObject Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
+        public virtual ResourceObject Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
             var resourceContext = ResourceContextProvider.GetResourceContext(resource.GetType());
 
             // populating the top-level "type" and "id" members.
-            var ro = new ResourceObject { Type = resourceContext.PublicName, Id = resource.StringId == string.Empty ? null : resource.StringId };
+            var resourceObject = new ResourceObject { Type = resourceContext.PublicName, Id = resource.StringId == string.Empty ? null : resource.StringId };
 
             // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
             if (attributes != null && (attributes = attributes.Where(attr => attr.Property.Name != nameof(Identifiable.Id)).ToArray()).Any())
-                ProcessAttributes(resource, attributes, ro);
+                ProcessAttributes(resource, attributes, resourceObject);
 
             // populating the top-level "relationship" member of a resource object.
             if (relationships != null)
-                ProcessRelationships(resource, relationships, ro);
+                ProcessRelationships(resource, relationships, resourceObject);
 
-            return ro;
+            return resourceObject;
         }
 
         /// <summary>

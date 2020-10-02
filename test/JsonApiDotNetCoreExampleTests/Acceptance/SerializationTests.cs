@@ -47,16 +47,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var json = JsonConvert.DeserializeObject<JToken>(bodyText).ToString();
 
             var expected = @"{
-  ""meta"": {
-    ""license"": ""MIT"",
-    ""projectUrl"": ""https://github.com/json-api-dotnet/JsonApiDotNetCore/"",
-    ""versions"": [
-      ""v4.0.0"",
-      ""v3.1.0"",
-      ""v2.5.2"",
-      ""v1.3.1""
-    ]
-  },
   ""links"": {
     ""self"": ""http://localhost/api/v1/people/123""
   },

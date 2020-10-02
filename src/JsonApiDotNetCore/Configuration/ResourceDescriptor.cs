@@ -7,8 +7,6 @@ namespace JsonApiDotNetCore.Configuration
         public Type ResourceType { get; }
         public Type IdType { get; }
 
-        internal static readonly ResourceDescriptor Empty = new ResourceDescriptor(null, null);
-
         public ResourceDescriptor(Type resourceType, Type idType)
         {
             ResourceType = resourceType;

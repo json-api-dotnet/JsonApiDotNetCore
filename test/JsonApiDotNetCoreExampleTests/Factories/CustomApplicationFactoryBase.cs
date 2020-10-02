@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests
             _scope = Services.CreateScope();
         }
 
-        public T GetService<T>() => (T)_scope.ServiceProvider.GetService(typeof(T));
+        public T GetRequiredService<T>() => (T)_scope.ServiceProvider.GetRequiredService(typeof(T));
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -32,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests
     {
         IServiceProvider ServiceProvider { get; }
 
-        T GetService<T>();
+        T GetRequiredService<T>();
         HttpClient CreateClient();
     }
 }

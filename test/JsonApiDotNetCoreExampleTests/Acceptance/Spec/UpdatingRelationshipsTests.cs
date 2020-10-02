@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public UpdatingRelationshipsTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
-            _context = fixture.GetService<AppDbContext>();
+            _context = fixture.GetRequiredService<AppDbContext>();
             _personFaker = new Faker<Person>()
                 .RuleFor(t => t.FirstName, f => f.Name.FirstName())
                 .RuleFor(t => t.LastName, f => f.Name.LastName());
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             await client.SendAsync(request);
-            _context = _fixture.GetService<AppDbContext>();
+            _context = _fixture.GetRequiredService<AppDbContext>();
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                  .Where(ti => ti.Id == todoItem.Id)
@@ -144,7 +144,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             await client.SendAsync(request);
-            _context = _fixture.GetService<AppDbContext>();
+            _context = _fixture.GetRequiredService<AppDbContext>();
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                  .Where(ti => ti.Id == todoItem.Id)
@@ -207,7 +207,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             await client.SendAsync(request);
-            _context = _fixture.GetService<AppDbContext>();
+            _context = _fixture.GetRequiredService<AppDbContext>();
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                  .Where(ti => ti.Id == todoItem.Id)
@@ -271,7 +271,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             var response = await client.SendAsync(request);
-            _context = _fixture.GetService<AppDbContext>();
+            _context = _fixture.GetRequiredService<AppDbContext>();
             var updatedTodoItems = _context.TodoItemCollections.AsNoTracking()
                 .Where(tic => tic.Id == todoCollection.Id)
                 .Include(tdc => tdc.TodoItems).SingleOrDefault().TodoItems;
@@ -349,7 +349,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             var response = await client.SendAsync(request);
-            _context = _fixture.GetService<AppDbContext>();
+            _context = _fixture.GetRequiredService<AppDbContext>();
             var updatedTodoItems = _context.TodoItemCollections.AsNoTracking()
                 .Where(tic => tic.Id == todoCollection.Id)
                 .Include(tdc => tdc.TodoItems).SingleOrDefault().TodoItems;
@@ -415,7 +415,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
 
-            _context = _fixture.GetService<AppDbContext>();
+            _context = _fixture.GetRequiredService<AppDbContext>();
             var updatedTodoItems = _context.TodoItemCollections.AsNoTracking()
                 .Where(tic => tic.Id == todoCollection.Id)
                 .Include(tdc => tdc.TodoItems).SingleOrDefault().TodoItems;
@@ -470,7 +470,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var body = response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            _context = _fixture.GetService<AppDbContext>();
+            _context = _fixture.GetRequiredService<AppDbContext>();
             var personsTodoItems = _context.People.Include(p => p.TodoItems).Single(p => p.Id == person.Id).TodoItems;
 
             Assert.NotEmpty(personsTodoItems);
@@ -664,7 +664,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Updating_ToOne_Relationship_With_Implicit_Remove()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var passport = new Passport(context);
             var person1 = _personFaker.Generate();
             person1.Passport = passport;
@@ -712,7 +712,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Updating_ToMany_Relationship_With_Implicit_Remove()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var person1 = _personFaker.Generate();
             person1.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
             var person2 = _personFaker.Generate();

@@ -1,4 +1,3 @@
-using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -25,8 +24,9 @@ namespace JsonApiDotNetCoreExampleTests
                         options.IncludeTotalResourceCount = true;
                         options.EnableResourceHooks = true;
                         options.LoadDatabaseValues = true;
+                        options.IncludeExceptionStackTraceInErrors = true;
                     },
-                    discovery => discovery.AddAssembly(Assembly.Load(nameof(JsonApiDotNetCoreExample))));
+                    discovery => discovery.AddAssembly(typeof(JsonApiDotNetCoreExample.Program).Assembly));
             });
         }
     }

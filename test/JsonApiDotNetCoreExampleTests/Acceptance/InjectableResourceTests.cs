@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public InjectableResourceTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
-            _context = fixture.GetService<AppDbContext>();
+            _context = fixture.GetRequiredService<AppDbContext>();
 
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())

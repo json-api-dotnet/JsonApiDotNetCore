@@ -76,12 +76,12 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public IReadOnlyDictionary<string, object> GetMeta(Type resourceType)
+        public IDictionary<string, object> GetMeta(Type resourceType, IIdentifiable resourceInstance)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
             dynamic resourceDefinition = GetResourceDefinition(resourceType);
-            return resourceDefinition.GetMeta();
+            return resourceDefinition.GetMeta((dynamic) resourceInstance);
         }
 
         protected object GetResourceDefinition(Type resourceType)
