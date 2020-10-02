@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 {
-    public sealed class ResourceInheritanceDbContext : DbContext
+    public sealed class InheritanceDbContext : DbContext
     {
-        public ResourceInheritanceDbContext(DbContextOptions<ResourceInheritanceDbContext> options) : base(options) { }
+        public InheritanceDbContext(DbContextOptions<InheritanceDbContext> options) : base(options) { }
         
         public DbSet<Man> Males { get; set; }
         
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 .HasValue<Video>(1)
                 .HasValue<Book>(2);
             
-            modelBuilder.Entity<HumanContentItem>()
+            modelBuilder.Entity<HumanFavoriteContentItem>()
                 .HasKey(pp => new { ContentPersonId = pp.ContentId, PersonId = pp.HumanId });
         }
     }

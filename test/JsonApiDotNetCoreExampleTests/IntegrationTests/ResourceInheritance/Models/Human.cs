@@ -17,10 +17,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
         public List<Human> Parents { get; set; }
         
         [NotMapped]
-        [HasManyThrough(nameof(HumanContentItems))]
+        [HasManyThrough(nameof(HumanFavoriteContentItems))]
         public List<Content> FavoriteContent { get; set; }
         
-        public List<HumanContentItem> HumanContentItems { get; set; }
+        public List<HumanFavoriteContentItem> HumanFavoriteContentItems { get; set; }
     }
 }
     

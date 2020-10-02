@@ -58,15 +58,12 @@ namespace UnitTests.Serialization
             resourceGraphBuilder.Add<Blog>();
             resourceGraphBuilder.Add<Food>();
             resourceGraphBuilder.Add<Song>();
-            
-            resourceGraphBuilder.Add<Animal>();
-            resourceGraphBuilder.Add<Cat>();
-            resourceGraphBuilder.Add<Dog>();
-            
-            resourceGraphBuilder.Add<Human>();
-            resourceGraphBuilder.Add<Man>();
-            resourceGraphBuilder.Add<Woman>();
 
+            resourceGraphBuilder.Add<TestResourceWithAbstractRelationship>();
+            resourceGraphBuilder.Add<BaseModel>();
+            resourceGraphBuilder.Add<FirstDerivedModel>();
+            resourceGraphBuilder.Add<SecondDerivedModel>();
+            
             return resourceGraphBuilder.Build();
         }
    }

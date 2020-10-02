@@ -340,54 +340,51 @@ namespace UnitTests.Serialization.Client
         public void DeserializeSingle_ResourceWithInheritanceAndInclusions_CanDeserialize()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("males");
-            content.SingleData.Relationships.Add("parents", CreateRelationshipData("males", isToManyData: true, id: "10"));
-            content.SingleData.Relationships["parents"].ManyData.Add(CreateRelationshipData("females", id: "10").SingleData);
-            content.SingleData.Relationships.Add("pet", CreateRelationshipData("cats", id: "20"));
+            var content = CreateDocumentWithRelationships("testResourceWithAbstractRelationships");
+            content.SingleData.Relationships.Add("toMany", CreateRelationshipData("firstDerivedModels", isToManyData: true, id: "10"));
+            content.SingleData.Relationships["toMany"].ManyData.Add(CreateRelationshipData("secondDerivedModels", id: "11").SingleData);
+            content.SingleData.Relationships.Add("toOne", CreateRelationshipData("firstDerivedModels", id: "20"));
             content.Included = new List<ResourceObject>
             {
                 new ResourceObject
                 {
-                    Type = "males",
+                    Type = "firstDerivedModels",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { { "hasBeard", "false" }, { "retired", "true" } }
+                    Attributes = new Dictionary<string, object> { { "firstProperty", "true" } }
                 },
                 new ResourceObject
                 {
-                    Type = "females",
+                    Type = "secondDerivedModels",
                     Id = "11",
-                    Attributes = new Dictionary<string, object> { { "isPregnant", "false" }, { "retired", "false" } }
+                    Attributes = new Dictionary<string, object> { { "secondProperty", "false" } }
                 },
                 new ResourceObject
                 {
-                    Type = "cats",
+                    Type = "firstDerivedModels",
                     Id = "20",
-                    Attributes = new Dictionary<string, object> { { "feline", "true" }, { "scaredOfDogs", "true" } }
+                    Attributes = new Dictionary<string, object> { { "firstProperty", "true" } }
                 },
             };
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeSingle<Man>(body);
+            var result = _deserializer.DeserializeSingle<TestResourceWithAbstractRelationship>(body);
             var resource = result.Data;
 
             // Assert
             Assert.Equal(1, resource.Id);
-            Assert.NotNull(resource.Pet);
-            Assert.True(resource.Pet.Feline);
-            Assert.True(resource.Pet is Cat);
-            Assert.True(((Cat)resource.Pet).ScaredOfDogs);
+            Assert.NotNull(resource.ToOne);
+            Assert.True(resource.ToOne is FirstDerivedModel);
+            Assert.True(((FirstDerivedModel)resource.ToOne).FirstProperty);
             
-            Assert.NotEmpty(resource.Parents);
-            var father = resource.Parents[0];
-            Assert.True(father is Man);
-            Assert.True(father.Retired);
-            Assert.False(((Man)father).HasBeard);
+            Assert.NotEmpty(resource.ToMany);
+            var first = resource.ToMany[0];
+            Assert.True(first is FirstDerivedModel);
+            Assert.True(((FirstDerivedModel)first).FirstProperty);
             
-            var mother = resource.Parents[1];
-            Assert.True(mother is Woman);
-            Assert.False(mother.Retired);
-            Assert.False(((Woman)mother).IsPregnant);
+            var second = resource.ToMany[1];
+            Assert.True(second is SecondDerivedModel);
+            Assert.False(((SecondDerivedModel)second).SecondProperty);
         }
     }
 }

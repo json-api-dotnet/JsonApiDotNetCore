@@ -10,26 +10,13 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 {
-    public sealed class ResourceInheritanceTests : IClassFixture<IntegrationTestContext<TestableStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext>>
+    public sealed class InheritanceTests : IClassFixture<IntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext> _testContext;
 
-        public ResourceInheritanceTests(IntegrationTestContext<TestableStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext)
+        public InheritanceTests(IntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext> testContext)
         {
             _testContext = testContext;
-
-            _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<HumanContentItem>();
-                await dbContext.ClearTableAsync<Book>();
-                await dbContext.ClearTableAsync<Video>();
-                await dbContext.ClearTableAsync<Cat>();
-                await dbContext.ClearTableAsync<Dog>();
-                await dbContext.ClearTableAsync<Woman>();
-                await dbContext.ClearTableAsync<Man>();
-
-                await dbContext.SaveChangesAsync();
-            }).Wait();
         }
         
         [Fact]
@@ -40,6 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                await dbContext.ClearTableAsync<Cat>();
 #pragma warning disable 4014
                 dbContext.AddAsync(cat);
 #pragma warning restore 4014
@@ -79,8 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 assertMan.Pet.GetType().Should().Be(cat.GetType());
             });
         }
-
-
+        
         [Fact]
         public async Task Can_patch_resource_with_to_one_relationship_through_relationship_link()
         {
@@ -90,6 +77,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                await dbContext.ClearTableAsync<Man, Cat>();
+
                 await dbContext.AddRangeAsync(man, cat);
                 await dbContext.SaveChangesAsync();
             });
@@ -127,6 +116,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                await dbContext.ClearTableAsync<Woman, Man>();
+
                 await dbContext.AddRangeAsync(father, mother);
                 await dbContext.SaveChangesAsync();
             });
@@ -181,6 +172,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                await dbContext.ClearTableAsync<Woman, Man>();
+
                 await dbContext.AddRangeAsync(child, father, mother);
                 await dbContext.SaveChangesAsync();
             });
@@ -222,6 +215,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                await dbContext.ClearTableAsync<Book, Video, Man>();
+
                 await dbContext.AddRangeAsync(book, video);
                 await dbContext.SaveChangesAsync();
             });
@@ -257,10 +252,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var favoriteContent = (await dbContext.Males
-                        .Include(h => h.HumanContentItems)
+                        .Include(h => h.HumanFavoriteContentItems)
                             .ThenInclude(hp => hp.Content)
                         .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id)))
-                    .HumanContentItems.Select(hp => hp.Content).ToList();
+                    .HumanFavoriteContentItems.Select(hp => hp.Content).ToList();
                 
                 favoriteContent.Should().HaveCount(2);
                 favoriteContent.Should().ContainSingle(h => h is Book);
@@ -278,6 +273,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                await dbContext.ClearTableAsync<HumanFavoriteContentItem, Book, Video, Man>();
+
                 await dbContext.AddRangeAsync(book, video, man);
                 await dbContext.SaveChangesAsync();
             });
@@ -301,10 +298,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var favoriteContent = (await dbContext.Males
-                        .Include(h => h.HumanContentItems)
+                        .Include(h => h.HumanFavoriteContentItems)
                             .ThenInclude(hp => hp.Content)
                         .SingleAsync(h => h.Id.Equals(man.Id)))
-                    .HumanContentItems.Select(hp => hp.Content).ToList();
+                    .HumanFavoriteContentItems.Select(hp => hp.Content).ToList();
         
                 favoriteContent.Should().HaveCount(2);
                 favoriteContent.Should().ContainSingle(h => h is Book);

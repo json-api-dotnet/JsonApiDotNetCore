@@ -1,6 +1,6 @@
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models
 {
-    public sealed class HumanContentItem
+    public sealed class HumanFavoriteContentItem
     {
         public int ContentId { get; set; }
         
