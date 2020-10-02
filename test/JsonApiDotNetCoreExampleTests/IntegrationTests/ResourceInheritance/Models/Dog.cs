@@ -5,6 +5,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
     public class Dog : Animal
     {
         [Attr]
-        public bool IsGuardDog { get; set; }
+        public Trainability Trainability  { get; set; }
+    }
+
+    public enum Trainability
+    {
+        None,
+        Easy,
+        Moderate,
+        Difficult
     }
 }
