@@ -23,14 +23,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public async Task Can_create_resource_with_to_one_relationship()
         {
             // Arrange
-            var cat = new Cat();
+            var insurance = new CompanyHealthInsurance();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Cat>();
-#pragma warning disable 4014
-                dbContext.AddAsync(cat);
-#pragma warning restore 4014
+                await dbContext.ClearTableAsync<CompanyHealthInsurance>();
+                dbContext.Add(insurance);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -43,9 +41,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                     relationships = new Dictionary<string, object>
                     {
                         {
-                            "pet", new
+                            "healthInsurance", new
                             {
-                                data = new { type = "cats", id = cat.StringId }
+                                data = new { type = "companyHealthInsurances", id = insurance.StringId }
                             }
                         }
                     }
@@ -61,10 +59,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var assertMan = await dbContext.Males
-                    .Include(h => h.Pet)
+                    .Include(h => h.HealthInsurance)
                     .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id));
                 
-                assertMan.Pet.GetType().Should().Be(cat.GetType());
+                assertMan.HealthInsurance.GetType().Should().Be(insurance.GetType());
             });
         }
         
@@ -73,21 +71,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         {
             // Arrange
             var man = new Man();
-            var cat = new Cat();
+            var insurance = new CompanyHealthInsurance();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Man, Cat>();
+                await dbContext.ClearTableAsync<Man, CompanyHealthInsurance>();
 
-                await dbContext.AddRangeAsync(man, cat);
+                await dbContext.AddRangeAsync(man, insurance);
                 await dbContext.SaveChangesAsync();
             });
             
-            var route = $"/men/{man.Id}/relationships/pet";
+            var route = $"/men/{man.Id}/relationships/healthInsurance";
 
             var requestBody = new
             {
-                data = new { type = "cats", id = cat.StringId }
+                data = new { type = "companyHealthInsurances", id = insurance.StringId }
             };
 
             // Act
@@ -99,10 +97,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var assertMan = await dbContext.Males
-                    .Include(h => h.Pet)
+                    .Include(h => h.HealthInsurance)
                     .SingleAsync(h => h.Id.Equals(man.Id));
 
-                assertMan.Pet.GetType().Should().Be(cat.GetType());
+                assertMan.HealthInsurance.GetType().Should().Be(insurance.GetType());
             });
         }
 

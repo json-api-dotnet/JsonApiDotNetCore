@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
         public bool Retired { get; set; }
         
         [HasOne]
-        public Animal Pet { get; set; }
+        public HealthInsurance HealthInsurance { get; set; }
         
         [HasMany]
         public List<Human> Parents { get; set; }

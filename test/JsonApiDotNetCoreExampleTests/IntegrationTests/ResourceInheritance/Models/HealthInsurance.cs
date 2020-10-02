@@ -3,9 +3,9 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models
 {
-    public abstract class Animal : Identifiable
+    public abstract class HealthInsurance : Identifiable
     {
         [Attr]
-        public bool IsDomesticated { get; set; }
+        public bool MonthlyFee { get; set; }
     }
 }

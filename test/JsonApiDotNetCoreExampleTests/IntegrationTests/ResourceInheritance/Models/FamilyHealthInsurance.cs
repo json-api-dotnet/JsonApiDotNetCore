@@ -2,9 +2,9 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models
 {
-    public class Cat : Animal
+    public class FamilyHealthInsurance : HealthInsurance
     {
         [Attr]
-        public bool UsesLitterBox { get; set; }
+        public int PermittedFamilySize  { get; set; }
     }
 }

@@ -17,11 +17,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 .HasValue<Man>(1)
                 .HasValue<Woman>(2);
             
-            modelBuilder.Entity<Animal>()
-                .ToTable("Animals")
+            modelBuilder.Entity<HealthInsurance>()
+                .ToTable("HealthInsurances")
                 .HasDiscriminator<int>("Type")
-                .HasValue<Cat>(1)
-                .HasValue<Dog>(2);
+                .HasValue<CompanyHealthInsurance>(1)
+                .HasValue<FamilyHealthInsurance>(2);
             
             modelBuilder.Entity<ContentItem>()
                 .ToTable("Content")
