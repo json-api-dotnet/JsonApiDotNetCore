@@ -58,7 +58,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertMan = await dbContext.Males
+                var assertMan = await dbContext.Men
                     .Include(h => h.HealthInsurance)
                     .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id));
                 
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Man, CompanyHealthInsurance>();
+                await dbContext.ClearTablesAsync<Man, CompanyHealthInsurance>();
 
                 await dbContext.AddRangeAsync(man, insurance);
                 await dbContext.SaveChangesAsync();
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertMan = await dbContext.Males
+                var assertMan = await dbContext.Men
                     .Include(h => h.HealthInsurance)
                     .SingleAsync(h => h.Id.Equals(man.Id));
 
@@ -114,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Woman, Man>();
+                await dbContext.ClearTablesAsync<Woman, Man>();
 
                 await dbContext.AddRangeAsync(father, mother);
                 await dbContext.SaveChangesAsync();
@@ -150,7 +150,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertMan = await dbContext.Males
+                var assertMan = await dbContext.Men
                     .Include(h => h.Parents)
                     .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id));
 
@@ -170,7 +170,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Woman, Man>();
+                await dbContext.ClearTablesAsync<Woman, Man>();
 
                 await dbContext.AddRangeAsync(child, father, mother);
                 await dbContext.SaveChangesAsync();
@@ -194,7 +194,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertChild = await dbContext.Males
+                var assertChild = await dbContext.Men
                     .Include(h => h.Parents)
                     .SingleAsync(h => h.Id == child.Id);
                 
@@ -213,7 +213,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Book, Video, Man>();
+                await dbContext.ClearTablesAsync<Book, Video, Man>();
 
                 await dbContext.AddRangeAsync(book, video);
                 await dbContext.SaveChangesAsync();
@@ -249,7 +249,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var favoriteContent = (await dbContext.Males
+                var favoriteContent = (await dbContext.Men
                         .Include(h => h.HumanFavoriteContentItems)
                             .ThenInclude(hp => hp.ContentItem)
                         .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id)))
@@ -271,7 +271,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<HumanFavoriteContentItem, Book, Video, Man>();
+                await dbContext.ClearTablesAsync<HumanFavoriteContentItem, Book, Video, Man>();
 
                 await dbContext.AddRangeAsync(book, video, man);
                 await dbContext.SaveChangesAsync();
