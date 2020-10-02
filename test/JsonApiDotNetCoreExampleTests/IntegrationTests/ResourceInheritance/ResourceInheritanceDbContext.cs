@@ -7,15 +7,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
     {
         public ResourceInheritanceDbContext(DbContextOptions<ResourceInheritanceDbContext> options) : base(options) { }
         
-        public DbSet<Male> Males { get; set; }
+        public DbSet<Man> Males { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Human>()
                 .ToTable("Persons")
                 .HasDiscriminator<int>("Type")
-                .HasValue<Male>(1)
-                .HasValue<Female>(2);
+                .HasValue<Man>(1)
+                .HasValue<Woman>(2);
             
             modelBuilder.Entity<Animal>()
                 .ToTable("Animals")

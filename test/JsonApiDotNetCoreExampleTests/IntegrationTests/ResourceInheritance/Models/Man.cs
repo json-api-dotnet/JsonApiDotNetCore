@@ -2,9 +2,9 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models
 {
-    public sealed class Female : Human
+    public sealed class Man : Human
     {
         [Attr]
-        public bool IsPregnant { get; set; }
+        public bool HasBeard { get; set; }
     }
 }

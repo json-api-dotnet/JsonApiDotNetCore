@@ -64,8 +64,8 @@ namespace UnitTests.Serialization
             resourceGraphBuilder.Add<Dog>();
             
             resourceGraphBuilder.Add<Human>();
-            resourceGraphBuilder.Add<Male>();
-            resourceGraphBuilder.Add<Female>();
+            resourceGraphBuilder.Add<Man>();
+            resourceGraphBuilder.Add<Woman>();
 
             return resourceGraphBuilder.Build();
         }

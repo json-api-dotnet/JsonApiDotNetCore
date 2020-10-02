@@ -25,8 +25,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 await dbContext.ClearTableAsync<Video>();
                 await dbContext.ClearTableAsync<Cat>();
                 await dbContext.ClearTableAsync<Dog>();
-                await dbContext.ClearTableAsync<Female>();
-                await dbContext.ClearTableAsync<Male>();
+                await dbContext.ClearTableAsync<Woman>();
+                await dbContext.ClearTableAsync<Man>();
 
                 await dbContext.SaveChangesAsync();
             }).Wait();
@@ -46,12 +46,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/males";
+            var route = "/men";
             var requestBody = new
             {
                 data = new
                 {
-                    type = "males",
+                    type = "men",
                     relationships = new Dictionary<string, object>
                     {
                         {
@@ -72,11 +72,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertPerson = await dbContext.Males
+                var assertMan = await dbContext.Males
                     .Include(h => h.Pet)
                     .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id));
                 
-                assertPerson.Pet.GetType().Should().Be(cat.GetType());
+                assertMan.Pet.GetType().Should().Be(cat.GetType());
             });
         }
 
@@ -85,16 +85,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public async Task Can_patch_resource_with_to_one_relationship_through_relationship_link()
         {
             // Arrange
-            var person = new Male();
+            var man = new Man();
             var cat = new Cat();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.AddRangeAsync(person, cat);
+                await dbContext.AddRangeAsync(man, cat);
                 await dbContext.SaveChangesAsync();
             });
             
-            var route = $"/males/{person.Id}/relationships/pet";
+            var route = $"/men/{man.Id}/relationships/pet";
 
             var requestBody = new
             {
@@ -109,11 +109,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertPerson = await dbContext.Males
+                var assertMan = await dbContext.Males
                     .Include(h => h.Pet)
-                    .SingleAsync(h => h.Id.Equals(person.Id));
+                    .SingleAsync(h => h.Id.Equals(man.Id));
 
-                assertPerson.Pet.GetType().Should().Be(cat.GetType());
+                assertMan.Pet.GetType().Should().Be(cat.GetType());
             });
         }
 
@@ -122,8 +122,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public async Task Can_create_resource_with_to_many_relationship()
         {
             // Arrange
-            var father = new Male();
-            var mother = new Female();
+            var father = new Man();
+            var mother = new Woman();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -131,12 +131,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/males";
+            var route = "/men";
             var requestBody = new
             {
                 data = new
                 {
-                    type = "males",
+                    type = "men",
                     relationships = new Dictionary<string, object>
                     {
                         {
@@ -144,8 +144,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                             {
                                 data = new[]
                                 {
-                                    new { type = "males", id = father.StringId },
-                                    new { type = "females", id = mother.StringId }
+                                    new { type = "men", id = father.StringId },
+                                    new { type = "women", id = mother.StringId }
                                 }
                             }
                         }
@@ -161,13 +161,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertPerson = await dbContext.Males
+                var assertMan = await dbContext.Males
                     .Include(h => h.Parents)
                     .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id));
 
-                assertPerson.Parents.Should().HaveCount(2);
-                assertPerson.Parents.Should().ContainSingle(h => h is Male);
-                assertPerson.Parents.Should().ContainSingle(h => h is Female);
+                assertMan.Parents.Should().HaveCount(2);
+                assertMan.Parents.Should().ContainSingle(h => h is Man);
+                assertMan.Parents.Should().ContainSingle(h => h is Woman);
             });
         }
 
@@ -175,9 +175,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public async Task Can_patch_resource_with_to_many_relationship_through_relationship_link()
         {
             // Arrange   
-            var child = new Male();
-            var father = new Male();
-            var mother = new Female();
+            var child = new Man();
+            var father = new Man();
+            var mother = new Woman();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -185,13 +185,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 await dbContext.SaveChangesAsync();
             });
         
-            var route = $"/males/{child.StringId}/relationships/parents";
+            var route = $"/men/{child.StringId}/relationships/parents";
             var requestBody = new
             {
                 data = new[]
                 {
-                    new { type = "males", id = father.StringId },
-                    new { type = "females", id = mother.StringId }
+                    new { type = "men", id = father.StringId },
+                    new { type = "women", id = mother.StringId }
                 }
             };
         
@@ -208,8 +208,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                     .SingleAsync(h => h.Id == child.Id);
                 
                 assertChild.Parents.Should().HaveCount(2);
-                assertChild.Parents.Should().ContainSingle(h => h is Male);
-                assertChild.Parents.Should().ContainSingle(h => h is Female);
+                assertChild.Parents.Should().ContainSingle(h => h is Man);
+                assertChild.Parents.Should().ContainSingle(h => h is Woman);
             });
         }
 
@@ -226,12 +226,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 await dbContext.SaveChangesAsync();
             });
         
-            var route = "/males";
+            var route = "/men";
             var requestBody = new
             {
                 data = new
                 {
-                    type = "males",
+                    type = "men",
                     relationships = new Dictionary<string, object>
                     {
                         {
@@ -274,15 +274,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             // Arrange
             var book = new Book();
             var video = new Video();
-            var person = new Male();
+            var man = new Man();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.AddRangeAsync(book, video, person);
+                await dbContext.AddRangeAsync(book, video, man);
                 await dbContext.SaveChangesAsync();
             });
         
-            var route = $"/males/{person.Id}/relationships/favoriteContent";
+            var route = $"/men/{man.Id}/relationships/favoriteContent";
             var requestBody = new
             {
                 data = new[]
@@ -303,7 +303,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 var favoriteContent = (await dbContext.Males
                         .Include(h => h.HumanContentItems)
                             .ThenInclude(hp => hp.Content)
-                        .SingleAsync(h => h.Id.Equals(person.Id)))
+                        .SingleAsync(h => h.Id.Equals(man.Id)))
                     .HumanContentItems.Select(hp => hp.Content).ToList();
         
                 favoriteContent.Should().HaveCount(2);

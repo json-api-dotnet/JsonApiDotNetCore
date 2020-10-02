@@ -368,7 +368,7 @@ namespace UnitTests.Serialization.Client
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeSingle<Male>(body);
+            var result = _deserializer.DeserializeSingle<Man>(body);
             var resource = result.Data;
 
             // Assert
@@ -380,14 +380,14 @@ namespace UnitTests.Serialization.Client
             
             Assert.NotEmpty(resource.Parents);
             var father = resource.Parents[0];
-            Assert.True(father is Male);
+            Assert.True(father is Man);
             Assert.True(father.Retired);
-            Assert.False(((Male)father).HasBeard);
+            Assert.False(((Man)father).HasBeard);
             
             var mother = resource.Parents[1];
-            Assert.True(mother is Female);
+            Assert.True(mother is Woman);
             Assert.False(mother.Retired);
-            Assert.False(((Female)mother).IsPregnant);
+            Assert.False(((Woman)mother).IsPregnant);
         }
     }
 }
