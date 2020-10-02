@@ -6,9 +6,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
     public abstract class Animal : Identifiable
     {
         [Attr]
-        public bool Feline { get; set; } 
-        
-        [Attr]
-        public bool IsDomesticated { get; set; } 
+        public bool IsDomesticated { get; set; }
     }
 }
