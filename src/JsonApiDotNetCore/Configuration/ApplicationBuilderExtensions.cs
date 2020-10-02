@@ -1,7 +1,11 @@
 using System;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -39,11 +43,20 @@ namespace JsonApiDotNetCore.Configuration
 
                 var routingConvention = builder.ApplicationServices.GetRequiredService<IJsonApiRoutingConvention>();
                 options.Conventions.Insert(0, routingConvention);
-
-                options.ModelValidatorProviders.Add(new JsonApiModelValidationProvider());
+                
+                
+                var validationAttributeAdapterProvider = builder.ApplicationServices.GetRequiredService<IValidationAttributeAdapterProvider>();
+                var dataAnnotationLocalizationOptions = builder.ApplicationServices.GetRequiredService<IOptions<MvcDataAnnotationsLocalizationOptions>>();
+                var stringLocalizerFactory = builder.ApplicationServices.GetService<IStringLocalizerFactory>();
+                options.ModelValidatorProviders.Add(new DataAnnotationsModelValidatorProvider_COPY(validationAttributeAdapterProvider, dataAnnotationLocalizationOptions, stringLocalizerFactory));
+                // options.ModelValidatorProviders.Add(new JsonApiModelValidationProvider());
+                ObjectModelValidator
             };
 
             builder.UseMiddleware<JsonApiMiddleware>();
         }
     }
 }
+
+
+
