@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.Options;
 
-namespace JsonApiDotNetCore.Configuration.Validation
+namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
     /// Custom implementation of <see cref="IModelMetadataProvider"/> that sets an additional <see cref="IPropertyValidationFilter"/>

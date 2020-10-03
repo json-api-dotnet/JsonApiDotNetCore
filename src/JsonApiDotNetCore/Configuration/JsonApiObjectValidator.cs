@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace JsonApiDotNetCore.Configuration.Validation
+namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
     /// Custom implementation of <see cref="IObjectModelValidator"/> that is identical to DefaultObjectValidator, apart from

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JsonApiDotNetCore.Configuration.Validation
+namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
     /// Validation filter that enables partial patching as part of the json:api spec.

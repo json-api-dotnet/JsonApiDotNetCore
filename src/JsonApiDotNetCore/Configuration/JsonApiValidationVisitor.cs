@@ -2,14 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace JsonApiDotNetCore.Configuration.Validation
+namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
     /// An extension of the internal <see cref="ValidationVisitor"/> that performs an additional check related to
     /// property validation filters
     /// </summary>
     /// <remarks>
-    /// see  **ADD URL TO ASPNETCORE ISSUE RELATED TO THIS** for background information.
+    /// see https://github.com/dotnet/aspnetcore/issues/26580 for background information.
     /// </remarks>
     internal sealed class JsonApiValidationVisitor : ValidationVisitor
     {
