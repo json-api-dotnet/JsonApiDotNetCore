@@ -78,7 +78,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private void ValidateIncomingResourceType(InputFormatterContext context, object model)
         {
-            if (context.HttpContext.IsJsonApiRequest() && IsPatchOrPostRequest(context.HttpContext.Request))
+            if (context.HttpContext.IsJsonApiRequest() && context.HttpContext.IsPatchOrPostRequest())
             {
                 var endpointResourceType = GetEndpointResourceType();
                 if (endpointResourceType == null)
@@ -171,11 +171,6 @@ namespace JsonApiDotNetCore.Serialization
             return await reader.ReadToEndAsync();
         }
         
-        private bool IsPatchOrPostRequest(HttpRequest request)
-        {
-            return request.Method == HttpMethods.Patch || request.Method == HttpMethods.Post;
-        }
-
         private IEnumerable<Type> GetBodyResourceTypes(object model)
         {
             if (model is IEnumerable<IIdentifiable> resourceCollection)

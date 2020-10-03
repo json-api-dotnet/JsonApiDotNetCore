@@ -18,6 +18,14 @@ namespace JsonApiDotNetCore.Middleware
             string value = httpContext.Items[_isJsonApiRequestKey] as string;
             return value == bool.TrueString;
         }
+        
+        /// <summary>
+        /// Indicates whether the currently executing HTTP request is a PATCH or POST request.
+        /// </summary>
+        public static bool IsPatchOrPostRequest(this HttpContext httpContext)
+        {
+            return httpContext.Request.Method == HttpMethods.Patch || httpContext.Request.Method == HttpMethods.Post;
+        }
 
         internal static void RegisterJsonApiRequest(this HttpContext httpContext)
         {
@@ -35,7 +43,7 @@ namespace JsonApiDotNetCore.Middleware
             var itemKey = $"{_disableRequiredValidatorKey}_{model}_{propertyName}";
             httpContext.Items[itemKey] = true;
         }
-
+        
         internal static bool IsRequiredValidatorDisabled(this HttpContext httpContext, string propertyName, string model)
         {
             if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));

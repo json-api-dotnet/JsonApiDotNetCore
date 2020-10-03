@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -8,6 +9,7 @@ namespace JsonApiDotNetCoreExample.Models
     public sealed class Author : Identifiable
     {
         [Attr]
+        [Required]
         public string FirstName { get; set; }
 
         [Attr]

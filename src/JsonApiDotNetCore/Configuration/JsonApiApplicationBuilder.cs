@@ -17,10 +17,13 @@ using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -129,7 +132,15 @@ namespace JsonApiDotNetCore.Configuration
                     _services.AddScoped(typeof(IDbContextResolver), contextResolverType);
                 }
             }
-
+            
+            _services.AddSingleton<IModelMetadataProvider, JsonApiModelMetadataProvider>();
+            _services.AddSingleton<IObjectModelValidator>(s =>
+            {
+                var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
+                var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
+                return new JsonApiObjectValidator(metadataProvider, options.ModelValidatorProviders, options);
+            });
+            
             AddResourceLayer();
             AddRepositoryLayer();
             AddServiceLayer();
