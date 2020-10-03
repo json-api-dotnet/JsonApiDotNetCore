@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Configuration.Validation
 {
+    /// <summary>
+    /// Validation filter that enables partial patching as part of the json:api spec.
+    /// </summary>
     internal sealed class PartialPatchValidationFilter : IPropertyValidationFilter
     {
         /// <inheritdoc />

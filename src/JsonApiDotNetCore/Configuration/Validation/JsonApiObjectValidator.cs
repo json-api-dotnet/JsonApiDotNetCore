@@ -7,21 +7,20 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 namespace JsonApiDotNetCore.Configuration.Validation
 {
     /// <summary>
-    /// The default implementation of <see cref="IObjectModelValidator"/>.
+    /// Custom implementation of <see cref="IObjectModelValidator"/> that is identical to DefaultObjectValidator, apart from
+    /// using our own <see cref="JsonApiValidationVisitor"/> instead of the built-in <see cref="ValidationVisitor"/>.
     /// </summary>
+    /// <remarks>
+    /// See https://github.com/dotnet/aspnetcore/blob/v3.1.8/src/Mvc/Mvc.Core/src/ModelBinding/Validation/DefaultObjectValidator.cs
+    /// </remarks>
     internal class JsonApiObjectValidator : ObjectModelValidator
     {
         private readonly IModelMetadataProvider _modelMetadataProvider;
         private readonly MvcOptions _mvcOptions;
         private readonly ValidatorCache _validatorCache;
         private readonly CompositeModelValidatorProvider _validatorProvider;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="DefaultObjectValidator"/>.
-        /// </summary>
-        /// <param name="modelMetadataProvider">The <see cref="IModelMetadataProvider"/>.</param>
-        /// <param name="validatorProviders">The list of <see cref="IModelValidatorProvider"/>.</param>
-        /// <param name="mvcOptions">Accessor to <see cref="MvcOptions"/>.</param>
+        
+        /// <inheritdoc />
         public JsonApiObjectValidator(
             IModelMetadataProvider modelMetadataProvider,
             IList<IModelValidatorProvider> validatorProviders,
@@ -39,6 +38,7 @@ namespace JsonApiDotNetCore.Configuration.Validation
             _mvcOptions = mvcOptions;
         }
 
+        /// <inheritdoc />
         public override ValidationVisitor GetValidationVisitor(
             ActionContext actionContext,
             IModelValidatorProvider validatorProvider,
@@ -77,19 +77,8 @@ namespace JsonApiDotNetCore.Configuration.Validation
             var metadata = model == null ? null : _modelMetadataProvider.GetMetadataForType(model.GetType());
             visitor.Validate(metadata, prefix, model, alwaysValidateAtTopLevel: false);
         }
-
-        /// <summary>
-        /// Validates the provided object model.
-        /// If <paramref name="model"/> is <see langword="null"/> and the <paramref name="metadata"/>'s
-        /// <see cref="ModelMetadata.IsRequired"/> is <see langword="true"/>, will add one or more
-        /// model state errors that <see cref="Validate(ActionContext, ValidationStateDictionary, string, object)"/>
-        /// would not.
-        /// </summary>
-        /// <param name="actionContext">The <see cref="ActionContext"/>.</param>
-        /// <param name="validationState">The <see cref="ValidationStateDictionary"/>.</param>
-        /// <param name="prefix">The model prefix key.</param>
-        /// <param name="model">The model object.</param>
-        /// <param name="metadata">The <see cref="ModelMetadata"/>.</param>
+        
+        /// <inheritdoc />
         public override void Validate(
             ActionContext actionContext,
             ValidationStateDictionary validationState,
