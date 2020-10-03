@@ -1,11 +1,7 @@
 using System;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Options;
 
 namespace JsonApiDotNetCore.Configuration
 {

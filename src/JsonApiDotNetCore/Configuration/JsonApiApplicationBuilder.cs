@@ -133,7 +133,7 @@ namespace JsonApiDotNetCore.Configuration
                     _services.AddScoped(typeof(IDbContextResolver), contextResolverType);
                 }
             }
-            
+
             AddResourceLayer();
             AddRepositoryLayer();
             AddServiceLayer();
