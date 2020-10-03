@@ -5,15 +5,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JsonApiDotNetCore.Configuration
+namespace JsonApiDotNetCore.Configuration.Validation
 {
     internal sealed class PartialPatchValidationFilter : IPropertyValidationFilter
     {
         /// <inheritdoc />
         public bool ShouldValidateEntry(ValidationEntry entry, ValidationEntry parentEntry) => true;
 
-        public bool ShouldValidateEntry(ValidationEntry entry, ValidationEntry parentEntry,
-            IServiceProvider serviceProvider)
+        public bool ShouldValidateEntry(ValidationEntry entry, ValidationEntry parentEntry, IServiceProvider serviceProvider)
         {
             if (serviceProvider == null) throw new ArgumentException(nameof(serviceProvider));
 

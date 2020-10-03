@@ -1,13 +1,10 @@
-// Copyright (c) .NET Foundation. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace JsonApiDotNetCore.Configuration
+namespace JsonApiDotNetCore.Configuration.Validation
 {
     /// <summary>
     /// The default implementation of <see cref="IObjectModelValidator"/>.

@@ -9,11 +9,9 @@ namespace JsonApiDotNetCoreExample.Models
     public sealed class Article : Identifiable
     {
         [Attr]
-        [Required]
         public string Caption { get; set; }
 
         [Attr]
-        [Required]
         public string Url { get; set; }
 
         [HasOne]

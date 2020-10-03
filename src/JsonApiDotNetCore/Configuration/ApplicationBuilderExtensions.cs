@@ -43,15 +43,6 @@ namespace JsonApiDotNetCore.Configuration
 
                 var routingConvention = builder.ApplicationServices.GetRequiredService<IJsonApiRoutingConvention>();
                 options.Conventions.Insert(0, routingConvention);
-                
-                
-                // var validationAttributeAdapterProvider = builder.ApplicationServices.GetRequiredService<IValidationAttributeAdapterProvider>();
-                // var dataAnnotationLocalizationOptions = builder.ApplicationServices.GetRequiredService<IOptions<MvcDataAnnotationsLocalizationOptions>>();
-                // var stringLocalizerFactory = builder.ApplicationServices.GetService<IStringLocalizerFactory>();
-                // options.ModelValidatorProviders.Add(new DataAnnotationsModelValidatorProvider_COPY(validationAttributeAdapterProvider, dataAnnotationLocalizationOptions, stringLocalizerFactory));
-                // options.ModelValidatorProviders.Add(new JsonApiModelValidationProvider());
-                // options.ModelMetadataDetailsProviders.Add(new JsonApiDataAnnotationsMetadataProvider());
-
             };
 
             builder.UseMiddleware<JsonApiMiddleware>();

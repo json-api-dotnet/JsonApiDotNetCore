@@ -9,7 +9,6 @@ namespace JsonApiDotNetCoreExample.Models
     public sealed class Author : Identifiable
     {
         [Attr]
-        [Required]
         public string FirstName { get; set; }
 
         [Attr]
