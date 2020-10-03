@@ -76,7 +76,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTablesAsync<Man, CompanyHealthInsurance>();
-
                 dbContext.AddRange(man, insurance);
                 await dbContext.SaveChangesAsync();
             });
@@ -115,7 +114,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTablesAsync<Woman, Man>();
-
                 dbContext.Humans.AddRange(father, mother);
                 await dbContext.SaveChangesAsync();
             });
@@ -171,7 +169,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTablesAsync<Woman, Man>();
-
                 dbContext.Humans.AddRange(child, father, mother);
                 await dbContext.SaveChangesAsync();
             });
@@ -214,7 +211,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTablesAsync<Book, Video, Man>();
-
                 dbContext.ContentItems.AddRange(book, video);
                 await dbContext.SaveChangesAsync();
             });
@@ -272,7 +268,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTablesAsync<HumanFavoriteContentItem, Book, Video, Man>();
-
                 dbContext.AddRange(book, video, man);
                 await dbContext.SaveChangesAsync();
             });

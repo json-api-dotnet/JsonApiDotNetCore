@@ -13,7 +13,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         
         public DbSet<CompanyHealthInsurance> CompanyHealthInsurances { get; set; }
 
-        public DbSet<Man> ContentItems { get; set; }
+        public DbSet<ContentItem> ContentItems { get; set; }
 
         public DbSet<HumanFavoriteContentItem> HumanFavoriteContentItems { get; set; }
         
