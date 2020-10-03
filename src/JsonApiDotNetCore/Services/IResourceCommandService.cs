@@ -24,6 +24,7 @@ namespace JsonApiDotNetCore.Services
         ICreateService<TResource, TId>,
         IUpdateService<TResource, TId>,
         IUpdateRelationshipService<TResource, TId>,
+        ICreateRelationshipService<TResource, TId>,
         IDeleteService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     { }

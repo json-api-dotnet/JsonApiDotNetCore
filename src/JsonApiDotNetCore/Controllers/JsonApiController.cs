@@ -34,10 +34,11 @@ namespace JsonApiDotNetCore.Controllers
             IGetRelationshipService<TResource, TId> getRelationship = null,
             ICreateService<TResource, TId> create = null,
             IUpdateService<TResource, TId> update = null,
-            IUpdateRelationshipService<TResource, TId> updateRelationships = null,
+            IUpdateRelationshipService<TResource, TId> updateRelationship = null,
+            ICreateRelationshipService<TResource, TId> createRelationship = null,
             IDeleteService<TResource, TId> delete = null)
             : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
-                updateRelationships, delete)
+                updateRelationship, createRelationship, delete)
         { }
 
         /// <inheritdoc />
@@ -75,6 +76,12 @@ namespace JsonApiDotNetCore.Controllers
         public override async Task<IActionResult> PatchRelationshipAsync(
             TId id, string relationshipName, [FromBody] object relationships)
             => await base.PatchRelationshipAsync(id, relationshipName, relationships);
+        
+        /// <inheritdoc />
+        [HttpPost("{id}/relationships/{relationshipName}")]
+        public override async Task<IActionResult> PostRelationshipAsync(
+            TId id, string relationshipName, [FromBody] object relationships)
+            => await base.PostRelationshipAsync(id, relationshipName, relationships);
 
         /// <inheritdoc />
         [HttpDelete("{id}")]
@@ -102,10 +109,11 @@ namespace JsonApiDotNetCore.Controllers
             IGetRelationshipService<TResource, int> getRelationship = null,
             ICreateService<TResource, int> create = null,
             IUpdateService<TResource, int> update = null,
-            IUpdateRelationshipService<TResource, int> updateRelationships = null,
+            IUpdateRelationshipService<TResource, int> updateRelationship = null,
+            ICreateRelationshipService<TResource, int> createRelationship = null,
             IDeleteService<TResource, int> delete = null)
             : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
-                updateRelationships, delete)
+                updateRelationship, createRelationship, delete)
         { }
     }
 }

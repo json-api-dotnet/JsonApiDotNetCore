@@ -25,6 +25,7 @@ namespace JsonApiDotNetCore.Controllers
         private readonly IGetRelationshipService<TResource, TId> _getRelationship;
         private readonly ICreateService<TResource, TId> _create;
         private readonly IUpdateService<TResource, TId> _update;
+        private readonly ICreateRelationshipService<TResource, TId> _createRelationship;
         private readonly IUpdateRelationshipService<TResource, TId> _updateRelationships;
         private readonly IDeleteService<TResource, TId> _delete;
         private readonly TraceLogWriter<BaseJsonApiController<TResource, TId>> _traceWriter;
@@ -65,6 +66,7 @@ namespace JsonApiDotNetCore.Controllers
             ICreateService<TResource, TId> create = null,
             IUpdateService<TResource, TId> update = null,
             IUpdateRelationshipService<TResource, TId> updateRelationships = null,
+            ICreateRelationshipService<TResource, TId> createRelationship = null,
             IDeleteService<TResource, TId> delete = null)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
@@ -78,6 +80,7 @@ namespace JsonApiDotNetCore.Controllers
             _create = create;
             _update = update;
             _updateRelationships = updateRelationships;
+            _createRelationship = createRelationship;
             _delete = delete;
         }
 
@@ -200,6 +203,19 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
+        /// Adds a resource to a to-many relationship.
+        /// </summary>
+        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] object relationships)
+        {
+            _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+
+            if (_createRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Post);
+            await _createRelationship.CreateRelationshipAsync(id, relationshipName, relationships);
+            return Ok();
+        }
+        
+        /// <summary>
         /// Deletes a resource.
         /// </summary>
         public virtual async Task<IActionResult> DeleteAsync(TId id)
@@ -243,10 +259,11 @@ namespace JsonApiDotNetCore.Controllers
             IGetRelationshipService<TResource, int> getRelationship = null,
             ICreateService<TResource, int> create = null,
             IUpdateService<TResource, int> update = null,
-            IUpdateRelationshipService<TResource, int> updateRelationships = null,
+            IUpdateRelationshipService<TResource, int> updateRelationship = null,
+            ICreateRelationshipService<TResource, int> createRelationship = null,
             IDeleteService<TResource, int> delete = null)
             : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
-                updateRelationships, delete)
+                updateRelationship, createRelationship, delete)
         { }
     }
 }
