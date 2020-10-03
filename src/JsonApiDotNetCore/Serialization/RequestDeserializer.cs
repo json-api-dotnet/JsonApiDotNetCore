@@ -74,22 +74,6 @@ namespace JsonApiDotNetCore.Serialization
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             if (attributes == null) throw new ArgumentNullException(nameof(attributes));
             
-            if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Patch.Method)
-            {
-                foreach (AttrAttribute attr in attributes)
-                {
-                    if (attr.Property.GetCustomAttribute<RequiredAttribute>() != null)
-                    {
-                        bool disableValidator = attributeValues == null || !attributeValues.ContainsKey(attr.PublicName);
-            
-                        if (disableValidator)
-                        {
-                            _httpContextAccessor.HttpContext.DisableRequiredValidator(attr.Property.Name, resource.GetType().Name);
-                        }
-                    }
-                }
-            }
-            
             return base.SetAttributes(resource, attributeValues, attributes);
         }
     }
