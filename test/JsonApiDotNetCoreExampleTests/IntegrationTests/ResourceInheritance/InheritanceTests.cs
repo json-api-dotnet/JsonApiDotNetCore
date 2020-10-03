@@ -59,8 +59,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var assertMan = await dbContext.Men
-                    .Include(h => h.HealthInsurance)
-                    .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id));
+                    .Include(m => m.HealthInsurance)
+                    .SingleAsync(m => m.Id == int.Parse(responseDocument.SingleData.Id));
                 
                 assertMan.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
             });
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var assertMan = await dbContext.Men
-                    .Include(h => h.HealthInsurance)
+                    .Include(m => m.HealthInsurance)
                     .SingleAsync(h => h.Id == man.Id);
 
                 assertMan.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
@@ -149,8 +149,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var assertMan = await dbContext.Men
-                    .Include(h => h.Parents)
-                    .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id));
+                    .Include(m => m.Parents)
+                    .SingleAsync(m => m.Id == int.Parse(responseDocument.SingleData.Id));
 
                 assertMan.Parents.Should().HaveCount(2);
                 assertMan.Parents.Should().ContainSingle(h => h is Man);
@@ -192,8 +192,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var assertChild = await dbContext.Men
-                    .Include(h => h.Parents)
-                    .SingleAsync(h => h.Id == child.Id);
+                    .Include(m => m.Parents)
+                    .SingleAsync(m => m.Id == child.Id);
                 
                 assertChild.Parents.Should().HaveCount(2);
                 assertChild.Parents.Should().ContainSingle(h => h is Man);
@@ -245,15 +245,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var favoriteContent = (await dbContext.Men
-                        .Include(h => h.HumanFavoriteContentItems)
-                            .ThenInclude(hp => hp.ContentItem)
-                        .SingleAsync(h => h.Id == int.Parse(responseDocument.SingleData.Id)))
-                    .HumanFavoriteContentItems.Select(hp => hp.ContentItem).ToList();
+                var contentItems = await dbContext.HumanFavoriteContentItems
+                    .Where(hfci => hfci.Human.Id == int.Parse(responseDocument.SingleData.Id))
+                    .Select(hfci => hfci.ContentItem)
+                    .ToListAsync();
                 
-                favoriteContent.Should().HaveCount(2);
-                favoriteContent.Should().ContainSingle(h => h is Book);
-                favoriteContent.Should().ContainSingle(h => h is Video);
+                contentItems.Should().HaveCount(2);
+                contentItems.Should().ContainSingle(ci => ci is Book);
+                contentItems.Should().ContainSingle(ci => ci is Video);
             });
         }
 
@@ -291,13 +290,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var contentItems = await dbContext.HumanFavoriteContentItems
-                    .Where(x => x.Human.Id == man.Id)
-                    .Select(x => x.ContentItem)
+                    .Where(hfci => hfci.Human.Id == man.Id)
+                    .Select(hfci => hfci.ContentItem)
                     .ToListAsync();
 
                 contentItems.Should().HaveCount(2);
-                contentItems.Should().ContainSingle(h => h is Book);
-                contentItems.Should().ContainSingle(h => h is Video);
+                contentItems.Should().ContainSingle(ci => ci is Book);
+                contentItems.Should().ContainSingle(ci => ci is Video);
             });
         }
     }
