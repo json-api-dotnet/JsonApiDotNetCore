@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -40,6 +41,12 @@ namespace JsonApiDotNetCore.Controllers
             TId id, string relationshipName, [FromBody] object relationships)
             => await base.PatchRelationshipAsync(id, relationshipName, relationships);
 
+        /// <inheritdoc />
+        [HttpPost("{id}/relationships/{relationshipName}")]
+        public override async Task<IActionResult> PostRelationshipAsync(
+            TId id, string relationshipName, [FromBody] IEnumerable<IIdentifiable> relationships)
+            => await base.PostRelationshipAsync(id, relationshipName, relationships);
+        
         /// <inheritdoc />
         [HttpDelete("{id}")]
         public override async Task<IActionResult> DeleteAsync(TId id) => await base.DeleteAsync(id);

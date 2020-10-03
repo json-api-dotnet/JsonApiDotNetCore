@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -205,7 +206,7 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Adds a resource to a to-many relationship.
         /// </summary>
-        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] object relationships)
+        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] IEnumerable<IIdentifiable> relationships)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));

@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Resources;
 
@@ -14,6 +16,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Handles a json:api request to update an existing relationship.
         /// </summary>
-        Task CreateRelationshipAsync(TId id, string relationshipName, object relationships);
+        Task CreateRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships);
     }
 }
