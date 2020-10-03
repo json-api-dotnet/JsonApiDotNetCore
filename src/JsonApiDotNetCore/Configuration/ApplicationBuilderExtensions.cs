@@ -23,12 +23,12 @@ namespace JsonApiDotNetCore.Configuration
         public static void UseJsonApi(this IApplicationBuilder builder)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
-
+            
             using var scope = builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
             var inverseRelationshipResolver = scope.ServiceProvider.GetRequiredService<IInverseRelationships>();
             inverseRelationshipResolver.Resolve();
-
-            var jsonApiApplicationBuilder = builder.ApplicationServices.GetRequiredService<IJsonApiApplicationBuilder>();
+            
+            var jsonApiApplicationBuilder =  builder.ApplicationServices.GetRequiredService<IJsonApiApplicationBuilder>();
             jsonApiApplicationBuilder.ConfigureMvcOptions = options =>
             {
                 var inputFormatter = builder.ApplicationServices.GetRequiredService<IJsonApiInputFormatter>();
@@ -45,6 +45,3 @@ namespace JsonApiDotNetCore.Configuration
         }
     }
 }
-
-
-
