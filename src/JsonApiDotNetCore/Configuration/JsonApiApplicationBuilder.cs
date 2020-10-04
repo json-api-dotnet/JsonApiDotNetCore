@@ -201,10 +201,7 @@ namespace JsonApiDotNetCore.Configuration
 
             _services.AddScoped(typeof(IGetByIdService<>), typeof(JsonApiResourceService<>));
             _services.AddScoped(typeof(IGetByIdService<,>), typeof(JsonApiResourceService<,>));
-
-            _services.AddScoped(typeof(IGetRelationshipService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(JsonApiResourceService<,>));
-
+            
             _services.AddScoped(typeof(IGetSecondaryService<>), typeof(JsonApiResourceService<>));
             _services.AddScoped(typeof(IGetSecondaryService<,>), typeof(JsonApiResourceService<,>));
 
@@ -214,6 +211,18 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped(typeof(IDeleteService<>), typeof(JsonApiResourceService<>));
             _services.AddScoped(typeof(IDeleteService<,>), typeof(JsonApiResourceService<,>));
 
+            _services.AddScoped(typeof(ICreateRelationshipService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(ICreateRelationshipService<,>), typeof(JsonApiResourceService<,>));
+            
+            _services.AddScoped(typeof(IGetRelationshipService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(JsonApiResourceService<,>));
+            
+            _services.AddScoped(typeof(IUpdateRelationshipService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(IUpdateRelationshipService<,>), typeof(JsonApiResourceService<,>));
+            
+            _services.AddScoped(typeof(IDeleteRelationshipService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(IDeleteRelationshipService<,>), typeof(JsonApiResourceService<,>));
+            
             _services.AddScoped(typeof(IResourceService<>), typeof(JsonApiResourceService<>));
             _services.AddScoped(typeof(IResourceService<,>), typeof(JsonApiResourceService<,>));
 

@@ -41,10 +41,10 @@ namespace UnitTests
                 IGetRelationshipService<Resource, int> getRelationship = null,
                 ICreateService<Resource, int> create = null,
                 IUpdateService<Resource, int> update = null,
-                IUpdateRelationshipService<Resource, int> updateRelationships = null,
+                IUpdateRelationshipService<Resource, int> updateRelationship = null,
                 IDeleteService<Resource, int> delete = null)
                 : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create,
-                    update, updateRelationships, delete)
+                    update, updateRelationship, delete)
             { }
         }
 
@@ -222,7 +222,7 @@ namespace UnitTests
             // Arrange
             const int id = 0;
             var serviceMock = new Mock<IUpdateRelationshipService<Resource>>();
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, updateRelationships: serviceMock.Object);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, updateRelationship: serviceMock.Object);
 
             // Act
             await controller.PatchRelationshipAsync(id, string.Empty, null);

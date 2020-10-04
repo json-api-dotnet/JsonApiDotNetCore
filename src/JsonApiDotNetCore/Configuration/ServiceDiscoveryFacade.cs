@@ -32,12 +32,18 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IGetByIdService<,>),
             typeof(IGetSecondaryService<>),
             typeof(IGetSecondaryService<,>),
-            typeof(IGetRelationshipService<>),
-            typeof(IGetRelationshipService<,>),
             typeof(IUpdateService<>),
             typeof(IUpdateService<,>),
             typeof(IDeleteService<>),
-            typeof(IDeleteService<,>)
+            typeof(IDeleteService<,>),
+            typeof(ICreateRelationshipService<>),
+            typeof(ICreateRelationshipService<,>),
+            typeof(IGetRelationshipService<>),
+            typeof(IGetRelationshipService<,>),
+            typeof(IUpdateRelationshipService<>),
+            typeof(IUpdateRelationshipService<,>),
+            typeof(IDeleteRelationshipService<>),
+            typeof(IDeleteRelationshipService<,>)
         };
 
         private static readonly HashSet<Type> _repositoryInterfaces = new HashSet<Type> {

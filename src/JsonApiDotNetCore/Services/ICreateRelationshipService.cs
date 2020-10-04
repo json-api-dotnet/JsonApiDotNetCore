@@ -10,11 +10,10 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<int> { }
 
     /// <summary />
-    public interface ICreateRelationshipService<TResource, in TId>
-        where TResource : class, IIdentifiable<TId>
+    public interface ICreateRelationshipService<TResource, in TId> where TResource : class, IIdentifiable<TId>
     {
         /// <summary>
-        /// Handles a json:api request to update an existing relationship.
+        /// Handles a json:api request to add resources to a to-many relationship.
         /// </summary>
         Task CreateRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships);
     }

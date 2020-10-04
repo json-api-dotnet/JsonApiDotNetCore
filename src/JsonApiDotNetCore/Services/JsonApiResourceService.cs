@@ -347,6 +347,16 @@ namespace JsonApiDotNetCore.Services
                 _hookExecutor.AfterUpdate(AsList(primaryResource), ResourcePipeline.PatchRelationship);
             }
         }
+        
+        public Task CreateRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public Task DeleteRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships)
+        {
+            throw new NotImplementedException();
+        }
 
         private void AssertPrimaryResourceExists(TResource resource)
         {
