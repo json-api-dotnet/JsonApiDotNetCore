@@ -56,6 +56,8 @@ namespace JsonApiDotNetCore.Services
             _hookExecutor = hookExecutor;
         }
 
+        #region Primary resource pipelines 
+        
         /// <inheritdoc />
         public virtual async Task<TResource> CreateAsync(TResource resource)
         {
@@ -79,36 +81,7 @@ namespace JsonApiDotNetCore.Services
 
             return resource;
         }
-
-        /// <inheritdoc />
-        public virtual async Task DeleteAsync(TId id)
-        {
-            _traceWriter.LogMethodStart(new {id});
-
-            if (_hookExecutor != null)
-            {
-                var resource = _resourceFactory.CreateInstance<TResource>();
-                resource.Id = id;
-
-                _hookExecutor.BeforeDelete(AsList(resource), ResourcePipeline.Delete);
-            }
-
-            var succeeded = await _repository.DeleteAsync(id);
-
-            if (_hookExecutor != null)
-            {
-                var resource = _resourceFactory.CreateInstance<TResource>();
-                resource.Id = id;
-
-                _hookExecutor.AfterDelete(AsList(resource), ResourcePipeline.Delete, succeeded);
-            }
-
-            if (!succeeded)
-            {
-                AssertPrimaryResourceExists(null);
-            }
-        }
-
+        
         /// <inheritdoc />
         public virtual async Task<IReadOnlyCollection<TResource>> GetAsync()
         {
@@ -200,37 +173,6 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        // triggered by GET /articles/1/relationships/{relationshipName}
-        public virtual async Task<TResource> GetRelationshipAsync(TId id, string relationshipName)
-        {
-            _traceWriter.LogMethodStart(new {id, relationshipName});
-            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
-
-            AssertRelationshipExists(relationshipName);
-
-            _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
-
-            var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
-            secondaryLayer.Projection = _queryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(_request.SecondaryResource);
-            secondaryLayer.Include = null;
-
-            var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
-
-            var primaryResources = await _repository.GetAsync(primaryLayer);
-
-            var primaryResource = primaryResources.SingleOrDefault();
-            AssertPrimaryResourceExists(primaryResource);
-
-            if (_hookExecutor != null)
-            {
-                _hookExecutor.AfterRead(AsList(primaryResource), ResourcePipeline.GetRelationship);
-                primaryResource = _hookExecutor.OnReturn(AsList(primaryResource), ResourcePipeline.GetRelationship).Single();
-            }
-
-            return primaryResource;
-        }
-
-        /// <inheritdoc />
         // triggered by GET /articles/1/{relationshipName}
         public virtual async Task<object> GetSecondaryAsync(TId id, string relationshipName)
         {
@@ -307,6 +249,97 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
+        public virtual async Task DeleteAsync(TId id)
+        {
+            _traceWriter.LogMethodStart(new {id});
+
+            if (_hookExecutor != null)
+            {
+                var resource = _resourceFactory.CreateInstance<TResource>();
+                resource.Id = id;
+
+                _hookExecutor.BeforeDelete(AsList(resource), ResourcePipeline.Delete);
+            }
+
+            var succeeded = await _repository.DeleteAsync(id);
+
+            if (_hookExecutor != null)
+            {
+                var resource = _resourceFactory.CreateInstance<TResource>();
+                resource.Id = id;
+
+                _hookExecutor.AfterDelete(AsList(resource), ResourcePipeline.Delete, succeeded);
+            }
+
+            if (!succeeded)
+            {
+                AssertPrimaryResourceExists(null);
+            }
+        }
+
+        #endregion 
+        
+        #region Relationship link pipelines
+
+        public Task CreateRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships)
+        {
+            /*
+             * APPROACH:
+             * - get all relationships through repository
+             * - construct accurate relationshipsId list
+             * - use repo.UpdateAsync method. POST vs PATCH part of the spec will be abstracted away from repo this way
+             * - EF Core:
+             *     one-to-many: will probably iterate through list and set FK to primaryResource.id.  C ~ relationshipsId.Count
+             *         X optimal performance: we could do this without getting any data. Now it does.
+             *     many-to-many: add new join table records. What if they already exist?
+             *         X here we will always need to get the join table records first to make sure we are not inserting one that already exists, so no performance loss
+             *
+             * Conclusion
+             * => for creation we only need to fetch data if relationships is many-to-many. so for many-to-many it doesnt matter if we create reuse repo.UpdateAsync,
+             * or not. For to-many, we never need to fetch data, so we wont leverage this performance opportunity if we re-use repo.UpdateAsync
+             */
+            
+            _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+
+            AssertRelationshipExists(relationshipName);
+            AssertRelationshipIsToMany(relationshipName);
+            
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        // triggered by GET /articles/1/relationships/{relationshipName}
+        public virtual async Task<TResource> GetRelationshipAsync(TId id, string relationshipName)
+        {
+            _traceWriter.LogMethodStart(new {id, relationshipName});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+
+            AssertRelationshipExists(relationshipName);
+
+            _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
+
+            var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
+            secondaryLayer.Projection = _queryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(_request.SecondaryResource);
+            secondaryLayer.Include = null;
+
+            var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
+
+            var primaryResources = await _repository.GetAsync(primaryLayer);
+
+            var primaryResource = primaryResources.SingleOrDefault();
+            AssertPrimaryResourceExists(primaryResource);
+
+            if (_hookExecutor != null)
+            {
+                _hookExecutor.AfterRead(AsList(primaryResource), ResourcePipeline.GetRelationship);
+                primaryResource = _hookExecutor.OnReturn(AsList(primaryResource), ResourcePipeline.GetRelationship).Single();
+            }
+
+            return primaryResource;
+        }
+
+        /// <inheritdoc />
         // triggered by PATCH /articles/1/relationships/{relationshipName}
         public virtual async Task UpdateRelationshipAsync(TId id, string relationshipName, object relationships)
         {
@@ -347,17 +380,36 @@ namespace JsonApiDotNetCore.Services
                 _hookExecutor.AfterUpdate(AsList(primaryResource), ResourcePipeline.PatchRelationship);
             }
         }
-        
-        public Task CreateRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships)
-        {
-            throw new NotImplementedException();
-        }
-        
+
         public Task DeleteRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships)
         {
+            /*
+             * APPROACH ONE:
+             * - get all relationships through repository
+             * - construct accurate relationshipsId list
+             * - use repo.UpdateAsync method. POST vs PATCH part of the spec will be abstracted away from repo this way
+             * - EF Core:
+             *     one-to-many: will probably iterate through list and set FK to primaryResource.id.  C ~ amount of new ids
+             *         X optimal performance: we could do this without getting any data. Now it does.
+             *     many-to-many: iterates over list and creates DELETE query per removed id. C ~ amount of new ids
+             *         X delete join table records. No need to fetch them first. Now it does.
+             *
+             * Conclusion
+             *  => for delete we wont ever need to fetch data first. If we reuse repo.UpdateAsync,
+             *  we wont leverage this performance opportunity
+             */
+            
+            _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+
+            AssertRelationshipExists(relationshipName);
+            AssertRelationshipIsToMany(relationshipName);
+            
             throw new NotImplementedException();
         }
-
+        
+        #endregion 
+        
         private void AssertPrimaryResourceExists(TResource resource)
         {
             if (resource == null)
@@ -371,6 +423,16 @@ namespace JsonApiDotNetCore.Services
             var relationship = _request.Relationship;
             if (relationship == null)
             {
+                throw new RelationshipNotFoundException(relationshipName, _request.PrimaryResource.PublicName);
+            }
+        }
+        
+        private void AssertRelationshipIsToMany(string relationshipName)
+        {
+            var relationship = _request.Relationship;
+            if (!(relationship is HasManyAttribute))
+            {
+                // TODO: This technically is OK because we no to-many relationship was found, but we could be more specific about this
                 throw new RelationshipNotFoundException(relationshipName, _request.PrimaryResource.PublicName);
             }
         }
