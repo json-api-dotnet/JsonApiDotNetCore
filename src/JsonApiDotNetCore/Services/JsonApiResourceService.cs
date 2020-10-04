@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -480,8 +481,7 @@ namespace JsonApiDotNetCore.Services
             var relationship = _request.Relationship;
             if (!(relationship is HasManyAttribute))
             {
-                // TODO: This technically is OK because we no to-many relationship was found, but we could be more specific about this
-                throw new RelationshipNotFoundException(relationshipName, _request.PrimaryResource.PublicName);
+                throw new RequestMethodNotAllowedException(relationship.PublicName);
             }
         }
         
