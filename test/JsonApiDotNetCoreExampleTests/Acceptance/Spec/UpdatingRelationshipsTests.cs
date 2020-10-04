@@ -643,6 +643,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var person = _personFaker.Generate();
+            person.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
             _context.People.Add(person);
 
             var todoItem = _todoItemFaker.Generate();
@@ -680,15 +681,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
-            var body = response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
             _context = _fixture.GetRequiredService<AppDbContext>();
-            var personsTodoItems = _context.People.Include(p => p.TodoItems).Single(p => p.Id == person.Id).TodoItems;
+            var assertTodoItems = _context.People.Include(p => p.TodoItems)
+                .Single(p => p.Id == person.Id).TodoItems;
 
-            Assert.NotEmpty(personsTodoItems);
+            Assert.Single(assertTodoItems);
+            Assert.Equal(todoItem.Id, assertTodoItems.ElementAt(0).Id);
         }
-
+        
         [Fact]
         public async Task Can_Set_ToOne_Relationship_Through_Relationship_Endpoint()
         {
@@ -768,6 +769,109 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Null(todoItemResult.Owner);
+        }
+        
+        [Fact]
+        public async Task Can_Add_To_ToMany_Relationship_Through_Relationship_Endpoint()
+        {
+            // Arrange
+            var person = _personFaker.Generate();
+            person.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
+            _context.People.Add(person);
+
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+
+            await _context.SaveChangesAsync();
+
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = new List<object>
+                {
+                    new {
+                        type = "todoItems",
+                        id = $"{todoItem.Id}"
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("POST");
+            var route = $"/api/v1/people/{person.Id}/relationships/todoItems";
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
+
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            _context = _fixture.GetRequiredService<AppDbContext>();
+            var assertTodoItems = _context.People.Include(p => p.TodoItems)
+                .Single(p => p.Id == person.Id).TodoItems;
+
+            Assert.Equal(4, assertTodoItems.Count);
+            Assert.Equal(todoItem.Id, assertTodoItems.ElementAt(3).Id);
+        }
+        
+        [Fact]
+        public async Task Can_Delete_From_To_ToMany_Relationship_Through_Relationship_Endpoint()
+        {
+            // Arrange
+            var person = _personFaker.Generate();
+            person.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
+            _context.People.Add(person);
+            
+            await _context.SaveChangesAsync();
+            var todoItemToDelete = person.TodoItems.ElementAt(0);
+
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = new List<object>
+                {
+                    new {
+                        type = "todoItems",
+                        id = $"{todoItemToDelete.Id}"
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("DELETE");
+            var route = $"/api/v1/people/{person.Id}/relationships/todoItems";
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
+
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            _context = _fixture.GetRequiredService<AppDbContext>();
+            var assertTodoItems = _context.People.Include(p => p.TodoItems)
+                .Single(p => p.Id == person.Id).TodoItems;
+
+            Assert.Equal(2, assertTodoItems.Count);
+            var deletedTodoItem = assertTodoItems.SingleOrDefault(ti => ti.Id == todoItemToDelete.Id);
+            Assert.Null(deletedTodoItem);
         }
         
         [Fact]
