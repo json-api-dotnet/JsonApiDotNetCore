@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         #region Primary resource pipelines 
-        
+
         /// <inheritdoc />
         // triggered by POST /articles
         public virtual async Task<TResource> CreateAsync(TResource resource)
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCore.Services
 
             return resource;
         }
-        
+
         /// <inheritdoc />
         public virtual async Task<IReadOnlyCollection<TResource>> GetAsync()
         {
@@ -235,13 +235,13 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {id, requestResource});
             if (requestResource == null) throw new ArgumentNullException(nameof(requestResource));
             
+            TResource databaseResource = await GetPrimaryResourceById(id, false);
+
             if (HasNonNullRelationshipAssignments(requestResource, out var assignments))
             {
                 await AssertRelationshipValuesExistAsync(assignments);
             }
             
-            TResource databaseResource = await GetPrimaryResourceById(id, false);
-
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(databaseResource);
             _resourceChangeTracker.SetRequestedAttributeValues(requestResource);
 
@@ -265,7 +265,7 @@ namespace JsonApiDotNetCore.Services
             bool hasImplicitChanges = _resourceChangeTracker.HasImplicitChanges();
             return hasImplicitChanges ? afterResource : null;
         }
-        
+
         /// <inheritdoc />
         // triggered by DELETE /articles/{id
         public virtual async Task DeleteAsync(TId id)
@@ -297,12 +297,12 @@ namespace JsonApiDotNetCore.Services
         }
 
         #endregion 
-        
+
         #region Relationship link pipelines
 
         /// <inheritdoc />
         // triggered by POST /articles/{id}/relationships/{relationshipName}
-        public Task AddRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships)
+        public async Task AddRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships)
         {
             /*
              * APPROACH:
@@ -334,6 +334,9 @@ namespace JsonApiDotNetCore.Services
 
             AssertRelationshipExists(relationshipName);
             AssertRelationshipIsToMany(relationshipName);
+            
+            var relationship = GetRelationshipAttribute(relationshipName);
+            await AssertRelationshipValuesExistAsync((relationship, relationships));
             
             throw new NotImplementedException();
         }
@@ -413,7 +416,7 @@ namespace JsonApiDotNetCore.Services
 
         /// <inheritdoc />
         // triggered by DELETE /articles/{id}/relationships/{relationshipName}
-        public Task DeleteRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships)
+        public async Task DeleteRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships)
         {
             /*
              * APPROACH ONE:
@@ -437,12 +440,15 @@ namespace JsonApiDotNetCore.Services
             AssertRelationshipExists(relationshipName);
             AssertRelationshipIsToMany(relationshipName);
             
+            var relationship = GetRelationshipAttribute(relationshipName);
+            await AssertRelationshipValuesExistAsync((relationship, relationships));
+
             throw new NotImplementedException();
         }
-        
+
         #endregion 
-        
-        private bool HasNonNullRelationshipAssignments(TResource requestResource, out IEnumerable<(RelationshipAttribute, object)> assignments)
+
+        private bool HasNonNullRelationshipAssignments(TResource requestResource, out (RelationshipAttribute, object)[] assignments)
         {
             assignments = _targetedFields.Relationships
                 .Select(attr => (attr, attr.GetValue(requestResource)))
@@ -454,11 +460,16 @@ namespace JsonApiDotNetCore.Services
                     }
 
                     return ((IEnumerable<IIdentifiable>) t.Item2).Any();
-                });
+                }).ToArray();
 
             return assignments.Any();
         }
-        
+
+        private RelationshipAttribute GetRelationshipAttribute(string relationshipName)
+        {
+            return _provider.GetResourceContext<TResource>().Relationships.Single(attr => attr.PublicName == relationshipName);
+        }
+
         private void AssertPrimaryResourceExists(TResource resource)
         {
             if (resource == null)
@@ -475,7 +486,7 @@ namespace JsonApiDotNetCore.Services
                 throw new RelationshipNotFoundException(relationshipName, _request.PrimaryResource.PublicName);
             }
         }
-        
+
         private void AssertRelationshipIsToMany(string relationshipName)
         {
             var relationship = _request.Relationship;
@@ -484,8 +495,8 @@ namespace JsonApiDotNetCore.Services
                 throw new RequestMethodNotAllowedException(relationship.PublicName);
             }
         }
-        
-        private async Task AssertRelationshipValuesExistAsync(IEnumerable<(RelationshipAttribute relationship, object relationshipValue)> assignments)
+
+        private async Task AssertRelationshipValuesExistAsync(params (RelationshipAttribute relationship, object relationshipValue)[] assignments)
         {
             var nonExistingResources = new Dictionary<string, IList<string>>();
             foreach (var (relationship, relationshipValue) in assignments)
@@ -498,7 +509,8 @@ namespace JsonApiDotNetCore.Services
                 else
                 {
                     identifiers = ((IEnumerable<IIdentifiable>) relationshipValue).Select(i => i.StringId);
-                }                
+                }  
+                
                 var resources = await _resourceAccessor.GetResourcesByIdAsync(relationship.RightType, identifiers);
                 var missing = identifiers.Where(id => resources.All(r => r?.StringId != id)).ToArray();
                 if (missing.Any())
