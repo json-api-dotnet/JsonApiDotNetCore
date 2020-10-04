@@ -875,7 +875,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
         
         [Fact]
-        public async Task Fails_On_Unknown_Relationship_On_Relationship_Endpoint()
+        public async Task Fails_When_Unknown_Relationship_On_Relationship_Endpoint()
         {
             // Arrange
             var person = _personFaker.Generate();
@@ -915,7 +915,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
         
         [Fact]
-        public async Task Fails_On_Missing_Resource_On_Relationship_Endpoint()
+        public async Task Fails_When_Missing_Resource_On_Relationship_Endpoint()
         {
             // Arrange
             var person = _personFaker.Generate();
