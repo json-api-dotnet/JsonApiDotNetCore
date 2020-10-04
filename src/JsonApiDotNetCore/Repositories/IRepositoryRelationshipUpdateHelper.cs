@@ -6,10 +6,10 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Repositories
 {
     /// <summary>
-    /// A special helper that processes updates of relationships
+    /// A  helper dedicated to processing updates of relationships
     /// </summary>
     /// <remarks>
-    /// This service required to be able translate involved expressions into queries
+    /// This service is required to be able translate involved expressions into queries
     /// instead of having them evaluated on the client side. In particular, for all three types of relationship
     /// a lookup is performed based on an ID. Expressions that use IIdentifiable.StringId can never
     /// be translated into queries because this property only exists at runtime after the query is performed.

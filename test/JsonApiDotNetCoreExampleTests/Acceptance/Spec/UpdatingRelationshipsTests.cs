@@ -215,6 +215,54 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             Assert.Equal(todoItem.Id, updatedTodoItem.ParentTodoId);
         }
+        
+        [Fact]
+        public async Task Fails_When_Patching_Resource_ToOne_Relationship_With_Missing_Resource()
+        {
+            // Arrange 
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+            await _context.SaveChangesAsync();
+
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            // Act
+            var content = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    id = todoItem.Id,
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "owner", new
+                            {
+                                data = new { type = "people", id = "999999999" }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todoItems/{todoItem.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+        }
 
         [Fact]
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource()
@@ -725,7 +773,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(todoItemsOwner);
         }
-        
+
         [Fact]
         public async Task Can_Delete_Relationship_By_Patching_Through_Relationship_Endpoint()
         {

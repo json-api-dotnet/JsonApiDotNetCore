@@ -303,6 +303,15 @@ namespace JsonApiDotNetCore.Services
              * Conclusion
              * => for creation we only need to fetch data if relationships is many-to-many. so for many-to-many it doesnt matter if we create reuse repo.UpdateAsync,
              * or not. For to-many, we never need to fetch data, so we wont leverage this performance opportunity if we re-use repo.UpdateAsync
+             *
+             *
+             * Rectification:
+             * before adding a relationship we need to see if it acutally exists. If not we must return 404.
+             * 
+             *
+             * So new conclusion: we always need to fetch the to be added or deleted relationship
+             * we dont have to fetch the current state of the relationship.
+             *     unless many-to-many: I think query wil fail if we create double entry in jointable when the pre-existing entry is not being tracked in dbcontext. 
              */
             
             _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
