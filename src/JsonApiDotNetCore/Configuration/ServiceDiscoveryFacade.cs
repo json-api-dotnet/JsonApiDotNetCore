@@ -36,12 +36,12 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IUpdateService<,>),
             typeof(IDeleteService<>),
             typeof(IDeleteService<,>),
-            typeof(ICreateRelationshipService<>),
-            typeof(ICreateRelationshipService<,>),
+            typeof(IAddRelationshipService<>),
+            typeof(IAddRelationshipService<,>),
             typeof(IGetRelationshipService<>),
             typeof(IGetRelationshipService<,>),
-            typeof(IUpdateRelationshipService<>),
-            typeof(IUpdateRelationshipService<,>),
+            typeof(ISetRelationshipService<>),
+            typeof(ISetRelationshipService<,>),
             typeof(IDeleteRelationshipService<>),
             typeof(IDeleteRelationshipService<,>)
         };

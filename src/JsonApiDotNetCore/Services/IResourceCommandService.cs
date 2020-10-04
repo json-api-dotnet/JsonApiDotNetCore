@@ -10,8 +10,8 @@ namespace JsonApiDotNetCore.Services
         ICreateService<TResource>,
         IUpdateService<TResource>,
         IDeleteService<TResource>,
-        IUpdateRelationshipService<TResource>,
-        ICreateRelationshipService<TResource>,
+        IAddRelationshipService<TResource>,
+        ISetRelationshipService<TResource>,
         IDeleteRelationshipService<TResource>,
         IResourceCommandService<TResource, int>
         where TResource : class, IIdentifiable<int>
@@ -26,8 +26,8 @@ namespace JsonApiDotNetCore.Services
         ICreateService<TResource, TId>,
         IUpdateService<TResource, TId>,
         IDeleteService<TResource, TId>,
-        IUpdateRelationshipService<TResource, TId>,
-        ICreateRelationshipService<TResource, TId>,
+        IAddRelationshipService<TResource, TId>,
+        ISetRelationshipService<TResource, TId>,
         IDeleteRelationshipService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     { }

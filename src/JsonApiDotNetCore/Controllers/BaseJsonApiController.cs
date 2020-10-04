@@ -27,8 +27,8 @@ namespace JsonApiDotNetCore.Controllers
         private readonly ICreateService<TResource, TId> _create;
         private readonly IUpdateService<TResource, TId> _update;
         private readonly IDeleteService<TResource, TId> _delete;
-        private readonly ICreateRelationshipService<TResource, TId> _createRelationship;
-        private readonly IUpdateRelationshipService<TResource, TId> _updateRelationship;
+        private readonly IAddRelationshipService<TResource, TId> _addRelationship;
+        private readonly ISetRelationshipService<TResource, TId> _setRelationship;
         private readonly IDeleteRelationshipService<TResource, TId> _deleteRelationship;
         private readonly TraceLogWriter<BaseJsonApiController<TResource, TId>> _traceWriter;
 
@@ -67,9 +67,9 @@ namespace JsonApiDotNetCore.Controllers
             IGetSecondaryService<TResource, TId> getSecondary = null,
             IUpdateService<TResource, TId> update = null,
             IDeleteService<TResource, TId> delete = null,
-            ICreateRelationshipService<TResource, TId> createRelationship = null,
+            IAddRelationshipService<TResource, TId> addRelationship = null,
             IGetRelationshipService<TResource, TId> getRelationship = null,
-            IUpdateRelationshipService<TResource, TId> updateRelationship = null,
+            ISetRelationshipService<TResource, TId> setRelationship = null,
             IDeleteRelationshipService<TResource, TId> deleteRelationship = null
             )
         {
@@ -83,9 +83,9 @@ namespace JsonApiDotNetCore.Controllers
             _getSecondary = getSecondary;
             _update = update;
             _delete = delete;
-            _createRelationship = createRelationship;
+            _addRelationship = addRelationship;
             _getRelationship = getRelationship;
-            _updateRelationship = updateRelationship;
+            _setRelationship = setRelationship;
             _deleteRelationship = deleteRelationship;
         }
 
@@ -220,21 +220,21 @@ namespace JsonApiDotNetCore.Controllers
             _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
-            if (_createRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Post);
-            await _createRelationship.CreateRelationshipAsync(id, relationshipName, relationships);
+            if (_addRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Post);
+            await _addRelationship.AddRelationshipAsync(id, relationshipName, relationships);
             return Ok();
         }
         
         /// <summary>
-        /// Updates a relationship.
+        /// Sets the resource(s) of a relationship.
         /// </summary>
         public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object relationships)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
-            if (_updateRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
-            await _updateRelationship.UpdateRelationshipAsync(id, relationshipName, relationships);
+            if (_setRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
+            await _setRelationship.SetRelationshipAsync(id, relationshipName, relationships);
             return Ok();
         }
         
@@ -284,13 +284,13 @@ namespace JsonApiDotNetCore.Controllers
             IGetSecondaryService<TResource, int> getSecondary = null,
             IUpdateService<TResource, int> update = null,
             IDeleteService<TResource, int> delete = null,
-            ICreateRelationshipService<TResource, int> createRelationship = null,
+            IAddRelationshipService<TResource, int> addRelationship = null,
             IGetRelationshipService<TResource, int> getRelationship = null,
-            IUpdateRelationshipService<TResource, int> updateRelationship = null,
+            ISetRelationshipService<TResource, int> setRelationship = null,
             IDeleteRelationshipService<TResource, int> deleteRelationship = null
             )
             : base(options, loggerFactory, create, getAll, getById, getSecondary, update, delete,
-                createRelationship, getRelationship, updateRelationship, deleteRelationship)
+                addRelationship, getRelationship, setRelationship, deleteRelationship)
         { }
     }
 }

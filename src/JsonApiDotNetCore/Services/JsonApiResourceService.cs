@@ -59,6 +59,7 @@ namespace JsonApiDotNetCore.Services
         #region Primary resource pipelines 
         
         /// <inheritdoc />
+        // triggered by POST /articles
         public virtual async Task<TResource> CreateAsync(TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});
@@ -118,6 +119,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
+        // triggered by GET /articles/{id}
         public virtual async Task<TResource> GetAsync(TId id)
         {
             _traceWriter.LogMethodStart(new {id});
@@ -173,7 +175,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        // triggered by GET /articles/1/{relationshipName}
+        // triggered by GET /articles/{id}/{relationshipName}
         public virtual async Task<object> GetSecondaryAsync(TId id, string relationshipName)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
@@ -189,7 +191,7 @@ namespace JsonApiDotNetCore.Services
             if (_request.IsCollection && _options.IncludeTotalResourceCount)
             {
                 // TODO: Consider support for pagination links on secondary resource collection. This requires to call Count() on the inverse relationship (which may not exist).
-                // For /blogs/1/articles we need to execute Count(Articles.Where(article => article.Blog.Id == 1 && article.Blog.existingFilter))) to determine TotalResourceCount.
+                // For /blogs/{id}/articles we need to execute Count(Articles.Where(article => article.Blog.Id == 1 && article.Blog.existingFilter))) to determine TotalResourceCount.
                 // This also means we need to invoke ResourceRepository<Article>.CountAsync() from ResourceService<Blog>.
                 // And we should call BlogResourceDefinition.OnApplyFilter to filter out soft-deleted blogs and translate from equals('IsDeleted','false') to equals('Blog.IsDeleted','false')
             }
@@ -216,7 +218,8 @@ namespace JsonApiDotNetCore.Services
             return secondaryResource;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc />\
+        // triggered by PATCH /articles/{id}
         public virtual async Task<TResource> UpdateAsync(TId id, TResource requestResource)
         {
             _traceWriter.LogMethodStart(new {id, requestResource});
@@ -249,6 +252,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
+        // triggered by DELETE /articles/{id
         public virtual async Task DeleteAsync(TId id)
         {
             _traceWriter.LogMethodStart(new {id});
@@ -281,7 +285,9 @@ namespace JsonApiDotNetCore.Services
         
         #region Relationship link pipelines
 
-        public Task CreateRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships)
+        /// <inheritdoc />
+        // triggered by POST /articles/{id}/relationships/{relationshipName}
+        public Task AddRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships)
         {
             /*
              * APPROACH:
@@ -309,7 +315,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        // triggered by GET /articles/1/relationships/{relationshipName}
+        // triggered by GET /articles/{id}/relationships/{relationshipName}
         public virtual async Task<TResource> GetRelationshipAsync(TId id, string relationshipName)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
@@ -340,8 +346,8 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        // triggered by PATCH /articles/1/relationships/{relationshipName}
-        public virtual async Task UpdateRelationshipAsync(TId id, string relationshipName, object relationships)
+        // triggered by PATCH /articles/{id}/relationships/{relationshipName}
+        public virtual async Task SetRelationshipAsync(TId id, string relationshipName, object relationships)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
@@ -381,6 +387,8 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
+        /// <inheritdoc />
+        // triggered by DELETE /articles/{id}/relationships/{relationshipName}
         public Task DeleteRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships)
         {
             /*

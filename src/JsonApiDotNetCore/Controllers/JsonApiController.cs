@@ -35,12 +35,12 @@ namespace JsonApiDotNetCore.Controllers
             IGetSecondaryService<TResource, TId> getSecondary = null,
             IUpdateService<TResource, TId> update = null,
             IDeleteService<TResource, TId> delete = null,
-            ICreateRelationshipService<TResource, TId> createRelationship = null,
+            IAddRelationshipService<TResource, TId> addRelationship = null,
             IGetRelationshipService<TResource, TId> getRelationship = null,
-            IUpdateRelationshipService<TResource, TId> updateRelationship = null,
+            ISetRelationshipService<TResource, TId> setRelationship = null,
             IDeleteRelationshipService<TResource, TId> deleteRelationship = null)
-            : base(options, loggerFactory, create, getAll, getById, getSecondary, update, delete, createRelationship, 
-                getRelationship, updateRelationship, deleteRelationship)
+            : base(options, loggerFactory, create, getAll, getById, getSecondary, update, delete, addRelationship, 
+                getRelationship, setRelationship, deleteRelationship)
         { }
 
         #region Primary Resource Endpoints
@@ -125,12 +125,12 @@ namespace JsonApiDotNetCore.Controllers
             IGetSecondaryService<TResource, int> getSecondary = null,
             IUpdateService<TResource, int> update = null,
             IDeleteService<TResource, int> delete = null,
-            ICreateRelationshipService<TResource, int> createRelationship = null,
+            IAddRelationshipService<TResource, int> addRelationship = null,
             IGetRelationshipService<TResource, int> getRelationship = null,
-            IUpdateRelationshipService<TResource, int> updateRelationship = null,
+            ISetRelationshipService<TResource, int> setRelationship = null,
             IDeleteRelationshipService<TResource, int> deleteRelationship = null)
-            : base(options, loggerFactory, create, getAll, getById, getSecondary, update, delete, createRelationship, 
-                getRelationship, updateRelationship, deleteRelationship)
+            : base(options, loggerFactory, create, getAll, getById, getSecondary, update, delete, addRelationship, 
+                getRelationship, setRelationship, deleteRelationship)
         { }
     }
 }

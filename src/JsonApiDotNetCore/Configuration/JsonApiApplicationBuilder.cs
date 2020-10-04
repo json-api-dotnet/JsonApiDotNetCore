@@ -211,14 +211,14 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped(typeof(IDeleteService<>), typeof(JsonApiResourceService<>));
             _services.AddScoped(typeof(IDeleteService<,>), typeof(JsonApiResourceService<,>));
 
-            _services.AddScoped(typeof(ICreateRelationshipService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(ICreateRelationshipService<,>), typeof(JsonApiResourceService<,>));
+            _services.AddScoped(typeof(IAddRelationshipService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(IAddRelationshipService<,>), typeof(JsonApiResourceService<,>));
             
             _services.AddScoped(typeof(IGetRelationshipService<>), typeof(JsonApiResourceService<>));
             _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(JsonApiResourceService<,>));
             
-            _services.AddScoped(typeof(IUpdateRelationshipService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IUpdateRelationshipService<,>), typeof(JsonApiResourceService<,>));
+            _services.AddScoped(typeof(ISetRelationshipService<>), typeof(JsonApiResourceService<>));
+            _services.AddScoped(typeof(ISetRelationshipService<,>), typeof(JsonApiResourceService<,>));
             
             _services.AddScoped(typeof(IDeleteRelationshipService<>), typeof(JsonApiResourceService<>));
             _services.AddScoped(typeof(IDeleteRelationshipService<,>), typeof(JsonApiResourceService<,>));
