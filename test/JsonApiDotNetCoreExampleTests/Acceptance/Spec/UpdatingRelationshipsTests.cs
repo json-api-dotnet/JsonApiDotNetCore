@@ -424,94 +424,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(2, updatedTodoItems.Count);
         }
-
-        [Fact]
-        public async Task Can_Update_ToMany_Relationship_ThroughLink()
-        {
-            // Arrange
-            var person = _personFaker.Generate();
-            _context.People.Add(person);
-
-            var todoItem = _todoItemFaker.Generate();
-            _context.TodoItems.Add(todoItem);
-
-            await _context.SaveChangesAsync();
-
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-
-            var content = new
-            {
-                data = new List<object>
-                {
-                    new {
-                        type = "todoItems",
-                        id = $"{todoItem.Id}"
-                    }
-                }
-            };
-
-            var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/people/{person.Id}/relationships/todoItems";
-            var request = new HttpRequestMessage(httpMethod, route)
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(content))
-            };
-
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            // Act
-            var response = await client.SendAsync(request);
-
-            // Assert
-            var body = response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-            _context = _fixture.GetRequiredService<AppDbContext>();
-            var personsTodoItems = _context.People.Include(p => p.TodoItems).Single(p => p.Id == person.Id).TodoItems;
-
-            Assert.NotEmpty(personsTodoItems);
-        }
-
-        [Fact]
-        public async Task Can_Update_ToOne_Relationship_ThroughLink()
-        {
-            // Arrange
-            var person = _personFaker.Generate();
-            _context.People.Add(person);
-
-            var todoItem = _todoItemFaker.Generate();
-            _context.TodoItems.Add(todoItem);
-
-            await _context.SaveChangesAsync();
-
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-
-            var serializer = _fixture.GetSerializer<Person>(p => new { });
-            var content = serializer.Serialize(person);
-
-            var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/owner";
-            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(content)};
-
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            // Act
-            var response = await client.SendAsync(request);
-            var todoItemsOwner = _context.TodoItems.Include(t => t.Owner).Single(t => t.Id == todoItem.Id);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotNull(todoItemsOwner);
-        }
-
+        
         [Fact]
         public async Task Can_Delete_ToOne_Relationship_By_Patching_Resource()
         {
@@ -614,52 +527,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Empty(personResult.TodoItems);
         }
-
-        [Fact]
-        public async Task Can_Delete_Relationship_By_Patching_Relationship()
-        {
-            // Arrange
-            var person = _personFaker.Generate();
-            var todoItem = _todoItemFaker.Generate();
-            todoItem.Owner = person;
-
-            _context.People.Add(person);
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
-
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-
-            var content = new
-            {
-                data = (object)null
-            };
-
-            var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/owner";
-            var request = new HttpRequestMessage(httpMethod, route)
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(content))
-            };
-
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            // Act
-            var response = await client.SendAsync(request);
-
-            // Assert
-            var todoItemResult = _context.TodoItems
-                .AsNoTracking()
-                .Include(t => t.Owner)
-                .Single(t => t.Id == todoItem.Id);
-
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Null(todoItemResult.Owner);
-        }
-
+        
         [Fact]
         public async Task Updating_ToOne_Relationship_With_Implicit_Remove()
         {
@@ -771,7 +639,139 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Fails_On_Unknown_Relationship()
+        public async Task Can_Set_ToMany_Relationship_Through_Relationship_Endpoint()
+        {
+            // Arrange
+            var person = _personFaker.Generate();
+            _context.People.Add(person);
+
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+
+            await _context.SaveChangesAsync();
+
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = new List<object>
+                {
+                    new {
+                        type = "todoItems",
+                        id = $"{todoItem.Id}"
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/people/{person.Id}/relationships/todoItems";
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
+
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            var body = response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            _context = _fixture.GetRequiredService<AppDbContext>();
+            var personsTodoItems = _context.People.Include(p => p.TodoItems).Single(p => p.Id == person.Id).TodoItems;
+
+            Assert.NotEmpty(personsTodoItems);
+        }
+
+        [Fact]
+        public async Task Can_Set_ToOne_Relationship_Through_Relationship_Endpoint()
+        {
+            // Arrange
+            var person = _personFaker.Generate();
+            _context.People.Add(person);
+
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+
+            await _context.SaveChangesAsync();
+
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var serializer = _fixture.GetSerializer<Person>(p => new { });
+            var content = serializer.Serialize(person);
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/owner";
+            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(content)};
+
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+
+            // Act
+            var response = await client.SendAsync(request);
+            var todoItemsOwner = _context.TodoItems.Include(t => t.Owner).Single(t => t.Id == todoItem.Id);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(todoItemsOwner);
+        }
+        
+        [Fact]
+        public async Task Can_Delete_Relationship_By_Patching_Through_Relationship_Endpoint()
+        {
+            // Arrange
+            var person = _personFaker.Generate();
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+
+            _context.People.Add(person);
+            _context.TodoItems.Add(todoItem);
+            await _context.SaveChangesAsync();
+
+            var builder = WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = (object)null
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/owner";
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
+
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            var todoItemResult = _context.TodoItems
+                .AsNoTracking()
+                .Include(t => t.Owner)
+                .Single(t => t.Id == todoItem.Id);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Null(todoItemResult.Owner);
+        }
+        
+        [Fact]
+        public async Task Fails_On_Unknown_Relationship_On_Relationship_Endpoint()
         {
             // Arrange
             var person = _personFaker.Generate();
@@ -809,9 +809,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal("The requested relationship does not exist.", errorDocument.Errors[0].Title);
             Assert.Equal("The resource 'todoItems' does not contain a relationship named 'invalid'.",errorDocument.Errors[0].Detail);
         }
-
+        
         [Fact]
-        public async Task Fails_On_Missing_Resource()
+        public async Task Fails_On_Missing_Resource_On_Relationship_Endpoint()
         {
             // Arrange
             var person = _personFaker.Generate();
