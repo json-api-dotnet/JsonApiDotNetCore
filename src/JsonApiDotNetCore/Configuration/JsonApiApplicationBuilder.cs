@@ -184,53 +184,29 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddRepositoryLayer()
         {
-            _services.AddScoped(typeof(IResourceRepository<>), typeof(EntityFrameworkCoreRepository<>));
-            _services.AddScoped(typeof(IResourceRepository<,>), typeof(EntityFrameworkCoreRepository<,>));
-
-            _services.AddScoped(typeof(IResourceReadRepository<,>), typeof(EntityFrameworkCoreRepository<,>));
-            _services.AddScoped(typeof(IResourceWriteRepository<,>), typeof(EntityFrameworkCoreRepository<,>));
+            var intTypedResourceService = typeof(EntityFrameworkCoreRepository<>);
+            var openTypedResourceService = typeof(EntityFrameworkCoreRepository<,>);
+            
+            foreach (var partialRepositoryInterface in ServiceDiscoveryFacade.RepositoryInterfaces)
+            {
+                _services.AddScoped(partialRepositoryInterface,
+                    partialRepositoryInterface.GetGenericArguments().Length == 2
+                        ? openTypedResourceService
+                        : intTypedResourceService);
+            }
         }
 
         private void AddServiceLayer()
         {
-            _services.AddScoped(typeof(ICreateService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(ICreateService<,>), typeof(JsonApiResourceService<,>));
-
-            _services.AddScoped(typeof(IGetAllService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IGetAllService<,>), typeof(JsonApiResourceService<,>));
-
-            _services.AddScoped(typeof(IGetByIdService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IGetByIdService<,>), typeof(JsonApiResourceService<,>));
-            
-            _services.AddScoped(typeof(IGetSecondaryService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IGetSecondaryService<,>), typeof(JsonApiResourceService<,>));
-
-            _services.AddScoped(typeof(IUpdateService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IUpdateService<,>), typeof(JsonApiResourceService<,>));
-
-            _services.AddScoped(typeof(IDeleteService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IDeleteService<,>), typeof(JsonApiResourceService<,>));
-
-            _services.AddScoped(typeof(IAddRelationshipService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IAddRelationshipService<,>), typeof(JsonApiResourceService<,>));
-            
-            _services.AddScoped(typeof(IGetRelationshipService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(JsonApiResourceService<,>));
-            
-            _services.AddScoped(typeof(ISetRelationshipService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(ISetRelationshipService<,>), typeof(JsonApiResourceService<,>));
-            
-            _services.AddScoped(typeof(IDeleteRelationshipService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IDeleteRelationshipService<,>), typeof(JsonApiResourceService<,>));
-            
-            _services.AddScoped(typeof(IResourceService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IResourceService<,>), typeof(JsonApiResourceService<,>));
-
-            _services.AddScoped(typeof(IResourceQueryService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IResourceQueryService<,>), typeof(JsonApiResourceService<,>));
-            
-            _services.AddScoped(typeof(IResourceCommandService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IResourceCommandService<,>), typeof(JsonApiResourceService<,>));
+            var intTypedResourceService = typeof(JsonApiResourceService<>);
+            var openTypedResourceService = typeof(JsonApiResourceService<,>);
+            foreach (var partialServiceInterface in ServiceDiscoveryFacade.ServiceInterfaces)
+            {
+                _services.AddScoped(partialServiceInterface,
+                    partialServiceInterface.GetGenericArguments().Length == 2
+                        ? openTypedResourceService
+                        : intTypedResourceService);
+            }
         }
 
         private void AddQueryStringLayer()

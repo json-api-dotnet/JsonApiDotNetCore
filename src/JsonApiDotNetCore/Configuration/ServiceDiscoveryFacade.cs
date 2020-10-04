@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IDeleteRelationshipService<,>)
         };
 
-        private static readonly HashSet<Type> _repositoryInterfaces = new HashSet<Type> {
+        internal static readonly HashSet<Type> RepositoryInterfaces = new HashSet<Type> {
             typeof(IResourceRepository<>),
             typeof(IResourceRepository<,>),
             typeof(IResourceWriteRepository<>),
@@ -174,7 +174,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddRepositories(Assembly assembly, ResourceDescriptor resourceDescriptor)
         {
-            foreach (var repositoryInterface in _repositoryInterfaces)
+            foreach (var repositoryInterface in RepositoryInterfaces)
             {
                 RegisterImplementations(assembly, repositoryInterface, resourceDescriptor);
             }
