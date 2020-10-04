@@ -22,9 +22,12 @@ namespace JsonApiDotNetCoreExample.Services
             IJsonApiRequest request,
             IResourceChangeTracker<Article> resourceChangeTracker,
             IResourceFactory resourceFactory,
+            IResourceAccessor resourceAccessor,
+            ITargetedFields targetedFields,
+            IResourceContextProvider provider,
             IResourceHookExecutor hookExecutor = null)
             : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                resourceChangeTracker, resourceFactory, hookExecutor)
+                resourceChangeTracker, resourceFactory, resourceAccessor, targetedFields, provider, hookExecutor)
         { }
 
         public override async Task<Article> GetAsync(int id)

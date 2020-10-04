@@ -67,14 +67,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = todoItem.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "childrenTodos", new
+                        {
+                            "childrenTodos", new
                             {
                                 data = new object[]
                                 {
-                                    new { type = "todoItems", id = $"{todoItem.Id}" },
-                                    new { type = "todoItems", id = $"{strayTodoItem.Id}" }
+                                    new {type = "todoItems", id = $"{todoItem.Id}"},
+                                    new {type = "todoItems", id = $"{strayTodoItem.Id}"}
                                 }
-
                             }
                         }
                     }
@@ -95,8 +95,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context = _fixture.GetRequiredService<AppDbContext>();
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
-                 .Where(ti => ti.Id == todoItem.Id)
-                 .Include(ti => ti.ChildrenTodos).First();
+                .Where(ti => ti.Id == todoItem.Id)
+                .Include(ti => ti.ChildrenTodos).First();
 
             Assert.Contains(updatedTodoItem.ChildrenTodos, ti => ti.Id == todoItem.Id);
         }
@@ -124,9 +124,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = todoItem.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "dependentOnTodo", new
+                        {
+                            "dependentOnTodo", new
                             {
-                                data = new { type = "todoItems", id = $"{todoItem.Id}" }
+                                data = new {type = "todoItems", id = $"{todoItem.Id}"}
                             }
                         }
                     }
@@ -147,8 +148,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context = _fixture.GetRequiredService<AppDbContext>();
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
-                 .Where(ti => ti.Id == todoItem.Id)
-                 .Include(ti => ti.DependentOnTodo).First();
+                .Where(ti => ti.Id == todoItem.Id)
+                .Include(ti => ti.DependentOnTodo).First();
 
             Assert.Equal(todoItem.Id, updatedTodoItem.DependentOnTodoId);
         }
@@ -178,17 +179,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = todoItem.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "dependentOnTodo", new
+                        {
+                            "dependentOnTodo", new
                             {
-                                data = new { type = "todoItems", id = $"{todoItem.Id}" }
+                                data = new {type = "todoItems", id = $"{todoItem.Id}"}
                             }
                         },
-                        { "childrenTodos", new
+                        {
+                            "childrenTodos", new
                             {
                                 data = new object[]
                                 {
-                                    new { type = "todoItems", id = $"{todoItem.Id}" },
-                                    new { type = "todoItems", id = $"{strayTodoItem.Id}" }
+                                    new {type = "todoItems", id = $"{todoItem.Id}"},
+                                    new {type = "todoItems", id = $"{strayTodoItem.Id}"}
                                 }
                             }
                         }
@@ -210,18 +213,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context = _fixture.GetRequiredService<AppDbContext>();
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
-                 .Where(ti => ti.Id == todoItem.Id)
-                 .Include(ti => ti.ParentTodo).First();
+                .Where(ti => ti.Id == todoItem.Id)
+                .Include(ti => ti.ParentTodo).First();
 
             Assert.Equal(todoItem.Id, updatedTodoItem.ParentTodoId);
         }
-        
+
         [Fact]
         public async Task Fails_When_Patching_Resource_ToOne_Relationship_With_Missing_Resource()
         {
             // Arrange 
             var todoItem = _todoItemFaker.Generate();
-            _context.TodoItems.Add(todoItem);
+            var person = _personFaker.Generate();
+            _context.AddRange(todoItem, person);
             await _context.SaveChangesAsync();
 
             var builder = WebHost.CreateDefaultBuilder()
@@ -239,9 +243,21 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = todoItem.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "owner", new
+                        {
+                            "stakeHolders", new
                             {
-                                data = new { type = "people", id = "999999999" }
+                                data = new[]
+                                {
+                                    new { type = "people", id = person.StringId },
+                                    new { type = "people", id = "900000" },
+                                    new { type = "people", id = "900001" }
+                                }
+                            }
+                        },
+                        {
+                            "parentTodo", new
+                            {
+                                data = new { type = "todoItems", id = "900002" }
                             }
                         }
                     }
@@ -256,12 +272,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             request.Content = new StringContent(serializedContent);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
-
             // Act
             var response = await client.SendAsync(request);
-
+            var responseBody = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-
+            Assert.Contains("For the following types, the resources with the specified ids do not exist:\\\\npeople: 900000,900001\\ntodoItems: 900002\"", responseBody);
         }
 
         [Fact]
@@ -295,14 +310,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = todoCollection.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "todoItems", new
+                        {
+                            "todoItems", new
                             {
                                 data = new object[]
                                 {
-                                    new { type = "todoItems", id = $"{newTodoItem1.Id}" },
-                                    new { type = "todoItems", id = $"{newTodoItem2.Id}" }
+                                    new {type = "todoItems", id = $"{newTodoItem1.Id}"},
+                                    new {type = "todoItems", id = $"{newTodoItem2.Id}"}
                                 }
-
                             }
                         }
                     }
@@ -373,14 +388,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     },
                     relationships = new Dictionary<string, object>
                     {
-                        { "todoItems", new
+                        {
+                            "todoItems", new
                             {
                                 data = new object[]
                                 {
-                                    new { type = "todoItems", id = $"{newTodoItem1.Id}" },
-                                    new { type = "todoItems", id = $"{newTodoItem2.Id}" }
+                                    new {type = "todoItems", id = $"{newTodoItem1.Id}"},
+                                    new {type = "todoItems", id = $"{newTodoItem2.Id}"}
                                 }
-
                             }
                         }
                     }
@@ -437,14 +452,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = todoCollection.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "todoItems", new
+                        {
+                            "todoItems", new
                             {
                                 data = new object[]
                                 {
-                                    new { type = "todoItems", id = $"{todoItem1.Id}" },
-                                    new { type = "todoItems", id = $"{todoItem2.Id}" }
+                                    new {type = "todoItems", id = $"{todoItem1.Id}"},
+                                    new {type = "todoItems", id = $"{todoItem2.Id}"}
                                 }
-
                             }
                         }
                     }
@@ -472,7 +487,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(2, updatedTodoItems.Count);
         }
-        
+
         [Fact]
         public async Task Can_Delete_ToOne_Relationship_By_Patching_Resource()
         {
@@ -501,7 +516,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                         owner = new
                         {
-                            data = (object)null
+                            data = (object) null
                         }
                     }
                 }
@@ -534,7 +549,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
-            person.TodoItems = new HashSet<TodoItem> { todoItem };
+            person.TodoItems = new HashSet<TodoItem> {todoItem};
             _context.People.Add(person);
             await _context.SaveChangesAsync();
 
@@ -546,7 +561,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     type = "people",
                     relationships = new Dictionary<string, object>
                     {
-                         { "todoItems", new
+                        {
+                            "todoItems", new
                             {
                                 data = new List<object>()
                             }
@@ -575,7 +591,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Empty(personResult.TodoItems);
         }
-        
+
         [Fact]
         public async Task Updating_ToOne_Relationship_With_Implicit_Remove()
         {
@@ -585,7 +601,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var person1 = _personFaker.Generate();
             person1.Passport = passport;
             var person2 = _personFaker.Generate();
-            context.People.AddRange(new List<Person> { person1, person2 });
+            context.People.AddRange(new List<Person> {person1, person2});
             await context.SaveChangesAsync();
             var passportId = person1.PassportId;
             var content = new
@@ -596,9 +612,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = person2.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "passport", new
+                        {
+                            "passport", new
                             {
-                                data = new { type = "passports", id = $"{passport.StringId}" }
+                                data = new {type = "passports", id = $"{passport.StringId}"}
                             }
                         }
                     }
@@ -618,9 +635,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var body = await response.Content.ReadAsStringAsync();
 
             // Assert
-           
-            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-            var dbPerson = context.People.AsNoTracking().Where(p => p.Id == person2.Id).Include("Passport").FirstOrDefault();
+
+            Assert.True(HttpStatusCode.OK == response.StatusCode,
+                $"{route} returned {response.StatusCode} status code with payload: {body}");
+            var dbPerson = context.People.AsNoTracking().Where(p => p.Id == person2.Id).Include("Passport")
+                .FirstOrDefault();
             Assert.Equal(passportId, dbPerson.Passport.Id);
         }
 
@@ -633,7 +652,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             person1.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
             var person2 = _personFaker.Generate();
             person2.TodoItems = _todoItemFaker.Generate(2).ToHashSet();
-            context.People.AddRange(new List<Person> { person1, person2 });
+            context.People.AddRange(new List<Person> {person1, person2});
             await context.SaveChangesAsync();
             var todoItem1Id = person1.TodoItems.ElementAt(0).Id;
             var todoItem2Id = person1.TodoItems.ElementAt(1).Id;
@@ -646,15 +665,18 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = person2.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "todoItems", new
+                        {
+                            "todoItems", new
                             {
                                 data = new List<object>
                                 {
-                                    new {
+                                    new
+                                    {
                                         type = "todoItems",
                                         id = $"{todoItem1Id}"
                                     },
-                                    new {
+                                    new
+                                    {
                                         type = "todoItems",
                                         id = $"{todoItem2Id}"
                                     }
@@ -679,8 +701,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
 
-            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-            var dbPerson = context.People.AsNoTracking().Where(p => p.Id == person2.Id).Include("TodoItems").FirstOrDefault();
+            Assert.True(HttpStatusCode.OK == response.StatusCode,
+                $"{route} returned {response.StatusCode} status code with payload: {body}");
+            var dbPerson = context.People.AsNoTracking().Where(p => p.Id == person2.Id).Include("TodoItems")
+                .FirstOrDefault();
             Assert.Equal(2, dbPerson.TodoItems.Count);
             Assert.NotNull(dbPerson.TodoItems.SingleOrDefault(ti => ti.Id == todoItem1Id));
             Assert.NotNull(dbPerson.TodoItems.SingleOrDefault(ti => ti.Id == todoItem2Id));
@@ -709,7 +733,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new List<object>
                 {
-                    new {
+                    new
+                    {
                         type = "todoItems",
                         id = $"{todoItem.Id}"
                     }
@@ -737,7 +762,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(assertTodoItems);
             Assert.Equal(todoItem.Id, assertTodoItems.ElementAt(0).Id);
         }
-        
+
         [Fact]
         public async Task Can_Set_ToOne_Relationship_Through_Relationship_Endpoint()
         {
@@ -794,7 +819,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var content = new
             {
-                data = (object)null
+                data = (object) null
             };
 
             var httpMethod = new HttpMethod("PATCH");
@@ -818,7 +843,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Null(todoItemResult.Owner);
         }
-        
+
         [Fact]
         public async Task Can_Add_To_ToMany_Relationship_Through_Relationship_Endpoint()
         {
@@ -842,7 +867,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new List<object>
                 {
-                    new {
+                    new
+                    {
                         type = "todoItems",
                         id = $"{todoItem.Id}"
                     }
@@ -870,7 +896,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(4, assertTodoItems.Count);
             Assert.Equal(todoItem.Id, assertTodoItems.ElementAt(3).Id);
         }
-        
+
         [Fact]
         public async Task Can_Delete_From_To_ToMany_Relationship_Through_Relationship_Endpoint()
         {
@@ -878,7 +904,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var person = _personFaker.Generate();
             person.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
             _context.People.Add(person);
-            
+
             await _context.SaveChangesAsync();
             var todoItemToDelete = person.TodoItems.ElementAt(0);
 
@@ -892,7 +918,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new List<object>
                 {
-                    new {
+                    new
+                    {
                         type = "todoItems",
                         id = $"{todoItemToDelete.Id}"
                     }
@@ -921,7 +948,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var deletedTodoItem = assertTodoItems.SingleOrDefault(ti => ti.Id == todoItemToDelete.Id);
             Assert.Null(deletedTodoItem);
         }
-        
+
         [Fact]
         public async Task Fails_When_Unknown_Relationship_On_Relationship_Endpoint()
         {
@@ -959,9 +986,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested relationship does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("The resource 'todoItems' does not contain a relationship named 'invalid'.",errorDocument.Errors[0].Detail);
+            Assert.Equal("The resource 'todoItems' does not contain a relationship named 'invalid'.",
+                errorDocument.Errors[0].Detail);
         }
-        
+
         [Fact]
         public async Task Fails_When_Missing_Resource_On_Relationship_Endpoint()
         {
@@ -996,7 +1024,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("Resource of type 'todoItems' with ID '99999999' does not exist.",errorDocument.Errors[0].Detail);
+            Assert.Equal("Resource of type 'todoItems' with ID '99999999' does not exist.",
+                errorDocument.Errors[0].Detail);
         }
     }
 }

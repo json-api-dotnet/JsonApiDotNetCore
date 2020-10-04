@@ -30,6 +30,9 @@ namespace JsonApiDotNetCore.Services
         private readonly IJsonApiRequest _request;
         private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
         private readonly IResourceFactory _resourceFactory;
+        private readonly IResourceAccessor _resourceAccessor;
+        private readonly ITargetedFields _targetedFields;
+        private readonly IResourceContextProvider _provider;
         private readonly IResourceHookExecutor _hookExecutor;
 
         public JsonApiResourceService(
@@ -41,6 +44,9 @@ namespace JsonApiDotNetCore.Services
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
+            IResourceAccessor resourceAccessor,
+            ITargetedFields targetedFields,
+            IResourceContextProvider provider,
             IResourceHookExecutor hookExecutor = null)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
@@ -53,6 +59,9 @@ namespace JsonApiDotNetCore.Services
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _resourceChangeTracker = resourceChangeTracker ?? throw new ArgumentNullException(nameof(resourceChangeTracker));
             _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
+            _resourceAccessor = resourceAccessor ?? throw new ArgumentNullException(nameof(resourceAccessor));
+            _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             _hookExecutor = hookExecutor;
         }
 
@@ -224,7 +233,12 @@ namespace JsonApiDotNetCore.Services
         {
             _traceWriter.LogMethodStart(new {id, requestResource});
             if (requestResource == null) throw new ArgumentNullException(nameof(requestResource));
-
+            
+            if (HasNonNullRelationshipAssignments(requestResource, out var assignments))
+            {
+                await AssertRelationshipValuesExistAsync(assignments);
+            }
+            
             TResource databaseResource = await GetPrimaryResourceById(id, false);
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(databaseResource);
@@ -250,7 +264,7 @@ namespace JsonApiDotNetCore.Services
             bool hasImplicitChanges = _resourceChangeTracker.HasImplicitChanges();
             return hasImplicitChanges ? afterResource : null;
         }
-
+        
         /// <inheritdoc />
         // triggered by DELETE /articles/{id
         public virtual async Task DeleteAsync(TId id)
@@ -362,7 +376,7 @@ namespace JsonApiDotNetCore.Services
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
-
+            
             var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
             secondaryLayer.Projection = _queryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(_request.SecondaryResource);
             secondaryLayer.Include = null;
@@ -427,6 +441,23 @@ namespace JsonApiDotNetCore.Services
         
         #endregion 
         
+        private bool HasNonNullRelationshipAssignments(TResource requestResource, out IEnumerable<(RelationshipAttribute, object)> assignments)
+        {
+            assignments = _targetedFields.Relationships
+                .Select(attr => (attr, attr.GetValue(requestResource)))
+                .Where(t =>
+                {
+                    if (t.Item1 is HasOneAttribute)
+                    {
+                        return t.Item2 != null;
+                    }
+
+                    return ((IEnumerable<IIdentifiable>) t.Item2).Any();
+                });
+
+            return assignments.Any();
+        }
+        
         private void AssertPrimaryResourceExists(TResource resource)
         {
             if (resource == null)
@@ -453,8 +484,36 @@ namespace JsonApiDotNetCore.Services
                 throw new RelationshipNotFoundException(relationshipName, _request.PrimaryResource.PublicName);
             }
         }
+        
+        private async Task AssertRelationshipValuesExistAsync(IEnumerable<(RelationshipAttribute relationship, object relationshipValue)> assignments)
+        {
+            var nonExistingResources = new Dictionary<string, IList<string>>();
+            foreach (var (relationship, relationshipValue) in assignments)
+            {
+                IEnumerable<string> identifiers; 
+                if (relationshipValue is IIdentifiable identifiable)
+                {
+                    identifiers = new [] { identifiable.StringId };
+                }
+                else
+                {
+                    identifiers = ((IEnumerable<IIdentifiable>) relationshipValue).Select(i => i.StringId);
+                }                
+                var resources = await _resourceAccessor.GetResourcesByIdAsync(relationship.RightType, identifiers);
+                var missing = identifiers.Where(id => resources.All(r => r?.StringId != id)).ToArray();
+                if (missing.Any())
+                {
+                    nonExistingResources.Add(_provider.GetResourceContext(relationship.RightType).PublicName, missing.ToList());
+                }
+            }
 
-        private static List<TResource> AsList(TResource resource)
+            if (nonExistingResources.Any())
+            {
+                throw new ResourceNotFoundException(nonExistingResources);
+            }
+        }
+
+        private List<TResource> AsList(TResource resource)
         {
             return new List<TResource> { resource };
         }
@@ -477,9 +536,12 @@ namespace JsonApiDotNetCore.Services
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
+            IResourceAccessor resourceAccessor,
+            ITargetedFields targetedFields,
+            IResourceContextProvider provider,
             IResourceHookExecutor hookExecutor = null)
             : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                resourceChangeTracker, resourceFactory, hookExecutor)
+                resourceChangeTracker, resourceFactory, resourceAccessor, targetedFields, provider, hookExecutor)
         { }
     }
 }
