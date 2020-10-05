@@ -65,13 +65,5 @@ namespace JsonApiDotNetCore.Serialization
             else if (field is RelationshipAttribute relationship)
                 _targetedFields.Relationships.Add(relationship);
         }
-
-        protected override IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
-        {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (attributes == null) throw new ArgumentNullException(nameof(attributes));
-            
-            return base.SetAttributes(resource, attributeValues, attributes);
-        }
     }
 }

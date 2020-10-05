@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="resource">The parsed resource.</param>
         /// <param name="attributeValues">Attributes and their values, as in the serialized content.</param>
         /// <param name="attributes">Exposed attributes for <paramref name="resource"/>.</param>
-        protected virtual IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
+        protected IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             if (attributes == null) throw new ArgumentNullException(nameof(attributes));
