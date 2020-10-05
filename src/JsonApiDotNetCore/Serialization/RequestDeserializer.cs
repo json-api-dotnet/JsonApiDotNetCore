@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
-using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -66,30 +63,6 @@ namespace JsonApiDotNetCore.Serialization
             }
             else if (field is RelationshipAttribute relationship)
                 _targetedFields.Relationships.Add(relationship);
-        }
-
-        protected override IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
-        {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (attributes == null) throw new ArgumentNullException(nameof(attributes));
-
-            if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Patch.Method)
-            {
-                foreach (AttrAttribute attr in attributes)
-                {
-                    if (attr.Property.GetCustomAttribute<IsRequiredAttribute>() != null)
-                    {
-                        bool disableValidator = attributeValues == null || !attributeValues.ContainsKey(attr.PublicName);
-
-                        if (disableValidator)
-                        {
-                            _httpContextAccessor.HttpContext.DisableRequiredValidator(attr.Property.Name, resource.GetType().Name);
-                        }
-                    }
-                }
-            }
-
-            return base.SetAttributes(resource, attributeValues, attributes);
         }
     }
 }

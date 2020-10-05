@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Building;
