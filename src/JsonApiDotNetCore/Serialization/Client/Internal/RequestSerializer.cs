@@ -99,6 +99,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         /// </summary>
         private IReadOnlyCollection<RelationshipAttribute> GetRelationshipsToSerialize(IIdentifiable resource)
         {
+            return RelationshipsToSerialize;
             var currentResourceType = resource.GetType();
             // only allow relationship attributes to be serialized if they were set using
             // <see cref="RelationshipsToInclude{T}(Expression{Func{T, dynamic}})"/>

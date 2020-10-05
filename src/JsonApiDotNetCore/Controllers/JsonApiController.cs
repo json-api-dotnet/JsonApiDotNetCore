@@ -43,8 +43,6 @@ namespace JsonApiDotNetCore.Controllers
                 getRelationship, setRelationship, deleteRelationship)
         { }
 
-        #region Primary Resource Endpoints
-
         /// <inheritdoc />
         [HttpPost]
         public override async Task<IActionResult> PostAsync([FromBody] TResource resource)
@@ -75,10 +73,6 @@ namespace JsonApiDotNetCore.Controllers
         [HttpDelete("{id}")]
         public override async Task<IActionResult> DeleteAsync(TId id) => await base.DeleteAsync(id);
         
-        #endregion
-        
-        #region Relationship Link Endpoints
-
         /// <inheritdoc />
         [HttpPost("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> PostRelationshipAsync(
@@ -99,9 +93,6 @@ namespace JsonApiDotNetCore.Controllers
         [HttpDelete("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IEnumerable<IIdentifiable> relationships)
             => await base.DeleteRelationshipAsync(id, relationshipName, relationships);
-
-        #endregion
-
     }
 
     /// <inheritdoc />

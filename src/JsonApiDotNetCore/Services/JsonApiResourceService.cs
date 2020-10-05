@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -65,8 +66,6 @@ namespace JsonApiDotNetCore.Services
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             _hookExecutor = hookExecutor;
         }
-
-        #region Primary resource pipelines 
 
         /// <inheritdoc />
         // triggered by POST /articles
@@ -295,11 +294,7 @@ namespace JsonApiDotNetCore.Services
                 AssertPrimaryResourceExists(null);
             }
         }
-
-        #endregion 
-
-        #region Relationship link pipelines
-
+        
         /// <inheritdoc />
         // triggered by POST /articles/{id}/relationships/{relationshipName}
         public async Task AddRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships)
@@ -388,11 +383,15 @@ namespace JsonApiDotNetCore.Services
             var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
             primaryLayer.Projection = null;
 
+            primaryLayer.Include = null;
+            
             var primaryResources = await _repository.GetAsync(primaryLayer);
 
             var primaryResource = primaryResources.SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
-
+            
+            await AssertRelationshipValuesExistAsync((_request.Relationship, relationships));
+            
             if (_hookExecutor != null)
             {
                 primaryResource = _hookExecutor.BeforeUpdate(AsList(primaryResource), ResourcePipeline.PatchRelationship).Single();
@@ -440,13 +439,10 @@ namespace JsonApiDotNetCore.Services
             AssertRelationshipExists(relationshipName);
             AssertRelationshipIsToMany(relationshipName);
             
-            var relationship = GetRelationshipAttribute(relationshipName);
-            await AssertRelationshipValuesExistAsync((relationship, relationships));
+            await AssertRelationshipValuesExistAsync((_request.Relationship, relationships));
 
             throw new NotImplementedException();
         }
-
-        #endregion 
 
         private bool HasNonNullRelationshipAssignments(TResource requestResource, out (RelationshipAttribute, object)[] assignments)
         {
@@ -508,14 +504,14 @@ namespace JsonApiDotNetCore.Services
                 }
                 else
                 {
-                    identifiers = ((IEnumerable<IIdentifiable>) relationshipValue).Select(i => i.StringId);
+                    identifiers = ((IEnumerable<IIdentifiable>) relationshipValue).Select(i => i.StringId).ToArray();
                 }  
                 
                 var resources = await _resourceAccessor.GetResourcesByIdAsync(relationship.RightType, identifiers);
                 var missing = identifiers.Where(id => resources.All(r => r?.StringId != id)).ToArray();
                 if (missing.Any())
                 {
-                    nonExistingResources.Add(_provider.GetResourceContext(relationship.RightType).PublicName, missing.ToList());
+                    nonExistingResources.Add(_provider.GetResourceContext(relationship.RightType).PublicName, missing.ToArray());
                 }
             }
 

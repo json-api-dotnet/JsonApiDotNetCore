@@ -428,7 +428,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource_With_Overlap()
         {
             // Arrange
-            var todoCollection = new TodoItemCollection {TodoItems = new HashSet<TodoItem>()};
+            var todoCollection = new TodoItemCollection { TodoItems = new HashSet<TodoItem>() };
             var person = _personFaker.Generate();
             var todoItem1 = _todoItemFaker.Generate();
             var todoItem2 = _todoItemFaker.Generate();
@@ -751,8 +751,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
 
             // Act
-            var response = await client.SendAsync(request);
-
+            var response = await client.SendAsync(request); ;
+            
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             _context = _fixture.GetRequiredService<AppDbContext>();

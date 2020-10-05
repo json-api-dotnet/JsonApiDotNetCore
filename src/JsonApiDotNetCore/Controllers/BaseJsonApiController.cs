@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Controllers
             ILoggerFactory loggerFactory,
             IResourceService<TResource, TId> resourceService)
             : this(options, loggerFactory, resourceService, resourceService, resourceService, resourceService,
-                resourceService, resourceService, resourceService, resourceService)
+                resourceService, resourceService, resourceService, resourceService, resourceService, resourceService)
         { }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Controllers
             IResourceQueryService<TResource, TId> queryService = null,
             IResourceCommandService<TResource, TId> commandService = null)
             : this(options, loggerFactory, commandService, queryService, queryService, queryService, commandService,
-                commandService, commandService, queryService)
+                commandService, commandService, queryService, commandService, commandService)
         { }
 
         /// <summary>

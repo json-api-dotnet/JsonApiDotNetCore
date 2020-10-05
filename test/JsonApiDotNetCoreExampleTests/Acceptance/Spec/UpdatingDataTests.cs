@@ -320,7 +320,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var client = server.CreateClient();
             var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, p => new { p.Description, p.Ordinal });
 
-            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", serializer.Serialize(newTodoItem));
+            var requestBody = serializer.Serialize(newTodoItem);
+            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}",requestBody);
 
             // Act
             var response = await client.SendAsync(request);

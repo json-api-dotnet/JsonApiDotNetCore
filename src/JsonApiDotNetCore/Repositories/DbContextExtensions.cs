@@ -16,16 +16,27 @@ namespace JsonApiDotNetCore.Repositories
         internal static TEntity GetTrackedEntity<TEntity>(this DbContext context, TEntity entity)
             where TEntity : class, IIdentifiable
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+            return (TEntity)context.GetTrackedEntity(typeof(TEntity), entity.StringId);
+        }
+
+        internal static IIdentifiable GetTrackedEntity(this DbContext context, Type entityType, string id)
+        {
+            if (entityType == null) throw new ArgumentNullException(nameof(entityType));
+            
+            if (id == null)
+            {
+                return null;
+            }
 
             var entityEntry = context.ChangeTracker
                 .Entries()
                 .FirstOrDefault(entry =>
-                    entry.Entity.GetType() == entity.GetType() &&
-                    ((IIdentifiable) entry.Entity).StringId == entity.StringId);
+                    entry.Entity.GetType() == entityType &&
+                    ((IIdentifiable) entry.Entity).StringId == id);
 
-            return (TEntity) entityEntry?.Entity;
+            return (IIdentifiable)entityEntry?.Entity;
         }
 
         /// <summary>
