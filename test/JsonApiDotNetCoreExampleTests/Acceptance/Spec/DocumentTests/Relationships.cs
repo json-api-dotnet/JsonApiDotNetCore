@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
         public Relationships(TestFixture<TestStartup> fixture)
         {
-            _context = fixture.GetService<AppDbContext>();
+            _context = fixture.GetRequiredService<AppDbContext>();
              _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())

@@ -13,5 +13,8 @@ namespace JsonApiDotNetCore.Serialization.Objects
 
         [JsonProperty("links", NullValueHandling = NullValueHandling.Ignore)]
         public ResourceLinks Links { get; set; }
+
+        [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
+        public IDictionary<string, object> Meta { get; set; }
     }
 }

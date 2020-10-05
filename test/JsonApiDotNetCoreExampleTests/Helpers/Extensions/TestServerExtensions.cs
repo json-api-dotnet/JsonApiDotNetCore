@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCoreExampleTests.Helpers.Extensions
 {
     public static class TestServerExtensions
     {
-        public static T GetService<T>(this TestServer server)
+        public static T GetRequiredService<T>(this TestServer server)
         {
-            return (T)server.Host.Services.GetService(typeof(T));
+            return (T)server.Host.Services.GetRequiredService(typeof(T));
         }
     }
 }

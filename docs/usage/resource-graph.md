@@ -101,4 +101,4 @@ public class MyModel : Identifiable { /* ... */ }
 public class MyModel : Identifiable { /* ... */ }
 ```
 
-The default naming convention can be changed in [options](./options.md#custom-serializer-settings).
+The default naming convention can be changed in [options](~/usage/options.md#custom-serializer-settings).

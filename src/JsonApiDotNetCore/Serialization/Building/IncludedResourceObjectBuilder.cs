@@ -14,16 +14,19 @@ namespace JsonApiDotNetCore.Serialization.Building
         private readonly HashSet<ResourceObject> _included;
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly ILinkBuilder _linkBuilder;
+        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
 
         public IncludedResourceObjectBuilder(IFieldsToSerialize fieldsToSerialize,
                                              ILinkBuilder linkBuilder,
                                              IResourceContextProvider resourceContextProvider,
+                                             IResourceDefinitionAccessor resourceDefinitionAccessor,
                                              IResourceObjectBuilderSettingsProvider settingsProvider)
             : base(resourceContextProvider, settingsProvider.Get())
         {
             _included = new HashSet<ResourceObject>(ResourceIdentifierObjectComparer.Instance);
             _fieldsToSerialize = fieldsToSerialize ?? throw new ArgumentNullException(nameof(fieldsToSerialize));
             _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
+            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
         }
 
         /// <inheritdoc />
@@ -45,6 +48,17 @@ namespace JsonApiDotNetCore.Serialization.Building
                 return _included.ToArray();
             }
             return null;
+        }
+
+        /// <inheritdoc /> 
+        public override ResourceObject Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null,
+            IReadOnlyCollection<RelationshipAttribute> relationships = null)
+        {
+            var resourceObject = base.Build(resource, attributes, relationships);
+
+            resourceObject.Meta = _resourceDefinitionAccessor.GetMeta(resource.GetType(), resource);
+
+            return resourceObject;
         }
 
         /// <inheritdoc />

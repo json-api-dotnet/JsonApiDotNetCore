@@ -14,7 +14,7 @@ public class Person : Identifiable
 
 There are two ways the public attribute name is determined:
 
-1. Using the configured [naming convention](./options.md#custom-serializer-settings).
+1. Using the configured [naming convention](~/usage/options.md#custom-serializer-settings).
 
 
 2. Individually using the attribute's constructor

@@ -41,7 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Request_ForEmptyCollection_Returns_EmptyDataCollection()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             await context.ClearTableAsync<TodoItem>();
             await context.SaveChangesAsync();
 
@@ -72,7 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Included_Resources_Contain_Relationship_Links()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             var todoItem = _todoItemFaker.Generate();
             var person = _personFaker.Generate();
             todoItem.Owner = person;
@@ -105,7 +105,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task GetResources_NoDefaultPageSize_ReturnsResources()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             await context.ClearTableAsync<TodoItem>();
             await context.SaveChangesAsync();
 
@@ -138,7 +138,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task GetSingleResource_ResourceDoesNotExist_ReturnsNotFound()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _fixture.GetRequiredService<AppDbContext>();
             await context.ClearTableAsync<TodoItem>();
             await context.SaveChangesAsync();
 

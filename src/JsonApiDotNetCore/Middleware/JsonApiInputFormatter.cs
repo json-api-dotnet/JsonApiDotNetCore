@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var reader = context.HttpContext.RequestServices.GetService<IJsonApiReader>();
+            var reader = context.HttpContext.RequestServices.GetRequiredService<IJsonApiReader>();
             return await reader.ReadAsync(context);
         }
     }

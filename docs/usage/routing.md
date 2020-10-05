@@ -26,11 +26,11 @@ public class OrderLineController : JsonApiController<OrderLine> { /* .... */ }
 GET /orderLines HTTP/1.1
 ```
 
-The public name of the resource ([which can be customized](./resource-graph.md#public-resource-name)) is used for the route, instead of the controller name.
+The public name of the resource ([which can be customized](~/usage/resource-graph.md#public-resource-name)) is used for the route, instead of the controller name.
 
 ### Non-json:api controllers
 
-If a controller does not inherit from `JsonApiController<TResource>`, the [configured naming convention](./options.md#custom-serializer-settings) is applied to the name of the controller.
+If a controller does not inherit from `JsonApiController<TResource>`, the [configured naming convention](~/usage/options.md#custom-serializer-settings) is applied to the name of the controller.
 ```c#
 public class OrderLineController : ControllerBase { /* .... */ }
 ```

@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
         public UpdatingDataTests(TestFixture<TestStartup> fixture) : base(fixture)
         { 
-            _context = fixture.GetService<AppDbContext>();
+            _context = fixture.GetRequiredService<AppDbContext>();
 
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())

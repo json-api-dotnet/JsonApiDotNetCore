@@ -231,8 +231,7 @@ namespace UnitTests.Serialization.Client
             var nestedIncludedResource = includedResource.Principal;
             Assert.Equal(nestedIncludeAttributeValue, nestedIncludedResource.AttributeMember);
         }
-
-
+        
         [Fact]
         public void DeserializeSingle_DeeplyNestedIncluded_CanDeserialize()
         {
@@ -284,7 +283,6 @@ namespace UnitTests.Serialization.Client
             Assert.Equal(deeplyNestedIncludedAttributeValue, deeplyNestedIncluded.AttributeMember);
         }
 
-
         [Fact]
         public void DeserializeList_DeeplyNestedIncluded_CanDeserialize()
         {
@@ -334,6 +332,57 @@ namespace UnitTests.Serialization.Client
             var deeplyNestedIncluded = nestedIncluded.Principal;
             Assert.Equal(10, deeplyNestedIncluded.Id);
             Assert.Equal(deeplyNestedIncludedAttributeValue, deeplyNestedIncluded.AttributeMember);
+        }
+        
+        [Fact]
+        public void DeserializeSingle_ResourceWithInheritanceAndInclusions_CanDeserialize()
+        {
+            // Arrange
+            var content = CreateDocumentWithRelationships("testResourceWithAbstractRelationships");
+            content.SingleData.Relationships.Add("toMany", CreateRelationshipData("firstDerivedModels", isToManyData: true, id: "10"));
+            content.SingleData.Relationships["toMany"].ManyData.Add(CreateRelationshipData("secondDerivedModels", id: "11").SingleData);
+            content.SingleData.Relationships.Add("toOne", CreateRelationshipData("firstDerivedModels", id: "20"));
+            content.Included = new List<ResourceObject>
+            {
+                new ResourceObject
+                {
+                    Type = "firstDerivedModels",
+                    Id = "10",
+                    Attributes = new Dictionary<string, object> { { "firstProperty", "true" } }
+                },
+                new ResourceObject
+                {
+                    Type = "secondDerivedModels",
+                    Id = "11",
+                    Attributes = new Dictionary<string, object> { { "secondProperty", "false" } }
+                },
+                new ResourceObject
+                {
+                    Type = "firstDerivedModels",
+                    Id = "20",
+                    Attributes = new Dictionary<string, object> { { "firstProperty", "true" } }
+                },
+            };
+            var body = JsonConvert.SerializeObject(content);
+
+            // Act
+            var result = _deserializer.DeserializeSingle<TestResourceWithAbstractRelationship>(body);
+            var resource = result.Data;
+
+            // Assert
+            Assert.Equal(1, resource.Id);
+            Assert.NotNull(resource.ToOne);
+            Assert.True(resource.ToOne is FirstDerivedModel);
+            Assert.True(((FirstDerivedModel)resource.ToOne).FirstProperty);
+            
+            Assert.NotEmpty(resource.ToMany);
+            var first = resource.ToMany[0];
+            Assert.True(first is FirstDerivedModel);
+            Assert.True(((FirstDerivedModel)first).FirstProperty);
+            
+            var second = resource.ToMany[1];
+            Assert.True(second is SecondDerivedModel);
+            Assert.False(((SecondDerivedModel)second).SecondProperty);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
         public DeletingDataTests(TestFixture<TestStartup> fixture)
         {
-            _context = fixture.GetService<AppDbContext>();
+            _context = fixture.GetRequiredService<AppDbContext>();
         }
 
         [Fact]

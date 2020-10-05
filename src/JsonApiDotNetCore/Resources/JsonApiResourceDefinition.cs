@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public virtual IReadOnlyDictionary<string, object> GetMeta()
+        public virtual IDictionary<string, object> GetMeta(TResource resource)
         {
             return null;
         }
