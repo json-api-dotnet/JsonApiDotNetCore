@@ -79,10 +79,16 @@ namespace JsonApiDotNetCore.Services
                 resource = _hookExecutor.BeforeCreate(AsList(resource), ResourcePipeline.Post).Single();
             }
             
+            if (HasNonNullRelationshipAssignments(resource, out var assignments))
+            {
+                await AssertRelationshipValuesExistAsync(assignments);
+            }
+            
             await _repository.CreateAsync(resource);
 
             resource = await GetPrimaryResourceById(resource.Id, true);
-
+            
+            
             if (_hookExecutor != null)
             {
                 _hookExecutor.AfterCreate(AsList(resource), ResourcePipeline.Post);
@@ -401,8 +407,8 @@ namespace JsonApiDotNetCore.Services
             if (relationships != null)
             {
                 relationshipIds = _request.Relationship is HasOneAttribute
-                    ? new[] {((IIdentifiable) relationships).StringId}
-                    : ((IEnumerable<IIdentifiable>) relationships).Select(e => e.StringId).ToArray();
+                    ? new[] {TypeHelper.GetIdValue((IIdentifiable) relationships)}
+                    : ((IEnumerable<IIdentifiable>) relationships).Select(TypeHelper.GetIdValue).ToArray();
             }
 
             await _repository.UpdateRelationshipAsync(primaryResource, _request.Relationship, relationshipIds ?? Array.Empty<string>());
@@ -500,15 +506,15 @@ namespace JsonApiDotNetCore.Services
                 IEnumerable<string> identifiers; 
                 if (relationshipValue is IIdentifiable identifiable)
                 {
-                    identifiers = new [] { identifiable.StringId };
+                    identifiers = new [] { TypeHelper.GetIdValue(identifiable) };
                 }
                 else
                 {
-                    identifiers = ((IEnumerable<IIdentifiable>) relationshipValue).Select(i => i.StringId).ToArray();
+                    identifiers = ((IEnumerable<IIdentifiable>) relationshipValue).Select(TypeHelper.GetIdValue).ToArray();
                 }  
                 
                 var resources = await _resourceAccessor.GetResourcesByIdAsync(relationship.RightType, identifiers);
-                var missing = identifiers.Where(id => resources.All(r => r?.StringId != id)).ToArray();
+                var missing = identifiers.Where(id => resources.All(r => TypeHelper.GetIdValue(r) != id)).ToArray();
                 if (missing.Any())
                 {
                     nonExistingResources.Add(_provider.GetResourceContext(relationship.RightType).PublicName, missing.ToArray());

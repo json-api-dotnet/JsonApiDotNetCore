@@ -153,9 +153,12 @@ namespace DiscoveryTests
                 IJsonApiRequest request,
                 IResourceChangeTracker<TestModel> resourceChangeTracker,
                 IResourceFactory resourceFactory,
+                IResourceAccessor resourceAccessor,
+                ITargetedFields targetedFields,
+                IResourceContextProvider provider,
                 IResourceHookExecutor hookExecutor = null)
                 : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                    resourceChangeTracker, resourceFactory, hookExecutor)
+                    resourceChangeTracker, resourceFactory, resourceAccessor, targetedFields, provider, hookExecutor)
             {
             }
         }
@@ -166,11 +169,11 @@ namespace DiscoveryTests
                 ITargetedFields targetedFields,
                 IDbContextResolver contextResolver,
                 IResourceGraph resourceGraph,
-                IGenericServiceFactory genericServiceFactory,
                 IResourceFactory resourceFactory,
                 IEnumerable<IQueryConstraintProvider> constraintProviders,
+                IResourceAccessor resourceAccessor,
                 ILoggerFactory loggerFactory)
-                : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory)
+                : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, resourceAccessor, loggerFactory)
             { }
         }
         

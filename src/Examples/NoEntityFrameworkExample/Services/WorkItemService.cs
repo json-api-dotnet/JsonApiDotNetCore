@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Configuration;
 using NoEntityFrameworkExample.Models;
@@ -79,5 +80,14 @@ namespace NoEntityFrameworkExample.Services
         }
 
         private IDbConnection GetConnection => new NpgsqlConnection(_connectionString);
+        public Task AddRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> relationships)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> relationships)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

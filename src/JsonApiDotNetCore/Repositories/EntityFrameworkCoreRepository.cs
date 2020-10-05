@@ -24,7 +24,6 @@ namespace JsonApiDotNetCore.Repositories
         private readonly ITargetedFields _targetedFields;
         private readonly DbContext _dbContext;
         private readonly IResourceGraph _resourceGraph;
-        private readonly IGenericServiceFactory _genericServiceFactory;
         private readonly IResourceFactory _resourceFactory;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly IResourceAccessor _resourceAccessor;
@@ -34,7 +33,6 @@ namespace JsonApiDotNetCore.Repositories
             ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
-            IGenericServiceFactory genericServiceFactory,
             IResourceFactory resourceFactory,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             IResourceAccessor resourceAccessor,
@@ -45,7 +43,6 @@ namespace JsonApiDotNetCore.Repositories
 
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
-            _genericServiceFactory = genericServiceFactory ?? throw new ArgumentNullException(nameof(genericServiceFactory));
             _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
             _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
             _resourceAccessor = resourceAccessor ?? throw new ArgumentNullException(nameof(constraintProviders));
@@ -114,22 +111,14 @@ namespace JsonApiDotNetCore.Repositories
         {
             _traceWriter.LogMethodStart(new {resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
-
+            
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
-                object trackedRelationshipValue = GetTrackedRelationshipValue(out bool relationshipWasAlreadyTracked, relationshipAttr, resource);
-                bool kk = false;
+                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, resource);
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
-                if (relationshipWasAlreadyTracked || relationshipAttr is HasManyThroughAttribute)
-                    // We only need to reassign the relationship value to the to-be-added
-                    // resource when we're using a different instance of the relationship (because this different one
-                    // was already tracked) than the one assigned to the to-be-created resource.
-                    // Alternatively, even if we don't have to reassign anything because of already tracked 
-                    // entities, we still need to assign the "through" entities in the case of many-to-many.
-                    relationshipAttr.SetValue(resource, trackedRelationshipValue, _resourceFactory);
+                relationshipAttr.SetValue(resource, trackedRelationshipValue, _resourceFactory);
             }
-            
-            
+
             _dbContext.Set<TResource>().Add(resource);
             await _dbContext.SaveChangesAsync();
 
@@ -229,7 +218,7 @@ namespace JsonApiDotNetCore.Repositories
                 // trackedRelationshipValue is either equal to updatedPerson.todoItems,
                 // or replaced with the same set (same ids) of todoItems from the EF Core change tracker,
                 // which is the case if they were already tracked
-                object trackedRelationshipValue = GetTrackedRelationshipValue(out _, relationshipAttr, requestResource);
+                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, requestResource);
                 // loads into the db context any persons currently related
                 // to the todoItems in trackedRelationshipValue
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
@@ -248,27 +237,30 @@ namespace JsonApiDotNetCore.Repositories
         /// to the change tracker. It does so by checking if there already are
         /// instances of the to-be-attached entities in the change tracker.
         /// </summary>
-        private object GetTrackedRelationshipValue(out bool wasAlreadyAttached, RelationshipAttribute relationship, TResource requestResource)
+        private object GetTrackedRelationshipValue(RelationshipAttribute relationship, TResource requestResource)
         {
-            wasAlreadyAttached = false;
             if (relationship is HasOneAttribute hasOneAttr)
             {
                 var relationshipValue = (IIdentifiable)hasOneAttr.GetValue(requestResource);
+
+                if (relationshipValue == null)
+                {
+                    return null;
+                }
                 
-                return GetTrackedRelationshipValue(out wasAlreadyAttached, relationship, relationshipValue?.StringId);
+                return GetTrackedRelationshipValue(relationship, relationshipValue.StringId);
             }
             else
             {
                 var hasManyAttr = (HasManyAttribute)relationship;
                 var relationshipValuesCollection = (IEnumerable<IIdentifiable>)hasManyAttr.GetValue(requestResource);
                 
-                return GetTrackedRelationshipValue(out wasAlreadyAttached, relationship, relationshipValuesCollection.Select(i => i.StringId).ToArray());
+                return GetTrackedRelationshipValue(relationship, relationshipValuesCollection.Select(i => i.StringId).ToArray());
             }
         }
         
-        private object GetTrackedRelationshipValue(out bool wasAlreadyAttached, RelationshipAttribute relationship, params string[] relationshipIds)
+        private object GetTrackedRelationshipValue(RelationshipAttribute relationship, params string[] relationshipIds)
         {
-            wasAlreadyAttached = false;
             object trackedRelationshipValue = null;
             var entityType = relationship.RightType;
             
@@ -277,7 +269,7 @@ namespace JsonApiDotNetCore.Repositories
                 if (relationship is HasOneAttribute)
                 {
                     var id = relationshipIds.Single();
-                    trackedRelationshipValue = GetTrackedOrNewlyAttachedEntity(entityType, id, ref wasAlreadyAttached);
+                    trackedRelationshipValue = GetTrackedOrNewlyAttachedEntity(entityType, id);
                 }
                 else
                 {
@@ -286,7 +278,7 @@ namespace JsonApiDotNetCore.Repositories
 
                     for (int i = 0; i < amountOfValues; i++)
                     {
-                        var elementOfRelationshipValue = GetTrackedOrNewlyAttachedEntity(entityType, relationshipIds[i], ref wasAlreadyAttached);
+                        var elementOfRelationshipValue = GetTrackedOrNewlyAttachedEntity(entityType, relationshipIds[i]);
                         collection[i] = Convert.ChangeType(elementOfRelationshipValue, entityType);
                     }
 
@@ -297,7 +289,7 @@ namespace JsonApiDotNetCore.Repositories
             return trackedRelationshipValue;
         }
         
-        private IIdentifiable GetTrackedOrNewlyAttachedEntity(Type resourceType, string id, ref bool wasAlreadyAttached)
+        private IIdentifiable GetTrackedOrNewlyAttachedEntity(Type resourceType, string id)
         {
             var trackedEntity = _dbContext.GetTrackedEntity(resourceType, id);
             if (trackedEntity == null)
@@ -311,11 +303,7 @@ namespace JsonApiDotNetCore.Repositories
                 trackedEntity.StringId = id;
                 _dbContext.Entry(trackedEntity).State = EntityState.Unchanged;
             }
-            else
-            {
-                wasAlreadyAttached = true;
-            }
-            
+
             return trackedEntity;
         }
         
@@ -326,30 +314,10 @@ namespace JsonApiDotNetCore.Repositories
             if (parent == null) throw new ArgumentNullException(nameof(parent));
             if (relationship == null) throw new ArgumentNullException(nameof(relationship));
             if (relationshipIds == null) throw new ArgumentNullException(nameof(relationshipIds));
-
-            var typeToUpdate = relationship is HasManyThroughAttribute hasManyThrough
-                ? hasManyThrough.ThroughType
-                : relationship.RightType;
-
-            LoadCurrentRelationships(parent, relationship);
-            object trackedRelationshipValue = GetTrackedRelationshipValue(out _, relationship, relationshipIds.ToArray());
-            // var helper = _genericServiceFactory.Get<IRepositoryRelationshipUpdateHelper>(typeof(RepositoryRelationshipUpdateHelper<>), typeToUpdate);
-            // await helper.UpdateRelationshipAsync((IIdentifiable)parent, relationship, relationshipIds);
-            // if (!(relationship is HasManyThroughAttribute))
-            // {
-            //     var accessorResult = await _resourceAccessor.GetResourcesByIdAsync(typeToUpdate, relationshipIds);
-            //     if (relationship is HasOneAttribute)
-            //     {
-            //         trackedRelationshipValue = accessorResult.First();
-            //     }
-            //     else
-            //     {
-            //         trackedRelationshipValue = TypeHelper.CopyToTypedCollection(accessorResult, relationship.Property.PropertyType);
-            //     }
-            // }
-
-            LoadInverseRelationships(trackedRelationshipValue, relationship);
             
+            LoadCurrentRelationships(parent, relationship);
+            object trackedRelationshipValue = GetTrackedRelationshipValue(relationship, relationshipIds.ToArray());
+            LoadInverseRelationships(trackedRelationshipValue, relationship);
             relationship.SetValue(parent, trackedRelationshipValue, _resourceFactory);
 
             await _dbContext.SaveChangesAsync();
@@ -434,12 +402,11 @@ namespace JsonApiDotNetCore.Repositories
             ITargetedFields targetedFields, 
             IDbContextResolver contextResolver, 
             IResourceGraph resourceGraph,
-            IGenericServiceFactory genericServiceFactory,
             IResourceFactory resourceFactory,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             IResourceAccessor resourceAccessor,
             ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, resourceAccessor, loggerFactory) 
+            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, resourceAccessor, loggerFactory) 
         { }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bogus;
+using Castle.Core.Resource;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal;
@@ -19,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using IResourceFactory = JsonApiDotNetCore.Resources.IResourceFactory;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace UnitTests.ResourceHooks
@@ -370,9 +372,9 @@ namespace UnitTests.ResourceHooks
             var serviceProvider = ((IInfrastructure<IServiceProvider>) dbContext).Instance;
             var resourceFactory = new ResourceFactory(serviceProvider);
             IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
-            var serviceFactory = new Mock<IGenericServiceFactory>().Object;
+            var resourceAccessor = new Mock<IResourceAccessor>().Object;
             var targetedFields = new TargetedFields();
-            return new EntityFrameworkCoreRepository<TModel, int>(targetedFields, resolver, resourceGraph, serviceFactory, resourceFactory, new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
+            return new EntityFrameworkCoreRepository<TModel, int>(targetedFields, resolver, resourceGraph, resourceFactory, new List<IQueryConstraintProvider>(), resourceAccessor, NullLoggerFactory.Instance);
         }
 
         private IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>

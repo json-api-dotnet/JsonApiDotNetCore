@@ -20,13 +20,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
-            IGenericServiceFactory genericServiceFactory,
             IResourceFactory resourceFactory,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             IResourceAccessor resourceAccessor,
             ILoggerFactory loggerFactory,
             ResourceCaptureStore captureStore)
-            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory,
+            : base(targetedFields, contextResolver, resourceGraph, resourceFactory,
                 constraintProviders, resourceAccessor, loggerFactory)
         {
             _captureStore = captureStore;
