@@ -1,37 +1,41 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.Options;
 
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Custom implementation of <see cref="IModelMetadataProvider"/> that sets an additional <see cref="IPropertyValidationFilter"/>
-    /// to support partial patching.
+    /// Custom implementation of <see cref="IModelMetadataProvider"/> to support json:api partial patching.
     /// </summary>
     internal class JsonApiModelMetadataProvider : DefaultModelMetadataProvider
     {
+        private readonly JsonApiValidationFilter _jsonApiValidationFilter;
+
         /// <inheritdoc />
-        public JsonApiModelMetadataProvider(ICompositeMetadataDetailsProvider detailsProvider)
-            : base(detailsProvider) { }
-        
+        public JsonApiModelMetadataProvider(ICompositeMetadataDetailsProvider detailsProvider, IRequestScopedServiceProvider serviceProvider)
+            : base(detailsProvider)
+        {
+            _jsonApiValidationFilter = new JsonApiValidationFilter(serviceProvider);
+        }
+
         /// <inheritdoc />
-        public JsonApiModelMetadataProvider(ICompositeMetadataDetailsProvider detailsProvider, IOptions<MvcOptions> optionsAccessor) 
-            : base(detailsProvider, optionsAccessor) { }
-        
+        public JsonApiModelMetadataProvider(ICompositeMetadataDetailsProvider detailsProvider, IOptions<MvcOptions> optionsAccessor, IRequestScopedServiceProvider serviceProvider) 
+            : base(detailsProvider, optionsAccessor)
+        {
+            _jsonApiValidationFilter = new JsonApiValidationFilter(serviceProvider);
+        }
+
         /// <inheritdoc />
         protected override ModelMetadata CreateModelMetadata(DefaultMetadataDetails entry)
         {
-            var metadata = new DefaultModelMetadata(this, DetailsProvider, entry, ModelBindingMessageProvider) ;
+            var metadata = (DefaultModelMetadata)base.CreateModelMetadata(entry);
 
-            var isRequired = metadata.ValidationMetadata.IsRequired;
-            
-            if (isRequired != null && isRequired.Value)
+            if (metadata.ValidationMetadata.IsRequired == true)
             {
-                metadata.ValidationMetadata.PropertyValidationFilter = new PartialPatchValidationFilter();
+                metadata.ValidationMetadata.PropertyValidationFilter = _jsonApiValidationFilter;
             }
-            
+
             return metadata;
         }
     }

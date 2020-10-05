@@ -106,6 +106,7 @@ namespace JsonApiDotNetCore.Configuration
             if (_options.ValidateModelState)
             {
                 _mvcBuilder.AddDataAnnotations();
+                _services.AddSingleton<IModelMetadataProvider, JsonApiModelMetadataProvider>();
             }
         }
 
@@ -166,19 +167,12 @@ namespace JsonApiDotNetCore.Configuration
             _services.TryAddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
             _services.AddSingleton<IControllerResourceMapping>(sp => sp.GetRequiredService<IJsonApiRoutingConvention>());
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            _services.AddScoped<IRequestScopedServiceProvider, RequestScopedServiceProvider>();
+            _services.AddSingleton<IRequestScopedServiceProvider, RequestScopedServiceProvider>();
             _services.AddScoped<IJsonApiRequest, JsonApiRequest>();
             _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             _services.AddScoped<IJsonApiReader, JsonApiReader>();
             _services.AddScoped<ITargetedFields, TargetedFields>();
             _services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
-            _services.AddSingleton<IModelMetadataProvider, JsonApiModelMetadataProvider>();
-            _services.AddSingleton<IObjectModelValidator>(s =>
-            {
-                var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
-                var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
-                return new JsonApiObjectValidator(metadataProvider, options.ModelValidatorProviders, options);
-            });
         }
 
         private void AddResourceLayer()
