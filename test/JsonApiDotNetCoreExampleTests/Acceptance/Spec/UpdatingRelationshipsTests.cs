@@ -14,6 +14,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -833,7 +834,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             var response = await client.SendAsync(request);
-
+            var responseBody = await response.Content.ReadAsStringAsync();
+            
             // Assert
             var todoItemResult = _context.TodoItems
                 .AsNoTracking()
@@ -894,7 +896,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .Single(p => p.Id == person.Id).TodoItems;
 
             Assert.Equal(4, assertTodoItems.Count);
-            Assert.Equal(todoItem.Id, assertTodoItems.ElementAt(3).Id);
+            Assert.True(assertTodoItems.Any(ati => ati.Id == todoItem.Id));
         }
 
         [Fact]
@@ -941,7 +943,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             _context = _fixture.GetRequiredService<AppDbContext>();
-            var assertTodoItems = _context.People.Include(p => p.TodoItems)
+            var assertTodoItems = _context.People.AsNoTracking().Include(p => p.TodoItems)
                 .Single(p => p.Id == person.Id).TodoItems;
 
             Assert.Equal(2, assertTodoItems.Count);

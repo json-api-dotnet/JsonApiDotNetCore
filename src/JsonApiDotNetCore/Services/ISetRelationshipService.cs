@@ -14,6 +14,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Handles a json:api request to update an existing relationship.
         /// </summary>
-        Task SetRelationshipAsync(TId id, string relationshipName, object relationships);
+        Task SetRelationshipAsync(TId id, string relationshipName, object relationshipValues);
     }
 }

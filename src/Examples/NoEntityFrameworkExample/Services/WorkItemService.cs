@@ -67,7 +67,7 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        public Task SetRelationshipAsync(int id, string relationshipName, object relationships)
+        public Task SetRelationshipAsync(int id, string relationshipName, object relationshipValues)
         {
             throw new NotImplementedException();
         }
@@ -80,12 +80,12 @@ namespace NoEntityFrameworkExample.Services
         }
 
         private IDbConnection GetConnection => new NpgsqlConnection(_connectionString);
-        public Task AddRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> relationships)
+        public Task AddRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> relatinshipValues)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> relationships)
+        public Task DeleteRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> relationshipValues)
         {
             throw new NotImplementedException();
         }

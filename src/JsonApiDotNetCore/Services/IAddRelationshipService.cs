@@ -15,6 +15,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Handles a json:api request to add resources to a to-many relationship.
         /// </summary>
-        Task AddRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationships);
+        Task AddRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relatinshipValues);
     }
 }

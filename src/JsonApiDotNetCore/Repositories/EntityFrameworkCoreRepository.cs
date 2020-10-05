@@ -114,7 +114,8 @@ namespace JsonApiDotNetCore.Repositories
             
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
-                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, resource);
+                var relationshipIds = GetRelationshipIds(relationshipAttr, resource);
+                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, relationshipIds.ToArray() );
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 relationshipAttr.SetValue(resource, trackedRelationshipValue, _resourceFactory);
             }
@@ -213,15 +214,19 @@ namespace JsonApiDotNetCore.Repositories
 
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
-                // loads databasePerson.todoItems
+                // loads databasePerson.todoItems. Required for complete replacements
                 LoadCurrentRelationships(databaseResource, relationshipAttr);
+                
                 // trackedRelationshipValue is either equal to updatedPerson.todoItems,
                 // or replaced with the same set (same ids) of todoItems from the EF Core change tracker,
                 // which is the case if they were already tracked
-                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, requestResource);
+                var relationshipIds = GetRelationshipIds(relationshipAttr, requestResource);
+                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, relationshipIds);
+                
                 // loads into the db context any persons currently related
                 // to the todoItems in trackedRelationshipValue
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
+                
                 // assigns the updated relationship to the database resource
                 //AssignRelationshipValue(databaseResource, trackedRelationshipValue, relationshipAttr);
                 relationshipAttr.SetValue(databaseResource, trackedRelationshipValue, _resourceFactory);
@@ -229,7 +234,7 @@ namespace JsonApiDotNetCore.Repositories
 
             await _dbContext.SaveChangesAsync();
         }
-
+        
         /// <summary>
         /// Responsible for getting the relationship value for a given relationship 
         /// attribute of a given resource. It ensures that the relationship value 
@@ -237,54 +242,57 @@ namespace JsonApiDotNetCore.Repositories
         /// to the change tracker. It does so by checking if there already are
         /// instances of the to-be-attached entities in the change tracker.
         /// </summary>
-        private object GetTrackedRelationshipValue(RelationshipAttribute relationship, TResource requestResource)
+        private string[] GetRelationshipIds(RelationshipAttribute relationship, TResource requestResource)
         {
             if (relationship is HasOneAttribute hasOneAttr)
             {
-                var relationshipValue = (IIdentifiable)hasOneAttr.GetValue(requestResource);
+                var relationshipValue = (IIdentifiable) hasOneAttr.GetValue(requestResource);
 
                 if (relationshipValue == null)
                 {
-                    return null;
+                    return new string[0];
                 }
-                
-                return GetTrackedRelationshipValue(relationship, relationshipValue.StringId);
+
+                return new[] { relationshipValue.StringId };
             }
             else
             {
                 var hasManyAttr = (HasManyAttribute)relationship;
                 var relationshipValuesCollection = (IEnumerable<IIdentifiable>)hasManyAttr.GetValue(requestResource);
-                
-                return GetTrackedRelationshipValue(relationship, relationshipValuesCollection.Select(i => i.StringId).ToArray());
+
+                return relationshipValuesCollection.Select(i => i.StringId).ToArray();
             }
         }
         
         private object GetTrackedRelationshipValue(RelationshipAttribute relationship, params string[] relationshipIds)
         {
-            object trackedRelationshipValue = null;
+            object trackedRelationshipValue;
             var entityType = relationship.RightType;
             
-            if (relationshipIds != null)
+            if (relationship is HasOneAttribute)
             {
-                if (relationship is HasOneAttribute)
+                if (!relationshipIds.Any())
                 {
-                    var id = relationshipIds.Single();
-                    trackedRelationshipValue = GetTrackedOrNewlyAttachedEntity(entityType, id);
+                    return null;
                 }
-                else
-                {
-                    var amountOfValues = relationshipIds.Count();
-                    var collection = new object[amountOfValues];
-
-                    for (int i = 0; i < amountOfValues; i++)
-                    {
-                        var elementOfRelationshipValue = GetTrackedOrNewlyAttachedEntity(entityType, relationshipIds[i]);
-                        collection[i] = Convert.ChangeType(elementOfRelationshipValue, entityType);
-                    }
-
-                    trackedRelationshipValue = TypeHelper.CopyToTypedCollection(collection, relationship.Property.PropertyType);
-                }
+                
+                var id = relationshipIds.Single();
+                trackedRelationshipValue = GetTrackedOrNewlyAttachedEntity(entityType, id);
             }
+            else
+            {
+                var amountOfValues = relationshipIds.Count();
+                var collection = new object[amountOfValues];
+
+                for (int i = 0; i < amountOfValues; i++)
+                {
+                    var elementOfRelationshipValue = GetTrackedOrNewlyAttachedEntity(entityType, relationshipIds[i]);
+                    collection[i] = Convert.ChangeType(elementOfRelationshipValue, entityType);
+                }
+
+                trackedRelationshipValue = TypeHelper.CopyToTypedCollection(collection, relationship.Property.PropertyType);
+            }
+
 
             return trackedRelationshipValue;
         }
@@ -308,13 +316,13 @@ namespace JsonApiDotNetCore.Repositories
         }
         
         /// <inheritdoc />
-        public async Task UpdateRelationshipAsync(TResource parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds)
+        public async Task SetRelationshipsAsync(TResource parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds)
         {
             _traceWriter.LogMethodStart(new {parent, relationship, relationshipIds});
             if (parent == null) throw new ArgumentNullException(nameof(parent));
             if (relationship == null) throw new ArgumentNullException(nameof(relationship));
             if (relationshipIds == null) throw new ArgumentNullException(nameof(relationshipIds));
-            
+
             LoadCurrentRelationships(parent, relationship);
             object trackedRelationshipValue = GetTrackedRelationshipValue(relationship, relationshipIds.ToArray());
             LoadInverseRelationships(trackedRelationshipValue, relationship);
