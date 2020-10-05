@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;

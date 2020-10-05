@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Linq;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
 using UnitTests.TestModels;
