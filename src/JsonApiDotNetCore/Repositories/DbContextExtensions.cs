@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Repositories
                     entry.Entity.GetType() == entityType &&
                     ((IIdentifiable) entry.Entity).StringId == entity.StringId);
 
-            return (TEntity)entityEntry?.Entity;
+            return (TEntity) entityEntry?.Entity;
         }
 
         /// <summary>

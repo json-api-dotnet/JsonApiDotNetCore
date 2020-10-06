@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Repositories
     public interface IResourceAccessor
     {
         /// <summary>
-        /// Gets resources by id. Any id that is not matched is returned as null.
+        /// Gets resources by id.
         /// </summary>
         /// <param name="resourceType">The type for which to create a repository.</param>
         /// <param name="ids">The ids to filter on.</param>
