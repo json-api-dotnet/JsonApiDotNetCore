@@ -15,7 +15,7 @@ namespace ReportsExample.Controllers
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IGetAllService<Report> getAll)
-            : base(options, loggerFactory, getAll: getAll)
+            : base(options, loggerFactory, getAll)
         { }
 
         [HttpGet]
