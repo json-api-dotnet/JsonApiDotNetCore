@@ -384,18 +384,23 @@ namespace JsonApiDotNetCore.Repositories
         /// after which the reassignment  `p1.todoItems = [t3, t4]` will actually 
         /// make EF Core perform a complete replace. This method does the loading of `[t1, t2]`.
         /// </summary>
-        protected void LoadCurrentRelationships(TResource oldResource, RelationshipAttribute relationshipAttribute)
+        protected void LoadCurrentRelationships(TResource databaseResource, RelationshipAttribute relationshipAttribute)
         {
-            if (oldResource == null) throw new ArgumentNullException(nameof(oldResource));
+            if (databaseResource == null) throw new ArgumentNullException(nameof(databaseResource));
             if (relationshipAttribute == null) throw new ArgumentNullException(nameof(relationshipAttribute));
+
+            // if (_dbContext.Set<TResource>().Local.All(e => e.StringId != databaseResource.StringId))
+            // {
+            //     _dbContext.Entry(databaseResource).State = EntityState.Unchanged;
+            // }
 
             if (relationshipAttribute is HasManyThroughAttribute throughAttribute)
             {
-                _dbContext.Entry(oldResource).Collection(throughAttribute.ThroughProperty.Name).Load();
+                _dbContext.Entry(databaseResource).Collection(throughAttribute.ThroughProperty.Name).Load();
             }
             else if (relationshipAttribute is HasManyAttribute hasManyAttribute)
             {
-                _dbContext.Entry(oldResource).Collection(hasManyAttribute.Property.Name).Load();
+                _dbContext.Entry(databaseResource).Collection(hasManyAttribute.Property.Name).Load();
             }
         }
     }

@@ -39,8 +39,7 @@ namespace JsonApiDotNetCore.Controllers
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<TResource, TId> resourceService)
-            : this(options, loggerFactory, resourceService, resourceService, resourceService, resourceService,
-                resourceService, resourceService, resourceService, resourceService)
+            : this(options, loggerFactory, resourceService, resourceService)
         { }
 
         /// <summary>
@@ -113,22 +112,7 @@ namespace JsonApiDotNetCore.Controllers
             var resource = await _getById.GetAsync(id);
             return Ok(resource);
         }
-
-        /// <summary>
-        /// Gets a single resource relationship.
-        /// Example: GET /articles/1/relationships/author HTTP/1.1
-        /// </summary>
-        public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
-        {
-            _traceWriter.LogMethodStart(new {id, relationshipName});
-            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
-
-            if (_getRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
-            var relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
-
-            return Ok(relationship);
-        }
-
+        
         /// <summary>
         /// Gets a single resource or multiple resources at a nested endpoint.
         /// Examples:
@@ -142,6 +126,21 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getSecondary == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var relationship = await _getSecondary.GetSecondaryAsync(id, relationshipName);
+            return Ok(relationship);
+        }
+        
+        /// <summary>
+        /// Gets a single resource relationship.
+        /// Example: GET /articles/1/relationships/author HTTP/1.1
+        /// </summary>
+        public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
+        {
+            _traceWriter.LogMethodStart(new {id, relationshipName});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+
+            if (_getRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
+            var relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
+
             return Ok(relationship);
         }
 

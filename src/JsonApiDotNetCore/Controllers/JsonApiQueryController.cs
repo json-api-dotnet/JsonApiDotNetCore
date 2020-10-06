@@ -31,16 +31,16 @@ namespace JsonApiDotNetCore.Controllers
         /// <inheritdoc />
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(TId id) => await base.GetAsync(id);
-
-        /// <inheritdoc />
-        [HttpGet("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
-            => await base.GetRelationshipAsync(id, relationshipName);
-
+        
         /// <inheritdoc />
         [HttpGet("{id}/{relationshipName}")]
         public override async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName)
             => await base.GetSecondaryAsync(id, relationshipName);
+        
+        /// <inheritdoc />
+        [HttpGet("{id}/relationships/{relationshipName}")]
+        public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
+            => await base.GetRelationshipAsync(id, relationshipName);
     }
 
     /// <inheritdoc />

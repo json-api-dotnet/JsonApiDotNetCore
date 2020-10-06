@@ -32,7 +32,10 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (body == null) throw new ArgumentNullException(nameof(body));
 
-            return DeserializeBody(body);
+            var deserialized = DeserializeBody(body);
+            
+            if ()
+            
         }
 
         /// <summary>
