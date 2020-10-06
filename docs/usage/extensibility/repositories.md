@@ -1,7 +1,7 @@
 # Resource Repositories
 
-If you want to use a data access technology other than Entity Framework Core, you can create an implementation of IResourceRepository<TResource, TId>.
-If you only need minor changes you can override the methods defined in EntityFrameworkCoreRepository<TResource, TId>.
+If you want to use a data access technology other than Entity Framework Core, you can create an implementation of `IResourceRepository<TResource, TId>`.
+If you only need minor changes you can override the methods defined in `EntityFrameworkCoreRepository<TResource, TId>`.
 
 The repository should then be added to the service collection in Startup.cs.
 
@@ -9,13 +9,12 @@ The repository should then be added to the service collection in Startup.cs.
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddScoped<IResourceRepository<Article>, ArticleRepository>();
-    // ...
 }
 ```
 
 A sample implementation that performs authorization might look like this.
 
-All of the methods in EntityFrameworkCoreRepository will use the GetAll() method to get the DbSet<TResource>, so this is a good method to apply filters such as user or tenant authorization.
+All of the methods in EntityFrameworkCoreRepository will use the `GetAll()` method to get the `DbSet<TResource>`, so this is a good method to apply filters such as user or tenant authorization.
 
 ```c#
 public class ArticleRepository : EntityFrameworkCoreRepository<Article>
@@ -31,7 +30,8 @@ public class ArticleRepository : EntityFrameworkCoreRepository<Article>
         IResourceFactory resourceFactory,
         IEnumerable<IQueryConstraintProvider> constraintProviders,
         ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory) 
+        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory,
+            resourceFactory, constraintProviders, loggerFactory) 
     {
         _authenticationService = authenticationService;
     }

@@ -1,16 +1,16 @@
 # Resource Definitions
 
 In order to improve the developer experience, we have introduced a type that makes
-common modifications to the default API behavior easier. `ResourceDefinition` was first introduced in v2.3.4.
+common modifications to the default API behavior easier. Resource definitions were first introduced in v2.3.4.
 
-Resource definitions are resolved from the D/I container, so you can inject dependencies in their constructor.
+Resource definitions are resolved from the dependency injection container, so you can inject dependencies in their constructor.
 
 ## Customizing query clauses
 
 _since v4.0_
 
 For various reasons (see examples below) you may need to change parts of the query, depending on resource type.
-`ResourceDefinition<TResource>` provides overridable methods that pass you the result of query string parameter parsing.
+`JsonApiResourceDefinition<TResource>` (which is an empty implementation of `IResourceDefinition<TResource>`) provides overridable methods that pass you the result of query string parameter parsing.
 The value returned by you determines what will be used to execute the query.
 
 An intermediate format (`QueryExpression` and derived types) is used, which enables us to separate json:api implementation 
@@ -24,7 +24,7 @@ For example, you may accept some sensitive data that should only be exposed to a
 Note: to exclude attributes unconditionally, use `[Attr(Capabilities = ~AttrCapabilities.AllowView)]`.
 
 ```c#
-public class UserDefinition : ResourceDefinition<User>
+public class UserDefinition : JsonApiResourceDefinition<User>
 {
     public UserDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
     { }
@@ -82,7 +82,7 @@ Content-Type: application/vnd.api+json
 You can define the default sort order if no `sort` query string parameter is provided.
 
 ```c#
-public class AccountDefinition : ResourceDefinition<Account>
+public class AccountDefinition : JsonApiResourceDefinition<Account>
 {
     public override SortExpression OnApplySort(SortExpression existingSort)
     {
@@ -102,10 +102,10 @@ public class AccountDefinition : ResourceDefinition<Account>
 
 ## Enforce page size
 
-You may want to enforce paging on large database tables.
+You may want to enforce pagination on large database tables.
 
 ```c#
-public class AccessLogDefinition : ResourceDefinition<AccessLog>
+public class AccessLogDefinition : JsonApiResourceDefinition<AccessLog>
 {
     public override PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
     {
@@ -127,7 +127,7 @@ public class AccessLogDefinition : ResourceDefinition<AccessLog>
 Soft-deletion sets `IsSoftDeleted` to `true` instead of actually deleting the record, so you may want to always filter them out.
 
 ```c#
-public class AccountDefinition : ResourceDefinition<Account>
+public class AccountDefinition : JsonApiResourceDefinition<Account>
 {
     public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
     {
@@ -147,7 +147,7 @@ public class AccountDefinition : ResourceDefinition<Account>
 ## Block including related resources
 
 ```c#
-public class EmployeeDefinition : ResourceDefinition<Employee>
+public class EmployeeDefinition : JsonApiResourceDefinition<Employee>
 {
     public override IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
     {
@@ -168,18 +168,18 @@ public class EmployeeDefinition : ResourceDefinition<Employee>
 
 _since v3.0.0_
 
-You can define additional query string parameters with the query expression that should be used.
-If the key is present in a query string, the supplied query will be executed before the default behavior.
+You can define additional query string parameters with the LINQ expression that should be used.
+If the key is present in a query string, the supplied LINQ expression will be added to the database query.
 
 Note this directly influences the Entity Framework Core `IQueryable`. As opposed to using `OnApplyFilter`, this enables the full range of EF Core functionality. 
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).
 
 ```c#
-public class ItemDefinition : ResourceDefinition<Item>
+public class ItemDefinition : JsonApiResourceDefinition<Item>
 {
     protected override QueryStringParameterHandlers OnRegisterQueryableHandlersForQueryStringParameters()
     {
-        return new QueryStringParameterHandlers
+        return new QueryStringParameterHandlers<Item>
         {
             ["isActive"] = (source, parameterValue) => source
                 .Include(item => item.Children)
@@ -196,7 +196,7 @@ public class ItemDefinition : ResourceDefinition<Item>
 }
 ```
 
-## Using ResourceDefinitions prior to v3
+## Using Resource Definitions prior to v3
 
 Prior to the introduction of auto-discovery, you needed to register the
 `ResourceDefinition` on the container yourself:
