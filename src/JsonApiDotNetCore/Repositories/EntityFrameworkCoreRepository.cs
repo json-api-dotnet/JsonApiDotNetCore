@@ -198,7 +198,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task UpdateAsync(TResource requestResource, TResource databaseResource)
+        public virtual async Task UpdateAsync(TResource requestResource, TResource databaseResource, bool completeReplacementOfRelationships = true)
         {
             _traceWriter.LogMethodStart(new {requestResource, databaseResource});
             if (requestResource == null) throw new ArgumentNullException(nameof(requestResource));
@@ -211,8 +211,14 @@ namespace JsonApiDotNetCore.Repositories
 
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
-                // Ensures complete replacements of relationships.
-                LoadCurrentRelationships(databaseResource, relationshipAttr);
+                // A database entity might not be tracked if it was retrieved through projection. 
+                databaseResource = (TResource)GetTrackedOrNewlyAttachedEntity(databaseResource);
+                
+                if (completeReplacementOfRelationships)
+                {
+                    // Ensures complete replacements of relationships.
+                    LoadCurrentRelationships(databaseResource, relationshipAttr);
+                }
 
                 ApplyRelationshipAssignment(requestResource, relationshipAttr, databaseResource);
             }
@@ -356,12 +362,7 @@ namespace JsonApiDotNetCore.Repositories
         {
             if (databaseResource == null) throw new ArgumentNullException(nameof(databaseResource));
             if (relationshipAttribute == null) throw new ArgumentNullException(nameof(relationshipAttribute));
-
-            // if (_dbContext.Set<TResource>().Local.All(e => e.StringId != databaseResource.StringId))
-            // {
-            //     _dbContext.Entry(databaseResource).State = EntityState.Unchanged;
-            // }
-
+            
             if (relationshipAttribute is HasManyThroughAttribute throughAttribute)
             {
                 _dbContext.Entry(databaseResource).Collection(throughAttribute.ThroughProperty.Name).Load();
@@ -369,6 +370,21 @@ namespace JsonApiDotNetCore.Repositories
             else if (relationshipAttribute is HasManyAttribute hasManyAttribute)
             {
                 _dbContext.Entry(databaseResource).Collection(hasManyAttribute.Property.Name).Load();
+            }
+            else if (relationshipAttribute is HasOneAttribute hasOneAttribute)
+            {
+                /*
+                 * dbContext.Entry(databaseResource).State = EntityState.Detached;
+                 * var newAttachment = _resourceFactory.CreateInstance(databaseResource.GetType()) as TResource;
+                 * newAttachment.StringId = databaseResource.StringId;
+                 * _dbContext.Entry(newAttachment).State = EntityState.Unchanged;
+                 * _dbContext.Entry(newAttachment).Reload(); // <--- why doesn't the line below work without this line?
+                 * _dbContext.Entry(newAttachment).Reference(hasOneAttribute.Property.Name).Load();
+                 * var relationship = hasOneAttribute.GetValue(newAttachment); // this is null, should not be null!
+                 */
+                
+                _dbContext.Entry(databaseResource).Reload(); // why is this line needed? see smaller repo example above
+                _dbContext.Entry(databaseResource).Reference(hasOneAttribute.Property.Name).Load();
             }
         }
     }

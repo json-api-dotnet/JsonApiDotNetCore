@@ -80,7 +80,7 @@ namespace NoEntityFrameworkExample.Services
         }
 
         private IDbConnection GetConnection => new NpgsqlConnection(_connectionString);
-        public Task AddRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> relationshipValues)
+        public Task AddRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> relationshipAssignment)
         {
             throw new NotImplementedException();
         }

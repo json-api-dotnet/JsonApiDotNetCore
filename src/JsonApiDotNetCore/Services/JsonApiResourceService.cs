@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -16,7 +13,6 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Services
@@ -249,7 +245,7 @@ namespace JsonApiDotNetCore.Services
             
             if (HasNonNullRelationshipAssignments(resource, out var assignments))
             {
-                await AssertRelationshipValuesExistAsync(assignments);
+                await AssertValuesOfRelationshipAssignmentExistAsync(assignments);
             }
             
             await _repository.CreateAsync(resource);
@@ -268,33 +264,24 @@ namespace JsonApiDotNetCore.Services
 
         /// <inheritdoc />
         // triggered by POST /articles/{id}/relationships/{relationshipName}
-        public async Task AddRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationshipValues)
+        public async Task AddRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationshipAssignment)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, relationships = relationshipValues});
+            _traceWriter.LogMethodStart(new {id, relationshipName, relationshipAssignment});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
-            AssertRelationshipIsToMany(relationshipName);
             
-            await AssertRelationshipValuesExistAsync((_request.Relationship, relationshipValues));
-            
-            var queryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
-            queryLayer.Include = IncludeRelationship(_request.Relationship);
-            queryLayer.Filter = IncludeFilterById(id, null);
-            
-            var primaryResource = (await _repository.GetAsync(queryLayer)).SingleOrDefault();
+            var primaryResource = await GetProjectedPrimaryResourceById(id);
             AssertPrimaryResourceExists(primaryResource);
 
-            var relationshipValueCollection = ((IEnumerable<IIdentifiable>) _request.Relationship.GetValue(primaryResource)).Select(i => i.StringId).ToList();
-            foreach (var entry in relationshipValues)
+            if (relationshipAssignment != null)
             {
-                if (!relationshipValueCollection.Contains(entry.StringId))
-                {
-                    relationshipValueCollection.Add(entry.StringId);
-                }
+                await AssertValuesOfRelationshipAssignmentExistAsync((_request.Relationship, relationshipAssignment));
             }
             
-            await _repository.SetRelationshipsAsync(primaryResource, _request.Relationship, relationshipValueCollection);
+            var requestResource = CreateRequestResource(relationshipAssignment, primaryResource);
+
+            await _repository.UpdateAsync(requestResource, primaryResource, completeReplacementOfRelationships: false);
         }
 
         /// <inheritdoc />
@@ -308,7 +295,7 @@ namespace JsonApiDotNetCore.Services
 
             if (HasNonNullRelationshipAssignments(requestResource, out var assignments))
             {
-                await AssertRelationshipValuesExistAsync(assignments);
+                await AssertValuesOfRelationshipAssignmentExistAsync(assignments);
             }
             
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(databaseResource);
@@ -339,22 +326,17 @@ namespace JsonApiDotNetCore.Services
         // triggered by PATCH /articles/{id}/relationships/{relationshipName}
         public virtual async Task SetRelationshipAsync(TId id, string relationshipName, object relationshipAssignment)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, relationshipValues = relationshipAssignment});
+             _traceWriter.LogMethodStart(new {id, relationshipName, relationshipAssignment});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
             
-            var queryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
-            // Todo: add projection on primary key for both root and nested resource; that's all we need.
-            queryLayer.Include = IncludeRelationship(_request.Relationship);
-            queryLayer.Filter = IncludeFilterById(id, null);
-            
-            var primaryResource = (await _repository.GetAsync(queryLayer)).SingleOrDefault();
+            var primaryResource = await GetProjectedPrimaryResourceById(id);
             AssertPrimaryResourceExists(primaryResource);
 
             if (relationshipAssignment != null)
             {
-                await AssertRelationshipValuesExistAsync((_request.Relationship, relationshipAssignment));
+                await AssertValuesOfRelationshipAssignmentExistAsync((_request.Relationship, relationshipAssignment));
             }
             
             if (_hookExecutor != null)
@@ -362,24 +344,24 @@ namespace JsonApiDotNetCore.Services
                 primaryResource = _hookExecutor.BeforeUpdate(AsList(primaryResource), ResourcePipeline.PatchRelationship).Single();
             }
 
-            var requestResource = _resourceFactory.CreateInstance<TResource>();
-            requestResource.StringId = primaryResource.StringId;
-            if (_request.Relationship is HasManyAttribute)
-            {
-                var collection = (IEnumerable<IIdentifiable>)relationshipAssignment;
-                _request.Relationship.SetValue(requestResource,  TypeHelper.CopyToTypedCollection(collection, _request.Relationship.Property.PropertyType), _resourceFactory);
-            }
-            else
-            {
-                _request.Relationship.SetValue(requestResource,  relationshipAssignment, _resourceFactory);
-            }
-            
+            var requestResource = CreateRequestResource(relationshipAssignment, primaryResource);
+
             await _repository.UpdateAsync(requestResource, primaryResource);
             
             if (_hookExecutor != null && primaryResource != null)
             {
                 _hookExecutor.AfterUpdate(AsList(primaryResource), ResourcePipeline.PatchRelationship);
             }
+        }
+
+        private async Task<TResource> GetProjectedPrimaryResourceById(TId id)
+        {
+            var queryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
+            queryLayer.Filter = IncludeFilterById(id, null);
+            var idAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+            queryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
+            var primaryResource = (await _repository.GetAsync(queryLayer)).SingleOrDefault();
+            return primaryResource;
         }
 
         /// <inheritdoc />
@@ -493,19 +475,19 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private async Task AssertRelationshipValuesExistAsync(params (RelationshipAttribute relationship, object relationshipValue)[] assignments)
+        private async Task AssertValuesOfRelationshipAssignmentExistAsync(params (RelationshipAttribute relationship, object assignmentValue)[] assignments)
         {
             var nonExistingResources = new Dictionary<string, IList<string>>();
-            foreach (var (relationship, relationshipValue) in assignments)
+            foreach (var (relationship, assignmentValue) in assignments)
             {
-                IEnumerable<string> identifiers; 
-                if (relationshipValue is IIdentifiable identifiable)
+                IEnumerable<string> identifiers;
+                if (assignmentValue is IIdentifiable identifiable)
                 {
                     identifiers = new [] { TypeHelper.GetIdValue(identifiable) };
                 }
                 else
                 {
-                    identifiers = ((IEnumerable<IIdentifiable>) relationshipValue).Select(TypeHelper.GetIdValue).ToArray();
+                    identifiers = ((IEnumerable<IIdentifiable>) assignmentValue).Select(TypeHelper.GetIdValue).ToArray();
                 }  
                 
                 var resources = await _resourceAccessor.GetResourcesByIdAsync(relationship.RightType, identifiers);
@@ -525,6 +507,21 @@ namespace JsonApiDotNetCore.Services
         private IncludeExpression IncludeRelationship(RelationshipAttribute relationship)
         {
             return new IncludeExpression(new[] { new IncludeElementExpression(relationship) });
+        }
+
+        private TResource CreateRequestResource(object relationshipAssignment, TResource primaryResource)
+        {
+            var requestResource = _resourceFactory.CreateInstance<TResource>();
+            requestResource.StringId = primaryResource.StringId;
+
+            if (_request.Relationship is HasManyAttribute)
+            {
+                relationshipAssignment = TypeHelper.CopyToTypedCollection((IEnumerable<IIdentifiable>) relationshipAssignment, _request.Relationship.Property.PropertyType);
+            }
+
+            _request.Relationship.SetValue(requestResource,  relationshipAssignment, _resourceFactory);
+
+            return requestResource;
         }
 
         private List<TResource> AsList(TResource resource)
