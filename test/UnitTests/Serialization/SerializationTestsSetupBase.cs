@@ -58,6 +58,11 @@ namespace UnitTests.Serialization
             resourceGraphBuilder.Add<Food>();
             resourceGraphBuilder.Add<Song>();
 
+            resourceGraphBuilder.Add<TestResourceWithAbstractRelationship>();
+            resourceGraphBuilder.Add<BaseModel>();
+            resourceGraphBuilder.Add<FirstDerivedModel>();
+            resourceGraphBuilder.Add<SecondDerivedModel>();
+            
             return resourceGraphBuilder.Build();
         }
    }

@@ -411,6 +411,71 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
+        public async Task When_patching_resource_with_invalid_ID_it_must_fail()
+        {
+            // Arrange
+            var directory = new SystemDirectory
+            {
+                Name = "Projects",
+                IsCaseSensitive = true
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Directories.Add(directory);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "systemDirectories",
+                    id = -1,
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["name"] = "Repositories"
+                    },
+                    relationships = new Dictionary<string, object>
+                    {
+                        ["subdirectories"] = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "systemDirectories",
+                                    id = -1
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            string requestBody = JsonConvert.SerializeObject(content);
+            string route = "/systemDirectories/-1";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(2);
+            
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
+            responseDocument.Errors[0].Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/id");
+            
+            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[1].Title.Should().Be("Input validation failed.");
+            responseDocument.Errors[1].Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
+            responseDocument.Errors[1].Source.Pointer.Should().Be("/data/attributes/Subdirectories[0].Id");
+        }
+
+        [Fact]
         public async Task When_patching_resource_with_valid_attribute_value_it_must_succeed()
         {
             // Arrange

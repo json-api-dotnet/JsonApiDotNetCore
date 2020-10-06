@@ -17,6 +17,7 @@ using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -103,6 +104,7 @@ namespace JsonApiDotNetCore.Configuration
             if (_options.ValidateModelState)
             {
                 _mvcBuilder.AddDataAnnotations();
+                _services.AddSingleton<IModelMetadataProvider, JsonApiModelMetadataProvider>();
             }
         }
 
@@ -163,7 +165,7 @@ namespace JsonApiDotNetCore.Configuration
             _services.TryAddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
             _services.AddSingleton<IControllerResourceMapping>(sp => sp.GetRequiredService<IJsonApiRoutingConvention>());
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            _services.AddScoped<IRequestScopedServiceProvider, RequestScopedServiceProvider>();
+            _services.AddSingleton<IRequestScopedServiceProvider, RequestScopedServiceProvider>();
             _services.AddScoped<IJsonApiRequest, JsonApiRequest>();
             _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             _services.AddScoped<IJsonApiReader, JsonApiReader>();

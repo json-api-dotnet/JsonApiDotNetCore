@@ -14,16 +14,34 @@ namespace UnitTests.TestModels
         [Attr] public int? NullableIntField { get; set; }
         [Attr] public Guid GuidField { get; set; }
         [Attr] public ComplexType ComplexField { get; set; }
+
     }
 
     public class TestResourceWithList : Identifiable
     {
         [Attr] public List<ComplexType> ComplexFields { get; set; }
     }
-
+    
     public class ComplexType
     {
         public string CompoundName { get; set; }
+    }
+    
+    public class TestResourceWithAbstractRelationship : Identifiable
+    {
+        [HasOne] public BaseModel ToOne { get; set; }
+        [HasMany] public List<BaseModel> ToMany { get; set; }
+    }
+    
+    public abstract class BaseModel : Identifiable { }
+
+    public class FirstDerivedModel : BaseModel
+    {
+        [Attr] public bool FirstProperty { get; set; }
+    }
+    public class SecondDerivedModel : BaseModel
+    {
+        [Attr] public bool SecondProperty { get; set; }
     }
 
     public sealed class OneToOnePrincipal : IdentifiableWithAttribute
@@ -119,5 +137,4 @@ namespace UnitTests.TestModels
     {
         [Attr] public string Title { get; set; }
     }
-
 }

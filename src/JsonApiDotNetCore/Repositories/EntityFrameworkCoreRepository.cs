@@ -286,8 +286,11 @@ namespace JsonApiDotNetCore.Repositories
 
                 for (int i = 0; i < amountOfValues; i++)
                 {
-                    var elementOfRelationshipValue = GetTrackedOrNewlyAttachedEntity(entityType, relationshipIds[i]);
-                    collection[i] = Convert.ChangeType(elementOfRelationshipValue, entityType);
+                    var trackedElementOfRelationshipValue = GetTrackedOrNewlyAttachedEntity(entityType, relationshipIds[i]);
+                    
+                    // We should recalculate the target type for every iteration because types may vary. This is possible with resource inheritance.
+                    var conversionTarget = trackedElementOfRelationshipValue.GetType();
+                    collection[i] = Convert.ChangeType(trackedElementOfRelationshipValue, conversionTarget);
                 }
 
                 trackedRelationshipValue = TypeHelper.CopyToTypedCollection(collection, relationship.Property.PropertyType);

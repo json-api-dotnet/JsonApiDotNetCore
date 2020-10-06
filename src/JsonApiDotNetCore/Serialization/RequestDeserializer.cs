@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -19,12 +17,19 @@ namespace JsonApiDotNetCore.Serialization
     {
         private readonly ITargetedFields  _targetedFields;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IJsonApiRequest _request;
 
-        public RequestDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory, ITargetedFields targetedFields, IHttpContextAccessor httpContextAccessor) 
+        public RequestDeserializer(
+            IResourceContextProvider resourceContextProvider,
+            IResourceFactory resourceFactory,
+            ITargetedFields targetedFields,
+            IHttpContextAccessor httpContextAccessor,
+            IJsonApiRequest request) 
             : base(resourceContextProvider, resourceFactory)
         {
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            _request = request ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
         /// <inheritdoc />
@@ -32,10 +37,12 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (body == null) throw new ArgumentNullException(nameof(body));
 
-            var deserialized = DeserializeBody(body);
+            if (_request.Kind == EndpointKind.Relationship)
+            {
+                _targetedFields.Relationships.Add(_request.Relationship);
+            }
             
-            if ()
-            
+            return DeserializeBody(body);
         }
 
         /// <summary>
@@ -69,30 +76,6 @@ namespace JsonApiDotNetCore.Serialization
             }
             else if (field is RelationshipAttribute relationship)
                 _targetedFields.Relationships.Add(relationship);
-        }
-
-        protected override IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
-        {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (attributes == null) throw new ArgumentNullException(nameof(attributes));
-
-            if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Patch.Method)
-            {
-                foreach (AttrAttribute attr in attributes)
-                {
-                    if (attr.Property.GetCustomAttribute<IsRequiredAttribute>() != null)
-                    {
-                        bool disableValidator = attributeValues == null || !attributeValues.ContainsKey(attr.PublicName);
-
-                        if (disableValidator)
-                        {
-                            _httpContextAccessor.HttpContext.DisableRequiredValidator(attr.Property.Name, resource.GetType().Name);
-                        }
-                    }
-                }
-            }
-
-            return base.SetAttributes(resource, attributeValues, attributes);
         }
     }
 }
