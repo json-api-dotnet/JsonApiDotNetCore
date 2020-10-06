@@ -85,7 +85,7 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        public Task DeleteRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> relationshipValues)
+        public Task DeleteRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> removals)
         {
             throw new NotImplementedException();
         }

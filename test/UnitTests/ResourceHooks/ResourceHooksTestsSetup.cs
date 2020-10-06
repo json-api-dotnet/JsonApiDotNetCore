@@ -372,9 +372,8 @@ namespace UnitTests.ResourceHooks
             var serviceProvider = ((IInfrastructure<IServiceProvider>) dbContext).Instance;
             var resourceFactory = new ResourceFactory(serviceProvider);
             IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
-            var resourceAccessor = new Mock<IResourceAccessor>().Object;
             var targetedFields = new TargetedFields();
-            return new EntityFrameworkCoreRepository<TModel, int>(targetedFields, resolver, resourceGraph, resourceFactory, new List<IQueryConstraintProvider>(), resourceAccessor, NullLoggerFactory.Instance);
+            return new EntityFrameworkCoreRepository<TModel, int>(targetedFields, resolver, resourceGraph, resourceFactory, new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
         }
 
         private IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>

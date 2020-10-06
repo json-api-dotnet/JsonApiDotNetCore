@@ -29,14 +29,9 @@ namespace JsonApiDotNetCore.Repositories
         /// </summary>
         /// <param name="requestResource">The (partial) resource coming from the request body.</param>
         /// <param name="databaseResource">The resource as stored in the database before the update.</param>
-        /// <param name="completeReplacementOfRelationships">Reflects if relationships assignments must be treated as complete replacements</param>
+        /// <param name="completeReplacementOfRelationships">Enable complete replacements when dealing with relationship assignments.</param>
         Task UpdateAsync(TResource requestResource, TResource databaseResource, bool completeReplacementOfRelationships = true);
-
-        /// <summary>
-        /// Updates a relationship in the underlying data store.
-        /// </summary>
-        Task SetRelationshipsAsync(TResource parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds);
-
+        
         /// <summary>
         /// Deletes a resource from the underlying data store.
         /// </summary>

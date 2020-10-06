@@ -22,11 +22,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             IResourceGraph resourceGraph,
             IResourceFactory resourceFactory,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IResourceAccessor resourceAccessor,
             ILoggerFactory loggerFactory,
             ResourceCaptureStore captureStore)
             : base(targetedFields, contextResolver, resourceGraph, resourceFactory,
-                constraintProviders, resourceAccessor, loggerFactory)
+                constraintProviders, loggerFactory)
         {
             _captureStore = captureStore;
         }

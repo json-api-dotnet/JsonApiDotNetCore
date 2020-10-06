@@ -54,7 +54,6 @@ namespace UnitTests.Extensions
             Assert.NotNull(provider.GetService<IJsonApiReader>());
             Assert.NotNull(provider.GetService<IJsonApiDeserializer>());
             Assert.NotNull(provider.GetService<IGenericServiceFactory>());
-            Assert.NotNull(provider.GetService(typeof(RepositoryRelationshipUpdateHelper<TodoItem>)));
         }
 
         [Fact]
@@ -169,7 +168,7 @@ namespace UnitTests.Extensions
             public Task<IntResource> UpdateAsync(int id, IntResource requestResource) => throw new NotImplementedException();
             public Task SetRelationshipAsync(int id, string relationshipName, object relationshipAssignment) => throw new NotImplementedException();
             public Task AddRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> relationshipAssignment) => throw new NotImplementedException();
-            public Task DeleteRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> relationshipValues) => throw new NotImplementedException();
+            public Task DeleteRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> removals) => throw new NotImplementedException();
         }
 
         private class GuidResourceService : IResourceService<GuidResource, Guid>
@@ -183,7 +182,7 @@ namespace UnitTests.Extensions
             public Task<GuidResource> UpdateAsync(Guid id, GuidResource requestResource) => throw new NotImplementedException();
             public Task SetRelationshipAsync(Guid id, string relationshipName, object relationshipAssignment) => throw new NotImplementedException();
             public Task AddRelationshipAsync(Guid id, string relationshipName, IEnumerable<IIdentifiable> relationshipAssignment) => throw new NotImplementedException();
-            public Task DeleteRelationshipAsync(Guid id, string relationshipName, IEnumerable<IIdentifiable> relationshipValues) => throw new NotImplementedException();
+            public Task DeleteRelationshipAsync(Guid id, string relationshipName, IEnumerable<IIdentifiable> removals) => throw new NotImplementedException();
         }
 
 

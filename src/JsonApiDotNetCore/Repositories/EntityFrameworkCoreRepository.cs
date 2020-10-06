@@ -29,7 +29,6 @@ namespace JsonApiDotNetCore.Repositories
         private readonly IResourceGraph _resourceGraph;
         private readonly IResourceFactory _resourceFactory;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
-        private readonly IResourceAccessor _resourceAccessor;
         private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
         
         public EntityFrameworkCoreRepository(
@@ -38,7 +37,6 @@ namespace JsonApiDotNetCore.Repositories
             IResourceGraph resourceGraph,
             IResourceFactory resourceFactory,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IResourceAccessor resourceAccessor,
             ILoggerFactory loggerFactory)
         {
             if (contextResolver == null) throw new ArgumentNullException(nameof(contextResolver));
@@ -48,7 +46,6 @@ namespace JsonApiDotNetCore.Repositories
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
             _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
             _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
-            _resourceAccessor = resourceAccessor ?? throw new ArgumentNullException(nameof(constraintProviders));
             _dbContext = contextResolver.GetContext();
             _traceWriter = new TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>>(loggerFactory);
         }
@@ -305,24 +302,6 @@ namespace JsonApiDotNetCore.Repositories
         }
         
         /// <inheritdoc />
-        public async Task SetRelationshipsAsync(TResource parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds)
-        {
-            // _traceWriter.LogMethodStart(new {parent, relationship, relationshipIds});
-            // if (parent == null) throw new ArgumentNullException(nameof(parent));
-            // if (relationship == null) throw new ArgumentNullException(nameof(relationship));
-            // if (relationshipIds == null) throw new ArgumentNullException(nameof(relationshipIds));
-            //
-            // LoadCurrentRelationships(parent, relationship);
-            // object trackedRelationshipValue = GetTrackedRelationshipValue(relationship, relationshipIds.ToArray());
-            // LoadInverseRelationships(trackedRelationshipValue, relationship);
-            // relationship.SetValue(parent, trackedRelationshipValue, _resourceFactory);
-            //
-            // await _dbContext.SaveChangesAsync();
-            
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
         public virtual async Task<bool> DeleteAsync(TId id)
         {
             _traceWriter.LogMethodStart(new {id});
@@ -431,9 +410,8 @@ namespace JsonApiDotNetCore.Repositories
             IResourceGraph resourceGraph,
             IResourceFactory resourceFactory,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IResourceAccessor resourceAccessor,
             ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, resourceAccessor, loggerFactory) 
+            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory) 
         { }
     }
 }

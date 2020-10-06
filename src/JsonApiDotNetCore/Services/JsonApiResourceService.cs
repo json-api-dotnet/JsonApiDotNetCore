@@ -251,8 +251,7 @@ namespace JsonApiDotNetCore.Services
             await _repository.CreateAsync(resource);
 
             resource = await GetPrimaryResourceById(resource.Id, true);
-            
-            
+    
             if (_hookExecutor != null)
             {
                 _hookExecutor.AfterCreate(AsList(resource), ResourcePipeline.Post);
@@ -266,6 +265,7 @@ namespace JsonApiDotNetCore.Services
         // triggered by POST /articles/{id}/relationships/{relationshipName}
         public async Task AddRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationshipAssignment)
         {
+            relationshipAssignment = relationshipAssignment.ToArray();
             _traceWriter.LogMethodStart(new {id, relationshipName, relationshipAssignment});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
@@ -274,14 +274,13 @@ namespace JsonApiDotNetCore.Services
             var primaryResource = await GetProjectedPrimaryResourceById(id);
             AssertPrimaryResourceExists(primaryResource);
 
-            if (relationshipAssignment != null)
+            if (relationshipAssignment.Any())
             {
                 await AssertValuesOfRelationshipAssignmentExistAsync((_request.Relationship, relationshipAssignment));
-            }
             
-            var requestResource = CreateRequestResource(relationshipAssignment, primaryResource);
-
-            await _repository.UpdateAsync(requestResource, primaryResource, completeReplacementOfRelationships: false);
+                var requestResource = CreateRequestResource(relationshipAssignment, primaryResource);
+                await _repository.UpdateAsync(requestResource, primaryResource, completeReplacementOfRelationships: false);
+            }
         }
 
         /// <inheritdoc />
@@ -354,13 +353,28 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private async Task<TResource> GetProjectedPrimaryResourceById(TId id)
+        private async Task<TResource> GetProjectedPrimaryResourceById(TId id, bool includeRequestRelationship = false)
         {
             var queryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
-            queryLayer.Filter = IncludeFilterById(id, null);
+            
+            queryLayer.Filter = IncludeFilterById(id, queryLayer.Filter);
+            
             var idAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
             queryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
+            
+            if (includeRequestRelationship)
+            {
+                queryLayer.Include = IncludeRelationshipExpression(_request.Relationship);
+                var relationshipResourceContext = _provider.GetResourceContext(_request.Relationship.RightType);
+                var relationshipIdAttribute = relationshipResourceContext.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+                var secondaryLayer = new QueryLayer(relationshipResourceContext)
+                {
+                    Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{relationshipIdAttribute, null}}
+                };
+                queryLayer.Projection.Add(_request.Relationship, secondaryLayer);
+            }
             var primaryResource = (await _repository.GetAsync(queryLayer)).SingleOrDefault();
+            
             return primaryResource;
         }
 
@@ -396,40 +410,24 @@ namespace JsonApiDotNetCore.Services
 
         /// <inheritdoc />
         // triggered by DELETE /articles/{id}/relationships/{relationshipName}
-        public async Task DeleteRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationshipValues)
+        public async Task DeleteRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> removals)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, relationshipValues});
+            _traceWriter.LogMethodStart(new {id, relationshipName, removals});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
-            AssertRelationshipIsToMany(relationshipName);
-
-            var queryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
-            queryLayer.Include = IncludeRelationship(_request.Relationship);
-            queryLayer.Filter = IncludeFilterById(id, null);
             
-            /*
-             * We are fetching resources plus related
-             * in most ideal scenario
-             *     one to many: clear FK
-             *     many to many: clear join table record
-             * no resources need to be fetched.
-             * implicit removes: don't exist, because we're explicitly removing
-             * complete replacement: not what we're doing.
-             */
-            var primaryResource = (await _repository.GetAsync(queryLayer)).SingleOrDefault();
+            var primaryResource = await GetProjectedPrimaryResourceById(id, includeRequestRelationship: true);
             AssertPrimaryResourceExists(primaryResource);
-
-            var relationshipValueCollection = ((IEnumerable<IIdentifiable>) _request.Relationship.GetValue(primaryResource)).Select(TypeHelper.GetIdValue).ToList();
-            foreach (var entry in relationshipValues)
-            {
-                if (relationshipValueCollection.Contains(entry.StringId))
-                {
-                    relationshipValueCollection.Remove(entry.StringId);
-                }
-            }
             
-            await _repository.SetRelationshipsAsync(primaryResource, _request.Relationship, relationshipValueCollection);
+            var currentAssignment =  ((IEnumerable<IIdentifiable>)_request.Relationship.GetValue(primaryResource)).ToArray();
+            var newAssignment = currentAssignment.Where(i => removals.All(r => r.StringId != i.StringId)).ToArray();
+            
+            if (newAssignment.Length < currentAssignment.Length)
+            {
+                var requestResource = CreateRequestResource(newAssignment, primaryResource);
+                await _repository.UpdateAsync(requestResource, primaryResource, completeReplacementOfRelationships: true);
+            }
         }
 
         private bool HasNonNullRelationshipAssignments(TResource requestResource, out (RelationshipAttribute, object)[] assignments)
@@ -504,7 +502,7 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private IncludeExpression IncludeRelationship(RelationshipAttribute relationship)
+        private IncludeExpression IncludeRelationshipExpression(RelationshipAttribute relationship)
         {
             return new IncludeExpression(new[] { new IncludeElementExpression(relationship) });
         }

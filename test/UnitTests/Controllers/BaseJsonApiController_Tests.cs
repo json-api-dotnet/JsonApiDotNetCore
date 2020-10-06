@@ -35,18 +35,18 @@ namespace UnitTests
             public ResourceController(
                 IJsonApiOptions options,
                 ILoggerFactory loggerFactory,
-                ICreateService<Resource, int> create = null,
                 IGetAllService<Resource, int> getAll = null,
                 IGetByIdService<Resource, int> getById = null,
                 IGetSecondaryService<Resource, int> getSecondary = null,
-                IUpdateService<Resource, int> update = null,
-                IDeleteService<Resource, int> delete = null,
-                IAddRelationshipService<Resource, int> addRelationship = null,
                 IGetRelationshipService<Resource, int> getRelationship = null,
+                ICreateService<Resource, int> create = null,
+                IAddRelationshipService<Resource, int> addRelationship = null,
+                IUpdateService<Resource, int> update = null,
                 ISetRelationshipService<Resource, int> setRelationship = null,
+                IDeleteService<Resource, int> delete = null,
                 IDeleteRelationshipService<Resource, int> deleteRelationship = null)
-                : base(options, loggerFactory, create, getAll, getById, getSecondary, update, delete, addRelationship,
-                    getRelationship, setRelationship, deleteRelationship)
+                : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addRelationship,
+                    update, setRelationship, delete, deleteRelationship)
             {
             }
         }
