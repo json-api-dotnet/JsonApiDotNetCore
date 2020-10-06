@@ -305,15 +305,15 @@ namespace JsonApiDotNetCore.Services
         
         /// <inheritdoc />
         // triggered by POST /articles/{id}/relationships/{relationshipName}
-        public async Task AddRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relatinshipValues)
+        public async Task AddRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> relationshipValues)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, relationships = relatinshipValues});
+            _traceWriter.LogMethodStart(new {id, relationshipName, relationships = relationshipValues});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
             AssertRelationshipIsToMany(relationshipName);
             
-            await AssertRelationshipValuesExistAsync((_request.Relationship, relatinshipValues));
+            await AssertRelationshipValuesExistAsync((_request.Relationship, relationshipValues));
             
             var queryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
             queryLayer.Include = IncludeRelationship(_request.Relationship);
@@ -323,7 +323,7 @@ namespace JsonApiDotNetCore.Services
             AssertPrimaryResourceExists(primaryResource);
 
             var relationshipValueCollection = ((IEnumerable<IIdentifiable>) _request.Relationship.GetValue(primaryResource)).Select(i => i.StringId).ToList();
-            foreach (var entry in relatinshipValues)
+            foreach (var entry in relationshipValues)
             {
                 if (!relationshipValueCollection.Contains(entry.StringId))
                 {
@@ -421,12 +421,20 @@ namespace JsonApiDotNetCore.Services
 
             AssertRelationshipExists(relationshipName);
             AssertRelationshipIsToMany(relationshipName);
-            await AssertRelationshipValuesExistAsync((_request.Relationship, relationshipValues));
-            
+
             var queryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
             queryLayer.Include = IncludeRelationship(_request.Relationship);
             queryLayer.Filter = IncludeFilterById(id, null);
             
+            /*
+             * We are fetching resources plus related
+             * in most ideal scenario
+             *     one to many: clear FK
+             *     many to many: clear join table record
+             * no resources need to be fetched.
+             * implicit removes: don't exist, because we're explicitly removing
+             * complete replacement: not what we're doing.
+             */
             var primaryResource = (await _repository.GetAsync(queryLayer)).SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
 
@@ -440,7 +448,6 @@ namespace JsonApiDotNetCore.Services
             }
             
             await _repository.SetRelationshipsAsync(primaryResource, _request.Relationship, relationshipValueCollection);
-            
         }
 
         private bool HasNonNullRelationshipAssignments(TResource requestResource, out (RelationshipAttribute, object)[] assignments)

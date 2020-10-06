@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -29,25 +28,20 @@ namespace JsonApiDotNetCore.Controllers
         public JsonApiController(
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
-            ICreateService<TResource, TId> create = null,
             IGetAllService<TResource, TId> getAll = null,
             IGetByIdService<TResource, TId> getById = null,
             IGetSecondaryService<TResource, TId> getSecondary = null,
-            IUpdateService<TResource, TId> update = null,
-            IDeleteService<TResource, TId> delete = null,
-            IAddRelationshipService<TResource, TId> addRelationship = null,
             IGetRelationshipService<TResource, TId> getRelationship = null,
+            ICreateService<TResource, TId> create = null,
+            IAddRelationshipService<TResource, TId> addRelationship = null,
+            IUpdateService<TResource, TId> update = null,
             ISetRelationshipService<TResource, TId> setRelationship = null,
+            IDeleteService<TResource, TId> delete = null,
             IDeleteRelationshipService<TResource, TId> deleteRelationship = null)
-            : base(options, loggerFactory, create, getAll, getById, getSecondary, update, delete, addRelationship, 
-                getRelationship, setRelationship, deleteRelationship)
+            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addRelationship, update,
+                setRelationship, delete, deleteRelationship)
         { }
 
-        /// <inheritdoc />
-        [HttpPost]
-        public override async Task<IActionResult> PostAsync([FromBody] TResource resource)
-            => await base.PostAsync(resource);
-        
         /// <inheritdoc />
         [HttpGet]
         public override async Task<IActionResult> GetAsync() => await base.GetAsync();
@@ -55,12 +49,21 @@ namespace JsonApiDotNetCore.Controllers
         /// <inheritdoc />
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(TId id) => await base.GetAsync(id);
-        
+
+        /// <inheritdoc />
+        [HttpGet("{id}/relationships/{relationshipName}")]
+        public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
+            => await base.GetRelationshipAsync(id, relationshipName);
+
         /// <inheritdoc />
         [HttpGet("{id}/{relationshipName}")]
         public override async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName)
             => await base.GetSecondaryAsync(id, relationshipName);
-        
+
+        /// <inheritdoc />
+        [HttpPost]
+        public override async Task<IActionResult> PostAsync([FromBody] TResource resource)
+            => await base.PostAsync(resource);
 
         /// <inheritdoc />
         [HttpPatch("{id}")]
@@ -70,29 +73,14 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <inheritdoc />
+        [HttpPatch("{id}/relationships/{relationshipName}")]
+        public override async Task<IActionResult> PatchRelationshipAsync(
+            TId id, string relationshipName, [FromBody] object relationships)
+            => await base.PatchRelationshipAsync(id, relationshipName, relationships);
+
+        /// <inheritdoc />
         [HttpDelete("{id}")]
         public override async Task<IActionResult> DeleteAsync(TId id) => await base.DeleteAsync(id);
-        
-        /// <inheritdoc />
-        [HttpPost("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> PostRelationshipAsync(
-            TId id, string relationshipName, [FromBody] IEnumerable<IIdentifiable> relationships)
-            => await base.PostRelationshipAsync(id, relationshipName, relationships);
-        
-        /// <inheritdoc />
-        [HttpGet("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
-            => await base.GetRelationshipAsync(id, relationshipName);
-        
-        /// <inheritdoc />
-        [HttpPatch("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object relationships)
-            => await base.PatchRelationshipAsync(id, relationshipName, relationships);
-        
-        /// <inheritdoc />
-        [HttpDelete("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IEnumerable<IIdentifiable> relationships)
-            => await base.DeleteRelationshipAsync(id, relationshipName, relationships);
     }
 
     /// <inheritdoc />
@@ -110,18 +98,18 @@ namespace JsonApiDotNetCore.Controllers
         public JsonApiController(
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
-            ICreateService<TResource, int> create = null,
             IGetAllService<TResource, int> getAll = null,
             IGetByIdService<TResource, int> getById = null,
             IGetSecondaryService<TResource, int> getSecondary = null,
-            IUpdateService<TResource, int> update = null,
-            IDeleteService<TResource, int> delete = null,
-            IAddRelationshipService<TResource, int> addRelationship = null,
             IGetRelationshipService<TResource, int> getRelationship = null,
+            ICreateService<TResource, int> create = null,
+            IAddRelationshipService<TResource, int> addRelationship = null,
+            IUpdateService<TResource, int> update = null,
             ISetRelationshipService<TResource, int> setRelationship = null,
+            IDeleteService<TResource, int> delete = null,
             IDeleteRelationshipService<TResource, int> deleteRelationship = null)
-            : base(options, loggerFactory, create, getAll, getById, getSecondary, update, delete, addRelationship, 
-                getRelationship, setRelationship, deleteRelationship)
+            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addRelationship, update,
+                setRelationship, delete, deleteRelationship)
         { }
     }
 }
