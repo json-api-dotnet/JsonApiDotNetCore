@@ -347,8 +347,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             newPerson.Passport = passport;
 
             // Act
-            var requestBody = serializer.Serialize(newPerson);
-            var (body, response) = await Post("/api/v1/people", requestBody);
+            var (body, response) = await Post("/api/v1/people", serializer.Serialize(newPerson));
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);

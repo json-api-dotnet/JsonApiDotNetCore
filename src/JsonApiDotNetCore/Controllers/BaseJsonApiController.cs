@@ -112,7 +112,7 @@ namespace JsonApiDotNetCore.Controllers
             var resource = await _getById.GetAsync(id);
             return Ok(resource);
         }
-        
+
         /// <summary>
         /// Gets a single resource or multiple resources at a nested endpoint.
         /// Examples:
@@ -128,7 +128,7 @@ namespace JsonApiDotNetCore.Controllers
             var relationship = await _getSecondary.GetSecondaryAsync(id, relationshipName);
             return Ok(relationship);
         }
-        
+
         /// <summary>
         /// Gets a single resource relationship.
         /// Example: GET /articles/1/relationships/author HTTP/1.1
@@ -215,6 +215,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_setRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
             await _setRelationship.SetRelationshipAsync(id, relationshipName, relationships);
+    
             return Ok();
         }
 
@@ -241,6 +242,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_deleteRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
             await _deleteRelationship.DeleteRelationshipAsync(id, relationshipName, relationships);
+
             return Ok();
         }
     }

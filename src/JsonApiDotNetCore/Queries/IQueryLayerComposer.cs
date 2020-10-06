@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Queries
         /// Wraps a layer for a secondary endpoint into a primary layer, rewriting top-level includes.
         /// </summary>
         QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceContext primaryResourceContext,
-            TId primaryId, RelationshipAttribute secondaryRelationship = null);
+            TId primaryId, RelationshipAttribute secondaryRelationship);
 
         /// <summary>
         /// Gets the secondary projection for a relationship endpoint.

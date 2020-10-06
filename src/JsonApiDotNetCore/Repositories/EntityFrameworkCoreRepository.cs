@@ -111,11 +111,11 @@ namespace JsonApiDotNetCore.Repositories
         {
             _traceWriter.LogMethodStart(new {resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
-            
+
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
                 var relationshipIds = GetRelationshipIds(relationshipAttr, resource);
-                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, relationshipIds.ToArray() );
+                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, resource);
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 relationshipAttr.SetValue(resource, trackedRelationshipValue, _resourceFactory);
             }
@@ -214,7 +214,7 @@ namespace JsonApiDotNetCore.Repositories
 
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
-                // loads databasePerson.todoItems. Required for complete replacements
+                // Ensures complete replacements of relationships.
                 LoadCurrentRelationships(databaseResource, relationshipAttr);
                 
                 // trackedRelationshipValue is either equal to updatedPerson.todoItems,
@@ -234,14 +234,7 @@ namespace JsonApiDotNetCore.Repositories
 
             await _dbContext.SaveChangesAsync();
         }
-        
-        /// <summary>
-        /// Responsible for getting the relationship value for a given relationship 
-        /// attribute of a given resource. It ensures that the relationship value 
-        /// that it returns is attached to the database without reattaching duplicates instances 
-        /// to the change tracker. It does so by checking if there already are
-        /// instances of the to-be-attached entities in the change tracker.
-        /// </summary>
+
         private string[] GetRelationshipIds(RelationshipAttribute relationship, TResource requestResource)
         {
             if (relationship is HasOneAttribute hasOneAttr)

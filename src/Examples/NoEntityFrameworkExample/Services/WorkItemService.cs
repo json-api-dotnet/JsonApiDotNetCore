@@ -67,7 +67,7 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        public Task SetRelationshipAsync(int id, string relationshipName, object relationshipValues)
+        public Task SetRelationshipAsync(int id, string relationshipName, object relationshipAssignment)
         {
             throw new NotImplementedException();
         }

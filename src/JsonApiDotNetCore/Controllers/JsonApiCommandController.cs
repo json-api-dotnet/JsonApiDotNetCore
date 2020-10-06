@@ -46,11 +46,11 @@ namespace JsonApiDotNetCore.Controllers
         public override async Task<IActionResult> PatchRelationshipAsync(
             TId id, string relationshipName, [FromBody] object relationships)
             => await base.PatchRelationshipAsync(id, relationshipName, relationships);
-        
+
         /// <inheritdoc />
         [HttpDelete("{id}")]
         public override async Task<IActionResult> DeleteAsync(TId id) => await base.DeleteAsync(id);
-        
+
         /// <inheritdoc />
         [HttpDelete("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IEnumerable<IIdentifiable> relationships)

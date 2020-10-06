@@ -177,7 +177,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         }
 
         /// <inheritdoc />
-        public QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceContext primaryResourceContext, TId primaryId, RelationshipAttribute secondaryRelationship = null)
+        public QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceContext primaryResourceContext, TId primaryId, RelationshipAttribute secondaryRelationship)
         {
             var innerInclude = secondaryLayer.Include;
             secondaryLayer.Include = null;
@@ -186,26 +186,17 @@ namespace JsonApiDotNetCore.Queries.Internal
             var sparseFieldSet = new SparseFieldSetExpression(new[] { primaryIdAttribute });
 
             var primaryProjection = GetSparseFieldSetProjection(new[] { sparseFieldSet }, primaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
-            if (secondaryRelationship != null)
-            {
-                primaryProjection[secondaryRelationship] = secondaryLayer;
-            }
+            primaryProjection[secondaryRelationship] = secondaryLayer;
             primaryProjection[primaryIdAttribute] = null;
 
             var primaryFilter = GetFilter(Array.Empty<QueryExpression>(), primaryResourceContext);
 
-            var queryLayer = new QueryLayer(primaryResourceContext)
+            return new QueryLayer(primaryResourceContext)
             {
+                Include = RewriteIncludeForSecondaryEndpoint(innerInclude, secondaryRelationship),
                 Filter = IncludeFilterById(primaryId, primaryResourceContext, primaryFilter),
                 Projection = primaryProjection
             };
-
-            if (secondaryRelationship != null)
-            {
-                queryLayer.Include = RewriteIncludeForSecondaryEndpoint(innerInclude, secondaryRelationship);
-            }
-
-            return queryLayer;
         }
 
         private IncludeExpression RewriteIncludeForSecondaryEndpoint(IncludeExpression relativeInclude, RelationshipAttribute secondaryRelationship)

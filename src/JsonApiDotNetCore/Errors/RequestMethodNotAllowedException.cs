@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http;
-using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Errors
@@ -16,17 +15,17 @@ namespace JsonApiDotNetCore.Errors
             : base(new Error(HttpStatusCode.MethodNotAllowed)
             {
                 Title = "The request method is not allowed.",
-                Detail = $"Resource does not support {method} requests." 
+                Detail = $"Resource does not support {method} requests."
             })
         {
             Method = method;
         }
         
-        public RequestMethodNotAllowedException(string mismatchingRelationshipType)
+        public RequestMethodNotAllowedException(string toOneRelationship)
             : base(new Error(HttpStatusCode.MethodNotAllowed)
             {
                 Title = "The request method is not allowed.",
-                Detail = $"Relationship {mismatchingRelationshipType} is not a to-many relationship."
+                Detail = $"Relationship {toOneRelationship} is not a to-many relationship."
             }) { }
     }
 }
