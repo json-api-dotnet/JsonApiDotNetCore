@@ -105,14 +105,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
 
             var body = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(document.Errors);
 
             var error = document.Errors.Single();
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
             Assert.Equal("Failed to deserialize request body.", error.Title);
             Assert.StartsWith("Property 'TodoItem.CalculatedValue' is read-only. - Request body: <<", error.Detail);
 
@@ -148,11 +148,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.NotFound, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
             Assert.Equal("Resource of type 'todoItems' with ID '100' does not exist.", errorDocument.Errors[0].Detail);
         }
@@ -177,14 +176,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
 
             var body = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(document.Errors);
 
             var error = document.Errors.Single();
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
             Assert.Equal("Failed to deserialize request body: Payload must include 'id' element.", error.Title);
             Assert.StartsWith("Request body: <<", error.Detail);
         }
@@ -212,14 +211,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Conflict, response);
 
             var body = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(document.Errors);
 
             var error = document.Errors.Single();
-            Assert.Equal(HttpStatusCode.Conflict, error.StatusCode);
             Assert.Equal("Resource ID mismatch between request body and endpoint URL.", error.Title);
             Assert.Equal($"Expected resource ID '{wrongTodoItemId}' in PATCH request body at endpoint 'http://localhost/api/v1/todoItems/{wrongTodoItemId}', instead of '{todoItem.Id}'.", error.Detail);
         }
@@ -241,14 +239,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
 
             var body = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(document.Errors);
 
             var error = document.Errors.Single();
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
             Assert.Equal("Failed to deserialize request body.", error.Title);
             Assert.StartsWith("Invalid character after parsing", error.Detail);
         }
@@ -293,7 +291,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(errorDocument.Errors);
 
             var error = errorDocument.Errors.Single();
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
             Assert.Equal("Failed to deserialize request body: Changing the value of the requested attribute is not allowed.", error.Title);
             Assert.StartsWith("Changing the value of 'offsetDate' is not allowed. - Request body:", error.Detail);
         }
@@ -327,7 +325,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert -- response
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
             var body = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.NotNull(document);
@@ -369,7 +367,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert -- response
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
             var body = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.NotNull(document);
@@ -408,7 +406,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .SingleOrDefault(t => t.Id == todoItem.Id);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
             Assert.Equal(person.Id, updatedTodoItem.OwnerId);
         }
 

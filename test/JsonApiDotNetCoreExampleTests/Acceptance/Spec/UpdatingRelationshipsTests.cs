@@ -276,7 +276,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.NotFound, response);
             Assert.Contains("For the following types, the resources with the specified ids do not exist:\\\\npeople: 900000,900001\\ntodoItems: 900002\"", responseBody);
         }
 
@@ -341,7 +341,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .Include(tdc => tdc.TodoItems).SingleOrDefault().TodoItems;
 
 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
             // we are expecting two, not three, because the request does 
             // a "complete replace".
             Assert.Equal(2, updatedTodoItems.Count);
@@ -419,7 +419,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .Include(tdc => tdc.TodoItems).SingleOrDefault().TodoItems;
 
 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
             // we are expecting two, not three, because the request does 
             // a "complete replace".
             Assert.Equal(2, updatedTodoItems.Count);
@@ -485,7 +485,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .Include(tdc => tdc.TodoItems).SingleOrDefault().TodoItems;
 
 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
             Assert.Equal(2, updatedTodoItems.Count);
         }
 
@@ -540,7 +540,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .Include(t => t.Owner)
                 .Single(t => t.Id == todoItem.Id);
 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
             Assert.Null(todoItemResult.Owner);
         }
 
@@ -589,7 +589,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .Include(p => p.TodoItems)
                 .Single(p => p.Id == person.Id);
 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
             Assert.Empty(personResult.TodoItems);
         }
 
@@ -755,7 +755,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request); ;
             var responseBody = await response.Content.ReadAsStringAsync();
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
             _context = _fixture.GetRequiredService<AppDbContext>();
             var assertTodoItems = _context.People.Include(p => p.TodoItems)
                 .Single(p => p.Id == person.Id).TodoItems;
@@ -796,7 +796,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItemsOwner = _context.TodoItems.Include(t => t.Owner).Single(t => t.Id == todoItem.Id);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
             Assert.NotNull(todoItemsOwner);
         }
 
@@ -842,7 +842,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .Include(t => t.Owner)
                 .Single(t => t.Id == todoItem.Id);
 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
             Assert.Null(todoItemResult.Owner);
         }
 
@@ -890,7 +890,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
             _context = _fixture.GetRequiredService<AppDbContext>();
             var assertTodoItems = _context.People.Include(p => p.TodoItems)
                 .Single(p => p.Id == person.Id).TodoItems;
@@ -941,7 +941,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
             _context = _fixture.GetRequiredService<AppDbContext>();
             var assertTodoItems = _context.People.AsNoTracking().Include(p => p.TodoItems)
                 .Single(p => p.Id == person.Id).TodoItems;
@@ -982,11 +982,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.NotFound, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested relationship does not exist.", errorDocument.Errors[0].Title);
             Assert.Equal("The resource 'todoItems' does not contain a relationship named 'invalid'.",
                 errorDocument.Errors[0].Detail);
@@ -1020,14 +1019,18 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.NotFound, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
             Assert.Equal("Resource of type 'todoItems' with ID '99999999' does not exist.",
                 errorDocument.Errors[0].Detail);
+        }
+        
+        private void AssertEqualStatusCode(HttpStatusCode expected, HttpResponseMessage response)
+        {
+            Assert.True(expected == response.StatusCode, $"Got {response.StatusCode} status code with payload instead of {expected}. Payload: {response.Content.ReadAsStringAsync().Result}");
         }
     }
 }
