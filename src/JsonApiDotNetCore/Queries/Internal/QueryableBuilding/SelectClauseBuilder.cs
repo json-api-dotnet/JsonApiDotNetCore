@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
@@ -173,27 +174,45 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             Expression layerExpression = builder.ApplyQuery(layer);
 
-            Type enumerableOfElementType = typeof(IEnumerable<>).MakeGenericType(elementType);
-            Type typedCollection = TypeHelper.ToConcreteCollectionType(collectionProperty.PropertyType);
+            // Earlier versions of EF Core 3.x failed to understand `query.ToHashSet()`, so we emit `new HashSet(query)` instead.
+            // Interestingly, EF Core 5 RC1 fails to understand `new HashSet(query)`, so we emit `query.ToHashSet()` instead.
+            // https://github.com/dotnet/efcore/issues/22902
 
-            ConstructorInfo typedCollectionConstructor = typedCollection.GetConstructor(new[]
+            if (EntityFrameworkCoreSupport.Version.Major < 5)
             {
-                enumerableOfElementType
-            });
+                Type enumerableOfElementType = typeof(IEnumerable<>).MakeGenericType(elementType);
+                Type typedCollection = TypeHelper.ToConcreteCollectionType(collectionProperty.PropertyType);
 
-            if (typedCollectionConstructor == null)
-            {
-                throw new Exception(
-                    $"Constructor on '{typedCollection.Name}' that accepts '{enumerableOfElementType.Name}' not found.");
+                ConstructorInfo typedCollectionConstructor = typedCollection.GetConstructor(new[]
+                {
+                    enumerableOfElementType
+                });
+
+                if (typedCollectionConstructor == null)
+                {
+                    throw new Exception(
+                        $"Constructor on '{typedCollection.Name}' that accepts '{enumerableOfElementType.Name}' not found.");
+                }
+
+                return Expression.New(typedCollectionConstructor, layerExpression);
             }
 
-            return Expression.New(typedCollectionConstructor, layerExpression);
+            string operationName = TypeHelper.TypeCanContainHashSet(collectionProperty.PropertyType) ? "ToHashSet" : "ToList";
+            return CopyCollectionExtensionMethodCall(layerExpression, operationName, elementType);
         }
 
         private static Expression TestForNull(Expression expressionToTest, Expression ifFalseExpression)
         {
             BinaryExpression equalsNull = Expression.Equal(expressionToTest, _nullConstant);
             return Expression.Condition(equalsNull, Expression.Convert(_nullConstant, expressionToTest.Type), ifFalseExpression);
+        }
+
+        private static Expression CopyCollectionExtensionMethodCall(Expression source, string operationName, Type elementType)
+        {
+            return Expression.Call(typeof(Enumerable), operationName, new[]
+            {
+                elementType
+            }, source);
         }
 
         private Expression SelectExtensionMethodCall(Expression source, Type elementType, Expression selectorBody)
