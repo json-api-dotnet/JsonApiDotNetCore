@@ -395,7 +395,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         }
 
         [Fact]
-        public async Task Cannot_update_relationship_for_deleted_parent()
+        public async Task Cannot_set_relationship_for_deleted_parent()
         {
             // Arrange
             var company = new Company

@@ -247,14 +247,26 @@ namespace JsonApiDotNetCore
         }
 
         /// <summary>
-        /// Gets the value of the id of an identifiable. This is recommended over using `StringId` because this might
+        /// Gets the value of the id of an identifiable. This can be useful to use over `StringId` because this might
         /// fail when the model has obfuscated IDs.
         /// </summary>
         public static string GetIdValue(IIdentifiable identifiable)
         {
             if (identifiable == null) throw new ArgumentNullException(nameof(identifiable));
-            
-            return identifiable.GetType().GetProperty(nameof(Identifiable.Id)).GetValue(identifiable)?.ToString();
+            var typedId = GetTypedIdValue(identifiable);
+
+            return typedId.ToString();
+        }
+        
+        /// <summary>
+        /// Gets the typed value of the id of an identifiable.
+        /// </summary>
+        public static object GetTypedIdValue(IIdentifiable identifiable)
+        {
+            if (identifiable == null) throw new ArgumentNullException(nameof(identifiable));
+            var typedId = identifiable.GetType().GetProperty(nameof(Identifiable.Id)).GetValue(identifiable);
+
+            return typedId;
         }
 
         public static object CreateInstance(Type type)

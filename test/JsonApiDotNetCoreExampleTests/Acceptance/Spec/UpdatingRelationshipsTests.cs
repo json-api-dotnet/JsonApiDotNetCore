@@ -811,21 +811,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
-            _context.Entry(todoItem).State = EntityState.Detached;
-            _context.Entry(person).State = EntityState.Detached;
             
-            var testObj = new TodoItem {Id = todoItem.Id};
-            _context.Entry(testObj).State = EntityState.Unchanged;
-            _context.Entry(testObj).Reload(); // <--- why doesn't the line below work without this line?
-            await _context.Entry(testObj).Reference("Owner").LoadAsync();
-            var owner = testObj.Owner;
-
-            if (owner == null)
-            {
-                throw new Exception("shouldn't be null");
-            }
-            
-
             var builder = WebHost.CreateDefaultBuilder()
                 .UseStartup<TestStartup>();
 

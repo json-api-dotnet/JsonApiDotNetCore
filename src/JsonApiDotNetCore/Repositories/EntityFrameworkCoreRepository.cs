@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -21,6 +23,7 @@ namespace JsonApiDotNetCore.Repositories
     public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
+        private static readonly ConcurrentDictionary<RelationshipAttribute, PropertyInfo> _foreignKeyCache = new ConcurrentDictionary<RelationshipAttribute, PropertyInfo>();
         private readonly ITargetedFields _targetedFields;
         private readonly DbContext _dbContext;
         private readonly IResourceGraph _resourceGraph;
@@ -28,7 +31,7 @@ namespace JsonApiDotNetCore.Repositories
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly IResourceAccessor _resourceAccessor;
         private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
-
+        
         public EntityFrameworkCoreRepository(
             ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
@@ -228,13 +231,27 @@ namespace JsonApiDotNetCore.Repositories
 
         private void ApplyRelationshipAssignment(TResource requestResource, RelationshipAttribute relationshipAttr, TResource targetResource = null)
         {
+            targetResource ??= requestResource;
             // Ensures the new relationship assignment will not result entities being tracked more than once.
             object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, requestResource);
             
             // Ensures successful handling of implicit removals of relationships.
             LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
             
-            relationshipAttr.SetValue(targetResource ?? requestResource, trackedRelationshipValue, _resourceFactory);
+            // if (re)
+            
+            var foreignKey = GetForeignKeyProperty(relationshipAttr);
+            if (foreignKey != null)
+            {
+                var foreignKeyValue = trackedRelationshipValue == null ? null : TypeHelper.GetTypedIdValue((IIdentifiable) trackedRelationshipValue);
+                foreignKey.SetValue(targetResource, foreignKeyValue);
+                if (_dbContext.Entry(targetResource).State != EntityState.Detached)
+                {
+                    _dbContext.Entry(targetResource).State = EntityState.Modified;
+                }
+            }
+
+            relationshipAttr.SetValue(targetResource, trackedRelationshipValue, _resourceFactory);
         }
 
         private object GetTrackedRelationshipValue(RelationshipAttribute relationship, object requestResource)
@@ -373,19 +390,32 @@ namespace JsonApiDotNetCore.Repositories
             }
             else if (relationshipAttribute is HasOneAttribute hasOneAttribute)
             {
-                /*
-                 * dbContext.Entry(databaseResource).State = EntityState.Detached;
-                 * var newAttachment = _resourceFactory.CreateInstance(databaseResource.GetType()) as TResource;
-                 * newAttachment.StringId = databaseResource.StringId;
-                 * _dbContext.Entry(newAttachment).State = EntityState.Unchanged;
-                 * _dbContext.Entry(newAttachment).Reload(); // <--- why doesn't the line below work without this line?
-                 * _dbContext.Entry(newAttachment).Reference(hasOneAttribute.Property.Name).Load();
-                 * var relationship = hasOneAttribute.GetValue(newAttachment); // this is null, should not be null!
-                 */
-                
-                _dbContext.Entry(databaseResource).Reload(); // why is this line needed? see smaller repo example above
-                _dbContext.Entry(databaseResource).Reference(hasOneAttribute.Property.Name).Load();
+                if (GetForeignKeyProperty(hasOneAttribute) == null)
+                {    // If the primary resource is the dependent side of a to-one relationship, there is no
+                     // need to load the relationship because we can just set the FK.
+                    _dbContext.Entry(databaseResource).Reference(hasOneAttribute.Property.Name).Load();
+                }
             }
+        }
+
+        private PropertyInfo GetForeignKeyProperty(RelationshipAttribute relationship)
+        {
+            PropertyInfo foreignKey = null;
+            
+            if (relationship is HasOneAttribute && !_foreignKeyCache.TryGetValue(relationship, out foreignKey))
+            {
+                var entityMetadata = _dbContext.Model.FindEntityType(typeof(TResource));
+                var foreignKeyMetadata = entityMetadata.FindNavigation(relationship.Property.Name).ForeignKey;
+                foreignKey = foreignKeyMetadata.Properties[0].PropertyInfo;
+                _foreignKeyCache.TryAdd(relationship, foreignKey);
+            }
+
+            if (foreignKey == null || foreignKey.DeclaringType != typeof(TResource))
+            {
+                return null;
+            }
+            
+            return foreignKey;
         }
     }
 
