@@ -28,6 +28,23 @@ namespace JsonApiDotNetCore.Repositories
             return (TEntity) entityEntry?.Entity;
         }
 
+        internal static object GetTrackedOrAttachCurrent(this DbContext context, IIdentifiable entity)
+        {
+           var trackedEntity = context.GetTrackedEntity(entity);
+            if (trackedEntity == null)
+            {
+                context.Entry(entity).State = EntityState.Unchanged;
+                trackedEntity = entity;
+            }
+
+            return trackedEntity;
+        }
+        
+        internal static TResource GetTrackedOrAttachCurrent<TResource>(this DbContext context, TResource entity) where TResource : IIdentifiable
+        {
+            return (TResource)GetTrackedOrAttachCurrent(context, (IIdentifiable)entity);
+        }
+
         /// <summary>
         /// Gets the current transaction or creates a new one.
         /// If a transaction already exists, commit, rollback and dispose

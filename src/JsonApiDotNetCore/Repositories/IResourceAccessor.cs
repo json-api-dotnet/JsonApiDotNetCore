@@ -17,6 +17,6 @@ namespace JsonApiDotNetCore.Repositories
         /// </summary>
         /// <param name="resourceType">The type for which to create a repository.</param>
         /// <param name="ids">The ids to filter on.</param>
-        Task<IEnumerable<IIdentifiable>> GetResourcesByIdAsync(Type resourceType, IEnumerable<string> ids);
+        Task<IEnumerable<IIdentifiable>> GetResourcesByIdAsync(Type resourceType, IReadOnlyCollection<string> ids);
     }
 }

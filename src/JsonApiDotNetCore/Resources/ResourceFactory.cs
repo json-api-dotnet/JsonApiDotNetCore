@@ -30,9 +30,16 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public TResource CreateInstance<TResource>()
+        public TResource CreateInstance<TResource>(object id = null) where TResource : IIdentifiable
         {
-            return (TResource) InnerCreateInstance(typeof(TResource), _serviceProvider);
+            var identifiable = (TResource) InnerCreateInstance(typeof(TResource), _serviceProvider);
+            
+            if (id != null)
+            {
+                TypeHelper.SetResourceTypedId(identifiable, id);
+            }
+
+            return identifiable;
         }
 
         private static object InnerCreateInstance(Type type, IServiceProvider serviceProvider)

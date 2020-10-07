@@ -97,6 +97,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getAll == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var resources = await _getAll.GetAsync();
+    
             return Ok(resources);
         }
 
@@ -110,6 +111,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getById == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var resource = await _getById.GetAsync(id);
+    
             return Ok(resource);
         }
 
@@ -126,6 +128,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getSecondary == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var relationship = await _getSecondary.GetSecondaryAsync(id, relationshipName);
+    
             return Ok(relationship);
         }
 
@@ -174,13 +177,14 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Adds resources to a to-many relationship.
         /// </summary>
-        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] IEnumerable<IIdentifiable> relationships)
+        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> relationshipAssignment)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
+            _traceWriter.LogMethodStart(new {id, relationshipName, relationshipAssignment});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_addRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Post);
-            await _addRelationship.AddRelationshipAsync(id, relationshipName, relationships);
+            await _addRelationship.AddRelationshipAsync(id, relationshipName, relationshipAssignment);
+
             return Ok();
         }
 
@@ -202,19 +206,20 @@ namespace JsonApiDotNetCore.Controllers
             }
 
             var updated = await _update.UpdateAsync(id, resource);
+    
             return updated == null ? Ok(null) : Ok(updated);
         }
 
         /// <summary>
         /// Updates a relationship.
         /// </summary>
-        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object relationships)
+        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object relationshipAssignment)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
+            _traceWriter.LogMethodStart(new {id, relationshipName, relationshipAssignment});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_setRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
-            await _setRelationship.SetRelationshipAsync(id, relationshipName, relationships);
+            await _setRelationship.SetRelationshipAsync(id, relationshipName, relationshipAssignment);
     
             return Ok();
         }
@@ -235,13 +240,13 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Removes resources from a to-many relationship.
         /// </summary>
-        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IEnumerable<IIdentifiable> relationships)
+        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> removals)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
+            _traceWriter.LogMethodStart(new {id, relationshipName, removals});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_deleteRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
-            await _deleteRelationship.DeleteRelationshipAsync(id, relationshipName, relationships);
+            await _deleteRelationship.DeleteRelationshipAsync(id, relationshipName, removals);
 
             return Ok();
         }

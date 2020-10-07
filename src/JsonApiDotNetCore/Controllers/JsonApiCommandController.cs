@@ -33,8 +33,8 @@ namespace JsonApiDotNetCore.Controllers
         /// <inheritdoc />
         [HttpPost("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> PostRelationshipAsync(
-            TId id, string relationshipName, [FromBody] IEnumerable<IIdentifiable> relationships)
-            => await base.PostRelationshipAsync(id, relationshipName, relationships);
+            TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> relationshipAssignment)
+            => await base.PostRelationshipAsync(id, relationshipName, relationshipAssignment);
 
         /// <inheritdoc />
         [HttpPatch("{id}")]
@@ -44,8 +44,8 @@ namespace JsonApiDotNetCore.Controllers
         /// <inheritdoc />
         [HttpPatch("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> PatchRelationshipAsync(
-            TId id, string relationshipName, [FromBody] object relationships)
-            => await base.PatchRelationshipAsync(id, relationshipName, relationships);
+            TId id, string relationshipName, [FromBody] object relationshipAssignment)
+            => await base.PatchRelationshipAsync(id, relationshipName, relationshipAssignment);
 
         /// <inheritdoc />
         [HttpDelete("{id}")]
@@ -53,8 +53,8 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpDelete("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IEnumerable<IIdentifiable> relationships)
-            => await base.DeleteRelationshipAsync(id, relationshipName, relationships);
+        public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> removals)
+            => await base.DeleteRelationshipAsync(id, relationshipName, removals);
     }
 
     /// <inheritdoc />

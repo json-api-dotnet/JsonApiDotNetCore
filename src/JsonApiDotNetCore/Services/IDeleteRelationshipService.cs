@@ -14,6 +14,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Handles a json:api request to remove resources from a to-many relationship.
         /// </summary>
-        Task DeleteRelationshipAsync(TId id, string relationshipName, IEnumerable<IIdentifiable> removals);
+        Task DeleteRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> removals);
     }
 }

@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-            _request = request ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            _request = request ?? throw new ArgumentNullException(nameof(request));
         }
 
         /// <inheritdoc />

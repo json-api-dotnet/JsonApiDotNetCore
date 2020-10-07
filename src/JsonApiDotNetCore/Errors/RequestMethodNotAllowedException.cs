@@ -20,12 +20,5 @@ namespace JsonApiDotNetCore.Errors
         {
             Method = method;
         }
-        
-        public RequestMethodNotAllowedException(string toOneRelationship)
-            : base(new Error(HttpStatusCode.MethodNotAllowed)
-            {
-                Title = "The request method is not allowed.",
-                Detail = $"Relationship {toOneRelationship} is not a to-many relationship."
-            }) { }
     }
 }

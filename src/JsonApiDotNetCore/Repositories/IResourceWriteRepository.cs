@@ -25,20 +25,34 @@ namespace JsonApiDotNetCore.Repositories
         Task CreateAsync(TResource resource);
 
         /// <summary>
+        /// Adds a value to a relationship collection in the underlying data store.
+        /// </summary>
+        Task AddRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> relationshipAssignment);
+
+        /// <summary>
         /// Updates an existing resource in the underlying data store.
         /// </summary>
         /// <param name="requestResource">The (partial) resource coming from the request body.</param>
         /// <param name="databaseResource">The resource as stored in the database before the update.</param>
-        /// <param name="completeReplacementOfRelationships">Enable complete replacements when dealing with relationship assignments.</param>
-        Task UpdateAsync(TResource requestResource, TResource databaseResource, bool completeReplacementOfRelationships = true);
+        Task UpdateAsync(TResource requestResource, TResource databaseResource);
         
+        /// <summary>
+        /// Performs a complete replacement of a relationship in the underlying data store.
+        /// </summary>
+        Task SetRelationshipAsync(TId id, object relationshipAssignment);
+    
         /// <summary>
         /// Deletes a resource from the underlying data store.
         /// </summary>
         /// <param name="id">Identifier for the resource to delete.</param>
         /// <returns><c>true</c> if the resource was deleted; <c>false</c> is the resource did not exist.</returns>
-        Task<bool> DeleteAsync(TId id);
-
+        Task DeleteAsync(TId id);
+        
+        /// <summary>
+        /// Removes a value from a relationship collection in the underlying data store.
+        /// </summary>
+        Task DeleteRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> relationshipAssignment);
+        
         /// <summary>
         /// Ensures that the next time this resource is requested, it is re-fetched from the underlying data store.
         /// </summary>

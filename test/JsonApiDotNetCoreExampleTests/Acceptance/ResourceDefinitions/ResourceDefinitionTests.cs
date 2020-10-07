@@ -141,7 +141,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -161,7 +161,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -186,7 +186,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -304,7 +304,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -355,7 +355,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -406,7 +406,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -435,7 +435,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -489,7 +489,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -546,7 +546,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -575,7 +575,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);

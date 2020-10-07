@@ -246,29 +246,6 @@ namespace JsonApiDotNetCore
             return property.PropertyType;
         }
 
-        /// <summary>
-        /// Gets the value of the id of an identifiable. This can be useful to use over `StringId` because this might
-        /// fail when the model has obfuscated IDs.
-        /// </summary>
-        public static string GetIdValue(IIdentifiable identifiable)
-        {
-            if (identifiable == null) throw new ArgumentNullException(nameof(identifiable));
-            var typedId = GetTypedIdValue(identifiable);
-
-            return typedId.ToString();
-        }
-        
-        /// <summary>
-        /// Gets the typed value of the id of an identifiable.
-        /// </summary>
-        public static object GetTypedIdValue(IIdentifiable identifiable)
-        {
-            if (identifiable == null) throw new ArgumentNullException(nameof(identifiable));
-            var typedId = identifiable.GetType().GetProperty(nameof(Identifiable.Id)).GetValue(identifiable);
-
-            return typedId;
-        }
-
         public static object CreateInstance(Type type)
         {
             if (type == null)
@@ -293,11 +270,36 @@ namespace JsonApiDotNetCore
             tempResource.StringId = stringId;
             return GetResourceTypedId(tempResource);
         }
+        
+        /// <summary>
+        /// Gets the value of the id of an identifiable. This can be useful to use over `StringId` because this might
+        /// fail when the model has obfuscated IDs.
+        /// </summary>
+        public static string GetResourceStringId(IIdentifiable identifiable)
+        {
+            return GetResourceTypedId(identifiable).ToString();
+        }
 
+        /// <summary>
+        /// Gets the typed value of the id of an identifiable.
+        /// </summary>
         public static object GetResourceTypedId(IIdentifiable resource)
         {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
             PropertyInfo property = resource.GetType().GetProperty(nameof(Identifiable.Id));
+            
             return property.GetValue(resource);
+        }
+        
+        /// <summary>
+        /// Gets the typed value of the id of an identifiable.
+        /// </summary>
+        public static void SetResourceTypedId(IIdentifiable identifiable, object id)
+        {
+            if (identifiable == null) throw new ArgumentNullException(nameof(identifiable));
+            if (id == null) throw new ArgumentNullException(nameof(id));
+            
+            identifiable.GetType().GetProperty(nameof(Identifiable.Id)).SetValue(identifiable, id);
         }
 
         /// <summary>
