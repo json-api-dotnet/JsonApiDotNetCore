@@ -62,7 +62,7 @@ public class AppDbContext : DbContext
 ### Define Controllers
 
 You need to create controllers that inherit from `JsonApiController<TResource>` or `JsonApiController<TResource, TId>`
-where `T` is the model that inherits from `Identifiable<TId>`
+where `TResource` is the model that inherits from `Identifiable<TId>`
 
 ```c#
 public class PeopleController : JsonApiController<Person>

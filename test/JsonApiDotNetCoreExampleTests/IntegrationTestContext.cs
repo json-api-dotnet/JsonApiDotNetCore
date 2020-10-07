@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCoreExampleTests
@@ -26,6 +27,7 @@ namespace JsonApiDotNetCoreExampleTests
         where TDbContext : DbContext
     {
         private readonly Lazy<WebApplicationFactory<EmptyStartup>> _lazyFactory;
+        private Action<ILoggingBuilder> _loggingConfiguration;
         private Action<IServiceCollection> _beforeServicesConfiguration;
         private Action<IServiceCollection> _afterServicesConfiguration;
 
@@ -43,6 +45,8 @@ namespace JsonApiDotNetCoreExampleTests
                 $"Host=localhost;Port=5432;Database=JsonApiTest-{Guid.NewGuid():N};User ID=postgres;Password={postgresPassword}";
 
             var factory = new IntegrationTestWebApplicationFactory();
+
+            factory.ConfigureLogging(_loggingConfiguration);
 
             factory.ConfigureServicesBeforeStartup(services =>
             {
@@ -72,6 +76,11 @@ namespace JsonApiDotNetCoreExampleTests
             RunOnDatabaseAsync(async context => await context.Database.EnsureDeletedAsync()).Wait();
 
             Factory.Dispose();
+        }
+
+        public void ConfigureLogging(Action<ILoggingBuilder> loggingConfiguration)
+        {
+            _loggingConfiguration = loggingConfiguration;
         }
 
         public void ConfigureServicesBeforeStartup(Action<IServiceCollection> servicesConfiguration)
@@ -165,8 +174,14 @@ namespace JsonApiDotNetCoreExampleTests
 
         private sealed class IntegrationTestWebApplicationFactory : WebApplicationFactory<EmptyStartup>
         {
+            private Action<ILoggingBuilder> _loggingConfiguration;
             private Action<IServiceCollection> _beforeServicesConfiguration;
             private Action<IServiceCollection> _afterServicesConfiguration;
+
+            public void ConfigureLogging(Action<ILoggingBuilder> loggingConfiguration)
+            {
+                _loggingConfiguration = loggingConfiguration;
+            }
 
             public void ConfigureServicesBeforeStartup(Action<IServiceCollection> servicesConfiguration)
             {
@@ -183,6 +198,11 @@ namespace JsonApiDotNetCoreExampleTests
                 return Host.CreateDefaultBuilder(null)
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
+                        webBuilder.ConfigureLogging(options =>
+                        {
+                            _loggingConfiguration?.Invoke(options);
+                        });
+
                         webBuilder.ConfigureServices(services =>
                         {
                             _beforeServicesConfiguration?.Invoke(services);

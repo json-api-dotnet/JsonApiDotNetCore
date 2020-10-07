@@ -16,7 +16,7 @@ public class ArticlesController : JsonApiController<Article>
 
 ## Non-Integer Type Keys
 
-If your model is using a type other than int for the primary key, you must explicitly declare it in the controller and service generic type definitions.
+If your model is using a type other than `int` for the primary key, you must explicitly declare it in the controller/service/repository definitions.
 
 ```c#
 public class ArticlesController : JsonApiController<Article, Guid>
@@ -34,7 +34,7 @@ public class ArticlesController : JsonApiController<Article, Guid>
 
 ## Resource Access Control
 
-It is often desirable to limit what methods are exposed on your controller. The first way, you can do this is to simply inherit from `BaseJsonApiController` and explicitly declare what methods are available.
+It is often desirable to limit what methods are exposed on your controller. The first way you can do this, is to simply inherit from `BaseJsonApiController` and explicitly declare what methods are available.
 
 In this example, if a client attempts to do anything other than GET a resource, an HTTP 404 Not Found response will be returned since no other methods are exposed.
 

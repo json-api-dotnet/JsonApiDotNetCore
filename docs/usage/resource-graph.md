@@ -23,18 +23,14 @@ is prioritized by the list above in descending order.
 Auto-discovery refers to the process of reflecting on an assembly and
 detecting all of the json:api resources, resource definitions, resource services and repositories.
 
-The following command will build the resource graph using all `IIdentifiable`
-implementations. It also injects resource definitions and service layer overrides which we will
-cover in a later section. You can enable auto-discovery for the
-current assembly by adding the following to your `Startup` class.
+The following command builds the resource graph using all `IIdentifiable` implementations and registers the services mentioned.
+You can enable auto-discovery for the current assembly by adding the following to your `Startup` class.
 
 ```c#
 // Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddJsonApi(
-        options => { /* ... */ },
-        discovery => discovery.AddCurrentAssembly());
+    services.AddJsonApi(discovery => discovery.AddCurrentAssembly());
 }
 ```
 
@@ -56,9 +52,7 @@ Be aware that this does not register resource definitions, resource services and
 // Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddJsonApi<AppDbContext>(
-        options => { /* ... */ },
-        discovery => discovery.AddCurrentAssembly());
+    services.AddJsonApi<AppDbContext>(discovery => discovery.AddCurrentAssembly());
 }
 ```
 
@@ -92,13 +86,13 @@ services.AddJsonApi(resources: builder =>
 2. The model is decorated with a `ResourceAttribute`
 ```c#
 [Resource("myResources")]
-public class MyModel : Identifiable { /* ... */ }
+public class MyModel : Identifiable { }
 ```
 
 3. The configured naming convention (by default this is camel-case).
 ```c#
 // this will be registered as "myModels"
-public class MyModel : Identifiable { /* ... */ }
+public class MyModel : Identifiable { }
 ```
 
 The default naming convention can be changed in [options](~/usage/options.md#custom-serializer-settings).

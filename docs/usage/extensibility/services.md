@@ -16,17 +16,17 @@ public class TodoItemService : JsonApiResourceService<TodoItem>
     private readonly INotificationService _notificationService;
 
     public TodoItemService(
-        IResourceRepository<TResource, int> repository,
+        IResourceRepository<TodoItem> repository,
         IQueryLayerComposer queryLayerComposer,
         IPaginationContext paginationContext,
         IJsonApiOptions options,
         ILoggerFactory loggerFactory,
         IJsonApiRequest request,
-        IResourceChangeTracker<TResource> resourceChangeTracker,
+        IResourceChangeTracker<TodoItem> resourceChangeTracker,
         IResourceFactory resourceFactory,
         IResourceHookExecutor hookExecutor = null)
-        : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
-            resourceChangeTracker, resourceFactory, hookExecutor)
+        : base(repository, queryLayerComposer, paginationContext, options, loggerFactory,
+            request, resourceChangeTracker, resourceFactory, hookExecutor)
     {
         _notificationService = notificationService;
     }
@@ -53,30 +53,27 @@ If you'd like to use another ORM that does not provide what JsonApiResourceServi
 // Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
-    // add the service override for MyModel
-    services.AddScoped<IResourceService<MyModel>, MyModelService>();
+    // add the service override for Product
+    services.AddScoped<IResourceService<Product>, ProductService>();
 
     // add your own Data Access Object
-    services.AddScoped<IMyModelDao, MyModelDao>();
-    // ...
+    services.AddScoped<IProductDao, ProductDao>();
 }
 
-// MyModelService.cs
-public class MyModelService : IResourceService<MyModel>
+// ProductService.cs
+public class ProductService : IResourceService<Product>
 {
-    private readonly IMyModelDao _dao;
+    private readonly IProductDao _dao;
 
-    public MyModelService(IMyModelDao dao)
+    public ProductService(IProductDao dao)
     {
         _dao = dao;
     }
 
-    public Task<IEnumerable<MyModel>> GetAsync()
+    public Task<IEnumerable<Product>> GetAsync()
     {
-        return await _dao.GetModelAsync();
+        return await _dao.GetProductsAsync();
     }
-
-    // ...
 }
 ```
 
@@ -136,10 +133,17 @@ public class Startup
 }
 ```
 
-Other dependency injection frameworks such as Autofac can be used to simplify this syntax.
+In v3.0 we introduced an extension method that you can use to register a resource service on all of its JsonApiDotNetCore interfaces.
+This is helpful when you implement a subset of the resource interfaces and want to register them all in one go.
 
 ```c#
-builder.RegisterType<ArticleService>().AsImplementedInterfaces();
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddResourceService<ArticleService>();
+    }
+}
 ```
 
 Then in the controller, you should inherit from the base controller and pass the services into the named, optional base parameters:

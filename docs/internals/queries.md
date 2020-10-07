@@ -17,7 +17,7 @@ Processing a request involves the following steps:
 	- These validated expressions contain direct references to attributes and relationships.
 	- The readers also implement `IQueryConstraintProvider`, which exposes expressions through `ExpressionInScope` objects.
 - `QueryLayerComposer` (used from `JsonApiResourceService`) collects all query constraints.
-	- It combines them with default options and `ResourceDefinition` overrides and composes a tree of `QueryLayer` objects.
+	- It combines them with default options and `IResourceDefinition` overrides and composes a tree of `QueryLayer` objects.
 	- It lifts the tree for nested endpoints like /blogs/1/articles and rewrites includes.
 	- `JsonApiResourceService` contains no more usage of `IQueryable`.
 - `EntityFrameworkCoreRepository` delegates to `QueryableBuilder` to transform the `QueryLayer` tree into `IQueryable` expression trees.

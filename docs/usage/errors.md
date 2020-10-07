@@ -23,3 +23,70 @@ throw new JsonApiException(new Error(HttpStatusCode.Conflict)
 ```
 
 In both cases, the middleware will properly serialize it and return it as a json:api error.
+
+# Exception handling
+
+The translation of user-defined exceptions to error responses can be customized by registering your own handler.
+This handler is also the place to choose the log level and message, based on the exception type.
+
+```c#
+public class ProductOutOfStockException : Exception
+{
+    public int ProductId { get; }
+
+    public ProductOutOfStockException(int productId)
+    {
+        ProductId = productId;
+    }
+}
+
+public class CustomExceptionHandler : ExceptionHandler
+{
+    public CustomExceptionHandler(ILoggerFactory loggerFactory, IJsonApiOptions options)
+        : base(loggerFactory, options)
+    {
+    }
+
+    protected override LogLevel GetLogLevel(Exception exception)
+    {
+        if (exception is ProductOutOfStockException)
+        {
+            return LogLevel.Information;
+        }
+
+        return base.GetLogLevel(exception);
+    }
+
+    protected override string GetLogMessage(Exception exception)
+    {
+        if (exception is ProductOutOfStockException productOutOfStock)
+        {
+            return $"Product {productOutOfStock.ProductId} is currently unavailable.";
+        }
+
+        return base.GetLogMessage(exception);
+    }
+
+    protected override ErrorDocument CreateErrorDocument(Exception exception)
+    {
+        if (exception is ProductOutOfStockException productOutOfStock)
+        {
+            return new ErrorDocument(new Error(HttpStatusCode.Conflict)
+            {
+                Title = "Product is temporarily available.",
+                Detail = $"Product {productOutOfStock.ProductId} cannot be ordered at the moment."
+            });
+        }
+
+        return base.CreateErrorDocument(exception);
+    }
+}
+
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddScoped<IExceptionHandler, CustomExceptionHandler>();
+    }
+}
+```

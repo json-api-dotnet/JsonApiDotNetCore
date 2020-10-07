@@ -11,6 +11,11 @@ namespace JsonApiDotNetCore
 {
     internal static class TypeHelper
     {
+        private static readonly Type[] _hashSetCompatibleCollectionTypes =
+        {
+            typeof(HashSet<>), typeof(ICollection<>), typeof(ISet<>), typeof(IEnumerable<>), typeof(IReadOnlyCollection<>)
+        };
+
         public static object ConvertType(object value, Type type)
         {
             if (type == null)
@@ -234,6 +239,21 @@ namespace JsonApiDotNetCore
             }
 
             return collectionType;
+        }
+
+        /// <summary>
+        /// Indicates whether a <see cref="HashSet{T}"/> instance can be assigned to the specified type,
+        /// for example IList{Article} -> false or ISet{Article} -> true.
+        /// </summary>
+        public static bool TypeCanContainHashSet(Type collectionType)
+        {
+            if (collectionType.IsGenericType)
+            {
+                var openCollectionType = collectionType.GetGenericTypeDefinition();
+                return _hashSetCompatibleCollectionTypes.Contains(openCollectionType);
+            }
+
+            return false;
         }
 
         /// <summary>
