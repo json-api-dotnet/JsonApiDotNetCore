@@ -1,267 +1,127 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Middleware;
+using FluentAssertions;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
-    [Collection("WebHostCollection")]
-    public sealed class UpdatingDataTests : EndToEndTest
+    public sealed class UpdatingDataTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
     {
-        private readonly AppDbContext _context;
-        private readonly Faker<TodoItem> _todoItemFaker;
-        private readonly Faker<Person> _personFaker;
+        private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
 
-        public UpdatingDataTests(TestFixture<TestStartup> fixture) : base(fixture)
-        { 
-            _context = fixture.GetRequiredService<AppDbContext>();
+        private readonly Faker<TodoItem> _todoItemFaker = new Faker<TodoItem>()
+            .RuleFor(t => t.Description, f => f.Lorem.Sentence())
+            .RuleFor(t => t.Ordinal, f => f.Random.Number())
+            .RuleFor(t => t.CreatedDate, f => f.Date.Past());
 
-            _todoItemFaker = new Faker<TodoItem>()
-                .RuleFor(t => t.Description, f => f.Lorem.Sentence())
-                .RuleFor(t => t.Ordinal, f => f.Random.Number())
-                .RuleFor(t => t.CreatedDate, f => f.Date.Past());
-            _personFaker = new Faker<Person>()
-                .RuleFor(p => p.FirstName, f => f.Name.FirstName())
-                .RuleFor(p => p.LastName, f => f.Name.LastName());
+        private readonly Faker<Person> _personFaker = new Faker<Person>()
+            .RuleFor(p => p.FirstName, f => f.Name.FirstName())
+            .RuleFor(p => p.LastName, f => f.Name.LastName());
+
+        public UpdatingDataTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        {
+            _testContext = testContext;
+
+            FakeLoggerFactory loggerFactory = null;
+
+            testContext.ConfigureLogging(options =>
+            {
+                loggerFactory = new FakeLoggerFactory();
+
+                options.ClearProviders();
+                options.AddProvider(loggerFactory);
+                options.SetMinimumLevel(LogLevel.Trace);
+                options.AddFilter((category, level) => level == LogLevel.Trace &&
+                    (category == typeof(JsonApiReader).FullName || category == typeof(JsonApiWriter).FullName));
+            });
+
+            testContext.ConfigureServicesBeforeStartup(services =>
+            {
+                if (loggerFactory != null)
+                {
+                    services.AddSingleton(_ => loggerFactory);
+                }
+            });
         }
 
         [Fact]
         public async Task PatchResource_ModelWithEntityFrameworkInheritance_IsPatched()
         {
             // Arrange
-            var dbContext = PrepareTest<TestStartup>();
+            var clock = _testContext.Factory.Services.GetRequiredService<ISystemClock>();
 
-            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
-            var server = new TestServer(builder);
+            SuperUser superUser = null;
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                superUser = new SuperUser(dbContext)
+                {
+                    SecurityLevel = 1337,
+                    UserName = "joe@account.com",
+                    Password = "12345",
+                    LastPasswordChange = clock.UtcNow.LocalDateTime.AddMinutes(-15)
+                };
 
-            var clock = server.Host.Services.GetRequiredService<ISystemClock>();
+                dbContext.Users.Add(superUser);
+                await dbContext.SaveChangesAsync();
+            });
 
-            var serializer = TestFixture<TestStartup>.GetSerializer<SuperUser>(server.Host.Services, e => new { e.SecurityLevel, e.UserName, e.Password });
-            var superUser = new SuperUser(_context) { SecurityLevel = 1337, UserName = "Super", Password = "User", LastPasswordChange = clock.UtcNow.LocalDateTime.AddMinutes(-15) };
-            dbContext.Set<SuperUser>().Add(superUser);
-            await dbContext.SaveChangesAsync();
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "superUsers",
+                    id = superUser.StringId,
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["securityLevel"] = 2674,
+                        ["userName"] = "joe@other-domain.com",
+                        ["password"] = "secret"
+                    }
+                }
+            };
 
-            var su = new SuperUser(_context) { Id = superUser.Id, SecurityLevel = 2674, UserName = "Power", Password = "secret" };
-            var content = serializer.Serialize(su);
+            var route = "/api/v1/superUsers/" + superUser.StringId;
 
             // Act
-            var (body, response) = await Patch($"/api/v1/superUsers/{su.Id}", content);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.OK, response);
-            var updated = _deserializer.DeserializeSingle<SuperUser>(body).Data;
-            Assert.Equal(su.SecurityLevel, updated.SecurityLevel);
-            Assert.Equal(su.UserName, updated.UserName);
-            Assert.Null(updated.Password);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["securityLevel"].Should().Be(2674);
+            responseDocument.SingleData.Attributes["userName"].Should().Be("joe@other-domain.com");
+            responseDocument.SingleData.Attributes.Should().NotContainKey("password");
         }
 
         [Fact]
         public async Task Response422IfUpdatingNotSettableAttribute()
         {
             // Arrange
-            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
+            var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
+            loggerFactory.Logger.Clear();
 
-            var loggerFactory = new FakeLoggerFactory();
-            builder.ConfigureLogging(options =>
+            var todoItem = _todoItemFaker.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                options.AddProvider(loggerFactory);
-                options.SetMinimumLevel(LogLevel.Trace);
-                options.AddFilter((category, level) => level == LogLevel.Trace && 
-                    (category == typeof(JsonApiReader).FullName || category == typeof(JsonApiWriter).FullName));
+                dbContext.TodoItems.Add(todoItem);
+                await dbContext.SaveChangesAsync();
             });
 
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-
-            var todoItem = _todoItemFaker.Generate();
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
-
-            var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, ti => new { ti.CalculatedValue });
-            var content = serializer.Serialize(todoItem);
-            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", content);
-
-            // Act
-            var response = await client.SendAsync(request);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
-
-            var body = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<ErrorDocument>(body);
-            Assert.Single(document.Errors);
-
-            var error = document.Errors.Single();
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
-            Assert.Equal("Failed to deserialize request body.", error.Title);
-            Assert.StartsWith("Property 'TodoItem.CalculatedValue' is read-only. - Request body: <<", error.Detail);
-
-            Assert.NotEmpty(loggerFactory.Logger.Messages);
-            Assert.Contains(loggerFactory.Logger.Messages,
-                x => x.Text.StartsWith("Received request at ") && x.Text.Contains("with body:"));
-            Assert.Contains(loggerFactory.Logger.Messages,
-                x => x.Text.StartsWith("Sending 422 response for request at ") && x.Text.Contains("Failed to deserialize request body."));
-        }
-
-        [Fact]
-        public async Task Respond_404_If_ResourceDoesNotExist()
-        {
-            // Arrange
-            await _context.ClearTableAsync<TodoItem>();
-            await _context.SaveChangesAsync();
-
-            var todoItem = _todoItemFaker.Generate();
-            todoItem.Id = 100;
-            todoItem.CreatedDate = new DateTime(2002, 2,2);
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-
-            var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, ti => new { ti.Description, ti.Ordinal, ti.CreatedDate });
-            var content = serializer.Serialize(todoItem);
-            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", content);
-
-            // Act
-            var response = await client.SendAsync(request);
-
-            // Assert
-            var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-            Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
-            Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("Resource of type 'todoItems' with ID '100' does not exist.", errorDocument.Errors[0].Detail);
-        }
-
-        [Fact]
-        public async Task Respond_422_If_IdNotInAttributeList()
-        {
-            // Arrange
-            var maxPersonId = _context.TodoItems.ToList().LastOrDefault()?.Id ?? 0;
-            var todoItem = _todoItemFaker.Generate();
-            todoItem.CreatedDate = new DateTime(2002, 2,2);
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-            var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, ti => new {ti.Description, ti.Ordinal, ti.CreatedDate});
-            var content = serializer.Serialize(todoItem);
-            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{maxPersonId}", content);
-
-            // Act
-            var response = await client.SendAsync(request);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
-
-            var body = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<ErrorDocument>(body);
-            Assert.Single(document.Errors);
-
-            var error = document.Errors.Single();
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
-            Assert.Equal("Failed to deserialize request body: Payload must include 'id' element.", error.Title);
-            Assert.StartsWith("Request body: <<", error.Detail);
-        }
-
-        [Fact]
-        public async Task Respond_409_If_IdInUrlIsDifferentFromIdInRequestBody()
-        {
-            // Arrange
-            var todoItem = _todoItemFaker.Generate();
-            todoItem.CreatedDate = new DateTime(2002, 2,2);
-
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
-
-            var wrongTodoItemId = todoItem.Id + 1;
-
-            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-            var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, ti => new {ti.Description, ti.Ordinal, ti.CreatedDate});
-            var content = serializer.Serialize(todoItem);
-            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{wrongTodoItemId}", content);
-
-            // Act
-            var response = await client.SendAsync(request);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
-
-            var body = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<ErrorDocument>(body);
-            Assert.Single(document.Errors);
-
-            var error = document.Errors.Single();
-            Assert.Equal(HttpStatusCode.Conflict, error.StatusCode);
-            Assert.Equal("Resource ID mismatch between request body and endpoint URL.", error.Title);
-            Assert.Equal($"Expected resource ID '{wrongTodoItemId}' in PATCH request body at endpoint 'http://localhost/api/v1/todoItems/{wrongTodoItemId}', instead of '{todoItem.Id}'.", error.Detail);
-        }
-
-        [Fact]
-        public async Task Respond_422_If_Broken_JSON_Payload()
-        {
-            // Arrange
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-
-            var content = "{ \"data\" {";
-            var request = PrepareRequest("POST", "/api/v1/todoItems", content);
-
-            // Act
-            var response = await client.SendAsync(request);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
-
-            var body = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<ErrorDocument>(body);
-            Assert.Single(document.Errors);
-
-            var error = document.Errors.Single();
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
-            Assert.Equal("Failed to deserialize request body.", error.Title);
-            Assert.StartsWith("Invalid character after parsing", error.Detail);
-        }
-
-        [Fact]
-        public async Task Respond_422_If_Blocked_For_Update()
-        {
-            // Arrange
-            var todoItem = _todoItemFaker.Generate();
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
-
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
@@ -269,81 +129,257 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = todoItem.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        { "offsetDate", "2000-01-01" }
+                        ["calculatedValue"] = "calculated"
                     }
                 }
             };
-            
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
 
-            var requestBody = JsonConvert.SerializeObject(content);
-            var request = PrepareRequest(HttpMethod.Patch.Method, "/api/v1/todoItems/" + todoItem.StringId, requestBody);
+            var route = "/api/v1/todoItems/" + todoItem.StringId;
 
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            var responseBody = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(responseBody);
-            Assert.Single(errorDocument.Errors);
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Property 'TodoItem.CalculatedValue' is read-only. - Request body: <<");
 
-            var error = errorDocument.Errors.Single();
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].StatusCode);
-            Assert.Equal("Failed to deserialize request body: Changing the value of the requested attribute is not allowed.", error.Title);
-            Assert.StartsWith("Changing the value of 'offsetDate' is not allowed. - Request body:", error.Detail);
+            loggerFactory.Logger.Messages.Should().HaveCount(2);
+            loggerFactory.Logger.Messages.Should().Contain(x =>
+                x.Text.StartsWith("Received request at ") && x.Text.Contains("with body:"));
+            loggerFactory.Logger.Messages.Should().Contain(x =>
+                x.Text.StartsWith("Sending 422 response for request at ") &&
+                x.Text.Contains("Failed to deserialize request body."));
+        }
+
+        [Fact]
+        public async Task Respond_404_If_ResourceDoesNotExist()
+        {
+            // Arrange
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<TodoItem>();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    id = 99999999,
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["description"] = "something else"
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoItems/" + 99999999;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[0].Title.Should().Be("The requested resource does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'todoItems' with ID '99999999' does not exist.");
+        }
+
+        [Fact]
+        public async Task Respond_422_If_IdNotInAttributeList()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.TodoItems.Add(todoItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["description"] = "something else"
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoItems/" + todoItem.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload must include 'id' element.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Request body: <<");
+        }
+
+        [Fact]
+        public async Task Respond_409_If_IdInUrlIsDifferentFromIdInRequestBody()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.TodoItems.Add(todoItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            int differentTodoItemId = todoItem.Id + 1;
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    id = differentTodoItemId,
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["description"] = "something else"
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoItems/" + todoItem.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Conflict);
+            responseDocument.Errors[0].Title.Should().Be("Resource ID mismatch between request body and endpoint URL.");
+            responseDocument.Errors[0].Detail.Should().Be($"Expected resource ID '{todoItem.Id}' in PATCH request body at endpoint 'http://localhost/api/v1/todoItems/{todoItem.Id}', instead of '{differentTodoItemId}'.");
+        }
+
+        [Fact]
+        public async Task Respond_422_If_Broken_JSON_Payload()
+        {
+            // Arrange
+            var requestBody = "{ \"data\" {";
+
+            var route = "/api/v1/todoItems/";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Invalid character after parsing");
+        }
+
+        [Fact]
+        public async Task Respond_422_If_Blocked_For_Update()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.TodoItems.Add(todoItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    id = todoItem.StringId,
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["offsetDate"] = "2000-01-01"
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoItems/" + todoItem.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Changing the value of the requested attribute is not allowed.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Changing the value of 'offsetDate' is not allowed. - Request body:");
         }
 
         [Fact]
         public async Task Can_Patch_Resource()
         {
             // Arrange
-            await _context.ClearTableAsync<TodoItemCollection>();
-            await _context.ClearTableAsync<TodoItem>();
-            await _context.ClearTableAsync<Person>();
-            await _context.SaveChangesAsync();
-
             var todoItem = _todoItemFaker.Generate();
-            var person = _personFaker.Generate();
-            todoItem.Owner = person;
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
+            todoItem.Owner = _personFaker.Generate();
 
-            var newTodoItem = _todoItemFaker.Generate();
-            newTodoItem.Id = todoItem.Id;
-            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-            var serializer = TestFixture<TestStartup>.GetSerializer<TodoItem>(server.Host.Services, p => new { p.Description, p.Ordinal });
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.TodoItems.Add(todoItem);
+                await dbContext.SaveChangesAsync();
+            });
 
-            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", serializer.Serialize(newTodoItem));
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    id = todoItem.StringId,
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["description"] = "something else",
+                        ["ordinal"] = 1
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoItems/" + todoItem.StringId;
 
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
-            // Assert -- response
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var body = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(body);
-            Assert.NotNull(document);
-            Assert.NotNull(document.Data);
-            Assert.NotNull(document.SingleData.Attributes);
-            Assert.Equal(newTodoItem.Description, document.SingleData.Attributes["description"]);
-            Assert.Equal(newTodoItem.Ordinal, (long)document.SingleData.Attributes["ordinal"]);
-            Assert.True(document.SingleData.Relationships.ContainsKey("owner"));
-            Assert.Null(document.SingleData.Relationships["owner"].SingleData);
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert -- database
-            var updatedTodoItem = _context.TodoItems.AsNoTracking()
-                .Include(t => t.Owner)
-                .SingleOrDefault(t => t.Id == todoItem.Id);
-            Assert.Equal(person.Id, todoItem.OwnerId);
-            Assert.Equal(newTodoItem.Description, updatedTodoItem.Description);
-            Assert.Equal(newTodoItem.Ordinal, updatedTodoItem.Ordinal);
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["description"].Should().Be("something else");
+            responseDocument.SingleData.Attributes["ordinal"].Should().Be(1);
+            responseDocument.SingleData.Relationships.Should().ContainKey("owner");
+            responseDocument.SingleData.Relationships["owner"].SingleData.Should().BeNull();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var updated = await dbContext.TodoItems
+                    .Include(t => t.Owner)
+                    .SingleAsync(t => t.Id == todoItem.Id);
+
+                updated.Description.Should().Be("something else");
+                updated.Ordinal.Should().Be(1);
+                updated.Owner.Id.Should().Be(todoItem.Owner.Id);
+            });
         }
 
         [Fact]
@@ -352,32 +388,40 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = _personFaker.Generate();
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
 
-            var newPerson = _personFaker.Generate();
-            newPerson.Id = todoItem.Owner.Id;
-            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-            var serializer = TestFixture<TestStartup>.GetSerializer<Person>(server.Host.Services, p => new { p.LastName, p.FirstName });
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.TodoItems.Add(todoItem);
+                await dbContext.SaveChangesAsync();
+            });
 
-            var request = PrepareRequest("PATCH", $"/api/v1/people/{todoItem.Owner.Id}", serializer.Serialize(newPerson));
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "people",
+                    id = todoItem.Owner.StringId,
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["firstName"] = "John",
+                        ["lastName"] = "Doe"
+                    }
+                }
+            };
+
+            var route = "/api/v1/people/" + todoItem.Owner.StringId;
 
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
-            // Assert -- response
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var body = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(body);
-            Assert.NotNull(document);
-            Assert.NotNull(document.Data);
-            Assert.NotNull(document.SingleData.Attributes);
-            Assert.Equal(newPerson.LastName, document.SingleData.Attributes["lastName"]);
-            Assert.Equal(newPerson.FirstName, document.SingleData.Attributes["firstName"]);
-            Assert.True(document.SingleData.Relationships.ContainsKey("todoItems"));
-            Assert.Null(document.SingleData.Relationships["todoItems"].Data);
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["firstName"].Should().Be("John");
+            responseDocument.SingleData.Attributes["lastName"].Should().Be("Doe");
+            responseDocument.SingleData.Relationships.Should().ContainKey("todoItems");
+            responseDocument.SingleData.Relationships["todoItems"].Data.Should().BeNull();
         }
 
         [Fact]
@@ -385,39 +429,57 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var todoItem = _todoItemFaker.Generate();
-            todoItem.CreatedDate = new DateTime(2002, 2,2);
             var person = _personFaker.Generate();
-            _context.TodoItems.Add(todoItem);
-            _context.People.Add(person);
-            await _context.SaveChangesAsync();
-            todoItem.Owner = person;
 
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-            var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.Description, ti.Ordinal, ti.CreatedDate }, ti => new { ti.Owner });
-            var content = serializer.Serialize(todoItem);
-            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", content);
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.TodoItems.Add(todoItem);
+                dbContext.People.Add(person);
+                
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    id = todoItem.StringId,
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["description"] = "Something else",
+                    },
+                    relationships = new Dictionary<string, object>
+                    {
+                        ["owner"] = new
+                        {
+                            data = new
+                            {
+                                type = "people",
+                                id = person.StringId
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoItems/" + todoItem.StringId;
 
             // Act
-            var response = await client.SendAsync(request);
-            var updatedTodoItem = _context.TodoItems.AsNoTracking()
-                .Include(t => t.Owner)
-                .SingleOrDefault(t => t.Id == todoItem.Id);
+            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(person.Id, updatedTodoItem.OwnerId);
-        }
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-        private HttpRequestMessage PrepareRequest(string method, string route, string content)
-        {
-            var httpMethod = new HttpMethod(method);
-            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(content)};
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var updated = await dbContext.TodoItems
+                    .Include(t => t.Owner)
+                    .SingleAsync(t => t.Id == todoItem.Id);
 
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-            return request;
+                updated.Description.Should().Be("Something else");
+                updated.Owner.Id.Should().Be(person.Id);
+            });
         }
     }
 }
