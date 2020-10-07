@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -29,8 +30,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             Assert.NotEmpty((string[]) errorDocument.Errors[0].Meta.Data["StackTrace"]);
 
             Assert.Single(loggerFactory.Logger.Messages);
-            Assert.Equal(LogLevel.Warning, loggerFactory.Logger.Messages[0].LogLevel);
-            Assert.Contains("Access is denied.", loggerFactory.Logger.Messages[0].Text);
+            Assert.Equal(LogLevel.Warning, loggerFactory.Logger.Messages.Single().LogLevel);
+            Assert.Contains("Access is denied.", loggerFactory.Logger.Messages.Single().Text);
         }
 
         public class CustomExceptionHandler : ExceptionHandler
