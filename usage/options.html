@@ -69,7 +69,7 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="global-options">Global Options</h1>
 
-<p>Configuration can be applied when adding the services to the DI container.</p>
+<p>Configuration can be applied when adding the services to the dependency injection container.</p>
 <pre><code class="lang-c#">public class Startup
 {
     // This method gets called by the runtime. Use this method to add services to the container.
@@ -83,12 +83,12 @@
 }
 </code></pre><h2 id="client-generated-ids">Client Generated IDs</h2>
 <p>By default, the server will respond with a 403 Forbidden HTTP Status Code if a POST request is received with a client-generated ID.</p>
-<p>However, this can be allowed by setting the AllowClientGeneratedIds flag in the options</p>
+<p>However, this can be allowed by setting the AllowClientGeneratedIds flag in the options:</p>
 <pre><code class="lang-c#">options.AllowClientGeneratedIds = true;
 </code></pre><h2 id="pagination">Pagination</h2>
 <p>The default page size used for all resources can be overridden in options (10 by default). To disable paging, set it to <code>null</code>.
 The maximum page size and number allowed from client requests can be set too (unconstrained by default).
-You can also include the total number of resources in each request. Note that when using this feature, it does add some query overhead since we have to also request the total number of resources.</p>
+You can also include the total number of resources in each response. Note that when using this feature, it does add some query overhead since we have to also request the total number of resources.</p>
 <pre><code class="lang-c#">options.DefaultPageSize = new PageSize(25);
 options.MaximumPageSize = new PageSize(100);
 options.MaximumPageNumber = new PageNumber(50);
@@ -109,28 +109,31 @@ options.IncludeTotalResourceCount = true;
   }
 }
 </code></pre><h2 id="unknown-query-string-parameters">Unknown Query String Parameters</h2>
-<p>If you would like to use unknown query string parameters (parameters not reserved by the json:api specification or registered using ResourceDefinitions), you can set <code>AllowUnknownQueryStringParameters = true</code>.
-When set, an HTTP 400 Bad Request is returned for unknown query string parameters.</p>
+<p>If you would like to allow unknown query string parameters (parameters not reserved by the json:api specification or registered using resource definitions), you can set <code>AllowUnknownQueryStringParameters = true</code>. When set to <code>false</code> (the default), an HTTP 400 Bad Request is returned for unknown query string parameters.</p>
 <pre><code class="lang-c#">options.AllowUnknownQueryStringParameters = true;
 </code></pre><h2 id="maximum-include-depth">Maximum include depth</h2>
 <p>To limit the maximum depth of nested includes, use <code>MaximumIncludeDepth</code>. This is null by default, which means unconstrained. If set and a request exceeds the limit, an HTTP 400 Bad Request is returned.</p>
 <pre><code class="lang-c#">options.MaximumIncludeDepth = 1;
 </code></pre><h2 id="custom-serializer-settings">Custom Serializer Settings</h2>
-<p>We use Newtonsoft.Json for all serialization needs.
+<p>We use <a href="https://www.newtonsoft.com/json">Newtonsoft.Json</a> for all serialization needs.
 If you want to change the default serializer settings, you can:</p>
 <pre><code class="lang-c#">options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 options.SerializerSettings.Converters.Add(new StringEnumConverter());
 options.SerializerSettings.Formatting = Formatting.Indented;
 </code></pre><p>The default naming convention (as used in the routes and public resources names) is also determined here, and can be changed (default is camel-case):</p>
-<pre><code class="lang-c#">options.SerializerSettings.ContractResolver = new DefaultContractResolver { NamingStrategy = new KebabCaseNamingStrategy() };
+<pre><code class="lang-c#">options.SerializerSettings.ContractResolver = new DefaultContractResolver
+{
+    NamingStrategy = new KebabCaseNamingStrategy()
+};
 </code></pre><p>Because we copy resource properties into an intermediate object before serialization, Newtonsoft.Json annotations on properties are ignored.</p>
 <h2 id="enable-modelstate-validation">Enable ModelState Validation</h2>
-<p>If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set <code>ValidateModelState = true</code>. By default, no model validation is performed.</p>
+<p>If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set <code>ValidateModelState</code> to <code>true</code>. By default, no model validation is performed.</p>
 <pre><code class="lang-c#">options.ValidateModelState = true;
-</code></pre><p>You will need to use the JsonApiDotNetCore &#39;IsRequiredAttribute&#39; instead of the built-in &#39;RequiredAttribute&#39; because it contains modifications to enable partial patching.</p>
-<pre><code class="lang-c#">public class Person : Identifiable
+</code></pre><pre><code class="lang-c#">public class Person : Identifiable
 {
-    [IsRequired(AllowEmptyStrings = true)]
+    [Attr]
+    [Required]
+    [MinLength(3)]
     public string FirstName { get; set; }
 }
 </code></pre></article>

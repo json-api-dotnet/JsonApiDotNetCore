@@ -76,29 +76,39 @@
 services.AddService&lt;IAsyncJsonApiExceptionFilter, CustomAsyncExceptionFilter&gt;()
 </code></pre><h2 id="configuring-mvcoptions">Configuring <code>MvcOptions</code></h2>
 <p>The following example replaces all internal filters with a custom filter.</p>
-<pre><code class="lang-c#">/// In Startup.ConfigureServices
-services.AddSingleton&lt;CustomAsyncQueryStringActionFilter&gt;();
-
-var builder = services.AddMvcCore();
-services.AddJsonApi&lt;AppDbContext&gt;(mvcBuilder: builder);
-
-// Ensure this call is placed after the AddJsonApi call.
-builder.AddMvcOptions(mvcOptions =&gt;
+<pre><code class="lang-c#">public class Startup
 {
-    _postConfigureMvcOptions?.Invoke(mvcOptions);
-});
+    private Action&lt;MvcOptions&gt; _postConfigureMvcOptions;
 
-/// In Startup.Configure
-app.UseJsonApi();
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddSingleton&lt;CustomAsyncQueryStringActionFilter&gt;();
 
-// Ensure this call is placed before the UseEndpoints call.
-_postConfigureMvcOptions = mvcOptions =&gt; 
-{ 
-    mvcOptions.Filters.Clear();
-    mvcOptions.Filters.Insert(0, app.ApplicationServices.GetService&lt;CustomAsyncQueryStringActionFilter&gt;());
-};
+        var builder = services.AddMvcCore();
+        services.AddJsonApi&lt;AppDbContext&gt;(mvcBuilder: builder);
 
-app.UseEndpoints(endpoints =&gt; endpoints.MapControllers());
+        // Ensure this call is placed after the AddJsonApi call.
+        builder.AddMvcOptions(mvcOptions =&gt;
+        {
+            _postConfigureMvcOptions.Invoke(mvcOptions);
+        });
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        // Ensure this call is placed before the UseEndpoints call.
+        _postConfigureMvcOptions = mvcOptions =&gt; 
+        { 
+            mvcOptions.Filters.Clear();
+            mvcOptions.Filters.Insert(0,
+                app.ApplicationServices.GetService&lt;CustomAsyncQueryStringActionFilter&gt;());
+        };
+
+        app.UseRouting();
+        app.UseJsonApi();
+        app.UseEndpoints(endpoints =&gt; endpoints.MapControllers());
+    }
+}
 </code></pre></article>
           </div>
           

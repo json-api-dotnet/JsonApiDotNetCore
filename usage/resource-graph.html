@@ -85,16 +85,12 @@ is prioritized by the list above in descending order.</p>
 <h3 id="auto-discovery">Auto-discovery</h3>
 <p>Auto-discovery refers to the process of reflecting on an assembly and
 detecting all of the json:api resources, resource definitions, resource services and repositories.</p>
-<p>The following command will build the resource graph using all <code>IIdentifiable</code>
-implementations. It also injects resource definitions and service layer overrides which we will
-cover in a later section. You can enable auto-discovery for the
-current assembly by adding the following to your <code>Startup</code> class.</p>
+<p>The following command builds the resource graph using all <code>IIdentifiable</code> implementations and registers the services mentioned.
+You can enable auto-discovery for the current assembly by adding the following to your <code>Startup</code> class.</p>
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddJsonApi(
-        options =&gt; { /* ... */ },
-        discovery =&gt; discovery.AddCurrentAssembly());
+    services.AddJsonApi(discovery =&gt; discovery.AddCurrentAssembly());
 }
 </code></pre><h3 id="specifying-an-entity-framework-core-dbcontext">Specifying an Entity Framework Core DbContext</h3>
 <p>If you are using Entity Framework Core as your ORM, you can add all the models of a <code>DbContext</code>  to the resource graph.</p>
@@ -107,9 +103,7 @@ public void ConfigureServices(IServiceCollection services)
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddJsonApi&lt;AppDbContext&gt;(
-        options =&gt; { /* ... */ },
-        discovery =&gt; discovery.AddCurrentAssembly());
+    services.AddJsonApi&lt;AppDbContext&gt;(discovery =&gt; discovery.AddCurrentAssembly());
 }
 </code></pre><h3 id="manual-specification">Manual Specification</h3>
 <p>You can manually construct the graph.</p>
@@ -132,11 +126,11 @@ public void ConfigureServices(IServiceCollection services)
 </code></pre></li>
 <li><p>The model is decorated with a <code>ResourceAttribute</code></p>
 <pre><code class="lang-c#">[Resource(&quot;myResources&quot;)]
-public class MyModel : Identifiable { /* ... */ }
+public class MyModel : Identifiable { }
 </code></pre></li>
 <li><p>The configured naming convention (by default this is camel-case).</p>
 <pre><code class="lang-c#">// this will be registered as &quot;myModels&quot;
-public class MyModel : Identifiable { /* ... */ }
+public class MyModel : Identifiable { }
 </code></pre></li>
 </ol>
 <p>The default naming convention can be changed in <a href="options.html#custom-serializer-settings">options</a>.</p>

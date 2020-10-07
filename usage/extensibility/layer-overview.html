@@ -75,7 +75,7 @@
 +-- JsonApiResourceService : IResourceService
 
      +-- EntityFrameworkCoreRepository : IResourceRepository
-</code></pre><p>Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible to keep the controllers free of unnecessary logic.
+</code></pre><p>Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible, to keep the controllers free of unnecessary logic.
 You can use the following as a general rule of thumb for where to put business logic:</p>
 <ul>
 <li><code>Controller</code>: simple validation logic that should result in the return of specific HTTP status codes, such as model validation</li>
@@ -83,29 +83,13 @@ You can use the following as a general rule of thumb for where to put business l
 <li><code>IResourceRepository</code>: custom logic that builds on the Entity Framework Core APIs</li>
 </ul>
 <h2 id="replacing-services">Replacing Services</h2>
-<p><strong>Note:</strong> If you are using auto-discovery, services will be automatically registered for you.</p>
-<p>Replacing services is done on a per-resource basis and can be done through simple DI in your Startup.cs file.</p>
-<p>In v3.0.0 we introduced an extenion method that you should use to
-register services. This method handles some of the common issues
-users have had with service registration.</p>
+<p><strong>Note:</strong> If you are using auto-discovery, resource services and repositories will be automatically registered for you.</p>
+<p>Replacing services and repositories is done on a per-resource basis and can be done through dependency injection in your Startup.cs file.</p>
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
-    // custom service
-    services.AddResourceService&lt;FooService&gt;();
-
-    // custom repository
-    services.AddScoped&lt;FooRepository&gt;();
-}
-</code></pre><p>Prior to v3.0.0 you could do it like so:</p>
-<pre><code class="lang-c#">// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    // custom service
-    services.AddScoped&lt;IResourceService&lt;Foo&gt;, FooService&gt;();
-
-    // custom repository
-    services.AddScoped&lt;IResourceRepository&lt;Foo&gt;, FooRepository&gt;();
+    services.AddScoped&lt;ProductService, IResourceService&lt;Product&gt;();
+    services.AddScoped&lt;ProductRepository, IResourceRepository&lt;Product&gt;&gt;();
 }
 </code></pre></article>
           </div>

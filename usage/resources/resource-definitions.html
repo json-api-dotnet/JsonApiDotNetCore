@@ -70,12 +70,12 @@
 <h1 id="resource-definitions">Resource Definitions</h1>
 
 <p>In order to improve the developer experience, we have introduced a type that makes
-common modifications to the default API behavior easier. <code>ResourceDefinition</code> was first introduced in v2.3.4.</p>
-<p>Resource definitions are resolved from the D/I container, so you can inject dependencies in their constructor.</p>
+common modifications to the default API behavior easier. Resource definitions were first introduced in v2.3.4.</p>
+<p>Resource definitions are resolved from the dependency injection container, so you can inject dependencies in their constructor.</p>
 <h2 id="customizing-query-clauses">Customizing query clauses</h2>
 <p><em>since v4.0</em></p>
 <p>For various reasons (see examples below) you may need to change parts of the query, depending on resource type.
-<code>ResourceDefinition&lt;TResource&gt;</code> provides overridable methods that pass you the result of query string parameter parsing.
+<code>JsonApiResourceDefinition&lt;TResource&gt;</code> (which is an empty implementation of <code>IResourceDefinition&lt;TResource&gt;</code>) provides overridable methods that pass you the result of query string parameter parsing.
 The value returned by you determines what will be used to execute the query.</p>
 <p>An intermediate format (<code>QueryExpression</code> and derived types) is used, which enables us to separate json:api implementation 
 from Entity Framework Core <code>IQueryable</code> execution.</p>
@@ -83,7 +83,7 @@ from Entity Framework Core <code>IQueryable</code> execution.</p>
 <p>There are some cases where you want attributes conditionally excluded from your resource response.
 For example, you may accept some sensitive data that should only be exposed to administrators after creation.</p>
 <p>Note: to exclude attributes unconditionally, use <code>[Attr(Capabilities = ~AttrCapabilities.AllowView)]</code>.</p>
-<pre><code class="lang-c#">public class UserDefinition : ResourceDefinition&lt;User&gt;
+<pre><code class="lang-c#">public class UserDefinition : JsonApiResourceDefinition&lt;User&gt;
 {
     public UserDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
     { }
@@ -129,7 +129,7 @@ Content-Type: application/vnd.api+json
 }
 </code></pre><h2 id="default-sort-order">Default sort order</h2>
 <p>You can define the default sort order if no <code>sort</code> query string parameter is provided.</p>
-<pre><code class="lang-c#">public class AccountDefinition : ResourceDefinition&lt;Account&gt;
+<pre><code class="lang-c#">public class AccountDefinition : JsonApiResourceDefinition&lt;Account&gt;
 {
     public override SortExpression OnApplySort(SortExpression existingSort)
     {
@@ -146,8 +146,8 @@ Content-Type: application/vnd.api+json
     }
 }
 </code></pre><h2 id="enforce-page-size">Enforce page size</h2>
-<p>You may want to enforce paging on large database tables.</p>
-<pre><code class="lang-c#">public class AccessLogDefinition : ResourceDefinition&lt;AccessLog&gt;
+<p>You may want to enforce pagination on large database tables.</p>
+<pre><code class="lang-c#">public class AccessLogDefinition : JsonApiResourceDefinition&lt;AccessLog&gt;
 {
     public override PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
     {
@@ -164,7 +164,7 @@ Content-Type: application/vnd.api+json
 }
 </code></pre><h2 id="exclude-soft-deleted-resources">Exclude soft-deleted resources</h2>
 <p>Soft-deletion sets <code>IsSoftDeleted</code> to <code>true</code> instead of actually deleting the record, so you may want to always filter them out.</p>
-<pre><code class="lang-c#">public class AccountDefinition : ResourceDefinition&lt;Account&gt;
+<pre><code class="lang-c#">public class AccountDefinition : JsonApiResourceDefinition&lt;Account&gt;
 {
     public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
     {
@@ -180,7 +180,7 @@ Content-Type: application/vnd.api+json
     }
 }
 </code></pre><h2 id="block-including-related-resources">Block including related resources</h2>
-<pre><code class="lang-c#">public class EmployeeDefinition : ResourceDefinition&lt;Employee&gt;
+<pre><code class="lang-c#">public class EmployeeDefinition : JsonApiResourceDefinition&lt;Employee&gt;
 {
     public override IReadOnlyCollection&lt;IncludeElementExpression&gt; OnApplyIncludes(IReadOnlyCollection&lt;IncludeElementExpression&gt; existingIncludes)
     {
@@ -197,15 +197,15 @@ Content-Type: application/vnd.api+json
 }
 </code></pre><h2 id="custom-query-string-parameters">Custom query string parameters</h2>
 <p><em>since v3.0.0</em></p>
-<p>You can define additional query string parameters with the query expression that should be used.
-If the key is present in a query string, the supplied query will be executed before the default behavior.</p>
+<p>You can define additional query string parameters with the LINQ expression that should be used.
+If the key is present in a query string, the supplied LINQ expression will be added to the database query.</p>
 <p>Note this directly influences the Entity Framework Core <code>IQueryable</code>. As opposed to using <code>OnApplyFilter</code>, this enables the full range of EF Core functionality. 
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).</p>
-<pre><code class="lang-c#">public class ItemDefinition : ResourceDefinition&lt;Item&gt;
+<pre><code class="lang-c#">public class ItemDefinition : JsonApiResourceDefinition&lt;Item&gt;
 {
     protected override QueryStringParameterHandlers OnRegisterQueryableHandlersForQueryStringParameters()
     {
-        return new QueryStringParameterHandlers
+        return new QueryStringParameterHandlers&lt;Item&gt;
         {
             [&quot;isActive&quot;] = (source, parameterValue) =&gt; source
                 .Include(item =&gt; item.Children)
@@ -220,7 +220,7 @@ But it only works on primary resource endpoints (for example: /articles, but not
         return isFilterOnHighRisk ? source.Where(item =&gt; item.RiskLevel &gt;= 5) : source.Where(item =&gt; item.RiskLevel &lt; 5);
     }
 }
-</code></pre><h2 id="using-resourcedefinitions-prior-to-v3">Using ResourceDefinitions prior to v3</h2>
+</code></pre><h2 id="using-resource-definitions-prior-to-v3">Using Resource Definitions prior to v3</h2>
 <p>Prior to the introduction of auto-discovery, you needed to register the
 <code>ResourceDefinition</code> on the container yourself:</p>
 <pre><code class="lang-c#">services.AddScoped&lt;ResourceDefinition&lt;Item&gt;, ItemResource&gt;();

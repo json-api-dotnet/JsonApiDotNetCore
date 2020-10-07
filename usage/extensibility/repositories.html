@@ -69,16 +69,15 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="resource-repositories">Resource Repositories</h1>
 
-<p>If you want to use a data access technology other than Entity Framework Core, you can create an implementation of IResourceRepository&lt;TResource, TId&gt;.
-If you only need minor changes you can override the methods defined in EntityFrameworkCoreRepository&lt;TResource, TId&gt;.</p>
+<p>If you want to use a data access technology other than Entity Framework Core, you can create an implementation of <code>IResourceRepository&lt;TResource, TId&gt;</code>.
+If you only need minor changes you can override the methods defined in <code>EntityFrameworkCoreRepository&lt;TResource, TId&gt;</code>.</p>
 <p>The repository should then be added to the service collection in Startup.cs.</p>
 <pre><code class="lang-c#">public void ConfigureServices(IServiceCollection services)
 {
     services.AddScoped&lt;IResourceRepository&lt;Article&gt;, ArticleRepository&gt;();
-    // ...
 }
 </code></pre><p>A sample implementation that performs authorization might look like this.</p>
-<p>All of the methods in EntityFrameworkCoreRepository will use the GetAll() method to get the DbSet<tresource>, so this is a good method to apply filters such as user or tenant authorization.<p>
+<p>All of the methods in EntityFrameworkCoreRepository will use the <code>GetAll()</code> method to get the <code>DbSet&lt;TResource&gt;</code>, so this is a good method to apply filters such as user or tenant authorization.</p>
 <pre><code class="lang-c#">public class ArticleRepository : EntityFrameworkCoreRepository&lt;Article&gt;
 {
     private readonly IAuthenticationService _authenticationService;
@@ -92,7 +91,8 @@ If you only need minor changes you can override the methods defined in EntityFra
         IResourceFactory resourceFactory,
         IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders,
         ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory) 
+        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory,
+            resourceFactory, constraintProviders, loggerFactory) 
     {
         _authenticationService = authenticationService;
     }
@@ -128,7 +128,7 @@ services.AddScoped&lt;IResourceRepository&lt;ResourceA&gt;, DbContextARepository
 services.AddScoped&lt;IResourceRepository&lt;ResourceB&gt;, DbContextBRepository&lt;ResourceB&gt;&gt;();
 
 services.AddJsonApi(dbContextTypes: new[] {typeof(DbContextA), typeof(DbContextB)});
-</code></pre></tresource></article>
+</code></pre></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
