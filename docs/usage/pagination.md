@@ -1,6 +1,6 @@
 # Pagination
 
-Resources can be paginated. This request would fetch the second page of 10 articles (articles 11 - 21).
+Resources can be paginated. This request would fetch the second page of 10 articles (articles 11 - 20).
 
 ```http
 GET /articles?page[size]=10&page[number]=2 HTTP/1.1

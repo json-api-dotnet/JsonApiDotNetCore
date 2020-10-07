@@ -1,6 +1,6 @@
 # Global Options
 
-Configuration can be applied when adding the services to the DI container.
+Configuration can be applied when adding the services to the dependency injection container.
 
 ```c#
 public class Startup
@@ -20,7 +20,7 @@ public class Startup
 
 By default, the server will respond with a 403 Forbidden HTTP Status Code if a POST request is received with a client-generated ID.
 
-However, this can be allowed by setting the AllowClientGeneratedIds flag in the options
+However, this can be allowed by setting the AllowClientGeneratedIds flag in the options:
 
 ```c#
 options.AllowClientGeneratedIds = true;
@@ -30,7 +30,7 @@ options.AllowClientGeneratedIds = true;
 
 The default page size used for all resources can be overridden in options (10 by default). To disable paging, set it to `null`.
 The maximum page size and number allowed from client requests can be set too (unconstrained by default).
-You can also include the total number of resources in each request. Note that when using this feature, it does add some query overhead since we have to also request the total number of resources.
+You can also include the total number of resources in each response. Note that when using this feature, it does add some query overhead since we have to also request the total number of resources.
 
 ```c#
 options.DefaultPageSize = new PageSize(25);
@@ -64,8 +64,7 @@ options.UseRelativeLinks = true;
 
 ## Unknown Query String Parameters
 
-If you would like to use unknown query string parameters (parameters not reserved by the json:api specification or registered using ResourceDefinitions), you can set `AllowUnknownQueryStringParameters = true`.
-When set, an HTTP 400 Bad Request is returned for unknown query string parameters.
+If you would like to allow unknown query string parameters (parameters not reserved by the json:api specification or registered using resource definitions), you can set `AllowUnknownQueryStringParameters = true`. When set to `false` (the default), an HTTP 400 Bad Request is returned for unknown query string parameters.
 
 ```c#
 options.AllowUnknownQueryStringParameters = true;
@@ -81,7 +80,7 @@ options.MaximumIncludeDepth = 1;
 
 ## Custom Serializer Settings
 
-We use Newtonsoft.Json for all serialization needs.
+We use [Newtonsoft.Json](https://www.newtonsoft.com/json) for all serialization needs.
 If you want to change the default serializer settings, you can:
 
 ```c#
@@ -92,7 +91,10 @@ options.SerializerSettings.Formatting = Formatting.Indented;
 
 The default naming convention (as used in the routes and public resources names) is also determined here, and can be changed (default is camel-case):
 ```c#
-options.SerializerSettings.ContractResolver = new DefaultContractResolver { NamingStrategy = new KebabCaseNamingStrategy() };
+options.SerializerSettings.ContractResolver = new DefaultContractResolver
+{
+    NamingStrategy = new KebabCaseNamingStrategy()
+};
 ```
 
 Because we copy resource properties into an intermediate object before serialization, Newtonsoft.Json annotations on properties are ignored.
@@ -100,18 +102,18 @@ Because we copy resource properties into an intermediate object before serializa
 
 ## Enable ModelState Validation
 
-If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set `ValidateModelState = true`. By default, no model validation is performed.
+If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set `ValidateModelState` to `true`. By default, no model validation is performed.
 
 ```c#
 options.ValidateModelState = true;
 ```
 
-You will need to use the JsonApiDotNetCore 'IsRequiredAttribute' instead of the built-in 'RequiredAttribute' because it contains modifications to enable partial patching.
-
 ```c#
 public class Person : Identifiable
 {
-    [IsRequired(AllowEmptyStrings = true)]
+    [Attr]
+    [Required]
+    [MinLength(3)]
     public string FirstName { get; set; }
 }
 ```

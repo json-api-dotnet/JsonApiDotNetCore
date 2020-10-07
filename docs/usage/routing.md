@@ -17,9 +17,16 @@ Which results in URLs like: https://yourdomain.com/api/v1/people
 The library will configure routes for all controllers in your project. By default, routes are camel-cased. This is based on the [recommendations](https://jsonapi.org/recommendations/) outlined in the json:api spec.
 
 ```c#
-public class OrderLine : Identifiable {  }
+public class OrderLine : Identifiable { }
 
-public class OrderLineController : JsonApiController<OrderLine> { /* .... */ }
+public class OrderLineController : JsonApiController<OrderLine>
+{
+    public OrderLineController(IJsonApiOptions options, ILoggerFactory loggerFactory,
+        IResourceService<OrderLine> resourceService)
+        : base(options, loggerFactory, resourceService)
+    {
+    }
+}
 ```
 
 ```http
@@ -32,7 +39,7 @@ The public name of the resource ([which can be customized](~/usage/resource-grap
 
 If a controller does not inherit from `JsonApiController<TResource>`, the [configured naming convention](~/usage/options.md#custom-serializer-settings) is applied to the name of the controller.
 ```c#
-public class OrderLineController : ControllerBase { /* .... */ }
+public class OrderLineController : ControllerBase { }
 ```
 ```http
 GET /orderLines HTTP/1.1
@@ -43,13 +50,20 @@ GET /orderLines HTTP/1.1
 It is possible to bypass the default routing convention for a controller.
 ```c#
 [Route("v1/custom/route/orderLines"), DisableRoutingConvention]
-public class OrderLineController : JsonApiController<OrderLine> { /* ... */ }
+public class OrderLineController : JsonApiController<OrderLine>
+{
+    public OrderLineController(IJsonApiOptions options, ILoggerFactory loggerFactory,
+        IResourceService<OrderLine> resourceService)
+        : base(options, loggerFactory, resourceService)
+    {
+    }
+}
 ```
 It is required to match your custom url with the public name of the associated resource.
 
 ## Advanced Usage: Custom Routing Convention
 
-It is possible to replace the built-in routing convention with a [custom routing convention]](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-3.1#sample-custom-routing-convention) by registering an implementation of `IJsonApiRoutingConvention`.
+It is possible to replace the built-in routing convention with a [custom routing convention](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-3.1#sample-custom-routing-convention) by registering an implementation of `IJsonApiRoutingConvention`.
 ```c#
 public void ConfigureServices(IServiceCollection services)
 {
