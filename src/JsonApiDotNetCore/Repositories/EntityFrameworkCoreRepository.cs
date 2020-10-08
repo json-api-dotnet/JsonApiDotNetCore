@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Repositories
         private readonly IResourceFactory _resourceFactory;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
-        
+
         public EntityFrameworkCoreRepository(
             ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
@@ -131,15 +131,15 @@ namespace JsonApiDotNetCore.Repositories
             DetachRelationships(resource);
         }
 
-        public async Task AddRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> relationshipAssignment)
+        public async Task AddRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> newValues)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipAssignment});
-            if (relationshipAssignment == null) throw new ArgumentNullException(nameof(relationshipAssignment));
+            _traceWriter.LogMethodStart(new {id, relationshipAssignment = newValues});
+            if (newValues == null) throw new ArgumentNullException(nameof(newValues));
             
             var relationship = _targetedFields.Relationships.Single();
             var databaseResource = _dbContext.GetTrackedOrAttachCurrent(_resourceFactory.CreateInstance<TResource>(id));
 
-            ApplyRelationshipAssignment(relationshipAssignment, relationship, databaseResource);
+            ApplyRelationshipAssignment(newValues, relationship, databaseResource);
 
             try
             {
@@ -150,17 +150,17 @@ namespace JsonApiDotNetCore.Repositories
                 throw new QueryExecutionException(exception);
             }
         }
-        
-        public async Task SetRelationshipAsync(TId id, object relationshipAssignment)
+
+        public async Task SetRelationshipAsync(TId id, object newValues)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipAssignment});
+            _traceWriter.LogMethodStart(new {id, relationshipAssignment = newValues});
 
             var relationship = _targetedFields.Relationships.Single();
             var databaseResource = _dbContext.GetTrackedOrAttachCurrent(_resourceFactory.CreateInstance<TResource>(id));
             
             LoadCurrentRelationships(databaseResource, relationship);
             
-            ApplyRelationshipAssignment(relationshipAssignment, relationship, databaseResource);
+            ApplyRelationshipAssignment(newValues, relationship, databaseResource);
 
             try
             {
@@ -171,7 +171,7 @@ namespace JsonApiDotNetCore.Repositories
                 throw new QueryExecutionException(exception);
             }
         }
-        
+
         /// <inheritdoc />
         public virtual async Task UpdateAsync(TResource requestResource, TResource databaseResource)
         {
@@ -224,10 +224,10 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        public async Task DeleteRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> removals)
+        public async Task DeleteRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> removalValues)
         {
-            _traceWriter.LogMethodStart(new {id, removals});
-            if (removals == null) throw new ArgumentNullException(nameof(removals));
+            _traceWriter.LogMethodStart(new {id, removals = removalValues});
+            if (removalValues == null) throw new ArgumentNullException(nameof(removalValues));
             
             var relationship = _targetedFields.Relationships.Single();
             var databaseResource = _dbContext.GetTrackedOrAttachCurrent(_resourceFactory.CreateInstance<TResource>(id));
@@ -235,7 +235,7 @@ namespace JsonApiDotNetCore.Repositories
             LoadCurrentRelationships(databaseResource, relationship);
 
             var currentAssignment = ((IReadOnlyCollection<IIdentifiable>) relationship.GetValue(databaseResource));
-            var newAssignment = currentAssignment.Where(i => removals.All(r => r.StringId != i.StringId)).ToArray();
+            var newAssignment = currentAssignment.Where(i => removalValues.All(r => r.StringId != i.StringId)).ToArray();
             
             if (newAssignment.Length < currentAssignment.Count())
             {
@@ -259,7 +259,7 @@ namespace JsonApiDotNetCore.Repositories
 
             _dbContext.Entry(resource).State = EntityState.Detached;
         }
-        
+
         /// <summary>
         /// Loads the inverse relationships to prevent foreign key constraints from being violated
         /// to support implicit removes, see https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
@@ -299,7 +299,6 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        // private bool IsOneToOne(string propertyName, Type type)
         private bool IsOneToOne(HasOneAttribute relationship)
         {
             var relationshipType = relationship.RightType;
@@ -433,7 +432,7 @@ namespace JsonApiDotNetCore.Repositories
             
             return trackedRelationshipAssignment;
         }
-        
+    
         private PropertyInfo GetForeignKeyProperty(RelationshipAttribute relationship)
         {
             PropertyInfo foreignKey = null;

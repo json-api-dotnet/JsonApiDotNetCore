@@ -329,8 +329,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             var body = await response.Content.ReadAsStringAsync();
-            
-            AssertEqualStatusCode(HttpStatusCode.NotFound, response);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -339,11 +338,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal("The resource 'todoItems' does not contain a relationship named 'invalid'.",errorDocument.Errors[0].Detail);
         }
 
-        protected void AssertEqualStatusCode(HttpStatusCode expected, HttpResponseMessage response)
-        {
-            Assert.True(expected == response.StatusCode, $"Got {response.StatusCode} status code with payload instead of {expected}. Payload: {response.Content.ReadAsStringAsync().Result}");
-        }
-        
         [Fact]
         public async Task When_getting_unknown_relationship_for_resource_it_should_fail()
         {
@@ -365,7 +359,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             var body = await response.Content.ReadAsStringAsync();
-            AssertEqualStatusCode(HttpStatusCode.NotFound, response);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);

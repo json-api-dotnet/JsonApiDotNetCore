@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Adds a value to a relationship collection in the underlying data store.
         /// </summary>
-        Task AddRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> relationshipAssignment);
+        Task AddRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> newValues);
 
         /// <summary>
         /// Updates an existing resource in the underlying data store.
@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Performs a complete replacement of a relationship in the underlying data store.
         /// </summary>
-        Task SetRelationshipAsync(TId id, object relationshipAssignment);
+        Task SetRelationshipAsync(TId id, object newValues);
     
         /// <summary>
         /// Deletes a resource from the underlying data store.
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Removes a value from a relationship collection in the underlying data store.
         /// </summary>
-        Task DeleteRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> relationshipAssignment);
+        Task DeleteRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> removalValues);
         
         /// <summary>
         /// Ensures that the next time this resource is requested, it is re-fetched from the underlying data store.

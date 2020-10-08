@@ -293,8 +293,8 @@ namespace JsonApiDotNetCore
         }
         
         /// <summary>
-        /// Gets the value of the id of an identifiable. This can be useful to use over `StringId` because this might
-        /// fail when the model has obfuscated IDs.
+        /// Gets the string value of the id of an identifiable through the typed value. This can be useful when dealing with
+        /// obfuscated IDs.
         /// </summary>
         public static string GetResourceStringId(IIdentifiable identifiable)
         {
@@ -313,7 +313,7 @@ namespace JsonApiDotNetCore
         }
         
         /// <summary>
-        /// Gets the typed value of the id of an identifiable.
+        /// Sets the typed value of the id of an identifiable.
         /// </summary>
         public static void SetResourceTypedId(IIdentifiable identifiable, object id)
         {

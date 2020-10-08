@@ -97,7 +97,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getAll == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var resources = await _getAll.GetAsync();
-    
+
             return Ok(resources);
         }
 
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getById == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var resource = await _getById.GetAsync(id);
-    
+
             return Ok(resource);
         }
 
@@ -128,7 +128,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getSecondary == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var relationship = await _getSecondary.GetSecondaryAsync(id, relationshipName);
-    
+
             return Ok(relationship);
         }
 
@@ -206,7 +206,7 @@ namespace JsonApiDotNetCore.Controllers
             }
 
             var updated = await _update.UpdateAsync(id, resource);
-    
+
             return updated == null ? Ok(null) : Ok(updated);
         }
 
@@ -220,7 +220,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_setRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
             await _setRelationship.SetRelationshipAsync(id, relationshipName, newValues);
-    
+
             return Ok();
         }
 

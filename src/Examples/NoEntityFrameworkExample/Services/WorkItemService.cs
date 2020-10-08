@@ -72,19 +72,6 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        private async Task<IEnumerable<T>> QueryAsync<T>(Func<IDbConnection, Task<IEnumerable<T>>> query)
-        {
-            using IDbConnection dbConnection = GetConnection;
-            dbConnection.Open();
-            return await query(dbConnection);
-        }
-
-        private IDbConnection GetConnection => new NpgsqlConnection(_connectionString);
-        public Task AddRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> relationshipAssignment)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task DeleteRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> removals)
         {
             throw new NotImplementedException();
@@ -99,5 +86,14 @@ namespace NoEntityFrameworkExample.Services
         {
             throw new NotImplementedException();
         }
+
+        private async Task<IEnumerable<T>> QueryAsync<T>(Func<IDbConnection, Task<IEnumerable<T>>> query)
+        {
+            using IDbConnection dbConnection = GetConnection;
+            dbConnection.Open();
+            return await query(dbConnection);
+        }
+
+        private IDbConnection GetConnection => new NpgsqlConnection(_connectionString);
     }
 }

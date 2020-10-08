@@ -12,10 +12,11 @@ namespace JsonApiDotNetCore.Resources
         /// Creates a new resource object instance.
         /// </summary>
         public object CreateInstance(Type resourceType);
-        
+
         /// <summary>
         /// Creates a new resource object instance.
         /// </summary>
+        /// <param name="id">The id that will be set for the instance, if provided.</param>
         public TResource CreateInstance<TResource>(object id = null) where TResource : IIdentifiable;
 
         /// <summary>

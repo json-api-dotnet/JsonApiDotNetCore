@@ -754,7 +754,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             var response = await client.SendAsync(request); ;
-            var responseBody = await response.Content.ReadAsStringAsync();
+
             // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
             _context = _fixture.GetRequiredService<AppDbContext>();

@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Errors
 {
     /// <summary>
-    /// The error that is thrown Entity Framework Core fails executing a query.
+    /// The error that is thrown when Entity Framework Core fails executing a query.
     /// </summary>
     public sealed class QueryExecutionException : Exception
     {
