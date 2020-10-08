@@ -13,36 +13,30 @@ using Microsoft.Extensions.DependencyInjection;
 namespace JsonApiDotNetCore.Repositories
 {
     /// <inheritdoc />
-    public class ResourceAccessor : IResourceAccessor
+    public class RepositoryAccessor : IRepositoryAccessor
     {
         private static readonly Type _openResourceReadRepositoryType = typeof(IResourceReadRepository<,>);
-        private static readonly MethodInfo _accessorMethod;
+        private static readonly MethodInfo _openGetByIdMethod;
 
-        static ResourceAccessor()
+        static RepositoryAccessor()
         {
-            _accessorMethod =
-                typeof(ResourceAccessor).GetMethod(nameof(GetById), BindingFlags.NonPublic | BindingFlags.Instance);
+            _openGetByIdMethod = typeof(RepositoryAccessor).GetMethod(nameof(GetById), BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
         private readonly IServiceProvider _serviceProvider;
         private readonly IResourceContextProvider _provider;
-        private readonly IQueryLayerComposer _queryLayerComposer;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
 
-        private readonly Dictionary<Type, (MethodInfo, object)> _parameterizedMethodRepositoryCache =
-            new Dictionary<Type, (MethodInfo, object)>();
+        private readonly Dictionary<Type, (MethodInfo, object)> _parameterizedMethodRepositoryCache = new Dictionary<Type, (MethodInfo, object)>();
 
-        public ResourceAccessor(
+        public RepositoryAccessor(
             IServiceProvider serviceProvider,
             IResourceContextProvider provider,
-            IQueryLayerComposer composer,
             IResourceDefinitionAccessor resourceDefinitionAccessor)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentException(nameof(serviceProvider));
             _provider = provider ?? throw new ArgumentException(nameof(serviceProvider));
-            _queryLayerComposer = composer ?? throw new ArgumentException(nameof(composer));
-            _resourceDefinitionAccessor = resourceDefinitionAccessor ??
-                                          throw new ArgumentException(nameof(resourceDefinitionAccessor));
+            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentException(nameof(resourceDefinitionAccessor));
         }
 
         /// <inheritdoc />
@@ -50,9 +44,9 @@ namespace JsonApiDotNetCore.Repositories
             IReadOnlyCollection<string> ids)
         {
             var resourceContext = _provider.GetResourceContext(resourceType);
-            var (parameterizedMethod, repository) = GetParameterizedMethodAndRepository(resourceType, resourceContext);
+            var (getByIdMethod, repository) = GetParameterizedMethodAndRepository(resourceType, resourceContext);
 
-            var resources = await parameterizedMethod.InvokeAsync(this, ids, repository, resourceContext);
+            var resources = await getByIdMethod.InvokeAsync(this, ids, repository, resourceContext);
 
             return (IEnumerable<IIdentifiable>) resources;
         }
@@ -62,9 +56,9 @@ namespace JsonApiDotNetCore.Repositories
         {
             if (!_parameterizedMethodRepositoryCache.TryGetValue(resourceType, out var accessorPair))
             {
-                var parameterizedMethod = _accessorMethod.MakeGenericMethod(resourceType, resourceContext.IdentityType);
-                var repositoryType =
-                    _openResourceReadRepositoryType.MakeGenericType(resourceType, resourceContext.IdentityType);
+                var parameterizedMethod = _openGetByIdMethod.MakeGenericMethod(resourceType, resourceContext.IdentityType);
+
+                var repositoryType = _openResourceReadRepositoryType.MakeGenericType(resourceType, resourceContext.IdentityType);
                 var repository = _serviceProvider.GetRequiredService(repositoryType);
 
                 accessorPair = (parameterizedMethod, repository);
@@ -77,7 +71,7 @@ namespace JsonApiDotNetCore.Repositories
         private async Task<IEnumerable<IIdentifiable>> GetById<TResource, TId>(
             IReadOnlyCollection<string> ids,
             IResourceReadRepository<TResource, TId> repository,
-            ResourceContext resourceContext)
+            ResourceContext resourceContext) 
             where TResource : class, IIdentifiable<TId>
         {
             var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
@@ -92,7 +86,7 @@ namespace JsonApiDotNetCore.Repositories
 
             // Only apply projection when there is no resource inheritance. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/844.
             // We can leave it out because the projection here is an optimization, not a functional requirement.
-            if (!resourceContext.ResourceType.GetTypeInfo().IsAbstract)
+            if (!resourceContext.ResourceType.IsAbstract)
             {
                 var projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
                 queryLayer.Projection = projection;

@@ -76,7 +76,7 @@ namespace UnitTests.Services
             var resourceFactory = new ResourceFactory(serviceProvider);
             var resourceDefinitionAccessor = new Mock<IResourceDefinitionAccessor>().Object;
             var paginationContext = new PaginationContext();
-            var resourceAccessor = new Mock<IResourceAccessor>().Object;
+            var resourceAccessor = new Mock<IRepositoryAccessor>().Object;
             var targetedFields = new Mock<ITargetedFields>().Object;
             var resourceContextProvider = new Mock<IResourceContextProvider>().Object;
             

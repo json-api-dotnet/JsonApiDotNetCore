@@ -177,13 +177,13 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Adds resources to a to-many relationship.
         /// </summary>
-        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> relationshipAssignment)
+        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> newValues)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, relationshipAssignment});
+            _traceWriter.LogMethodStart(new {id, relationshipName, newValues});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_addRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Post);
-            await _addRelationship.AddRelationshipAsync(id, relationshipName, relationshipAssignment);
+            await _addRelationship.AddRelationshipAsync(id, relationshipName, newValues);
 
             return Ok();
         }
@@ -213,13 +213,13 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Updates a relationship.
         /// </summary>
-        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object relationshipAssignment)
+        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object newValues)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, relationshipAssignment});
+            _traceWriter.LogMethodStart(new {id, relationshipName, newValues});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_setRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
-            await _setRelationship.SetRelationshipAsync(id, relationshipName, relationshipAssignment);
+            await _setRelationship.SetRelationshipAsync(id, relationshipName, newValues);
     
             return Ok();
         }
@@ -240,13 +240,13 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Removes resources from a to-many relationship.
         /// </summary>
-        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> removals)
+        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> removalValues)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, removals});
+            _traceWriter.LogMethodStart(new {id, relationshipName, removalValues});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_deleteRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
-            await _deleteRelationship.DeleteRelationshipAsync(id, relationshipName, removals);
+            await _deleteRelationship.DeleteRelationshipAsync(id, relationshipName, removalValues);
 
             return Ok();
         }

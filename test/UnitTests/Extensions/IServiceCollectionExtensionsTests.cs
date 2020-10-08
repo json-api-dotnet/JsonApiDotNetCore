@@ -166,9 +166,9 @@ namespace UnitTests.Extensions
             public Task<object> GetSecondaryAsync(int id, string relationshipName) => throw new NotImplementedException();
             public Task<IntResource> GetRelationshipAsync(int id, string relationshipName) => throw new NotImplementedException();
             public Task<IntResource> UpdateAsync(int id, IntResource requestResource) => throw new NotImplementedException();
-            public Task SetRelationshipAsync(int id, string relationshipName, object relationshipAssignment) => throw new NotImplementedException();
-            public Task AddRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> relationshipAssignment) => throw new NotImplementedException();
-            public Task DeleteRelationshipAsync(int id, string relationshipName, IEnumerable<IIdentifiable> removals) => throw new NotImplementedException();
+            public Task SetRelationshipAsync(int id, string relationshipName, object newValue) => throw new NotImplementedException();
+            public Task AddRelationshipAsync(int id, string relationshipName, IReadOnlyCollection<IIdentifiable> newValues) => throw new NotImplementedException();
+            public Task DeleteRelationshipAsync(int id, string relationshipName, IReadOnlyCollection<IIdentifiable> removalValues) => throw new NotImplementedException();
         }
 
         private class GuidResourceService : IResourceService<GuidResource, Guid>
@@ -180,9 +180,9 @@ namespace UnitTests.Extensions
             public Task<object> GetSecondaryAsync(Guid id, string relationshipName) => throw new NotImplementedException();
             public Task<GuidResource> GetRelationshipAsync(Guid id, string relationshipName) => throw new NotImplementedException();
             public Task<GuidResource> UpdateAsync(Guid id, GuidResource requestResource) => throw new NotImplementedException();
-            public Task SetRelationshipAsync(Guid id, string relationshipName, object relationshipAssignment) => throw new NotImplementedException();
-            public Task AddRelationshipAsync(Guid id, string relationshipName, IEnumerable<IIdentifiable> relationshipAssignment) => throw new NotImplementedException();
-            public Task DeleteRelationshipAsync(Guid id, string relationshipName, IEnumerable<IIdentifiable> removals) => throw new NotImplementedException();
+            public Task SetRelationshipAsync(Guid id, string relationshipName, object newValue) => throw new NotImplementedException();
+            public Task AddRelationshipAsync(Guid id, string relationshipName, IReadOnlyCollection<IIdentifiable> newValues) => throw new NotImplementedException();
+            public Task DeleteRelationshipAsync(Guid id, string relationshipName, IReadOnlyCollection<IIdentifiable> removalValues) => throw new NotImplementedException();
         }
 
 

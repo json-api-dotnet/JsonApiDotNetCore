@@ -39,7 +39,7 @@ namespace DiscoveryTests
             _services.AddScoped(_ => new Mock<IResourceFactory>().Object);
             _services.AddScoped(_ => new Mock<IPaginationContext>().Object);
             _services.AddScoped(_ => new Mock<IQueryLayerComposer>().Object);
-            _services.AddScoped(_ => new Mock<IResourceAccessor>().Object);
+            _services.AddScoped(_ => new Mock<IRepositoryAccessor>().Object);
 
             _resourceGraphBuilder = new ResourceGraphBuilder(_options, NullLoggerFactory.Instance);
         }
@@ -154,12 +154,12 @@ namespace DiscoveryTests
                 IJsonApiRequest request,
                 IResourceChangeTracker<TestModel> resourceChangeTracker,
                 IResourceFactory resourceFactory,
-                IResourceAccessor resourceAccessor,
+                IRepositoryAccessor repositoryAccessor,
                 ITargetedFields targetedFields,
                 IResourceContextProvider provider,
                 IResourceHookExecutor hookExecutor = null)
                 : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                    resourceChangeTracker, resourceFactory, resourceAccessor, targetedFields, provider, hookExecutor)
+                    resourceChangeTracker, resourceFactory, repositoryAccessor, targetedFields, provider, hookExecutor)
             {
             }
         }

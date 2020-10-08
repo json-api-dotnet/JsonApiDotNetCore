@@ -196,7 +196,7 @@ namespace JsonApiDotNetCore.Configuration
                         : intTypedResourceService);
             }
             
-            _services.AddScoped<IResourceAccessor, ResourceAccessor>();
+            _services.AddScoped<IRepositoryAccessor, RepositoryAccessor>();
         }
 
         private void AddServiceLayer()

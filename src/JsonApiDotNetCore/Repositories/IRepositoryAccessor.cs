@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Repositories
     /// <summary>
     /// Retrieves a <see cref="IResourceRepository{TResource,TId}"/> instance from the D/I container and invokes a callback on it.
     /// </summary>
-    public interface IResourceAccessor
+    public interface IRepositoryAccessor
     {
         /// <summary>
         /// Gets resources by id.
