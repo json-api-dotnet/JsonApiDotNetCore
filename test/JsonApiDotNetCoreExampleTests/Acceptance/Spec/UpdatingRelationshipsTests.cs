@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
@@ -895,7 +896,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .Single(p => p.Id == person.Id).TodoItems;
 
             Assert.Equal(4, assertTodoItems.Count);
-            Assert.True(assertTodoItems.Any(ati => ati.Id == todoItem.Id));
+            Assert.Contains(todoItem, assertTodoItems, IdentifiableComparer.Instance);
         }
 
         [Fact]
