@@ -479,7 +479,7 @@ namespace JsonApiDotNetCore.Services
                     {
                         IIdentifiable hasOneAssignment => true,
                         IReadOnlyCollection<IIdentifiable> hasManyAssignment => hasManyAssignment.Any(),
-                        null => false
+                        _ => false
                     };
                 }).ToArray();
 
