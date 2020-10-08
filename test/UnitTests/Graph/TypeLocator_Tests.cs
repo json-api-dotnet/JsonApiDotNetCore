@@ -19,15 +19,16 @@ namespace UnitTests.Internal
             var expectedInterface = typeof(IGenericInterface<int>);
 
             // Act
-            var (implementation, registrationInterface) = TypeLocator.GetGenericInterfaceImplementation(
+            var result = TypeLocator.GetGenericInterfaceImplementation(
                 assembly,
                 openGeneric,
                 genericArg
             );
 
             // Assert
-            Assert.Equal(expectedImplementation, implementation);
-            Assert.Equal(expectedInterface, registrationInterface);
+            Assert.NotNull(result);
+            Assert.Equal(expectedImplementation, result.Value.implementation);
+            Assert.Equal(expectedInterface, result.Value.registrationInterface);
         }
 
         [Fact]
