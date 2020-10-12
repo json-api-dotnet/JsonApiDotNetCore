@@ -15,6 +15,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Repositories
@@ -306,9 +307,10 @@ namespace JsonApiDotNetCore.Repositories
             }
             else if (relationship is HasOneAttribute hasOneRelationship)
             {
-                if (GetForeignKey(hasOneRelationship) == null)
-                {   // If the primary resource is the dependent side of a to-one relationship, there can be no
-                    // FK violations resulting from a the implicit removal.
+                var foreignKeyProperties = GetForeignKeys(hasOneRelationship);
+                if (foreignKeyProperties.Count() != 1)
+                {   // If the primary resource is the dependent side of a to-one relationship, there can be no FK
+                    // violations resulting from a the implicit removal.
                     navigationEntry = entityEntry.Reference(hasOneRelationship.Property.Name);
                 }
             }
@@ -400,14 +402,14 @@ namespace JsonApiDotNetCore.Repositories
                     secondaryResourceId = secondaryResource.GetTypedId();
                 }
                 
-                var foreignKey = GetForeignKey(relationship);
-                if (foreignKey != null)
+                var foreignKeyProperties = GetForeignKeys(relationship);
+                if (foreignKeyProperties.Count() == 1)
                 {
-                    foreignKey.SetValue(primaryResource, secondaryResourceId);
+                    foreignKeyProperties.First().SetValue(primaryResource, secondaryResourceId);
                     _dbContext.Entry(primaryResource).State = EntityState.Modified;
                 }
             }
-
+            
             relationship.SetValue(primaryResource, trackedRelationshipAssignment, _resourceFactory);
         }
 
@@ -443,24 +445,22 @@ namespace JsonApiDotNetCore.Repositories
             return trackedRelationshipAssignment;
         }
 
-        private PropertyInfo GetForeignKey(RelationshipAttribute relationship)
+        private PropertyInfo[] GetForeignKeys(RelationshipAttribute relationship)
         {
-            PropertyInfo foreignKey = null;
-            
             if (relationship is HasOneAttribute)
             {
                 var entityMetadata = _dbContext.Model.FindEntityType(typeof(TResource));
                 var foreignKeyMetadata = entityMetadata.FindNavigation(relationship.Property.Name).ForeignKey;
-                foreignKey = foreignKeyMetadata.Properties[0].PropertyInfo;
-
-                if (foreignKey?.DeclaringType != typeof(TResource))
-                {
-                    foreignKey = null;
-                }
-                
-            }
     
-            return foreignKey;
+                var declaringEntiyType = foreignKeyMetadata.DeclaringEntityType.ClrType;
+
+                if (declaringEntiyType == typeof(TResource))
+                {
+                    return foreignKeyMetadata.Properties.Select(p => p.PropertyInfo).Where(pi => pi != null).ToArray();
+                }
+            }
+
+            return new PropertyInfo[0];
         }
 
         private IIdentifiable GetTrackedOrAttach(IIdentifiable resource)

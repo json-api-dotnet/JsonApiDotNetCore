@@ -107,7 +107,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Response422IfUpdatingNotSettableAttribute()
+        public async Task Response_422_If_Updating_Not_Settable_Attribute()
         {
             // Arrange
             var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
@@ -479,6 +479,64 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
                 updated.Description.Should().Be("Something else");
                 updated.Owner.Id.Should().Be(person.Id);
+            });
+        }
+        
+        [Fact]
+        public async Task Can_Remove_Relationship_Of_Resource_With_Composite_Foreign_Keys()
+        {
+            // Arrange
+
+            var product = new Product
+            {
+                Name = "Croissants"
+            };
+            var category = new Category
+            {
+                Id = "4234-FRENCHSPECIALTIES",
+                Name = "French Specialties"
+            };
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTablesAsync<Product, Category>();
+                dbContext.AddRange(product, category);
+                await dbContext.SaveChangesAsync();
+                product.Category = category;
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "products",
+                    id = product.Id,
+                    relationships = new Dictionary<string, object>
+                    {
+                        ["category"] = new
+                        {
+                            data = (object)null
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/products/" + product.Id;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var assertProduct = await dbContext.Products
+                    .Include(m => m.Category)
+                    .SingleAsync(h => h.Id == product.Id);
+
+                assertProduct.Category.Should().BeNull();
             });
         }
     }
