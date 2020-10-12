@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Updates the attributes and relationships of an existing resource in the underlying data store.
         /// </summary>
-        Task UpdateAsync(TResource resourceFromRequest, TResource localResource);
+        Task UpdateAsync(TResource resourceFromRequest, TResource resourceFromDatabase);
         
         /// <summary>
         /// Performs a complete replacement of the relationship in the underlying data store.

@@ -9,11 +9,11 @@ namespace JsonApiDotNetCore.Errors
     /// <summary>
     /// The error that is thrown when assigning one or more non-existing resources to a relationship.
     /// </summary>
-    public sealed class ResourcesInRelationshipAssignmentNotFoundException : Exception
+    public sealed class ResourcesInRelationshipAssignmentsNotFoundException : Exception
     {
         public IReadOnlyCollection<Error> Errors { get; }
 
-        public ResourcesInRelationshipAssignmentNotFoundException(IEnumerable<MissingResourceInRelationship> missingResources)
+        public ResourcesInRelationshipAssignmentsNotFoundException(IEnumerable<MissingResourceInRelationship> missingResources)
         {
             Errors = missingResources.Select(CreateError).ToList();
         }
@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Errors
         {
             return new Error(HttpStatusCode.NotFound)
             {
-                Title = "Resource being assigned to relationship do not exist.",
+                Title = "A resource being assigned to a relationship does not exist.",
                 Detail =
                     $"Resource of type '{missingResourceInRelationship.ResourceType}' with ID '{missingResourceInRelationship.ResourceId}' " +
                     $"being assigned to relationship '{missingResourceInRelationship.RelationshipName}' does not exist."
