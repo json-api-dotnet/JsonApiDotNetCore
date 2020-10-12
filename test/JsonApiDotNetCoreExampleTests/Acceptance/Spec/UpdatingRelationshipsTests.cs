@@ -277,9 +277,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             var response = await client.SendAsync(request);
-            var responseBody = await response.Content.ReadAsStringAsync();
+            var body = await response.Content.ReadAsStringAsync();
+            
             AssertEqualStatusCode(HttpStatusCode.NotFound, response);
-            Assert.Contains("For the following types, the resources with the specified ids do not exist:\\\\npeople: 900000,900001\\ntodoItems: 900002\"", responseBody);
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Equal(3, errorDocument.Errors.Count);
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("A resource being assigned to a relationship does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("Resource of type 'people' with ID '900000' being assigned to relationship 'people' does not exist.",errorDocument.Errors[0].Detail);
         }
 
         [Fact]

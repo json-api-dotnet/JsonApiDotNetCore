@@ -494,7 +494,7 @@ namespace JsonApiDotNetCore.Services
             
             foreach (var (relationship, resources) in assignments)
             {
-                var identifiers = (IReadOnlyCollection<string>)resources.Select(i => i.GetTypedId().ToString());
+                IReadOnlyCollection<string> identifiers = (IReadOnlyCollection<string>)resources.Select(i => i.GetTypedId().ToString()).ToArray();
                 var databaseResources = await _repositoryAccessor.GetResourcesByIdAsync(relationship.RightType, identifiers);
 
                 var errorsInAssignment = resources
