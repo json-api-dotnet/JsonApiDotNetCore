@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IResourceReadRepository<,>)
         };
 
-        private static readonly HashSet<Type> _resourceDefinitionInterfaces = new HashSet<Type> {
+        internal static readonly HashSet<Type> ResourceDefinitionInterfaces = new HashSet<Type> {
             typeof(IResourceDefinition<>),
             typeof(IResourceDefinition<,>)
         };
@@ -182,7 +182,7 @@ namespace JsonApiDotNetCore.Configuration
         
         private void AddResourceDefinitions(Assembly assembly, ResourceDescriptor resourceDescriptor)
         {
-            foreach (var resourceDefinitionInterface in _resourceDefinitionInterfaces)
+            foreach (var resourceDefinitionInterface in ResourceDefinitionInterfaces)
             {
                 RegisterImplementations(assembly, resourceDefinitionInterface, resourceDescriptor);
             }

@@ -174,42 +174,37 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddResourceLayer()
         {
-            _services.AddScoped(typeof(IResourceDefinition<>), typeof(JsonApiResourceDefinition<>));
-            _services.AddScoped(typeof(IResourceDefinition<,>), typeof(JsonApiResourceDefinition<,>));
+            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ResourceDefinitionInterfaces, 
+                typeof(JsonApiResourceDefinition<>), typeof(JsonApiResourceDefinition<,>));
+
             _services.AddScoped<IResourceDefinitionAccessor, ResourceDefinitionAccessor>();
-
             _services.AddScoped<IResourceFactory, ResourceFactory>();
-
             _services.AddSingleton<IResourceContextProvider>(sp => sp.GetRequiredService<IResourceGraph>());
         }
 
         private void AddRepositoryLayer()
         {
-            var openIdResourceRepository = typeof(EntityFrameworkCoreRepository<,>);
-            var intIdResourceRepository = typeof(EntityFrameworkCoreRepository<>);
-            
-            foreach (var openRepositoryInterface in ServiceDiscoveryFacade.RepositoryInterfaces)
-            {
-                _services.AddScoped(openRepositoryInterface,
-                    openRepositoryInterface.GetGenericArguments().Length == 2
-                        ? openIdResourceRepository
-                        : intIdResourceRepository);
-            }
-            
+            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.RepositoryInterfaces, 
+                typeof(EntityFrameworkCoreRepository<>), typeof(EntityFrameworkCoreRepository<,>));
+
             _services.AddScoped<IRepositoryAccessor, RepositoryAccessor>();
         }
 
         private void AddServiceLayer()
         {
-            var openIdResourceService = typeof(JsonApiResourceService<,>);
-            var intIdResourceService = typeof(JsonApiResourceService<>);
-            
-            foreach (var openServiceInterface in ServiceDiscoveryFacade.ServiceInterfaces)
+            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ServiceInterfaces, 
+                typeof(JsonApiResourceService<>), typeof(JsonApiResourceService<,>));
+        }
+
+        private void RegisterImplementationForOpenInterfaces(HashSet<Type> openGenericInterfaces, Type intImplementation, Type implementation)
+        {
+            foreach (var openGenericInterface in openGenericInterfaces)
             {
-                _services.AddScoped(openServiceInterface,
-                    openServiceInterface.GetGenericArguments().Length == 2
-                        ? openIdResourceService
-                        : intIdResourceService);
+                var implementationType = openGenericInterface.GetGenericArguments().Length == 1
+                    ? intImplementation
+                    : implementation;
+
+                _services.AddScoped(openGenericInterface, implementationType);
             }
         }
 
