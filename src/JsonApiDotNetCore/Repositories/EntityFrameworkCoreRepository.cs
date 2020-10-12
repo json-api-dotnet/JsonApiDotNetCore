@@ -180,7 +180,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual async Task UpdateAsync(TResource resourceFromRequest, TResource localResource)
         {
-            _traceWriter.LogMethodStart(new {requestResource = resourceFromRequest, localResource});
+            _traceWriter.LogMethodStart(new {resourceFromRequest, localResource});
             if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
             if (localResource == null) throw new ArgumentNullException(nameof(localResource));
 
