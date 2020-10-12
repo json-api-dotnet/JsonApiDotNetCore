@@ -478,7 +478,7 @@ namespace JsonApiDotNetCore.Repositories
             }
             catch (DbUpdateException exception)
             {
-                throw new RepositorySaveException(exception);
+                throw new DataStorePersistFailedException(exception);
             }
         }
     }

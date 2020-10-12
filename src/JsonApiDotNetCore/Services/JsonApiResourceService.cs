@@ -231,7 +231,7 @@ namespace JsonApiDotNetCore.Services
             {
                 await _repository.CreateAsync(resource);
             }
-            catch (RepositorySaveException)
+            catch (DataStorePersistFailedException)
             {
                 var relationshipsWithValues = GetPopulatedRelationships(resource);
                 await AssertValuesOfRelationshipAssignmentExistAsync(relationshipsWithValues);
@@ -266,7 +266,7 @@ namespace JsonApiDotNetCore.Services
                 {
                     await _repository.AddToToManyRelationshipAsync(id, secondaryResourceIds);
                 }
-                catch (RepositorySaveException)
+                catch (DataStorePersistFailedException)
                 {
                     var primaryResource = await GetProjectedPrimaryResourceById(id);
                     AssertPrimaryResourceExists(primaryResource);
@@ -300,7 +300,7 @@ namespace JsonApiDotNetCore.Services
             {
                 await _repository.UpdateAsync(resourceFromRequest, localResource);
             }
-            catch (RepositorySaveException)
+            catch (DataStorePersistFailedException)
             {
                 var assignments = GetPopulatedRelationships(resourceFromRequest);
                 await AssertValuesOfRelationshipAssignmentExistAsync(assignments);
@@ -344,7 +344,7 @@ namespace JsonApiDotNetCore.Services
             {
                 await _repository.SetRelationshipAsync(id, secondaryResourceIds);
             }
-            catch (RepositorySaveException)
+            catch (DataStorePersistFailedException)
             {
                 if (primaryResource == null)
                 {
@@ -386,7 +386,7 @@ namespace JsonApiDotNetCore.Services
             {
                 await _repository.DeleteAsync(id);
             }
-            catch (RepositorySaveException)
+            catch (DataStorePersistFailedException)
             {
                 succeeded = false;
                 resource = await GetProjectedPrimaryResourceById(id);
@@ -414,7 +414,7 @@ namespace JsonApiDotNetCore.Services
             {
                 await _repository.RemoveFromToManyRelationshipAsync(id, secondaryResourceIds);
             }
-            catch (RepositorySaveException)
+            catch (DataStorePersistFailedException)
             {
                 var resource = await GetProjectedPrimaryResourceById(id);
                 AssertPrimaryResourceExists(resource);
