@@ -329,7 +329,7 @@ namespace JsonApiDotNetCore.Services
                 
                 throw;
             }
-            
+
             if (_hookExecutor != null && primaryResource != null)
             {
                 _hookExecutor.AfterUpdate(AsList(primaryResource), ResourcePipeline.PatchRelationship);
@@ -350,7 +350,7 @@ namespace JsonApiDotNetCore.Services
             }
 
             var succeeded = true;
-            
+
             try
             {
                 await _repository.DeleteAsync(id);
@@ -377,7 +377,7 @@ namespace JsonApiDotNetCore.Services
 
             AssertRelationshipExists(relationshipName);
             AssertRelationshipIsToMany();
-            
+
             try
             {
                 await _repository.RemoveFromToManyRelationshipAsync(id, secondaryResourceIds);
@@ -518,7 +518,7 @@ namespace JsonApiDotNetCore.Services
         {
             return new List<TResource> { resource };
         }
-        
+
         private IReadOnlyCollection<IIdentifiable> AsReadOnlyCollection(object relationshipAssignment)
         {
             if (relationshipAssignment is IIdentifiable hasOneAssignment)
@@ -528,7 +528,7 @@ namespace JsonApiDotNetCore.Services
 
             return (IReadOnlyCollection<IIdentifiable>)relationshipAssignment;
         }
-        
+
         private enum Projection
         {
             None,

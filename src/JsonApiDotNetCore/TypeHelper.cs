@@ -292,18 +292,6 @@ namespace JsonApiDotNetCore
             return tempResource.GetTypedId();
         }
 
-        
-        /// <summary>
-        /// Sets the typed value of the id of an identifiable.
-        /// </summary>
-        public static void SetResourceTypedId(IIdentifiable identifiable, object id)
-        {
-            if (identifiable == null) throw new ArgumentNullException(nameof(identifiable));
-            if (id == null) throw new ArgumentNullException(nameof(id));
-            
-            identifiable.GetType().GetProperty(nameof(Identifiable.Id)).SetValue(identifiable, id);
-        }
-
         /// <summary>
         /// Extension to use the LINQ cast method in a non-generic way:
         /// <code>

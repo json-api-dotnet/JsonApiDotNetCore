@@ -133,9 +133,9 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResources)
+        public async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResourceIds)
         {
-            await _resourceService.SetRelationshipAsync(id, relationshipName, secondaryResources);
+            await _resourceService.SetRelationshipAsync(id, relationshipName, secondaryResourceIds);
     
             return Ok();
         }
