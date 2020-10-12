@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -15,15 +16,18 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IResourceGraph _resourceGraph;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
+        private readonly IJsonApiRequest _jsonApiRequest;
 
         public FieldsToSerialize(
             IResourceGraph resourceGraph,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IResourceDefinitionAccessor resourceDefinitionAccessor)
+            IResourceDefinitionAccessor resourceDefinitionAccessor,
+            IJsonApiRequest jsonApiRequest)
         {
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
             _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
             _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
+            _jsonApiRequest = jsonApiRequest ?? throw new ArgumentNullException(nameof(jsonApiRequest));
         }
 
         /// <inheritdoc />
@@ -31,6 +35,11 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
+            if (_jsonApiRequest.Kind == EndpointKind.Relationship)
+            {
+                return new AttrAttribute[0];
+            }
+            
             var sparseFieldSetAttributes = _constraintProviders
                 .SelectMany(p => p.GetConstraints())
                 .Where(expressionInScope => relationship == null
@@ -79,6 +88,11 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
+            if (_jsonApiRequest.Kind == EndpointKind.Relationship)
+            {
+                return new RelationshipAttribute[0];
+            }
+            
             return _resourceGraph.GetRelationships(type);
         }
     }

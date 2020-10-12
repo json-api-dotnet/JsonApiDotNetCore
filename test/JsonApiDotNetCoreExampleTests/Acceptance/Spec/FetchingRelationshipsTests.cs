@@ -62,8 +62,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             string expected = @"{
   ""links"": {
-    ""self"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/relationships/owner"",
-    ""related"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/owner""
+    ""self"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/relationships/owner""
   },
   ""data"": {
     ""type"": ""people"",
@@ -116,7 +115,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var expected = @"{
   ""links"": {
     ""self"": ""http://localhost/api/v1/authors/" + author.StringId + @"/relationships/articles"",
-    ""related"": ""http://localhost/api/v1/authors/" + author.StringId + @"/articles""
+    ""first"": ""http://localhost/api/v1/authors/" + author.StringId + @"/relationships/articles""
   },
   ""data"": [
     {
