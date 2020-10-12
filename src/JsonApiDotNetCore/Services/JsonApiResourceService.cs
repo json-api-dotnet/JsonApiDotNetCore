@@ -252,26 +252,26 @@ namespace JsonApiDotNetCore.Services
 
         /// <inheritdoc />
         // triggered by POST /articles/{id}/relationships/{relationshipName}
-        public async Task AddRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResources)
+        public async Task AddToToManyRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new { id, secondaryResources });
+            _traceWriter.LogMethodStart(new { id, secondaryResourceIds });
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
             AssertRelationshipIsToMany();
     
-            if (secondaryResources.Any())
+            if (secondaryResourceIds.Any())
             {
                 try
                 {
-                    await _repository.AddToRelationshipAsync(id, secondaryResources);
+                    await _repository.AddToToManyRelationshipAsync(id, secondaryResourceIds);
                 }
                 catch (RepositorySaveException)
                 {
                     var primaryResource = await GetProjectedPrimaryResourceById(id);
                     AssertPrimaryResourceExists(primaryResource);
                     
-                    var assignment = new Dictionary<RelationshipAttribute, object> { { _request.Relationship, secondaryResources } };
+                    var assignment = new Dictionary<RelationshipAttribute, object> { { _request.Relationship, secondaryResourceIds } };
                     await AssertValuesOfRelationshipAssignmentExistAsync(assignment);
                     
                     throw;
@@ -324,9 +324,9 @@ namespace JsonApiDotNetCore.Services
 
         /// <inheritdoc />
         // triggered by PATCH /articles/{id}/relationships/{relationshipName}
-        public virtual async Task SetRelationshipAsync(TId id, string relationshipName, object secondaryResources)
+        public virtual async Task SetRelationshipAsync(TId id, string relationshipName, object secondaryResourceIds)
         {
-             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResources});
+             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
@@ -342,7 +342,7 @@ namespace JsonApiDotNetCore.Services
             
             try
             {
-                await _repository.SetRelationshipAsync(id, secondaryResources);
+                await _repository.SetRelationshipAsync(id, secondaryResourceIds);
             }
             catch (RepositorySaveException)
             {
@@ -352,9 +352,9 @@ namespace JsonApiDotNetCore.Services
                     AssertPrimaryResourceExists(primaryResource);
                 }
                 
-                if (secondaryResources != null)
+                if (secondaryResourceIds != null)
                 {
-                    var assignment = new Dictionary<RelationshipAttribute, object> { { _request.Relationship, secondaryResources } };
+                    var assignment = new Dictionary<RelationshipAttribute, object> { { _request.Relationship, secondaryResourceIds } };
                     await AssertValuesOfRelationshipAssignmentExistAsync(assignment);
                 }
                 
@@ -402,9 +402,9 @@ namespace JsonApiDotNetCore.Services
 
         /// <inheritdoc />
         // triggered by DELETE /articles/{id}/relationships/{relationshipName}
-        public async Task RemoveFromRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResources)
+        public async Task RemoveFromToManyRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResources});
+            _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
@@ -412,7 +412,7 @@ namespace JsonApiDotNetCore.Services
             
             try
             {
-                await _repository.RemoveFromRelationshipAsync(id, secondaryResources);
+                await _repository.RemoveFromToManyRelationshipAsync(id, secondaryResourceIds);
             }
             catch (RepositorySaveException)
             {

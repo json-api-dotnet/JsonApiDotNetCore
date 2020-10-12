@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="id">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship to add resources to.</param>
-        /// <param name="secondaryResources">The resources to add to the relationship.</param>
-        Task AddRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResources);
+        /// <param name="secondaryResourceIds">The resources to add to the relationship.</param>
+        Task AddToToManyRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds);
     }
 }

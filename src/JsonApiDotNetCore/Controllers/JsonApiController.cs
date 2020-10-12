@@ -69,8 +69,8 @@ namespace JsonApiDotNetCore.Controllers
         /// <inheritdoc />
         [HttpPost("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> PostRelationshipAsync(
-            TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> secondaryResources)
-            => await base.PostRelationshipAsync(id, relationshipName, secondaryResources);
+            TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
+            => await base.PostRelationshipAsync(id, relationshipName, secondaryResourceIds);
 
         /// <inheritdoc />
         [HttpPatch("{id}")]
@@ -82,8 +82,8 @@ namespace JsonApiDotNetCore.Controllers
         /// <inheritdoc />
         [HttpPatch("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> PatchRelationshipAsync(
-            TId id, string relationshipName, [FromBody] object secondaryResources)
-            => await base.PatchRelationshipAsync(id, relationshipName, secondaryResources);
+            TId id, string relationshipName, [FromBody] object secondaryResourceIds)
+            => await base.PatchRelationshipAsync(id, relationshipName, secondaryResourceIds);
 
         /// <inheritdoc />
         [HttpDelete("{id}")]
@@ -91,8 +91,8 @@ namespace JsonApiDotNetCore.Controllers
         
         /// <inheritdoc />
         [HttpDelete("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> secondaryResources)
-            => await base.DeleteRelationshipAsync(id, relationshipName, secondaryResources);
+        public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
+            => await base.DeleteRelationshipAsync(id, relationshipName, secondaryResourceIds);
     }
 
     /// <inheritdoc />

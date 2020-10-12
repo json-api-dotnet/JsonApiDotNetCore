@@ -135,6 +135,7 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Gets a single resource relationship.
         /// Example: GET /articles/1/relationships/author HTTP/1.1
+        /// Example: GET /articles/1/relationships/revisions HTTP/1.1
         /// </summary>
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
@@ -148,7 +149,8 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Creates a new resource.
+        /// Creates a new resource with attributes, relationships or both.
+        /// Example: POST /articles HTTP/1.1
         /// </summary>
         public virtual async Task<IActionResult> PostAsync([FromBody] TResource resource)
         {
@@ -176,20 +178,25 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <summary>
         /// Adds resources to a to-many relationship.
+        /// Example: POST /articles/1/revisions HTTP/1.1
         /// </summary>
-        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> secondaryResources)
+        /// <param name="id">The identifier of the primary resource.</param>
+        /// <param name="relationshipName">The relationship to add resources to.</param>
+        /// <param name="secondaryResourceIds">The set of resources to add to the relationship.</param>
+        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResources});
+            _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_addToRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Post);
-            await _addToRelationship.AddRelationshipAsync(id, relationshipName, secondaryResources);
+            await _addToRelationship.AddToToManyRelationshipAsync(id, relationshipName, secondaryResourceIds);
 
             return Ok();
         }
 
         /// <summary>
-        /// Updates an existing resource. May contain a partial set of attributes.
+        /// Updates an existing resource with attributes, relationships or both. May contain a partial set of attributes.
+        /// Example: PATCH /articles/1 HTTP/1.1
         /// </summary>
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource)
         {
@@ -211,21 +218,27 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Performs a complete replacement of a relationship.
+        /// Performs a complete replacement of a relationship on an existing resource.
+        /// Example: PATCH /articles/1/relationships/author HTTP/1.1
+        /// Example: PATCH /articles/1/relationships/revisions HTTP/1.1
         /// </summary>
-        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResources)
+        /// <param name="id">The identifier of the primary resource.</param>
+        /// <param name="relationshipName">The relationship for which to perform a complete replacement.</param>
+        /// <param name="secondaryResourceIds">The resources to assign to the relationship.</param>
+        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResources});
+            _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_setRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
-            await _setRelationship.SetRelationshipAsync(id, relationshipName, secondaryResources);
+            await _setRelationship.SetRelationshipAsync(id, relationshipName, secondaryResourceIds);
 
             return Ok();
         }
 
         /// <summary>
-        /// Deletes a resource.
+        /// Deletes an existing resource.
+        /// Example: DELETE /articles/1 HTTP/1.1
         /// </summary>
         public virtual async Task<IActionResult> DeleteAsync(TId id)
         {
@@ -239,14 +252,18 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <summary>
         /// Removes resources from a to-many relationship.
+        /// Example: DELETE /articles/1/relationships/revisions HTTP/1.1
         /// </summary>
-        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> secondaryResources)
+        /// <param name="id">The identifier of the primary resource.</param>
+        /// <param name="relationshipName">The relationship to remove resources from.</param>
+        /// <param name="secondaryResourceIds">The resources to remove from the relationship.</param>
+        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResources});
+            _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_removeFromRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
-            await _removeFromRelationship.RemoveFromRelationshipAsync(id, relationshipName, secondaryResources);
+            await _removeFromRelationship.RemoveFromToManyRelationshipAsync(id, relationshipName, secondaryResourceIds);
 
             return Ok();
         }

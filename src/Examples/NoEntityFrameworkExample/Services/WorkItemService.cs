@@ -67,17 +67,17 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        public Task SetRelationshipAsync(int id, string relationshipName, object secondaryResources)
+        public Task SetRelationshipAsync(int id, string relationshipName, object secondaryResourceIds)
         {
             throw new NotImplementedException();
         }
         
-        public Task AddRelationshipAsync(int id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResources)
+        public Task AddToToManyRelationshipAsync(int id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveFromRelationshipAsync(int id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResources)
+        public Task RemoveFromToManyRelationshipAsync(int id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
         {
             throw new NotImplementedException();
         }

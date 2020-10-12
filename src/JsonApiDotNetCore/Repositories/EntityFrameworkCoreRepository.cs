@@ -150,29 +150,29 @@ namespace JsonApiDotNetCore.Repositories
             DetachRelationships(resource);
         }
 
-        public async Task AddToRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResources)
+        public async Task AddToToManyRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new {id, secondaryResources});
-            if (secondaryResources == null) throw new ArgumentNullException(nameof(secondaryResources));
+            _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
+            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
             
             var relationship = _targetedFields.Relationships.Single();
             var localResource = (TResource)GetTrackedOrAttach(_resourceFactory.CreateInstance<TResource>(id));
 
-            await ApplyRelationshipAssignment(localResource, relationship, secondaryResources);
+            await ApplyRelationshipAssignment(localResource, relationship, secondaryResourceIds);
 
             await TrySave();
         }
 
-        public async Task SetRelationshipAsync(TId id, object secondaryResources)
+        public async Task SetRelationshipAsync(TId id, object secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new {id, secondaryResources});
+            _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
 
             var relationship = _targetedFields.Relationships.Single();
             var localResource = (TResource)GetTrackedOrAttach(_resourceFactory.CreateInstance<TResource>(id));
             
             await LoadCurrentRelationship(localResource, relationship);
             
-            await ApplyRelationshipAssignment(localResource, relationship, secondaryResources);
+            await ApplyRelationshipAssignment(localResource, relationship, secondaryResourceIds);
 
             await TrySave();
         }
@@ -215,10 +215,10 @@ namespace JsonApiDotNetCore.Repositories
             await TrySave();
         }
 
-        public async Task RemoveFromRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResources)
+        public async Task RemoveFromToManyRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new {id, secondaryResources});
-            if (secondaryResources == null) throw new ArgumentNullException(nameof(secondaryResources));
+            _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
+            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
             
             var relationship = _targetedFields.Relationships.Single();
             var localResource = (TResource)GetTrackedOrAttach(_resourceFactory.CreateInstance<TResource>(id));
@@ -226,7 +226,7 @@ namespace JsonApiDotNetCore.Repositories
             await LoadCurrentRelationship(localResource, relationship);
 
             var currentRelationshipAssignment = ((IReadOnlyCollection<IIdentifiable>) relationship.GetValue(localResource));
-            var newRelationshipAssignment = currentRelationshipAssignment.Where(i => secondaryResources.All(r => r.StringId != i.StringId)).ToArray();
+            var newRelationshipAssignment = currentRelationshipAssignment.Where(i => secondaryResourceIds.All(r => r.StringId != i.StringId)).ToArray();
             
             if (newRelationshipAssignment.Length < currentRelationshipAssignment.Count())
             {
