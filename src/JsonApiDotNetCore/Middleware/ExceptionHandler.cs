@@ -71,6 +71,12 @@ namespace JsonApiDotNetCore.Middleware
                 return new ErrorDocument(modelStateException.Errors);
             }
 
+            if (exception is ResourcesInRelationshipAssignmentNotFoundException
+                resourcesInRelationshipAssignmentNotFound)
+            {
+                return new ErrorDocument(resourcesInRelationshipAssignmentNotFound.Errors);
+            }
+
             Error error = exception is JsonApiException jsonApiException
                 ? jsonApiException.Error
                 : new Error(HttpStatusCode.InternalServerError)

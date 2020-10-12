@@ -535,7 +535,8 @@ namespace JsonApiDotNetCore.Services
 
             if (missingResources.Any())
             {
-                throw new ResourceNotFoundException(missingResources);
+                throw null; // TODO: Fix broken tests.
+                //throw new ResourcesInRelationshipAssignmentNotFoundException(missingResources);
             }
         }
 
