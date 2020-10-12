@@ -500,7 +500,7 @@ namespace JsonApiDotNetCore.Services
         private void AssertRelationshipIsToMany()
         {
             var relationship = _request.Relationship;
-            if (relationship is HasOneAttribute);
+            if (relationship is HasOneAttribute)
             {
                 throw new ToOneRelationshipUpdateForbiddenException(relationship.PublicName);
             }
