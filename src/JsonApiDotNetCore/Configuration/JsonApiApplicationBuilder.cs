@@ -185,15 +185,15 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddRepositoryLayer()
         {
-            var intTypedResourceService = typeof(EntityFrameworkCoreRepository<>);
-            var openTypedResourceService = typeof(EntityFrameworkCoreRepository<,>);
+            var openIdResourceRepository = typeof(EntityFrameworkCoreRepository<,>);
+            var intIdResourceRepository = typeof(EntityFrameworkCoreRepository<>);
             
-            foreach (var partialRepositoryInterface in ServiceDiscoveryFacade.RepositoryInterfaces)
+            foreach (var openRepositoryInterface in ServiceDiscoveryFacade.RepositoryInterfaces)
             {
-                _services.AddScoped(partialRepositoryInterface,
-                    partialRepositoryInterface.GetGenericArguments().Length == 2
-                        ? openTypedResourceService
-                        : intTypedResourceService);
+                _services.AddScoped(openRepositoryInterface,
+                    openRepositoryInterface.GetGenericArguments().Length == 2
+                        ? openIdResourceRepository
+                        : intIdResourceRepository);
             }
             
             _services.AddScoped<IRepositoryAccessor, RepositoryAccessor>();
@@ -201,14 +201,15 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddServiceLayer()
         {
-            var intTypedResourceService = typeof(JsonApiResourceService<>);
-            var openTypedResourceService = typeof(JsonApiResourceService<,>);
-            foreach (var partialServiceInterface in ServiceDiscoveryFacade.ServiceInterfaces)
+            var openIdResourceService = typeof(JsonApiResourceService<,>);
+            var intIdResourceService = typeof(JsonApiResourceService<>);
+            
+            foreach (var openServiceInterface in ServiceDiscoveryFacade.ServiceInterfaces)
             {
-                _services.AddScoped(partialServiceInterface,
-                    partialServiceInterface.GetGenericArguments().Length == 2
-                        ? openTypedResourceService
-                        : intTypedResourceService);
+                _services.AddScoped(openServiceInterface,
+                    openServiceInterface.GetGenericArguments().Length == 2
+                        ? openIdResourceService
+                        : intIdResourceService);
             }
         }
 

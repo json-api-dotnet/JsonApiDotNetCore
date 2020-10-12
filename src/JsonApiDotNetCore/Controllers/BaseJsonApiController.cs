@@ -25,11 +25,11 @@ namespace JsonApiDotNetCore.Controllers
         private readonly IGetSecondaryService<TResource, TId> _getSecondary;
         private readonly IGetRelationshipService<TResource, TId> _getRelationship;
         private readonly ICreateService<TResource, TId> _create;
-        private readonly IAddRelationshipService<TResource, TId> _addRelationship;
+        private readonly IAddToRelationshipService<TResource, TId> _addToRelationship;
         private readonly IUpdateService<TResource, TId> _update;
         private readonly ISetRelationshipService<TResource, TId> _setRelationship;
         private readonly IDeleteService<TResource, TId> _delete;
-        private readonly IDeleteRelationshipService<TResource, TId> _deleteRelationship;
+        private readonly IRemoveFromRelationshipService<TResource, TId> _removeFromRelationship;
         private readonly TraceLogWriter<BaseJsonApiController<TResource, TId>> _traceWriter;
 
         /// <summary>
@@ -65,11 +65,11 @@ namespace JsonApiDotNetCore.Controllers
             IGetSecondaryService<TResource, TId> getSecondary = null,
             IGetRelationshipService<TResource, TId> getRelationship = null,
             ICreateService<TResource, TId> create = null,
-            IAddRelationshipService<TResource, TId> addRelationship = null,
+            IAddToRelationshipService<TResource, TId> addToRelationship = null,
             IUpdateService<TResource, TId> update = null,
             ISetRelationshipService<TResource, TId> setRelationship = null,
             IDeleteService<TResource, TId> delete = null,
-            IDeleteRelationshipService<TResource, TId> deleteRelationship = null)
+            IRemoveFromRelationshipService<TResource, TId> removeFromRelationship = null)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 
@@ -80,11 +80,11 @@ namespace JsonApiDotNetCore.Controllers
             _getSecondary = getSecondary;
             _getRelationship = getRelationship;
             _create = create;
-            _addRelationship = addRelationship;
+            _addToRelationship = addToRelationship;
             _update = update;
             _setRelationship = setRelationship;
             _delete = delete;
-            _deleteRelationship = deleteRelationship;
+            _removeFromRelationship = removeFromRelationship;
         }
 
         /// <summary>
@@ -177,13 +177,13 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Adds resources to a to-many relationship.
         /// </summary>
-        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> newValues)
+        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> secondaryResources)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, newValues});
+            _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResources});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
-            if (_addRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Post);
-            await _addRelationship.AddRelationshipAsync(id, relationshipName, newValues);
+            if (_addToRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Post);
+            await _addToRelationship.AddRelationshipAsync(id, relationshipName, secondaryResources);
 
             return Ok();
         }
@@ -211,15 +211,15 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Updates a relationship.
+        /// Performs a complete replacement of a relationship.
         /// </summary>
-        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object newValues)
+        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResources)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, newValues});
+            _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResources});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_setRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
-            await _setRelationship.SetRelationshipAsync(id, relationshipName, newValues);
+            await _setRelationship.SetRelationshipAsync(id, relationshipName, secondaryResources);
 
             return Ok();
         }
@@ -240,13 +240,13 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Removes resources from a to-many relationship.
         /// </summary>
-        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> removalValues)
+        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> secondaryResources)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, removalValues});
+            _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResources});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
-            if (_deleteRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
-            await _deleteRelationship.DeleteRelationshipAsync(id, relationshipName, removalValues);
+            if (_removeFromRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
+            await _removeFromRelationship.RemoveFromRelationshipAsync(id, relationshipName, secondaryResources);
 
             return Ok();
         }
@@ -281,13 +281,13 @@ namespace JsonApiDotNetCore.Controllers
             IGetSecondaryService<TResource, int> getSecondary = null,
             IGetRelationshipService<TResource, int> getRelationship = null,
             ICreateService<TResource, int> create = null,
-            IAddRelationshipService<TResource, int> addRelationship = null,
+            IAddToRelationshipService<TResource, int> addToRelationship = null,
             IUpdateService<TResource, int> update = null,
             ISetRelationshipService<TResource, int> setRelationship = null,
             IDeleteService<TResource, int> delete = null,
-            IDeleteRelationshipService<TResource, int> deleteRelationship = null)
-            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addRelationship, update,
-                setRelationship, delete, deleteRelationship)
+            IRemoveFromRelationshipService<TResource, int> removeFromRelationship = null)
+            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship, update,
+                setRelationship, delete, removeFromRelationship)
         { }
     }
 }

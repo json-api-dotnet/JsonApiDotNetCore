@@ -45,8 +45,8 @@ namespace JsonApiDotNetCore.Repositories
         {
             var resourceContext = _provider.GetResourceContext(resourceType);
             var (getByIdMethod, repository) = GetParameterizedMethodAndRepository(resourceType, resourceContext);
-
-            var resources = await getByIdMethod.InvokeAsync(this, ids, repository, resourceContext);
+            
+            var resources = await InvokeAsync(getByIdMethod, this, new [] { ids, repository, resourceContext });
 
             return (IEnumerable<IIdentifiable>) resources;
         }
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Repositories
             if (!_parameterizedMethodRepositoryCache.TryGetValue(resourceType, out var accessorPair))
             {
                 var parameterizedMethod = _openGetByIdMethod.MakeGenericMethod(resourceType, resourceContext.IdentityType);
-
+                
                 var repositoryType = _openResourceReadRepositoryType.MakeGenericType(resourceType, resourceContext.IdentityType);
                 var repository = _serviceProvider.GetRequiredService(repositoryType);
 
@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         private async Task<IEnumerable<IIdentifiable>> GetById<TResource, TId>(
-            IReadOnlyCollection<string> ids,
+            IEnumerable<string> ids,
             IResourceReadRepository<TResource, TId> repository,
             ResourceContext resourceContext) 
             where TResource : class, IIdentifiable<TId>
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCore.Repositories
             };
 
             // Only apply projection when there is no resource inheritance. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/844.
-            // We can leave it out because the projection here is an optimization, not a functional requirement.
+            // We can leave it out because the projection here is just an optimization
             if (!resourceContext.ResourceType.IsAbstract)
             {
                 var projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
@@ -93,6 +93,14 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             return await repository.GetAsync(queryLayer);
+        }
+        
+        private async Task<object> InvokeAsync(MethodInfo methodInfo, object target, object[] parameters)
+        {
+            dynamic task = methodInfo.Invoke(target, parameters);
+            await task;
+    
+            return task.GetAwaiter().GetResult();
         }
     }
 }

@@ -9,40 +9,18 @@ namespace JsonApiDotNetCore.Repositories
 {
     public static class DbContextExtensions
     {
-        /// <summary>
-        /// Determines whether or not EF is already tracking an entity of the same Type and Id
-        /// and returns that entity.
-        /// </summary>
-        internal static TEntity GetTrackedEntity<TEntity>(this DbContext context, TEntity entity)
-            where TEntity : class, IIdentifiable
+        internal static object GetTrackedIdentifiable(this DbContext context, IIdentifiable identifiable)
         {
-            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (identifiable == null) throw new ArgumentNullException(nameof(identifiable));
 
-            var entityType = entity.GetType();
+            var entityType = identifiable.GetType();
             var entityEntry = context.ChangeTracker
                 .Entries()
                 .FirstOrDefault(entry =>
                     entry.Entity.GetType() == entityType &&
-                    ((IIdentifiable) entry.Entity).StringId == entity.StringId);
+                    ((IIdentifiable) entry.Entity).StringId == identifiable.StringId);
 
-            return (TEntity) entityEntry?.Entity;
-        }
-
-        internal static object GetTrackedOrAttachCurrent(this DbContext context, IIdentifiable entity)
-        {
-           var trackedEntity = context.GetTrackedEntity(entity);
-            if (trackedEntity == null)
-            {
-                context.Entry(entity).State = EntityState.Unchanged;
-                trackedEntity = entity;
-            }
-
-            return trackedEntity;
-        }
-        
-        internal static TResource GetTrackedOrAttachCurrent<TResource>(this DbContext context, TResource entity) where TResource : IIdentifiable
-        {
-            return (TResource)GetTrackedOrAttachCurrent(context, (IIdentifiable)entity);
+            return entityEntry?.Entity;
         }
 
         /// <summary>

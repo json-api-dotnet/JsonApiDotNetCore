@@ -25,36 +25,32 @@ namespace JsonApiDotNetCore.Repositories
         Task CreateAsync(TResource resource);
 
         /// <summary>
-        /// Adds a value to a relationship collection in the underlying data store.
+        /// Adds resources to a to-many relationship in the underlying data store.
         /// </summary>
-        Task AddRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> newValues);
+        Task AddToRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResources);
 
         /// <summary>
-        /// Updates an existing resource in the underlying data store.
+        /// Updates the attributes and relationships of an existing resource in the underlying data store.
         /// </summary>
-        /// <param name="requestResource">The (partial) resource coming from the request body.</param>
-        /// <param name="databaseResource">The resource as stored in the database before the update.</param>
-        Task UpdateAsync(TResource requestResource, TResource databaseResource);
+        Task UpdateAsync(TResource resourceFromRequest, TResource localResource);
         
         /// <summary>
-        /// Performs a complete replacement of a relationship in the underlying data store.
+        /// Performs a complete replacement of the value(s) of a relationship in the underlying data store.
         /// </summary>
-        Task SetRelationshipAsync(TId id, object newValues);
+        Task SetRelationshipAsync(TId id, object secondaryResources);
     
         /// <summary>
         /// Deletes a resource from the underlying data store.
         /// </summary>
-        /// <param name="id">Identifier for the resource to delete.</param>
-        /// <returns><c>true</c> if the resource was deleted; <c>false</c> is the resource did not exist.</returns>
         Task DeleteAsync(TId id);
         
         /// <summary>
-        /// Removes a value from a relationship collection in the underlying data store.
+        /// Removes resources from a to-many relationship in the underlying data store.
         /// </summary>
-        Task DeleteRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> removalValues);
+        Task RemoveFromRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResources);
         
         /// <summary>
-        /// Ensures that the next time this resource is requested, it is re-fetched from the underlying data store.
+        /// Ensures that the next time a given resource is requested, it is re-fetched from the underlying data store.
         /// </summary>
         void FlushFromCache(TResource resource);
     }

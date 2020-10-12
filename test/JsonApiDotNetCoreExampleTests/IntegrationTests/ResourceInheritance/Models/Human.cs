@@ -9,10 +9,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
     {
         [Attr]
         public bool Retired { get; set; }
-        
-        [HasOne]
-        public HealthInsurance HealthInsurance { get; set; }
-        
+
+        [HasOne] public HealthInsurance HealthInsurance { get; set; }
+
         [HasMany]
         public ICollection<Human> Parents { get; set; }
         

@@ -4,11 +4,11 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.Errors
 {
     /// <summary>
-    /// The error that is thrown when a request is received that contains an unsupported HTTP verb.
+    /// The error that is thrown when an attempt is made to update a to-one relationship on a to-many relationship endpoint.
     /// </summary>
-    public sealed class RelationshipUpdateForbiddenException : JsonApiException
+    public sealed class ToOneRelationshipUpdateForbiddenException : JsonApiException
     {
-        public RelationshipUpdateForbiddenException(string toOneRelationship)
+        public ToOneRelationshipUpdateForbiddenException(string toOneRelationship)
             : base(new Error(HttpStatusCode.Forbidden)
             {
                 Title = "The request to update the relationship is forbidden.",

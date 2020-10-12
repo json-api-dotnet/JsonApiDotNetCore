@@ -289,28 +289,9 @@ namespace JsonApiDotNetCore
         {
             var tempResource = (IIdentifiable)resourceFactory.CreateInstance(resourceType);
             tempResource.StringId = stringId;
-            return GetResourceTypedId(tempResource);
-        }
-        
-        /// <summary>
-        /// Gets the string value of the id of an identifiable through the typed value. This can be useful when dealing with
-        /// obfuscated IDs.
-        /// </summary>
-        public static string GetResourceStringId(IIdentifiable identifiable)
-        {
-            return GetResourceTypedId(identifiable).ToString();
+            return tempResource.GetTypedId();
         }
 
-        /// <summary>
-        /// Gets the typed value of the id of an identifiable.
-        /// </summary>
-        public static object GetResourceTypedId(IIdentifiable resource)
-        {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-            PropertyInfo property = resource.GetType().GetProperty(nameof(Identifiable.Id));
-            
-            return property.GetValue(resource);
-        }
         
         /// <summary>
         /// Sets the typed value of the id of an identifiable.

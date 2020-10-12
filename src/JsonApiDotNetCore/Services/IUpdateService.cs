@@ -15,6 +15,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Handles a json:api request to update an existing resource.
         /// </summary>
-        Task<TResource> UpdateAsync(TId id, TResource resource);
+        Task<TResource> UpdateAsync(TId id, TResource resourceFromRequest);
     }
 }

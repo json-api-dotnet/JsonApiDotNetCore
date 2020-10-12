@@ -40,13 +40,13 @@ namespace UnitTests
                 IGetSecondaryService<Resource, int> getSecondary = null,
                 IGetRelationshipService<Resource, int> getRelationship = null,
                 ICreateService<Resource, int> create = null,
-                IAddRelationshipService<Resource, int> addRelationship = null,
+                IAddToRelationshipService<Resource, int> addToRelationship = null,
                 IUpdateService<Resource, int> update = null,
                 ISetRelationshipService<Resource, int> setRelationship = null,
                 IDeleteService<Resource, int> delete = null,
-                IDeleteRelationshipService<Resource, int> deleteRelationship = null)
-                : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addRelationship,
-                    update, setRelationship, delete, deleteRelationship)
+                IRemoveFromRelationshipService<Resource, int> removeFromRelationship = null)
+                : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship,
+                    update, setRelationship, delete, removeFromRelationship)
             {
             }
         }

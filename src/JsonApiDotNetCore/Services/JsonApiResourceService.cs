@@ -231,10 +231,10 @@ namespace JsonApiDotNetCore.Services
             {
                 await _repository.CreateAsync(resource);
             }
-            catch (QueryExecutionException)
+            catch (RepositorySaveException)
             {
-                var nonNullAssignments = GetNonNullAssignments(resource);
-                await AssertValuesOfRelationshipAssignmentExistAsync(nonNullAssignments);
+                var relationshipsWithValues = GetPopulatedRelationships(resource);
+                await AssertValuesOfRelationshipAssignmentExistAsync(relationshipsWithValues);
                 
                 throw;
             }
@@ -252,26 +252,26 @@ namespace JsonApiDotNetCore.Services
 
         /// <inheritdoc />
         // triggered by POST /articles/{id}/relationships/{relationshipName}
-        public async Task AddRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> newValues)
+        public async Task AddRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResources)
         {
-            _traceWriter.LogMethodStart(new { id, newValues });
+            _traceWriter.LogMethodStart(new { id, secondaryResources });
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
             AssertRelationshipIsToMany();
     
-            if (newValues.Any())
+            if (secondaryResources.Any())
             {
                 try
                 {
-                    await _repository.AddRelationshipAsync(id, newValues);
+                    await _repository.AddToRelationshipAsync(id, secondaryResources);
                 }
-                catch (QueryExecutionException)
+                catch (RepositorySaveException)
                 {
                     var primaryResource = await GetProjectedPrimaryResourceById(id);
                     AssertPrimaryResourceExists(primaryResource);
                     
-                    var assignment = new RelationshipAssignment(_request.Relationship, newValues);
+                    var assignment = new Dictionary<RelationshipAttribute, object> { { _request.Relationship, secondaryResources } };
                     await AssertValuesOfRelationshipAssignmentExistAsync(assignment);
                     
                     throw;
@@ -281,53 +281,52 @@ namespace JsonApiDotNetCore.Services
 
         /// <inheritdoc />
         // triggered by PATCH /articles/{id}
-        public virtual async Task<TResource> UpdateAsync(TId id, TResource requestResource)
+        public virtual async Task<TResource> UpdateAsync(TId id, TResource resourceFromRequest)
         {
-            _traceWriter.LogMethodStart(new {id, requestResource});
-            if (requestResource == null) throw new ArgumentNullException(nameof(requestResource));
+            _traceWriter.LogMethodStart(new {id, resourceFromRequest});
+            if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
             
-            TResource databaseResource = await GetPrimaryResourceById(id, false);
+            TResource localResource = await GetPrimaryResourceById(id, false);
             
-            _resourceChangeTracker.SetInitiallyStoredAttributeValues(databaseResource);
-            _resourceChangeTracker.SetRequestedAttributeValues(requestResource);
+            _resourceChangeTracker.SetInitiallyStoredAttributeValues(localResource);
+            _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
 
             if (_hookExecutor != null)
             {
-                requestResource = _hookExecutor.BeforeUpdate(AsList(requestResource), ResourcePipeline.Patch).Single();
+                resourceFromRequest = _hookExecutor.BeforeUpdate(AsList(resourceFromRequest), ResourcePipeline.Patch).Single();
             }
             
             try
             {
-                await _repository.UpdateAsync(requestResource, databaseResource);
+                await _repository.UpdateAsync(resourceFromRequest, localResource);
             }
-            catch (QueryExecutionException)
+            catch (RepositorySaveException)
             {
-                var assignments = GetNonNullAssignments(requestResource);
+                var assignments = GetPopulatedRelationships(resourceFromRequest);
                 await AssertValuesOfRelationshipAssignmentExistAsync(assignments);
-
-                
+    
                 throw;
             }
             
             if (_hookExecutor != null)
             {
-                _hookExecutor.AfterUpdate(AsList(databaseResource), ResourcePipeline.Patch);
-                _hookExecutor.OnReturn(AsList(databaseResource), ResourcePipeline.Patch);
+                _hookExecutor.AfterUpdate(AsList(localResource), ResourcePipeline.Patch);
+                _hookExecutor.OnReturn(AsList(localResource), ResourcePipeline.Patch);
             }
 
-            _repository.FlushFromCache(databaseResource);
-            TResource afterResource = await GetPrimaryResourceById(id, false);
-            _resourceChangeTracker.SetFinallyStoredAttributeValues(afterResource);
+            _repository.FlushFromCache(localResource);
+            TResource afterResourceFromDatabase = await GetPrimaryResourceById(id, false);
+            _resourceChangeTracker.SetFinallyStoredAttributeValues(afterResourceFromDatabase);
 
             bool hasImplicitChanges = _resourceChangeTracker.HasImplicitChanges();
-            return hasImplicitChanges ? afterResource : null;
+            return hasImplicitChanges ? afterResourceFromDatabase : null;
         }
 
         /// <inheritdoc />
         // triggered by PATCH /articles/{id}/relationships/{relationshipName}
-        public virtual async Task SetRelationshipAsync(TId id, string relationshipName, object newValues)
+        public virtual async Task SetRelationshipAsync(TId id, string relationshipName, object secondaryResources)
         {
-             _traceWriter.LogMethodStart(new {id, relationshipName, newValues});
+             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResources});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
@@ -343,9 +342,9 @@ namespace JsonApiDotNetCore.Services
             
             try
             {
-                await _repository.SetRelationshipAsync(id, newValues);
+                await _repository.SetRelationshipAsync(id, secondaryResources);
             }
-            catch (QueryExecutionException)
+            catch (RepositorySaveException)
             {
                 if (primaryResource == null)
                 {
@@ -353,9 +352,9 @@ namespace JsonApiDotNetCore.Services
                     AssertPrimaryResourceExists(primaryResource);
                 }
                 
-                if (newValues != null)
+                if (secondaryResources != null)
                 {
-                    var assignment = new RelationshipAssignment(_request.Relationship, newValues);
+                    var assignment = new Dictionary<RelationshipAttribute, object> { { _request.Relationship, secondaryResources } };
                     await AssertValuesOfRelationshipAssignmentExistAsync(assignment);
                 }
                 
@@ -387,7 +386,7 @@ namespace JsonApiDotNetCore.Services
             {
                 await _repository.DeleteAsync(id);
             }
-            catch (QueryExecutionException)
+            catch (RepositorySaveException)
             {
                 succeeded = false;
                 resource = await GetProjectedPrimaryResourceById(id);
@@ -403,9 +402,9 @@ namespace JsonApiDotNetCore.Services
 
         /// <inheritdoc />
         // triggered by DELETE /articles/{id}/relationships/{relationshipName}
-        public async Task DeleteRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> removalValues)
+        public async Task RemoveFromRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResources)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, removalValues});
+            _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResources});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
@@ -413,27 +412,14 @@ namespace JsonApiDotNetCore.Services
             
             try
             {
-                await _repository.DeleteRelationshipAsync(id, removalValues);
+                await _repository.RemoveFromRelationshipAsync(id, secondaryResources);
             }
-            catch (QueryExecutionException)
+            catch (RepositorySaveException)
             {
                 var resource = await GetProjectedPrimaryResourceById(id);
                 AssertPrimaryResourceExists(resource);
                 
                 throw;
-            }
-        }
-
-        private readonly struct RelationshipAssignment
-        {
-            public RelationshipAttribute Relationship { get; }
-            
-            public object Value { get; }
-            
-            public RelationshipAssignment(RelationshipAttribute relationship, object value)
-            {
-                Relationship = relationship;
-                Value = value;
             }
         }
 
@@ -462,30 +448,38 @@ namespace JsonApiDotNetCore.Services
                 // https://github.com/dotnet/efcore/issues/20502
                 queryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> { { idAttribute, null } };
             }
-            
-            
+
             var primaryResource = (await _repository.GetAsync(queryLayer)).SingleOrDefault();
             
             return primaryResource;
         }
-        
-        private RelationshipAssignment[] GetNonNullAssignments(TResource requestResource)
+
+        private Dictionary<RelationshipAttribute, object> GetPopulatedRelationships(TResource requestResource)
         {
             var assignments = _targetedFields.Relationships
-                .Select(relationship => new RelationshipAssignment (relationship ,relationship.GetValue(requestResource)))
-                .Where(p =>
-                {
-                    return p.Value switch
-                    {
-                        IIdentifiable hasOneAssignment => true,
-                        IReadOnlyCollection<IIdentifiable> hasManyAssignment => hasManyAssignment.Any(),
-                        _ => false
-                    };
-                }).ToArray();
+                .Select(relationship => (Relationship: relationship, Value: relationship.GetValue(requestResource)))
+                .Where(RelationshipIsPopulated)
+                .ToDictionary(r => r.Relationship, r => r.Value);
 
             return assignments;
         }
 
+        private bool RelationshipIsPopulated((RelationshipAttribute Relationship, object Value) p)
+        {
+            if (p.Value is IIdentifiable hasOneValue)
+            {
+                return true;
+            }
+            else if (p.Value is IReadOnlyCollection<IIdentifiable> hasManyValues)
+            {
+                return hasManyValues.Any();
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
         private void AssertPrimaryResourceExists(TResource resource)
         {
             if (resource == null)
@@ -506,47 +500,45 @@ namespace JsonApiDotNetCore.Services
         private void AssertRelationshipIsToMany()
         {
             var relationship = _request.Relationship;
-            if (!(relationship is HasManyAttribute))
+            if (relationship is HasOneAttribute);
             {
-                throw new RelationshipUpdateForbiddenException(relationship.PublicName);
+                throw new ToOneRelationshipUpdateForbiddenException(relationship.PublicName);
             }
         }
 
-        private async Task AssertValuesOfRelationshipAssignmentExistAsync(params RelationshipAssignment[] nonNullRelationshipAssignments)
+        private async Task AssertValuesOfRelationshipAssignmentExistAsync(Dictionary<RelationshipAttribute, object> nonNullRelationshipAssignments)
         {
-            var nonExistingResources = new Dictionary<string, IList<string>>();
+            var missingResources = new Dictionary<string, ICollection<string>>();
+            
             foreach (var assignment in nonNullRelationshipAssignments)
             {
                 IReadOnlyCollection<string> identifiers;
                 if (assignment.Value is IIdentifiable identifiable)
                 {
-                    identifiers = new [] { TypeHelper.GetResourceStringId(identifiable) };
+                    identifiers = new [] { identifiable.GetTypedId().ToString() };
                 }
                 else
                 {
-                    identifiers = ((IReadOnlyCollection<IIdentifiable>) assignment.Value).Select(TypeHelper.GetResourceStringId).ToArray();
+                    identifiers = ((IEnumerable<IIdentifiable>)assignment.Value)
+                        .Select(i => i.GetTypedId().ToString())
+                        .ToArray();
                 }  
                 
-                var resources = await _repositoryAccessor.GetResourcesByIdAsync(assignment.Relationship.RightType, identifiers);
-                var missing = identifiers.Where(id => resources.All(r => TypeHelper.GetResourceStringId(r) != id)).ToArray();
+                var resources = await _repositoryAccessor.GetResourcesByIdAsync(assignment.Key.RightType, identifiers);
+                var missing = identifiers.Where(id => resources.All(r => r.GetTypedId().ToString() != id)).ToArray();
                 
                 if (missing.Any())
                 {
-                    nonExistingResources.Add(_provider.GetResourceContext(assignment.Relationship.RightType).PublicName, missing.ToArray());
+                    missingResources.Add(_provider.GetResourceContext(assignment.Key.RightType).PublicName, missing.ToArray());
                 }
             }
 
-            if (nonExistingResources.Any())
+            if (missingResources.Any())
             {
-                throw new ResourceNotFoundException(nonExistingResources);
+                throw new ResourceNotFoundException(missingResources);
             }
         }
 
-        private IncludeExpression IncludeRelationshipExpression(RelationshipAttribute relationship)
-        {
-            return new IncludeExpression(new[] { new IncludeElementExpression(relationship) });
-        }
-        
         private List<TResource> AsList(TResource resource)
         {
             return new List<TResource> { resource };

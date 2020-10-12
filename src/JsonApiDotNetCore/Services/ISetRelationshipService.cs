@@ -12,8 +12,11 @@ namespace JsonApiDotNetCore.Services
     public interface ISetRelationshipService<TResource, in TId> where TResource : class, IIdentifiable<TId>
     {
         /// <summary>
-        /// Handles a json:api request to update an existing relationship.
+        /// Handles a json:api request to perform a complete replacement of the value of a relationship.
         /// </summary>
-        Task SetRelationshipAsync(TId id, string relationshipName, object newValues);
+        /// <param name="id">The identifier of the primary resource.</param>
+        /// <param name="relationshipName">The relationship for which to perform a complete replacement.</param>
+        /// <param name="secondaryResources">The resources to perform the complete replacement with.</param>
+        Task SetRelationshipAsync(TId id, string relationshipName, object secondaryResources);
     }
 }

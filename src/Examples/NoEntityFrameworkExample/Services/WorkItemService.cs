@@ -62,22 +62,22 @@ namespace NoEntityFrameworkExample.Services
                 await connection.QueryAsync<WorkItem>(@"delete from ""WorkItems"" where ""Id""=@id", new { id }));
         }
 
-        public Task<WorkItem> UpdateAsync(int id, WorkItem requestResource)
+        public Task<WorkItem> UpdateAsync(int id, WorkItem resourceFromRequest)
         {
             throw new NotImplementedException();
         }
 
-        public Task SetRelationshipAsync(int id, string relationshipName, object newValue)
+        public Task SetRelationshipAsync(int id, string relationshipName, object secondaryResources)
         {
             throw new NotImplementedException();
         }
         
-        public Task AddRelationshipAsync(int id, string relationshipName, IReadOnlyCollection<IIdentifiable> newValues)
+        public Task AddRelationshipAsync(int id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResources)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteRelationshipAsync(int id, string relationshipName, IReadOnlyCollection<IIdentifiable> removalValues)
+        public Task RemoveFromRelationshipAsync(int id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResources)
         {
             throw new NotImplementedException();
         }

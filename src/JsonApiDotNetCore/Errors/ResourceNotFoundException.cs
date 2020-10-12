@@ -17,15 +17,15 @@ namespace JsonApiDotNetCore.Errors
                 Detail = $"Resource of type '{resourceType}' with ID '{resourceId}' does not exist."
             }) { }
 
-        public ResourceNotFoundException(Dictionary<string, IList<string>> nonExistingResources) : base(
+        public ResourceNotFoundException(Dictionary<string, ICollection<string>> nonExistingResources) : base(
             new Error(HttpStatusCode.NotFound)
             {
                 Title = "The requested resources do not exist.",
                 Detail = CreateErrorMessageForMultipleMissing(nonExistingResources)
             })
         {
-            var pairs = nonExistingResources.ToList();
-            if (pairs.Count == 1 && pairs[0].Value.Count == 1)
+            var pairs = nonExistingResources.ToArray();
+            if (pairs.Count() == 1 && pairs[0].Value.Count == 1)
             {
                 var (resourceType, value) = pairs[0];
                 var resourceId = value.First();
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Errors
             }
         }
 
-        private static string CreateErrorMessageForMultipleMissing(Dictionary<string, IList<string>> missingResources)
+        private static string CreateErrorMessageForMultipleMissing(Dictionary<string, ICollection<string>> missingResources)
         {
             var errorDetailLines = missingResources.Select(p => $"{p.Key}: {string.Join(',', p.Value)}")
                 .ToArray();

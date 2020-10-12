@@ -69,8 +69,8 @@ namespace JsonApiDotNetCoreExample.Controllers
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> PatchRelationshipAsync(
-            int id, string relationshipName, [FromBody] object newValues)
-            => await base.PatchRelationshipAsync(id, relationshipName, newValues);
+            int id, string relationshipName, [FromBody] object secondaryResources)
+            => await base.PatchRelationshipAsync(id, relationshipName, secondaryResources);
 
         [HttpDelete("{id}")]
         public override async Task<IActionResult> DeleteAsync(int id)
