@@ -101,7 +101,6 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        // triggered by GET /articles/{id}
         public virtual async Task<TResource> GetAsync(TId id)
         {
             _traceWriter.LogMethodStart(new {id});
@@ -145,7 +144,6 @@ namespace JsonApiDotNetCore.Services
         }
         
         /// <inheritdoc />
-        // triggered by GET /articles/{id}/{relationshipName}
         public virtual async Task<object> GetSecondaryAsync(TId id, string relationshipName)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
@@ -187,7 +185,6 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        // triggered by GET /articles/{id}/relationships/{relationshipName}
         public virtual async Task<TResource> GetRelationshipAsync(TId id, string relationshipName)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
@@ -216,7 +213,6 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        // triggered by POST /articles
         public virtual async Task<TResource> CreateAsync(TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});
@@ -251,7 +247,6 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        // triggered by POST /articles/{id}/relationships/{relationshipName}
         public async Task AddToToManyRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new { id, secondaryResourceIds });
@@ -280,7 +275,6 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        // triggered by PATCH /articles/{id}
         public virtual async Task<TResource> UpdateAsync(TId id, TResource resourceFromRequest)
         {
             _traceWriter.LogMethodStart(new {id, resourceFromRequest});
@@ -323,7 +317,6 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        // triggered by PATCH /articles/{id}/relationships/{relationshipName}
         public virtual async Task SetRelationshipAsync(TId id, string relationshipName, object secondaryResourceIds)
         {
              _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
@@ -368,7 +361,6 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        // triggered by DELETE /articles/{id
         public virtual async Task DeleteAsync(TId id)
         {
             _traceWriter.LogMethodStart(new {id});
@@ -401,7 +393,6 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        // triggered by DELETE /articles/{id}/relationships/{relationshipName}
         public async Task RemoveFromToManyRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
