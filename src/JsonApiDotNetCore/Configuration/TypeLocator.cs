@@ -38,41 +38,52 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Gets all implementations of the generic interface.
+        /// Gets all implementations of a generic interface.
         /// </summary>
-        /// <param name="assembly">The assembly to search.</param>
-        /// <param name="openGenericInterface">The open generic type, e.g. `typeof(IResourceService&lt;&gt;)`.</param>
-        /// <param name="genericInterfaceArguments">Parameters to the generic type.</param>
+        /// <param name="assembly">The assembly to search in.</param>
+        /// <param name="openGenericInterface">The open generic interface.</param>
+        /// <param name="interfaceGenericTypeArguments">Generic type parameters to construct the generic interface.</param>
         /// <example>
         /// <code><![CDATA[
-        /// GetGenericInterfaceImplementation(assembly, typeof(IResourceService<>), typeof(Article), typeof(Guid));
+        /// GetGenericInterfaceImplementation(assembly, typeof(IResourceService<,>), typeof(Article), typeof(Guid));
         /// ]]></code>
         /// </example>
-        public static (Type implementation, Type registrationInterface) GetGenericInterfaceImplementation(Assembly assembly, Type openGenericInterface, params Type[] genericInterfaceArguments)
+        public static (Type implementation, Type registrationInterface)? GetGenericInterfaceImplementation(Assembly assembly, Type openGenericInterface, params Type[] interfaceGenericTypeArguments)
         {
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
             if (openGenericInterface == null) throw new ArgumentNullException(nameof(openGenericInterface));
-            if (genericInterfaceArguments == null) throw new ArgumentNullException(nameof(genericInterfaceArguments));
-            if (genericInterfaceArguments.Length == 0) throw new ArgumentException("No arguments supplied for the generic interface.", nameof(genericInterfaceArguments));
-            if (!openGenericInterface.IsGenericType) throw new ArgumentException("Requested type is not a generic type.", nameof(openGenericInterface));
+            if (interfaceGenericTypeArguments == null) throw new ArgumentNullException(nameof(interfaceGenericTypeArguments));
 
-            foreach (var type in assembly.GetTypes())
+            if (!openGenericInterface.IsInterface || !openGenericInterface.IsGenericType ||
+                openGenericInterface != openGenericInterface.GetGenericTypeDefinition())
             {
-                var interfaces = type.GetInterfaces();
-                foreach (var @interface in interfaces)
+                throw new ArgumentException($"Specified type '{openGenericInterface.FullName}' is not an open generic interface.", nameof(openGenericInterface));
+            }
+
+            if (interfaceGenericTypeArguments.Length != openGenericInterface.GetGenericArguments().Length)
+            {
+                throw new ArgumentException(
+                    $"Interface '{openGenericInterface.FullName}' requires {openGenericInterface.GetGenericArguments().Length} type parameters instead of {interfaceGenericTypeArguments.Length}.",
+                    nameof(interfaceGenericTypeArguments));
+            }
+
+            foreach (var nextType in assembly.GetTypes())
+            {
+                foreach (var nextGenericInterface in nextType.GetInterfaces().Where(x => x.IsGenericType))
                 {
-                    if (@interface.IsGenericType)
+                    var nextOpenGenericInterface = nextGenericInterface.GetGenericTypeDefinition();
+                    if (nextOpenGenericInterface == openGenericInterface)
                     {
-                        var genericTypeDefinition = @interface.GetGenericTypeDefinition();
-                        if (@interface.GetGenericArguments().First() == genericInterfaceArguments.First() &&genericTypeDefinition == openGenericInterface.GetGenericTypeDefinition())
+                        var nextGenericArguments = nextGenericInterface.GetGenericArguments();
+                        if (nextGenericArguments.Length == interfaceGenericTypeArguments.Length && nextGenericArguments.SequenceEqual(interfaceGenericTypeArguments))
                         {
-                            return (type, genericTypeDefinition.MakeGenericType(genericInterfaceArguments));
+                            return (nextType, nextOpenGenericInterface.MakeGenericType(interfaceGenericTypeArguments));    
                         }
                     }
                 }
             }
 
-            return (null, null);
+            return null;
         }
 
         /// <summary>
