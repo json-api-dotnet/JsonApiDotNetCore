@@ -164,6 +164,8 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+
             AssertRelationshipExists(relationshipName);
 
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
@@ -185,8 +187,7 @@ namespace JsonApiDotNetCore.Services
                 primaryResource = _hookExecutor.OnReturn(AsList(primaryResource), ResourcePipeline.GetRelationship).Single();
             }
 
-            var relationshipAssignment = _request.Relationship.GetValue(primaryResource);
-            return relationshipAssignment;
+            return _request.Relationship.GetValue(primaryResource);
         }
 
         /// <inheritdoc />

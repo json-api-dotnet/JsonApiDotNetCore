@@ -355,8 +355,6 @@ namespace UnitTests.Serialization.Server
             // Arrange
             var resource = new OneToOnePrincipal { Id = 2, Dependent = null };
             var serializer = GetResponseSerializer<OneToOnePrincipal>();
-            var requestRelationship = _resourceGraph.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
-            serializer.RequestRelationship = requestRelationship;
 
             // Act
             string serialized = serializer.SerializeSingle(resource);
@@ -373,9 +371,6 @@ namespace UnitTests.Serialization.Server
             // Arrange
             var resource = new OneToOnePrincipal { Id = 2, Dependent = new OneToOneDependent { Id = 1 } };
             var serializer = GetResponseSerializer<OneToOnePrincipal>();
-            var requestRelationship = _resourceGraph.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
-            serializer.RequestRelationship = requestRelationship;
-
 
             // Act
             string serialized = serializer.SerializeSingle(resource);
@@ -399,9 +394,6 @@ namespace UnitTests.Serialization.Server
             // Arrange
             var resource = new OneToManyPrincipal { Id = 2, Dependents = new HashSet<OneToManyDependent>() };
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
-            var requestRelationship = _resourceGraph.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
-            serializer.RequestRelationship = requestRelationship;
-
 
             // Act
             string serialized = serializer.SerializeSingle(resource);
@@ -418,9 +410,6 @@ namespace UnitTests.Serialization.Server
             // Arrange
             var resource = new OneToManyPrincipal { Id = 2, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 1 } } };
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
-            var requestRelationship = _resourceGraph.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
-            serializer.RequestRelationship = requestRelationship;
-
 
             // Act
             string serialized = serializer.SerializeSingle(resource);

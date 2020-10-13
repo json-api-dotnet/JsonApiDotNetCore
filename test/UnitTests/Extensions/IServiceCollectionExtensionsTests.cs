@@ -164,7 +164,7 @@ namespace UnitTests.Extensions
             public Task<IReadOnlyCollection<IntResource>> GetAsync() => throw new NotImplementedException();
             public Task<IntResource> GetAsync(int id) => throw new NotImplementedException();
             public Task<object> GetSecondaryAsync(int id, string relationshipName) => throw new NotImplementedException();
-            public Task<IntResource> GetRelationshipAsync(int id, string relationshipName) => throw new NotImplementedException();
+            public Task<object> GetRelationshipAsync(int id, string relationshipName) => throw new NotImplementedException();
             public Task<IntResource> UpdateAsync(int id, IntResource resourceFromRequest) => throw new NotImplementedException();
             public Task SetRelationshipAsync(int id, string relationshipName, object secondaryResourceIds) => throw new NotImplementedException();
             public Task AddToToManyRelationshipAsync(int id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
@@ -178,7 +178,7 @@ namespace UnitTests.Extensions
             public Task<IReadOnlyCollection<GuidResource>> GetAsync() => throw new NotImplementedException();
             public Task<GuidResource> GetAsync(Guid id) => throw new NotImplementedException();
             public Task<object> GetSecondaryAsync(Guid id, string relationshipName) => throw new NotImplementedException();
-            public Task<GuidResource> GetRelationshipAsync(Guid id, string relationshipName) => throw new NotImplementedException();
+            public Task<object> GetRelationshipAsync(Guid id, string relationshipName) => throw new NotImplementedException();
             public Task<GuidResource> UpdateAsync(Guid id, GuidResource resourceFromRequest) => throw new NotImplementedException();
             public Task SetRelationshipAsync(Guid id, string relationshipName, object secondaryResourceIds) => throw new NotImplementedException();
             public Task AddToToManyRelationshipAsync(Guid id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();

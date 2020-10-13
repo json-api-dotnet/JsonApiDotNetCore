@@ -49,7 +49,7 @@ namespace Benchmarks.Serialization
 
             var accessor = new Mock<IResourceDefinitionAccessor>().Object;
 
-            return new FieldsToSerialize(resourceGraph, constraintProviders, accessor);
+            return new FieldsToSerialize(resourceGraph, constraintProviders, accessor, request);
         }
 
         [Benchmark]

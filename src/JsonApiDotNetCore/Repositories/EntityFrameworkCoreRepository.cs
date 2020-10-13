@@ -1,12 +1,10 @@
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -15,7 +13,6 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Repositories
