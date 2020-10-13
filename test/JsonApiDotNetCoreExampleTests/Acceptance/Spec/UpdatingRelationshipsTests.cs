@@ -223,7 +223,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Fails_When_Patching_Resource_Relationships_With_Missing_Resources()
+        public async Task Fails_When_Patching_Primary_Endpoint_With_Missing_Secondary_Resources()
         {
             // Arrange 
             var todoItem = _todoItemFaker.Generate();
@@ -966,7 +966,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Fails_When_Unknown_Relationship_On_Relationship_Endpoint()
+        public async Task Fails_When_Patching_Relationships_Endpoint_With_Unknown_Relationship()
         {
             // Arrange
             var person = _personFaker.Generate();
@@ -1006,7 +1006,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Fails_When_Missing_Resource_On_Relationship_Endpoint()
+        public async Task Fails_When_Patching_Relationships_Endpoint_With_Missing_Primary_Resource()
         {
             // Arrange
             var person = _personFaker.Generate();
@@ -1041,6 +1041,94 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal("Resource of type 'todoItems' with ID '99999999' does not exist.",
                 errorDocument.Errors[0].Detail);
         }
+        
+        [Fact]
+        public async Task Fails_When_Posting_To_Many_Relationship_On_Relationships_Endpoint_With_Missing_Secondary_Resources()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+
+            var person = _personFaker.Generate();
+            _context.People.Add(person);
+
+            await _context.SaveChangesAsync();
+
+            var missingPerson1 = _personFaker.Generate();
+            missingPerson1.Id = 9999998;
+            var missingPerson2 = _personFaker.Generate();
+            missingPerson2.Id = 9999999;
+            
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var serializer = _fixture.GetSerializer<Person>(p => new { });
+            var content = serializer.Serialize(new [] { person, missingPerson1, missingPerson2 });
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todoItems/{todoItem.StringId}/relationships/stakeHolders";
+            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(content)};
+
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            var body = await response.Content.ReadAsStringAsync();
+            AssertEqualStatusCode(HttpStatusCode.NotFound, response);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Equal(2, errorDocument.Errors.Count);
+
+            
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("A resource being assigned to a relationship does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("Resource of type 'people' with ID '9999998' being assigned to relationship 'stakeHolders' does not exist.",errorDocument.Errors[0].Detail);
+
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[1].StatusCode);
+            Assert.Equal("A resource being assigned to a relationship does not exist.", errorDocument.Errors[1].Title);
+            Assert.Equal("Resource of type 'people' with ID '9999999' being assigned to relationship 'stakeHolders' does not exist.",errorDocument.Errors[1].Detail);
+        }
+        
+        [Fact]
+        public async Task Fails_When_Patching_To_One_Relationship_On_Relationships_Endpoint_With_Missing_Secondary_Resource()
+{
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+            await _context.SaveChangesAsync();
+
+            var missingPerson = _personFaker.Generate();
+            missingPerson.Id = 9999999;
+
+            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var serializer = _fixture.GetSerializer<Person>(p => new { });
+            var content = serializer.Serialize(missingPerson);
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todoItems/{todoItem.StringId}/relationships/owner";
+            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(content)};
+
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            var body = await response.Content.ReadAsStringAsync();
+            AssertEqualStatusCode(HttpStatusCode.NotFound, response);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("A resource being assigned to a relationship does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("Resource of type 'people' with ID '9999999' being assigned to relationship 'owner' does not exist.",errorDocument.Errors[0].Detail);
+}
         
         private void AssertEqualStatusCode(HttpStatusCode expected, HttpResponseMessage response)
         {
