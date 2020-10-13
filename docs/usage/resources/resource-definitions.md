@@ -30,14 +30,16 @@ public class UserDefinition : JsonApiResourceDefinition<User>
     {
     }
 
-    public override SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+    public override SparseFieldSetExpression OnApplySparseFieldSet(
+        SparseFieldSetExpression existingSparseFieldSet)
     {
         if (IsAdministrator)
         {
             return existingSparseFieldSet;
         }
 
-        return existingSparseFieldSet.Excluding<User>(x => x.Password, ResourceGraph);
+        return existingSparseFieldSet.Excluding<User>(
+            user => user.Password, ResourceGraph);
     }
 }
 ```
@@ -82,6 +84,10 @@ You can define the default sort order if no `sort` query string parameter is pro
 ```c#
 public class AccountDefinition : JsonApiResourceDefinition<Account>
 {
+    public AccountDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    {
+    }
+
     public override SortExpression OnApplySort(SortExpression existingSort)
     {
         if (existingSort != null)
@@ -105,17 +111,25 @@ You may want to enforce pagination on large database tables.
 ```c#
 public class AccessLogDefinition : JsonApiResourceDefinition<AccessLog>
 {
-    public override PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
+    public AccessLogDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    {
+    }
+
+    public override PaginationExpression OnApplyPagination(
+        PaginationExpression existingPagination)
     {
         var maxPageSize = new PageSize(10);
 
         if (existingPagination != null)
         {
-            var pageSize = existingPagination.PageSize?.Value <= maxPageSize.Value ? existingPagination.PageSize : maxPageSize;
+            var pageSize = existingPagination.PageSize?.Value <= maxPageSize.Value
+                ? existingPagination.PageSize
+                : maxPageSize;
+
             return new PaginationExpression(existingPagination.PageNumber, pageSize);
         }
 
-        return new PaginationExpression(PageNumber.ValueOne, _maxPageSize);
+        return new PaginationExpression(PageNumber.ValueOne, maxPageSize);
     }
 }
 ```
@@ -127,17 +141,26 @@ Soft-deletion sets `IsSoftDeleted` to `true` instead of actually deleting the re
 ```c#
 public class AccountDefinition : JsonApiResourceDefinition<Account>
 {
+    public AccountDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    {
+    }
+
     public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
     {
         var resourceContext = ResourceGraph.GetResourceContext<Account>();
-        var isSoftDeletedAttribute = resourceContext.Attributes.Single(a => a.Property.Name == nameof(Account.IsSoftDeleted));
+
+        var isSoftDeletedAttribute =
+            resourceContext.Attributes.Single(a =>
+                a.Property.Name == nameof(Account.IsSoftDeleted));
 
         var isNotSoftDeleted = new ComparisonExpression(ComparisonOperator.Equals,
-            new ResourceFieldChainExpression(isSoftDeletedAttribute), new LiteralConstantExpression(bool.FalseString));
+            new ResourceFieldChainExpression(isSoftDeletedAttribute),
+            new LiteralConstantExpression(bool.FalseString));
 
         return existingFilter == null
             ? (FilterExpression) isNotSoftDeleted
-            : new LogicalExpression(LogicalOperator.And, new[] {isNotSoftDeleted, existingFilter});
+            : new LogicalExpression(LogicalOperator.And,
+                new[] {isNotSoftDeleted, existingFilter});
     }
 }
 ```
@@ -147,9 +170,15 @@ public class AccountDefinition : JsonApiResourceDefinition<Account>
 ```c#
 public class EmployeeDefinition : JsonApiResourceDefinition<Employee>
 {
-    public override IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+    public EmployeeDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
     {
-        if (existingIncludes.Any(include => include.Relationship.Property.Name == nameof(Employee.Manager)))
+    }
+
+    public override IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(
+        IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+    {
+        if (existingIncludes.Any(include =>
+            include.Relationship.Property.Name == nameof(Employee.Manager)))
         {
             throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
             {
@@ -175,7 +204,12 @@ But it only works on primary resource endpoints (for example: /articles, but not
 ```c#
 public class ItemDefinition : JsonApiResourceDefinition<Item>
 {
-    protected override QueryStringParameterHandlers OnRegisterQueryableHandlersForQueryStringParameters()
+    public ItemDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    {
+    }
+
+    public override QueryStringParameterHandlers<Item>
+        OnRegisterQueryableHandlersForQueryStringParameters()
     {
         return new QueryStringParameterHandlers<Item>
         {
@@ -186,10 +220,14 @@ public class ItemDefinition : JsonApiResourceDefinition<Item>
         };
     }
 
-    private static IQueryable<Item> FilterByHighRisk(IQueryable<Item> source, StringValues parameterValue)
+    private static IQueryable<Item> FilterByHighRisk(IQueryable<Item> source,
+        StringValues parameterValue)
     {
         bool isFilterOnHighRisk = bool.Parse(parameterValue);
-        return isFilterOnHighRisk ? source.Where(item => item.RiskLevel >= 5) : source.Where(item => item.RiskLevel < 5);
+
+        return isFilterOnHighRisk
+            ? source.Where(item => item.RiskLevel >= 5)
+            : source.Where(item => item.RiskLevel < 5);
     }
 }
 ```
