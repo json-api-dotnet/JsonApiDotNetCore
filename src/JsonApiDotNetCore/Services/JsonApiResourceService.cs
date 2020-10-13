@@ -23,6 +23,7 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<TId>
     {
         private readonly IResourceRepository<TResource, TId> _repository;
+        private readonly IResourceRepositoryAccessor _repositoryAccessor;
         private readonly IQueryLayerComposer _queryLayerComposer;
         private readonly IPaginationContext _paginationContext;
         private readonly IJsonApiOptions _options;
@@ -30,13 +31,13 @@ namespace JsonApiDotNetCore.Services
         private readonly IJsonApiRequest _request;
         private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
         private readonly IResourceFactory _resourceFactory;
-        private readonly IResourceRepositoryAccessor _repositoryAccessor;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IResourceHookExecutor _hookExecutor;
 
         public JsonApiResourceService(
             IResourceRepository<TResource, TId> repository,
+            IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext,
             IJsonApiOptions options,
@@ -44,7 +45,6 @@ namespace JsonApiDotNetCore.Services
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
-            IResourceRepositoryAccessor repositoryAccessor,
             ITargetedFields targetedFields,
             IResourceContextProvider resourceContextProvider,
             IResourceHookExecutor hookExecutor = null)
@@ -52,6 +52,7 @@ namespace JsonApiDotNetCore.Services
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _repositoryAccessor = repositoryAccessor ?? throw new ArgumentNullException(nameof(repositoryAccessor));
             _queryLayerComposer = queryLayerComposer ?? throw new ArgumentNullException(nameof(queryLayerComposer));
             _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
             _options = options ?? throw new ArgumentNullException(nameof(options));
@@ -59,7 +60,6 @@ namespace JsonApiDotNetCore.Services
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _resourceChangeTracker = resourceChangeTracker ?? throw new ArgumentNullException(nameof(resourceChangeTracker));
             _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
-            _repositoryAccessor = repositoryAccessor ?? throw new ArgumentNullException(nameof(repositoryAccessor));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _hookExecutor = hookExecutor;
@@ -107,7 +107,7 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetSingle, id.ToString());
 
-            var primaryResource = await GetPrimaryResourceById(id, Projection.TopSparseFieldSet);
+            var primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.PreserveExisting);
 
             if (_hookExecutor != null)
             {
@@ -117,7 +117,6 @@ namespace JsonApiDotNetCore.Services
 
             return primaryResource;
         }
-
 
         /// <inheritdoc />
         public virtual async Task<object> GetSecondaryAsync(TId id, string relationshipName)
@@ -213,7 +212,7 @@ namespace JsonApiDotNetCore.Services
                 throw;
             }
 
-            resource = await GetPrimaryResourceById(resource.Id, Projection.TopSparseFieldSet);
+            resource = await GetPrimaryResourceById(resource.Id, TopFieldSelection.PreserveExisting);
     
             if (_hookExecutor != null)
             {
@@ -241,7 +240,7 @@ namespace JsonApiDotNetCore.Services
                 }
                 catch (DataStoreUpdateFailedException)
                 {
-                    var primaryResource = await GetPrimaryResourceById(id, Projection.PrimaryId);
+                    var primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
                     AssertPrimaryResourceExists(primaryResource);
 
                     var relationshipAssignment = (_request.Relationship, secondaryResourceIds);
@@ -258,7 +257,7 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {id, resourceFromRequest});
             if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
             
-            TResource resourceFromDatabase = await GetPrimaryResourceById(id, Projection.None);
+            TResource resourceFromDatabase = await GetPrimaryResourceById(id, TopFieldSelection.AllAttributes);
             
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
             _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
@@ -287,7 +286,7 @@ namespace JsonApiDotNetCore.Services
             }
 
             _repository.FlushFromCache(resourceFromDatabase);
-            TResource afterResourceFromDatabase = await GetPrimaryResourceById(id, Projection.None);
+            TResource afterResourceFromDatabase = await GetPrimaryResourceById(id, TopFieldSelection.AllAttributes);
             _resourceChangeTracker.SetFinallyStoredAttributeValues(afterResourceFromDatabase);
 
             bool hasImplicitChanges = _resourceChangeTracker.HasImplicitChanges();
@@ -306,7 +305,7 @@ namespace JsonApiDotNetCore.Services
             
             if (_hookExecutor != null)
             {
-                primaryResource = await GetPrimaryResourceById(id, Projection.PrimaryId); 
+                primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute); 
                 AssertPrimaryResourceExists(primaryResource);
                 _hookExecutor.BeforeUpdate(AsList(primaryResource), ResourcePipeline.PatchRelationship);
             }
@@ -319,7 +318,7 @@ namespace JsonApiDotNetCore.Services
             {
                 if (primaryResource == null)
                 {
-                    primaryResource = await GetPrimaryResourceById(id, Projection.PrimaryId);
+                    primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
                     AssertPrimaryResourceExists(primaryResource);
                 }
                 
@@ -360,7 +359,7 @@ namespace JsonApiDotNetCore.Services
             catch (DataStoreUpdateFailedException)
             {
                 succeeded = false;
-                resource = await GetPrimaryResourceById(id, Projection.PrimaryId);
+                resource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
                 AssertPrimaryResourceExists(resource);
 
                 throw;
@@ -386,37 +385,33 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateFailedException)
             {
-                var resource = await GetPrimaryResourceById(id, Projection.PrimaryId);
+                var resource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
                 AssertPrimaryResourceExists(resource);
                 
                 throw;
             }
         }
 
-        private async Task<TResource> GetPrimaryResourceById(TId id, Projection projectionToAdd)
+        private async Task<TResource> GetPrimaryResourceById(TId id, TopFieldSelection fieldSelection)
         {
             var primaryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
             primaryLayer.Sort = null;
             primaryLayer.Pagination = null;
             primaryLayer.Filter = IncludeFilterById(id, primaryLayer.Filter);
             
-            if (projectionToAdd == Projection.None && primaryLayer.Projection != null)
+            if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
             {
-                // Discard any ?fields= or attribute exclusions from ResourceDefinition, because we need the full record.
+                var idAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+                primaryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
+            }
+            else if (fieldSelection == TopFieldSelection.AllAttributes && primaryLayer.Projection != null)
+            {
+                // Discard any top-level ?fields= or attribute exclusions from resource definition, because we need the full record.
                 while (primaryLayer.Projection.Any(p => p.Key is AttrAttribute))
                 {
                     primaryLayer.Projection.Remove(primaryLayer.Projection.First(p => p.Key is AttrAttribute));
                 }
             } 
-            else if (projectionToAdd == Projection.PrimaryId)
-            {
-                // https://github.com/dotnet/efcore/issues/20502
-                if (!TypeHelper.ConstructorDependsOnDbContext(_request.PrimaryResource.ResourceType))
-                {   
-                    var idAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
-                    primaryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> { { idAttribute, null } };   
-                }
-            }
 
             var primaryResources = await _repository.GetAsync(primaryLayer);
 
@@ -564,11 +559,11 @@ namespace JsonApiDotNetCore.Services
             return (IReadOnlyCollection<IIdentifiable>)relationshipAssignment;
         }
 
-        private enum Projection
+        private enum TopFieldSelection
         {
-            None,
-            PrimaryId,
-            TopSparseFieldSet
+            AllAttributes,
+            OnlyIdAttribute,
+            PreserveExisting
         }
     }
 
@@ -582,6 +577,7 @@ namespace JsonApiDotNetCore.Services
     {
         public JsonApiResourceService(
             IResourceRepository<TResource> repository,
+            IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext,
             IJsonApiOptions options,
@@ -589,12 +585,11 @@ namespace JsonApiDotNetCore.Services
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
-            IResourceRepositoryAccessor repositoryAccessor,
             ITargetedFields targetedFields,
             IResourceContextProvider resourceContextProvider,
             IResourceHookExecutor hookExecutor = null)
-            : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                resourceChangeTracker, resourceFactory, repositoryAccessor, targetedFields, resourceContextProvider, hookExecutor)
+            : base(repository, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory,
+                request, resourceChangeTracker, resourceFactory, targetedFields, resourceContextProvider, hookExecutor)
         { }
     }
 }

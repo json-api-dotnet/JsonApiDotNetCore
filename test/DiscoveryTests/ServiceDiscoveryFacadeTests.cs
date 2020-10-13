@@ -147,6 +147,7 @@ namespace DiscoveryTests
         {
             public TestModelService(
                 IResourceRepository<TestModel> repository,
+                IResourceRepositoryAccessor repositoryAccessor,
                 IQueryLayerComposer queryLayerComposer,
                 IPaginationContext paginationContext,
                 IJsonApiOptions options,
@@ -154,12 +155,12 @@ namespace DiscoveryTests
                 IJsonApiRequest request,
                 IResourceChangeTracker<TestModel> resourceChangeTracker,
                 IResourceFactory resourceFactory,
-                IResourceRepositoryAccessor repositoryAccessor,
                 ITargetedFields targetedFields,
                 IResourceContextProvider resourceContextProvider,
                 IResourceHookExecutor hookExecutor = null)
-                : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                    resourceChangeTracker, resourceFactory, repositoryAccessor, targetedFields, resourceContextProvider, hookExecutor)
+                : base(repository, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory,
+                    request, resourceChangeTracker, resourceFactory, targetedFields, resourceContextProvider,
+                    hookExecutor)
             {
             }
         }
