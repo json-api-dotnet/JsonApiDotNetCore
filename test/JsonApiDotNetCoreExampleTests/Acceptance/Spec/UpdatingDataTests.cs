@@ -483,10 +483,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
         
         [Fact]
-        public async Task Can_Remove_Relationship_Of_Resource_With_Composite_Foreign_Keys()
+        public async Task Can_Remove_Relationship_Of_Resource_With_Composite_Foreign_Key()
         {
             // Arrange
-
             var product = new Product
             {
                 Name = "Croissants"

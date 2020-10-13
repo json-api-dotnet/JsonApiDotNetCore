@@ -282,9 +282,18 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             AssertEqualStatusCode(HttpStatusCode.NotFound, response);
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Equal(3, errorDocument.Errors.Count);
+
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("A resource being assigned to a relationship does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("Resource of type 'people' with ID '900000' being assigned to relationship 'people' does not exist.",errorDocument.Errors[0].Detail);
+            Assert.Equal("Resource of type 'people' with ID '900000' being assigned to relationship 'stakeHolders' does not exist.",errorDocument.Errors[0].Detail);
+
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[1].StatusCode);
+            Assert.Equal("A resource being assigned to a relationship does not exist.", errorDocument.Errors[1].Title);
+            Assert.Equal("Resource of type 'people' with ID '900001' being assigned to relationship 'stakeHolders' does not exist.",errorDocument.Errors[1].Detail);
+
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[2].StatusCode);
+            Assert.Equal("A resource being assigned to a relationship does not exist.", errorDocument.Errors[2].Title);
+            Assert.Equal("Resource of type 'todoItems' with ID '900002' being assigned to relationship 'parentTodo' does not exist.",errorDocument.Errors[2].Detail);
         }
 
         [Fact]

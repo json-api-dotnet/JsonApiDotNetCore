@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Serialization
 
             if (_jsonApiRequest.Kind == EndpointKind.Relationship)
             {
-                return new AttrAttribute[0];
+                return Array.Empty<AttrAttribute>();
             }
             
             var sparseFieldSetAttributes = _constraintProviders
@@ -88,12 +88,9 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            if (_jsonApiRequest.Kind == EndpointKind.Relationship)
-            {
-                return new RelationshipAttribute[0];
-            }
-            
-            return _resourceGraph.GetRelationships(type);
+            return _jsonApiRequest.Kind == EndpointKind.Relationship
+                ? Array.Empty<RelationshipAttribute>()
+                : _resourceGraph.GetRelationships(type);
         }
     }
 }

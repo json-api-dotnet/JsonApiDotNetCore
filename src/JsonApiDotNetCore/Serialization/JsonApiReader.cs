@@ -183,7 +183,7 @@ namespace JsonApiDotNetCore.Serialization
                 return resourceCollection.Select(r => r.GetType()).Distinct();
             }
 
-            return model == null ? new Type[0] : new[] { model.GetType() };
+            return model == null ? Array.Empty<Type>() : new[] { model.GetType() };
         }
 
         private Type GetEndpointResourceType()

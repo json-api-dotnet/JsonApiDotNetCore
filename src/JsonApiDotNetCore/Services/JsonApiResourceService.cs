@@ -204,7 +204,7 @@ namespace JsonApiDotNetCore.Services
             {
                 await _repository.CreateAsync(resource);
             }
-            catch (DataStoreUpdateFailedException)
+            catch (DataStoreUpdateException)
             {
                 var assignments = GetPopulatedRelationshipAssignments(resource);
                 await AssertResourcesInRelationshipAssignmentsExistAsync(assignments);
@@ -238,7 +238,7 @@ namespace JsonApiDotNetCore.Services
                 {
                     await _repository.AddToToManyRelationshipAsync(id, secondaryResourceIds);
                 }
-                catch (DataStoreUpdateFailedException)
+                catch (DataStoreUpdateException)
                 {
                     var primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
                     AssertPrimaryResourceExists(primaryResource);
@@ -271,7 +271,7 @@ namespace JsonApiDotNetCore.Services
             {
                 await _repository.UpdateAsync(resourceFromRequest, resourceFromDatabase);
             }
-            catch (DataStoreUpdateFailedException)
+            catch (DataStoreUpdateException)
             {
                 var relationshipAssignments = GetPopulatedRelationshipAssignments(resourceFromRequest);
                 await AssertResourcesInRelationshipAssignmentsExistAsync(relationshipAssignments);
@@ -314,7 +314,7 @@ namespace JsonApiDotNetCore.Services
             {
                 await _repository.SetRelationshipAsync(id, secondaryResourceIds);
             }
-            catch (DataStoreUpdateFailedException)
+            catch (DataStoreUpdateException)
             {
                 if (primaryResource == null)
                 {
@@ -356,7 +356,7 @@ namespace JsonApiDotNetCore.Services
             {
                 await _repository.DeleteAsync(id);
             }
-            catch (DataStoreUpdateFailedException)
+            catch (DataStoreUpdateException)
             {
                 succeeded = false;
                 resource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
@@ -383,7 +383,7 @@ namespace JsonApiDotNetCore.Services
             {
                 await _repository.RemoveFromToManyRelationshipAsync(id, secondaryResourceIds);
             }
-            catch (DataStoreUpdateFailedException)
+            catch (DataStoreUpdateException)
             {
                 var resource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
                 AssertPrimaryResourceExists(resource);
@@ -401,8 +401,11 @@ namespace JsonApiDotNetCore.Services
             
             if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
             {
-                var idAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
-                primaryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
+                if (!TypeHelper.ConstructorDependsOnDbContext(_request.PrimaryResource.ResourceType))
+                {
+                    var idAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+                    primaryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
+                }
             }
             else if (fieldSelection == TopFieldSelection.AllAttributes && primaryLayer.Projection != null)
             {
@@ -498,7 +501,7 @@ namespace JsonApiDotNetCore.Services
                     .Where(sr => databaseResources.All(dbr => dbr.StringId != sr.StringId))
                     .Select(sr =>
                         new MissingResourceInRelationship(
-                            _resourceContextProvider.GetResourceContext(relationship.RightType).PublicName,
+                            relationship.PublicName,
                             _resourceContextProvider.GetResourceContext(sr.GetType()).PublicName,
                             sr.StringId));
 
@@ -507,7 +510,7 @@ namespace JsonApiDotNetCore.Services
 
             if (missingResources.Any())
             { 
-                throw new ResourcesInRelationshipAssignmentsNotFoundException(missingResources);
+                throw new ResourcesInRelationshipAssignmentNotFoundException(missingResources);
             }
         }
 

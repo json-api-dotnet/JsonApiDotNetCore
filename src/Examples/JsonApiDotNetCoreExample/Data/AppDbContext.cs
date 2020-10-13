@@ -22,10 +22,7 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Blog> Blogs { get; set; }
-        
         public DbSet<Product> Products { get; set; }
-        
-        public DbSet<Category> Categories { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options, ISystemClock systemClock) : base(options)
         {

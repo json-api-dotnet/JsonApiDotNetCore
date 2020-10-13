@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -11,13 +12,21 @@ namespace JsonApiDotNetCoreExample.Models
             get => $"{CountryId}-{ShopId}";
             set
             {
-                var split = value.Split('-');
-                CountryId = int.Parse(split[0]);
-                ShopId =  split[1];
-            }
+                var elements = value.Split('-');
+                if (elements.Length == 2)
+                {
+                    if (int.TryParse(elements[0], out var countryId))
+                    {
+                        CountryId = countryId;
+                        ShopId = elements[1];
+                        return;
+                    }
+                }
 
+                throw new InvalidOperationException($"Failed to convert ID '{value}'.");
+            }
         }
-        
+
         [Attr]
         public string Name { get; set; }
 
