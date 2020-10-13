@@ -7,13 +7,13 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.Errors
 {
     /// <summary>
-    /// The error that is thrown when assigning one or more non-existing resources to a relationship.
+    /// The error that is thrown when assigning one or more non-existing resources in one or more relationships.
     /// </summary>
-    public sealed class ResourcesInRelationshipAssignmentNotFoundException : Exception
+    public sealed class ResourcesInRelationshipAssignmentsNotFoundException : Exception
     {
         public IReadOnlyCollection<Error> Errors { get; }
 
-        public ResourcesInRelationshipAssignmentNotFoundException(IEnumerable<MissingResourceInRelationship> missingResources)
+        public ResourcesInRelationshipAssignmentsNotFoundException(IEnumerable<MissingResourceInRelationship> missingResources)
         {
             Errors = missingResources.Select(CreateError).ToList();
         }

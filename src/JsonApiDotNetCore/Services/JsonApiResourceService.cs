@@ -425,19 +425,22 @@ namespace JsonApiDotNetCore.Services
                 : new LogicalExpression(LogicalOperator.And, new[] { filterById, existingFilter });
         }
 
-        private async Task AssertResourcesInRelationshipAssignmentsExistAsync(IEnumerable<RelationshipAttribute> relationships, TResource resource)
+        private async Task AssertResourcesInRelationshipAssignmentsExistAsync(IEnumerable<RelationshipAttribute> relationships, TResource leftResource)
         {
             var missingResources = new List<MissingResourceInRelationship>();
 
             foreach (var relationship in relationships)
             {
-                var missingResourcesInRelationship = GetMissingResourcesInRelationshipAsync(relationship, resource);
+                object rightValue = relationship.GetValue(leftResource);
+                ICollection<IIdentifiable> rightResources = ExtractResources(rightValue);
+
+                var missingResourcesInRelationship = GetMissingResourcesInRelationshipAsync(relationship, rightResources);
                 await missingResources.AddRangeAsync(missingResourcesInRelationship);
             }
 
             if (missingResources.Any())
             {
-                throw new ResourcesInRelationshipAssignmentNotFoundException(missingResources);
+                throw new ResourcesInRelationshipAssignmentsNotFoundException(missingResources);
             }
         }
 
@@ -448,17 +451,8 @@ namespace JsonApiDotNetCore.Services
             var missingResources = await GetMissingResourcesInRelationshipAsync(relationship, rightResources).ToListAsync();
             if (missingResources.Any())
             {
-                throw new ResourcesInRelationshipAssignmentNotFoundException(missingResources);
+                throw new ResourcesInRelationshipAssignmentsNotFoundException(missingResources);
             }
-        }
-
-        private IAsyncEnumerable<MissingResourceInRelationship> GetMissingResourcesInRelationshipAsync(
-            RelationshipAttribute relationship, TResource leftResource)
-        {
-            object rightValue = relationship.GetValue(leftResource);
-            ICollection<IIdentifiable> rightResources = ExtractResources(rightValue);
-
-            return GetMissingResourcesInRelationshipAsync(relationship, rightResources);
         }
 
         private async IAsyncEnumerable<MissingResourceInRelationship> GetMissingResourcesInRelationshipAsync(
