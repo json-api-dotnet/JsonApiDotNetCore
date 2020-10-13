@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IJsonApiRequest _request;
         private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
         private readonly IResourceFactory _resourceFactory;
-        private readonly IRepositoryAccessor _repositoryAccessor;
+        private readonly IResourceRepositoryAccessor _repositoryAccessor;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceContextProvider _provider;
         private readonly IResourceHookExecutor _hookExecutor;
@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Services
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
-            IRepositoryAccessor repositoryAccessor,
+            IResourceRepositoryAccessor repositoryAccessor,
             ITargetedFields targetedFields,
             IResourceContextProvider provider,
             IResourceHookExecutor hookExecutor = null)
@@ -492,11 +492,11 @@ namespace JsonApiDotNetCore.Services
 
         private async Task AssertResourcesInRelationshipAssignmentsExistAsync(params (RelationshipAttribute, IReadOnlyCollection<IIdentifiable>)[] assignments)
         {
-            var missingResourceErrors = new List<MissingResourceInRelationship>();
+            var missingResources = new List<MissingResourceInRelationship>();
             
             foreach (var (relationship, resources) in assignments)
             {
-                IReadOnlyCollection<string> identifiers = (IReadOnlyCollection<string>)resources.Select(i => i.GetTypedId().ToString()).ToArray();
+                IReadOnlyCollection<string> identifiers = resources.Select(i => i.GetTypedId().ToString()).ToArray();
                 var databaseResources = await _repositoryAccessor.GetResourcesByIdAsync(relationship.RightType, identifiers);
 
                 var errorsInAssignment = resources
@@ -507,12 +507,12 @@ namespace JsonApiDotNetCore.Services
                             _provider.GetResourceContext(sr.GetType()).PublicName,
                             sr.StringId));
 
-                missingResourceErrors.AddRange(errorsInAssignment);
+                missingResources.AddRange(errorsInAssignment);
             }
 
-            if (missingResourceErrors.Any())
+            if (missingResources.Any())
             { 
-                throw new ResourcesInRelationshipAssignmentsNotFoundException(missingResourceErrors);
+                throw new ResourcesInRelationshipAssignmentsNotFoundException(missingResources);
             }
         }
 
@@ -556,7 +556,7 @@ namespace JsonApiDotNetCore.Services
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
-            IRepositoryAccessor repositoryAccessor,
+            IResourceRepositoryAccessor repositoryAccessor,
             ITargetedFields targetedFields,
             IResourceContextProvider provider,
             IResourceHookExecutor hookExecutor = null)

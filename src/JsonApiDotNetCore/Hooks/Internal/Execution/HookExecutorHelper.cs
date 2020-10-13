@@ -130,15 +130,19 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             return discovery;
         }
 
-        private IEnumerable<TResource> GetWhereAndInclude<TResource, TId>(IEnumerable<TId> ids, RelationshipAttribute[] relationshipsToNextLayer) where TResource : class, IIdentifiable<TId>
+        private IEnumerable<TResource> GetWhereAndInclude<TResource, TId>(IReadOnlyCollection<TId> ids, RelationshipAttribute[] relationshipsToNextLayer) where TResource : class, IIdentifiable<TId>
         {
+            if (!ids.Any())
+            {
+                return Array.Empty<TResource>();
+            }
+
             var resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
-            var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
+            var filterExpression = CreateFilterByIds(ids, resourceContext);
 
             var queryLayer = new QueryLayer(resourceContext)
             {
-                Filter = new EqualsAnyOfExpression(new ResourceFieldChainExpression(idAttribute),
-                    ids.Select(id => new LiteralConstantExpression(id.ToString())).ToList())
+                Filter = filterExpression
             };
 
             var chains = relationshipsToNextLayer.Select(relationship => new ResourceFieldChainExpression(relationship)).ToList();
@@ -149,6 +153,21 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
 
             var repository = GetRepository<TResource, TId>();
             return repository.GetAsync(queryLayer).Result;
+        }
+
+        private static FilterExpression CreateFilterByIds<TId>(IReadOnlyCollection<TId> ids, ResourceContext resourceContext)
+        {
+            var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
+            var idChain = new ResourceFieldChainExpression(idAttribute);
+
+            if (ids.Count == 1)
+            {
+                var constant = new LiteralConstantExpression(ids.Single().ToString());
+                return new ComparisonExpression(ComparisonOperator.Equals, idChain, constant);
+            }
+
+            var constants = ids.Select(id => new LiteralConstantExpression(id.ToString())).ToList();
+            return new EqualsAnyOfExpression(idChain, constants);
         }
 
         private IResourceReadRepository<TResource, TId> GetRepository<TResource, TId>() where TResource : class, IIdentifiable<TId>

@@ -223,7 +223,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Fails_When_Patching_Resource_ToOne_Relationship_With_Missing_Resource()
+        public async Task Fails_When_Patching_Resource_Relationships_With_Missing_Resources()
         {
             // Arrange 
             var todoItem = _todoItemFaker.Generate();

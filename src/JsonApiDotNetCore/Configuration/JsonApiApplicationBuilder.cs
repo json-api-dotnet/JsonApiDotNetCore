@@ -187,7 +187,7 @@ namespace JsonApiDotNetCore.Configuration
             RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.RepositoryInterfaces, 
                 typeof(EntityFrameworkCoreRepository<>), typeof(EntityFrameworkCoreRepository<,>));
 
-            _services.AddScoped<IRepositoryAccessor, RepositoryAccessor>();
+            _services.AddScoped<IResourceRepositoryAccessor, ResourceRepositoryAccessor>();
         }
 
         private void AddServiceLayer()

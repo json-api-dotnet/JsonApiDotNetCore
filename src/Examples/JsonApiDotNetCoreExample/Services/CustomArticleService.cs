@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExample.Services
             IJsonApiRequest request,
             IResourceChangeTracker<Article> resourceChangeTracker,
             IResourceFactory resourceFactory,
-            IRepositoryAccessor repositoryAccessor,
+            IResourceRepositoryAccessor repositoryAccessor,
             ITargetedFields targetedFields,
             IResourceContextProvider resourceContextProvider,
             IResourceHookExecutor hookExecutor = null)
