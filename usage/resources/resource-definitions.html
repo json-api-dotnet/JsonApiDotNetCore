@@ -86,7 +86,8 @@ For example, you may accept some sensitive data that should only be exposed to a
 <pre><code class="lang-c#">public class UserDefinition : JsonApiResourceDefinition&lt;User&gt;
 {
     public UserDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
-    { }
+    {
+    }
 
     public override SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
     {
@@ -95,10 +96,7 @@ For example, you may accept some sensitive data that should only be exposed to a
             return existingSparseFieldSet;
         }
 
-        var resourceContext = ResourceGraph.GetResourceContext&lt;User&gt;(); 
-        var passwordAttribute = resourceContext.Attributes.Single(a =&gt; a.Property.Name == nameof(User.Password));
-
-        return existingSparseFieldSet.Excluding(passwordAttribute);
+        return existingSparseFieldSet.Excluding&lt;User&gt;(x =&gt; x.Password, ResourceGraph);
     }
 }
 </code></pre><p>Using this technique, you can achieve the following request/response behavior:</p>
