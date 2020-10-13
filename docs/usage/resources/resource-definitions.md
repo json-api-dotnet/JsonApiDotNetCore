@@ -27,7 +27,8 @@ Note: to exclude attributes unconditionally, use `[Attr(Capabilities = ~AttrCapa
 public class UserDefinition : JsonApiResourceDefinition<User>
 {
     public UserDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
-    { }
+    {
+    }
 
     public override SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
     {
@@ -36,10 +37,7 @@ public class UserDefinition : JsonApiResourceDefinition<User>
             return existingSparseFieldSet;
         }
 
-        var resourceContext = ResourceGraph.GetResourceContext<User>(); 
-        var passwordAttribute = resourceContext.Attributes.Single(a => a.Property.Name == nameof(User.Password));
-
-        return existingSparseFieldSet.Excluding(passwordAttribute);
+        return existingSparseFieldSet.Excluding<User>(x => x.Password, ResourceGraph);
     }
 }
 ```
