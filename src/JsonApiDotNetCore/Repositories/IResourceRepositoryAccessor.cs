@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Repositories
 {
@@ -13,10 +12,8 @@ namespace JsonApiDotNetCore.Repositories
     public interface IResourceRepositoryAccessor
     {
         /// <summary>
-        /// Gets resources by filtering on id.
+        /// Invokes <see cref="IResourceReadRepository{TResource,TId}.GetAsync"/> for the specified resource type.
         /// </summary>
-        /// <param name="resourceType">The type for which to create a repository.</param>
-        /// <param name="ids">The ids to filter on.</param>
-        Task<IEnumerable<IIdentifiable>> GetResourcesByIdAsync(Type resourceType, IReadOnlyCollection<string> ids);
+        Task<IReadOnlyCollection<IIdentifiable>> GetAsync(Type resourceType, QueryLayer layer);
     }
 }

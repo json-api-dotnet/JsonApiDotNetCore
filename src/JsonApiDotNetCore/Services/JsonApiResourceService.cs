@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IResourceFactory _resourceFactory;
         private readonly IResourceRepositoryAccessor _repositoryAccessor;
         private readonly ITargetedFields _targetedFields;
-        private readonly IResourceContextProvider _provider;
+        private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IResourceHookExecutor _hookExecutor;
 
         public JsonApiResourceService(
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Services
             IResourceFactory resourceFactory,
             IResourceRepositoryAccessor repositoryAccessor,
             ITargetedFields targetedFields,
-            IResourceContextProvider provider,
+            IResourceContextProvider resourceContextProvider,
             IResourceHookExecutor hookExecutor = null)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.Services
             _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
             _repositoryAccessor = repositoryAccessor ?? throw new ArgumentNullException(nameof(repositoryAccessor));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
-            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _hookExecutor = hookExecutor;
         }
 
@@ -497,14 +497,14 @@ namespace JsonApiDotNetCore.Services
             foreach (var (relationship, resources) in assignments)
             {
                 IReadOnlyCollection<string> identifiers = resources.Select(i => i.GetTypedId().ToString()).ToArray();
-                var databaseResources = await _repositoryAccessor.GetResourcesByIdAsync(relationship.RightType, identifiers);
+                var databaseResources = await GetResourcesByIdAsync(relationship.RightType, identifiers);
 
                 var errorsInAssignment = resources
                     .Where(sr => databaseResources.All(dbr => dbr.StringId != sr.StringId))
                     .Select(sr =>
                         new MissingResourceInRelationship(
-                            _provider.GetResourceContext(relationship.RightType).PublicName,
-                            _provider.GetResourceContext(sr.GetType()).PublicName,
+                            _resourceContextProvider.GetResourceContext(relationship.RightType).PublicName,
+                            _resourceContextProvider.GetResourceContext(sr.GetType()).PublicName,
                             sr.StringId));
 
                 missingResources.AddRange(errorsInAssignment);
@@ -514,6 +514,39 @@ namespace JsonApiDotNetCore.Services
             { 
                 throw new ResourcesInRelationshipAssignmentsNotFoundException(missingResources);
             }
+        }
+
+        private async Task<IReadOnlyCollection<IIdentifiable>> GetResourcesByIdAsync(Type resourceType,
+            IReadOnlyCollection<string> ids)
+        {
+            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            var idsFilter = CreateFilterByIds(ids, resourceContext);
+
+            //var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
+
+            var queryLayer = new QueryLayer(resourceContext)
+            {
+                // TODO: Call into ResourceDefinition.OnApplyFilter
+                //Filter = _resourceDefinitionAccessor.OnApplyFilter(resourceContext.ResourceType, idsFilter)
+                Filter = idsFilter
+            };
+
+            return await _repositoryAccessor.GetAsync(resourceType, queryLayer);
+        }
+
+        private static FilterExpression CreateFilterByIds(IReadOnlyCollection<string> ids, ResourceContext resourceContext)
+        {
+            var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
+            var idChain = new ResourceFieldChainExpression(idAttribute);
+
+            if (ids.Count == 1)
+            {
+                var constant = new LiteralConstantExpression(ids.Single());
+                return new ComparisonExpression(ComparisonOperator.Equals, idChain, constant);
+            }
+
+            var constants = ids.Select(id => new LiteralConstantExpression(id)).ToList();
+            return new EqualsAnyOfExpression(idChain, constants);
         }
 
         private List<TResource> AsList(TResource resource)
@@ -558,10 +591,10 @@ namespace JsonApiDotNetCore.Services
             IResourceFactory resourceFactory,
             IResourceRepositoryAccessor repositoryAccessor,
             ITargetedFields targetedFields,
-            IResourceContextProvider provider,
+            IResourceContextProvider resourceContextProvider,
             IResourceHookExecutor hookExecutor = null)
             : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                resourceChangeTracker, resourceFactory, repositoryAccessor, targetedFields, provider, hookExecutor)
+                resourceChangeTracker, resourceFactory, repositoryAccessor, targetedFields, resourceContextProvider, hookExecutor)
         { }
     }
 }

@@ -156,10 +156,10 @@ namespace DiscoveryTests
                 IResourceFactory resourceFactory,
                 IResourceRepositoryAccessor repositoryAccessor,
                 ITargetedFields targetedFields,
-                IResourceContextProvider provider,
+                IResourceContextProvider resourceContextProvider,
                 IResourceHookExecutor hookExecutor = null)
                 : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                    resourceChangeTracker, resourceFactory, repositoryAccessor, targetedFields, provider, hookExecutor)
+                    resourceChangeTracker, resourceFactory, repositoryAccessor, targetedFields, resourceContextProvider, hookExecutor)
             {
             }
         }
