@@ -89,14 +89,16 @@ For example, you may accept some sensitive data that should only be exposed to a
     {
     }
 
-    public override SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+    public override SparseFieldSetExpression OnApplySparseFieldSet(
+        SparseFieldSetExpression existingSparseFieldSet)
     {
         if (IsAdministrator)
         {
             return existingSparseFieldSet;
         }
 
-        return existingSparseFieldSet.Excluding&lt;User&gt;(x =&gt; x.Password, ResourceGraph);
+        return existingSparseFieldSet.Excluding&lt;User&gt;(
+            user =&gt; user.Password, ResourceGraph);
     }
 }
 </code></pre><p>Using this technique, you can achieve the following request/response behavior:</p>
@@ -129,6 +131,10 @@ Content-Type: application/vnd.api+json
 <p>You can define the default sort order if no <code>sort</code> query string parameter is provided.</p>
 <pre><code class="lang-c#">public class AccountDefinition : JsonApiResourceDefinition&lt;Account&gt;
 {
+    public AccountDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    {
+    }
+
     public override SortExpression OnApplySort(SortExpression existingSort)
     {
         if (existingSort != null)
@@ -147,42 +153,65 @@ Content-Type: application/vnd.api+json
 <p>You may want to enforce pagination on large database tables.</p>
 <pre><code class="lang-c#">public class AccessLogDefinition : JsonApiResourceDefinition&lt;AccessLog&gt;
 {
-    public override PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
+    public AccessLogDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    {
+    }
+
+    public override PaginationExpression OnApplyPagination(
+        PaginationExpression existingPagination)
     {
         var maxPageSize = new PageSize(10);
 
         if (existingPagination != null)
         {
-            var pageSize = existingPagination.PageSize?.Value &lt;= maxPageSize.Value ? existingPagination.PageSize : maxPageSize;
+            var pageSize = existingPagination.PageSize?.Value &lt;= maxPageSize.Value
+                ? existingPagination.PageSize
+                : maxPageSize;
+
             return new PaginationExpression(existingPagination.PageNumber, pageSize);
         }
 
-        return new PaginationExpression(PageNumber.ValueOne, _maxPageSize);
+        return new PaginationExpression(PageNumber.ValueOne, maxPageSize);
     }
 }
 </code></pre><h2 id="exclude-soft-deleted-resources">Exclude soft-deleted resources</h2>
 <p>Soft-deletion sets <code>IsSoftDeleted</code> to <code>true</code> instead of actually deleting the record, so you may want to always filter them out.</p>
 <pre><code class="lang-c#">public class AccountDefinition : JsonApiResourceDefinition&lt;Account&gt;
 {
+    public AccountDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    {
+    }
+
     public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
     {
         var resourceContext = ResourceGraph.GetResourceContext&lt;Account&gt;();
-        var isSoftDeletedAttribute = resourceContext.Attributes.Single(a =&gt; a.Property.Name == nameof(Account.IsSoftDeleted));
+
+        var isSoftDeletedAttribute =
+            resourceContext.Attributes.Single(a =&gt;
+                a.Property.Name == nameof(Account.IsSoftDeleted));
 
         var isNotSoftDeleted = new ComparisonExpression(ComparisonOperator.Equals,
-            new ResourceFieldChainExpression(isSoftDeletedAttribute), new LiteralConstantExpression(bool.FalseString));
+            new ResourceFieldChainExpression(isSoftDeletedAttribute),
+            new LiteralConstantExpression(bool.FalseString));
 
         return existingFilter == null
             ? (FilterExpression) isNotSoftDeleted
-            : new LogicalExpression(LogicalOperator.And, new[] {isNotSoftDeleted, existingFilter});
+            : new LogicalExpression(LogicalOperator.And,
+                new[] {isNotSoftDeleted, existingFilter});
     }
 }
 </code></pre><h2 id="block-including-related-resources">Block including related resources</h2>
 <pre><code class="lang-c#">public class EmployeeDefinition : JsonApiResourceDefinition&lt;Employee&gt;
 {
-    public override IReadOnlyCollection&lt;IncludeElementExpression&gt; OnApplyIncludes(IReadOnlyCollection&lt;IncludeElementExpression&gt; existingIncludes)
+    public EmployeeDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
     {
-        if (existingIncludes.Any(include =&gt; include.Relationship.Property.Name == nameof(Employee.Manager)))
+    }
+
+    public override IReadOnlyCollection&lt;IncludeElementExpression&gt; OnApplyIncludes(
+        IReadOnlyCollection&lt;IncludeElementExpression&gt; existingIncludes)
+    {
+        if (existingIncludes.Any(include =&gt;
+            include.Relationship.Property.Name == nameof(Employee.Manager)))
         {
             throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
             {
@@ -201,7 +230,12 @@ If the key is present in a query string, the supplied LINQ expression will be ad
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).</p>
 <pre><code class="lang-c#">public class ItemDefinition : JsonApiResourceDefinition&lt;Item&gt;
 {
-    protected override QueryStringParameterHandlers OnRegisterQueryableHandlersForQueryStringParameters()
+    public ItemDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    {
+    }
+
+    public override QueryStringParameterHandlers&lt;Item&gt;
+        OnRegisterQueryableHandlersForQueryStringParameters()
     {
         return new QueryStringParameterHandlers&lt;Item&gt;
         {
@@ -212,10 +246,14 @@ But it only works on primary resource endpoints (for example: /articles, but not
         };
     }
 
-    private static IQueryable&lt;Item&gt; FilterByHighRisk(IQueryable&lt;Item&gt; source, StringValues parameterValue)
+    private static IQueryable&lt;Item&gt; FilterByHighRisk(IQueryable&lt;Item&gt; source,
+        StringValues parameterValue)
     {
         bool isFilterOnHighRisk = bool.Parse(parameterValue);
-        return isFilterOnHighRisk ? source.Where(item =&gt; item.RiskLevel &gt;= 5) : source.Where(item =&gt; item.RiskLevel &lt; 5);
+
+        return isFilterOnHighRisk
+            ? source.Where(item =&gt; item.RiskLevel &gt;= 5)
+            : source.Where(item =&gt; item.RiskLevel &lt; 5);
     }
 }
 </code></pre><h2 id="using-resource-definitions-prior-to-v3">Using Resource Definitions prior to v3</h2>
