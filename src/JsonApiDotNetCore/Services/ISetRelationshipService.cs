@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="id">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship for which to perform a complete replacement.</param>
-        /// <param name="secondaryResourceIds">The resources to assign to the relationship.</param>
+        /// <param name="secondaryResourceIds">The resource or set of resources to assign to the relationship.</param>
         Task SetRelationshipAsync(TId id, string relationshipName, object secondaryResourceIds);
     }
 }

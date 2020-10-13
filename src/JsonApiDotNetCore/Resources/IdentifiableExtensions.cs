@@ -1,10 +1,9 @@
 using System;
 using System.Reflection;
-using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Resources
 {
-    public static class IIdentifiableExtensions
+    public static class IdentifiableExtensions
     {
         internal static object GetTypedId(this IIdentifiable identifiable)
         {
@@ -12,6 +11,11 @@ namespace JsonApiDotNetCore.Resources
             
             PropertyInfo property = identifiable.GetType().GetProperty(nameof(Identifiable.Id));
             
+            if (property == null)
+            {
+                throw new InvalidOperationException($"Resource of type '{identifiable.GetType()}' does not have an Id property.");
+            }
+
             return property.GetValue(identifiable);
         }
     }

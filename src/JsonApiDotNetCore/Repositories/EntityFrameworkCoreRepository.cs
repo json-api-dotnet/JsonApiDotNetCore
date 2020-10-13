@@ -221,10 +221,10 @@ namespace JsonApiDotNetCore.Repositories
             
             await LoadRelationship(primaryResource, relationship);
 
-            var currentRelationshipAssignment = ((IReadOnlyCollection<IIdentifiable>)relationship.GetValue(primaryResource));
+            var currentRelationshipAssignment = (IReadOnlyCollection<IIdentifiable>)relationship.GetValue(primaryResource);
             var newRelationshipAssignment = currentRelationshipAssignment.Where(i => secondaryResourceIds.All(r => r.StringId != i.StringId)).ToArray();
             
-            if (newRelationshipAssignment.Length < currentRelationshipAssignment.Count())
+            if (newRelationshipAssignment.Length < currentRelationshipAssignment.Count)
             {
                 await ApplyRelationshipAssignment(primaryResource, relationship, newRelationshipAssignment);
                 await TrySave();
@@ -305,7 +305,7 @@ namespace JsonApiDotNetCore.Repositories
             else if (relationship is HasOneAttribute hasOneRelationship)
             {
                 var foreignKeyProperties = GetForeignKey(hasOneRelationship);
-                if (foreignKeyProperties.Count() != 1)
+                if (foreignKeyProperties.Length != 1)
                 {   // If the primary resource is the dependent side of a to-one relationship, there can be no FK
                     // violations resulting from a the implicit removal.
                     navigationEntry = entityEntry.Reference(hasOneRelationship.Property.Name);
@@ -403,7 +403,7 @@ namespace JsonApiDotNetCore.Repositories
                 }
                 
                 var foreignKeyProperties = GetForeignKey(relationship);
-                if (foreignKeyProperties.Count() == 1)
+                if (foreignKeyProperties.Length == 1)
                 {
                     foreignKeyProperties.First().SetValue(primaryResource, secondaryResourceId);
                     _dbContext.Entry(primaryResource).State = EntityState.Modified;
@@ -427,8 +427,8 @@ namespace JsonApiDotNetCore.Repositories
             }
             else
             {
-                var hasManyValue = ((IReadOnlyCollection<IIdentifiable>)relationshipAssignment);
-                var trackedHasManyValues = new object[hasManyValue.Count()];
+                var hasManyValue = (IReadOnlyCollection<IIdentifiable>)relationshipAssignment;
+                var trackedHasManyValues = new object[hasManyValue.Count];
 
                 for (int i = 0; i < hasManyValue.Count; i++)
                 {

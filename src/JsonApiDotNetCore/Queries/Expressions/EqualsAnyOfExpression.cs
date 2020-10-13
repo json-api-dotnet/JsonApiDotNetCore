@@ -22,7 +22,6 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             if (constants.Count < 2)
             {
-                // TODO: Update tests.
                 throw new ArgumentException("At least two constants are required.", nameof(constants));
             }
         }

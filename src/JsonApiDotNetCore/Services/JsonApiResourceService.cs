@@ -111,8 +111,8 @@ namespace JsonApiDotNetCore.Services
 
             if (_hookExecutor != null)
             {
-                _hookExecutor.AfterRead(AsList(primaryResource), ResourcePipeline.GetSingle);
-                return _hookExecutor.OnReturn(AsList(primaryResource), ResourcePipeline.GetSingle).Single();
+                _hookExecutor.AfterRead(ToList(primaryResource), ResourcePipeline.GetSingle);
+                return _hookExecutor.OnReturn(ToList(primaryResource), ResourcePipeline.GetSingle).Single();
             }
 
             return primaryResource;
@@ -144,8 +144,8 @@ namespace JsonApiDotNetCore.Services
 
             if (_hookExecutor != null)
             {   
-                _hookExecutor.AfterRead(AsList(primaryResource), ResourcePipeline.GetRelationship);
-                primaryResource = _hookExecutor.OnReturn(AsList(primaryResource), ResourcePipeline.GetRelationship).Single();
+                _hookExecutor.AfterRead(ToList(primaryResource), ResourcePipeline.GetRelationship);
+                primaryResource = _hookExecutor.OnReturn(ToList(primaryResource), ResourcePipeline.GetRelationship).Single();
             }
 
             var secondaryResource = _request.Relationship.GetValue(primaryResource);
@@ -182,8 +182,8 @@ namespace JsonApiDotNetCore.Services
 
             if (_hookExecutor != null)
             {
-                _hookExecutor.AfterRead(AsList(primaryResource), ResourcePipeline.GetRelationship);
-                primaryResource = _hookExecutor.OnReturn(AsList(primaryResource), ResourcePipeline.GetRelationship).Single();
+                _hookExecutor.AfterRead(ToList(primaryResource), ResourcePipeline.GetRelationship);
+                primaryResource = _hookExecutor.OnReturn(ToList(primaryResource), ResourcePipeline.GetRelationship).Single();
             }
 
             return _request.Relationship.GetValue(primaryResource);
@@ -197,7 +197,7 @@ namespace JsonApiDotNetCore.Services
 
             if (_hookExecutor != null)
             {
-                resource = _hookExecutor.BeforeCreate(AsList(resource), ResourcePipeline.Post).Single();
+                resource = _hookExecutor.BeforeCreate(ToList(resource), ResourcePipeline.Post).Single();
             }
             
             try
@@ -206,9 +206,7 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                var assignments = GetPopulatedRelationshipAssignments(resource);
-                await AssertResourcesInRelationshipAssignmentsExistAsync(assignments);
-                
+                await AssertResourcesInRelationshipAssignmentsExistAsync(_targetedFields.Relationships, resource);
                 throw;
             }
 
@@ -216,8 +214,8 @@ namespace JsonApiDotNetCore.Services
     
             if (_hookExecutor != null)
             {
-                _hookExecutor.AfterCreate(AsList(resource), ResourcePipeline.Post);
-                resource = _hookExecutor.OnReturn(AsList(resource), ResourcePipeline.Post).Single();
+                _hookExecutor.AfterCreate(ToList(resource), ResourcePipeline.Post);
+                resource = _hookExecutor.OnReturn(ToList(resource), ResourcePipeline.Post).Single();
             }
 
             return resource;
@@ -243,9 +241,7 @@ namespace JsonApiDotNetCore.Services
                     var primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
                     AssertPrimaryResourceExists(primaryResource);
 
-                    var relationshipAssignment = (_request.Relationship, secondaryResourceIds);
-                    await AssertResourcesInRelationshipAssignmentsExistAsync(relationshipAssignment);
-                    
+                    await AssertResourcesInRelationshipAssignmentExistAsync(_request.Relationship, secondaryResourceIds);
                     throw;
                 }
             }
@@ -264,7 +260,7 @@ namespace JsonApiDotNetCore.Services
 
             if (_hookExecutor != null)
             {
-                resourceFromRequest = _hookExecutor.BeforeUpdate(AsList(resourceFromRequest), ResourcePipeline.Patch).Single();
+                resourceFromRequest = _hookExecutor.BeforeUpdate(ToList(resourceFromRequest), ResourcePipeline.Patch).Single();
             }
             
             try
@@ -273,16 +269,14 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                var relationshipAssignments = GetPopulatedRelationshipAssignments(resourceFromRequest);
-                await AssertResourcesInRelationshipAssignmentsExistAsync(relationshipAssignments);
-    
+                await AssertResourcesInRelationshipAssignmentsExistAsync(_targetedFields.Relationships, resourceFromRequest);
                 throw;
             }
-            
+
             if (_hookExecutor != null)
             {
-                _hookExecutor.AfterUpdate(AsList(resourceFromDatabase), ResourcePipeline.Patch);
-                _hookExecutor.OnReturn(AsList(resourceFromDatabase), ResourcePipeline.Patch);
+                _hookExecutor.AfterUpdate(ToList(resourceFromDatabase), ResourcePipeline.Patch);
+                _hookExecutor.OnReturn(ToList(resourceFromDatabase), ResourcePipeline.Patch);
             }
 
             _repository.FlushFromCache(resourceFromDatabase);
@@ -307,7 +301,7 @@ namespace JsonApiDotNetCore.Services
             {
                 primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute); 
                 AssertPrimaryResourceExists(primaryResource);
-                _hookExecutor.BeforeUpdate(AsList(primaryResource), ResourcePipeline.PatchRelationship);
+                _hookExecutor.BeforeUpdate(ToList(primaryResource), ResourcePipeline.PatchRelationship);
             }
             
             try
@@ -321,19 +315,14 @@ namespace JsonApiDotNetCore.Services
                     primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
                     AssertPrimaryResourceExists(primaryResource);
                 }
-                
-                if (secondaryResourceIds != null)
-                {
-                    var relationshipAssignment = (_request.Relationship, AsReadOnlyCollection(secondaryResourceIds));
-                    await AssertResourcesInRelationshipAssignmentsExistAsync(relationshipAssignment);
-                }
-                
+
+                await AssertResourcesInRelationshipAssignmentExistAsync(_request.Relationship, secondaryResourceIds);
                 throw;
             }
 
             if (_hookExecutor != null && primaryResource != null)
             {
-                _hookExecutor.AfterUpdate(AsList(primaryResource), ResourcePipeline.PatchRelationship);
+                _hookExecutor.AfterUpdate(ToList(primaryResource), ResourcePipeline.PatchRelationship);
             }
         }
 
@@ -347,7 +336,7 @@ namespace JsonApiDotNetCore.Services
             {
                 resource = _resourceFactory.CreateInstance<TResource>();
                 resource.Id = id;
-                _hookExecutor.BeforeDelete(AsList(resource), ResourcePipeline.Delete);
+                _hookExecutor.BeforeDelete(ToList(resource), ResourcePipeline.Delete);
             }
 
             var succeeded = true;
@@ -366,7 +355,7 @@ namespace JsonApiDotNetCore.Services
             }
             finally
             {
-                _hookExecutor?.AfterDelete(AsList(resource), ResourcePipeline.Delete, succeeded);
+                _hookExecutor?.AfterDelete(ToList(resource), ResourcePipeline.Delete, succeeded);
             }
         }
 
@@ -436,30 +425,109 @@ namespace JsonApiDotNetCore.Services
                 : new LogicalExpression(LogicalOperator.And, new[] { filterById, existingFilter });
         }
 
-        private (RelationshipAttribute Relationship, IReadOnlyCollection<IIdentifiable> Assignment)[] GetPopulatedRelationshipAssignments(TResource requestResource)
+        private async Task AssertResourcesInRelationshipAssignmentsExistAsync(IEnumerable<RelationshipAttribute> relationships, TResource resource)
         {
-            var assignments = _targetedFields.Relationships
-                .Select(relationship => (Relationship: relationship, Assignment: AsReadOnlyCollection(relationship.GetValue(requestResource))))
-                .Where(p => RelationshipIsPopulated(p.Assignment))
-                .ToArray();
+            var missingResources = new List<MissingResourceInRelationship>();
 
-            return assignments;
+            foreach (var relationship in relationships)
+            {
+                var missingResourcesInRelationship = GetMissingResourcesInRelationshipAsync(relationship, resource);
+                await missingResources.AddRangeAsync(missingResourcesInRelationship);
+            }
+
+            if (missingResources.Any())
+            {
+                throw new ResourcesInRelationshipAssignmentNotFoundException(missingResources);
+            }
         }
 
-        private bool RelationshipIsPopulated(object assignment)
+        private async Task AssertResourcesInRelationshipAssignmentExistAsync(RelationshipAttribute relationship, object secondaryResourceIds)
         {
-            if (assignment is IIdentifiable hasOneValue)
+            ICollection<IIdentifiable> rightResources = ExtractResources(secondaryResourceIds);
+
+            var missingResources = await GetMissingResourcesInRelationshipAsync(relationship, rightResources).ToListAsync();
+            if (missingResources.Any())
             {
-                return true;
+                throw new ResourcesInRelationshipAssignmentNotFoundException(missingResources);
             }
-            else if (assignment is IReadOnlyCollection<IIdentifiable> hasManyValues)
+        }
+
+        private IAsyncEnumerable<MissingResourceInRelationship> GetMissingResourcesInRelationshipAsync(
+            RelationshipAttribute relationship, TResource leftResource)
+        {
+            object rightValue = relationship.GetValue(leftResource);
+            ICollection<IIdentifiable> rightResources = ExtractResources(rightValue);
+
+            return GetMissingResourcesInRelationshipAsync(relationship, rightResources);
+        }
+
+        private async IAsyncEnumerable<MissingResourceInRelationship> GetMissingResourcesInRelationshipAsync(
+            RelationshipAttribute relationship, ICollection<IIdentifiable> rightResources)
+        {
+            if (rightResources.Any())
             {
-                return hasManyValues.Any();
+                var rightIds = rightResources.Select(resource => resource.GetTypedId());
+                var existingResourceStringIds = await GetSecondaryResourceStringIdsAsync(relationship.RightType, rightIds);
+
+                foreach (var rightResource in rightResources)
+                {
+                    if (existingResourceStringIds.Contains(rightResource.StringId))
+                    {
+                        continue;
+                    }
+
+                    var resourceContext = _resourceContextProvider.GetResourceContext(rightResource.GetType());
+
+                    yield return new MissingResourceInRelationship(relationship.PublicName,
+                        resourceContext.PublicName, rightResource.StringId);
+                }
             }
-            else
+        }
+
+        private static ICollection<IIdentifiable> ExtractResources(object value)
+        {
+            if (value is IEnumerable<IIdentifiable> resources)
             {
-                return false;
+                return resources.ToList();
             }
+
+            if (value is IIdentifiable resource)
+            {
+                return new[] {resource};
+            }
+
+            return Array.Empty<IIdentifiable>();
+        }
+
+        private async Task<ICollection<string>> GetSecondaryResourceStringIdsAsync(Type resourceType, IEnumerable<object> typedIds)
+        {
+            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+
+            var idValues = typedIds.Select(id => id.ToString()).ToArray();
+            var idsFilter = CreateFilterByIds(idValues, resourceContext);
+
+            var queryLayer = new QueryLayer(resourceContext)
+            {
+                Filter = idsFilter
+            };
+
+            var resources = await _repositoryAccessor.GetAsync(resourceType, queryLayer);
+            return resources.Select(resource => resource.StringId).ToArray();
+        }
+
+        private static FilterExpression CreateFilterByIds(ICollection<string> ids, ResourceContext resourceContext)
+        {
+            var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
+            var idChain = new ResourceFieldChainExpression(idAttribute);
+
+            if (ids.Count == 1)
+            {
+                var constant = new LiteralConstantExpression(ids.Single());
+                return new ComparisonExpression(ComparisonOperator.Equals, idChain, constant);
+            }
+
+            var constants = ids.Select(id => new LiteralConstantExpression(id)).ToList();
+            return new EqualsAnyOfExpression(idChain, constants);
         }
 
         private void AssertPrimaryResourceExists(TResource resource)
@@ -488,78 +556,9 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private async Task AssertResourcesInRelationshipAssignmentsExistAsync(params (RelationshipAttribute, IReadOnlyCollection<IIdentifiable>)[] assignments)
-        {
-            var missingResources = new List<MissingResourceInRelationship>();
-            
-            foreach (var (relationship, resources) in assignments)
-            {
-                IReadOnlyCollection<string> identifiers = resources.Select(i => i.GetTypedId().ToString()).ToArray();
-                var databaseResources = await GetResourcesByIdAsync(relationship.RightType, identifiers);
-
-                var errorsInAssignment = resources
-                    .Where(sr => databaseResources.All(dbr => dbr.StringId != sr.StringId))
-                    .Select(sr =>
-                        new MissingResourceInRelationship(
-                            relationship.PublicName,
-                            _resourceContextProvider.GetResourceContext(sr.GetType()).PublicName,
-                            sr.StringId));
-
-                missingResources.AddRange(errorsInAssignment);
-            }
-
-            if (missingResources.Any())
-            { 
-                throw new ResourcesInRelationshipAssignmentNotFoundException(missingResources);
-            }
-        }
-
-        private async Task<IReadOnlyCollection<IIdentifiable>> GetResourcesByIdAsync(Type resourceType,
-            IReadOnlyCollection<string> ids)
-        {
-            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
-            var idsFilter = CreateFilterByIds(ids, resourceContext);
-
-            //var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
-
-            var queryLayer = new QueryLayer(resourceContext)
-            {
-                // TODO: Call into ResourceDefinition.OnApplyFilter
-                //Filter = _resourceDefinitionAccessor.OnApplyFilter(resourceContext.ResourceType, idsFilter)
-                Filter = idsFilter
-            };
-
-            return await _repositoryAccessor.GetAsync(resourceType, queryLayer);
-        }
-
-        private static FilterExpression CreateFilterByIds(IReadOnlyCollection<string> ids, ResourceContext resourceContext)
-        {
-            var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
-            var idChain = new ResourceFieldChainExpression(idAttribute);
-
-            if (ids.Count == 1)
-            {
-                var constant = new LiteralConstantExpression(ids.Single());
-                return new ComparisonExpression(ComparisonOperator.Equals, idChain, constant);
-            }
-
-            var constants = ids.Select(id => new LiteralConstantExpression(id)).ToList();
-            return new EqualsAnyOfExpression(idChain, constants);
-        }
-
-        private List<TResource> AsList(TResource resource)
+        private List<TResource> ToList(TResource resource)
         {
             return new List<TResource> { resource };
-        }
-
-        private IReadOnlyCollection<IIdentifiable> AsReadOnlyCollection(object relationshipAssignment)
-        {
-            if (relationshipAssignment is IIdentifiable hasOneAssignment)
-            {
-                return new[] { hasOneAssignment };
-            }
-
-            return (IReadOnlyCollection<IIdentifiable>)relationshipAssignment;
         }
 
         private enum TopFieldSelection
