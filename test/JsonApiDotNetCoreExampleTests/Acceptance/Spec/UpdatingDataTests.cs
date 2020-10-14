@@ -481,27 +481,25 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 updated.Owner.Id.Should().Be(person.Id);
             });
         }
-        
+
         [Fact]
         public async Task Can_Remove_Relationship_Of_Resource_With_Composite_Foreign_Key()
         {
             // Arrange
-            var product = new Product
+            var car = new Car
             {
-                Name = "Croissants"
+                RegionCode = "NL",
+                LicensePlate = "AA-BB-11",
+                Engine = new Engine
+                {
+                    SerialCode = "1234567890"
+                }
             };
-            var category = new Category
-            {
-                Id = "4234-FRENCHSPECIALTIES",
-                Name = "French Specialties"
-            };
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTablesAsync<Product, Category>();
-                dbContext.AddRange(product, category);
-                await dbContext.SaveChangesAsync();
-                product.Category = category;
+                await dbContext.ClearTableAsync<Car>();
+                dbContext.Cars.Add(car);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -509,11 +507,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
-                    type = "products",
-                    id = product.Id,
+                    type = "cars",
+                    id = car.StringId,
                     relationships = new Dictionary<string, object>
                     {
-                        ["category"] = new
+                        ["engine"] = new
                         {
                             data = (object)null
                         }
@@ -521,7 +519,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 }
             };
 
-            var route = "/api/v1/products/" + product.Id;
+            var route = "/api/v1/cars/" + car.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -529,13 +527,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            responseDocument.Data.Should().BeNull();
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertProduct = await dbContext.Products
-                    .Include(m => m.Category)
-                    .SingleAsync(h => h.Id == product.Id);
+                var engineInDatabase = await dbContext.Engines
+                    .Include(e => e.Car)
+                    .SingleAsync(e => e.Id == car.Engine.Id);
 
-                assertProduct.Category.Should().BeNull();
+                engineInDatabase.Car.Should().BeNull();
             });
         }
     }

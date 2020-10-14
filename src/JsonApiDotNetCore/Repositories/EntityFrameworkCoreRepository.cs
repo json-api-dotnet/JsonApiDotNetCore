@@ -306,8 +306,9 @@ namespace JsonApiDotNetCore.Repositories
             {
                 var foreignKeyProperties = GetForeignKey(hasOneRelationship);
                 if (foreignKeyProperties.Length != 1)
-                {   // If the primary resource is the dependent side of a to-one relationship, there can be no FK
-                    // violations resulting from a the implicit removal.
+                {   
+                    // If the primary resource is the dependent side of a to-one relationship, there can be no FK
+                    // violations resulting from the implicit removal.
                     navigationEntry = entityEntry.Reference(hasOneRelationship.Property.Name);
                 }
             }
@@ -416,7 +417,7 @@ namespace JsonApiDotNetCore.Repositories
 
         private object EnsureRelationshipValueToAssignIsTracked(object valueToAssign, Type relationshipPropertyType)
         {
-            if (valueToAssign is ICollection<IIdentifiable> rightResourcesInToManyRelationship)
+            if (valueToAssign is IReadOnlyCollection<IIdentifiable> rightResourcesInToManyRelationship)
             {
                 return EnsureToManyRelationshipValueToAssignIsTracked(rightResourcesInToManyRelationship, relationshipPropertyType);
             }
@@ -429,7 +430,7 @@ namespace JsonApiDotNetCore.Repositories
             return null;
         }
 
-        private object EnsureToManyRelationshipValueToAssignIsTracked(ICollection<IIdentifiable> rightResources, Type rightCollectionType)
+        private object EnsureToManyRelationshipValueToAssignIsTracked(IReadOnlyCollection<IIdentifiable> rightResources, Type rightCollectionType)
         {
             var rightResourcesTracked = new object[rightResources.Count];
 
