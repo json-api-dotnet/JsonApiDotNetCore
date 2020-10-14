@@ -87,7 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             string content = JsonConvert.SerializeObject(new
             {
-                data = new object[]
+                data = new[]
                 {
                     new { type = "todoItems", id = 1 },
                     new { type = "articles", id = 2 },

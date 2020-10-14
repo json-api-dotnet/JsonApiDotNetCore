@@ -8,10 +8,10 @@ namespace JsonApiDotNetCore.Errors
     /// </summary>
     public sealed class RelationshipNotFoundException : JsonApiException
     {
-        public RelationshipNotFoundException(string relationshipName, string containingResourceName) : base(new Error(HttpStatusCode.NotFound)
+        public RelationshipNotFoundException(string relationshipName, string resourceType) : base(new Error(HttpStatusCode.NotFound)
         {
             Title = "The requested relationship does not exist.",
-            Detail = $"The resource '{containingResourceName}' does not contain a relationship named '{relationshipName}'."
+            Detail = $"Resource of type '{resourceType}' does not contain a relationship named '{relationshipName}'."
         })
         {
         }

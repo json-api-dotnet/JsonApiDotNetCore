@@ -284,7 +284,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "passport", new
                             {
-                                data = new { type = "passports", id = $"{lockedPerson.Passport.StringId}" }
+                                data = new { type = "passports", id = lockedPerson.Passport.StringId }
                             }
                         }
                     }
@@ -335,7 +335,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "passport", new
                             {
-                                data = new { type = "passports", id = $"{newPassport.StringId}" }
+                                data = new { type = "passports", id = newPassport.StringId }
                             }
                         }
                     }
@@ -464,10 +464,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "stakeHolders", new
                             {
-                                data = new object[]
+                                data = new[]
                                 {
-                                    new { type = "people", id = $"{persons[0].Id}" },
-                                    new { type = "people", id = $"{persons[1].Id}" }
+                                    new { type = "people", id = persons[0].StringId },
+                                    new { type = "people", id = persons[1].StringId }
                                 }
 
                             }
@@ -521,10 +521,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "stakeHolders", new
                             {
-                                data = new object[]
+                                data = new[]
                                 {
-                                    new { type = "people", id = $"{persons[0].Id}" },
-                                    new { type = "people", id = $"{persons[1].Id}" }
+                                    new { type = "people", id = persons[0].StringId },
+                                    new { type = "people", id = persons[1].StringId }
                                 }
 
                             }

@@ -58,11 +58,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertMan = await dbContext.Men
+                var manInDatabase = await dbContext.Men
                     .Include(m => m.HealthInsurance)
                     .SingleAsync(m => m.Id == int.Parse(responseDocument.SingleData.Id));
                 
-                assertMan.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
+                manInDatabase.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
             });
         }
         
@@ -95,11 +95,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertMan = await dbContext.Men
+                var manInDatabase = await dbContext.Men
                     .Include(m => m.HealthInsurance)
                     .SingleAsync(h => h.Id == man.Id);
 
-                assertMan.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
+                manInDatabase.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
             });
         }
 
@@ -148,13 +148,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertMan = await dbContext.Men
+                var manInDatabase = await dbContext.Men
                     .Include(m => m.Parents)
                     .SingleAsync(m => m.Id == int.Parse(responseDocument.SingleData.Id));
 
-                assertMan.Parents.Should().HaveCount(2);
-                assertMan.Parents.Should().ContainSingle(h => h is Man);
-                assertMan.Parents.Should().ContainSingle(h => h is Woman);
+                manInDatabase.Parents.Should().HaveCount(2);
+                manInDatabase.Parents.Should().ContainSingle(h => h is Man);
+                manInDatabase.Parents.Should().ContainSingle(h => h is Woman);
             });
         }
 
@@ -191,13 +191,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertChild = await dbContext.Men
+                var manInDatabase = await dbContext.Men
                     .Include(m => m.Parents)
                     .SingleAsync(m => m.Id == child.Id);
                 
-                assertChild.Parents.Should().HaveCount(2);
-                assertChild.Parents.Should().ContainSingle(h => h is Man);
-                assertChild.Parents.Should().ContainSingle(h => h is Woman);
+                manInDatabase.Parents.Should().HaveCount(2);
+                manInDatabase.Parents.Should().ContainSingle(h => h is Man);
+                manInDatabase.Parents.Should().ContainSingle(h => h is Woman);
             });
         }
 

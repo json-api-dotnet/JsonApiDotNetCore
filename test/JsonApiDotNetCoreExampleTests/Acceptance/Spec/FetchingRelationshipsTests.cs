@@ -334,7 +334,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested relationship does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("The resource 'todoItems' does not contain a relationship named 'invalid'.",errorDocument.Errors[0].Detail);
+            Assert.Equal("Resource of type 'todoItems' does not contain a relationship named 'invalid'.",errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -364,7 +364,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested relationship does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("The resource 'todoItems' does not contain a relationship named 'invalid'.",errorDocument.Errors[0].Detail);
+            Assert.Equal("Resource of type 'todoItems' does not contain a relationship named 'invalid'.",errorDocument.Errors[0].Detail);
         }
     }
 }
