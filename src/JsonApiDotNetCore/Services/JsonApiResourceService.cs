@@ -544,9 +544,9 @@ namespace JsonApiDotNetCore.Services
         private void AssertRelationshipIsToMany()
         {
             var relationship = _request.Relationship;
-            if (relationship is HasOneAttribute)
+            if (!(relationship is HasManyAttribute))
             {
-                throw new ToOneRelationshipUpdateForbiddenException(relationship.PublicName);
+                throw new ToManyRelationshipRequiredException(relationship.PublicName);
             }
         }
 

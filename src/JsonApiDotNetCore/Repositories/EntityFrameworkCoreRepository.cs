@@ -137,12 +137,12 @@ namespace JsonApiDotNetCore.Repositories
 
             _dbContext.Set<TResource>().Add(resource);
 
-            await TrySave();
+            await SaveChangesAsync();
 
             FlushFromCache(resource);
 
-            // this ensures relationships get reloaded from the database if they have
-            // been requested. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
+            // This ensures relationships get reloaded from the database if they have
+            // been requested. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343.
             DetachRelationships(resource);
         }
 
@@ -156,7 +156,7 @@ namespace JsonApiDotNetCore.Repositories
 
             await ApplyRelationshipAssignment(primaryResource, relationship, secondaryResourceIds);
 
-            await TrySave();
+            await SaveChangesAsync();
         }
 
         public async Task SetRelationshipAsync(TId id, object secondaryResourceIds)
@@ -170,7 +170,7 @@ namespace JsonApiDotNetCore.Repositories
             
             await ApplyRelationshipAssignment(primaryResource, relationship, secondaryResourceIds);
 
-            await TrySave();
+            await SaveChangesAsync();
         }
 
         /// <inheritdoc />
@@ -197,7 +197,7 @@ namespace JsonApiDotNetCore.Repositories
                 await ApplyRelationshipAssignment(resourceFromDatabase, relationship, relationshipAssignment);
             }
 
-            await TrySave();
+            await SaveChangesAsync();
         }
 
         /// <inheritdoc />
@@ -208,7 +208,7 @@ namespace JsonApiDotNetCore.Repositories
             var resource = GetTrackedOrAttach(CreateInstanceWithAssignedId(id));
             _dbContext.Remove(resource);
 
-            await TrySave();
+            await SaveChangesAsync();
         }
 
         public async Task RemoveFromToManyRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
@@ -227,7 +227,7 @@ namespace JsonApiDotNetCore.Repositories
             if (newRelationshipAssignment.Length < currentRelationshipAssignment.Count)
             {
                 await ApplyRelationshipAssignment(primaryResource, relationship, newRelationshipAssignment);
-                await TrySave();
+                await SaveChangesAsync();
             }
         }
 
@@ -475,7 +475,7 @@ namespace JsonApiDotNetCore.Repositories
             return trackedResource;
         }
 
-        private async Task TrySave()
+        private async Task SaveChangesAsync()
         {
             try
             {
