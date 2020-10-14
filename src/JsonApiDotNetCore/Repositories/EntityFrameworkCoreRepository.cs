@@ -131,8 +131,8 @@ namespace JsonApiDotNetCore.Repositories
 
             foreach (var relationship in _targetedFields.Relationships)
             {
-                var relationshipAssignment = relationship.GetValue(resource);
-                await ApplyRelationshipAssignment(resource, relationship, relationshipAssignment);
+                var rightValue = relationship.GetValue(resource);
+                await AssignValueToRelationship(relationship, resource, rightValue);
             }
 
             _dbContext.Set<TResource>().Add(resource);
@@ -152,9 +152,9 @@ namespace JsonApiDotNetCore.Repositories
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
             
             var relationship = _targetedFields.Relationships.Single();
-            var primaryResource = (TResource)GetTrackedOrAttach(CreateInstanceWithAssignedId(id));
+            var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreateInstanceWithAssignedId(id));
 
-            await ApplyRelationshipAssignment(primaryResource, relationship, secondaryResourceIds);
+            await AssignValueToRelationship(relationship, primaryResource, secondaryResourceIds);
 
             await SaveChangesAsync();
         }
@@ -164,11 +164,11 @@ namespace JsonApiDotNetCore.Repositories
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
 
             var relationship = _targetedFields.Relationships.Single();
-            var primaryResource = (TResource)GetTrackedOrAttach(CreateInstanceWithAssignedId(id));
+            var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreateInstanceWithAssignedId(id));
             
             await LoadRelationship(primaryResource, relationship);
             
-            await ApplyRelationshipAssignment(primaryResource, relationship, secondaryResourceIds);
+            await AssignValueToRelationship(relationship, primaryResource, secondaryResourceIds);
 
             await SaveChangesAsync();
         }
@@ -188,13 +188,13 @@ namespace JsonApiDotNetCore.Repositories
             foreach (var relationship in _targetedFields.Relationships)
             {
                 // A database entity might not be tracked if it was retrieved through projection. 
-                resourceFromDatabase = (TResource) GetTrackedOrAttach(resourceFromDatabase);
+                resourceFromDatabase = (TResource) _dbContext.GetTrackedOrAttach(resourceFromDatabase);
 
                 // Ensures complete replacements of relationships.
                 await LoadRelationship(resourceFromDatabase, relationship);
 
                 var relationshipAssignment = relationship.GetValue(resourceFromRequest);
-                await ApplyRelationshipAssignment(resourceFromDatabase, relationship, relationshipAssignment);
+                await AssignValueToRelationship(relationship, resourceFromDatabase, relationshipAssignment);
             }
 
             await SaveChangesAsync();
@@ -205,7 +205,7 @@ namespace JsonApiDotNetCore.Repositories
         {
             _traceWriter.LogMethodStart(new {id});
 
-            var resource = GetTrackedOrAttach(CreateInstanceWithAssignedId(id));
+            var resource = _dbContext.GetTrackedOrAttach(CreateInstanceWithAssignedId(id));
             _dbContext.Remove(resource);
 
             await SaveChangesAsync();
@@ -217,7 +217,7 @@ namespace JsonApiDotNetCore.Repositories
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
             
             var relationship = _targetedFields.Relationships.Single();
-            var primaryResource = (TResource)GetTrackedOrAttach(CreateInstanceWithAssignedId(id));
+            var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreateInstanceWithAssignedId(id));
             
             await LoadRelationship(primaryResource, relationship);
 
@@ -226,7 +226,7 @@ namespace JsonApiDotNetCore.Repositories
             
             if (newRelationshipAssignment.Length < currentRelationshipAssignment.Count)
             {
-                await ApplyRelationshipAssignment(primaryResource, relationship, newRelationshipAssignment);
+                await AssignValueToRelationship(relationship, primaryResource, newRelationshipAssignment);
                 await SaveChangesAsync();
             }
         }
@@ -380,14 +380,15 @@ namespace JsonApiDotNetCore.Repositories
             return !inversePropertyIsEnumerable;
         }
 
-        private async Task ApplyRelationshipAssignment(TResource primaryResource, RelationshipAttribute relationship, object relationshipAssignment)
+        private async Task AssignValueToRelationship(RelationshipAttribute relationship, TResource leftResource,
+            object valueToAssign)
         {
-            // Ensures the new relationship assignment will not result entities being tracked more than once.
+            // Ensures the new relationship assignment will not result in entities being tracked more than once.
             object trackedRelationshipAssignment = null;
 
-            if (relationshipAssignment != null)
+            if (valueToAssign != null)
             {
-                trackedRelationshipAssignment = GetTrackedRelationshipAssignment(relationshipAssignment, relationship.Property.PropertyType);
+                trackedRelationshipAssignment = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
                 
                 // Ensures successful handling of implicit removals of relationships.
                 await LoadInverseRelationships(trackedRelationshipAssignment, relationship);
@@ -405,44 +406,46 @@ namespace JsonApiDotNetCore.Repositories
                 var foreignKeyProperties = GetForeignKey(relationship);
                 if (foreignKeyProperties.Length == 1)
                 {
-                    foreignKeyProperties.First().SetValue(primaryResource, secondaryResourceId);
-                    _dbContext.Entry(primaryResource).State = EntityState.Modified;
+                    foreignKeyProperties.First().SetValue(leftResource, secondaryResourceId);
+                    _dbContext.Entry(leftResource).State = EntityState.Modified;
                 }
             }
 
-            relationship.SetValue(primaryResource, trackedRelationshipAssignment, _resourceFactory);
+            relationship.SetValue(leftResource, trackedRelationshipAssignment, _resourceFactory);
         }
 
-        private object GetTrackedRelationshipAssignment(object relationshipAssignment, Type relationshipType)
+        private object EnsureRelationshipValueToAssignIsTracked(object valueToAssign, Type relationshipPropertyType)
         {
-            object trackedRelationshipAssignment;
-
-            if (relationshipAssignment == null)
+            if (valueToAssign is ICollection<IIdentifiable> rightResourcesInToManyRelationship)
             {
-                trackedRelationshipAssignment = null;
-            } 
-            else if (relationshipAssignment is IIdentifiable hasOneValue)
-            {
-                trackedRelationshipAssignment = GetTrackedOrAttach(hasOneValue);
+                return EnsureToManyRelationshipValueToAssignIsTracked(rightResourcesInToManyRelationship, relationshipPropertyType);
             }
-            else
+
+            if (valueToAssign is IIdentifiable rightResourceInToOneRelationship)
             {
-                var hasManyValue = (IReadOnlyCollection<IIdentifiable>)relationshipAssignment;
-                var trackedHasManyValues = new object[hasManyValue.Count];
-
-                for (int i = 0; i < hasManyValue.Count; i++)
-                {
-                    var trackedHasManyValue = GetTrackedOrAttach(hasManyValue.ElementAt(i));
-                    
-                    // We should recalculate the target type for every iteration because types may vary. This is possible with resource inheritance.
-                    var conversionTarget = trackedHasManyValue.GetType();
-                    trackedHasManyValues[i] = Convert.ChangeType(trackedHasManyValue, conversionTarget);
-                }
-
-                trackedRelationshipAssignment = TypeHelper.CopyToTypedCollection(trackedHasManyValues, relationshipType);
+                return _dbContext.GetTrackedOrAttach(rightResourceInToOneRelationship);
             }
-            
-            return trackedRelationshipAssignment;
+
+            return null;
+        }
+
+        private object EnsureToManyRelationshipValueToAssignIsTracked(ICollection<IIdentifiable> rightResources, Type rightCollectionType)
+        {
+            var rightResourcesTracked = new object[rightResources.Count];
+
+            int index = 0;
+            foreach (var rightResource in rightResources)
+            {
+                var trackedIdentifiable = _dbContext.GetTrackedOrAttach(rightResource);
+
+                // We should recalculate the target type for every iteration because types may vary. This is possible with resource inheritance.
+                var identifiableRuntimeType = trackedIdentifiable.GetType();
+                rightResourcesTracked[index] = Convert.ChangeType(trackedIdentifiable, identifiableRuntimeType);
+
+                index++;
+            }
+
+            return TypeHelper.CopyToTypedCollection(rightResourcesTracked, rightCollectionType);
         }
 
         private PropertyInfo[] GetForeignKey(RelationshipAttribute relationship)
@@ -461,18 +464,6 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             return Array.Empty<PropertyInfo>();
-        }
-
-        private IIdentifiable GetTrackedOrAttach(IIdentifiable resource)
-        {
-            var trackedResource = (IIdentifiable)_dbContext.GetTrackedIdentifiable(resource);
-            if (trackedResource == null)
-            {
-                _dbContext.Entry(resource).State = EntityState.Unchanged;
-                trackedResource = resource;
-            }
-
-            return trackedResource;
         }
 
         private async Task SaveChangesAsync()
