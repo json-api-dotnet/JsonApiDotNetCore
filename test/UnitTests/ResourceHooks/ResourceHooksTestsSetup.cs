@@ -386,7 +386,7 @@ namespace UnitTests.ResourceHooks
         private void ResolveInverseRelationships(AppDbContext context)
         {
             var dbContextResolvers = new[] {new DbContextResolver<AppDbContext>(context)};
-            var inverseRelationships = new InverseRelationships(_resourceGraph, dbContextResolvers);
+            var inverseRelationships = new InverseRelationshipResolver(_resourceGraph, dbContextResolvers);
             inverseRelationships.Resolve();
         }
 

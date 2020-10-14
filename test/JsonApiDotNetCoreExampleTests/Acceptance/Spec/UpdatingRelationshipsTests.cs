@@ -820,9 +820,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Delete_Relationship_By_Patching_Through_Relationship_Endpoint()
         {
             // Arrange
-            var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
-            todoItem.Owner = person;
+            todoItem.Owner = _personFaker.Generate();
             
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();

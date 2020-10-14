@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Configuration
             if (builder == null) throw new ArgumentNullException(nameof(builder));
             
             using var scope = builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            var inverseRelationshipResolver = scope.ServiceProvider.GetRequiredService<IInverseRelationships>();
+            var inverseRelationshipResolver = scope.ServiceProvider.GetRequiredService<IInverseRelationshipResolver>();
             inverseRelationshipResolver.Resolve();
             
             var jsonApiApplicationBuilder =  builder.ApplicationServices.GetRequiredService<IJsonApiApplicationBuilder>();

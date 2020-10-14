@@ -3,20 +3,19 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Responsible for populating the <see cref="RelationshipAttribute.InverseNavigation"/> property.
+    /// Responsible for populating the <see cref="RelationshipAttribute.InverseRelationshipPropertyName"/> property.
     /// 
     /// This service is instantiated in the configure phase of the application.
     /// 
     /// When using a data access layer different from EF Core, and when using ResourceHooks
     /// that depend on the inverse navigation property (BeforeImplicitUpdateRelationship),
-    /// you will need to override this service, or pass along the inverseNavigationProperty in
+    /// you will need to override this service, or pass along the InverseRelationshipPropertyName in
     /// the RelationshipAttribute.
     /// </summary>
-    public interface IInverseRelationships
+    public interface IInverseRelationshipResolver
     {
         /// <summary>
-        /// This method is called upon startup by JsonApiDotNetCore. It should 
-        /// deal with resolving the inverse relationships. 
+        /// This method is called upon startup by JsonApiDotNetCore. It resolves inverse relationships. 
         /// </summary>
         void Resolve();
     }

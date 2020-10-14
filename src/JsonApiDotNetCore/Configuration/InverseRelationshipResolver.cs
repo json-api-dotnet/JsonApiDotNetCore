@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <inheritdoc />
-    public class InverseRelationships : IInverseRelationships
+    public class InverseRelationshipResolver : IInverseRelationshipResolver
     {
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IEnumerable<IDbContextResolver> _dbContextResolvers;
 
-        public InverseRelationships(IResourceContextProvider resourceContextProvider,
+        public InverseRelationshipResolver(IResourceContextProvider resourceContextProvider,
             IEnumerable<IDbContextResolver> dbContextResolvers)
         {
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
@@ -41,8 +41,10 @@ namespace JsonApiDotNetCore.Configuration
                     {
                         if (!(relationship is HasManyThroughAttribute))
                         {
+                            // TODO: Replace Relationship.InverseRelationshipPropertyName (string) with RelationShip.InverseRelationship object that we assign here.
+
                             INavigation inverseNavigation = entityType.FindNavigation(relationship.Property.Name)?.FindInverse();
-                            relationship.InverseNavigation = inverseNavigation?.Name;
+                            relationship.InverseRelationshipPropertyName = inverseNavigation?.Name;
                         }
                     }
                 }

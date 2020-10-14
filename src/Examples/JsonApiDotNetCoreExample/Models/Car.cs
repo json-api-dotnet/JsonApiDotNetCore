@@ -16,7 +16,7 @@ namespace JsonApiDotNetCoreExample.Models
 
         protected override string GetStringId(string value)
         {
-            return $"{RegionCode}:{LicensePlate}";
+            return $"{RegionId}:{LicensePlate}";
         }
 
         protected override string GetTypedId(string value)
@@ -24,9 +24,12 @@ namespace JsonApiDotNetCoreExample.Models
             var elements = value.Split(':');
             if (elements.Length == 2)
             {
-                RegionCode = elements[0];
-                LicensePlate = elements[1];
-                return value;
+                if (int.TryParse(elements[0], out int regionId))
+                {
+                    RegionId = regionId;
+                    LicensePlate = elements[1];
+                    return value;
+                }
             }
 
             throw new InvalidOperationException($"Failed to convert ID '{value}'.");
@@ -36,7 +39,7 @@ namespace JsonApiDotNetCoreExample.Models
         public string LicensePlate { get; set; }
 
         [Attr]
-        public string RegionCode { get; set; }
+        public long RegionId { get; set; }
 
         [HasOne]
         public Engine Engine { get; set; }

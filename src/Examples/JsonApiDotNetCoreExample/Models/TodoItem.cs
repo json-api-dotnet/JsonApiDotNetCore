@@ -45,7 +45,7 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowChange)]
         public DateTimeOffset? OffsetDate { get; set; }
  
-        public int? OwnerId { get; set; }
+        //public int? OwnerId { get; set; }
 
         public int? AssigneeId { get; set; }
 

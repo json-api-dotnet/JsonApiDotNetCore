@@ -206,7 +206,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert -- database
             var todoItemResult = await _context.TodoItems.SingleAsync(t => t.Id == resultId);
 
-            Assert.Equal(person1.Id, todoItemResult.OwnerId);
+            Assert.Equal(person1.Id, todoItemResult.Owner.Id);
             Assert.Equal(person2.Id, todoItemResult.AssigneeId);
         }
 

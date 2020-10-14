@@ -51,16 +51,16 @@ namespace JsonApiDotNetCoreExample.Repositories
 
         private sealed class CarFilterRewriter : QueryExpressionRewriter<object>
         {
-            private readonly AttrAttribute _regionCodeAttribute;
+            private readonly AttrAttribute _regionIdAttribute;
             private readonly AttrAttribute _licensePlateAttribute;
 
             public CarFilterRewriter(IResourceContextProvider resourceContextProvider)
             {
                 var carResourceContext = resourceContextProvider.GetResourceContext<Car>();
 
-                _regionCodeAttribute =
+                _regionIdAttribute =
                     carResourceContext.Attributes.Single(attribute =>
-                        attribute.Property.Name == nameof(Car.RegionCode));
+                        attribute.Property.Name == nameof(Car.RegionId));
 
                 _licensePlateAttribute =
                     carResourceContext.Attributes.Single(attribute =>
@@ -99,15 +99,15 @@ namespace JsonApiDotNetCoreExample.Repositories
                     StringId = carStringId
                 };
 
-                return CreateEqualityComparisonOnRegionCodeLicensePlate(tempCar.RegionCode, tempCar.LicensePlate);
+                return CreateEqualityComparisonOnRegionIdLicensePlate(tempCar.RegionId, tempCar.LicensePlate);
             }
 
-            private QueryExpression CreateEqualityComparisonOnRegionCodeLicensePlate(string regionCodeValue,
+            private QueryExpression CreateEqualityComparisonOnRegionIdLicensePlate(long regionIdValue,
                 string licensePlateValue)
             {
-                var regionCodeComparison = new ComparisonExpression(ComparisonOperator.Equals,
-                    new ResourceFieldChainExpression(_regionCodeAttribute),
-                    new LiteralConstantExpression(regionCodeValue));
+                var regionIdComparison = new ComparisonExpression(ComparisonOperator.Equals,
+                    new ResourceFieldChainExpression(_regionIdAttribute),
+                    new LiteralConstantExpression(regionIdValue.ToString()));
 
                 var licensePlateComparison = new ComparisonExpression(ComparisonOperator.Equals,
                     new ResourceFieldChainExpression(_licensePlateAttribute),
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCoreExample.Repositories
 
                 return new LogicalExpression(LogicalOperator.And, new[]
                 {
-                    regionCodeComparison,
+                    regionIdComparison,
                     licensePlateComparison
                 });
             }

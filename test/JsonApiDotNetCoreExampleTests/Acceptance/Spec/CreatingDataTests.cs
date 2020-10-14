@@ -179,7 +179,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItemResult = GetDbContext().TodoItems.AsNoTracking()
                 .Include(c => c.Owner)
                 .SingleOrDefault(c => c.Id == responseItem.Id);
-            Assert.Equal(owner.Id, todoItemResult.OwnerId);
+            Assert.Equal(owner.Id, todoItemResult.Owner.Id);
         }
 
         [Fact]
@@ -244,9 +244,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _dbContext.People.Add(person);
             await _dbContext.SaveChangesAsync();
             var personRole = new PersonRole { Person = person };
+            var requestBody = serializer.Serialize(personRole);
 
             // Act
-            var (body, response) = await Post("/api/v1/personRoles", serializer.Serialize(personRole));
+            var (body, response) = await Post("/api/v1/personRoles", requestBody);
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);

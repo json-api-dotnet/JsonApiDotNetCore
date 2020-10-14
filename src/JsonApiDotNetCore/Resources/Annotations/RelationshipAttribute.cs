@@ -11,7 +11,25 @@ namespace JsonApiDotNetCore.Resources.Annotations
     {
         private LinkTypes _links;
 
-        public string InverseNavigation { get; set; }
+        /// <summary>
+        /// The property name of the inverse relationship, if any.
+        /// </summary>
+        /// <example>
+        /// <code><![CDATA[
+        /// public class Article : Identifiable
+        /// {
+        ///     [HasOne] // InverseRelationshipPropertyName = Articles
+        ///     public Person Owner { get; set; }
+        /// }
+        /// 
+        /// public class Person : Identifiable
+        /// {
+        ///     [HasMany] // InverseRelationshipPropertyName = Owner
+        ///     public ICollection<Article> Articles { get; set; }
+        /// }
+        /// ]]></code>
+        /// </example>
+        public string InverseRelationshipPropertyName { get; internal set; }
 
         /// <summary>
         /// The internal navigation property path to the related resource.

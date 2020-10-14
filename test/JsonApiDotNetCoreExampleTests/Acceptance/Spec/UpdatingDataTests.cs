@@ -483,17 +483,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Can_Remove_Relationship_Of_Resource_With_Composite_Foreign_Key()
+        public async Task Can_Get_By_Composite_Key()
         {
             // Arrange
             var car = new Car
             {
-                RegionCode = "NL",
-                LicensePlate = "AA-BB-11",
-                Engine = new Engine
-                {
-                    SerialCode = "1234567890"
-                }
+                RegionId = 123,
+                LicensePlate = "AA-BB-11"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -503,15 +499,93 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 await dbContext.SaveChangesAsync();
             });
 
+            var route = "/api/v1/cars/" + car.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Id.Should().Be(car.StringId);
+        }
+
+        // TODO: Remove temporary code for experiments.
+        [Fact]
+        public async Task Demo_Composite_Key_Navigation_Assignment()
+        {
+            // Arrange
+            var engine = new Engine
+            {
+                SerialCode = "1234567890"
+            };
+
+            var car = new Car
+            {
+                RegionId = 123,
+                LicensePlate = "AA-BB-11",
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTablesAsync<Engine, Car>();
+                dbContext.AddRange(engine, car);
+                await dbContext.SaveChangesAsync();
+            });
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                engine = await dbContext.Engines.FirstAsync(e => e.Id.Equals(engine.Id));
+                car = await dbContext.Cars.FirstAsync(c => c.RegionId == car.RegionId && c.LicensePlate == car.LicensePlate);
+
+                // Act
+                engine.Car = car;
+
+                await dbContext.SaveChangesAsync();
+            });
+
+            // Assert
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var engineInDatabase = await dbContext.Engines
+                    .Include(e => e.Car)
+                    .SingleAsync(e => e.Id == engine.Id);
+
+                engineInDatabase.Car.Should().NotBeNull();
+            });
+        }
+
+        [Fact]
+        public async Task Can_Remove_Relationship_Of_Resource_With_Composite_Foreign_Key()
+        {
+            // Arrange
+            var engine = new Engine
+            {
+                SerialCode = "1234567890",
+                Car = new Car
+                {
+                    RegionId = 123,
+                    LicensePlate = "AA-BB-11",
+                }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<Car>();
+                dbContext.Engines.Add(engine);
+                await dbContext.SaveChangesAsync();
+            });
+
             var requestBody = new
             {
                 data = new
                 {
-                    type = "cars",
-                    id = car.StringId,
+                    type = "engines",
+                    id = engine.StringId,
                     relationships = new Dictionary<string, object>
                     {
-                        ["engine"] = new
+                        ["car"] = new
                         {
                             data = (object)null
                         }
@@ -519,7 +593,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 }
             };
 
-            var route = "/api/v1/cars/" + car.StringId;
+            var route = "/api/v1/engines/" + engine.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -533,9 +607,72 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 var engineInDatabase = await dbContext.Engines
                     .Include(e => e.Car)
-                    .SingleAsync(e => e.Id == car.Engine.Id);
+                    .SingleAsync(e => e.Id == engine.Id);
 
                 engineInDatabase.Car.Should().BeNull();
+            });
+        }
+
+        [Fact]
+        public async Task Can_Assign_Relationship_Of_Resource_With_Composite_Foreign_Key()
+        {
+            // Arrange
+            var car = new Car
+            {
+                RegionId = 123,
+                LicensePlate = "AA-BB-11"
+            };
+
+            var engine = new Engine
+            {
+                SerialCode = "1234567890"
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<Car>();
+                dbContext.AddRange(car, engine);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "engines",
+                    id = engine.StringId,
+                    relationships = new Dictionary<string, object>
+                    {
+                        ["car"] = new
+                        {
+                            data = new
+                            {
+                                type = "cars",
+                                id = car.StringId
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/engines/" + engine.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Data.Should().BeNull();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var engineInDatabase = await dbContext.Engines
+                    .Include(e => e.Car)
+                    .SingleAsync(e => e.Id == engine.Id);
+
+                engineInDatabase.Car.Should().NotBeNull();
+                engineInDatabase.Car.Id.Should().Be(car.StringId);
             });
         }
     }
