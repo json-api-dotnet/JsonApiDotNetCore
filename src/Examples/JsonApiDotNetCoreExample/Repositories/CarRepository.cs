@@ -102,7 +102,7 @@ namespace JsonApiDotNetCoreExample.Repositories
                 return CreateEqualityComparisonOnRegionIdLicensePlate(tempCar.RegionId, tempCar.LicensePlate);
             }
 
-            private QueryExpression CreateEqualityComparisonOnRegionIdLicensePlate(long regionIdValue,
+            private QueryExpression CreateEqualityComparisonOnRegionIdLicensePlate(long? regionIdValue,
                 string licensePlateValue)
             {
                 var regionIdComparison = new ComparisonExpression(ComparisonOperator.Equals,

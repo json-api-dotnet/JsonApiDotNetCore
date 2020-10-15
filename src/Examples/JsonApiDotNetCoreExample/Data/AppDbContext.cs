@@ -96,7 +96,10 @@ namespace JsonApiDotNetCoreExample.Data
                 .HasForeignKey<TodoItem>(p => p.OneToOnePersonId);
             
             modelBuilder.Entity<Car>()
+                .Ignore(c => c.Id)
+                .Ignore(c => c.StringId)
                 .HasKey(c => new { c.RegionId, c.LicensePlate });
+
 
             modelBuilder.Entity<Engine>()
                 .HasOne(e => e.Car)

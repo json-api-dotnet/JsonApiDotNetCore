@@ -165,17 +165,18 @@ namespace JsonApiDotNetCore.Repositories
 
             var relationship = _targetedFields.Relationships.Single();
 
-            TResource primaryResource;
+            TResource primaryResource = CreateInstanceWithAssignedId(id);
             if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtSideOfHasOneRelationship(hasOneRelationship))
             {
-                primaryResource = await _dbContext.Set<TResource>()
+                var primaryResourceFromDatabase = await _dbContext.Set<TResource>()
                     .Include(relationship.Property.Name)
                     .Where(r => r.Id.Equals(id))
-                    .FirstAsync();
+                    .FirstOrDefaultAsync();
+                primaryResource = primaryResourceFromDatabase ?? primaryResource;
             }
             else
             {
-                primaryResource = (TResource) _dbContext.GetTrackedOrAttach(CreateInstanceWithAssignedId(id));
+                primaryResource = (TResource) _dbContext.GetTrackedOrAttach(primaryResource);
                 await LoadRelationship(primaryResource, relationship);
             }
             
@@ -190,12 +191,7 @@ namespace JsonApiDotNetCore.Repositories
             _traceWriter.LogMethodStart(new {resourceFromRequest, resourceFromDatabase});
             if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
             if (resourceFromDatabase == null) throw new ArgumentNullException(nameof(resourceFromDatabase));
-
-            foreach (var attribute in _targetedFields.Attributes)
-            {
-                attribute.SetValue(resourceFromDatabase, attribute.GetValue(resourceFromRequest));
-            }
-
+            
             foreach (var relationship in _targetedFields.Relationships)
             {
                 if (relationship is HasOneAttribute hasOneRelationship &&
@@ -221,6 +217,11 @@ namespace JsonApiDotNetCore.Repositories
                 await AssignValueToRelationship(relationship, resourceFromDatabase, relationshipAssignment);
 
                 //_dbContext.Entry(resourceFromDatabase).State = EntityState.Modified;
+            }
+            
+            foreach (var attribute in _targetedFields.Attributes)
+            {
+                attribute.SetValue(resourceFromDatabase, attribute.GetValue(resourceFromRequest));
             }
 
             await SaveChangesAsync();
@@ -454,7 +455,7 @@ namespace JsonApiDotNetCore.Repositories
                     }
                 }*/
             }
-
+            
             relationship.SetValue(leftResource, trackedValueToAssign, _resourceFactory);
         }
 

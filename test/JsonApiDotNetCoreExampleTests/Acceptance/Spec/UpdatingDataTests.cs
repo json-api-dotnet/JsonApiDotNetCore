@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
@@ -510,52 +511,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(car.StringId);
         }
-
-        // TODO: Remove temporary code for experiments.
-        [Fact]
-        public async Task Demo_Composite_Key_Navigation_Assignment()
-        {
-            // Arrange
-            var engine = new Engine
-            {
-                SerialCode = "1234567890"
-            };
-
-            var car = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11",
-            };
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTablesAsync<Engine, Car>();
-                dbContext.AddRange(engine, car);
-                await dbContext.SaveChangesAsync();
-            });
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                engine = await dbContext.Engines.FirstAsync(e => e.Id.Equals(engine.Id));
-                car = await dbContext.Cars.FirstAsync(c => c.RegionId == car.RegionId && c.LicensePlate == car.LicensePlate);
-
-                // Act
-                engine.Car = car;
-
-                await dbContext.SaveChangesAsync();
-            });
-
-            // Assert
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var engineInDatabase = await dbContext.Engines
-                    .Include(e => e.Car)
-                    .SingleAsync(e => e.Id == engine.Id);
-
-                engineInDatabase.Car.Should().NotBeNull();
-            });
-        }
-
+    
         [Fact]
         public async Task Can_Remove_Relationship_Of_Resource_With_Composite_Foreign_Key()
         {
