@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -172,7 +173,14 @@ namespace JsonApiDotNetCore.Repositories
                     .Include(relationship.Property.Name)
                     .Where(r => r.Id.Equals(id))
                     .FirstOrDefaultAsync();
-                primaryResource = primaryResourceFromDatabase ?? primaryResource;
+
+                if (primaryResourceFromDatabase == null)
+                {
+                    var resourceContext = _resourceGraph.GetResourceContext<TResource>();
+                    throw new ResourceNotFoundException(primaryResource.StringId, resourceContext.PublicName);
+                }
+
+                primaryResource = primaryResourceFromDatabase;
             }
             else
             {
