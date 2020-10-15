@@ -167,7 +167,7 @@ namespace JsonApiDotNetCore.Repositories
             var relationship = _targetedFields.Relationships.Single();
 
             TResource primaryResource = CreateInstanceWithAssignedId(id);
-            if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtSideOfHasOneRelationship(hasOneRelationship))
+            if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSideOfHasOneRelationship(hasOneRelationship))
             {
                 var primaryResourceFromDatabase = await _dbContext.Set<TResource>()
                     .Include(relationship.Property.Name)
@@ -203,7 +203,7 @@ namespace JsonApiDotNetCore.Repositories
             foreach (var relationship in _targetedFields.Relationships)
             {
                 if (relationship is HasOneAttribute hasOneRelationship &&
-                    HasForeignKeyAtSideOfHasOneRelationship(hasOneRelationship))
+                    HasForeignKeyAtLeftSideOfHasOneRelationship(hasOneRelationship))
                 {
                     FlushFromCache(resourceFromDatabase);
 
@@ -368,7 +368,7 @@ namespace JsonApiDotNetCore.Repositories
         /// these "inverse relationships" into the DbContext ensures EF Core to take this into account.
         /// </remarks>
         /// </summary>
-        private async Task LoadInverseRelationshipsInChangeTracker(RelationshipAttribute relationship, object resource)
+        private async Task LoadInverseRelationships(RelationshipAttribute relationship, object resource)
         {
             if (relationship.InverseNavigationProperty != null)
             {
@@ -430,7 +430,7 @@ namespace JsonApiDotNetCore.Repositories
                 trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
                 
                 // Ensures successful handling of implicit removals of relationships.
-                await LoadInverseRelationshipsInChangeTracker(relationship, trackedValueToAssign);
+                await LoadInverseRelationships(relationship, trackedValueToAssign);
             }
 
             if (relationship is HasOneAttribute hasOneRelationship)
@@ -496,7 +496,7 @@ namespace JsonApiDotNetCore.Repositories
             return TypeHelper.CopyToTypedCollection(rightResourcesTracked, rightCollectionType);
         }
 
-        private bool HasForeignKeyAtSideOfHasOneRelationship(HasOneAttribute relationship)
+        private bool HasForeignKeyAtLeftSideOfHasOneRelationship(HasOneAttribute relationship)
         {
             var entityType = _dbContext.Model.FindEntityType(typeof(TResource));
             var navigation = entityType.FindNavigation(relationship.Property.Name);
