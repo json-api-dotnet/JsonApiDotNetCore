@@ -5,9 +5,10 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public sealed class Car : IIdentifiable<string>
+    public sealed class Car : Identifiable<string>
     {
-        public string Id
+        [NotMapped]
+        public override string Id
         {
             get => $"{RegionId}:{LicensePlate}";
             set
@@ -28,16 +29,13 @@ namespace JsonApiDotNetCoreExample.Models
             }
         }
 
-        public string StringId
-        {
-            get => Id;
-            set => Id = value;
-        }
+        [Attr]
+        public string LicensePlate { get; set; }
 
-        [Attr] public string LicensePlate { get; set; }
+        [Attr]
+        public long RegionId { get; set; }
 
-        [Attr] public long? RegionId { get; set; }
-
-        [HasOne] public Engine Engine { get; set; }
+        [HasOne]
+        public Engine Engine { get; set; }
     }
 }
