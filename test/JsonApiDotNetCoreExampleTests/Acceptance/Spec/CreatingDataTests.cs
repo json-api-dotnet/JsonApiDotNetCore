@@ -3,391 +3,739 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
+using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample;
+using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
-    public sealed class CreatingDataTests : FunctionalTestCollection<StandardApplicationFactory>
+    public sealed class CreatingDataTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
     {
-        private readonly Faker<TodoItem> _todoItemFaker;
-        private readonly Faker<Person> _personFaker;
+        private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
 
-        public CreatingDataTests(StandardApplicationFactory factory) : base(factory)
+        private readonly Faker<TodoItem> _todoItemFaker = new Faker<TodoItem>()
+            .RuleFor(t => t.Description, f => f.Lorem.Sentence())
+            .RuleFor(t => t.Ordinal, f => f.Random.Number())
+            .RuleFor(t => t.CreatedDate, f => f.Date.Past());
+
+        private readonly Faker<Person> _personFaker = new Faker<Person>()
+            .RuleFor(p => p.FirstName, f => f.Name.FirstName())
+            .RuleFor(p => p.LastName, f => f.Name.LastName());
+
+        public CreatingDataTests(IntegrationTestContext<Startup, AppDbContext> testContext)
         {
-            _todoItemFaker = new Faker<TodoItem>()
-                    .RuleFor(t => t.Description, f => f.Lorem.Sentence())
-                    .RuleFor(t => t.Ordinal, f => f.Random.Number())
-                    .RuleFor(t => t.CreatedDate, f => f.Date.Past());
-            _personFaker = new Faker<Person>()
-                    .RuleFor(t => t.FirstName, f => f.Name.FirstName())
-                    .RuleFor(t => t.LastName, f => f.Name.LastName());
+            _testContext = testContext;
+
+            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.AllowClientGeneratedIds = false;
         }
 
         [Fact]
         public async Task CreateResource_ModelWithEntityFrameworkInheritance_IsCreated()
         {
             // Arrange
-            var serializer = GetSerializer<SuperUser>(e => new { e.SecurityLevel, e.UserName, e.Password });
-            var superUser = new SuperUser(_dbContext) { SecurityLevel = 1337, UserName = "Super", Password = "User" };
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "superUsers",
+                    attributes = new
+                    {
+                        securityLevel = 1337,
+                        userName = "Jack",
+                        password = "secret"
+                    }
+                }
+            };
+
+            var route = "/api/v1/superUsers";
 
             // Act
-            var (body, response) = await Post("/api/v1/superUsers", serializer.Serialize(superUser));
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.Created, response);
-            var createdSuperUser = _deserializer.DeserializeSingle<SuperUser>(body).Data;
-            var first = _dbContext.Set<SuperUser>().FirstOrDefault(e => e.Id.Equals(createdSuperUser.Id));
-            Assert.NotNull(first);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["securityLevel"].Should().Be(1337);
+            responseDocument.SingleData.Attributes["userName"].Should().Be("Jack");
+
+            var newSuperUserId = responseDocument.SingleData.Id;
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var superUserInDatabase = await dbContext.Set<SuperUser>()
+                    .Where(superUser => superUser.Id == int.Parse(newSuperUserId))
+                    .SingleAsync();
+
+                superUserInDatabase.Password.Should().Be("secret");
+            });
         }
 
         [Fact]
         public async Task CreateResource_GuidResource_IsCreated()
         {
             // Arrange
-            var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.Owner });
-            var owner = new Person();
-            _dbContext.People.Add(owner);
-            await _dbContext.SaveChangesAsync();
-            var todoItemCollection = new TodoItemCollection { Owner = owner };
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoCollections",
+                    attributes = new
+                    {
+                        name = "Jack"
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoCollections";
 
             // Act
-            var (_, response) = await Post("/api/v1/todoCollections", serializer.Serialize(todoItemCollection));
+            var (httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.Created, response);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
         }
 
         [Fact]
         public async Task ClientGeneratedId_IntegerIdAndNotEnabled_IsForbidden()
         {
             // Arrange
-            var serializer = GetSerializer<TodoItem>(e => new { e.Description, e.Ordinal, e.CreatedDate });
-            var todoItem = _todoItemFaker.Generate();
-            const int clientDefinedId = 9999;
-            todoItem.Id = clientDefinedId;
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    id = "9999",
+                    attributes = new
+                    {
+                        description = "some",
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoItems";
 
             // Act
-            var (body, response) = await Post("/api/v1/todoItems", serializer.Serialize(todoItem));
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-            Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.Forbidden, errorDocument.Errors[0].StatusCode);
-            Assert.Equal("Specifying the resource ID in POST requests is not allowed.", errorDocument.Errors[0].Title);
-            Assert.Null(errorDocument.Errors[0].Detail);
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            responseDocument.Errors[0].Title.Should().Be("Specifying the resource ID in POST requests is not allowed.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
         public async Task CreateWithRelationship_HasMany_IsCreated()
         {
             // Arrange
-            var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.TodoItems });
-            var todoItem = _todoItemFaker.Generate();
-            _dbContext.TodoItems.Add(todoItem);
-            await _dbContext.SaveChangesAsync();
-            var todoCollection = new TodoItemCollection { TodoItems = new HashSet<TodoItem> { todoItem } };
+            var existingTodoItem = _todoItemFaker.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.TodoItems.Add(existingTodoItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoCollections",
+                    relationships = new
+                    {
+                        todoItems = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "todoItems",
+                                    id = existingTodoItem.StringId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoCollections";
 
             // Act
-            var (body, response) = await Post("/api/v1/todoCollections", serializer.Serialize(todoCollection));
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.Created, response);
-            var responseItem = _deserializer.DeserializeSingle<TodoItemCollectionClient>(body).Data;
-            var contextCollection = GetDbContext().TodoItemCollections.AsNoTracking()
-                .Include(c => c.Owner)
-                .Include(c => c.TodoItems)
-                .SingleOrDefault(c => c.Id == responseItem.Id);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            Assert.NotEmpty(contextCollection.TodoItems);
-            Assert.Equal(todoItem.Id, contextCollection.TodoItems.First().Id);
+            var newTodoCollectionId = responseDocument.SingleData.Id;
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var todoCollectionsInDatabase = await dbContext.TodoItemCollections
+                    .Include(collection => collection.TodoItems)
+                    .ToListAsync();
+
+                var newTodoCollectionInDatabase = todoCollectionsInDatabase.Single(c => c.StringId == newTodoCollectionId);
+                newTodoCollectionInDatabase.TodoItems.Should().HaveCount(1);
+                newTodoCollectionInDatabase.TodoItems.ElementAt(0).Id.Should().Be(existingTodoItem.Id);
+            });
         }
 
         [Fact]
         public async Task CreateWithRelationship_HasManyAndInclude_IsCreatedAndIncluded()
         {
             // Arrange
-            var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.TodoItems, e.Owner });
-            var owner = new Person();
-            var todoItem = new TodoItem { Owner = owner, Description = "Description" };
-            _dbContext.People.Add(owner);
-            _dbContext.TodoItems.Add(todoItem);
-            await _dbContext.SaveChangesAsync();
-            var todoCollection = new TodoItemCollection { Owner = owner, TodoItems = new HashSet<TodoItem> { todoItem } };
+            var existingTodoItem = _todoItemFaker.Generate();
+            existingTodoItem.Owner = _personFaker.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.TodoItems.Add(existingTodoItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoCollections",
+                    relationships = new
+                    {
+                        todoItems = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "todoItems",
+                                    id = existingTodoItem.StringId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoCollections?include=todoItems";
 
             // Act
-            var (body, response) = await Post("/api/v1/todoCollections?include=todoItems", serializer.Serialize(todoCollection));
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.Created, response);
-            var responseItem = _deserializer.DeserializeSingle<TodoItemCollectionClient>(body).Data;
-            Assert.NotNull(responseItem);
-            Assert.NotEmpty(responseItem.TodoItems);
-            Assert.Equal(todoItem.Description, responseItem.TodoItems.Single().Description);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            responseDocument.SingleData.Should().NotBeNull();
+
+            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Type.Should().Be("todoItems");
+            responseDocument.Included[0].Id.Should().Be(existingTodoItem.StringId);
+            responseDocument.Included[0].Attributes["description"].Should().Be(existingTodoItem.Description);
         }
 
         [Fact]
         public async Task CreateWithRelationship_HasManyAndIncludeAndSparseFieldset_IsCreatedAndIncluded()
         {
             // Arrange
-            var serializer = GetSerializer<TodoItemCollection>(e => new { e.Name }, e => new { e.TodoItems, e.Owner });
-            var owner = new Person();
-            var todoItem = new TodoItem { Owner = owner, Ordinal = 123, Description = "Description" };
-            _dbContext.People.Add(owner);
-            _dbContext.TodoItems.Add(todoItem);
-            await _dbContext.SaveChangesAsync();
-            var todoCollection = new TodoItemCollection {Owner = owner, Name = "Jack", TodoItems = new HashSet<TodoItem> {todoItem}};
+            var existingTodoItem = _todoItemFaker.Generate();
+            existingTodoItem.Owner = _personFaker.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.TodoItems.Add(existingTodoItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoCollections",
+                    attributes = new
+                    {
+                        name = "Jack"
+                    },
+                    relationships = new
+                    {
+                        todoItems = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "todoItems",
+                                    id = existingTodoItem.StringId
+                                }
+                            }
+                        },
+                        owner = new
+                        {
+                            data = new
+                            {
+                                type = "people",
+                                id = existingTodoItem.Owner.StringId
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoCollections?include=todoItems&fields=name&fields[todoItems]=ordinal";
 
             // Act
-            var (body, response) = await Post("/api/v1/todoCollections?include=todoItems&fields=name&fields[todoItems]=ordinal", serializer.Serialize(todoCollection));
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.Created, response);
-            var responseItem = _deserializer.DeserializeSingle<TodoItemCollectionClient>(body).Data;
-            Assert.NotNull(responseItem);
-            Assert.Equal(todoCollection.Name, responseItem.Name);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            Assert.NotEmpty(responseItem.TodoItems);
-            Assert.Equal(todoItem.Ordinal, responseItem.TodoItems.Single().Ordinal);
-            Assert.Null(responseItem.TodoItems.Single().Description);
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["name"].Should().Be("Jack");
+
+            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Type.Should().Be("todoItems");
+            responseDocument.Included[0].Id.Should().Be(existingTodoItem.StringId);
+            responseDocument.Included[0].Attributes["ordinal"].Should().Be(existingTodoItem.Ordinal);
+            responseDocument.Included[0].Attributes.Should().NotContainKey("description");
         }
 
         [Fact]
         public async Task CreateWithRelationship_HasOne_IsCreated()
         {
             // Arrange
-            var serializer = GetSerializer<TodoItem>(attributes: ti => new { }, relationships: ti => new { ti.Owner });
-            var todoItem = new TodoItem();
-            var owner = new Person();
-            _dbContext.People.Add(owner);
-            await _dbContext.SaveChangesAsync();
-            todoItem.Owner = owner;
+            var existingOwner = _personFaker.Generate();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.People.Add(existingOwner);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    relationships = new
+                    {
+                        owner = new
+                        {
+                            data = new
+                            {
+                                type = "people",
+                                id = existingOwner.StringId
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoItems";
 
             // Act
-            var (body, response) = await Post("/api/v1/todoItems", serializer.Serialize(todoItem));
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.Created, response);
-            var responseItem = _deserializer.DeserializeSingle<TodoItemClient>(body).Data;
-            var todoItemResult = GetDbContext().TodoItems.AsNoTracking()
-                .Include(c => c.Owner)
-                .SingleOrDefault(c => c.Id == responseItem.Id);
-            Assert.Equal(owner.Id, todoItemResult.Owner.Id);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            var newTodoItemId = responseDocument.SingleData.Id;
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var todoItemInDatabase = await dbContext.TodoItems
+                    .Include(item => item.Owner)
+                    .Where(item => item.Id == int.Parse(newTodoItemId))
+                    .SingleAsync();
+
+                todoItemInDatabase.Owner.Id.Should().Be(existingOwner.Id);
+            });
         }
 
         [Fact]
         public async Task CreateWithRelationship_HasOneAndInclude_IsCreatedAndIncluded()
         {
             // Arrange
-            var serializer = GetSerializer<TodoItem>(attributes: ti => new { }, relationships: ti => new { ti.Owner });
-            var todoItem = new TodoItem();
-            var owner = new Person { FirstName = "Alice" };
-            _dbContext.People.Add(owner);
-            await _dbContext.SaveChangesAsync();
-            todoItem.Owner = owner;
+            var existingOwner = _personFaker.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.People.Add(existingOwner);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    attributes = new
+                    {
+                        description = "some"
+                    },
+                    relationships = new
+                    {
+                        owner = new
+                        {
+                            data = new
+                            {
+                                type = "people",
+                                id = existingOwner.StringId
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoItems?include=owner";
 
             // Act
-            var (body, response) = await Post("/api/v1/todoItems?include=owner", serializer.Serialize(todoItem));
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.Created, response);
-            var responseItem = _deserializer.DeserializeSingle<TodoItemClient>(body).Data;
-            Assert.NotNull(responseItem);
-            Assert.NotNull(responseItem.Owner);
-            Assert.Equal(owner.FirstName, responseItem.Owner.FirstName);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["description"].Should().Be("some");
+
+            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Type.Should().Be("people");
+            responseDocument.Included[0].Id.Should().Be(existingOwner.StringId);
+            responseDocument.Included[0].Attributes["firstName"].Should().Be(existingOwner.FirstName);
+            responseDocument.Included[0].Attributes["lastName"].Should().Be(existingOwner.LastName);
         }
 
         [Fact]
         public async Task CreateWithRelationship_HasOneAndIncludeAndSparseFieldset_IsCreatedAndIncluded()
         {
             // Arrange
-            var serializer = GetSerializer<TodoItem>(attributes: ti => new { ti.Ordinal }, relationships: ti => new { ti.Owner });
-            var todoItem = new TodoItem
+            var existingOwner = _personFaker.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Ordinal = 123,
-                Description = "some"
+                dbContext.People.Add(existingOwner);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    attributes = new
+                    {
+                        ordinal = 123,
+                        description = "some"
+                    },
+                    relationships = new
+                    {
+                        owner = new
+                        {
+                            data = new
+                            {
+                                type = "people",
+                                id = existingOwner.StringId
+                            }
+                        }
+                    }
+                }
             };
-            var owner = new Person { FirstName = "Alice", LastName = "Cooper" };
-            _dbContext.People.Add(owner);
-            await _dbContext.SaveChangesAsync();
-            todoItem.Owner = owner;
+
+            var route = "/api/v1/todoItems?include=owner&fields=ordinal&fields[owner]=firstName";
 
             // Act
-            var (body, response) = await Post("/api/v1/todoItems?include=owner&fields=ordinal&fields[owner]=firstName", serializer.Serialize(todoItem));
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.Created, response);
-            var responseItem = _deserializer.DeserializeSingle<TodoItemClient>(body).Data;
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            Assert.NotNull(responseItem);
-            Assert.Equal(todoItem.Ordinal, responseItem.Ordinal);
-            Assert.Null(responseItem.Description);
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["ordinal"].Should().Be(123);
+            responseDocument.SingleData.Attributes.Should().NotContainKey("description");
 
-            Assert.NotNull(responseItem.Owner);
-            Assert.Equal(owner.FirstName, responseItem.Owner.FirstName);
-            Assert.Null(responseItem.Owner.LastName);
+            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Type.Should().Be("people");
+            responseDocument.Included[0].Id.Should().Be(existingOwner.StringId);
+            responseDocument.Included[0].Attributes["firstName"].Should().Be(existingOwner.FirstName);
+            responseDocument.Included[0].Attributes.Should().NotContainKey("lastName");
         }
 
         [Fact]
         public async Task CreateWithRelationship_HasOneFromIndependentSide_IsCreated()
         {
             // Arrange
-            var serializer = GetSerializer<PersonRole>(pr => new { }, pr => new { pr.Person });
-            var person = new Person();
-            _dbContext.People.Add(person);
-            await _dbContext.SaveChangesAsync();
-            var personRole = new PersonRole { Person = person };
-            var requestBody = serializer.Serialize(personRole);
+            var existingPerson = new Person();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.People.Add(existingPerson);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "personRoles",
+                    relationships = new
+                    {
+                        person = new
+                        {
+                            data = new
+                            {
+                                type = "people",
+                                id = existingPerson.StringId
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/personRoles";
 
             // Act
-            var (body, response) = await Post("/api/v1/personRoles", requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.Created, response);
-            var responseItem = _deserializer.DeserializeSingle<PersonRole>(body).Data;
-            var personRoleResult = _dbContext.PersonRoles.AsNoTracking()
-                .Include(c => c.Person)
-                .SingleOrDefault(c => c.Id == responseItem.Id);
-            Assert.NotEqual(0, responseItem.Id);
-            Assert.Equal(person.Id, personRoleResult.Person.Id);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            var newPersonRoleId = responseDocument.SingleData.Id;
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var personRoleInDatabase = await dbContext.PersonRoles
+                    .Include(role => role.Person)
+                    .Where(role => role.Id == int.Parse(newPersonRoleId))
+                    .SingleAsync();
+
+                personRoleInDatabase.Person.Id.Should().Be(existingPerson.Id);
+            });
         }
 
         [Fact]
         public async Task CreateResource_SimpleResource_HeaderLocationsAreCorrect()
         {
             // Arrange
-            var serializer = GetSerializer<TodoItem>(ti => new { ti.CreatedDate, ti.Description, ti.Ordinal });
             var todoItem = _todoItemFaker.Generate();
 
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    attributes = new
+                    {
+                        createdDate = todoItem.CreatedDate,
+                        description = todoItem.Description,
+                        ordinal = todoItem.Ordinal
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoItems";
+
             // Act
-            var (body, response) = await Post("/api/v1/todoItems", serializer.Serialize(todoItem));
-            var responseItem = _deserializer.DeserializeSingle<TodoItemClient>(body).Data;
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.Created, response);
-            Assert.Equal($"/api/v1/todoItems/{responseItem.Id}", response.Headers.Location.ToString());
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            var newTodoItemId = responseDocument.SingleData.Id;
+            httpResponse.Headers.Location.Should().Be("/api/v1/todoItems/" + newTodoItemId);
         }
 
         [Fact]
         public async Task CreateResource_UnknownResourceType_Fails()
         {
             // Arrange
-            string content = JsonConvert.SerializeObject(new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "something"
                 }
-            });
+            };
+
+            var route = "/api/v1/todoItems";
 
             // Act
-            var (body, response) = await Post("/api/v1/todoItems", content);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-            Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].StatusCode);
-            Assert.Equal("Failed to deserialize request body: Payload includes unknown resource type.", errorDocument.Errors[0].Title);
-            Assert.StartsWith("The resource 'something' is not registered on the resource graph.", errorDocument.Errors[0].Detail);
-            Assert.Contains("Request body: <<", errorDocument.Errors[0].Detail);
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload includes unknown resource type.");
+            responseDocument.Errors[0].Detail.Should().StartWith("The resource 'something' is not registered on the resource graph.");
+            responseDocument.Errors[0].Detail.Should().Contain("Request body: <<");
         }
 
         [Fact]
         public async Task CreateResource_Blocked_Fails()
         {
             // Arrange
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "todoItems",
                     attributes = new Dictionary<string, object>
                     {
-                        { "alwaysChangingValue", "X" }
+                        ["alwaysChangingValue"] = "X"
                     }
                 }
             };
 
-            var requestBody = JsonConvert.SerializeObject(content);
+            var route = "/api/v1/todoItems";
 
             // Act
-            var (body, response) = await Post("/api/v1/todoItems", requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-            Assert.Single(errorDocument.Errors);
-
-            var error = errorDocument.Errors.Single();
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].StatusCode);
-            Assert.Equal("Failed to deserialize request body: Assigning to the requested attribute is not allowed.", error.Title);
-            Assert.StartsWith("Assigning to 'alwaysChangingValue' is not allowed. - Request body:", error.Detail);
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Assigning to the requested attribute is not allowed.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Assigning to 'alwaysChangingValue' is not allowed. - Request body:");
         }
 
         [Fact]
         public async Task CreateRelationship_ToOneWithImplicitRemove_IsCreated()
         {
             // Arrange
-            var serializer = GetSerializer<Person>(e => new { e.FirstName }, e => new { e.Passport });
-            var passport = new Passport(_dbContext);
-            var currentPerson = _personFaker.Generate();
-            currentPerson.Passport = passport;
-            _dbContext.People.Add(currentPerson);
-            await _dbContext.SaveChangesAsync();
-            var newPerson = _personFaker.Generate();
-            newPerson.Passport = passport;
+            var existingPerson = _personFaker.Generate();
 
+            Passport passport = null;
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<Person>();
+
+                passport = new Passport(dbContext);
+                existingPerson.Passport = passport;
+
+                dbContext.People.Add(existingPerson);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "people",
+                    relationships = new
+                    {
+                        passport = new
+                        {
+                            data = new
+                            {
+                                type = "passports",
+                                id = passport.StringId
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/people";
+            
             // Act
-            var (body, response) = await Post("/api/v1/people", serializer.Serialize(newPerson));
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.Created, response);
-            var responseItem = _deserializer.DeserializeSingle<Person>(body).Data;
-            var newPersonDb = _dbContext.People.AsNoTracking().Where(p => p.Id == responseItem.Id).Include(e => e.Passport).Single();
-            Assert.NotNull(newPersonDb.Passport);
-            Assert.Equal(passport.Id, newPersonDb.Passport.Id);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            var newPersonId = responseDocument.SingleData.Id;
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var personsInDatabase = await dbContext.People
+                    .Include(p => p.Passport)
+                    .ToListAsync();
+
+                var existingPersonInDatabase = personsInDatabase.Single(p => p.Id == existingPerson.Id);
+                existingPersonInDatabase.Passport.Should().BeNull();
+
+                var newPersonInDatabase = personsInDatabase.Single(p => p.StringId == newPersonId);
+                newPersonInDatabase.Passport.Id.Should().Be(passport.Id);
+            });
         }
 
         [Fact]
         public async Task CreateRelationship_ToManyWithImplicitRemove_IsCreated()
         {
             // Arrange
-            var serializer = GetSerializer<Person>(e => new { e.FirstName }, e => new { e.TodoItems });
-            var currentPerson = _personFaker.Generate();
             var todoItems = _todoItemFaker.Generate(3);
-            currentPerson.TodoItems = todoItems.ToHashSet();
-            _dbContext.Add(currentPerson);
-            await _dbContext.SaveChangesAsync();
-            var firstTd = todoItems[0];
-            var secondTd = todoItems[1];
-            var thirdTd = todoItems[2];
 
-            var newPerson = _personFaker.Generate();
-            newPerson.TodoItems = new HashSet<TodoItem> { firstTd, secondTd };
+            var existingPerson = _personFaker.Generate();
+            existingPerson.TodoItems = todoItems.ToHashSet();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.People.Add(existingPerson);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "people",
+                    relationships = new
+                    {
+                        todoItems = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "todoItems",
+                                    id = todoItems[0].StringId
+                                },
+                                new
+                                {
+                                    type = "todoItems",
+                                    id = todoItems[1].StringId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/people";
 
             // Act
-            var (body, response) = await Post("/api/v1/people", serializer.Serialize(newPerson));
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.Created, response);
-            var responseItem = _deserializer.DeserializeSingle<Person>(body).Data;
-            var newPersonDb = _dbContext.People.AsNoTracking().Where(p => p.Id == responseItem.Id).Include(e => e.TodoItems).Single();
-            var oldPersonDb = _dbContext.People.AsNoTracking().Where(p => p.Id == currentPerson.Id).Include(e => e.TodoItems).Single();
-            Assert.Equal(2, newPersonDb.TodoItems.Count);
-            Assert.Single(oldPersonDb.TodoItems);
-            Assert.NotNull(newPersonDb.TodoItems.SingleOrDefault(ti => ti.Id == firstTd.Id));
-            Assert.NotNull(newPersonDb.TodoItems.SingleOrDefault(ti => ti.Id == secondTd.Id));
-            Assert.NotNull(oldPersonDb.TodoItems.SingleOrDefault(ti => ti.Id == thirdTd.Id));
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            var newPersonId = responseDocument.SingleData.Id;
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var personsInDatabase = await dbContext.People
+                    .Include(p => p.TodoItems)
+                    .ToListAsync();
+
+                var existingPersonInDatabase = personsInDatabase.Single(p => p.Id == existingPerson.Id);
+                existingPersonInDatabase.TodoItems.Should().HaveCount(1);
+                existingPersonInDatabase.TodoItems.Should().ContainSingle(item => item.Id == todoItems[2].Id);
+
+                var newPersonInDatabase = personsInDatabase.Single(p => p.StringId == newPersonId);
+                newPersonInDatabase.TodoItems.Should().HaveCount(2);
+                newPersonInDatabase.TodoItems.Should().ContainSingle(item => item.Id == todoItems[0].Id);
+                newPersonInDatabase.TodoItems.Should().ContainSingle(item => item.Id == todoItems[1].Id);
+            });
         }
     }
 }

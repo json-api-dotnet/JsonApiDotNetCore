@@ -1,19 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
 using FluentAssertions;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
