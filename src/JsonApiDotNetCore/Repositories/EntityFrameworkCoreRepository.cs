@@ -360,50 +360,15 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Loads the inverse relationships to prevent foreign key constraints from being violated
         /// to support implicit removes, see https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
-        /// <remarks>
-        /// Consider the following example: 
-        /// person.todoItems = [t1, t2] is updated to [t3, t4]. If t3 and/or t4 was
-        /// already related to another person, and these persons are NOT loaded into the 
-        /// DbContext, then the query may fail with a foreign key constraint violation. Loading
-        /// these "inverse relationships" into the DbContext ensures EF Core to take this into account.
-        /// </remarks>
         /// </summary>
         private async Task LoadInverseRelationships(RelationshipAttribute relationship, object resource)
         {
             if (relationship.InverseNavigationProperty != null)
             {
-                if (relationship is HasOneAttribute hasOneRelationship)
+                if (relationship is HasOneAttribute hasOneRelationship && IsOneToOne(hasOneRelationship) == true)
                 {
-                    var entityEntry = _dbContext.Entry(resource);
-
-                    var isOneToOne = IsOneToOne(hasOneRelationship);
-
-                    if (isOneToOne == true)
-                    {
-                        await entityEntry.Reference(relationship.InverseNavigationProperty.Name).LoadAsync();
-                    }
-                    else if (isOneToOne == false)
-                    {
-                        await entityEntry.Collection(relationship.InverseNavigationProperty.Name).LoadAsync();
-                    }
-                    else
-                    {
-                        // TODO: What should happen if no inverse navigation exists?
-                    }
-                }
-                else if (relationship is HasManyThroughAttribute)
-                {
-                    // Do nothing. Implicit removal is not possible for many-to-many relationships.
-                }
-                else
-                {
-                    var resources = (IEnumerable<IIdentifiable>)resource;
-
-                    foreach (var nextResource in resources)
-                    {
-                        var nextEntityEntry = _dbContext.Entry(nextResource);
-                        await nextEntityEntry.Reference(relationship.InverseNavigationProperty.Name).LoadAsync();
-                    }
+                    var entityEntry = _dbContext.Entry(resource); 
+                    await entityEntry.Reference(relationship.InverseNavigationProperty.Name).LoadAsync();
                 }
             }
         }
