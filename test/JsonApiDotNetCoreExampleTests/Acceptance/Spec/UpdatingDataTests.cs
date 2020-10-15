@@ -447,7 +447,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = todoItem.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        ["description"] = "Something else",
+                        ["description"] = "Something else"
                     },
                     relationships = new Dictionary<string, object>
                     {
@@ -524,7 +524,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var car = new Car
             {
                 RegionId = 123,
-                LicensePlate = "AA-BB-11",
+                LicensePlate = "AA-BB-11"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -566,7 +566,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 Car = new Car
                 {
                     RegionId = 123,
-                    LicensePlate = "AA-BB-11",
+                    LicensePlate = "AA-BB-11"
                 }
             };
 

@@ -378,7 +378,7 @@ namespace JsonApiDotNetCore.Repositories
                 }
                 else if (relationship is HasManyThroughAttribute)
                 {
-                    // TODO: What should happen in this case?
+                    // Do nothing. Implicit removal is not possible for many-to-many relationships.
                 }
                 else
                 {
