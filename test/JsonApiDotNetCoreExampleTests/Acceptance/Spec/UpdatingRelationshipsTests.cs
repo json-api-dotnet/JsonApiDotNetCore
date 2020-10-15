@@ -590,8 +590,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     .Include(person => person.TodoItems)
                     .ToListAsync();
 
-                // TODO: Should this even work? The test name suggests that it should...
-                //personsInDatabase.Single(person => person.Id == person1.Id).TodoItems.Should().BeEmpty();
+                personsInDatabase.Single(person => person.Id == person1.Id).TodoItems.Should().HaveCount(1);
                 
                 var person2InDatabase = personsInDatabase.Single(person => person.Id == person2.Id);
                 person2InDatabase.TodoItems.Should().HaveCount(2);

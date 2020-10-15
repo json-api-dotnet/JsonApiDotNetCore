@@ -362,24 +362,30 @@ namespace JsonApiDotNetCore.Repositories
         /// </summary>
         private async Task LoadInverseRelationshipsInChangeTracker(RelationshipAttribute relationship, object resource)
         {
-            if (relationship.InverseRelationshipPropertyName != null)
+            if (relationship.InverseNavigationProperty != null)
             {
                 if (relationship is HasOneAttribute hasOneRelationship)
                 {
                     var entityEntry = _dbContext.Entry(resource);
-    
-                    if (IsOneToOne(hasOneRelationship))
+
+                    var isOneToOne = IsOneToOne(hasOneRelationship);
+
+                    if (isOneToOne == true)
                     {
-                        await entityEntry.Reference(relationship.InverseRelationshipPropertyName).LoadAsync();
+                        await entityEntry.Reference(relationship.InverseNavigationProperty.Name).LoadAsync();
+                    }
+                    else if (isOneToOne == false)
+                    {
+                        await entityEntry.Collection(relationship.InverseNavigationProperty.Name).LoadAsync();
                     }
                     else
                     {
-                        await entityEntry.Collection(relationship.InverseRelationshipPropertyName).LoadAsync();
+                        // TODO: What should happen if no inverse navigation exists?
                     }
                 }
                 else if (relationship is HasManyThroughAttribute)
                 {
-                    // TODO: What should happen in this case?
+                    // Do nothing. Implicit removal is not possible for many-to-many relationships.
                 }
                 else
                 {
@@ -388,32 +394,21 @@ namespace JsonApiDotNetCore.Repositories
                     foreach (var nextResource in resources)
                     {
                         var nextEntityEntry = _dbContext.Entry(nextResource);
-                        await nextEntityEntry.Reference(relationship.InverseRelationshipPropertyName).LoadAsync();
+                        await nextEntityEntry.Reference(relationship.InverseNavigationProperty.Name).LoadAsync();
                     }
                 }
             }
         }
 
-        private bool IsOneToOne(HasOneAttribute hasOneRelationship)
+        private bool? IsOneToOne(HasOneAttribute hasOneRelationship)
         {
-            var inverseRelationship = _resourceGraph
-                .GetRelationships(hasOneRelationship.RightType)
-                .FirstOrDefault(r => r.Property.Name == hasOneRelationship.InverseRelationshipPropertyName);
-
-            if (inverseRelationship != null)
+            if (hasOneRelationship.InverseNavigationProperty != null)
             {
-                return inverseRelationship is HasOneAttribute;
+                var inversePropertyIsCollection = TypeHelper.TryGetCollectionElementType(hasOneRelationship.InverseNavigationProperty.PropertyType) != null;
+                return !inversePropertyIsCollection;
             }
 
-            // inverseRelationship is null when there is no RelationshipAttribute on the inverse navigation property.
-            // In this case we reflect on the type to figure out what kind of relationship is pointing back.
-
-            // TODO: If there is no InverseRelationshipPropertyName, I don't think the next line ever matches anything.
-            // On the other hand, if there is one, then we would have found it in the lines above.
-            var inverseProperty = hasOneRelationship.RightType.GetProperty(hasOneRelationship.InverseRelationshipPropertyName).PropertyType;
-
-            var isCollection = TypeHelper.IsOrImplementsInterface(inverseProperty, typeof(IEnumerable));
-            return !isCollection;
+            return null;
         }
 
         private async Task AssignValueToRelationship(RelationshipAttribute relationship, TResource leftResource,

@@ -337,7 +337,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             // that the inverse attribute was also set (Owner has one Article: HasOneAttr:article).
             // If it isn't, JADNC currently knows nothing about this relationship pointing back, and it 
             // currently cannot fire hooks for resources resolved through inverse relationships.
-            var inversableRelationshipAttributes = resourcesByRelationship.Where(kvp => kvp.Key.InverseRelationshipPropertyName != null);
+            var inversableRelationshipAttributes = resourcesByRelationship.Where(kvp => kvp.Key.InverseNavigationProperty != null);
             return inversableRelationshipAttributes.ToDictionary(kvp => _resourceGraph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
         }
 

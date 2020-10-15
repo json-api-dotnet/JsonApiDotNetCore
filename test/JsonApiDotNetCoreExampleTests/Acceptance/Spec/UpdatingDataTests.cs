@@ -448,7 +448,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = todoItem.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        ["description"] = "Something else",
+                        ["description"] = "Something else"
                     },
                     relationships = new Dictionary<string, object>
                     {
@@ -511,7 +511,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(car.StringId);
         }
-    
+
         [Fact]
         public async Task Can_Remove_Relationship_Of_Resource_With_Composite_Foreign_Key()
         {
@@ -522,7 +522,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 Car = new Car
                 {
                     RegionId = 123,
-                    LicensePlate = "AA-BB-11",
+                    LicensePlate = "AA-BB-11"
                 }
             };
 
