@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 
@@ -12,24 +13,24 @@ namespace JsonApiDotNetCore.Resources.Annotations
         private LinkTypes _links;
 
         /// <summary>
-        /// The property name of the inverse relationship, if any.
+        /// The property name of the EF Core inverse navigation, which may or may not be exposed as a json:api relationship.
         /// </summary>
         /// <example>
         /// <code><![CDATA[
         /// public class Article : Identifiable
         /// {
-        ///     [HasOne] // InverseRelationshipPropertyName = Articles
+        ///     [HasOne] // InverseNavigationProperty = Person.Articles
         ///     public Person Owner { get; set; }
         /// }
         /// 
         /// public class Person : Identifiable
         /// {
-        ///     [HasMany] // InverseRelationshipPropertyName = Owner
+        ///     [HasMany] // InverseNavigationProperty = Article.Owner
         ///     public ICollection<Article> Articles { get; set; }
         /// }
         /// ]]></code>
         /// </example>
-        public string InverseRelationshipPropertyName { get; internal set; }
+        internal PropertyInfo InverseNavigationProperty { get; set; }
 
         /// <summary>
         /// The internal navigation property path to the related resource.

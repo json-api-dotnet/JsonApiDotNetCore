@@ -41,10 +41,8 @@ namespace JsonApiDotNetCore.Configuration
                     {
                         if (!(relationship is HasManyThroughAttribute))
                         {
-                            // TODO: Replace Relationship.InverseRelationshipPropertyName (string) with RelationShip.InverseRelationship object that we assign here.
-
                             INavigation inverseNavigation = entityType.FindNavigation(relationship.Property.Name)?.FindInverse();
-                            relationship.InverseRelationshipPropertyName = inverseNavigation?.Name;
+                            relationship.InverseNavigationProperty = inverseNavigation?.PropertyInfo;
                         }
                     }
                 }
