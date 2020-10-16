@@ -313,13 +313,12 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <summary>
-        /// Before assigning new relationship values (<see cref="UpdateAsync"/>), we need to
-        /// attach the current database values of the relationship to the DbContext, else 
-        /// it will not perform a complete-replace which is required for 
-        /// one-to-many and many-to-many.
+        /// Before assigning new relationship values, we need to attach the current database values
+        /// of the relationship to the DbContext, otherwise it will not perform a complete-replace,
+        /// which is required for one-to-many and many-to-many.
         /// <para>
         /// For example: a person `p1` has 2 todo-items: `t1` and `t2`.
-        /// If we want to update this todo-item set to `t3` and `t4`, simply assigning
+        /// If we want to update this set to `t3` and `t4`, simply assigning
         /// `p1.todoItems = [t3, t4]` will result in EF Core adding them to the set,
         /// resulting in `[t1 ... t4]`. Instead, we should first include `[t1, t2]`,
         /// after which the reassignment `p1.todoItems = [t3, t4]` will actually 
