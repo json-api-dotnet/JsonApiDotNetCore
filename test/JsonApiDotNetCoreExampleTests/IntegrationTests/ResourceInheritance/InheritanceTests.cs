@@ -161,7 +161,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         [Fact]
         public async Task Can_patch_resource_with_to_many_relationship_through_relationship_link()
         {
-            // Arrange   
+            // Arrange
             var child = new Man();
             var father = new Man();
             var mother = new Woman();

@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Update_Cyclic_ToMany_Relationship_By_Patching_Resource()
         {
-            // Arrange 
+            // Arrange
             var todoItem = _todoItemFaker.Generate();
             var otherTodoItem = _todoItemFaker.Generate();
 
@@ -89,7 +89,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Update_Cyclic_ToOne_Relationship_By_Patching_Resource()
         {
-            // Arrange 
+            // Arrange
             var todoItem = _todoItemFaker.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -136,7 +136,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Update_Both_Cyclic_ToOne_And_ToMany_Relationship_By_Patching_Resource()
         {
-            // Arrange 
+            // Arrange
             var todoItem = _todoItemFaker.Generate();
             var otherTodoItem = _todoItemFaker.Generate();
             
@@ -187,67 +187,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
                 todoItemInDatabase.ParentTodoId.Should().Be(todoItem.Id);
             });
-        }
-        
-        [Fact]
-        public async Task Fails_When_Patching_Primary_Endpoint_With_Missing_Secondary_Resources()
-        {
-            // Arrange 
-            var todoItem = _todoItemFaker.Generate();
-            var person = _personFaker.Generate();
-            
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddRange(todoItem, person);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "todoItems",
-                    id = todoItem.StringId,
-                    relationships = new Dictionary<string, object>
-                    {
-                        ["stakeHolders"] = new
-                        {
-                            data = new[]
-                            {
-                                new {type = "people", id = person.StringId},
-                                new {type = "people", id = "900000"},
-                                new {type = "people", id = "900001"}
-                            }
-                        },
-                        ["parentTodo"] = new
-                        {
-                            data = new {type = "todoItems", id = "900002"}
-                        }
-                    }
-                }
-            };
-
-            var route = "/api/v1/todoItems/" + todoItem.StringId;
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.Should().HaveCount(3);
-
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'people' with ID '900000' being assigned to relationship 'stakeHolders' does not exist.");
-
-            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[1].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[1].Detail.Should().Be("Resource of type 'people' with ID '900001' being assigned to relationship 'stakeHolders' does not exist.");
-
-            responseDocument.Errors[2].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[2].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[2].Detail.Should().Be("Resource of type 'todoItems' with ID '900002' being assigned to relationship 'parentTodo' does not exist.");
         }
 
         [Fact]
@@ -752,7 +691,102 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Fails_When_Patching_Relationships_Endpoint_With_Unknown_Relationship()
+        public async Task Fails_When_Patching_On_Primary_Endpoint_With_Missing_Secondary_Resources()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            var person = _personFaker.Generate();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(todoItem, person);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    id = todoItem.StringId,
+                    relationships = new Dictionary<string, object>
+                    {
+                        ["stakeHolders"] = new
+                        {
+                            data = new[]
+                            {
+                                new {type = "people", id = person.StringId},
+                                new {type = "people", id = "900000"},
+                                new {type = "people", id = "900001"}
+                            }
+                        },
+                        ["parentTodo"] = new
+                        {
+                            data = new {type = "todoItems", id = "900002"}
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoItems/" + todoItem.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            responseDocument.Errors.Should().HaveCount(3);
+
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'people' with ID '900000' being assigned to relationship 'stakeHolders' does not exist.");
+
+            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[1].Title.Should().Be("A resource being assigned to a relationship does not exist.");
+            responseDocument.Errors[1].Detail.Should().Be("Resource of type 'people' with ID '900001' being assigned to relationship 'stakeHolders' does not exist.");
+
+            responseDocument.Errors[2].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[2].Title.Should().Be("A resource being assigned to a relationship does not exist.");
+            responseDocument.Errors[2].Detail.Should().Be("Resource of type 'todoItems' with ID '900002' being assigned to relationship 'parentTodo' does not exist.");
+        }
+
+        [Fact]
+        public async Task Fails_When_Patching_On_Relationships_Endpoint_With_Missing_Primary_Resource()
+        {
+            // Arrange
+            var person = _personFaker.Generate();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.People.Add(person);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "people", id = person.StringId
+                }
+            };
+
+            var route = "/api/v1/todoItems/99999999/relationships/owner";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[0].Title.Should().Be("The requested resource does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'todoItems' with ID '99999999' does not exist.");
+        }
+
+        [Fact]
+        public async Task Fails_When_Patching_On_Relationships_Endpoint_With_Unknown_Relationship()
         {
             // Arrange
             var person = _personFaker.Generate();
@@ -787,40 +821,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Fails_When_Patching_Relationships_Endpoint_With_Missing_Primary_Resource()
-        {
-            // Arrange
-            var person = _personFaker.Generate();
-            
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.People.Add(person);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "people", id = person.StringId
-                }
-            };
-
-            var route = "/api/v1/todoItems/99999999/relationships/owner";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("The requested resource does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'todoItems' with ID '99999999' does not exist.");
-        }
-
-         [Fact]
         public async Task Fails_When_Posting_To_Many_Relationship_On_Relationships_Endpoint_With_Missing_Secondary_Resources()
         {
             // Arrange

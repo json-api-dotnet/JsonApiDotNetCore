@@ -69,7 +69,7 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void RelationshipsDictionary_GetByRelationships()
         {
-            // Arrange 
+            // Arrange
             RelationshipsDictionary<Dummy> relationshipsDictionary = new RelationshipsDictionary<Dummy>(Relationships);
 
             // Act
@@ -84,7 +84,7 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void RelationshipsDictionary_GetAffected()
         {
-            // Arrange 
+            // Arrange
             RelationshipsDictionary<Dummy> relationshipsDictionary = new RelationshipsDictionary<Dummy>(Relationships);
 
             // Act
@@ -101,7 +101,7 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void ResourceHashSet_GetByRelationships()
         {
-            // Arrange 
+            // Arrange
             ResourceHashSet<Dummy> resources = new ResourceHashSet<Dummy>(AllResources, Relationships);
 
             // Act
@@ -122,7 +122,7 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void ResourceDiff_GetByRelationships()
         {
-            // Arrange 
+            // Arrange
             var dbResources = new HashSet<Dummy>(AllResources.Select(e => new Dummy { Id = e.Id }).ToList());
             DiffableResourceHashSet<Dummy> diffs = new DiffableResourceHashSet<Dummy>(AllResources, dbResources, Relationships, null);
 
@@ -155,7 +155,7 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void ResourceDiff_Loops_Over_Diffs()
         {
-            // Arrange 
+            // Arrange
             var dbResources = new HashSet<Dummy>(AllResources.Select(e => new Dummy { Id = e.Id }));
             DiffableResourceHashSet<Dummy> diffs = new DiffableResourceHashSet<Dummy>(AllResources, dbResources, Relationships, null);
 
@@ -172,7 +172,7 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void ResourceDiff_GetAffected_Relationships()
         {
-            // Arrange 
+            // Arrange
             var dbResources = new HashSet<Dummy>(AllResources.Select(e => new Dummy { Id = e.Id }));
             DiffableResourceHashSet<Dummy> diffs = new DiffableResourceHashSet<Dummy>(AllResources, dbResources, Relationships, null);
 
@@ -190,7 +190,7 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void ResourceDiff_GetAffected_Attributes()
         {
-            // Arrange 
+            // Arrange
             var dbResources = new HashSet<Dummy>(AllResources.Select(e => new Dummy { Id = e.Id }));
             var updatedAttributes = new Dictionary<PropertyInfo, HashSet<Dummy>>
             {
