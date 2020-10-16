@@ -214,6 +214,7 @@ namespace JsonApiDotNetCore.Controllers
 
             var updated = await _update.UpdateAsync(id, resource);
 
+            // TODO: json:api spec says to return 204 without body when no side-effects.
             return updated == null ? Ok(null) : Ok(updated);
         }
 
