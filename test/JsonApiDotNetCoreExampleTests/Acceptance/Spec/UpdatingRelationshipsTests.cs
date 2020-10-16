@@ -666,6 +666,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                         type = "todoItems",
                         id = todoItemToDelete.StringId
+                    },
+                    new
+                    {
+                        type = "todoItems",
+                        id = "99999999"
                     }
                 }
             };
