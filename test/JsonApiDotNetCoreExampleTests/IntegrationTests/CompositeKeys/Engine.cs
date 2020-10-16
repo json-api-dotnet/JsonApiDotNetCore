@@ -1,7 +1,7 @@
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExample.Models
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 {
     public sealed class Engine : Identifiable
     {
