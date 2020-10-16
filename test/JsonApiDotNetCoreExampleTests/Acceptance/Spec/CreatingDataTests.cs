@@ -139,11 +139,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task CreateWithRelationship_HasMany_IsCreated()
         {
             // Arrange
-            var existingTodoItem = _todoItemFaker.Generate();
+            var todoItems = _todoItemFaker.Generate(3);
+
+            var existingPerson = _personFaker.Generate();
+            existingPerson.TodoItems = todoItems.ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.TodoItems.Add(existingTodoItem);
+                dbContext.People.Add(existingPerson);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -151,7 +154,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
-                    type = "todoCollections",
+                    type = "people",
                     relationships = new
                     {
                         todoItems = new
@@ -161,7 +164,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                                 new
                                 {
                                     type = "todoItems",
-                                    id = existingTodoItem.StringId
+                                    id = todoItems[0].StringId
+                                },
+                                new
+                                {
+                                    type = "todoItems",
+                                    id = todoItems[1].StringId
                                 }
                             }
                         }
@@ -169,7 +177,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 }
             };
 
-            var route = "/api/v1/todoCollections";
+            var route = "/api/v1/people";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -177,17 +185,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            var newTodoCollectionId = responseDocument.SingleData.Id;
+            var newPersonId = responseDocument.SingleData.Id;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var todoCollectionsInDatabase = await dbContext.TodoItemCollections
-                    .Include(collection => collection.TodoItems)
+                var personsInDatabase = await dbContext.People
+                    .Include(p => p.TodoItems)
                     .ToListAsync();
 
-                var newTodoCollectionInDatabase = todoCollectionsInDatabase.Single(c => c.StringId == newTodoCollectionId);
-                newTodoCollectionInDatabase.TodoItems.Should().HaveCount(1);
-                newTodoCollectionInDatabase.TodoItems.ElementAt(0).Id.Should().Be(existingTodoItem.Id);
+                var existingPersonInDatabase = personsInDatabase.Single(p => p.Id == existingPerson.Id);
+                existingPersonInDatabase.TodoItems.Should().HaveCount(1);
+                existingPersonInDatabase.TodoItems.Should().ContainSingle(item => item.Id == todoItems[2].Id);
+
+                var newPersonInDatabase = personsInDatabase.Single(p => p.StringId == newPersonId);
+                newPersonInDatabase.TodoItems.Should().HaveCount(2);
+                newPersonInDatabase.TodoItems.Should().ContainSingle(item => item.Id == todoItems[0].Id);
+                newPersonInDatabase.TodoItems.Should().ContainSingle(item => item.Id == todoItems[1].Id);
             });
         }
 
@@ -609,7 +622,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task CreateRelationship_ToOneWithImplicitRemove_IsCreated()
+        public async Task CreateRelationship_OneToOneWithImplicitRemove_IsCreated()
         {
             // Arrange
             var existingPerson = _personFaker.Generate();
@@ -666,75 +679,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
                 var newPersonInDatabase = personsInDatabase.Single(p => p.StringId == newPersonId);
                 newPersonInDatabase.Passport.Id.Should().Be(passport.Id);
-            });
-        }
-
-        [Fact]
-        public async Task CreateRelationship_ToManyWithImplicitRemove_IsCreated()
-        {
-            // Arrange
-            var todoItems = _todoItemFaker.Generate(3);
-
-            var existingPerson = _personFaker.Generate();
-            existingPerson.TodoItems = todoItems.ToHashSet();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.People.Add(existingPerson);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "people",
-                    relationships = new
-                    {
-                        todoItems = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "todoItems",
-                                    id = todoItems[0].StringId
-                                },
-                                new
-                                {
-                                    type = "todoItems",
-                                    id = todoItems[1].StringId
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/api/v1/people";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
-
-            var newPersonId = responseDocument.SingleData.Id;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var personsInDatabase = await dbContext.People
-                    .Include(p => p.TodoItems)
-                    .ToListAsync();
-
-                var existingPersonInDatabase = personsInDatabase.Single(p => p.Id == existingPerson.Id);
-                existingPersonInDatabase.TodoItems.Should().HaveCount(1);
-                existingPersonInDatabase.TodoItems.Should().ContainSingle(item => item.Id == todoItems[2].Id);
-
-                var newPersonInDatabase = personsInDatabase.Single(p => p.StringId == newPersonId);
-                newPersonInDatabase.TodoItems.Should().HaveCount(2);
-                newPersonInDatabase.TodoItems.Should().ContainSingle(item => item.Id == todoItems[0].Id);
-                newPersonInDatabase.TodoItems.Should().ContainSingle(item => item.Id == todoItems[1].Id);
             });
         }
     }

@@ -254,22 +254,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource()
         {
             // Arrange
+            var person1 = _personFaker.Generate();
+            person1.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
 
-            var todoCollection = new TodoItemCollection
-            {
-                Owner = _personFaker.Generate(),
-                TodoItems = new HashSet<TodoItem>
-                {
-                    _todoItemFaker.Generate()
-                }
-            };
+            var person2 = _personFaker.Generate();
+            person2.TodoItems = _todoItemFaker.Generate(2).ToHashSet();
             
-            var newTodoItem1 = _todoItemFaker.Generate();
-            var newTodoItem2 = _todoItemFaker.Generate();
-
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AddRange(todoCollection, newTodoItem1, newTodoItem2);
+                dbContext.People.AddRange(person1, person2);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -277,23 +270,31 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
-                    type = "todoCollections",
-                    id = todoCollection.StringId,
+                    type = "people",
+                    id = person2.StringId,
                     relationships = new Dictionary<string, object>
                     {
                         ["todoItems"] = new
                         {
                             data = new[]
                             {
-                                new {type = "todoItems", id = newTodoItem1.StringId},
-                                new {type = "todoItems", id = newTodoItem2.StringId}
+                                new
+                                {
+                                    type = "todoItems",
+                                    id = person1.TodoItems.ElementAt(0).StringId
+                                },
+                                new
+                                {
+                                    type = "todoItems",
+                                    id = person1.TodoItems.ElementAt(1).StringId
+                                }
                             }
                         }
                     }
                 }
             };
 
-            var route = "/api/v1/todoCollections/" + todoCollection.StringId;
+            var route = "/api/v1/people/" + person2.StringId;
 
             // Act
             var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -303,12 +304,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var todoCollectionInDatabase = await dbContext.TodoItemCollections
-                    .Include(collection => collection.TodoItems)
-                    .Where(collection => collection.Id == todoCollection.Id)
-                    .FirstAsync();
+                var personsInDatabase = await dbContext.People
+                    .Include(person => person.TodoItems)
+                    .ToListAsync();
 
-                todoCollectionInDatabase.TodoItems.Should().HaveCount(2);
+                personsInDatabase.Single(person => person.Id == person1.Id).TodoItems.Should().HaveCount(1);
+                
+                var person2InDatabase = personsInDatabase.Single(person => person.Id == person2.Id);
+                person2InDatabase.TodoItems.Should().HaveCount(2);
+                person2InDatabase.TodoItems.Should().ContainSingle(x => x.Id == person1.TodoItems.ElementAt(0).Id);
+                person2InDatabase.TodoItems.Should().ContainSingle(x => x.Id == person1.TodoItems.ElementAt(1).Id);
             });
         }
 
@@ -474,7 +479,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Updating_ToOne_Relationship_With_Implicit_Remove()
+        public async Task Updating_OneToOne_Relationship_With_Implicit_Remove()
         {
             // Arrange
             var person1 = _personFaker.Generate();
@@ -524,73 +529,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
                 personsInDatabase.Single(person => person.Id == person1.Id).Passport.Should().BeNull();
                 personsInDatabase.Single(person => person.Id == person2.Id).Passport.Id.Should().Be(passport.Id);
-            });
-        }
-
-        [Fact]
-        public async Task Updating_ToMany_Relationship_With_Implicit_Remove()
-        {
-            // Arrange
-            var person1 = _personFaker.Generate();
-            person1.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
-
-            var person2 = _personFaker.Generate();
-            person2.TodoItems = _todoItemFaker.Generate(2).ToHashSet();
-            
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.People.AddRange(person1, person2);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "people",
-                    id = person2.StringId,
-                    relationships = new Dictionary<string, object>
-                    {
-                        ["todoItems"] = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "todoItems",
-                                    id = person1.TodoItems.ElementAt(0).StringId
-                                },
-                                new
-                                {
-                                    type = "todoItems",
-                                    id = person1.TodoItems.ElementAt(1).StringId
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/api/v1/people/" + person2.StringId;
-
-            // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var personsInDatabase = await dbContext.People
-                    .Include(person => person.TodoItems)
-                    .ToListAsync();
-
-                personsInDatabase.Single(person => person.Id == person1.Id).TodoItems.Should().HaveCount(1);
-                
-                var person2InDatabase = personsInDatabase.Single(person => person.Id == person2.Id);
-                person2InDatabase.TodoItems.Should().HaveCount(2);
-                person2InDatabase.TodoItems.Should().ContainSingle(x => x.Id == person1.TodoItems.ElementAt(0).Id);
-                person2InDatabase.TodoItems.Should().ContainSingle(x => x.Id == person1.TodoItems.ElementAt(1).Id);
             });
         }
 
