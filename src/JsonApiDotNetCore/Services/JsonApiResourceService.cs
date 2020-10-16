@@ -390,11 +390,8 @@ namespace JsonApiDotNetCore.Services
             
             if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
             {
-                if (!TypeHelper.ConstructorDependsOnDbContext(_request.PrimaryResource.ResourceType))
-                {
-                    var idAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
-                    primaryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
-                }
+                var idAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+                primaryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
             }
             else if (fieldSelection == TopFieldSelection.AllAttributes && primaryLayer.Projection != null)
             {

@@ -196,7 +196,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 resource => resource.Attributes.ContainsKey("lastName"));
         }
 
-        [Fact]
+        [Fact(Skip = "https://github.com/dotnet/efcore/issues/20502")]
         public async Task Fail_When_Deleting_Missing_Passport()
         {
             // Arrange
