@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task When_posting_resource_with_invalid_attribute_value_it_must_succeed()
         {
             // Arrange
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
@@ -34,7 +34,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories";
 
             // Act
@@ -63,7 +62,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
@@ -76,7 +75,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories/" + directory.StringId;
 
             // Act
