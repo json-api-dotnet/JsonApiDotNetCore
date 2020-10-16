@@ -372,6 +372,8 @@ namespace JsonApiDotNetCore
 
         internal static bool ConstructorDependsOnDbContext(Type resourceType)
         {
+            // TODO: Rewrite existing test(s) so this can be reverted.
+
             var constructors = resourceType.GetConstructors().Where(c => !c.IsStatic).ToArray();
             if (constructors.Any())
             {
