@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -164,15 +163,12 @@ namespace JsonApiDotNetCore.Repositories
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
 
             var relationship = _targetedFields.Relationships.Single();
-            TResource primaryResource;
+            TResource primaryResource = CreatePrimaryResourceWithAssignedId(id);
 
             if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSide(hasOneRelationship))
             {
-                primaryResource = await _dbContext.Set<TResource>()
-                    .Include(relationship.Property.Name)
-                    .Where(resource => resource.Id.Equals(id))
-                    .FirstOrDefaultAsync();
-
+                primaryResource = await LoadResourceAndRelationship(relationship, id, secondaryResourceIds);
+                
                 if (primaryResource == null)
                 {
                     var tempResource = CreatePrimaryResourceWithAssignedId(id);
@@ -182,8 +178,7 @@ namespace JsonApiDotNetCore.Repositories
             }
             else
             {
-                primaryResource = CreatePrimaryResourceWithAssignedId(id);
-                primaryResource = (TResource) _dbContext.GetTrackedOrAttach(primaryResource);
+                primaryResource = (TResource)_dbContext.GetTrackedOrAttach(primaryResource);
 
                 await LoadRelationship(relationship, primaryResource);
             }
@@ -204,16 +199,9 @@ namespace JsonApiDotNetCore.Repositories
             {
                 if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSide(hasOneRelationship))
                 {
+                    var rightResourceId = (relationship.GetValue(resourceFromRequest) as IIdentifiable)?.GetTypedId();
                     // TODO: Can/should we unify this, instead of executing a new query for each individual one-to-one relationship?
-                    var query = _dbContext.Set<TResource>().Where(resource => resource.Id.Equals(resourceFromRequest.Id));
-                    
-                    var rightResource = relationship.GetValue(resourceFromRequest);
-                    if (rightResource == null)
-                    {
-                        query = query.Include(relationship.Property.Name);
-                    }
-                    
-                    resourceFromDatabase = await query.FirstAsync();
+                    resourceFromDatabase = await LoadResourceAndRelationship(relationship, resourceFromRequest.Id, rightResourceId);
                 }
                 else
                 {
@@ -227,7 +215,7 @@ namespace JsonApiDotNetCore.Repositories
                     // because there is no guarantee it is.
 
                     // A database entity might not be tracked if it was retrieved through projection.
-                    resourceFromDatabase = (TResource) _dbContext.GetTrackedOrAttach(resourceFromDatabase);
+                    resourceFromDatabase = (TResource)_dbContext.GetTrackedOrAttach(resourceFromDatabase);
 
                     // Ensures complete replacement of the relationship.
                     await LoadRelationship(relationship, resourceFromDatabase);
@@ -245,6 +233,20 @@ namespace JsonApiDotNetCore.Repositories
             await SaveChangesAsync();
             
             FlushFromCache(resourceFromDatabase);
+        }
+
+        private async Task<TResource> LoadResourceAndRelationship(RelationshipAttribute relationship, TId leftResourceId, object rightResourceId)
+        {
+            var primaryResourceQuery = _dbContext.Set<TResource>().Where(resource => resource.Id.Equals(leftResourceId));
+
+            var relationshipIsNulled = rightResourceId == null;
+            if (relationshipIsNulled)
+            {
+                primaryResourceQuery = primaryResourceQuery.Include(relationship.Property.Name);
+            }
+
+            var primaryResource = await primaryResourceQuery.FirstOrDefaultAsync();
+            return primaryResource;
         }
 
         /// <inheritdoc />
@@ -403,7 +405,7 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        private static bool IsOneToOneRelationship(RelationshipAttribute relationship)
+        private bool IsOneToOneRelationship(RelationshipAttribute relationship)
         {
             if (relationship is HasOneAttribute hasOneRelationship)
             {
