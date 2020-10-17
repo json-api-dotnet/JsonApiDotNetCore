@@ -22,8 +22,6 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Blog> Blogs { get; set; }
-        public DbSet<Car> Cars { get; set; }
-        public DbSet<Engine> Engines { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options, ISystemClock systemClock) : base(options)
         {
@@ -94,14 +92,6 @@ namespace JsonApiDotNetCoreExample.Data
                 .HasOne(p => p.OneToOneTodoItem)
                 .WithOne(p => p.OneToOnePerson)
                 .HasForeignKey<TodoItem>(p => p.OneToOnePersonId);
-            
-            modelBuilder.Entity<Car>()
-                .HasKey(c => new { c.RegionId, c.LicensePlate });
-
-            modelBuilder.Entity<Engine>()
-                .HasOne(e => e.Car)
-                .WithOne(c => c.Engine)
-                .HasForeignKey<Engine>();
         }
     }
 }

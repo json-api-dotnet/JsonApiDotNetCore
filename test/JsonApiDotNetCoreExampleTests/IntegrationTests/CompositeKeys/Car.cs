@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExample.Models
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 {
     public sealed class Car : Identifiable<string>
     {

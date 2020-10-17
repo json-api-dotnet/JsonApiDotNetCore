@@ -256,15 +256,33 @@ namespace JsonApiDotNetCore.Repositories
 
             await LoadRelationship(relationship, primaryResource);
 
-            var currentRightResources = (IReadOnlyCollection<IIdentifiable>)relationship.GetValue(primaryResource);
-            var newRightResources = currentRightResources.Where(i => secondaryResourceIds.All(r => r.StringId != i.StringId)).ToArray();
+            var existingRightResources = (IReadOnlyCollection<IIdentifiable>)relationship.GetValue(primaryResource);
+            var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources,
+                secondaryResourceIds.Select(x => x.StringId));
 
-            // TODO: What does this < comparison mean?
-            if (newRightResources.Length < currentRightResources.Count)
+            if (newRightResources.Count != existingRightResources.Count)
             {
                 await AssignValueToRelationship(relationship, primaryResource, newRightResources);
                 await SaveChangesAsync();
             }
+        }
+
+        /// <summary>
+        /// Removes resources from <paramref name="existingRightResources"/> whose ID exists in <paramref name="resourceIdsToRemove"/>.
+        /// </summary>
+        /// <example>
+        /// <code><![CDATA[
+        /// existingRightResources = { 1, 2, 3 }
+        /// resourceIdsToRemove = { 3, 4, 5 }
+        /// returns { 1, 2 }
+        /// ]]></code>
+        /// </example>
+        private ICollection<IIdentifiable> GetResourcesToAssignForRemoveFromToManyRelationship(
+            IEnumerable<IIdentifiable> existingRightResources, IEnumerable<string> resourceIdsToRemove)
+        {
+            var newRightResources = new HashSet<IIdentifiable>(existingRightResources);
+            newRightResources.RemoveWhere(r => resourceIdsToRemove.Any(stringId => r.StringId == stringId));
+            return newRightResources;
         }
 
         private TResource CreatePrimaryResourceWithAssignedId(TId id)
@@ -330,15 +348,14 @@ namespace JsonApiDotNetCore.Repositories
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             if (relationship == null) throw new ArgumentNullException(nameof(relationship));
 
-            var navigationEntry = GetNavigationEntry(relationship, resource);
+            var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
             if (navigationEntry != null)
             {
                 await navigationEntry.LoadAsync();
             }
         }
 
-        // TODO: Rename this method to something better.
-        private NavigationEntry GetNavigationEntry(RelationshipAttribute relationship, TResource resource)
+        private NavigationEntry GetNavigationEntryForRelationship(RelationshipAttribute relationship, TResource resource)
         {
             EntityEntry<TResource> entityEntry = _dbContext.Entry(resource);
 
