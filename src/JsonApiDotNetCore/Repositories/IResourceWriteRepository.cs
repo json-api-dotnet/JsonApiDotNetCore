@@ -48,10 +48,5 @@ namespace JsonApiDotNetCore.Repositories
         /// Removes resources from a to-many relationship in the underlying data store.
         /// </summary>
         Task RemoveFromToManyRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResourceIds);
-        
-        /// <summary>
-        /// Ensures that the next time a given resource is requested, it is re-fetched from the underlying data store.
-        /// </summary>
-        void FlushFromCache(TResource resource);
     }
 }

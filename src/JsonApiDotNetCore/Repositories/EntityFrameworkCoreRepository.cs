@@ -164,7 +164,7 @@ namespace JsonApiDotNetCore.Repositories
             var relationship = _targetedFields.Relationships.Single();
             TResource primaryResource;
 
-            if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSideOfHasOneRelationship(hasOneRelationship))
+            if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSide(hasOneRelationship))
             {
                 primaryResource = await _dbContext.Set<TResource>()
                     .Include(relationship.Property.Name)
@@ -200,10 +200,8 @@ namespace JsonApiDotNetCore.Repositories
             // TODO: Code inside this loop is very similar to SetRelationshipAsync, we should consider to factor this out into a shared method.
             foreach (var relationship in _targetedFields.Relationships)
             {
-                if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSideOfHasOneRelationship(hasOneRelationship))
+                if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSide(hasOneRelationship))
                 {
-                    FlushFromCache(resourceFromDatabase);
-
                     resourceFromDatabase = await _dbContext.Set<TResource>()
                         // TODO: Can/should we unify this, instead of executing a new query for each individual one-to-one relationship?
                         .Include(relationship.Property.Name)
@@ -215,6 +213,11 @@ namespace JsonApiDotNetCore.Repositories
                     // TODO: I believe the comment below does not apply here (anymore). The calling resource service always fetches the entire record.
                     // And commenting out the line below still keeps all tests green.
                     // Does this comment maybe apply to SetRelationshipAsync()?
+                    
+                    // Maurits: We tried moving the update logic to the repo without success. Now that we're keeping 
+                    // it this (i.e. service doing a repo.GetAsync and then calling repo.UpdateAsync), I think it is good to
+                    // keep it a repo responsibility to make sure that the provided database resource is actually present in the change tracker
+                    // because there is no guarantee it is.
 
                     // A database entity might not be tracked if it was retrieved through projection.
                     resourceFromDatabase = (TResource) _dbContext.GetTrackedOrAttach(resourceFromDatabase);
@@ -233,6 +236,8 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             await SaveChangesAsync();
+            
+            FlushFromCache(resourceFromDatabase);
         }
 
         /// <inheritdoc />
@@ -439,7 +444,7 @@ namespace JsonApiDotNetCore.Repositories
             return TypeHelper.CopyToTypedCollection(rightResourcesTracked, rightCollectionType);
         }
 
-        private bool HasForeignKeyAtLeftSideOfHasOneRelationship(HasOneAttribute relationship)
+        private bool HasForeignKeyAtLeftSide(HasOneAttribute relationship)
         {
             var entityType = _dbContext.Model.FindEntityType(typeof(TResource));
             var navigation = entityType.FindNavigation(relationship.Property.Name);
