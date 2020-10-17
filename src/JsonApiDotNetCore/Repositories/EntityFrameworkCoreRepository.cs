@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -13,6 +14,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Repositories
@@ -202,11 +204,16 @@ namespace JsonApiDotNetCore.Repositories
             {
                 if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSide(hasOneRelationship))
                 {
-                    resourceFromDatabase = await _dbContext.Set<TResource>()
-                        // TODO: Can/should we unify this, instead of executing a new query for each individual one-to-one relationship?
-                        .Include(relationship.Property.Name)
-                        .Where(resource => resource.Id.Equals(resourceFromRequest.Id))
-                        .FirstAsync();
+                    // TODO: Can/should we unify this, instead of executing a new query for each individual one-to-one relationship?
+                    var query = _dbContext.Set<TResource>().Where(resource => resource.Id.Equals(resourceFromRequest.Id));
+                    
+                    var rightResource = relationship.GetValue(resourceFromRequest);
+                    if (rightResource == null)
+                    {
+                        query = query.Include(relationship.Property.Name);
+                    }
+                    
+                    resourceFromDatabase = await query.FirstAsync();
                 }
                 else
                 {
@@ -299,11 +306,11 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual void FlushFromCache(TResource resource)
+        private void FlushFromCache(TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});
 
-            var trackedResource = _dbContext.GetTrackedIdentifiable(resource);
+            var trackedResource = _dbContext.GetTrackedOrAttach(resource);
             _dbContext.Entry(trackedResource).State = EntityState.Detached;
         }
 
@@ -389,17 +396,22 @@ namespace JsonApiDotNetCore.Repositories
         /// </summary>
         private async Task LoadInverseForOneToOneRelationship(RelationshipAttribute relationship, object resource)
         {
-            if (relationship.InverseNavigationProperty != null && relationship is HasOneAttribute hasOneRelationship)
+            if (relationship.InverseNavigationProperty != null && IsOneToOneRelationship(relationship))
+            {
+                var entityEntry = _dbContext.Entry(resource); 
+                await entityEntry.Reference(relationship.InverseNavigationProperty.Name).LoadAsync();
+            }
+        }
+
+        private static bool IsOneToOneRelationship(RelationshipAttribute relationship)
+        {
+            if (relationship is HasOneAttribute hasOneRelationship)
             {
                 var elementType = TypeHelper.TryGetCollectionElementType(hasOneRelationship.InverseNavigationProperty.PropertyType);
-                var isOneToOneRelationship = elementType == null;
-
-                if (isOneToOneRelationship)
-                {
-                    var entityEntry = _dbContext.Entry(resource); 
-                    await entityEntry.Reference(relationship.InverseNavigationProperty.Name).LoadAsync();
-                }
+                return elementType == null;
             }
+
+            return false;
         }
 
         private async Task AssignValueToRelationship(RelationshipAttribute relationship, TResource leftResource,
@@ -411,8 +423,37 @@ namespace JsonApiDotNetCore.Repositories
             {
                 await LoadInverseForOneToOneRelationship(relationship, trackedValueToAssign);
             }
-
+            
+            if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSide(hasOneRelationship))
+            {
+                var foreignKeyProperties = GetForeignKeyProperties(hasOneRelationship);
+                if (foreignKeyProperties.Count == 1)
+                {
+                    SetValueThroughForeignKeyProperty(foreignKeyProperties.First(), leftResource, trackedValueToAssign);
+                }
+            }
+        
             relationship.SetValue(leftResource, trackedValueToAssign, _resourceFactory);
+        }
+        
+        private void SetValueThroughForeignKeyProperty(IProperty foreignKeyProperty, TResource leftResource, object valueToAssign)
+        {
+            var rightResourceId = valueToAssign is IIdentifiable rightResource
+                ? rightResource.GetTypedId()
+                : null;
+    
+            if (foreignKeyProperty.IsShadowProperty())
+            {
+                // When assigning a FK through a shadow property, EF Core will handle updating the EntityState.
+                _dbContext.Entry(leftResource).Property(foreignKeyProperty.Name).CurrentValue = rightResourceId;
+            }
+            else
+            {
+                foreignKeyProperty.PropertyInfo.SetValue(leftResource, rightResourceId);
+
+                // When assigning a FK through a regular property, we are responsible ourselves for updating the EntityState.
+                _dbContext.Entry(leftResource).State = EntityState.Modified;
+            }
         }
 
         private object EnsureRelationshipValueToAssignIsTracked(object valueToAssign, Type relationshipPropertyType)
@@ -446,10 +487,18 @@ namespace JsonApiDotNetCore.Repositories
 
         private bool HasForeignKeyAtLeftSide(HasOneAttribute relationship)
         {
-            var entityType = _dbContext.Model.FindEntityType(typeof(TResource));
-            var navigation = entityType.FindNavigation(relationship.Property.Name);
+            var foreignKeyProperties = GetForeignKeyProperties(relationship);
+            var leftSideHasForeignKey = foreignKeyProperties.First().DeclaringType.ClrType == typeof(TResource);
 
-            return navigation.ForeignKey.DeclaringEntityType.ClrType == typeof(TResource);
+            return leftSideHasForeignKey;
+        }
+
+        private IReadOnlyList<IProperty> GetForeignKeyProperties(HasOneAttribute relationship)
+        {
+            var entityType = _dbContext.Model.FindEntityType(typeof(TResource));
+            var foreignKeyMetadata = entityType.FindNavigation(relationship.Property.Name).ForeignKey;
+            
+            return foreignKeyMetadata.Properties;
         }
 
         private async Task SaveChangesAsync()
