@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -820,6 +822,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.Should().BeNull();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var assertDirectory = await dbContext.Directories.Where(d => d.Id == directory.Id)
+                    .Include(d => d.Parent)
+                    .FirstOrDefaultAsync();
+
+                assertDirectory.Parent.Id.Should().Be(otherParent.Id);
+            });
         }
 
         [Fact]

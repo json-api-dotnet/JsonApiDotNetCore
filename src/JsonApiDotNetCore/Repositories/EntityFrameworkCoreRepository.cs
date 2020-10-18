@@ -165,18 +165,9 @@ namespace JsonApiDotNetCore.Repositories
             var relationship = _targetedFields.Relationships.Single();
             TResource primaryResource = CreatePrimaryResourceWithAssignedId(id);
 
-            if (relationship is HasOneAttribute hasOneRelationship && HasSingleForeignKeyAtLeftSide(hasOneRelationship))
+            if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSide(hasOneRelationship))
             {
-                if (secondaryResourceIds == null)
-                {
-                    primaryResource = await LoadResourceAndRelationship(hasOneRelationship, id);
-                    if (primaryResource == null)
-                    {
-                        var tempResource = CreatePrimaryResourceWithAssignedId(id);
-                        var resourceContext = _resourceGraph.GetResourceContext<TResource>();
-                        throw new ResourceNotFoundException(tempResource.StringId, resourceContext.PublicName);
-                    }
-                }
+                // noop, refactor
             }
             else
             {
@@ -212,17 +203,9 @@ namespace JsonApiDotNetCore.Repositories
             // TODO: Code inside this loop is very similar to SetRelationshipAsync, we should consider to factor this out into a shared method.
             foreach (var relationship in _targetedFields.Relationships)
             {
-                if (relationship is HasOneAttribute hasOneRelationship && HasSingleForeignKeyAtLeftSide(hasOneRelationship))
+                if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSide(hasOneRelationship))
                 {
-                    // TODO: Can/should we unify this, instead of executing a new query for each individual one-to-one relationship?
-                    var rightResourceId = (relationship.GetValue(resourceFromRequest) as IIdentifiable)?.GetTypedId();
-                    if (rightResourceId == null)
-                    {
-                        // If the foreign keys live on the primary resource there is no need to load the relationship,
-                        // unless the relationship is being set to null. In this case without having loaded the relationship
-                        // we will be assigning null to null, which does not trigger entry in EF Cores change tracker.
-                        resourceFromDatabase = await LoadResourceAndRelationship(hasOneRelationship, resourceFromRequest.Id);
-                    }
+                    // noop, refactor
                 }
                 else
                 {
@@ -246,13 +229,11 @@ namespace JsonApiDotNetCore.Repositories
 
         private async Task<TResource> LoadResourceAndRelationship(HasOneAttribute relationship, TId leftResourceId)
         {
-
             
             var primaryResourceQuery = _dbContext.Set<TResource>().Where(resource => resource.Id.Equals(leftResourceId));
             
             primaryResourceQuery = primaryResourceQuery.Include(relationship.Property.Name);
-
-                var primaryResource = await primaryResourceQuery.FirstOrDefaultAsync();
+            var primaryResource = await primaryResourceQuery.FirstOrDefaultAsync();
             return primaryResource;
         }
 
@@ -279,7 +260,7 @@ namespace JsonApiDotNetCore.Repositories
 
             var existingRightResources = (IReadOnlyCollection<IIdentifiable>)relationship.GetValue(primaryResource);
             var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources,
-                secondaryResourceIds.Select(x => x.StringId));
+                secondaryResourceIds.Select(r => r.StringId));
 
             if (newRightResources.Count != existingRightResources.Count)
             {
@@ -405,11 +386,8 @@ namespace JsonApiDotNetCore.Repositories
         /// </summary>
         private async Task LoadInverseForOneToOneRelationship(RelationshipAttribute relationship, object resource)
         {
-            if (relationship.InverseNavigationProperty != null && IsOneToOneRelationship(relationship))
-            {
-                var entityEntry = _dbContext.Entry(resource); 
-                await entityEntry.Reference(relationship.InverseNavigationProperty.Name).LoadAsync();
-            }
+            var entityEntry = _dbContext.Entry(resource); 
+            await entityEntry.Reference(relationship.InverseNavigationProperty.Name).LoadAsync();
         }
 
         private bool IsOneToOneRelationship(RelationshipAttribute relationship)
@@ -428,7 +406,7 @@ namespace JsonApiDotNetCore.Repositories
         {
             // Ensures the new relationship assignment will not result in entities being tracked more than once.
             var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
-            if (trackedValueToAssign != null)
+            if (trackedValueToAssign != null && relationship.InverseNavigationProperty != null && IsOneToOneRelationship(relationship))
             {
                 await LoadInverseForOneToOneRelationship(relationship, trackedValueToAssign);
             }
@@ -436,11 +414,16 @@ namespace JsonApiDotNetCore.Repositories
             if (relationship is HasOneAttribute hasOneRelationship && HasSingleForeignKeyAtLeftSide(hasOneRelationship))
             {
                 var foreignKeyProperty = GetForeignKeyProperties(hasOneRelationship).First();
-                SetValueThroughForeignKeyProperty(foreignKeyProperty, leftResource, trackedValueToAssign);
+                SetValueThroughForeignKeyProperty(foreignKeyProperty, leftResource, valueToAssign);
             }
             else
             {
                 relationship.SetValue(leftResource, trackedValueToAssign, _resourceFactory);
+                if (trackedValueToAssign == null)
+                {
+                    var entry = GetNavigationEntryForRelationship(relationship, leftResource);
+                    entry.IsModified = true;
+                }
             }
         }
         
@@ -450,17 +433,10 @@ namespace JsonApiDotNetCore.Repositories
                 ? rightResource.GetTypedId()
                 : null;
 
+            // https://stackoverflow.com/questions/10257360/how-to-update-not-every-fields-of-an-object-using-entity-framework-and-entitysta
             var entityEntry = _dbContext.Entry(leftResource);
-            if (foreignKeyProperty.IsShadowProperty())
-            {
-                entityEntry.Property(foreignKeyProperty.Name).CurrentValue = rightResourceId;
-            }
-            else
-            {
-                foreignKeyProperty.PropertyInfo.SetValue(leftResource, rightResourceId);
-            }
-            
-            entityEntry.State = EntityState.Modified;
+            entityEntry.Property(foreignKeyProperty.Name).CurrentValue = rightResourceId;
+            entityEntry.Property(foreignKeyProperty.Name).IsModified = true;
         }
 
         private object EnsureRelationshipValueToAssignIsTracked(object valueToAssign, Type relationshipPropertyType)
@@ -498,6 +474,13 @@ namespace JsonApiDotNetCore.Repositories
             var hasForeignKeyOnLeftSide = foreignKeyProperties.First().DeclaringType.ClrType == typeof(TResource);
             var hasSingleForeignKey = foreignKeyProperties.Count == 1;
             return hasForeignKeyOnLeftSide && hasSingleForeignKey;
+        }
+        
+        private bool HasForeignKeyAtLeftSide(HasOneAttribute relationship)
+        {
+            var foreignKeyProperties = GetForeignKeyProperties(relationship);
+            var hasForeignKeyOnLeftSide = foreignKeyProperties.First().DeclaringType.ClrType == typeof(TResource);
+            return hasForeignKeyOnLeftSide;
         }
 
         private IReadOnlyList<IProperty> GetForeignKeyProperties(HasOneAttribute relationship)
