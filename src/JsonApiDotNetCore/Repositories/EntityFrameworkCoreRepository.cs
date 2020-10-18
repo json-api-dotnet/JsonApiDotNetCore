@@ -165,15 +165,17 @@ namespace JsonApiDotNetCore.Repositories
             var relationship = _targetedFields.Relationships.Single();
             TResource primaryResource = CreatePrimaryResourceWithAssignedId(id);
 
-            if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSide(hasOneRelationship))
+            if (relationship is HasOneAttribute hasOneRelationship && HasSingleForeignKeyAtLeftSide(hasOneRelationship))
             {
-                primaryResource = await LoadResourceAndRelationship(relationship, id, secondaryResourceIds);
-                
-                if (primaryResource == null)
+                if (secondaryResourceIds == null)
                 {
-                    var tempResource = CreatePrimaryResourceWithAssignedId(id);
-                    var resourceContext = _resourceGraph.GetResourceContext<TResource>();
-                    throw new ResourceNotFoundException(tempResource.StringId, resourceContext.PublicName);
+                    primaryResource = await LoadResourceAndRelationship(hasOneRelationship, id);
+                    if (primaryResource == null)
+                    {
+                        var tempResource = CreatePrimaryResourceWithAssignedId(id);
+                        var resourceContext = _resourceGraph.GetResourceContext<TResource>();
+                        throw new ResourceNotFoundException(tempResource.StringId, resourceContext.PublicName);
+                    }
                 }
             }
             else
@@ -194,29 +196,36 @@ namespace JsonApiDotNetCore.Repositories
             if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
             if (resourceFromDatabase == null) throw new ArgumentNullException(nameof(resourceFromDatabase));
 
+            
+            // TODO: I believe the comment below does not apply here (anymore). The calling resource service always fetches the entire record.
+            // And commenting out the line below still keeps all tests green.
+            // Does this comment maybe apply to SetRelationshipAsync()?
+            
+            // Maurits: We tried moving the update logic to the repo without success. Now that we're keeping 
+            // it this (i.e. service doing a repo.GetAsync and then calling repo.UpdateAsync), I think it is good to
+            // keep it a repo responsibility to make sure that the provided database resource is actually present in the change tracker
+            // because there is no guarantee it is.
+
+            // A database entity might not be tracked if it was retrieved through projection.
+            resourceFromDatabase = (TResource)_dbContext.GetTrackedOrAttach(resourceFromDatabase);
+
             // TODO: Code inside this loop is very similar to SetRelationshipAsync, we should consider to factor this out into a shared method.
             foreach (var relationship in _targetedFields.Relationships)
             {
-                if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSide(hasOneRelationship))
+                if (relationship is HasOneAttribute hasOneRelationship && HasSingleForeignKeyAtLeftSide(hasOneRelationship))
                 {
-                    var rightResourceId = (relationship.GetValue(resourceFromRequest) as IIdentifiable)?.GetTypedId();
                     // TODO: Can/should we unify this, instead of executing a new query for each individual one-to-one relationship?
-                    resourceFromDatabase = await LoadResourceAndRelationship(relationship, resourceFromRequest.Id, rightResourceId);
+                    var rightResourceId = (relationship.GetValue(resourceFromRequest) as IIdentifiable)?.GetTypedId();
+                    if (rightResourceId == null)
+                    {
+                        // If the foreign keys live on the primary resource there is no need to load the relationship,
+                        // unless the relationship is being set to null. In this case without having loaded the relationship
+                        // we will be assigning null to null, which does not trigger entry in EF Cores change tracker.
+                        resourceFromDatabase = await LoadResourceAndRelationship(hasOneRelationship, resourceFromRequest.Id);
+                    }
                 }
                 else
                 {
-                    // TODO: I believe the comment below does not apply here (anymore). The calling resource service always fetches the entire record.
-                    // And commenting out the line below still keeps all tests green.
-                    // Does this comment maybe apply to SetRelationshipAsync()?
-                    
-                    // Maurits: We tried moving the update logic to the repo without success. Now that we're keeping 
-                    // it this (i.e. service doing a repo.GetAsync and then calling repo.UpdateAsync), I think it is good to
-                    // keep it a repo responsibility to make sure that the provided database resource is actually present in the change tracker
-                    // because there is no guarantee it is.
-
-                    // A database entity might not be tracked if it was retrieved through projection.
-                    resourceFromDatabase = (TResource)_dbContext.GetTrackedOrAttach(resourceFromDatabase);
-
                     // Ensures complete replacement of the relationship.
                     await LoadRelationship(relationship, resourceFromDatabase);
                 }
@@ -235,17 +244,15 @@ namespace JsonApiDotNetCore.Repositories
             FlushFromCache(resourceFromDatabase);
         }
 
-        private async Task<TResource> LoadResourceAndRelationship(RelationshipAttribute relationship, TId leftResourceId, object rightResourceId)
+        private async Task<TResource> LoadResourceAndRelationship(HasOneAttribute relationship, TId leftResourceId)
         {
+
+            
             var primaryResourceQuery = _dbContext.Set<TResource>().Where(resource => resource.Id.Equals(leftResourceId));
+            
+            primaryResourceQuery = primaryResourceQuery.Include(relationship.Property.Name);
 
-            var relationshipIsNulled = rightResourceId == null;
-            if (relationshipIsNulled)
-            {
-                primaryResourceQuery = primaryResourceQuery.Include(relationship.Property.Name);
-            }
-
-            var primaryResource = await primaryResourceQuery.FirstOrDefaultAsync();
+                var primaryResource = await primaryResourceQuery.FirstOrDefaultAsync();
             return primaryResource;
         }
 
@@ -426,16 +433,15 @@ namespace JsonApiDotNetCore.Repositories
                 await LoadInverseForOneToOneRelationship(relationship, trackedValueToAssign);
             }
             
-            if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSide(hasOneRelationship))
+            if (relationship is HasOneAttribute hasOneRelationship && HasSingleForeignKeyAtLeftSide(hasOneRelationship))
             {
-                var foreignKeyProperties = GetForeignKeyProperties(hasOneRelationship);
-                if (foreignKeyProperties.Count == 1)
-                {
-                    SetValueThroughForeignKeyProperty(foreignKeyProperties.First(), leftResource, trackedValueToAssign);
-                }
+                var foreignKeyProperty = GetForeignKeyProperties(hasOneRelationship).First();
+                SetValueThroughForeignKeyProperty(foreignKeyProperty, leftResource, trackedValueToAssign);
             }
-        
-            relationship.SetValue(leftResource, trackedValueToAssign, _resourceFactory);
+            else
+            {
+                relationship.SetValue(leftResource, trackedValueToAssign, _resourceFactory);
+            }
         }
         
         private void SetValueThroughForeignKeyProperty(IProperty foreignKeyProperty, TResource leftResource, object valueToAssign)
@@ -443,19 +449,18 @@ namespace JsonApiDotNetCore.Repositories
             var rightResourceId = valueToAssign is IIdentifiable rightResource
                 ? rightResource.GetTypedId()
                 : null;
-    
+
+            var entityEntry = _dbContext.Entry(leftResource);
             if (foreignKeyProperty.IsShadowProperty())
             {
-                // When assigning a FK through a shadow property, EF Core will handle updating the EntityState.
-                _dbContext.Entry(leftResource).Property(foreignKeyProperty.Name).CurrentValue = rightResourceId;
+                entityEntry.Property(foreignKeyProperty.Name).CurrentValue = rightResourceId;
             }
             else
             {
                 foreignKeyProperty.PropertyInfo.SetValue(leftResource, rightResourceId);
-
-                // When assigning a FK through a regular property, we are responsible ourselves for updating the EntityState.
-                _dbContext.Entry(leftResource).State = EntityState.Modified;
             }
+            
+            entityEntry.State = EntityState.Modified;
         }
 
         private object EnsureRelationshipValueToAssignIsTracked(object valueToAssign, Type relationshipPropertyType)
@@ -487,12 +492,12 @@ namespace JsonApiDotNetCore.Repositories
             return TypeHelper.CopyToTypedCollection(rightResourcesTracked, rightCollectionType);
         }
 
-        private bool HasForeignKeyAtLeftSide(HasOneAttribute relationship)
+        private bool HasSingleForeignKeyAtLeftSide(HasOneAttribute relationship)
         {
             var foreignKeyProperties = GetForeignKeyProperties(relationship);
-            var leftSideHasForeignKey = foreignKeyProperties.First().DeclaringType.ClrType == typeof(TResource);
-
-            return leftSideHasForeignKey;
+            var hasForeignKeyOnLeftSide = foreignKeyProperties.First().DeclaringType.ClrType == typeof(TResource);
+            var hasSingleForeignKey = foreignKeyProperties.Count == 1;
+            return hasForeignKeyOnLeftSide && hasSingleForeignKey;
         }
 
         private IReadOnlyList<IProperty> GetForeignKeyProperties(HasOneAttribute relationship)
