@@ -393,8 +393,8 @@ namespace JsonApiDotNetCore.Repositories
 
         /// <summary>
         /// If a (shadow) foreign key is already loaded on the left resource of a relationship, it is not possible to
-        /// set it to null by just assigning null to the navigation property and marking the navigation property as modified.
-        /// Instead, when marking it modified, it will mark the pre-existing foreign key value as modified but without nulling its value.
+        /// set it to null by just assigning null to the navigation property and marking it as modified.
+        /// Instead, when marking it as modified, it will mark the pre-existing foreign key value as modified too but without nulling its value.
         /// One way to work around this is by loading the relationship before nulling it. Another approach as done in this method is
         /// tricking the change tracker into recognising the null assignment by first assigning a placeholder entity to the navigation property, and then
         /// nulling it out.
