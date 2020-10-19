@@ -163,16 +163,10 @@ namespace JsonApiDotNetCore.Repositories
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
 
             var relationship = _targetedFields.Relationships.Single();
-            TResource primaryResource = CreatePrimaryResourceWithAssignedId(id);
+            TResource primaryResource = (TResource) _dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
 
-            if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSide(hasOneRelationship))
+            if (!HasForeignKeyAtLeftSide(relationship))
             {
-                // noop, refactor
-            }
-            else
-            {
-                primaryResource = (TResource)_dbContext.GetTrackedOrAttach(primaryResource);
-
                 await LoadRelationship(relationship, primaryResource);
             }
 
@@ -203,13 +197,8 @@ namespace JsonApiDotNetCore.Repositories
             // TODO: Code inside this loop is very similar to SetRelationshipAsync, we should consider to factor this out into a shared method.
             foreach (var relationship in _targetedFields.Relationships)
             {
-                if (relationship is HasOneAttribute hasOneRelationship && HasForeignKeyAtLeftSide(hasOneRelationship))
+                if (!HasForeignKeyAtLeftSide(relationship))
                 {
-                    // noop, refactor
-                }
-                else
-                {
-                    // Ensures complete replacement of the relationship.
                     await LoadRelationship(relationship, resourceFromDatabase);
                 }
 
@@ -225,16 +214,6 @@ namespace JsonApiDotNetCore.Repositories
             await SaveChangesAsync();
             
             FlushFromCache(resourceFromDatabase);
-        }
-
-        private async Task<TResource> LoadResourceAndRelationship(HasOneAttribute relationship, TId leftResourceId)
-        {
-            
-            var primaryResourceQuery = _dbContext.Set<TResource>().Where(resource => resource.Id.Equals(leftResourceId));
-            
-            primaryResourceQuery = primaryResourceQuery.Include(relationship.Property.Name);
-            var primaryResource = await primaryResourceQuery.FirstOrDefaultAsync();
-            return primaryResource;
         }
 
         /// <inheritdoc />
@@ -411,9 +390,9 @@ namespace JsonApiDotNetCore.Repositories
                 await LoadInverseForOneToOneRelationship(relationship, trackedValueToAssign);
             }
             
-            if (relationship is HasOneAttribute hasOneRelationship && HasSingleForeignKeyAtLeftSide(hasOneRelationship))
+            if (HasSingleForeignKeyAtLeftSide(relationship))
             {
-                var foreignKeyProperty = GetForeignKeyProperties(hasOneRelationship).First();
+                var foreignKeyProperty = GetForeignKeyProperties((HasOneAttribute)relationship).First();
                 SetValueThroughForeignKeyProperty(foreignKeyProperty, leftResource, valueToAssign);
             }
             else
@@ -468,19 +447,29 @@ namespace JsonApiDotNetCore.Repositories
             return TypeHelper.CopyToTypedCollection(rightResourcesTracked, rightCollectionType);
         }
 
-        private bool HasSingleForeignKeyAtLeftSide(HasOneAttribute relationship)
+        private bool HasSingleForeignKeyAtLeftSide(RelationshipAttribute relationship)
         {
-            var foreignKeyProperties = GetForeignKeyProperties(relationship);
-            var hasForeignKeyOnLeftSide = foreignKeyProperties.First().DeclaringType.ClrType == typeof(TResource);
-            var hasSingleForeignKey = foreignKeyProperties.Count == 1;
-            return hasForeignKeyOnLeftSide && hasSingleForeignKey;
+            if (relationship is HasOneAttribute hasOneRelationship)
+            {
+                var foreignKeyProperties = GetForeignKeyProperties(hasOneRelationship);
+                var hasForeignKeyOnLeftSide = foreignKeyProperties.First().DeclaringType.ClrType == typeof(TResource);
+                var hasSingleForeignKey = foreignKeyProperties.Count == 1;
+                return hasForeignKeyOnLeftSide && hasSingleForeignKey;                
+            }
+
+            return false;
         }
         
-        private bool HasForeignKeyAtLeftSide(HasOneAttribute relationship)
+        private bool HasForeignKeyAtLeftSide(RelationshipAttribute relationship)
         {
-            var foreignKeyProperties = GetForeignKeyProperties(relationship);
-            var hasForeignKeyOnLeftSide = foreignKeyProperties.First().DeclaringType.ClrType == typeof(TResource);
-            return hasForeignKeyOnLeftSide;
+            if (relationship is HasOneAttribute hasOneRelationship)
+            {
+                var foreignKeyProperties = GetForeignKeyProperties(hasOneRelationship);
+                var hasForeignKeyOnLeftSide = foreignKeyProperties.First().DeclaringType.ClrType == typeof(TResource);
+                return hasForeignKeyOnLeftSide;
+            }
+
+            return false;
         }
 
         private IReadOnlyList<IProperty> GetForeignKeyProperties(HasOneAttribute relationship)
