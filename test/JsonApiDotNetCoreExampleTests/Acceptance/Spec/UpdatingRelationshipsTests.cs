@@ -367,6 +367,55 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
+        public async Task Can_Set_ToOne_Relationship_By_Patching_Resource()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            var person = _personFaker.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(todoItem, person);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    id = todoItem.StringId,
+                    type = "todoItems",
+                    relationships = new
+                    {
+                        owner = new
+                        {
+                            data = new { type = "people", id = person.StringId}
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/todoItems/" + todoItem.StringId;
+
+            // Act
+            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var todoItemInDatabase = await dbContext.TodoItems
+                    .Include(item => item.Owner)
+                    .Where(item => item.Id == todoItem.Id)
+                    .FirstAsync();
+
+                todoItemInDatabase.Owner.Should().NotBeNull();
+                todoItemInDatabase.Owner.Id.Should().Be(person.Id);
+            });
+        }
+        
+        [Fact]
         public async Task Can_Delete_ToMany_Relationship_By_Patching_Resource()
         {
             // Arrange

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -13,7 +12,6 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Repositories
@@ -118,7 +116,7 @@ namespace JsonApiDotNetCore.Repositories
             var expression = builder.ApplyQuery(layer);
             return source.Provider.CreateQuery<TResource>(expression);
         }
-
+        
         protected virtual IQueryable<TResource> GetAll()
         {
             return _dbContext.Set<TResource>();
@@ -133,7 +131,7 @@ namespace JsonApiDotNetCore.Repositories
             foreach (var relationship in _targetedFields.Relationships)
             {
                 var rightValue = relationship.GetValue(resource);
-                await AssignValueToRelationship(relationship, resource, rightValue);
+                await ProcessRelationshipUpdate(relationship, resource, rightValue);
             }
 
             _dbContext.Set<TResource>().Add(resource);
@@ -146,7 +144,8 @@ namespace JsonApiDotNetCore.Repositories
             DetachRelationships(resource);
         }
 
-        public async Task AddToToManyRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
+        /// <inheritdoc />
+        public virtual async Task AddToToManyRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
@@ -154,11 +153,12 @@ namespace JsonApiDotNetCore.Repositories
             var relationship = _targetedFields.Relationships.Single();
             var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
 
-            await AssignValueToRelationship(relationship, primaryResource, secondaryResourceIds);
+            await ProcessRelationshipUpdate(relationship, primaryResource, secondaryResourceIds);
             await SaveChangesAsync();
         }
 
-        public async Task SetRelationshipAsync(TId id, object secondaryResourceIds)
+        /// <inheritdoc />
+        public virtual async Task SetRelationshipAsync(TId id, object secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
 
@@ -170,7 +170,7 @@ namespace JsonApiDotNetCore.Repositories
                 await LoadRelationship(relationship, primaryResource);
             }
 
-            await AssignValueToRelationship(relationship, primaryResource, secondaryResourceIds);
+            await ProcessRelationshipUpdate(relationship, primaryResource, secondaryResourceIds);
             await SaveChangesAsync();
         }
 
@@ -193,7 +193,7 @@ namespace JsonApiDotNetCore.Repositories
 
             // A database entity might not be tracked if it was retrieved through projection.
             resourceFromDatabase = (TResource)_dbContext.GetTrackedOrAttach(resourceFromDatabase);
-
+            
             // TODO: Code inside this loop is very similar to SetRelationshipAsync, we should consider to factor this out into a shared method.
             foreach (var relationship in _targetedFields.Relationships)
             {
@@ -203,7 +203,7 @@ namespace JsonApiDotNetCore.Repositories
                 }
 
                 var relationshipAssignment = relationship.GetValue(resourceFromRequest);
-                await AssignValueToRelationship(relationship, resourceFromDatabase, relationshipAssignment);
+                await ProcessRelationshipUpdate(relationship, resourceFromDatabase, relationshipAssignment);
             }
 
             foreach (var attribute in _targetedFields.Attributes)
@@ -229,7 +229,8 @@ namespace JsonApiDotNetCore.Repositories
             await SaveChangesAsync();
         }
 
-        public async Task RemoveFromToManyRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
+        /// <inheritdoc />
+        public virtual async Task RemoveFromToManyRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
@@ -245,7 +246,7 @@ namespace JsonApiDotNetCore.Repositories
 
             if (newRightResources.Count != existingRightResources.Count)
             {
-                await AssignValueToRelationship(relationship, primaryResource, newRightResources);
+                await ProcessRelationshipUpdate(relationship, primaryResource, newRightResources);
                 await SaveChangesAsync();
             }
         }
@@ -268,49 +269,58 @@ namespace JsonApiDotNetCore.Repositories
             return newRightResources;
         }
 
+        private async Task SaveChangesAsync()
+        {
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException exception)
+            {
+                throw new DataStoreUpdateException(exception);
+            }
+        }
+
+        private async Task ProcessRelationshipUpdate(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
+        {
+            // Ensures the new relationship assignment will not result in entities being tracked more than once.
+            var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
+    
+            if (ShouldLoadInverseRelationship(relationship, trackedValueToAssign))
+            {
+                var entityEntry = _dbContext.Entry(trackedValueToAssign); 
+                var inversePropertyName = relationship.InverseNavigationProperty.Name;
+                
+                await entityEntry.Reference(inversePropertyName).LoadAsync();
+            }
+            
+            if (HasForeignKeyAtLeftSide(relationship) && trackedValueToAssign == null)
+            {
+                PrepareChangeTrackerForNullAssignment(relationship, leftResource);
+            }
+            
+            relationship.SetValue(leftResource, trackedValueToAssign, _resourceFactory);
+        }
+        
+        private bool HasForeignKeyAtLeftSide(RelationshipAttribute relationship)
+        {
+            if (relationship is HasOneAttribute)
+            {
+                var entityType = _dbContext.Model.FindEntityType(typeof(TResource));
+                var navigationMetadata = entityType.FindNavigation(relationship.Property.Name);
+    
+                return navigationMetadata.IsDependentToPrincipal();
+            }
+
+            return false;
+        }
+
         private TResource CreatePrimaryResourceWithAssignedId(TId id)
         {
             var resource = _resourceFactory.CreateInstance<TResource>();
             resource.Id = id;
 
             return resource;
-        }
-
-        private void FlushFromCache(TResource resource)
-        {
-            _traceWriter.LogMethodStart(new {resource});
-
-            // TODO: Check if this change can be reverted (use GetTrackedIdentifiable).
-            var trackedResource = _dbContext.GetTrackedOrAttach(resource);
-            _dbContext.Entry(trackedResource).State = EntityState.Detached;
-        }
-
-        private void DetachRelationships(TResource resource)
-        {
-            foreach (var relationship in _targetedFields.Relationships)
-            {
-                var rightValue = relationship.GetValue(resource);
-
-                if (rightValue is IEnumerable<IIdentifiable> rightResources)
-                {
-                    foreach (var rightResource in rightResources)
-                    {
-                        _dbContext.Entry(rightResource).State = EntityState.Detached;
-                    }
-
-                    // Detaching to-many relationships is not sufficient to 
-                    // trigger a full reload of relationships: the navigation 
-                    // property actually needs to be nulled out, otherwise
-                    // EF Core will still add duplicate instances to the collection.
-
-                    // TODO: Ensure that a test exists for this. Commenting out the next line still makes all tests succeed.
-                    relationship.SetValue(resource, null, _resourceFactory);
-                }
-                else if (rightValue != null)
-                {
-                    _dbContext.Entry(rightValue).State = EntityState.Detached;
-                }
-            }
         }
 
         /// <summary>
@@ -338,6 +348,15 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
+        private void FlushFromCache(IIdentifiable resource)
+        {
+            _traceWriter.LogMethodStart(new {resource});
+
+            // TODO: Check if this change can be reverted (use GetTrackedIdentifiable).
+            var trackedResource = _dbContext.GetTrackedOrAttach(resource);
+            _dbContext.Entry(trackedResource).State = EntityState.Detached;
+        }
+
         private NavigationEntry GetNavigationEntryForRelationship(RelationshipAttribute relationship, TResource resource)
         {
             EntityEntry<TResource> entityEntry = _dbContext.Entry(resource);
@@ -362,14 +381,11 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <summary>
-        /// Loads the inverse of a one-to-one relationship, to support an implicit remove. This prevents a foreign key constraint from being violated.
         /// See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
         /// </summary>
-        // TODO: Rename, this is no longer specific to one-to-one and does not affect inverse.
-        private async Task LoadInverseForOneToOneRelationship(RelationshipAttribute relationship, object resource)
+        private bool ShouldLoadInverseRelationship(RelationshipAttribute relationship, object trackedValueToAssign)
         {
-            var entityEntry = _dbContext.Entry(resource); 
-            await entityEntry.Reference(relationship.InverseNavigationProperty.Name).LoadAsync();
+            return trackedValueToAssign != null && relationship.InverseNavigationProperty != null && IsOneToOneRelationship(relationship);
         }
 
         private bool IsOneToOneRelationship(RelationshipAttribute relationship)
@@ -383,42 +399,53 @@ namespace JsonApiDotNetCore.Repositories
             return false;
         }
 
-        private async Task AssignValueToRelationship(RelationshipAttribute relationship, TResource leftResource,
-            object valueToAssign)
+        /// <summary>
+        /// If a (shadow) foreign key is already loaded on the left resource of a relationship, it is not possible to
+        /// set it to null by just assigning null to the navigation property and marking the navigation property as modified.
+        /// Instead, when marking it modified, it will mark the pre-existing foreign key value as modified but without nulling its value.
+        /// One way to work around this is by loading the relationship before nulling it. Another approach as done in this method is
+        /// tricking the change tracker into recognising the null assignment by first assigning a placeholder entity to the navigation property, and then
+        /// nulling it out.
+        /// </summary>
+        private void PrepareChangeTrackerForNullAssignment(RelationshipAttribute relationship, TResource leftResource)
         {
-            // Ensures the new relationship assignment will not result in entities being tracked more than once.
-            var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
-            if (trackedValueToAssign != null && relationship.InverseNavigationProperty != null && IsOneToOneRelationship(relationship))
-            {
-                await LoadInverseForOneToOneRelationship(relationship, trackedValueToAssign);
-            }
+            var placeholderRightResource = _resourceFactory.CreateInstance(relationship.RightType);
+
+            // When assigning an entity to a navigation property, it will be assigned. This fails when the placeholder has 
+            // nullable primary key(s) that have a null reference.
+            EnsurePlaceholderIsAttachable(placeholderRightResource);
+
+            relationship.SetValue(leftResource, placeholderRightResource, _resourceFactory);
+            _dbContext.Entry(leftResource).DetectChanges();
             
-            if (HasSingleForeignKeyAtLeftSide(relationship))
+            _dbContext.Entry(placeholderRightResource).State = EntityState.Detached;
+        }
+
+        private void EnsurePlaceholderIsAttachable(object entity)
+        {
+            var primaryKey = _dbContext.Entry(entity).Metadata.FindPrimaryKey();
+            if (primaryKey != null)
             {
-                var foreignKeyProperty = GetForeignKeyProperties((HasOneAttribute)relationship).First();
-                SetValueThroughForeignKeyProperty(foreignKeyProperty, leftResource, valueToAssign);
-            }
-            else
-            {
-                relationship.SetValue(leftResource, trackedValueToAssign, _resourceFactory);
-                if (trackedValueToAssign == null)
+                foreach (var propertyMeta in primaryKey.Properties)
                 {
-                    var entry = GetNavigationEntryForRelationship(relationship, leftResource);
-                    entry.IsModified = true;
+                    var propertyInfo = propertyMeta.PropertyInfo;
+                    object propertyValue = null;
+
+                    if (propertyInfo.PropertyType == typeof(string))
+                    {
+                        propertyValue = "";
+                    }
+                    else if (Nullable.GetUnderlyingType(propertyInfo.PropertyType) != null)
+                    {
+                        propertyValue = propertyInfo.PropertyType.GetGenericArguments()[0];
+                    }
+
+                    if (propertyValue != null)
+                    {
+                        propertyInfo.SetValue(entity, propertyValue);
+                    }
                 }
             }
-        }
-        
-        private void SetValueThroughForeignKeyProperty(IProperty foreignKeyProperty, TResource leftResource, object valueToAssign)
-        {
-            var rightResourceId = valueToAssign is IIdentifiable rightResource
-                ? rightResource.GetTypedId()
-                : null;
-
-            // https://stackoverflow.com/questions/10257360/how-to-update-not-every-fields-of-an-object-using-entity-framework-and-entitysta
-            var entityEntry = _dbContext.Entry(leftResource);
-            entityEntry.Property(foreignKeyProperty.Name).CurrentValue = rightResourceId;
-            entityEntry.Property(foreignKeyProperty.Name).IsModified = true;
         }
 
         private object EnsureRelationshipValueToAssignIsTracked(object valueToAssign, Type relationshipPropertyType)
@@ -450,48 +477,31 @@ namespace JsonApiDotNetCore.Repositories
             return TypeHelper.CopyToTypedCollection(rightResourcesTracked, rightCollectionType);
         }
 
-        private bool HasSingleForeignKeyAtLeftSide(RelationshipAttribute relationship)
+        private void DetachRelationships(TResource resource)
         {
-            if (relationship is HasOneAttribute hasOneRelationship)
+            foreach (var relationship in _targetedFields.Relationships)
             {
-                var foreignKeyProperties = GetForeignKeyProperties(hasOneRelationship);
-                var hasForeignKeyOnLeftSide = foreignKeyProperties.First().DeclaringType.ClrType == typeof(TResource);
-                var hasSingleForeignKey = foreignKeyProperties.Count == 1;
-                return hasForeignKeyOnLeftSide && hasSingleForeignKey;                
-            }
+                var rightValue = relationship.GetValue(resource);
 
-            return false;
-        }
-        
-        private bool HasForeignKeyAtLeftSide(RelationshipAttribute relationship)
-        {
-            if (relationship is HasOneAttribute hasOneRelationship)
-            {
-                var foreignKeyProperties = GetForeignKeyProperties(hasOneRelationship);
-                var hasForeignKeyOnLeftSide = foreignKeyProperties.First().DeclaringType.ClrType == typeof(TResource);
-                return hasForeignKeyOnLeftSide;
-            }
+                if (rightValue is IEnumerable<IIdentifiable> rightResources)
+                {
+                    foreach (var rightResource in rightResources)
+                    {
+                        _dbContext.Entry(rightResource).State = EntityState.Detached;
+                    }
 
-            return false;
-        }
+                    // Detaching to-many relationships is not sufficient to 
+                    // trigger a full reload of relationships: the navigation 
+                    // property actually needs to be nulled out, otherwise
+                    // EF Core will still add duplicate instances to the collection.
 
-        private IReadOnlyList<IProperty> GetForeignKeyProperties(HasOneAttribute relationship)
-        {
-            var entityType = _dbContext.Model.FindEntityType(typeof(TResource));
-            var foreignKeyMetadata = entityType.FindNavigation(relationship.Property.Name).ForeignKey;
-            
-            return foreignKeyMetadata.Properties;
-        }
-
-        private async Task SaveChangesAsync()
-        {
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException exception)
-            {
-                throw new DataStoreUpdateException(exception);
+                    // TODO: Ensure that a test exists for this. Commenting out the next line still makes all tests succeed.
+                    relationship.SetValue(resource, null, _resourceFactory);
+                }
+                else if (rightValue != null)
+                {
+                    _dbContext.Entry(rightValue).State = EntityState.Detached;
+                }
             }
         }
     }

@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Resources
             return identifiable;
         }
 
-        private static object InnerCreateInstance(Type type, IServiceProvider serviceProvider)
+        private object InnerCreateInstance(Type type, IServiceProvider serviceProvider)
         {
             bool hasSingleConstructorWithoutParameters = HasSingleConstructorWithoutParameters(type);
 
