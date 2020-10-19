@@ -214,6 +214,8 @@ namespace JsonApiDotNetCore.Repositories
             await SaveChangesAsync();
             
             FlushFromCache(resourceFromDatabase);
+
+            // TODO: Should we call DetachRelationships here, similar to Create?
         }
 
         /// <inheritdoc />
@@ -363,6 +365,7 @@ namespace JsonApiDotNetCore.Repositories
         /// Loads the inverse of a one-to-one relationship, to support an implicit remove. This prevents a foreign key constraint from being violated.
         /// See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
         /// </summary>
+        // TODO: Rename, this is no longer specific to one-to-one and does not affect inverse.
         private async Task LoadInverseForOneToOneRelationship(RelationshipAttribute relationship, object resource)
         {
             var entityEntry = _dbContext.Entry(resource); 
