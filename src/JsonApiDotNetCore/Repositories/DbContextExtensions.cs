@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Repositories
             return trackedIdentifiable;
         }
 
-        private static object GetTrackedIdentifiable(this DbContext dbContext, IIdentifiable identifiable)
+        public static object GetTrackedIdentifiable(this DbContext dbContext, IIdentifiable identifiable)
         {
             if (dbContext == null) throw new ArgumentNullException(nameof(dbContext));
             if (identifiable == null) throw new ArgumentNullException(nameof(identifiable));

@@ -136,9 +136,7 @@ namespace JsonApiDotNetCore.Repositories
 
             _dbContext.Set<TResource>().Add(resource);
             await SaveChangesAsync();
-
-            FlushFromCache(resource);
-
+    
             // This ensures relationships get reloaded from the database if they have
             // been requested. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343.
             DetachRelationships(resource);
@@ -171,6 +169,7 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             await ProcessRelationshipUpdate(relationship, primaryResource, secondaryResourceIds);
+            
             await SaveChangesAsync();
         }
 
@@ -181,20 +180,9 @@ namespace JsonApiDotNetCore.Repositories
             if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
             if (resourceFromDatabase == null) throw new ArgumentNullException(nameof(resourceFromDatabase));
 
-            
-            // TODO: I believe the comment below does not apply here (anymore). The calling resource service always fetches the entire record.
-            // And commenting out the line below still keeps all tests green.
-            // Does this comment maybe apply to SetRelationshipAsync()?
-            
-            // Maurits: We tried moving the update logic to the repo without success. Now that we're keeping 
-            // it this (i.e. service doing a repo.GetAsync and then calling repo.UpdateAsync), I think it is good to
-            // keep it a repo responsibility to make sure that the provided database resource is actually present in the change tracker
-            // because there is no guarantee it is.
-
             // A database entity might not be tracked if it was retrieved through projection.
             resourceFromDatabase = (TResource)_dbContext.GetTrackedOrAttach(resourceFromDatabase);
             
-            // TODO: Code inside this loop is very similar to SetRelationshipAsync, we should consider to factor this out into a shared method.
             foreach (var relationship in _targetedFields.Relationships)
             {
                 if (!HasForeignKeyAtLeftSide(relationship))
@@ -214,8 +202,6 @@ namespace JsonApiDotNetCore.Repositories
             await SaveChangesAsync();
             
             FlushFromCache(resourceFromDatabase);
-
-            // TODO: Should we call DetachRelationships here, similar to Create?
         }
 
         /// <inheritdoc />
@@ -351,9 +337,8 @@ namespace JsonApiDotNetCore.Repositories
         private void FlushFromCache(IIdentifiable resource)
         {
             _traceWriter.LogMethodStart(new {resource});
-
-            // TODO: Check if this change can be reverted (use GetTrackedIdentifiable).
-            var trackedResource = _dbContext.GetTrackedOrAttach(resource);
+    
+            var trackedResource = _dbContext.GetTrackedIdentifiable(resource);
             _dbContext.Entry(trackedResource).State = EntityState.Detached;
         }
 
@@ -489,14 +474,6 @@ namespace JsonApiDotNetCore.Repositories
                     {
                         _dbContext.Entry(rightResource).State = EntityState.Detached;
                     }
-
-                    // Detaching to-many relationships is not sufficient to 
-                    // trigger a full reload of relationships: the navigation 
-                    // property actually needs to be nulled out, otherwise
-                    // EF Core will still add duplicate instances to the collection.
-
-                    // TODO: Ensure that a test exists for this. Commenting out the next line still makes all tests succeed.
-                    relationship.SetValue(resource, null, _resourceFactory);
                 }
                 else if (rightValue != null)
                 {

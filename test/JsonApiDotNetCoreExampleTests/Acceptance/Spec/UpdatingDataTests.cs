@@ -382,6 +382,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             });
         }
 
+        // TODO: this test is flakey.
         [Fact]
         public async Task Patch_Resource_With_HasMany_Does_Not_Include_Relationships()
         {

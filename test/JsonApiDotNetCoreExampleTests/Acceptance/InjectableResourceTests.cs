@@ -197,6 +197,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         // TODO: We agreed this test needs to be refactored, not disabled.
+        // Maurits: I still don't think refactoring makes sense in this case. See JsonApiResourceService.DeleteAsync(TId).
+        // The reason why it fails is because we do a projection there as a default part of handling that pipeline.
         [Fact(Skip = "https://github.com/dotnet/efcore/issues/20502")]
         public async Task Fail_When_Deleting_Missing_Passport()
         {
