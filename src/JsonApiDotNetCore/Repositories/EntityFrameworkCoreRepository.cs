@@ -143,6 +143,7 @@ namespace JsonApiDotNetCore.Repositories
             _dbContext.Set<TResource>().Add(resource);
             await SaveChangesAsync();
     
+            // Todo: why was this reverted?
             FlushFromCache(resource);
 
             // This ensures relationships get reloaded from the database if they have
@@ -404,7 +405,7 @@ namespace JsonApiDotNetCore.Repositories
 
             // When assigning an entity to a navigation property, it will be assigned. This fails when the placeholder has 
             // nullable primary key(s) that have a null reference.
-            EnsurePlaceholderIsAttachable(placeholderRightResource);
+            EnsureNoNullPrimaryKeys(placeholderRightResource);
 
             relationship.SetValue(leftResource, placeholderRightResource, _resourceFactory);
             _dbContext.Entry(leftResource).DetectChanges();
@@ -412,7 +413,7 @@ namespace JsonApiDotNetCore.Repositories
             _dbContext.Entry(placeholderRightResource).State = EntityState.Detached;
         }
 
-        private void EnsurePlaceholderIsAttachable(object entity)
+        private void EnsureNoNullPrimaryKeys(object entity)
         {
             var primaryKey = _dbContext.Entry(entity).Metadata.FindPrimaryKey();
             if (primaryKey != null)
