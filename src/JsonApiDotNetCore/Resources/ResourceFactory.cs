@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Repositories;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources
@@ -31,14 +30,13 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public TResource CreateInstance<TResource>() where TResource : IIdentifiable
+        public TResource CreateInstance<TResource>()
+            where TResource : IIdentifiable
         {
-            var identifiable = (TResource) InnerCreateInstance(typeof(TResource), _serviceProvider);
-
-            return identifiable;
+            return (TResource) InnerCreateInstance(typeof(TResource), _serviceProvider);
         }
 
-        private object InnerCreateInstance(Type type, IServiceProvider serviceProvider)
+        private static object InnerCreateInstance(Type type, IServiceProvider serviceProvider)
         {
             bool hasSingleConstructorWithoutParameters = HasSingleConstructorWithoutParameters(type);
 
@@ -77,10 +75,8 @@ namespace JsonApiDotNetCore.Resources
                     object constructorArgument =
                         ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, constructorParameter.ParameterType);
 
-                    var argumentExpression = EntityFrameworkCoreSupport.Version.Major >= 5
-                        // Workaround for https://github.com/dotnet/efcore/issues/20502 to not fail on injected DbContext in EF Core 5.
-                        ? CreateTupleAccessExpressionForConstant(constructorArgument, constructorArgument.GetType())
-                        : Expression.Constant(constructorArgument);
+                    var argumentExpression =
+                        CreateTupleAccessExpressionForConstant(constructorArgument, constructorArgument.GetType());
 
                     constructorArguments.Add(argumentExpression);
                 }
@@ -108,7 +104,7 @@ namespace JsonApiDotNetCore.Resources
             return Expression.Property(tupleCreateCall, "Item1");
         }
 
-        private static bool HasSingleConstructorWithoutParameters(Type type)
+        internal static bool HasSingleConstructorWithoutParameters(Type type)
         {
             ConstructorInfo[] constructors = type.GetConstructors().Where(c => !c.IsStatic).ToArray();
 
@@ -123,8 +119,20 @@ namespace JsonApiDotNetCore.Resources
             {
                 throw new InvalidOperationException($"No public constructor was found for '{type.FullName}'.");
             }
-            
-            var bestMatch = TypeHelper.GetLongestConstructor(constructors);
+
+            ConstructorInfo bestMatch = constructors[0];
+            int maxParameterLength = constructors[0].GetParameters().Length;
+
+            for (int index = 1; index < constructors.Length; index++)
+            {
+                var constructor = constructors[index];
+                int length = constructor.GetParameters().Length;
+                if (length > maxParameterLength)
+                {
+                    bestMatch = constructor;
+                    maxParameterLength = length;
+                }
+            }
 
             return bestMatch;
         }

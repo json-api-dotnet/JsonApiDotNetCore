@@ -252,12 +252,10 @@ namespace JsonApiDotNetCore.Services
         {
             _traceWriter.LogMethodStart(new {id, resourceFromRequest});
             if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
-            
-            // TODO: optimization; if TargetedFields.Attributes.Length = 0, we can do TopFieldSelection.OnlyIdAttribute instead of AllAttributes.
-            // var fieldsToSelect = _targetedFields.Attributes.Any() ? TopFieldSelection.AllAttributes : TopFieldSelection.OnlyIdAttribute;
-            var fieldsToSelect = TopFieldSelection.AllAttributes;
+
+            var fieldsToSelect = _targetedFields.Attributes.Any() ? TopFieldSelection.AllAttributes : TopFieldSelection.OnlyIdAttribute;
             TResource resourceFromDatabase = await GetPrimaryResourceById(id, fieldsToSelect);
-            
+
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
             _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
 
@@ -265,7 +263,7 @@ namespace JsonApiDotNetCore.Services
             {
                 resourceFromRequest = _hookExecutor.BeforeUpdate(ToList(resourceFromRequest), ResourcePipeline.Patch).Single();
             }
-            
+
             try
             {
                 await _repository.UpdateAsync(resourceFromRequest, resourceFromDatabase);

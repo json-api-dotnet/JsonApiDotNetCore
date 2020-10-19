@@ -6,7 +6,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore
 {
@@ -349,42 +348,6 @@ namespace JsonApiDotNetCore
             }
 
             return source == interfaceType || source.GetInterfaces().Any(type => type == interfaceType);
-        }
-        
-        internal static ConstructorInfo GetLongestConstructor(ConstructorInfo[] constructors)
-        {
-            ConstructorInfo bestMatch = constructors[0];
-            int maxParameterLength = constructors[0].GetParameters().Length;
-
-            for (int index = 1; index < constructors.Length; index++)
-            {
-                var constructor = constructors[index];
-                int length = constructor.GetParameters().Length;
-                if (length > maxParameterLength)
-                {
-                    bestMatch = constructor;
-                    maxParameterLength = length;
-                }
-            }
-
-            return bestMatch;
-        }
-
-        internal static bool ConstructorDependsOnDbContext(Type resourceType)
-        {
-            // TODO: Rewrite existing test(s) so this can be reverted.
-
-            var constructors = resourceType.GetConstructors().Where(c => !c.IsStatic).ToArray();
-            if (constructors.Any())
-            {
-                var dbContextType = typeof(DbContext);
-                var constructor = GetLongestConstructor(constructors);
-                
-                return constructor.GetParameters().Any(p => dbContextType.IsAssignableFrom(p.ParameterType));
-            }
-
-            return false;
-            
         }
     }
 }

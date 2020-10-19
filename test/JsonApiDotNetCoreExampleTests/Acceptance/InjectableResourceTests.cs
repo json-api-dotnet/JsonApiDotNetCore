@@ -107,7 +107,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             }
         }
 
-        [Fact(Skip = "Requires fix for https://github.com/dotnet/efcore/issues/20502")]
+        [Fact]
         public async Task Can_Get_Passports_With_Filter()
         {
             // Arrange
@@ -147,7 +147,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal("Joe", document.Included[0].Attributes["firstName"]);
         }
 
-        [Fact(Skip = "https://github.com/dotnet/efcore/issues/20502")]
+        [Fact]
         public async Task Can_Get_Passports_With_Sparse_Fieldset()
         {
             // Arrange
@@ -196,10 +196,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 resource => resource.Attributes.ContainsKey("lastName"));
         }
 
-        // TODO: We agreed this test needs to be refactored, not disabled.
-        // Maurits: I still don't think refactoring makes sense in this case. See JsonApiResourceService.DeleteAsync(TId).
-        // The reason why it fails is because we do a projection there as a default part of handling that pipeline.
-        [Fact(Skip = "https://github.com/dotnet/efcore/issues/20502")]
+        [Fact]
         public async Task Fail_When_Deleting_Missing_Passport()
         {
             // Arrange

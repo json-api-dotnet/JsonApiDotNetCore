@@ -96,6 +96,12 @@ namespace JsonApiDotNetCore.Repositories
             _traceWriter.LogMethodStart(new {layer});
             if (layer == null) throw new ArgumentNullException(nameof(layer));
 
+            if (EntityFrameworkCoreSupport.Version.Major < 5)
+            {
+                var writer = new MemoryLeakDetectionBugRewriter();
+                layer = writer.Rewrite(layer);
+            }
+
             IQueryable<TResource> source = GetAll();
 
             var queryableHandlers = _constraintProviders
@@ -137,6 +143,8 @@ namespace JsonApiDotNetCore.Repositories
             _dbContext.Set<TResource>().Add(resource);
             await SaveChangesAsync();
     
+            FlushFromCache(resource);
+
             // This ensures relationships get reloaded from the database if they have
             // been requested. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343.
             DetachRelationships(resource);
@@ -336,8 +344,6 @@ namespace JsonApiDotNetCore.Repositories
 
         private void FlushFromCache(IIdentifiable resource)
         {
-            _traceWriter.LogMethodStart(new {resource});
-    
             var trackedResource = _dbContext.GetTrackedIdentifiable(resource);
             _dbContext.Entry(trackedResource).State = EntityState.Detached;
         }

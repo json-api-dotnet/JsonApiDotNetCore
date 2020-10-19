@@ -16,7 +16,8 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Creates a new resource object instance.
         /// </summary>
-        public TResource CreateInstance<TResource>() where TResource : IIdentifiable;
+        public TResource CreateInstance<TResource>()
+            where TResource : IIdentifiable;
 
         /// <summary>
         /// Returns an expression tree that represents creating a new resource object instance.
