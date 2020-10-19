@@ -196,6 +196,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 resource => resource.Attributes.ContainsKey("lastName"));
         }
 
+        // TODO: We agreed this test needs to be refactored, not disabled.
         [Fact(Skip = "https://github.com/dotnet/efcore/issues/20502")]
         public async Task Fail_When_Deleting_Missing_Passport()
         {

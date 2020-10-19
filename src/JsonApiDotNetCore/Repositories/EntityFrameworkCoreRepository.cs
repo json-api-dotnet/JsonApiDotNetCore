@@ -295,11 +295,11 @@ namespace JsonApiDotNetCore.Repositories
             return resource;
         }
 
-        /// <inheritdoc />
         private void FlushFromCache(TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});
 
+            // TODO: Check if this change can be reverted (use GetTrackedIdentifiable).
             var trackedResource = _dbContext.GetTrackedOrAttach(resource);
             _dbContext.Entry(trackedResource).State = EntityState.Detached;
         }

@@ -255,7 +255,8 @@ namespace JsonApiDotNetCore.Services
             
             // TODO: optimization; if TargetedFields.Attributes.Length = 0, we can do TopFieldSelection.OnlyIdAttribute instead of AllAttributes.
             // This is a problem though with implicit change tracking: implicit changes can not be tracked. Do we think this is important?
-            var fieldsToSelect = _targetedFields.Attributes.Any() ? TopFieldSelection.AllAttributes : TopFieldSelection.OnlyIdAttribute;
+            //var fieldsToSelect = _targetedFields.Attributes.Any() ? TopFieldSelection.AllAttributes : TopFieldSelection.OnlyIdAttribute;
+            var fieldsToSelect = TopFieldSelection.AllAttributes;
             TResource resourceFromDatabase = await GetPrimaryResourceById(id, fieldsToSelect);
             
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
@@ -281,7 +282,7 @@ namespace JsonApiDotNetCore.Services
                 _hookExecutor.AfterUpdate(ToList(resourceFromDatabase), ResourcePipeline.Patch);
                 _hookExecutor.OnReturn(ToList(resourceFromDatabase), ResourcePipeline.Patch);
             }
-            
+
             TResource afterResourceFromDatabase = await GetPrimaryResourceById(id, fieldsToSelect);
             _resourceChangeTracker.SetFinallyStoredAttributeValues(afterResourceFromDatabase);
 
