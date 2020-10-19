@@ -216,16 +216,6 @@ namespace JsonApiDotNetCore.Repositories
             FlushFromCache(resourceFromDatabase);
         }
 
-        private async Task<TResource> LoadResourceAndRelationship(HasOneAttribute relationship, TId leftResourceId)
-        {
-            
-            var primaryResourceQuery = _dbContext.Set<TResource>().Where(resource => resource.Id.Equals(leftResourceId));
-            
-            primaryResourceQuery = primaryResourceQuery.Include(relationship.Property.Name);
-            var primaryResource = await primaryResourceQuery.FirstOrDefaultAsync();
-            return primaryResource;
-        }
-
         /// <inheritdoc />
         public virtual async Task DeleteAsync(TId id)
         {

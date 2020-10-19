@@ -24,21 +24,6 @@ namespace JsonApiDotNetCore.Repositories
             return trackedIdentifiable;
         }
 
-        public static IProperty GetSingleForeignKeyProperty(this DbContext dbContext, HasOneAttribute relationship)
-        {
-            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
-            
-            var entityType = dbContext.Model.FindEntityType(relationship.LeftType);
-            var foreignKeyProperties = entityType.FindNavigation(relationship.Property.Name).ForeignKey.Properties;
-
-            if (foreignKeyProperties.Count != 1)
-            {
-                throw new ArgumentException($"Relationship {relationship} does not have a left side with a single foreign key");
-            }
-            
-            return foreignKeyProperties.First();
-        }
-        
         private static object GetTrackedIdentifiable(this DbContext dbContext, IIdentifiable identifiable)
         {
             if (dbContext == null) throw new ArgumentNullException(nameof(dbContext));
