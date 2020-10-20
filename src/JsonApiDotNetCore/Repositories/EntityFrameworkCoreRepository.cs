@@ -171,12 +171,8 @@ namespace JsonApiDotNetCore.Repositories
 
             var relationship = _targetedFields.Relationships.Single();
             TResource primaryResource = (TResource) _dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
-
-            if (!HasForeignKeyAtLeftSide(relationship))
-            {
-                await LoadRelationship(relationship, primaryResource);
-            }
-
+            
+            await EnsureCompleteReplacement(relationship, primaryResource);
             await ProcessRelationshipUpdate(relationship, primaryResource, secondaryResourceIds);
             
             await SaveChangesAsync();
@@ -194,10 +190,7 @@ namespace JsonApiDotNetCore.Repositories
             
             foreach (var relationship in _targetedFields.Relationships)
             {
-                if (!HasForeignKeyAtLeftSide(relationship))
-                {
-                    await LoadRelationship(relationship, resourceFromDatabase);
-                }
+                await EnsureCompleteReplacement(relationship, resourceFromDatabase);
 
                 var relationshipAssignment = relationship.GetValue(resourceFromRequest);
                 await ProcessRelationshipUpdate(relationship, resourceFromDatabase, relationshipAssignment);
@@ -233,13 +226,16 @@ namespace JsonApiDotNetCore.Repositories
             var relationship = _targetedFields.Relationships.Single();
             var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
 
-            await LoadRelationship(relationship, primaryResource);
+            await EnsureCompleteReplacement(relationship, primaryResource);
 
             var existingRightResources = (IReadOnlyCollection<IIdentifiable>)relationship.GetValue(primaryResource);
-            var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources,
-                secondaryResourceIds.Select(r => r.StringId));
+            // todo: consider reverting like done below. I don't think the commented out version is more readable.
+            var newRightResources = existingRightResources.Where(i => secondaryResourceIds.All(r => r.StringId != i.StringId)).ToList();
+            // var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources,secondaryResourceIds.Select(r => r.StringId));
 
-            if (newRightResources.Count != existingRightResources.Count)
+            if (newRightResources.Count < existingRightResources.Count);
+            // todo:
+            // if (newRightResources.Count != existingRightResources.Count)
             {
                 await ProcessRelationshipUpdate(relationship, primaryResource, newRightResources);
                 await SaveChangesAsync();
@@ -285,7 +281,6 @@ namespace JsonApiDotNetCore.Repositories
             {
                 var entityEntry = _dbContext.Entry(trackedValueToAssign); 
                 var inversePropertyName = relationship.InverseNavigationProperty.Name;
-                
                 await entityEntry.Reference(inversePropertyName).LoadAsync();
             }
             
@@ -296,7 +291,7 @@ namespace JsonApiDotNetCore.Repositories
             
             relationship.SetValue(leftResource, trackedValueToAssign, _resourceFactory);
         }
-        
+
         private bool HasForeignKeyAtLeftSide(RelationshipAttribute relationship)
         {
             if (relationship is HasOneAttribute)
@@ -317,28 +312,28 @@ namespace JsonApiDotNetCore.Repositories
 
             return resource;
         }
-
+        
         /// <summary>
-        /// Before assigning new relationship values, we need to attach the current database values
-        /// of the relationship to the DbContext, otherwise it will not perform a complete-replace,
-        /// which is required for one-to-many and many-to-many.
-        /// <para>
+        /// Prepares a relationship for complete replacement.
+        /// </summary>
+        /// <remarks>
         /// For example: a person `p1` has 2 todo-items: `t1` and `t2`.
         /// If we want to update this set to `t3` and `t4`, simply assigning
         /// `p1.todoItems = [t3, t4]` will result in EF Core adding them to the set,
         /// resulting in `[t1 ... t4]`. Instead, we should first include `[t1, t2]`,
         /// after which the reassignment `p1.todoItems = [t3, t4]` will actually 
-        /// make EF Core perform a complete replace. This method does the loading of `[t1, t2]`.
-        /// </para>
-        /// </summary>
-        protected async Task LoadRelationship(RelationshipAttribute relationship, TResource resource)
-        {
+        /// make EF Core perform a complete replacement. This method does the loading of `[t1, t2]`.
+        /// </remarks>
+        protected async Task EnsureCompleteReplacement(RelationshipAttribute relationship, TResource resource)
+        {            
+            _traceWriter.LogMethodStart(new {relationship, resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             if (relationship == null) throw new ArgumentNullException(nameof(relationship));
 
-            var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
-            if (navigationEntry != null)
+            // If the left resource is the dependent side of the relationship, complete replacement is already guaranteed.
+            if (!HasForeignKeyAtLeftSide(relationship))
             {
+                var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
                 await navigationEntry.LoadAsync();
             }
         }
