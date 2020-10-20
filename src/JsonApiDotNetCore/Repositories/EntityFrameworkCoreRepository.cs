@@ -137,7 +137,7 @@ namespace JsonApiDotNetCore.Repositories
             foreach (var relationship in _targetedFields.Relationships)
             {
                 var rightValue = relationship.GetValue(resource);
-                await ProcessRelationshipUpdate(relationship, resource, rightValue);
+                await ApplyRelationshipUpdate(relationship, resource, rightValue);
             }
 
             _dbContext.Set<TResource>().Add(resource);
@@ -160,7 +160,7 @@ namespace JsonApiDotNetCore.Repositories
             var relationship = _targetedFields.Relationships.Single();
             var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
 
-            await ProcessRelationshipUpdate(relationship, primaryResource, secondaryResourceIds);
+            await ApplyRelationshipUpdate(relationship, primaryResource, secondaryResourceIds);
             await SaveChangesAsync();
         }
 
@@ -172,8 +172,8 @@ namespace JsonApiDotNetCore.Repositories
             var relationship = _targetedFields.Relationships.Single();
             TResource primaryResource = (TResource) _dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
             
-            await EnsureCompleteReplacement(relationship, primaryResource);
-            await ProcessRelationshipUpdate(relationship, primaryResource, secondaryResourceIds);
+            await EnableCompleteReplacement(relationship, primaryResource);
+            await ApplyRelationshipUpdate(relationship, primaryResource, secondaryResourceIds);
             
             await SaveChangesAsync();
         }
@@ -190,10 +190,10 @@ namespace JsonApiDotNetCore.Repositories
             
             foreach (var relationship in _targetedFields.Relationships)
             {
-                await EnsureCompleteReplacement(relationship, resourceFromDatabase);
+                await EnableCompleteReplacement(relationship, resourceFromDatabase);
 
                 var rightResources = relationship.GetValue(resourceFromRequest);
-                await ProcessRelationshipUpdate(relationship, resourceFromDatabase, rightResources);
+                await ApplyRelationshipUpdate(relationship, resourceFromDatabase, rightResources);
             }
 
             foreach (var attribute in _targetedFields.Attributes)
@@ -226,18 +226,20 @@ namespace JsonApiDotNetCore.Repositories
             var relationship = _targetedFields.Relationships.Single();
             var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
 
-            await EnsureCompleteReplacement(relationship, primaryResource);
+            await EnableCompleteReplacement(relationship, primaryResource);
 
             var existingRightResources = (IReadOnlyCollection<IIdentifiable>)relationship.GetValue(primaryResource);
             // todo: consider reverting like done below. I don't think the commented out version is more readable.
-            var newRightResources = existingRightResources.Where(i => secondaryResourceIds.All(r => r.StringId != i.StringId)).ToList();
+            // var newRightResources = existingRightResources.Where(i => secondaryResourceIds.All(r => r.StringId != i.StringId)).ToList();
             // var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources,secondaryResourceIds.Select(r => r.StringId));
+            var newRightResources = RemoveResources(existingRightResources, secondaryResourceIds);
 
-            if (newRightResources.Count < existingRightResources.Count);
             // todo:
             // if (newRightResources.Count != existingRightResources.Count)
+            var hasRemovals = newRightResources.Count < existingRightResources.Count;
+            if (hasRemovals)
             {
-                await ProcessRelationshipUpdate(relationship, primaryResource, newRightResources);
+                await ApplyRelationshipUpdate(relationship, primaryResource, newRightResources);
                 await SaveChangesAsync();
             }
         }
@@ -252,12 +254,11 @@ namespace JsonApiDotNetCore.Repositories
         /// returns { 1, 2 }
         /// ]]></code>
         /// </example>
-        private ICollection<IIdentifiable> GetResourcesToAssignForRemoveFromToManyRelationship(
-            IEnumerable<IIdentifiable> existingRightResources, IEnumerable<string> resourceIdsToRemove)
+        // private ICollection<IIdentifiable> GetResourcesToAssignForRemoveFromToManyRelationship(IEnumerable<IIdentifiable> existingRightResources, IEnumerable<IIdentifiable> resourceIdsToRemove)
+        private ICollection<IIdentifiable> RemoveResources(IEnumerable<IIdentifiable> existingRightResources, IEnumerable<IIdentifiable> resourceIdsToRemove)
         {
             var newRightResources = new HashSet<IIdentifiable>(existingRightResources);
-            newRightResources.RemoveWhere(r => resourceIdsToRemove.Any(stringId => r.StringId == stringId));
-            return newRightResources;
+            return newRightResources.Except(resourceIdsToRemove, IdentifiableComparer.Instance).ToList();
         }
 
         private async Task SaveChangesAsync()
@@ -272,7 +273,7 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        private async Task ProcessRelationshipUpdate(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
+        private async Task ApplyRelationshipUpdate(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
         {
             // Ensures the new relationship assignment will not result in entities being tracked more than once.
             var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
@@ -324,7 +325,7 @@ namespace JsonApiDotNetCore.Repositories
         /// after which the reassignment `p1.todoItems = [t3, t4]` will actually 
         /// make EF Core perform a complete replacement. This method does the loading of `[t1, t2]`.
         /// </remarks>
-        protected async Task EnsureCompleteReplacement(RelationshipAttribute relationship, TResource resource)
+        protected async Task EnableCompleteReplacement(RelationshipAttribute relationship, TResource resource)
         {            
             _traceWriter.LogMethodStart(new {relationship, resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
