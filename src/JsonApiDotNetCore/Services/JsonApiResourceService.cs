@@ -206,7 +206,7 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                await AssertResourcesInRelationshipAssignmentsExistAsync(_targetedFields.Relationships, resource);
+                await AssertRightResourcesInRelationshipsExistAsync(_targetedFields.Relationships, resource);
                 throw;
             }
 
@@ -241,7 +241,7 @@ namespace JsonApiDotNetCore.Services
                     var primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
                     AssertPrimaryResourceExists(primaryResource);
 
-                    await AssertResourcesInRelationshipAssignmentExistAsync(_request.Relationship, secondaryResourceIds);
+                    await AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
                     throw;
                 }
             }
@@ -270,7 +270,7 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                await AssertResourcesInRelationshipAssignmentsExistAsync(_targetedFields.Relationships, resourceFromRequest);
+                await AssertRightResourcesInRelationshipsExistAsync(_targetedFields.Relationships, resourceFromRequest);
                 throw;
             }
 
@@ -316,7 +316,7 @@ namespace JsonApiDotNetCore.Services
                     AssertPrimaryResourceExists(primaryResource);
                 }
 
-                await AssertResourcesInRelationshipAssignmentExistAsync(_request.Relationship, secondaryResourceIds);
+                await AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
                 throw;
             }
 
@@ -422,7 +422,7 @@ namespace JsonApiDotNetCore.Services
                 : new LogicalExpression(LogicalOperator.And, new[] { filterById, existingFilter });
         }
 
-        private async Task AssertResourcesInRelationshipAssignmentsExistAsync(IEnumerable<RelationshipAttribute> relationships, TResource leftResource)
+        private async Task AssertRightResourcesInRelationshipsExistAsync(IEnumerable<RelationshipAttribute> relationships, TResource leftResource)
         {
             var missingResources = new List<MissingResourceInRelationship>();
 
@@ -441,7 +441,7 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private async Task AssertResourcesInRelationshipAssignmentExistAsync(RelationshipAttribute relationship, object secondaryResourceIds)
+        private async Task AssertRightResourcesInRelationshipExistAsync(RelationshipAttribute relationship, object secondaryResourceIds)
         {
             ICollection<IIdentifiable> rightResources = ExtractResources(secondaryResourceIds);
 

@@ -143,9 +143,9 @@ namespace JsonApiDotNetCore.Controllers
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_getRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
-            var relationshipAssignment = await _getRelationship.GetRelationshipAsync(id, relationshipName);
+            var rightResources = await _getRelationship.GetRelationshipAsync(id, relationshipName);
 
-            return Ok(relationshipAssignment);
+            return Ok(rightResources);
         }
 
         /// <summary>

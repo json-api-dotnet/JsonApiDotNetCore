@@ -192,8 +192,8 @@ namespace JsonApiDotNetCore.Repositories
             {
                 await EnsureCompleteReplacement(relationship, resourceFromDatabase);
 
-                var relationshipAssignment = relationship.GetValue(resourceFromRequest);
-                await ProcessRelationshipUpdate(relationship, resourceFromDatabase, relationshipAssignment);
+                var rightResources = relationship.GetValue(resourceFromRequest);
+                await ProcessRelationshipUpdate(relationship, resourceFromDatabase, rightResources);
             }
 
             foreach (var attribute in _targetedFields.Attributes)
