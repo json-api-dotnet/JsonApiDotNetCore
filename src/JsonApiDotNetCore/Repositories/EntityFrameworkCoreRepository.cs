@@ -230,12 +230,13 @@ namespace JsonApiDotNetCore.Repositories
 
             var existingRightResources = (IReadOnlyCollection<IIdentifiable>)relationship.GetValue(primaryResource);
             // todo: consider reverting like done below. I don't think the commented out version is more readable.
-            var newRightResources = existingRightResources.Where(i => secondaryResourceIds.All(r => r.StringId != i.StringId)).ToList();
-            // var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources,secondaryResourceIds.Select(r => r.StringId));
+            // var newRightResources = existingRightResources.Where(i => secondaryResourceIds.All(r => r.StringId != i.StringId)).ToList();
+            var newRightResources = RemoveResources(existingRightResources, secondaryResourceIds);
 
-            if (newRightResources.Count < existingRightResources.Count);
             // todo:
             // if (newRightResources.Count != existingRightResources.Count)
+            var hasRemovals = newRightResources.Count < existingRightResources.Count;
+            if (hasRemovals)
             {
                 await ProcessRelationshipUpdate(relationship, primaryResource, newRightResources);
                 await SaveChangesAsync();
@@ -252,12 +253,10 @@ namespace JsonApiDotNetCore.Repositories
         /// returns { 1, 2 }
         /// ]]></code>
         /// </example>
-        private ICollection<IIdentifiable> GetResourcesToAssignForRemoveFromToManyRelationship(
-            IEnumerable<IIdentifiable> existingRightResources, IEnumerable<string> resourceIdsToRemove)
+        private ICollection<IIdentifiable> RemoveResources(IEnumerable<IIdentifiable> existingRightResources, IEnumerable<IIdentifiable> resourceIdsToRemove)
         {
             var newRightResources = new HashSet<IIdentifiable>(existingRightResources);
-            newRightResources.RemoveWhere(r => resourceIdsToRemove.Any(stringId => r.StringId == stringId));
-            return newRightResources;
+            return newRightResources.Except(resourceIdsToRemove, IdentifiableComparer.Instance).ToList();
         }
 
         private async Task SaveChangesAsync()
