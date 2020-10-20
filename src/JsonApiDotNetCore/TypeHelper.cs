@@ -286,7 +286,7 @@ namespace JsonApiDotNetCore
 
         public static object ConvertStringIdToTypedId(Type resourceType, string stringId, IResourceFactory resourceFactory)
         {
-            var tempResource = (IIdentifiable)resourceFactory.CreateInstance(resourceType);
+            var tempResource = resourceFactory.CreateInstance(resourceType);
             tempResource.StringId = stringId;
             return tempResource.GetTypedId();
         }

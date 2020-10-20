@@ -137,7 +137,10 @@ namespace JsonApiDotNetCore.Resources.Annotations
                 List<object> throughResources = new List<object>();
                 foreach (IIdentifiable identifiable in (IEnumerable)newValue)
                 {
-                    object throughResource = resourceFactory.CreateInstance(ThroughType);
+                    var throughResource = TypeHelper.IsOrImplementsInterface(ThroughType, typeof(IIdentifiable))
+                        ? resourceFactory.CreateInstance(ThroughType)
+                        : TypeHelper.CreateInstance(ThroughType);
+
                     LeftProperty.SetValue(throughResource, resource);
                     RightProperty.SetValue(throughResource, identifiable);
                     throughResources.Add(throughResource);

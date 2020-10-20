@@ -94,7 +94,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
                 throw new InvalidOperationException($"Included type '{relatedResourceIdentifier.Type}' is not a registered json:api resource.");
             }
             
-            var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(relatedResourceContext.ResourceType);
+            var relatedInstance = ResourceFactory.CreateInstance(relatedResourceContext.ResourceType);
             relatedInstance.StringId = relatedResourceIdentifier.Id;
 
             var includedResource = GetLinkedResource(relatedResourceIdentifier);

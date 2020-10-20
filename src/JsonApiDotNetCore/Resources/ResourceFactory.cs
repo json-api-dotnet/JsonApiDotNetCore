@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using JsonApiDotNetCore.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources
@@ -18,11 +17,8 @@ namespace JsonApiDotNetCore.Resources
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        // todo: this is confusing. CreateInstance<TResource>() works for iidentifiables, whereas CreateInstance(Type) works for any.
-        // These methods suggest they do the same but just allow for a non-generic vs generic way of doing it. Also because the comments are the same.
-        // This method is being used for creating join table entities, which most of the time aren't resources, so this is technically not correct.
         /// <inheritdoc />
-        public object CreateInstance(Type resourceType)
+        public IIdentifiable CreateInstance(Type resourceType)
         {
             if (resourceType == null)
             {
@@ -39,15 +35,15 @@ namespace JsonApiDotNetCore.Resources
             return (TResource) InnerCreateInstance(typeof(TResource), _serviceProvider);
         }
 
-        private static object InnerCreateInstance(Type type, IServiceProvider serviceProvider)
+        private static IIdentifiable InnerCreateInstance(Type type, IServiceProvider serviceProvider)
         {
             bool hasSingleConstructorWithoutParameters = HasSingleConstructorWithoutParameters(type);
 
             try
             {
                 return hasSingleConstructorWithoutParameters
-                    ? Activator.CreateInstance(type)
-                    : ActivatorUtilities.CreateInstance(serviceProvider, type);
+                    ? (IIdentifiable)Activator.CreateInstance(type)
+                    : (IIdentifiable)ActivatorUtilities.CreateInstance(serviceProvider, type);
             }
             catch (Exception exception)
             {

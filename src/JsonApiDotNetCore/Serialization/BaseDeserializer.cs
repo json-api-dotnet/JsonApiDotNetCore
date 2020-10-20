@@ -146,7 +146,7 @@ namespace JsonApiDotNetCore.Serialization
                     "If you have manually registered the resource, check that the call to Add correctly sets the public name.", null);
             }
 
-            var resource = (IIdentifiable)ResourceFactory.CreateInstance(resourceContext.ResourceType);
+            var resource = ResourceFactory.CreateInstance(resourceContext.ResourceType);
 
             resource = SetAttributes(resource, data.Attributes, resourceContext.Attributes);
             resource = SetRelationships(resource, data.Relationships, resourceContext.Relationships);
@@ -221,7 +221,7 @@ namespace JsonApiDotNetCore.Serialization
             }
             else
             {
-                var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(relationshipType);
+                var relatedInstance = ResourceFactory.CreateInstance(relationshipType);
                 relatedInstance.StringId = relatedId;
                 attr.SetValue(resource, relatedInstance, ResourceFactory);
             }
@@ -240,7 +240,7 @@ namespace JsonApiDotNetCore.Serialization
                 var relatedResources = relationshipData.ManyData.Select(rio =>
                 {
                     var relationshipType = ResourceContextProvider.GetResourceContext(rio.Type).ResourceType;
-                    var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(relationshipType);
+                    var relatedInstance = ResourceFactory.CreateInstance(relationshipType);
                     relatedInstance.StringId = rio.Id;
                     
                     return relatedInstance;
