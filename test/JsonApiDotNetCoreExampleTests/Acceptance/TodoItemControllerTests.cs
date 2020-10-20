@@ -396,6 +396,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Empty(body);
+
             Assert.Null(_context.TodoItems.FirstOrDefault(t => t.Id == todoItem.Id));
         }
     }

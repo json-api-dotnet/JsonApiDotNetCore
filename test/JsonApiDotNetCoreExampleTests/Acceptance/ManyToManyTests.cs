@@ -310,7 +310,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.NoContent == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-            
+
+            Assert.Empty(body);
+
             _fixture.ReloadDbContext();
             var persistedArticle = await _fixture.Context.Articles
                 .Include(a => a.ArticleTags)
@@ -372,7 +374,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.NoContent == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-            
+
+            Assert.Empty(body);
+
             _fixture.ReloadDbContext();
             var persistedArticle = await _fixture.Context.Articles
                 .Include("ArticleTags.Tag")
@@ -437,7 +441,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.NoContent == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-            
+
+            Assert.Empty(body);
+
             _fixture.ReloadDbContext();
             var persistedArticle = await _fixture.Context.Articles
                 .Include(a => a.ArticleTags)

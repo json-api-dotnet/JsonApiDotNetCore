@@ -131,11 +131,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var requestBody = serializer.Serialize(model);
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-            
+
+            responseDocument.Should().BeEmpty();
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var stored = await dbContext.KebabCasedModels.SingleAsync(x => x.Id == model.Id);

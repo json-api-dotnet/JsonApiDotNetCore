@@ -217,11 +217,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             var route = "/engines/" + engine.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-            
+
+            responseDocument.Should().BeEmpty();
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var engineInDatabase = await dbContext.Engines
@@ -277,10 +279,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             var route = "/engines/" + engine.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

@@ -78,10 +78,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             string route = "/systemDirectories/" + directory.StringId;
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
         }
     }
 }
