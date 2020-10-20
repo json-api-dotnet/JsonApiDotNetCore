@@ -222,10 +222,11 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public async Task AddToToManyRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
+        public async Task AddToToManyRelationshipAsync(TId id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new { id, secondaryResourceIds });
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             AssertRelationshipExists(relationshipName);
             AssertRelationshipIsToMany();
@@ -360,10 +361,11 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public async Task RemoveFromToManyRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
+        public async Task RemoveFromToManyRelationshipAsync(TId id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             AssertRelationshipExists(relationshipName);
             AssertRelationshipIsToMany();

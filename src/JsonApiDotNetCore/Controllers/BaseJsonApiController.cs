@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -188,9 +189,10 @@ namespace JsonApiDotNetCore.Controllers
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             if (_addToRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Post);
-            await _addToRelationship.AddToToManyRelationshipAsync(id, relationshipName, secondaryResourceIds);
+            await _addToRelationship.AddToToManyRelationshipAsync(id, relationshipName, secondaryResourceIds.ToHashSet(IdentifiableComparer.Instance));
 
             // TODO: Silently ignore already-existing entries, causing duplicates. From json:api spec:
             // "If a client makes a POST request to a URL from a relationship link, the server MUST add the specified members to the relationship unless they are already present. If a given type and id is already in the relationship, the server MUST NOT add it again"
@@ -270,9 +272,10 @@ namespace JsonApiDotNetCore.Controllers
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             if (_removeFromRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
-            await _removeFromRelationship.RemoveFromToManyRelationshipAsync(id, relationshipName, secondaryResourceIds);
+            await _removeFromRelationship.RemoveFromToManyRelationshipAsync(id, relationshipName, secondaryResourceIds.ToHashSet(IdentifiableComparer.Instance));
 
             // TODO: Should return 204 when relationship does not exist (see json:api spec) + ensure we have a test covering this.
             return Ok();

@@ -17,6 +17,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="id">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship to remove resources from.</param>
         /// <param name="secondaryResourceIds">The set of resources to remove from the relationship.</param>
-        Task RemoveFromToManyRelationshipAsync(TId id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds);
+        Task RemoveFromToManyRelationshipAsync(TId id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds);
     }
 }

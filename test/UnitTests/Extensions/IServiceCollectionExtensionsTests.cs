@@ -167,8 +167,8 @@ namespace UnitTests.Extensions
             public Task<object> GetRelationshipAsync(int id, string relationshipName) => throw new NotImplementedException();
             public Task<IntResource> UpdateAsync(int id, IntResource resourceFromRequest) => throw new NotImplementedException();
             public Task SetRelationshipAsync(int id, string relationshipName, object secondaryResourceIds) => throw new NotImplementedException();
-            public Task AddToToManyRelationshipAsync(int id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
-            public Task RemoveFromToManyRelationshipAsync(int id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
+            public Task AddToToManyRelationshipAsync(int id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
+            public Task RemoveFromToManyRelationshipAsync(int id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
         }
 
         private class GuidResourceService : IResourceService<GuidResource, Guid>
@@ -181,8 +181,8 @@ namespace UnitTests.Extensions
             public Task<object> GetRelationshipAsync(Guid id, string relationshipName) => throw new NotImplementedException();
             public Task<GuidResource> UpdateAsync(Guid id, GuidResource resourceFromRequest) => throw new NotImplementedException();
             public Task SetRelationshipAsync(Guid id, string relationshipName, object secondaryResourceIds) => throw new NotImplementedException();
-            public Task AddToToManyRelationshipAsync(Guid id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
-            public Task RemoveFromToManyRelationshipAsync(Guid id, string relationshipName, IReadOnlyCollection<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
+            public Task AddToToManyRelationshipAsync(Guid id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
+            public Task RemoveFromToManyRelationshipAsync(Guid id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
         }
 
 

@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Adds resources to a to-many relationship in the underlying data store.
         /// </summary>
-        Task AddToToManyRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResourceIds);
+        Task AddToToManyRelationshipAsync(TId id, ISet<IIdentifiable> secondaryResourceIds);
 
         /// <summary>
         /// Updates the attributes and relationships of an existing resource in the underlying data store.
@@ -47,6 +47,6 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Removes resources from a to-many relationship in the underlying data store.
         /// </summary>
-        Task RemoveFromToManyRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResourceIds);
+        Task RemoveFromToManyRelationshipAsync(TId id, ISet<IIdentifiable> secondaryResourceIds);
     }
 }

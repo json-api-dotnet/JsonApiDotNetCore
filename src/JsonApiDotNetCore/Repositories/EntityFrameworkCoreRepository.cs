@@ -152,7 +152,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task AddToToManyRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
+        public virtual async Task AddToToManyRelationshipAsync(TId id, ISet<IIdentifiable> secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
@@ -218,7 +218,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task RemoveFromToManyRelationshipAsync(TId id, IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
+        public virtual async Task RemoveFromToManyRelationshipAsync(TId id, ISet<IIdentifiable> secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
