@@ -506,7 +506,7 @@ namespace JsonApiDotNetCore.Services
             return resources.Select(resource => resource.StringId).ToArray();
         }
 
-        private static FilterExpression CreateFilterByIds(ICollection<string> ids, ResourceContext resourceContext)
+        private FilterExpression CreateFilterByIds(ICollection<string> ids, ResourceContext resourceContext)
         {
             var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
             var idChain = new ResourceFieldChainExpression(idAttribute);

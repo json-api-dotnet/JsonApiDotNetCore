@@ -12,12 +12,15 @@ namespace JsonApiDotNetCore.Resources
     internal sealed class ResourceFactory : IResourceFactory
     {
         private readonly IServiceProvider _serviceProvider;
-
+        // todo: consider converting static methods to instance methods.
         public ResourceFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
+        // todo: this is confusing. CreateInstance<TResource>() works for iidentifiables, whereas CreateInstance(Type) works for any.
+        // These methods suggest they do the same but just allow for a non-generic vs generic way of doing it. Also because the comments are the same.
+        // This method is being used for creating join table entities, which most of the time aren't resources, so this is technically not correct.
         /// <inheritdoc />
         public object CreateInstance(Type resourceType)
         {
@@ -28,7 +31,7 @@ namespace JsonApiDotNetCore.Resources
 
             return InnerCreateInstance(resourceType, _serviceProvider);
         }
-
+        
         /// <inheritdoc />
         public TResource CreateInstance<TResource>()
             where TResource : IIdentifiable
