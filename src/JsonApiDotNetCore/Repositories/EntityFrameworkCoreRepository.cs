@@ -231,6 +231,7 @@ namespace JsonApiDotNetCore.Repositories
             var existingRightResources = (IReadOnlyCollection<IIdentifiable>)relationship.GetValue(primaryResource);
             // todo: consider reverting like done below. I don't think the commented out version is more readable.
             // var newRightResources = existingRightResources.Where(i => secondaryResourceIds.All(r => r.StringId != i.StringId)).ToList();
+            // var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources,secondaryResourceIds.Select(r => r.StringId));
             var newRightResources = RemoveResources(existingRightResources, secondaryResourceIds);
 
             // todo:
@@ -253,6 +254,7 @@ namespace JsonApiDotNetCore.Repositories
         /// returns { 1, 2 }
         /// ]]></code>
         /// </example>
+        // private ICollection<IIdentifiable> GetResourcesToAssignForRemoveFromToManyRelationship(IEnumerable<IIdentifiable> existingRightResources, IEnumerable<IIdentifiable> resourceIdsToRemove)
         private ICollection<IIdentifiable> RemoveResources(IEnumerable<IIdentifiable> existingRightResources, IEnumerable<IIdentifiable> resourceIdsToRemove)
         {
             var newRightResources = new HashSet<IIdentifiable>(existingRightResources);
