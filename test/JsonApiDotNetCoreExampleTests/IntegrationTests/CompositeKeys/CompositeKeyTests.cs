@@ -220,10 +220,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.Should().BeNull();
-
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+            
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var engineInDatabase = await dbContext.Engines
@@ -282,9 +280,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.Should().BeNull();
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
