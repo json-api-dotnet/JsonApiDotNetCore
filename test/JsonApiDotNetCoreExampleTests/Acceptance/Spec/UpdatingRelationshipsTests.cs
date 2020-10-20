@@ -239,7 +239,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -305,7 +305,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -453,7 +453,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -507,7 +507,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

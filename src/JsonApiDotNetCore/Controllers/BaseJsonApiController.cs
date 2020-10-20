@@ -223,7 +223,13 @@ namespace JsonApiDotNetCore.Controllers
             var updated = await _update.UpdateAsync(id, resource);
 
             // TODO: json:api spec says to return 204 without body when no side-effects. See other comments on how this could be interpreted for relationships too.
-            return updated == null ? Ok(null) : Ok(updated);
+            // TODO: check tests
+            if (updated != null)
+            {
+                return Ok(updated);
+            }
+
+            return NoContent();
         }
 
         /// <summary>
