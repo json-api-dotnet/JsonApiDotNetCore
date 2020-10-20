@@ -381,13 +381,13 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private async Task<TResource> GetPrimaryResourceById(TId id, TopFieldSelection fieldSelection)
+        protected async Task<TResource> GetPrimaryResourceById(TId id, TopFieldSelection fieldSelection)
         {
             var primaryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
             primaryLayer.Sort = null;
             primaryLayer.Pagination = null;
             primaryLayer.Filter = IncludeFilterById(id, primaryLayer.Filter);
-            
+
             if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
             {
                 var idAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
@@ -552,7 +552,7 @@ namespace JsonApiDotNetCore.Services
             return new List<TResource> { resource };
         }
 
-        private enum TopFieldSelection
+        protected enum TopFieldSelection
         {
             AllAttributes,
             OnlyIdAttribute,
