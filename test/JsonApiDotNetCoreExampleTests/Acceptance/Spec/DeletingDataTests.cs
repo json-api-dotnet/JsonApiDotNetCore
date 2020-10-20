@@ -53,5 +53,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
             Assert.Equal("Resource of type 'todoItems' with ID '123' does not exist.",errorDocument.Errors[0].Detail);
         }
+
+        // TODO: Add test for DeleteRelationshipAsync that only deletes non-existing from the right resources in to-many relationship.
     }
 }

@@ -265,7 +265,7 @@ namespace JsonApiDotNetCore.Controllers
         /// </summary>
         /// <param name="id">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship to remove resources from.</param>
-        /// <param name="secondaryResourceIds">The resources to remove from the relationship.</param>
+        /// <param name="secondaryResourceIds">The set of resources to remove from the relationship.</param>
         public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
