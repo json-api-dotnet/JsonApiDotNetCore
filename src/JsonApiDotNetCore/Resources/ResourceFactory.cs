@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Resources
     internal sealed class ResourceFactory : IResourceFactory
     {
         private readonly IServiceProvider _serviceProvider;
-        // todo: consider converting static methods to instance methods.
+
         public ResourceFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));

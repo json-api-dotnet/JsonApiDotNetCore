@@ -229,15 +229,10 @@ namespace JsonApiDotNetCore.Repositories
             await EnableCompleteReplacement(relationship, primaryResource);
 
             var existingRightResources = (IReadOnlyCollection<IIdentifiable>)relationship.GetValue(primaryResource);
-            // todo: consider reverting like done below. I don't think the commented out version is more readable.
-            // var newRightResources = existingRightResources.Where(i => secondaryResourceIds.All(r => r.StringId != i.StringId)).ToList();
-            // var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources,secondaryResourceIds.Select(r => r.StringId));
-            var newRightResources = RemoveResources(existingRightResources, secondaryResourceIds);
+            var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources, secondaryResourceIds);
 
-            // todo:
-            // if (newRightResources.Count != existingRightResources.Count)
-            var hasRemovals = newRightResources.Count < existingRightResources.Count;
-            if (hasRemovals)
+            bool hasChanges = newRightResources.Count != existingRightResources.Count;
+            if (hasChanges)
             {
                 await ApplyRelationshipUpdate(relationship, primaryResource, newRightResources);
                 await SaveChangesAsync();
@@ -245,20 +240,21 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <summary>
-        /// Removes resources from <paramref name="existingRightResources"/> whose ID exists in <paramref name="resourceIdsToRemove"/>.
+        /// Removes resources from <paramref name="existingRightResources"/> whose ID exists in <paramref name="resourcesToRemove"/>.
         /// </summary>
         /// <example>
         /// <code><![CDATA[
         /// existingRightResources = { 1, 2, 3 }
-        /// resourceIdsToRemove = { 3, 4, 5 }
+        /// resourcesToRemove = { 3, 4, 5 }
         /// returns { 1, 2 }
         /// ]]></code>
         /// </example>
-        // private ICollection<IIdentifiable> GetResourcesToAssignForRemoveFromToManyRelationship(IEnumerable<IIdentifiable> existingRightResources, IEnumerable<IIdentifiable> resourceIdsToRemove)
-        private ICollection<IIdentifiable> RemoveResources(IEnumerable<IIdentifiable> existingRightResources, IEnumerable<IIdentifiable> resourceIdsToRemove)
+        private ICollection<IIdentifiable> GetResourcesToAssignForRemoveFromToManyRelationship(
+            IEnumerable<IIdentifiable> existingRightResources, IEnumerable<IIdentifiable> resourcesToRemove)
         {
-            var newRightResources = new HashSet<IIdentifiable>(existingRightResources);
-            return newRightResources.Except(resourceIdsToRemove, IdentifiableComparer.Instance).ToList();
+            var newRightResources = new HashSet<IIdentifiable>(existingRightResources, IdentifiableComparer.Instance);
+            newRightResources.ExceptWith(resourcesToRemove);
+            return newRightResources;
         }
 
         private async Task SaveChangesAsync()
