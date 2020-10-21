@@ -174,8 +174,9 @@ namespace JsonApiDotNetCore.Controllers
 
             resource = await _create.CreateAsync(resource);
 
-            // TODO: When options.AllowClientGeneratedIds, should run change tracking similar to Patch, and return 201 or 204 (see json:api spec).
-            return Created($"{HttpContext.Request.Path}/{resource.StringId}", resource);
+            return resource == null
+                ? (IActionResult) NoContent()
+                : Created($"{HttpContext.Request.Path}/{resource.StringId}", resource);
         }
 
         /// <summary>

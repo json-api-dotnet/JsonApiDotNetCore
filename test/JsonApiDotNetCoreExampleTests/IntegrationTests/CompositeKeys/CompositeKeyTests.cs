@@ -169,12 +169,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             var route = "/cars";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Should().BeEmpty();
         }
 
         [Fact]

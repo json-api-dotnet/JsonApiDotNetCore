@@ -137,6 +137,11 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns>The parsed resource.</returns>
         private IIdentifiable ParseResourceObject(ResourceObject data)
         {
+            if (data.Type == null)
+            {
+                throw new InvalidRequestBodyException("Payload must include 'type' element.", null, null);
+            }
+
             var resourceContext = ResourceContextProvider.GetResourceContext(data.Type);
             if (resourceContext == null)
             {

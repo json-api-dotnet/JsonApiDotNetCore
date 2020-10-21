@@ -195,30 +195,41 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
+            var resourceFromRequest = resource;
+            _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
+
+            var defaultResource = _resourceFactory.CreateInstance<TResource>();
+            defaultResource.Id = resource.Id;
+
+            _resourceChangeTracker.SetInitiallyStoredAttributeValues(defaultResource);
+
             if (_hookExecutor != null)
             {
-                resource = _hookExecutor.BeforeCreate(ToList(resource), ResourcePipeline.Post).Single();
+                resourceFromRequest = _hookExecutor.BeforeCreate(ToList(resourceFromRequest), ResourcePipeline.Post).Single();
             }
-            
+
             try
             {
-                await _repository.CreateAsync(resource);
+                await _repository.CreateAsync(resourceFromRequest);
             }
             catch (DataStoreUpdateException)
             {
-                await AssertRightResourcesInRelationshipsExistAsync(_targetedFields.Relationships, resource);
+                await AssertRightResourcesInRelationshipsExistAsync(_targetedFields.Relationships, resourceFromRequest);
                 throw;
             }
 
-            resource = await GetPrimaryResourceById(resource.Id, TopFieldSelection.PreserveExisting);
+            var resourceFromDatabase = await GetPrimaryResourceById(resourceFromRequest.Id, TopFieldSelection.PreserveExisting);
     
             if (_hookExecutor != null)
             {
-                _hookExecutor.AfterCreate(ToList(resource), ResourcePipeline.Post);
-                resource = _hookExecutor.OnReturn(ToList(resource), ResourcePipeline.Post).Single();
+                _hookExecutor.AfterCreate(ToList(resourceFromDatabase), ResourcePipeline.Post);
+                resourceFromDatabase = _hookExecutor.OnReturn(ToList(resourceFromDatabase), ResourcePipeline.Post).Single();
             }
 
-            return resource;
+            _resourceChangeTracker.SetFinallyStoredAttributeValues(resourceFromDatabase);
+
+            bool hasImplicitChanges = _resourceChangeTracker.HasImplicitChanges();
+            return hasImplicitChanges ? resourceFromDatabase : null;
         }
 
         /// <inheritdoc />
@@ -249,16 +260,18 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResource> UpdateAsync(TId id, TResource resourceFromRequest)
+        public virtual async Task<TResource> UpdateAsync(TId id, TResource resource)
         {
-            _traceWriter.LogMethodStart(new {id, resourceFromRequest});
-            if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
+            _traceWriter.LogMethodStart(new {id, resource});
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
+            var resourceFromRequest = resource;
+            _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
 
             var fieldsToSelect = _targetedFields.Attributes.Any() ? TopFieldSelection.AllAttributes : TopFieldSelection.OnlyIdAttribute;
             TResource resourceFromDatabase = await GetPrimaryResourceById(id, fieldsToSelect);
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
-            _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
 
             if (_hookExecutor != null)
             {

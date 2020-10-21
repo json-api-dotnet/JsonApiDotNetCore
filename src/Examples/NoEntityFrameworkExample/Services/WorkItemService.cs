@@ -62,7 +62,7 @@ namespace NoEntityFrameworkExample.Services
                 await connection.QueryAsync<WorkItem>(@"delete from ""WorkItems"" where ""Id""=@id", new { id }));
         }
 
-        public Task<WorkItem> UpdateAsync(int id, WorkItem resourceFromRequest)
+        public Task<WorkItem> UpdateAsync(int id, WorkItem resource)
         {
             throw new NotImplementedException();
         }
