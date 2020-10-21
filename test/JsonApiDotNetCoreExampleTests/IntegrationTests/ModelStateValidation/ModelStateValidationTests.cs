@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
@@ -28,9 +27,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["isCaseSensitive"] = "true"
+                        isCaseSensitive = true
                     }
                 }
             };
@@ -59,10 +58,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = null,
-                        ["isCaseSensitive"] = "true"
+                        name = (string) null,
+                        isCaseSensitive = true
                     }
                 }
             };
@@ -91,10 +90,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "!@#$%^&*().-",
-                        ["isCaseSensitive"] = "true"
+                        name = "!@#$%^&*().-",
+                        isCaseSensitive = true
                     }
                 }
             };
@@ -123,10 +122,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Projects",
-                        ["isCaseSensitive"] = "true"
+                        name = "Projects",
+                        isCaseSensitive = true
                     }
                 }
             };
@@ -153,9 +152,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["sizeInBytes"] = "-1"
+                        sizeInBytes = -1
                     }
                 }
             };
@@ -221,14 +220,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Projects",
-                        ["isCaseSensitive"] = "true"
+                        name = "Projects",
+                        isCaseSensitive = true
                     },
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
-                        ["subdirectories"] = new
+                        subdirectories = new
                         {
                             data = new[]
                             {
@@ -239,7 +238,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                                 }
                             }
                         },
-                        ["files"] = new
+                        files = new
                         {
                             data = new[]
                             {
@@ -250,7 +249,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                                 }
                             }
                         },
-                        ["parent"] = new
+                        parent = new
                         {
                             data = new
                             {
@@ -342,9 +341,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["sizeInBytes"] = "100"
+                        sizeInBytes = 100
                     }
                 }
             };
@@ -382,9 +381,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = null
+                        name = (string) null
                     }
                 }
             };
@@ -426,9 +425,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "!@#$%^&*().-"
+                        name = "!@#$%^&*().-"
                     }
                 }
             };
@@ -470,13 +469,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     type = "systemDirectories",
                     id = -1,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Repositories"
+                        name = "Repositories"
                     },
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
-                        ["subdirectories"] = new
+                        subdirectories = new
                         {
                             data = new[]
                             {
@@ -534,9 +533,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Repositories"
+                        name = "Repositories"
                     }
                 }
             };
@@ -613,13 +612,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Project Files"
+                        name = "Project Files"
                     },
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
-                        ["subdirectories"] = new
+                        subdirectories = new
                         {
                             data = new[]
                             {
@@ -630,7 +629,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                                 }
                             }
                         },
-                        ["files"] = new
+                        files = new
                         {
                             data = new[]
                             {
@@ -641,7 +640,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                                 }
                             }
                         },
-                        ["parent"] = new
+                        parent = new
                         {
                             data = new
                             {
@@ -686,13 +685,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Project files"
+                        name = "Project files"
                     },
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
-                        ["self"] = new
+                        self = new
                         {
                             data = new
                             {
@@ -700,7 +699,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                                 id = directory.StringId
                             }
                         },
-                        ["alsoSelf"] = new
+                        alsoSelf = new
                         {
                             data = new
                             {
@@ -745,13 +744,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Project files"
+                        name = "Project files"
                     },
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
-                        ["subdirectories"] = new
+                        subdirectories = new
                         {
                             data = new[]
                             {

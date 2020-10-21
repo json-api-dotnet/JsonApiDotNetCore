@@ -253,6 +253,49 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         }
 
         [Fact]
+        public async Task Can_create_resource_with_unknown_attribute()
+        {
+            // Arrange
+            var workItem = WriteFakers.WorkItem.Generate();
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    attributes = new
+                    {
+                        doesNotExist = "ignored",
+                        description = workItem.Description
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Type.Should().Be("workItems");
+            responseDocument.SingleData.Attributes["description"].Should().Be(workItem.Description);
+
+            var newWorkItemId = responseDocument.SingleData.Id;
+            newWorkItemId.Should().NotBeNullOrEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemsInDatabase = await dbContext.WorkItems.ToListAsync();
+
+                var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
+                newWorkItemInDatabase.Description.Should().Be(workItem.Description);
+            });
+        }
+
+        [Fact]
         public async Task Cannot_create_resource_with_client_generated_ID()
         {
             // Arrange
@@ -309,7 +352,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload must include 'type' element.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Request body: <<");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
         }
 
         [Fact]
@@ -320,7 +363,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
             {
                 data = new
                 {
-                    type = "unknown",
+                    type = "doesNotExist",
                     attributes = new
                     {
                     }
@@ -338,7 +381,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload includes unknown resource type.");
-            responseDocument.Errors[0].Detail.Should().StartWith("The resource 'unknown' is not registered on the resource graph.");
+            responseDocument.Errors[0].Detail.Should().StartWith("The resource type 'doesNotExist' is not registered on the resource graph.");
             responseDocument.Errors[0].Detail.Should().Contain("Request body: <<");
         }
 

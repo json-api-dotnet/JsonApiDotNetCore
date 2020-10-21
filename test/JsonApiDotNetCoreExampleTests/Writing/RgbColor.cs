@@ -7,5 +7,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing
     {
         [Attr]
         public string DisplayName { get; set; }
+
+        [HasOne]
+        public WorkItemGroup Group { get; set; }
     }
 }

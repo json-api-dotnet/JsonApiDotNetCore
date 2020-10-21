@@ -38,7 +38,8 @@ namespace JsonApiDotNetCore.Serialization.Building
                 foreach (var resourceObject in _included)
                 {
                     if (resourceObject.Relationships != null)
-                    {   // removes relationship entries (<see cref="RelationshipEntry"/>s) if they're completely empty.  
+                    {
+                        // removes relationship entries (<see cref="RelationshipEntry"/>s) if they're completely empty.  
                         var pruned = resourceObject.Relationships.Where(p => p.Value.IsPopulated || p.Value.Links != null).ToDictionary(p => p.Key, p => p.Value);
                         if (!pruned.Any()) pruned = null;
                         resourceObject.Relationships = pruned;
@@ -104,7 +105,8 @@ namespace JsonApiDotNetCore.Serialization.Building
             relationshipEntry.Data = GetRelatedResourceLinkage(nextRelationship, parent);
 
             if (relationshipEntry.HasResource)
-            {   // if the relationship is set, continue parsing the chain.
+            {
+                // if the relationship is set, continue parsing the chain.
                 var related = nextRelationship.GetValue(parent);
                 ProcessChain(nextRelationship, related, chainRemainder);
             }

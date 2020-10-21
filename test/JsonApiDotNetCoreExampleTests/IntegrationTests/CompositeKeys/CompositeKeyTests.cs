@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -204,11 +203,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 {
                     type = "engines",
                     id = engine.StringId,
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
-                        ["car"] = new
+                        car = new
                         {
-                            data = (object)null
+                            data = (object) null
                         }
                     }
                 }
@@ -262,9 +261,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 {
                     type = "engines",
                     id = engine.StringId,
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
-                        ["car"] = new
+                        car = new
                         {
                             data = new
                             {

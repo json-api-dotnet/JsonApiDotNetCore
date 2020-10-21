@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
                 data = new
                 {
                     type = "workItemGroups",
-                    id = group.Id,
+                    id = group.StringId,
                     attributes = new
                     {
                         name = group.Name
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("workItemGroups");
-            responseDocument.SingleData.Id.Should().Be(group.Id.ToString());
+            responseDocument.SingleData.Id.Should().Be(group.StringId);
             responseDocument.SingleData.Attributes["name"].Should().Be(group.Name);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -90,7 +90,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
                 data = new
                 {
                     type = "rgbColors",
-                    id = color.Id,
+                    id = color.StringId,
                     attributes = new
                     {
                         displayName = color.DisplayName
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
                 data = new
                 {
                     type = "rgbColors",
-                    id = color.Id,
+                    id = color.StringId,
                     attributes = new
                     {
                         displayName = color.DisplayName

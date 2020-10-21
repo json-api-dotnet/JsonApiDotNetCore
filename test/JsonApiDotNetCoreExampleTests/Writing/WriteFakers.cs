@@ -6,7 +6,12 @@ namespace JsonApiDotNetCoreExampleTests.Writing
     {
         public static Faker<WorkItem> WorkItem { get; } = new Faker<WorkItem>()
             .RuleFor(p => p.Description, f => f.Lorem.Sentence())
-            .RuleFor(p => p.DueAt, f => f.Date.Future());
+            .RuleFor(p => p.DueAt, f => f.Date.Future())
+            .RuleFor(p => p.Priority, f => f.PickRandom<WorkItemPriority>());
+
+        public static Faker<WorkTag> WorkTags { get; } = new Faker<WorkTag>()
+            .RuleFor(p => p.Text, f => f.Lorem.Word())
+            .RuleFor(p => p.IsBuiltIn, f => f.Random.Bool());
 
         public static Faker<UserAccount> UserAccount { get; } = new Faker<UserAccount>()
             .RuleFor(p => p.FirstName, f => f.Name.FirstName())

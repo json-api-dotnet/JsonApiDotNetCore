@@ -868,7 +868,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 }
             };
 
-            var route = $"/api/v1/todoItems/{todoItem.StringId}/relationships/invalid";
+            var route = $"/api/v1/todoItems/{todoItem.StringId}/relationships/doesNotExist";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -879,7 +879,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[0].Title.Should().Be("The requested relationship does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'todoItems' does not contain a relationship named 'invalid'.");
+            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'todoItems' does not contain a relationship named 'doesNotExist'.");
         }
 
         [Fact]

@@ -8,13 +8,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public InheritanceDbContext(DbContextOptions<InheritanceDbContext> options) : base(options) { }
         
         public DbSet<Human> Humans { get; set; }
-        
         public DbSet<Man> Men { get; set; }
-        
         public DbSet<CompanyHealthInsurance> CompanyHealthInsurances { get; set; }
-
         public DbSet<ContentItem> ContentItems { get; set; }
-
         public DbSet<HumanFavoriteContentItem> HumanFavoriteContentItems { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -35,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 .HasValue<Book>(2);
             
             modelBuilder.Entity<HumanFavoriteContentItem>()
-                .HasKey(hfci => new { ContentPersonId = hfci.ContentItemId, PersonId = hfci.HumanId });
+                .HasKey(item => new { ContentPersonId = item.ContentItemId, PersonId = item.HumanId });
         }
     }
 }
