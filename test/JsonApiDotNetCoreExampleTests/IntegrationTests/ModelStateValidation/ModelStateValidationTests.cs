@@ -315,9 +315,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Should().BeNull();
         }
 
         [Fact]
@@ -819,9 +819,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -886,9 +886,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Should().BeNull();
         }
 
         [Fact]
@@ -926,9 +926,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Should().BeNull();
         }
     }
 }

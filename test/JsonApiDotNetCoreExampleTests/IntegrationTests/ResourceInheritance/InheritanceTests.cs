@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -187,8 +187,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
         
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-        
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var manInDatabase = await dbContext.Men
@@ -285,8 +285,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
         
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-        
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var contentItems = await dbContext.HumanFavoriteContentItems

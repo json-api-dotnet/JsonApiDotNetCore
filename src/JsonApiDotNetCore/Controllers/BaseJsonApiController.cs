@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -185,23 +184,22 @@ namespace JsonApiDotNetCore.Controllers
         /// <param name="id">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship to add resources to.</param>
         /// <param name="secondaryResourceIds">The set of resources to add to the relationship.</param>
-        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
+        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             if (_addToRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Post);
-            await _addToRelationship.AddToToManyRelationshipAsync(id, relationshipName, secondaryResourceIds.ToHashSet(IdentifiableComparer.Instance));
+            await _addToRelationship.AddToToManyRelationshipAsync(id, relationshipName, secondaryResourceIds);
 
             // TODO: Silently ignore already-existing entries, causing duplicates. From json:api spec:
             // "If a client makes a POST request to a URL from a relationship link, the server MUST add the specified members to the relationship unless they are already present. If a given type and id is already in the relationship, the server MUST NOT add it again"
             // "Note: This matches the semantics of databases that use foreign keys for has-many relationships. Document-based storage should check the has-many relationship before appending to avoid duplicates."
             // "If all of the specified resources can be added to, or are already present in, the relationship then the server MUST return a successful response."
             // "Note: This approach ensures that a request is successful if the server’s state matches the requested state, and helps avoid pointless race conditions caused by multiple clients making the same changes to a relationship."
-
-            // TODO: Should return 204 when relationship already exists (see json:api spec) + ensure we have a test covering this.
-            return Ok();
+    
+            return NoContent();
         }
 
         /// <summary>
@@ -244,7 +242,7 @@ namespace JsonApiDotNetCore.Controllers
             if (_setRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
             await _setRelationship.SetRelationshipAsync(id, relationshipName, secondaryResourceIds);
 
-            return Ok();
+            return NoContent();
         }
 
         /// <summary>
@@ -268,17 +266,16 @@ namespace JsonApiDotNetCore.Controllers
         /// <param name="id">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship to remove resources from.</param>
         /// <param name="secondaryResourceIds">The set of resources to remove from the relationship.</param>
-        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] IReadOnlyCollection<IIdentifiable> secondaryResourceIds)
+        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             if (_removeFromRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
-            await _removeFromRelationship.RemoveFromToManyRelationshipAsync(id, relationshipName, secondaryResourceIds.ToHashSet(IdentifiableComparer.Instance));
-
-            // TODO: Should return 204 when relationship does not exist (see json:api spec) + ensure we have a test covering this.
-            return Ok();
+            await _removeFromRelationship.RemoveFromToManyRelationshipAsync(id, relationshipName, secondaryResourceIds);
+    
+            return NoContent();
         }
     }
 

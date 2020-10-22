@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace JsonApiDotNetCore.Resources.Annotations
 {
@@ -23,6 +24,11 @@ namespace JsonApiDotNetCore.Resources.Annotations
         public HasManyAttribute()
         {
             Links = LinkTypes.All;
+        }
+        
+        public virtual IEnumerable<IIdentifiable> GetManyValue(object resource)
+        {
+            return (IEnumerable<IIdentifiable>) base.GetValue(resource);
         }
     }
 }

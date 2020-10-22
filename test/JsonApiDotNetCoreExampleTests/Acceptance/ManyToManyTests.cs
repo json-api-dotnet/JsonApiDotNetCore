@@ -488,7 +488,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.True(HttpStatusCode.NoContent == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
             _fixture.ReloadDbContext();
             var persistedArticle = await _fixture.Context.Articles

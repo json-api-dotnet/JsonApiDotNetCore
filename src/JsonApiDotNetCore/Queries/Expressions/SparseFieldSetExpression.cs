@@ -10,6 +10,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// </summary>
     public class SparseFieldSetExpression : QueryExpression
     {
+        // todo: can we make a ISet of this, and later upgrade it to IReadOnlySet when aspnetcore 5 lands?
         public IReadOnlyCollection<AttrAttribute> Attributes { get; }
 
         public SparseFieldSetExpression(IReadOnlyCollection<AttrAttribute> attributes)

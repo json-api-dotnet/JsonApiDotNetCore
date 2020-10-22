@@ -53,12 +53,18 @@ namespace JsonApiDotNetCore.Serialization
             if (Document.IsManyData)
             {
                 if (Document.ManyData.Count == 0)
-                    return Array.Empty<IIdentifiable>();
+                {
+                    return new HashSet<IIdentifiable>();   
+                }
 
-                return Document.ManyData.Select(ParseResourceObject).ToArray();
+                return Document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
             }
 
-            if (Document.SingleData == null) return null;
+            if (Document.SingleData == null) 
+            {
+                return null;
+            }
+
             return ParseResourceObject(Document.SingleData);
         }
 
@@ -101,20 +107,29 @@ namespace JsonApiDotNetCore.Serialization
             if (relationshipAttributes == null) throw new ArgumentNullException(nameof(relationshipAttributes));
 
             if (relationshipValues == null || relationshipValues.Count == 0)
+            {
                 return resource;
+            }
 
             var resourceProperties = resource.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
                 var relationshipIsProvided = relationshipValues.TryGetValue(attr.PublicName, out RelationshipEntry relationshipData);
                 if (!relationshipIsProvided || !relationshipData.IsPopulated)
+                {
                     continue;
+                }
 
                 if (attr is HasOneAttribute hasOneAttribute)
+                {
                     SetHasOneRelationship(resource, resourceProperties, hasOneAttribute, relationshipData);
+                }
                 else
+                {
                     SetHasManyRelationship(resource, (HasManyAttribute)attr, relationshipData);
+                }
             }
+    
             return resource;
         }
 
@@ -145,7 +160,7 @@ namespace JsonApiDotNetCore.Serialization
                     "If you are using Entity Framework Core, make sure the DbSet matches the expected resource name. " +
                     "If you have manually registered the resource, check that the call to Add correctly sets the public name.", null);
             }
-
+            
             var resource = ResourceFactory.CreateInstance(resourceContext.ResourceType);
 
             resource = SetAttributes(resource, data.Attributes, resourceContext.Attributes);
@@ -244,7 +259,7 @@ namespace JsonApiDotNetCore.Serialization
                     relatedInstance.StringId = rio.Id;
                     
                     return relatedInstance;
-                });
+                }).ToHashSet(IdentifiableComparer.Instance);
 
                 var convertedCollection = TypeHelper.CopyToTypedCollection(relatedResources, attr.Property.PropertyType);
                 attr.SetValue(resource, convertedCollection, ResourceFactory);

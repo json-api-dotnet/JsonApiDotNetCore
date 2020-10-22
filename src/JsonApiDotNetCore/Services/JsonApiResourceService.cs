@@ -383,7 +383,7 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        protected async Task<TResource> GetPrimaryResourceById(TId id, TopFieldSelection fieldSelection)
+        private async Task<TResource> GetPrimaryResourceById(TId id, TopFieldSelection fieldSelection)
         {
             var primaryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
             primaryLayer.Sort = null;
@@ -554,7 +554,7 @@ namespace JsonApiDotNetCore.Services
             return new List<TResource> { resource };
         }
 
-        protected enum TopFieldSelection
+        private enum TopFieldSelection
         {
             AllAttributes,
             OnlyIdAttribute,

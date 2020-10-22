@@ -142,8 +142,7 @@ namespace JsonApiDotNetCore.Repositories
 
             _dbContext.Set<TResource>().Add(resource);
             await SaveChangesAsync();
-    
-            // Todo: why was this reverted?
+
             FlushFromCache(resource);
 
             // This ensures relationships get reloaded from the database if they have
@@ -223,14 +222,29 @@ namespace JsonApiDotNetCore.Repositories
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
-            var relationship = _targetedFields.Relationships.Single();
+            var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
             var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
 
             await EnableCompleteReplacement(relationship, primaryResource);
 
+            /*
+             * todo: I find the abstraction difficult to read because its name is very verbose and contains a lot of concepts,
+             * while the operation that is being abstracted away is very simple: substracting two sets.
+             * Now that we're using hashsets, I think this operation is intuitive enough to read as is.
+             * Either
+             *     - make the abstraction name easier to read (less = more): we are in the Remove From ToMany Relationship method,
+             *             so it feels redundant to put that in the method name too. Proposal: GetResourcesToAssign.
+             *     - or consider inlining like below
+             */
+            // var existingRightResources = relationship.GetManyValue(primaryResource)
+            // var newRightResources = existingRightResources.ToHashSet(IdentifiableComparer.Instance); 
+            // newRightResources.ExceptWith(secondaryResourceIds);
+            
             var existingRightResources = (IReadOnlyCollection<IIdentifiable>)relationship.GetValue(primaryResource);
             var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources, secondaryResourceIds);
+            
 
+            // todo: why has it been reverted to != again?
             bool hasChanges = newRightResources.Count != existingRightResources.Count;
             if (hasChanges)
             {
@@ -250,10 +264,11 @@ namespace JsonApiDotNetCore.Repositories
         /// ]]></code>
         /// </example>
         private ICollection<IIdentifiable> GetResourcesToAssignForRemoveFromToManyRelationship(
-            IEnumerable<IIdentifiable> existingRightResources, IEnumerable<IIdentifiable> resourcesToRemove)
+            IEnumerable<IIdentifiable> existingRightResources, ISet<IIdentifiable> resourcesToRemove)
         {
             var newRightResources = new HashSet<IIdentifiable>(existingRightResources, IdentifiableComparer.Instance);
             newRightResources.ExceptWith(resourcesToRemove);
+
             return newRightResources;
         }
 
@@ -417,7 +432,7 @@ namespace JsonApiDotNetCore.Repositories
 
                     if (propertyInfo.PropertyType == typeof(string))
                     {
-                        propertyValue = "";
+                        propertyValue = string.Empty;
                     }
                     else if (Nullable.GetUnderlyingType(propertyInfo.PropertyType) != null)
                     {

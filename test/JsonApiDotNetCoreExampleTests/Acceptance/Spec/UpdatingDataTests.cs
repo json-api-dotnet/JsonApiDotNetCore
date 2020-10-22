@@ -328,14 +328,57 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Changing the value of the requested attribute is not allowed.");
             responseDocument.Errors[0].Detail.Should().StartWith("Changing the value of 'offsetDate' is not allowed. - Request body:");
         }
-
+        
         [Fact]
         public async Task Can_Patch_Resource()
         {
             // Arrange
+            var person = _personFaker.Generate();
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.People.Add(person);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "people",
+                    id = person.StringId,
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["lastName"] = "Johnson",
+                    }
+                }
+            };
+
+            var route = "/api/v1/people/" + person.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeNull();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var updated = await dbContext.People
+                    .FirstAsync(t => t.Id == person.Id);
+
+                updated.LastName.Should().Be("Johnson");
+            });
+        }
+        
+        [Fact]
+        public async Task Can_Patch_Resource_And_Get_Response_With_Side_Effects()
+        {
+            // Arrange
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = _personFaker.Generate();
-
+            var currentStateOfAlwaysChangingValue = todoItem.AlwaysChangingValue;
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.TodoItems.Add(todoItem);
@@ -367,8 +410,61 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Attributes["description"].Should().Be("something else");
             responseDocument.SingleData.Attributes["ordinal"].Should().Be(1);
+            responseDocument.SingleData.Attributes["alwaysChangingValue"].Should().NotBe(currentStateOfAlwaysChangingValue);
             responseDocument.SingleData.Relationships.Should().ContainKey("owner");
             responseDocument.SingleData.Relationships["owner"].SingleData.Should().BeNull();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var updated = await dbContext.TodoItems
+                    .Include(t => t.Owner)
+                    .SingleAsync(t => t.Id == todoItem.Id);
+
+                updated.Description.Should().Be("something else");
+                updated.Ordinal.Should().Be(1);
+                updated.AlwaysChangingValue.Should().NotBe(currentStateOfAlwaysChangingValue);
+                updated.Owner.Id.Should().Be(todoItem.Owner.Id);
+            });
+        }
+        
+        [Fact]
+        public async Task Can_Patch_Resource_And_Hide_Side_Effects_With_Sparse_Field_Set_Selection()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = _personFaker.Generate();
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.TodoItems.Add(todoItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    id = todoItem.StringId,
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["description"] = "something else",
+                        ["ordinal"] = 1
+                    }
+                }
+            };
+
+            var route = $"/api/v1/todoItems/{todoItem.StringId}?fields=description,ordinal&";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["description"].Should().Be("something else");
+            responseDocument.SingleData.Attributes["ordinal"].Should().Be(1);
+            responseDocument.SingleData.Attributes.Count.Should().Be(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -382,7 +478,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             });
         }
 
-        // TODO: this test is flaky.
+        // TODO: This test is flaky.
         [Fact]
         public async Task Patch_Resource_With_HasMany_Does_Not_Include_Relationships()
         {

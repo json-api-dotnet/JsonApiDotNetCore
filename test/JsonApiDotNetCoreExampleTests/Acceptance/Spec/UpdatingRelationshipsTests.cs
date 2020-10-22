@@ -561,7 +561,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -602,7 +602,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -617,7 +617,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Can_Delete_Relationship_By_Patching_Through_Relationship_Endpoint()
+        public async Task Can_Delete_ToOne_Relationship_By_Patching_Through_Relationship_Endpoint()
         {
             // Arrange
             var todoItem = _todoItemFaker.Generate();
@@ -640,7 +640,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -686,7 +686,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var (httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -699,9 +699,108 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 personInDatabase.TodoItems.Should().ContainSingle(item => item.Id == otherTodoItem.Id);
             });
         }
+        
+        [Fact]
+        public async Task Can_Add_Already_Related_Resource_To_ToMany_Relationship_Through_Relationship_Endpoint_Without_It_Being_Readded()
+        {   
+            // Arrange
+            var person = _personFaker.Generate();
+            person.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
+
+            var alreadyRelatedTodoItem = person.TodoItems.ElementAt(0);
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(person, alreadyRelatedTodoItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "todoItems",
+                        id = alreadyRelatedTodoItem.StringId
+                    },
+                }
+            };
+
+            var route = $"/api/v1/people/{person.StringId}/relationships/todoItems";
+
+            // Act
+            var (httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var personInDatabase = await dbContext.People
+                    .Include(p => p.TodoItems)
+                    .Where(p => p.Id == person.Id)
+                    .FirstAsync();
+
+                personInDatabase.TodoItems.Should().HaveCount(3);
+            });
+        }
+        
+        [Fact]
+        public async Task Can_Add_Duplicate_Resources_To_ToMany_Relationship_Through_Relationship_Endpoint_Without_Them_Being_More_Than_Once()
+        {   
+            // Arrange
+            var person = _personFaker.Generate();
+            person.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
+
+            var duplicatedTodoResource = _todoItemFaker.Generate();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(person, duplicatedTodoResource);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "todoItems",
+                        id = duplicatedTodoResource.StringId
+                    },
+                    new
+                    {
+                        type = "todoItems",
+                        id = duplicatedTodoResource.StringId
+                    }
+                }
+            };
+
+            var route = $"/api/v1/people/{person.StringId}/relationships/todoItems";
+
+            // Act
+            var (httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var personInDatabase = await dbContext.People
+                    .Include(p => p.TodoItems)
+                    .Where(p => p.Id == person.Id)
+                    .FirstAsync();
+
+                personInDatabase.TodoItems.Should().HaveCount(4);
+                personInDatabase.TodoItems.Should().ContainSingle(item => item.Id == duplicatedTodoResource.Id);
+
+            });
+        }
 
         [Fact]
-        public async Task Can_Delete_From_To_ToMany_Relationship_Through_Relationship_Endpoint()
+        public async Task Can_Delete_From_ToMany_Relationship_Through_Relationship_Endpoint()
         {
             // Arrange
             var person = _personFaker.Generate();
@@ -723,11 +822,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                         type = "todoItems",
                         id = todoItemToDelete.StringId
-                    },
-                    new
-                    {
-                        type = "todoItems",
-                        id = "99999999"
                     }
                 }
             };
@@ -738,7 +832,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var (httpResponse, _) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -752,6 +846,59 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             });
         }
 
+        [Fact]
+        public async Task Can_Delete_Unrelated_Resources_From_ToMany_Relationship_Through_Relationship_Endpoint_Without_Failing()
+        {
+            // Arrange
+            var person = _personFaker.Generate();
+            person.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
+            
+            var unrelatedTodoItems = _todoItemFaker.Generate(2).ToHashSet();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(person, unrelatedTodoItems.First(), unrelatedTodoItems.Last());
+                await dbContext.SaveChangesAsync();
+            });
+            
+            var todoItemToDelete = person.TodoItems.ElementAt(0);
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "todoItems",
+                        id = unrelatedTodoItems.ElementAt(0).StringId
+                    },
+                    new
+                    {
+                        type = "todoItems",
+                        id = unrelatedTodoItems.ElementAt(1).StringId
+                    }
+                }
+            };
+
+            var route = $"/api/v1/people/{person.StringId}/relationships/todoItems";
+
+            // Act
+            var (httpResponse, _) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var personInDatabase = await dbContext.People
+                    .Include(p => p.TodoItems)
+                    .Where(p => p.Id == person.Id)
+                    .FirstAsync();
+
+                personInDatabase.TodoItems.Should().HaveCount(3);
+            });
+        }
+        
         [Fact]
         public async Task Fails_When_Patching_On_Primary_Endpoint_With_Missing_Secondary_Resources()
         {

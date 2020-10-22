@@ -73,7 +73,7 @@ namespace UnitTests.Serialization.Deserializer
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = (IIdentifiable[])_deserializer.Deserialize(body);
+            var result = (HashSet<IIdentifiable>)_deserializer.Deserialize(body);
 
             // Assert
             Assert.Equal("1", result.First().StringId);
