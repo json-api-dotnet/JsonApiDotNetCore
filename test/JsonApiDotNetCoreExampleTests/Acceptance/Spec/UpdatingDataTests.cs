@@ -332,12 +332,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Changing the value of the requested attribute is not allowed.");
             responseDocument.Errors[0].Detail.Should().StartWith("Changing the value of 'offsetDate' is not allowed. - Request body:");
         }
-        
+
         [Fact]
         public async Task Can_Patch_Resource()
         {
             // Arrange
             var person = _personFaker.Generate();
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.People.Add(person);
@@ -360,10 +361,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = "/api/v1/people/" + person.StringId;
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -381,6 +384,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = _personFaker.Generate();
             var currentStateOfAlwaysChangingValue = todoItem.AlwaysChangingValue;
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.TodoItems.Add(todoItem);
@@ -413,14 +417,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             responseDocument.SingleData.Attributes["description"].Should().Be("something else");
             responseDocument.SingleData.Attributes["ordinal"].Should().Be(1);
             responseDocument.SingleData.Attributes["alwaysChangingValue"].Should().NotBe(currentStateOfAlwaysChangingValue);
-            responseDocument.SingleData.Relationships.Should().ContainKey("owner");
             responseDocument.SingleData.Relationships["owner"].SingleData.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var updated = await dbContext.TodoItems
                     .Include(t => t.Owner)
-                    .SingleAsync(t => t.Id == todoItem.Id);
+                    .FirstAsync(t => t.Id == todoItem.Id);
 
                 updated.Description.Should().Be("something else");
                 updated.Ordinal.Should().Be(1);
@@ -428,13 +431,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 updated.Owner.Id.Should().Be(todoItem.Owner.Id);
             });
         }
-        
+
         [Fact]
         public async Task Can_Patch_Resource_With_Side_Effects_And_Apply_Sparse_Field_Set_Selection()
         {
             // Arrange
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = _personFaker.Generate();
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.TodoItems.Add(todoItem);
@@ -455,7 +459,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 }
             };
 
-            var route = $"/api/v1/todoItems/{todoItem.StringId}?fields=description,ordinal&";
+            var route = $"/api/v1/todoItems/{todoItem.StringId}?fields=description,ordinal";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -464,21 +468,23 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Should().NotBeNull();
+            responseDocument.SingleData.Attributes.Should().HaveCount(2);
             responseDocument.SingleData.Attributes["description"].Should().Be("something else");
             responseDocument.SingleData.Attributes["ordinal"].Should().Be(1);
-            responseDocument.SingleData.Attributes.Count.Should().Be(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var updated = await dbContext.TodoItems
                     .Include(t => t.Owner)
-                    .SingleAsync(t => t.Id == todoItem.Id);
+                    .FirstAsync(t => t.Id == todoItem.Id);
 
                 updated.Description.Should().Be("something else");
                 updated.Ordinal.Should().Be(1);
                 updated.Owner.Id.Should().Be(todoItem.Owner.Id);
             });
         }
+
+        // TODO: Add test(s) that save a relationship, then return its data via include.
 
         // TODO: This test is flaky.
         [Fact]
@@ -582,7 +588,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 var updated = await dbContext.TodoItems
                     .Include(t => t.Owner)
-                    .SingleAsync(t => t.Id == todoItem.Id);
+                    .FirstAsync(t => t.Id == todoItem.Id);
 
                 updated.Description.Should().Be("Something else");
                 updated.Owner.Id.Should().Be(person.Id);

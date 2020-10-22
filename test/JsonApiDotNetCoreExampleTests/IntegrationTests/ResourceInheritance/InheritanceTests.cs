@@ -57,13 +57,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             responseDocument.SingleData.Attributes["isRetired"].Should().Be(man.IsRetired);
             responseDocument.SingleData.Attributes["hasBeard"].Should().Be(man.HasBeard);
 
-            var newManId = responseDocument.SingleData.Id;
-            newManId.Should().NotBeNullOrEmpty();
+            var newManId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var manInDatabase = await dbContext.Men
-                    .SingleAsync(m => m.Id == int.Parse(newManId));
+                    .FirstAsync(m => m.Id == newManId);
                 
                 manInDatabase.FamilyName.Should().Be(man.FamilyName);
                 manInDatabase.IsRetired.Should().Be(man.IsRetired);
@@ -113,12 +112,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
+            var newManId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var manInDatabase = await dbContext.Men
                     .Include(man => man.HealthInsurance)
-                    .SingleAsync(man => man.Id == int.Parse(responseDocument.SingleData.Id));
+                    .FirstAsync(man => man.Id == newManId);
                 
                 manInDatabase.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
                 manInDatabase.HealthInsurance.Id.Should().Be(existingInsurance.Id);
@@ -152,16 +152,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             var route = $"/men/{existingMan.StringId}/relationships/healthInsurance";
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var manInDatabase = await dbContext.Men
                     .Include(man => man.HealthInsurance)
-                    .SingleAsync(man => man.Id == existingMan.Id);
+                    .FirstAsync(man => man.Id == existingMan.Id);
 
                 manInDatabase.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
                 manInDatabase.HealthInsurance.Id.Should().Be(existingInsurance.Id);
@@ -219,15 +221,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
-
-            var newManId = responseDocument.SingleData.Id;
-            newManId.Should().NotBeNullOrEmpty();
+            var newManId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var manInDatabase = await dbContext.Men
                     .Include(man => man.Parents)
-                    .SingleAsync(man => man.Id == int.Parse(newManId));
+                    .FirstAsync(man => man.Id == newManId);
 
                 manInDatabase.Parents.Should().HaveCount(2);
                 manInDatabase.Parents.Should().ContainSingle(human => human is Man);
@@ -271,16 +271,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             var route = $"/men/{existingChild.StringId}/relationships/parents";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
         
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var manInDatabase = await dbContext.Men
                     .Include(man => man.Parents)
-                    .SingleAsync(man => man.Id == existingChild.Id);
+                    .FirstAsync(man => man.Id == existingChild.Id);
                 
                 manInDatabase.Parents.Should().HaveCount(2);
                 manInDatabase.Parents.Should().ContainSingle(human => human is Man);
@@ -339,11 +341,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
+            var newManId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var contentItems = await dbContext.HumanFavoriteContentItems
-                    .Where(favorite => favorite.Human.Id == int.Parse(responseDocument.SingleData.Id))
+                    .Where(favorite => favorite.Human.Id == newManId)
                     .Select(favorite => favorite.ContentItem)
                     .ToListAsync();
 
@@ -389,10 +392,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             var route = $"/men/{existingMan.StringId}/relationships/favoriteContent";
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
             
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

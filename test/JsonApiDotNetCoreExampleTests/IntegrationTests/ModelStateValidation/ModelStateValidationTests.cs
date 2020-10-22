@@ -311,10 +311,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             string route = $"/systemDirectories/{directory.StringId}/relationships/files";
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
         }
 
         [Fact]
@@ -653,10 +655,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             string route = "/systemDirectories/" + directory.StringId;
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
         }
 
         [Fact]
@@ -710,10 +714,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             string route = "/systemDirectories/" + directory.StringId;
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
         }
 
         [Fact]
@@ -762,10 +768,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             string route = "/systemDirectories/" + directory.StringId;
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
         }
 
         [Fact]
@@ -807,17 +815,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             string route = "/systemDirectories/" + directory.StringId + "/relationships/parent";
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var directoryInDatabase = await dbContext.Directories
                     .Include(d => d.Parent)
                     .Where(d => d.Id == directory.Id)
-                    .SingleAsync();
+                    .FirstAsync();
 
                 directoryInDatabase.Parent.Id.Should().Be(otherParent.Id);
             });
@@ -872,10 +882,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             string route = "/systemDirectories/" + directory.StringId + "/relationships/files";
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
         }
 
         [Fact]
@@ -910,10 +922,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             string route = $"/systemDirectories/{directory.StringId}/relationships/files";
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
         }
     }
 }

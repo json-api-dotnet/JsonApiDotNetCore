@@ -152,8 +152,6 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            // todo: I think this is redundant. It's not possible to pass a body to the IActionResult NoContent() method in the controllers.
-            // So we're basically testing asp.net cores internals rather than JADNC.
             responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

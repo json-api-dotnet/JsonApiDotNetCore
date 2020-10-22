@@ -333,8 +333,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(resource.StringId);
+            responseDocument.SingleData.Attributes.Should().HaveCount(2);
             responseDocument.SingleData.Attributes["label"].Should().Be(resource.Label);
-            responseDocument.SingleData.Attributes.Should().NotContainKey("percentageComplete");
             responseDocument.SingleData.Attributes["status"].Should().Be("5% completed.");
         }
         
@@ -396,8 +396,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(resource.StringId);
+            responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["label"].Should().Be(resource.Label);
-            responseDocument.SingleData.Attributes.Should().NotContainKey("riskLevel");
         }
 
         [Fact]

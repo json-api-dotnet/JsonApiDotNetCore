@@ -227,7 +227,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             {
                 var engineInDatabase = await dbContext.Engines
                     .Include(e => e.Car)
-                    .SingleAsync(e => e.Id == engine.Id);
+                    .FirstAsync(e => e.Id == engine.Id);
 
                 engineInDatabase.Car.Should().BeNull();
             });
@@ -289,7 +289,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             {
                 var engineInDatabase = await dbContext.Engines
                     .Include(e => e.Car)
-                    .SingleAsync(e => e.Id == engine.Id);
+                    .FirstAsync(e => e.Id == engine.Id);
 
                 engineInDatabase.Car.Should().NotBeNull();
                 engineInDatabase.Car.Id.Should().Be(car.StringId);

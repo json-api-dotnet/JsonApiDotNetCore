@@ -254,8 +254,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["description"].Should().Be(workItem.Description);
-            responseDocument.SingleData.Attributes.Should().NotContainKey("priority");
 
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
@@ -585,8 +585,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
             responseDocument.Included.Should().OnlyContain(p => p.Type == "userAccounts");
             responseDocument.Included.Should().ContainSingle(p => p.Id == existingUserAccounts[0].StringId);
             responseDocument.Included.Should().ContainSingle(p => p.Id == existingUserAccounts[1].StringId);
+            responseDocument.Included.Should().OnlyContain(p => p.Attributes.Count == 1);
             responseDocument.Included.Should().OnlyContain(p => p.Attributes["firstName"] != null);
-            responseDocument.Included.Should().OnlyContain(p => !p.Attributes.ContainsKey("lastName"));
 
             var newWorkItemId = responseDocument.SingleData.Id;
             newWorkItemId.Should().NotBeNullOrEmpty();
@@ -733,8 +733,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["priority"].Should().Be(workItem.Priority.ToString("G"));
-            responseDocument.SingleData.Attributes.Should().NotContainKey("description");
 
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
             
@@ -743,8 +743,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
             responseDocument.Included.Should().ContainSingle(p => p.Id == existingTags[0].StringId);
             responseDocument.Included.Should().ContainSingle(p => p.Id == existingTags[1].StringId);
             responseDocument.Included.Should().ContainSingle(p => p.Id == existingTags[2].StringId);
+            responseDocument.Included.Should().OnlyContain(p => p.Attributes.Count == 1);
             responseDocument.Included.Should().OnlyContain(p => p.Attributes["text"] != null);
-            responseDocument.Included.Should().OnlyContain(p => !p.Attributes.ContainsKey("isBuiltIn"));
 
             var newWorkItemId = responseDocument.SingleData.Id;
             newWorkItemId.Should().NotBeNullOrEmpty();
