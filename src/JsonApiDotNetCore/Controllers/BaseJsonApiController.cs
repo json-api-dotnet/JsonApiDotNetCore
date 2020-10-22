@@ -269,7 +269,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_removeFromRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
             await _removeFromRelationship.RemoveFromToManyRelationshipAsync(id, relationshipName, secondaryResourceIds);
-    
+
             return NoContent();
         }
     }
