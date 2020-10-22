@@ -422,7 +422,7 @@ namespace JsonApiDotNetCore.Repositories
         {
             var placeholderRightResource = _resourceFactory.CreateInstance(relationship.RightType);
 
-            // When assigning an related entity to a navigation property, it will be attached to change tracker. This fails
+            // When assigning a related entity to a navigation property it will be attached to change tracker. This fails
             // when that entity has null reference(s) for its primary key(s).
             EnsureNoNullPrimaryKeys(placeholderRightResource);
 

@@ -162,7 +162,7 @@ namespace JsonApiDotNetCore.Serialization
                     "If you are using Entity Framework Core, make sure the DbSet matches the expected resource name. " +
                     "If you have manually registered the resource, check that the call to Add correctly sets the public name.", null);
             }
-            
+
             var resource = ResourceFactory.CreateInstance(resourceContext.ResourceType);
 
             resource = SetAttributes(resource, data.Attributes, resourceContext.Attributes);

@@ -406,7 +406,8 @@ namespace JsonApiDotNetCore.Services
 
             if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
             {
-                primaryLayer.Projection = GetPrimaryIdProjection();
+                var idAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+                primaryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
             }
             else if (fieldSelection == TopFieldSelection.AllAttributes && primaryLayer.Projection != null)
             {
@@ -423,13 +424,6 @@ namespace JsonApiDotNetCore.Services
             AssertPrimaryResourceExists(primaryResource);
 
             return primaryResource;
-        }
-
-        private Dictionary<ResourceFieldAttribute, QueryLayer> GetPrimaryIdProjection()
-        {
-            var idAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
-
-            return new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
         }
 
         private FilterExpression IncludeFilterById(TId id, FilterExpression existingFilter)

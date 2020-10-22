@@ -194,12 +194,6 @@ namespace JsonApiDotNetCore.Controllers
             if (_addToRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Post);
             await _addToRelationship.AddToToManyRelationshipAsync(id, relationshipName, secondaryResourceIds);
 
-            // TODO: Silently ignore already-existing entries, causing duplicates. From json:api spec:
-            // "If a client makes a POST request to a URL from a relationship link, the server MUST add the specified members to the relationship unless they are already present. If a given type and id is already in the relationship, the server MUST NOT add it again"
-            // "Note: This matches the semantics of databases that use foreign keys for has-many relationships. Document-based storage should check the has-many relationship before appending to avoid duplicates."
-            // "If all of the specified resources can be added to, or are already present in, the relationship then the server MUST return a successful response."
-            // "Note: This approach ensures that a request is successful if the server’s state matches the requested state, and helps avoid pointless race conditions caused by multiple clients making the same changes to a relationship."
-    
             return NoContent();
         }
 
