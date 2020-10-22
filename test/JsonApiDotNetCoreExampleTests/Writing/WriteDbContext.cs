@@ -6,6 +6,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing
     {
         public DbSet<WorkItem> WorkItems { get; set; }
         public DbSet<WorkTag> WorkTags { get; set; }
+        public DbSet<WorkItemTag> WorkItemTags { get; set; }
         public DbSet<WorkItemGroup> Groups { get; set; }
         public DbSet<RgbColor> RgbColors { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }

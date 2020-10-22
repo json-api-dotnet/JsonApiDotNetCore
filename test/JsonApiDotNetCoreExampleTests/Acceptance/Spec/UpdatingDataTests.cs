@@ -484,6 +484,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
         // TODO: Add test(s) that save a relationship, then return its data via include.
 
+        // TODO: Add test for DeleteRelationshipAsync that only deletes non-existing from the right resources in to-many relationship.
+
         // TODO: This test is flaky.
         [Fact]
         public async Task Patch_Resource_With_HasMany_Does_Not_Include_Relationships()

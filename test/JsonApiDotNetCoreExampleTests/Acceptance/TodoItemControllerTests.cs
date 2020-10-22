@@ -371,36 +371,5 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(newTodoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
             Assert.Null(deserializedBody.AchievedDate);
         }
-
-        [Fact]
-        public async Task Can_Delete_TodoItem()
-        {
-            // Arrange
-            var person = new Person();
-            _context.People.Add(person);
-            await _context.SaveChangesAsync();
-
-            var todoItem = _todoItemFaker.Generate();
-            todoItem.Owner = person;
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
-
-            var httpMethod = new HttpMethod("DELETE");
-            var route = $"/api/v1/todoItems/{todoItem.Id}";
-
-            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(string.Empty)};
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            // Act
-            var response = await _fixture.Client.SendAsync(request);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
-
-            var body = await response.Content.ReadAsStringAsync();
-            Assert.Empty(body);
-
-            Assert.Null(_context.TodoItems.FirstOrDefault(t => t.Id == todoItem.Id));
-        }
     }
 }
