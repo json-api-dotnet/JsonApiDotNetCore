@@ -255,6 +255,8 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
+        // TODO: Restore or remove commented-out code.
+        /*
         /// <summary>
         /// Removes resources from <paramref name="existingRightResources"/> whose ID exists in <paramref name="resourcesToRemove"/>.
         /// </summary>
@@ -265,14 +267,15 @@ namespace JsonApiDotNetCore.Repositories
         /// returns { 1, 2 }
         /// ]]></code>
         /// </example>
-        // private ICollection<IIdentifiable> GetResourcesToAssignForRemoveFromToManyRelationship(
-        //     ISet<IIdentifiable> existingRightResources, ISet<IIdentifiable> resourcesToRemove)
-        // {
-        //     var newRightResources = new HashSet<IIdentifiable>(existingRightResources, IdentifiableComparer.Instance);
-        //     newRightResources.ExceptWith(resourcesToRemove);
-        //
-        //     return newRightResources;
-        // }
+        private ICollection<IIdentifiable> GetResourcesToAssignForRemoveFromToManyRelationship(
+            ISet<IIdentifiable> existingRightResources, ISet<IIdentifiable> resourcesToRemove)
+        {
+            var newRightResources = new HashSet<IIdentifiable>(existingRightResources, IdentifiableComparer.Instance);
+            newRightResources.ExceptWith(resourcesToRemove);
+
+            return newRightResources;
+        }
+        */
 
         private async Task SaveChangesAsync()
         {
