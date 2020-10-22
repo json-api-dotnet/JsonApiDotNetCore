@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
             Links = LinkTypes.All;
         }
         
-        public virtual IEnumerable<IIdentifiable> GetManyValue(object resource, IResourceFactory resourceFactory)
+        internal virtual IEnumerable<IIdentifiable> GetManyValue(object resource, IResourceFactory resourceFactory)
         {
             return (IEnumerable<IIdentifiable>)base.GetValue(resource);
         }

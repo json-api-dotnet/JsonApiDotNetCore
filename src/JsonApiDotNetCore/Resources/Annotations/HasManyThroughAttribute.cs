@@ -111,13 +111,14 @@ namespace JsonApiDotNetCore.Resources.Annotations
             return GetManyValue(resource, null);
         }
         
-        public override IEnumerable<IIdentifiable> GetManyValue(object resource, IResourceFactory resourceFactory)
+        internal override IEnumerable<IIdentifiable> GetManyValue(object resource, IResourceFactory resourceFactory)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
             var throughEntities = ((IEnumerable)ThroughProperty.GetValue(resource) ?? Array.Empty<object>()).Cast<object>().ToArray();
             var rightResourcesAreLoaded =  throughEntities.Any() && RightProperty.GetValue(throughEntities.First()) != null;
 
+            // Even if the right resources aren't loaded, we can still construct identifier objects using the id set on the through entity.
             var rightResources = rightResourcesAreLoaded
                 ? throughEntities.Select(te => RightProperty.GetValue(te)).Cast<IIdentifiable>()
                 : throughEntities.Select(te => CreateRightResourceWithId(te, resourceFactory));
