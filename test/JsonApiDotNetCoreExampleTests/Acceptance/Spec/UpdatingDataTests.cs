@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Xunit;
+using Xunit.Abstractions;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
@@ -20,6 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     public sealed class UpdatingDataTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
     {
         private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ITestOutputHelper _testOutputHelper;
 
         private readonly Faker<TodoItem> _todoItemFaker = new Faker<TodoItem>()
             .RuleFor(t => t.Description, f => f.Lorem.Sentence())
@@ -30,9 +33,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             .RuleFor(p => p.FirstName, f => f.Name.FirstName())
             .RuleFor(p => p.LastName, f => f.Name.LastName());
 
-        public UpdatingDataTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        public UpdatingDataTests(IntegrationTestContext<Startup, AppDbContext> testContext, ITestOutputHelper testOutputHelper)
         {
             _testContext = testContext;
+            _testOutputHelper = testOutputHelper;
 
             FakeLoggerFactory loggerFactory = null;
 
@@ -510,7 +514,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            try
+            {
+                httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            }
+            catch(Exception)
+            {
+                _testOutputHelper.WriteLine("What can we additionally log here to get insight in why this test is flaking irregularly?");
+                throw;
+            }
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Attributes["firstName"].Should().Be("John");
