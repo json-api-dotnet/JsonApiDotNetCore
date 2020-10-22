@@ -71,7 +71,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         }
 
         [Fact]
-        public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects_and_apply_sparse_field_set_selection()
+        public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects_and_fieldset()
         {
             // Arrange
             var group = WriteFakers.WorkItemGroup.Generate();
@@ -101,8 +101,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("workItemGroups");
             responseDocument.SingleData.Id.Should().Be(group.StringId);
-            responseDocument.SingleData.Attributes["name"].Should().Be(group.Name);
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
+            responseDocument.SingleData.Attributes["name"].Should().Be(group.Name);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

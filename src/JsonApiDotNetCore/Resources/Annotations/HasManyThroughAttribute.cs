@@ -108,20 +108,28 @@ namespace JsonApiDotNetCore.Resources.Annotations
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
+            // TODO: Passing null for the resourceFactory parameter is wrong here. Instead, GetManyValue() should properly throw when null is passed in.
             return GetManyValue(resource, null);
         }
-        
+
         internal override IEnumerable<IIdentifiable> GetManyValue(object resource, IResourceFactory resourceFactory)
         {
+            // TODO: This method contains surprising code: Instead of returning the contents of a collection,
+            // it modifies data and performs logic that is highly specific to what EntityFrameworkCoreRepository needs.
+            // This method is not reusable at all, it should not be concerned if resources are loaded, so should be moved into the caller instead.
+            // After moving the code, the unneeded copying into new collections multiple times can be removed too.
+
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            var throughEntities = ((IEnumerable)ThroughProperty.GetValue(resource) ?? Array.Empty<object>()).Cast<object>().ToArray();
+            var value = ThroughProperty.GetValue(resource);
+
+            var throughEntities = value == null ? Array.Empty<object>() : ((IEnumerable)value).Cast<object>().ToArray();
             var rightResourcesAreLoaded =  throughEntities.Any() && RightProperty.GetValue(throughEntities.First()) != null;
 
-            // Even if the right resources aren't loaded, we can still construct identifier objects using the id set on the through entity.
+            // Even if the right resources aren't loaded, we can still construct identifier objects using the ID set on the through entity.
             var rightResources = rightResourcesAreLoaded
-                ? throughEntities.Select(te => RightProperty.GetValue(te)).Cast<IIdentifiable>()
-                : throughEntities.Select(te => CreateRightResourceWithId(te, resourceFactory));
+                ? throughEntities.Select(entity => RightProperty.GetValue(entity)).Cast<IIdentifiable>()
+                : throughEntities.Select(entity => CreateRightResourceWithId(entity, resourceFactory));
 
             return (IEnumerable<IIdentifiable>)TypeHelper.CopyToTypedCollection(rightResources, Property.PropertyType);
         }

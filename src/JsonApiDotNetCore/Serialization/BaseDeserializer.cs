@@ -54,13 +54,13 @@ namespace JsonApiDotNetCore.Serialization
             {
                 if (Document.ManyData.Count == 0)
                 {
-                    return new HashSet<IIdentifiable>();   
+                    return new HashSet<IIdentifiable>();
                 }
 
                 return Document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
             }
 
-            if (Document.SingleData == null) 
+            if (Document.SingleData == null)
             {
                 return null;
             }
@@ -258,26 +258,30 @@ namespace JsonApiDotNetCore.Serialization
             HasManyAttribute hasManyRelationship,
             RelationshipEntry relationshipData)
         {
-            if (relationshipData.Data != null)
-            {   
-                // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
-                var relatedResources = relationshipData.ManyData.Select(rio =>
-                {
-                    AssertHasType(rio, hasManyRelationship);
-                    AssertHasId(rio, hasManyRelationship);
-
-                    var relationshipType = ResourceContextProvider.GetResourceContext(rio.Type).ResourceType;
-                    var relatedInstance = ResourceFactory.CreateInstance(relationshipType);
-                    relatedInstance.StringId = rio.Id;
-                    
-                    return relatedInstance;
-                }).ToHashSet(IdentifiableComparer.Instance);
+            // If the relationship data is null, there is no need to set the navigation property to null: this is the default value.
+            if (relationshipData.ManyData != null)
+            {
+                var relatedResources = relationshipData.ManyData
+                    .Select(rio => CreateRightResourceForHasMany(hasManyRelationship, rio))
+                    .ToHashSet(IdentifiableComparer.Instance);
 
                 var convertedCollection = TypeHelper.CopyToTypedCollection(relatedResources, hasManyRelationship.Property.PropertyType);
                 hasManyRelationship.SetValue(resource, convertedCollection, ResourceFactory);
             }
 
             AfterProcessField(resource, hasManyRelationship, relationshipData);
+        }
+
+        private IIdentifiable CreateRightResourceForHasMany(HasManyAttribute hasManyRelationship, ResourceIdentifierObject rio)
+        {
+            AssertHasType(rio, hasManyRelationship);
+            AssertHasId(rio, hasManyRelationship);
+
+            var relationshipType = ResourceContextProvider.GetResourceContext(rio.Type).ResourceType;
+            var relatedInstance = ResourceFactory.CreateInstance(relationshipType);
+            relatedInstance.StringId = rio.Id;
+
+            return relatedInstance;
         }
 
         private void AssertHasType(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)

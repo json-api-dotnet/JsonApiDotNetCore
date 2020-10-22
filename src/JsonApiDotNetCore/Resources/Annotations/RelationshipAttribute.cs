@@ -86,7 +86,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         public bool CanInclude { get; set; } = true;
 
         /// <summary>
-        /// Gets the value of the resource property this attributes was declared on.
+        /// Gets the value of the resource property this attribute was declared on.
         /// </summary>
         public virtual object GetValue(object resource)
         {
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         }
 
         /// <summary>
-        /// Sets the value of the resource property this attributes was declared on.
+        /// Sets the value of the resource property this attribute was declared on.
         /// </summary>
         public virtual void SetValue(object resource, object newValue, IResourceFactory resourceFactory)
         {

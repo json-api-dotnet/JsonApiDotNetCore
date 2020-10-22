@@ -13,8 +13,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Xunit;
-using Xunit.Abstractions;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
@@ -22,7 +22,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     public sealed class UpdatingDataTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
     {
         private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
-        private readonly ITestOutputHelper _testOutputHelper;
 
         private readonly Faker<TodoItem> _todoItemFaker = new Faker<TodoItem>()
             .RuleFor(t => t.Description, f => f.Lorem.Sentence())
@@ -33,10 +32,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             .RuleFor(p => p.FirstName, f => f.Name.FirstName())
             .RuleFor(p => p.LastName, f => f.Name.LastName());
 
-        public UpdatingDataTests(IntegrationTestContext<Startup, AppDbContext> testContext, ITestOutputHelper testOutputHelper)
+        public UpdatingDataTests(IntegrationTestContext<Startup, AppDbContext> testContext)
         {
             _testContext = testContext;
-            _testOutputHelper = testOutputHelper;
 
             FakeLoggerFactory loggerFactory = null;
 
@@ -517,24 +515,26 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = "/api/v1/people/" + todoItem.Owner.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            //var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseText) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
-            // Assert
             try
             {
+                // Assert
                 httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-            }
-            catch(Exception)
-            {
-                _testOutputHelper.WriteLine("What can we additionally log here to get insight in why this test is flaking irregularly?");
-                throw;
-            }
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["firstName"].Should().Be("John");
-            responseDocument.SingleData.Attributes["lastName"].Should().Be("Doe");
-            responseDocument.SingleData.Relationships.Should().ContainKey("todoItems");
-            responseDocument.SingleData.Relationships["todoItems"].Data.Should().BeNull();
+                var responseDocument = JsonConvert.DeserializeObject<Document>(responseText);
+
+                responseDocument.SingleData.Should().NotBeNull();
+                responseDocument.SingleData.Attributes["firstName"].Should().Be("John");
+                responseDocument.SingleData.Attributes["lastName"].Should().Be("Doe");
+                responseDocument.SingleData.Relationships.Should().ContainKey("todoItems");
+                responseDocument.SingleData.Relationships["todoItems"].Data.Should().BeNull();
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Flaky test failed with response status " + (int)httpResponse.StatusCode + " and body: <<" + responseText + ">>", exception);
+            }
         }
 
         [Fact]

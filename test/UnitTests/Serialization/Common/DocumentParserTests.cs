@@ -72,7 +72,7 @@ namespace UnitTests.Serialization.Deserializer
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = (HashSet<IIdentifiable>)_deserializer.Deserialize(body);
+            var result = (IEnumerable<IIdentifiable>)_deserializer.Deserialize(body);
 
             // Assert
             Assert.Equal("1", result.First().StringId);
@@ -85,7 +85,7 @@ namespace UnitTests.Serialization.Deserializer
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = (ISet<IIdentifiable>)_deserializer.Deserialize(body);
+            var result = (IEnumerable<IIdentifiable>)_deserializer.Deserialize(body);
 
             // Assert
             Assert.Empty(result);

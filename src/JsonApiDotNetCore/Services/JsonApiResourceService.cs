@@ -469,8 +469,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         private async IAsyncEnumerable<MissingResourceInRelationship> GetMissingResourcesInRelationshipAsync(
-            RelationshipAttribute relationship, 
-            ICollection<IIdentifiable> rightResources)
+            RelationshipAttribute relationship, ICollection<IIdentifiable> rightResources)
         {
             if (rightResources.Any())
             {

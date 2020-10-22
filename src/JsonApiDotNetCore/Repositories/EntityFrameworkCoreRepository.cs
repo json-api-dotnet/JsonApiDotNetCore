@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -12,6 +13,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Repositories
@@ -158,7 +160,7 @@ namespace JsonApiDotNetCore.Repositories
 
             var relationship = _targetedFields.Relationships.Single();
             var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
-            
+
             if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
             {
                 // In the case of many-to-many relationships, creating a duplicate entry in the join table results in a uniqueness constraint violation.
@@ -356,18 +358,22 @@ namespace JsonApiDotNetCore.Repositories
             _dbContext.Entry(trackedResource).State = EntityState.Detached;
         }
 
-        private async Task RemoveAlreadyRelatedResourcesFromAssignment(HasManyThroughAttribute hasManyThroughRelationship, TId primaryResourceId, ISet<IIdentifiable> secondaryResourceIds) 
+        private async Task RemoveAlreadyRelatedResourcesFromAssignment(HasManyThroughAttribute hasManyThroughRelationship, TId primaryResourceId, ISet<IIdentifiable> secondaryResourceIds)
         {
-            var primaryResource  =  await _dbContext.Set<TResource>()
+            // TODO: This is a no-go, because it loads the complete set of related entities, which can be massive.
+            // Instead, it should only load the subset of related entities that is in secondaryResourceIds, and the deduce what still needs to be added.
+
+            var primaryResource = await _dbContext.Set<TResource>()
+                // TODO: Why use AsNoTracking() here? We're not doing that anywhere else.
                 .AsNoTracking()
                 .Where(r => r.Id.Equals(primaryResourceId))
                 .Include(hasManyThroughRelationship.ThroughPropertyName)
                 .FirstAsync();
-            
+
             var existingRightResources = hasManyThroughRelationship.GetManyValue(primaryResource, _resourceFactory).ToHashSet(IdentifiableComparer.Instance);
             secondaryResourceIds.ExceptWith(existingRightResources);
         }
-        
+
         private NavigationEntry GetNavigationEntryForRelationship(RelationshipAttribute relationship, TResource resource)
         {
             EntityEntry<TResource> entityEntry = _dbContext.Entry(resource);
@@ -413,18 +419,18 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// If a (shadow) foreign key is already loaded on the left resource of a relationship, it is not possible to
         /// set it to null by just assigning null to the navigation property and marking it as modified.
-        /// Instead, when marking it as modified, it will mark the pre-existing foreign key value as modified too but without nulling its value.
-        /// One way to work around this is by loading the relationship before nulling it. Another approach as done in this method is
-        /// tricking the change tracker into recognising the null assignment by first assigning a placeholder entity to the navigation property, and then
-        /// nulling it out.
+        /// Instead, when marking it as modified, it will mark the pre-existing foreign key value as modified too but without setting its value to null.
+        /// One way to work around this is by loading the relationship before setting it to null. Another approach (as done in this method) is
+        /// tricking the change tracker into recognizing the null assignment by first assigning a placeholder entity to the navigation property, and then
+        /// setting it to null.
         /// </summary>
         private void PrepareChangeTrackerForNullAssignment(RelationshipAttribute relationship, TResource leftResource)
         {
             var placeholderRightResource = _resourceFactory.CreateInstance(relationship.RightType);
 
-            // When assigning a related entity to a navigation property it will be attached to change tracker. This fails
-            // when that entity has null reference(s) for its primary key(s).
-            EnsureNoNullPrimaryKeys(placeholderRightResource);
+            // When assigning a related entity to a navigation property, it will be attached to the change tracker.
+            // This fails when that entity has null reference(s) for its primary key(s).
+            EnsurePrimaryKeyPropertiesAreNotNull(placeholderRightResource);
 
             relationship.SetValue(leftResource, placeholderRightResource, _resourceFactory);
             _dbContext.Entry(leftResource).DetectChanges();
@@ -432,31 +438,40 @@ namespace JsonApiDotNetCore.Repositories
             _dbContext.Entry(placeholderRightResource).State = EntityState.Detached;
         }
 
-        private void EnsureNoNullPrimaryKeys(object entity)
+        private void EnsurePrimaryKeyPropertiesAreNotNull(object entity)
         {
             var primaryKey = _dbContext.Entry(entity).Metadata.FindPrimaryKey();
             if (primaryKey != null)
             {
-                foreach (var propertyMeta in primaryKey.Properties)
+                foreach (var property in primaryKey.Properties)
                 {
-                    var propertyInfo = propertyMeta.PropertyInfo;
-                    object propertyValue = null;
-
-                    if (propertyInfo.PropertyType == typeof(string))
-                    {
-                        propertyValue = string.Empty;
-                    }
-                    else if (Nullable.GetUnderlyingType(propertyInfo.PropertyType) != null)
-                    {
-                        propertyValue = propertyInfo.PropertyType.GetGenericArguments()[0];
-                    }
-
+                    var propertyValue = TryGetValueForProperty(property.PropertyInfo);
                     if (propertyValue != null)
                     {
-                        propertyInfo.SetValue(entity, propertyValue);
+                        property.PropertyInfo.SetValue(entity, propertyValue);
                     }
                 }
             }
+        }
+
+        private static object TryGetValueForProperty(PropertyInfo propertyInfo)
+        {
+            if (propertyInfo.PropertyType == typeof(string))
+            {
+                return string.Empty;
+            }
+
+            if (Nullable.GetUnderlyingType(propertyInfo.PropertyType) != null)
+            {
+                // TODO: This looks wrong -- we're returning a System.Type in this case.
+                // I would expect it needs to return the default value of the underlying type.
+                return propertyInfo.PropertyType.GetGenericArguments()[0];
+            }
+
+            // TODO: I'm assuming that returning null for a non-nullable value type is okay here.
+            // If so, then we should throw in case we find a non-string reference type.
+
+            return null;
         }
 
         private object EnsureRelationshipValueToAssignIsTracked(object valueToAssign, Type relationshipPropertyType)
