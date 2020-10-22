@@ -152,11 +152,13 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns>The parsed resource.</returns>
         private IIdentifiable ParseResourceObject(ResourceObject data)
         {
+            AssertHasType(data, null);
+
             var resourceContext = ResourceContextProvider.GetResourceContext(data.Type);
             if (resourceContext == null)
             {
                 throw new InvalidRequestBodyException("Payload includes unknown resource type.",
-                    $"The resource '{data.Type}' is not registered on the resource graph. " +
+                    $"The resource type '{data.Type}' is not registered on the resource graph. " +
                     "If you are using Entity Framework Core, make sure the DbSet matches the expected resource name. " +
                     "If you have manually registered the resource, check that the call to Add correctly sets the public name.", null);
             }
@@ -178,29 +180,35 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private void SetHasOneRelationship(IIdentifiable resource,
             PropertyInfo[] resourceProperties,
-            HasOneAttribute attr,
+            HasOneAttribute hasOneRelationship,
             RelationshipEntry relationshipData)
         {
             var rio = (ResourceIdentifierObject)relationshipData.Data;
             var relatedId = rio?.Id;
 
+            if (relationshipData.SingleData != null)
+            {
+                AssertHasType(relationshipData.SingleData, hasOneRelationship);
+                AssertHasId(relationshipData.SingleData, hasOneRelationship);
+            }
+
             var relationshipType = relationshipData.SingleData == null
-                ? attr.RightType
+                ? hasOneRelationship.RightType
                 : ResourceContextProvider.GetResourceContext(relationshipData.SingleData.Type).ResourceType;
 
-            // this does not make sense in the following case: if we're setting the dependent of a one-to-one relationship, IdentifiablePropertyName should be null.
-            var foreignKeyProperty = resourceProperties.FirstOrDefault(p => p.Name == attr.IdentifiablePropertyName);
+            // TODO: this does not make sense in the following case: if we're setting the dependent of a one-to-one relationship, IdentifiablePropertyName should be null.
+            var foreignKeyProperty = resourceProperties.FirstOrDefault(p => p.Name == hasOneRelationship.IdentifiablePropertyName);
 
             if (foreignKeyProperty != null)
                 // there is a FK from the current resource pointing to the related object,
                 // i.e. we're populating the relationship from the dependent side.
-                SetForeignKey(resource, foreignKeyProperty, attr, relatedId, relationshipType);
+                SetForeignKey(resource, foreignKeyProperty, hasOneRelationship, relatedId, relationshipType);
 
-            SetNavigation(resource, attr, relatedId, relationshipType);
+            SetNavigation(resource, hasOneRelationship, relatedId, relationshipType);
 
             // depending on if this base parser is used client-side or server-side,
             // different additional processing per field needs to be executed.
-            AfterProcessField(resource, attr, relationshipData);
+            AfterProcessField(resource, hasOneRelationship, relationshipData);
         }
 
         /// <summary>
@@ -247,13 +255,17 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private void SetHasManyRelationship(
             IIdentifiable resource,
-            HasManyAttribute attr,
+            HasManyAttribute hasManyRelationship,
             RelationshipEntry relationshipData)
         {
             if (relationshipData.Data != null)
-            {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
+            {   
+                // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
                 var relatedResources = relationshipData.ManyData.Select(rio =>
                 {
+                    AssertHasType(rio, hasManyRelationship);
+                    AssertHasId(rio, hasManyRelationship);
+
                     var relationshipType = ResourceContextProvider.GetResourceContext(rio.Type).ResourceType;
                     var relatedInstance = ResourceFactory.CreateInstance(relationshipType);
                     relatedInstance.StringId = rio.Id;
@@ -261,11 +273,32 @@ namespace JsonApiDotNetCore.Serialization
                     return relatedInstance;
                 }).ToHashSet(IdentifiableComparer.Instance);
 
-                var convertedCollection = TypeHelper.CopyToTypedCollection(relatedResources, attr.Property.PropertyType);
-                attr.SetValue(resource, convertedCollection, ResourceFactory);
+                var convertedCollection = TypeHelper.CopyToTypedCollection(relatedResources, hasManyRelationship.Property.PropertyType);
+                hasManyRelationship.SetValue(resource, convertedCollection, ResourceFactory);
             }
 
-            AfterProcessField(resource, attr, relationshipData);
+            AfterProcessField(resource, hasManyRelationship, relationshipData);
+        }
+
+        private void AssertHasType(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)
+        {
+            if (resourceIdentifierObject.Type == null)
+            {
+                var details = relationship != null
+                    ? $"Expected 'type' element in relationship '{relationship.PublicName}'."
+                    : "Expected 'type' element in 'data' element.";
+
+                throw new InvalidRequestBodyException("Payload must include 'type' element.", details, null);
+            }
+        }
+
+        private void AssertHasId(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)
+        {
+            if (resourceIdentifierObject.Id == null)
+            {
+                throw new InvalidRequestBodyException("Payload must include 'id' element.",
+                    $"Expected 'id' element in relationship '{relationship.PublicName}'.", null);
+            }
         }
 
         private object ConvertAttrValue(object newValue, Type targetType)

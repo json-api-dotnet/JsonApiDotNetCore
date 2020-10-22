@@ -1,9 +1,7 @@
 using System;
 using System.Linq;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace JsonApiDotNetCore.Repositories
 {

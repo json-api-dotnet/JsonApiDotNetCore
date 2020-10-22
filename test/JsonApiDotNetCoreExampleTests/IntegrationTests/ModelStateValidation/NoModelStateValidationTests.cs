@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
@@ -26,10 +25,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "!@#$%^&*().-",
-                        ["isCaseSensitive"] = "false"
+                        name = "!@#$%^&*().-",
+                        isCaseSensitive = "false"
                     }
                 }
             };
@@ -68,9 +67,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "!@#$%^&*().-"
+                        name = "!@#$%^&*().-"
                     }
                 }
             };

@@ -356,12 +356,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = "/api/v1/people/" + person.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -428,7 +426,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
         
         [Fact]
-        public async Task Can_Patch_Resource_And_Hide_Side_Effects_With_Sparse_Field_Set_Selection()
+        public async Task Can_Patch_Resource_With_Side_Effects_And_Apply_Sparse_Field_Set_Selection()
         {
             // Arrange
             var todoItem = _todoItemFaker.Generate();

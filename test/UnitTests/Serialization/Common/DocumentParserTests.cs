@@ -86,7 +86,7 @@ namespace UnitTests.Serialization.Deserializer
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = (IList)_deserializer.Deserialize(body);
+            var result = (ISet<IIdentifiable>)_deserializer.Deserialize(body);
 
             // Assert
             Assert.Empty(result);

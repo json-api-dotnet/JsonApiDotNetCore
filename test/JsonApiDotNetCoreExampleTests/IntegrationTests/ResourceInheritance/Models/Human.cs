@@ -8,7 +8,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
     public abstract class Human : Identifiable
     {
         [Attr]
-        public bool Retired { get; set; }
+        public string FamilyName { get; set; }
+
+        [Attr]
+        public bool IsRetired { get; set; }
 
         [HasOne]
         public HealthInsurance HealthInsurance { get; set; }

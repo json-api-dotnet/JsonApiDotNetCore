@@ -108,13 +108,29 @@ namespace JsonApiDotNetCore.Resources.Annotations
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            IEnumerable throughResources = (IEnumerable)ThroughProperty.GetValue(resource) ?? Array.Empty<object>();
+            return GetManyValue(resource, null);
+        }
+        
+        public override IEnumerable<IIdentifiable> GetManyValue(object resource, IResourceFactory resourceFactory)
+        {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            IEnumerable<object> rightResources = throughResources
-                .Cast<object>()
-                .Select(rightResource =>  RightProperty.GetValue(rightResource));
+            var throughEntities = ((IEnumerable)ThroughProperty.GetValue(resource) ?? Array.Empty<object>()).Cast<object>().ToArray();
+            var rightResourcesAreLoaded =  throughEntities.Any() && RightProperty.GetValue(throughEntities.First()) != null;
 
-            return TypeHelper.CopyToTypedCollection(rightResources, Property.PropertyType);
+            var rightResources = rightResourcesAreLoaded
+                ? throughEntities.Select(te => RightProperty.GetValue(te)).Cast<IIdentifiable>()
+                : throughEntities.Select(te => CreateRightResourceWithId(te, resourceFactory));
+
+            return (IEnumerable<IIdentifiable>)TypeHelper.CopyToTypedCollection(rightResources, Property.PropertyType);
+        }
+
+        private IIdentifiable CreateRightResourceWithId(object throughEntity, IResourceFactory resourceFactory)
+        {
+            var rightResource = resourceFactory.CreateInstance(RightType);
+            rightResource.StringId = RightIdProperty.GetValue(throughEntity)!.ToString();
+
+            return rightResource;
         }
 
         /// <summary>

@@ -158,9 +158,18 @@ namespace JsonApiDotNetCore.Repositories
 
             var relationship = _targetedFields.Relationships.Single();
             var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
+            
+            if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
+            {
+                // In the case of many-to-many relationships, creating a duplicate entry in the join table results in a uniqueness constraint violation.
+                await RemoveAlreadyRelatedResourcesFromAssignment(hasManyThroughRelationship, primaryResource.Id, secondaryResourceIds);
+            }
 
-            await ApplyRelationshipUpdate(relationship, primaryResource, secondaryResourceIds);
-            await SaveChangesAsync();
+            if (secondaryResourceIds.Any())
+            {
+                await ApplyRelationshipUpdate(relationship, primaryResource, secondaryResourceIds);
+                await SaveChangesAsync();
+            }
         }
 
         /// <inheritdoc />
@@ -226,29 +235,20 @@ namespace JsonApiDotNetCore.Repositories
             var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
 
             await EnableCompleteReplacement(relationship, primaryResource);
+            
+            var rightResources = relationship.GetManyValue(primaryResource, _resourceFactory).ToHashSet(IdentifiableComparer.Instance);
+            var currentRightResourcesCount = rightResources.Count;
 
-            /*
-             * todo: I find the abstraction difficult to read because its name is very verbose and contains a lot of concepts,
-             * while the operation that is being abstracted away is very simple: substracting two sets.
-             * Now that we're using hashsets, I think this operation is intuitive enough to read as is.
-             * Either
-             *     - make the abstraction name easier to read (less = more): we are in the Remove From ToMany Relationship method,
-             *             so it feels redundant to put that in the method name too. Proposal: GetResourcesToAssign.
-             *     - or consider inlining like below
-             */
-            // var existingRightResources = relationship.GetManyValue(primaryResource)
-            // var newRightResources = existingRightResources.ToHashSet(IdentifiableComparer.Instance); 
-            // newRightResources.ExceptWith(secondaryResourceIds);
+            rightResources.ExceptWith(secondaryResourceIds);
             
-            var existingRightResources = (IReadOnlyCollection<IIdentifiable>)relationship.GetValue(primaryResource);
-            var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources, secondaryResourceIds);
-            
+            // TODO: with introduction of HasManyAttribute.GetManyValue, I think we don't have to abstract away substraction of two sets any longer.
+            // var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources, secondaryResourceIds);
 
             // todo: why has it been reverted to != again?
-            bool hasChanges = newRightResources.Count != existingRightResources.Count;
+            bool hasChanges = rightResources.Count != currentRightResourcesCount;
             if (hasChanges)
             {
-                await ApplyRelationshipUpdate(relationship, primaryResource, newRightResources);
+                await ApplyRelationshipUpdate(relationship, primaryResource, rightResources);
                 await SaveChangesAsync();
             }
         }
@@ -263,14 +263,14 @@ namespace JsonApiDotNetCore.Repositories
         /// returns { 1, 2 }
         /// ]]></code>
         /// </example>
-        private ICollection<IIdentifiable> GetResourcesToAssignForRemoveFromToManyRelationship(
-            IEnumerable<IIdentifiable> existingRightResources, ISet<IIdentifiable> resourcesToRemove)
-        {
-            var newRightResources = new HashSet<IIdentifiable>(existingRightResources, IdentifiableComparer.Instance);
-            newRightResources.ExceptWith(resourcesToRemove);
-
-            return newRightResources;
-        }
+        // private ICollection<IIdentifiable> GetResourcesToAssignForRemoveFromToManyRelationship(
+        //     ISet<IIdentifiable> existingRightResources, ISet<IIdentifiable> resourcesToRemove)
+        // {
+        //     var newRightResources = new HashSet<IIdentifiable>(existingRightResources, IdentifiableComparer.Instance);
+        //     newRightResources.ExceptWith(resourcesToRemove);
+        //
+        //     return newRightResources;
+        // }
 
         private async Task SaveChangesAsync()
         {
@@ -356,6 +356,18 @@ namespace JsonApiDotNetCore.Repositories
             _dbContext.Entry(trackedResource).State = EntityState.Detached;
         }
 
+        private async Task RemoveAlreadyRelatedResourcesFromAssignment(HasManyThroughAttribute hasManyThroughRelationship, TId primaryResourceId, ISet<IIdentifiable> secondaryResourceIds) 
+        {
+            var primaryResource  =  await _dbContext.Set<TResource>()
+                .AsNoTracking()
+                .Where(r => r.Id.Equals(primaryResourceId))
+                .Include(hasManyThroughRelationship.ThroughPropertyName)
+                .FirstAsync();
+            
+            var existingRightResources = hasManyThroughRelationship.GetManyValue(primaryResource, _resourceFactory).ToHashSet(IdentifiableComparer.Instance);
+            secondaryResourceIds.ExceptWith(existingRightResources);
+        }
+        
         private NavigationEntry GetNavigationEntryForRelationship(RelationshipAttribute relationship, TResource resource)
         {
             EntityEntry<TResource> entityEntry = _dbContext.Entry(resource);

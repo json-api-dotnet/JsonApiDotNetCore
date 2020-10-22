@@ -1,55 +1,70 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Middleware;
+using FluentAssertions;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
-    [Collection("WebHostCollection")]
-    public sealed class ManyToManyTests
+    public sealed class ManyToManyTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
     {
-        private readonly TestFixture<TestStartup> _fixture;
+        private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
 
         private readonly Faker<Author> _authorFaker;
         private readonly Faker<Article> _articleFaker;
         private readonly Faker<Tag> _tagFaker;
 
-        public ManyToManyTests(TestFixture<TestStartup> fixture)
+        public ManyToManyTests(IntegrationTestContext<Startup, AppDbContext> testContext)
         {
-            _fixture = fixture;
-            var context = _fixture.GetRequiredService<AppDbContext>();
+            _testContext = testContext;
 
             _authorFaker = new Faker<Author>()
-                .RuleFor(a => a.LastName, f => f.Random.Words(2));
+            .RuleFor(a => a.LastName, f => f.Random.Words(2));
 
             _articleFaker = new Faker<Article>()
-                .RuleFor(a => a.Caption, f => f.Random.AlphaNumeric(10))
-                .RuleFor(a => a.Author, f => _authorFaker.Generate());
+            .RuleFor(a => a.Caption, f => f.Random.AlphaNumeric(10))
+            .RuleFor(a => a.Author, f => _authorFaker.Generate());
 
             _tagFaker = new Faker<Tag>()
-                .CustomInstantiator(f => new Tag())
-                .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
-        }
+            .CustomInstantiator(f => new Tag())
+            .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
+            
+            FakeLoggerFactory loggerFactory = null;
 
+            testContext.ConfigureLogging(options =>
+            {
+                loggerFactory = new FakeLoggerFactory();
+
+                options.ClearProviders();
+                options.AddProvider(loggerFactory);
+                options.SetMinimumLevel(LogLevel.Trace);
+                options.AddFilter((category, level) => level == LogLevel.Trace &&
+                    (category == typeof(JsonApiReader).FullName || category == typeof(JsonApiWriter).FullName));
+            });
+
+            testContext.ConfigureServicesBeforeStartup(services =>
+            {
+                if (loggerFactory != null)
+                {
+                    services.AddSingleton(_ => loggerFactory);
+                }
+            });
+        }
+        
         [Fact]
-        public async Task Can_Fetch_Many_To_Many_Through_Id()
+        public async Task Can_Get_HasManyThrough_Relationship_Through_Secondary_Endpoint()
         {
             // Arrange
-            var context = _fixture.GetRequiredService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
             var articleTag = new ArticleTag
@@ -57,38 +72,31 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 Article = article,
                 Tag = tag
             };
-            context.ArticleTags.Add(articleTag);
-            await context.SaveChangesAsync();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(article, tag, articleTag);
+                await dbContext.SaveChangesAsync();
+            });
 
             var route = $"/api/v1/articles/{article.Id}/tags";
 
-            // @TODO - Use fixture
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-
             // Act
-            var response = await client.GetAsync(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
-            var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-
-            var document = JsonConvert.DeserializeObject<Document>(body);
-            Assert.Single(document.ManyData);
-
-            var tagResponse = _fixture.GetDeserializer().DeserializeMany<Tag>(body).Data.First();
-            Assert.NotNull(tagResponse);
-            Assert.Equal(tag.Id, tagResponse.Id);
-            Assert.Equal(tag.Name, tagResponse.Name);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            
+            responseDocument.ManyData.Should().ContainSingle();
+            responseDocument.ManyData[0].Id.Should().Be(tag.StringId);
+            responseDocument.ManyData[0].Type.Should().Be("tags");
+            responseDocument.ManyData[0].Attributes["name"].Should().Be(tag.Name);
         }
-
+        
         [Fact]
-        public async Task Can_Fetch_Many_To_Many_Through_GetById_Relationship_Link()
+        public async Task Can_Get_HasManyThrough_Through_Relationship_Endpoint()
         {
             // Arrange
-            var context = _fixture.GetRequiredService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
             var articleTag = new ArticleTag
@@ -96,117 +104,41 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 Article = article,
                 Tag = tag
             };
-            context.ArticleTags.Add(articleTag);
-            await context.SaveChangesAsync();
-
-            var route = $"/api/v1/articles/{article.Id}/tags";
-
-            // @TODO - Use fixture
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-
-            // Act
-            var response = await client.GetAsync(route);
-
-            // Assert
-            var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-
-            var document = JsonConvert.DeserializeObject<Document>(body);
-            Assert.Null(document.Included);
-
-            var tagResponse = _fixture.GetDeserializer().DeserializeMany<Tag>(body).Data.First();
-            Assert.NotNull(tagResponse);
-            Assert.Equal(tag.Id, tagResponse.Id);
-        }
-
-        [Fact]
-        public async Task Can_Fetch_Many_To_Many_Through_Relationship_Link()
-        {
-            // Arrange
-            var context = _fixture.GetRequiredService<AppDbContext>();
-            var article = _articleFaker.Generate();
-            var tag = _tagFaker.Generate();
-            var articleTag = new ArticleTag
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Article = article,
-                Tag = tag
-            };
-            context.ArticleTags.Add(articleTag);
-            await context.SaveChangesAsync();
+                dbContext.AddRange(article, tag, articleTag);
+                await dbContext.SaveChangesAsync();
+            });
 
             var route = $"/api/v1/articles/{article.Id}/relationships/tags";
             
-            // @TODO - Use fixture
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-
             // Act
-            var response = await client.GetAsync(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
-            var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-
-            var document = JsonConvert.DeserializeObject<Document>(body);
-            Assert.Null(document.Included);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
             
-            var tagResponse = _fixture.GetDeserializer().DeserializeMany<Tag>(body).Data.First();
-            Assert.NotNull(tagResponse);
-            Assert.Equal(tag.Id, tagResponse.Id);
+            responseDocument.ManyData.Should().ContainSingle();
+            responseDocument.ManyData[0].Id.Should().Be(tag.StringId);
+            responseDocument.ManyData[0].Type.Should().Be("tags");
+            responseDocument.ManyData[0].Attributes.Should().BeNull();
         }
-
+        
         [Fact]
-        public async Task Can_Fetch_Many_To_Many_Without_Include()
+        public async Task Can_Create_Resource_With_HasManyThrough_Relationship()
         {
             // Arrange
-            var context = _fixture.GetRequiredService<AppDbContext>();
-            var article = _articleFaker.Generate();
-            var tag = _tagFaker.Generate();
-            var articleTag = new ArticleTag
-            {
-                Article = article,
-                Tag = tag
-            };
-            context.ArticleTags.Add(articleTag);
-            await context.SaveChangesAsync();
-            var route = $"/api/v1/articles/{article.Id}";
-
-            // @TODO - Use fixture
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-
-            // Act
-            var response = await client.GetAsync(route);
-
-            // Assert
-            var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-
-            var document = JsonConvert.DeserializeObject<Document>(body);
-            Assert.Null(document.SingleData.Relationships["tags"].ManyData);
-        }
-
-        [Fact]
-        public async Task Can_Create_Many_To_Many()
-        {
-            // Arrange
-            var context = _fixture.GetRequiredService<AppDbContext>();
             var tag = _tagFaker.Generate();
             var author = _authorFaker.Generate();
-            context.Tags.Add(tag);
-            context.AuthorDifferentDbContextName.Add(author);
-            await context.SaveChangesAsync();
 
-            var route = "/api/v1/articles";
-            var request = new HttpRequestMessage(new HttpMethod("POST"), route);
-            var content = new
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(tag, author);
+                await dbContext.SaveChangesAsync();
+            });
+            
+            var requestBody = new
             {
                 data = new
                 {
@@ -236,97 +168,30 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     }
                 }
             };
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            // @TODO - Use fixture
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
+            
+            var route = $"/api/v1/articles";
 
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Created == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-
-            var articleResponse = _fixture.GetDeserializer().DeserializeSingle<Article>(body).Data;
-            Assert.NotNull(articleResponse);
-
-            var persistedArticle = await _fixture.Context.Articles
-                .Include(a => a.ArticleTags)
-                .SingleAsync(a => a.Id == articleResponse.Id);
-
-            var persistedArticleTag = Assert.Single(persistedArticle.ArticleTags);
-            Assert.Equal(tag.Id, persistedArticleTag.TagId);
-        }
-
-        [Fact]
-        public async Task Can_Update_Many_To_Many()
-        {
-            // Arrange
-            var context = _fixture.GetRequiredService<AppDbContext>();
-            var tag = _tagFaker.Generate();
-            var article = _articleFaker.Generate();
-            context.Tags.Add(tag);
-            context.Articles.Add(article);
-            await context.SaveChangesAsync();
-
-            var route = $"/api/v1/articles/{article.Id}";
-            var request = new HttpRequestMessage(new HttpMethod("PATCH"), route);
-            var content = new
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                data = new
-                {
-                    type = "articles",
-                    id = article.StringId,
-                    relationships = new Dictionary<string, dynamic>
-                    {
-                        {  "tags",  new {
-                            data = new [] { new
-                            {
-                                type = "tags",
-                                id = tag.StringId
-                            } }
-                        } }
-                    }
-                }
-            };
+                var persistedArticle = await dbContext.Articles
+                    .Include(a => a.ArticleTags)
+                    .FirstAsync(a => a.Id == int.Parse(responseDocument.SingleData.Id));
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            // @TODO - Use fixture
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-
-            // Act
-            var response = await client.SendAsync(request);
-
-            // Assert
-            var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.NoContent == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-
-            Assert.Empty(body);
-
-            _fixture.ReloadDbContext();
-            var persistedArticle = await _fixture.Context.Articles
-                .Include(a => a.ArticleTags)
-                .SingleAsync(a => a.Id == article.Id);
-
-            var persistedArticleTag = Assert.Single(persistedArticle.ArticleTags);
-            Assert.Equal(tag.Id, persistedArticleTag.TagId);
+                persistedArticle.ArticleTags.Should().ContainSingle();
+                persistedArticle.ArticleTags.First().TagId.Should().Be(tag.Id);
+            });
         }
-
+        
         [Fact]
-        public async Task Can_Update_Many_To_Many_With_Complete_Replacement()
+        public async Task Can_Set_HasManyThrough_Relationship_Through_Primary_Endpoint()
         {
             // Arrange
-            var context = _fixture.GetRequiredService<AppDbContext>();
             var firstTag = _tagFaker.Generate();
             var article = _articleFaker.Generate();
             var articleTag = new ArticleTag
@@ -334,14 +199,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 Article = article,
                 Tag = firstTag
             };
-            context.ArticleTags.Add(articleTag);
             var secondTag = _tagFaker.Generate();
-            context.Tags.Add(secondTag);
-            await context.SaveChangesAsync();
-
-            var route = $"/api/v1/articles/{article.Id}";
-            var request = new HttpRequestMessage(new HttpMethod("PATCH"), route);
-            var content = new
+    
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(firstTag, secondTag, article, articleTag);
+                await dbContext.SaveChangesAsync();
+            });
+            
+            var requestBody = new
             {
                 data = new
                 {
@@ -360,36 +226,29 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 }
             };
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            // @TODO - Use fixture
-            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
+            var route = $"/api/v1/articles/{article.Id}";
 
             // Act
-            var response = await client.SendAsync(request);
-
+            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            
             // Assert
-            var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.NoContent == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var persistedArticle = await dbContext.Articles
+                    .Include(a => a.ArticleTags)
+                    .FirstAsync(a => a.Id == article.Id);
 
-            Assert.Empty(body);
-
-            _fixture.ReloadDbContext();
-            var persistedArticle = await _fixture.Context.Articles
-                .Include("ArticleTags.Tag")
-                .SingleOrDefaultAsync(a => a.Id == article.Id);
-            var tag = persistedArticle.ArticleTags.Select(at => at.Tag).Single();
-            Assert.Equal(secondTag.Id, tag.Id);
+                persistedArticle.ArticleTags.Should().ContainSingle();
+                persistedArticle.ArticleTags.First().TagId.Should().Be(secondTag.Id);
+            });
         }
-
+        
         [Fact]
-        public async Task Can_Update_Many_To_Many_With_Complete_Replacement_With_Overlap()
+        public async Task Can_Set_With_Overlap_To_HasManyThrough_Relationship_Through_Primary_Endpoint()
         {
             // Arrange
-            var context = _fixture.GetRequiredService<AppDbContext>();
             var firstTag = _tagFaker.Generate();
             var article = _articleFaker.Generate();
             var articleTag = new ArticleTag
@@ -397,14 +256,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 Article = article,
                 Tag = firstTag
             };
-            context.ArticleTags.Add(articleTag);
             var secondTag = _tagFaker.Generate();
-            context.Tags.Add(secondTag);
-            await context.SaveChangesAsync();
 
-            var route = $"/api/v1/articles/{article.Id}";
-            var request = new HttpRequestMessage(new HttpMethod("PATCH"), route);
-            var content = new
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(firstTag, secondTag, article, articleTag);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
             {
                 data = new
                 {
@@ -427,76 +287,232 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 }
             };
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+            var route = $"/api/v1/articles/{article.Id}";
 
-            // @TODO - Use fixture
-            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
 
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
 
             // Assert
-            var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.NoContent == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            Assert.Empty(body);
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var persistedArticle = await dbContext.Articles
+                    .Include(a => a.ArticleTags)
+                    .FirstAsync(a => a.Id == article.Id);
 
-            _fixture.ReloadDbContext();
-            var persistedArticle = await _fixture.Context.Articles
-                .Include(a => a.ArticleTags)
-                .SingleOrDefaultAsync(a => a.Id == article.Id);
-            var tags = persistedArticle.ArticleTags.Select(at => at.Tag).ToList();
-            Assert.Equal(2, tags.Count);
+                persistedArticle.ArticleTags.Should().HaveCount(2);
+                persistedArticle.ArticleTags.Should().ContainSingle(at => at.TagId == firstTag.Id);
+                persistedArticle.ArticleTags.Should().ContainSingle(at => at.TagId == secondTag.Id);
+            });
         }
-
+        
         [Fact]
-        public async Task Can_Update_Many_To_Many_Through_Relationship_Link()
+        public async Task Can_Set_HasManyThrough_Relationship_Through_Relationships_Endpoint()
         {
             // Arrange
-            var context = _fixture.GetRequiredService<AppDbContext>();
             var tag = _tagFaker.Generate();
             var article = _articleFaker.Generate();
-            context.Tags.Add(tag);
-            context.Articles.Add(article);
-            await context.SaveChangesAsync();
+            var articleTag = new ArticleTag
+            {
+                Article = article,
+                Tag = tag
+            };
+            var secondTag = _tagFaker.Generate();
+    
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(tag, secondTag, article, articleTag);
+                await dbContext.SaveChangesAsync();
+            });
+            
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "tags",
+                        id = secondTag.StringId
+                    }
+                }
+            };
 
             var route = $"/api/v1/articles/{article.Id}/relationships/tags";
-            var request = new HttpRequestMessage(new HttpMethod("PATCH"), route);
-            var content = new
+
+            // Act
+            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                data = new[] {
-                    new {
+                var persistedArticle = await dbContext.Articles
+                    .Include(a => a.ArticleTags)
+                    .FirstAsync(a => a.Id == article.Id);
+
+                persistedArticle.ArticleTags.Should().ContainSingle();
+                persistedArticle.ArticleTags.First().TagId.Should().Be(secondTag.Id);
+            });
+        }
+        
+        [Fact]
+        public async Task Can_Add_To_HasManyThrough_Relationship_Through_Relationships_Endpoint()
+        {
+            // Arrange
+            var firstTag = _tagFaker.Generate();
+            var article = _articleFaker.Generate();
+            var articleTag = new ArticleTag
+            {
+                Article = article,
+                Tag = firstTag
+            };
+            var secondTag = _tagFaker.Generate();
+    
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(firstTag, secondTag, article, articleTag);
+                await dbContext.SaveChangesAsync();
+            });
+    
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "tags",
+                        id = secondTag.StringId
+                    }
+                }
+            };
+
+            var route = $"/api/v1/articles/{article.Id}/relationships/tags";
+
+            // Act
+            var (httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+            
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var persistedArticle = await dbContext.Articles
+                    .Include(a => a.ArticleTags)
+                    .FirstAsync(a => a.Id == article.Id);
+
+                persistedArticle.ArticleTags.Should().HaveCount(2);
+                persistedArticle.ArticleTags.Should().ContainSingle(at => at.TagId == firstTag.Id);
+                persistedArticle.ArticleTags.Should().ContainSingle(at => at.TagId == secondTag.Id);
+            });
+        }
+        
+        [Fact]
+        public async Task Can_Add_Already_Related_Resource_Without_It_Being_Readded_To_HasManyThrough_Relationship_Through_Relationships_Endpoint()
+        {
+            // Arrange
+            var article = _articleFaker.Generate();
+            var firstTag = _tagFaker.Generate();
+            var secondTag = _tagFaker.Generate();
+            article.ArticleTags = new HashSet<ArticleTag> {new ArticleTag  {Article = article, Tag = firstTag}, new ArticleTag  {Article = article, Tag = secondTag} };
+
+            var thirdTag = _tagFaker.Generate();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(firstTag, secondTag, article, thirdTag);
+                await dbContext.SaveChangesAsync();
+            });
+            
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "tags",
+                        id = secondTag.StringId
+                    },
+                    new
+                    {
+                        type = "tags",
+                        id = thirdTag.StringId
+                    }
+                }
+            };
+
+            var route = $"/api/v1/articles/{article.Id}/relationships/tags";
+
+            // Act
+            var (httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+            
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var persistedArticle = await dbContext.Articles
+                    .Include(a => a.ArticleTags)
+                    .FirstAsync(a => a.Id == article.Id);
+
+                persistedArticle.ArticleTags.Should().HaveCount(3);
+                persistedArticle.ArticleTags.Should().ContainSingle(at => at.TagId == firstTag.Id);
+                persistedArticle.ArticleTags.Should().ContainSingle(at => at.TagId == secondTag.Id);
+                persistedArticle.ArticleTags.Should().ContainSingle(at => at.TagId == thirdTag.Id);
+            });
+        }
+        
+        [Fact]
+        public async Task Can_Delete_From_HasManyThrough_Relationship_Through_Relationships_Endpoint()
+        {
+            // Arrange
+            var article = _articleFaker.Generate();
+            var tag = _tagFaker.Generate();
+            var articleTag = new ArticleTag
+            {
+                Article = article,
+                Tag = tag
+            };
+
+            article.ArticleTags = new HashSet<ArticleTag> {articleTag};
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(tag, article, articleTag);
+                await dbContext.SaveChangesAsync();
+            });
+            
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
                         type = "tags",
                         id = tag.StringId
                     }
                 }
             };
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            // @TODO - Use fixture
-            var builder = WebHost.CreateDefaultBuilder().UseStartup<TestStartup>();
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
+            var route = $"/api/v1/articles/{article.Id}/relationships/tags";
 
             // Act
-            var response = await client.SendAsync(request);
-
+            var (httpResponse, _) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
+            
             // Assert
-            var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.NoContent == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var persistedArticle = await dbContext.Articles
+                    .Include(a => a.ArticleTags)
+                    .FirstAsync(a => a.Id == article.Id);
 
-            _fixture.ReloadDbContext();
-            var persistedArticle = await _fixture.Context.Articles
-                .Include(a => a.ArticleTags)
-                .SingleAsync(a => a.Id == article.Id);
-
-            var persistedArticleTag = Assert.Single(persistedArticle.ArticleTags);
-            Assert.Equal(tag.Id, persistedArticleTag.TagId);
+                persistedArticle.ArticleTags.Should().BeEmpty();
+            });
         }
     }
 }
