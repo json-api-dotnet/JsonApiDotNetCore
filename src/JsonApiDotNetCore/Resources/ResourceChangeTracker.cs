@@ -95,5 +95,15 @@ namespace JsonApiDotNetCore.Resources
 
             return false;
         }
+
+        // TODO: Remove debugging code for analyzing flaky test.
+        public string DumpContents()
+        {
+            var requested = JsonConvert.SerializeObject(_requestedAttributeValues, Formatting.Indented);
+            var before = JsonConvert.SerializeObject(_initiallyStoredAttributeValues, Formatting.Indented);
+            var after = JsonConvert.SerializeObject(_finallyStoredAttributeValues, Formatting.Indented);
+
+            return $"Requested:\n{requested}\nBefore:\n{before}\nAfter:\n{after}";
+        }
     }
 }

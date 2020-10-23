@@ -98,62 +98,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Can_Create_Resource_With_HasManyThrough_Relationship()
-        {
-            // Arrange
-            var existingTag = _tagFaker.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Tags.Add(existingTag);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "articles",
-                    relationships = new
-                    {
-                        tags = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "tags",
-                                    id = existingTag.StringId
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/api/v1/articles";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
-
-            responseDocument.SingleData.Should().NotBeNull();
-            var newArticleId = int.Parse(responseDocument.SingleData.Id);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var articleInDatabase = await dbContext.Articles
-                    .Include(article => article.ArticleTags)
-                    .FirstAsync(article => article.Id == newArticleId);
-
-                articleInDatabase.ArticleTags.Should().HaveCount(1);
-                articleInDatabase.ArticleTags.First().TagId.Should().Be(existingTag.Id);
-            });
-        }
-
-        [Fact]
         public async Task Can_Set_HasManyThrough_Relationship_Through_Primary_Endpoint()
         {
             // Arrange

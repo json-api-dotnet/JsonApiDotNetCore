@@ -11,6 +11,9 @@ namespace JsonApiDotNetCoreExampleTests.Writing
         [Attr]
         public string Name { get; set; }
 
+        [Attr]
+        public bool IsPublic { get; set; }
+
         [NotMapped]
         [Attr]
         public Guid ConcurrencyToken { get; } = Guid.NewGuid();

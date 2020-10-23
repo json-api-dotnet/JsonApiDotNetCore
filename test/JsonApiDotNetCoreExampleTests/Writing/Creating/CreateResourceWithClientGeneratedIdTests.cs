@@ -71,7 +71,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         }
 
         [Fact]
-        public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects_and_fieldset()
+        public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects_with_fieldset()
         {
             // Arrange
             var group = WriteFakers.WorkItemGroup.Generate();

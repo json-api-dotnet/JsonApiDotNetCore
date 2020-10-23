@@ -140,7 +140,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Deleting
         }
 
         [Fact]
-        public async Task Cannot_delete_existing_resource_with_OneToMany_relationship()
+        public async Task Cannot_delete_existing_resource_with_HasMany_relationship()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
@@ -170,7 +170,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Deleting
         }
 
         [Fact]
-        public async Task Can_delete_resource_with_ManyToMany_relationship()
+        public async Task Can_delete_resource_with_HasManyThrough_relationship()
         {
             // Arrange
             var existingWorkItemTag = new WorkItemTag

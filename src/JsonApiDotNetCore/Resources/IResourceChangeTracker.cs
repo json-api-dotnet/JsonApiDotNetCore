@@ -29,5 +29,8 @@ namespace JsonApiDotNetCore.Resources
         /// <c>true</c> if the attribute values from the POST or PATCH request were the only changes; <c>false</c>, otherwise.
         /// </returns>
         bool HasImplicitChanges();
+
+        // TODO: Remove debugging code for analyzing flaky test.
+        string DumpContents();
     }
 }
