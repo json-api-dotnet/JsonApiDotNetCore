@@ -159,13 +159,14 @@ namespace JsonApiDotNetCore.Repositories
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             var relationship = _targetedFields.Relationships.Single();
-            var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
 
             if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
             {
                 // In the case of many-to-many relationships, creating a duplicate entry in the join table results in a uniqueness constraint violation.
-                await RemoveAlreadyRelatedResourcesFromAssignment(hasManyThroughRelationship, primaryResource.Id, secondaryResourceIds);
+                await RemoveAlreadyRelatedResourcesFromAssignment(hasManyThroughRelationship, id, secondaryResourceIds);
             }
+            
+            var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
 
             if (secondaryResourceIds.Any())
             {
@@ -243,7 +244,7 @@ namespace JsonApiDotNetCore.Repositories
 
             rightResources.ExceptWith(secondaryResourceIds);
             
-            // TODO: with introduction of HasManyAttribute.GetManyValue, I think we don't have to abstract away substraction of two sets any longer.
+            // TODO: with introduction of HasManyAttribute.GetManyValue, I think we don't have to abstract away subtraction of two sets any longer.
             // var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources, secondaryResourceIds);
 
             // todo: why has it been reverted to != again?
@@ -366,17 +367,22 @@ namespace JsonApiDotNetCore.Repositories
             // TODO: This is a no-go, because it loads the complete set of related entities, which can be massive.
             // Instead, it should only load the subset of related entities that is in secondaryResourceIds, and the deduce what still needs to be added.
             
-            // => What you're describing is not possible. We need filtered includes for that, which land in EF Core 5.
-
-            var primaryResource = await _dbContext.Set<TResource>()
-                // TODO: Why use AsNoTracking() here? We're not doing that anywhere else.
-                .AsNoTracking()
-                .Where(r => r.Id.Equals(primaryResourceId))
-                .Include(hasManyThroughRelationship.ThroughPropertyName)
-                .FirstAsync();
-
+            // => What you're describing is not possible because we cannot be sure that ArticleTags is defined as a DbSet on DbContext.
+            // We would need to load them through filtered includes, for which we need to wait for EF Core 5.
+            
+            var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(primaryResourceId));
+    
+            var navigationEntry = GetNavigationEntryForRelationship(hasManyThroughRelationship, primaryResource);
+            await navigationEntry.LoadAsync();
+            
             var existingRightResources = hasManyThroughRelationship.GetManyValue(primaryResource, _resourceFactory).ToHashSet(IdentifiableComparer.Instance);
             secondaryResourceIds.ExceptWith(existingRightResources);
+
+            _dbContext.Entry(primaryResource).State = EntityState.Detached;
+            foreach (var resource in existingRightResources)
+            {
+                _dbContext.Entry(resource).State = EntityState.Detached;
+            }
         }
 
         private NavigationEntry GetNavigationEntryForRelationship(RelationshipAttribute relationship, TResource resource)
