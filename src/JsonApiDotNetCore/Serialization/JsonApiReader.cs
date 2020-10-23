@@ -109,7 +109,7 @@ namespace JsonApiDotNetCore.Serialization
                 bool hasMissingId = model is IList list ? HasMissingId(list) : HasMissingId(model);
                 if (hasMissingId)
                 {
-                    throw new InvalidRequestBodyException("Payload must include 'id' element.", null, body);
+                    throw new InvalidRequestBodyException("Request body must include 'id' element.", null, body);
                 }
 
                 if (_request.Kind == EndpointKind.Primary && TryGetId(model, out var bodyId) && bodyId != _request.PrimaryId)
@@ -119,13 +119,13 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        /// <summary> Checks if the deserialized payload has an ID included </summary>
+        /// <summary> Checks if the deserialized request body has an ID included </summary>
         private bool HasMissingId(object model)
         {
             return TryGetId(model, out string id) && string.IsNullOrEmpty(id);
         }
 
-        /// <summary> Checks if all elements in the deserialized payload have an ID included </summary>
+        /// <summary> Checks if all elements in the deserialized request body have an ID included </summary>
         private bool HasMissingId(IEnumerable models)
         {
             foreach (var model in models)

@@ -160,7 +160,7 @@ namespace NoEntityFrameworkTests
             if (expected != response.StatusCode)
             {
                 var responseBody = response.Content.ReadAsStringAsync().Result;
-                Assert.True(false, $"Got {response.StatusCode} status code instead of {expected}. Payload: {responseBody}");
+                Assert.True(expected == response.StatusCode, $"Got {response.StatusCode} status code instead of {expected}. Response body: {responseBody}");
             }
         }
     }

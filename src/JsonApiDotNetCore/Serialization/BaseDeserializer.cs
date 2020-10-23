@@ -157,10 +157,8 @@ namespace JsonApiDotNetCore.Serialization
             var resourceContext = ResourceContextProvider.GetResourceContext(data.Type);
             if (resourceContext == null)
             {
-                throw new InvalidRequestBodyException("Payload includes unknown resource type.",
-                    $"The resource type '{data.Type}' is not registered on the resource graph. " +
-                    "If you are using Entity Framework Core, make sure the DbSet matches the expected resource name. " +
-                    "If you have manually registered the resource, check that the call to Add correctly sets the public name.", null);
+                throw new InvalidRequestBodyException("Request body includes unknown resource type.",
+                    $"Resource of type '{data.Type}' does not exist.", null);
             }
 
             var resource = ResourceFactory.CreateInstance(resourceContext.ResourceType);
@@ -292,7 +290,7 @@ namespace JsonApiDotNetCore.Serialization
                     ? $"Expected 'type' element in relationship '{relationship.PublicName}'."
                     : "Expected 'type' element in 'data' element.";
 
-                throw new InvalidRequestBodyException("Payload must include 'type' element.", details, null);
+                throw new InvalidRequestBodyException("Request body must include 'type' element.", details, null);
             }
         }
 
@@ -300,7 +298,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (resourceIdentifierObject.Id == null)
             {
-                throw new InvalidRequestBodyException("Payload must include 'id' element.",
+                throw new InvalidRequestBodyException("Request body must include 'id' element.",
                     $"Expected 'id' element in relationship '{relationship.PublicName}'.", null);
             }
         }

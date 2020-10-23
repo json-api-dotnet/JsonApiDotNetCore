@@ -227,7 +227,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload must include 'id' element.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Request body: <<");
         }
 
@@ -273,7 +273,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Respond_422_If_Broken_JSON_Payload()
+        public async Task Respond_422_If_Broken_JSON_Request_Body()
         {
             // Arrange
             var requestBody = "{ \"data\" {";

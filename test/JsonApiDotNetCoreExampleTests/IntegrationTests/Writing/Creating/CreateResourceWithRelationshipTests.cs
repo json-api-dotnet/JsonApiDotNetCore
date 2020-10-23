@@ -10,7 +10,8 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 {
-    public sealed class CreateResourceWithRelationshipTests : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
+    public sealed class CreateResourceWithRelationshipTests
+        : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> _testContext;
 
@@ -313,7 +314,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload must include 'type' element.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in relationship 'assignedTo'. - Request body: <<");
         }
 
@@ -349,7 +350,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload must include 'id' element.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in relationship 'assignedTo'. - Request body: <<");
         }
 
@@ -452,8 +453,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
                 var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
                 newWorkItemInDatabase.Subscribers.Should().HaveCount(2);
-                newWorkItemInDatabase.Subscribers.Should().ContainSingle(x => x.Id == existingUserAccounts[0].Id);
-                newWorkItemInDatabase.Subscribers.Should().ContainSingle(x => x.Id == existingUserAccounts[1].Id);
+                newWorkItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingUserAccounts[0].Id);
+                newWorkItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingUserAccounts[1].Id);
             });
         }
 
@@ -778,7 +779,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                         {
                             data = new
                             {
-                                type = "doesNotExists",
+                                type = "doesNotExist",
                                 id = "12345678"
                             }
                         }
@@ -844,7 +845,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload must include 'type' element.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in relationship 'subscribers'. - Request body: <<");
         }
 
@@ -883,7 +884,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload must include 'id' element.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in relationship 'subscribers'. - Request body: <<");
         }
 
