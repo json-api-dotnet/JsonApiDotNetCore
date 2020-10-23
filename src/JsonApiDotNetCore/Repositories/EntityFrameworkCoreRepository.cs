@@ -365,6 +365,8 @@ namespace JsonApiDotNetCore.Repositories
         {
             // TODO: This is a no-go, because it loads the complete set of related entities, which can be massive.
             // Instead, it should only load the subset of related entities that is in secondaryResourceIds, and the deduce what still needs to be added.
+            
+            // => What you're describing is not possible. We need filtered includes for that, which land in EF Core 5.
 
             var primaryResource = await _dbContext.Set<TResource>()
                 // TODO: Why use AsNoTracking() here? We're not doing that anywhere else.
@@ -457,22 +459,26 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        private static object TryGetValueForProperty(PropertyInfo propertyInfo)
+        private object TryGetValueForProperty(PropertyInfo propertyInfo)
         {
-            if (propertyInfo.PropertyType == typeof(string))
+            var propertyType = propertyInfo.PropertyType;
+            
+            if (propertyType == typeof(string))
             {
                 return string.Empty;
             }
 
-            if (Nullable.GetUnderlyingType(propertyInfo.PropertyType) != null)
+            if (Nullable.GetUnderlyingType(propertyType) != null)
             {
-                // TODO: This looks wrong -- we're returning a System.Type in this case.
-                // I would expect it needs to return the default value of the underlying type.
-                return propertyInfo.PropertyType.GetGenericArguments()[0];
+                var underlyingType = propertyInfo.PropertyType.GetGenericArguments()[0];
+
+                return Activator.CreateInstance(underlyingType);
             }
 
-            // TODO: I'm assuming that returning null for a non-nullable value type is okay here.
-            // If so, then we should throw in case we find a non-string reference type.
+            if (!propertyType.IsValueType)
+            {
+                throw new InvalidOperationException($"Unexpected reference type '{propertyType.Name}' for primary key property '{propertyInfo.Name}'.");
+            }
 
             return null;
         }

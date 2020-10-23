@@ -91,11 +91,15 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         private List<ResourceIdentifierObject> GetRelatedResourceLinkageForHasMany(HasManyAttribute relationship, IIdentifiable resource)
         {
-            var relatedResources = (IEnumerable)relationship.GetValue(resource);
+            var relatedResources = relationship.GetManyValue(resource);
             var manyData = new List<ResourceIdentifierObject>();
             if (relatedResources != null)
-                foreach (IIdentifiable relatedResource in relatedResources)
+            {
+                foreach (var relatedResource in relatedResources)
+                {
                     manyData.Add(GetResourceIdentifier(relatedResource));
+                }
+            }
 
             return manyData;
         }

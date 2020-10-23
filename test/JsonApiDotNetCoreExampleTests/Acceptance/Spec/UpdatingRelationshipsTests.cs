@@ -953,6 +953,57 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
+        public async Task Can_Non_Existing_Resources_From_ToMany_Relationship_Through_Relationship_Endpoint_Without_Failing()
+        {
+            // Arrange
+            var existingPerson = _personFaker.Generate();
+            existingPerson.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(existingPerson);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "todoItems",
+                        id = "9998"
+                    },
+                    new
+                    {
+                        type = "todoItems",
+                        id = "9999"
+                    }
+                }
+            };
+
+            var route = $"/api/v1/people/{existingPerson.StringId}/relationships/todoItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var personInDatabase = await dbContext.People
+                    .Include(p => p.TodoItems)
+                    .Where(p => p.Id == existingPerson.Id)
+                    .FirstAsync();
+
+                personInDatabase.TodoItems.Should().HaveCount(3);
+            });
+        }
+        
+        [Fact]
         public async Task Fails_When_Patching_On_Primary_Endpoint_With_Missing_Secondary_Resources()
         {
             // Arrange
