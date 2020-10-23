@@ -114,8 +114,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
             
             // The resouceFactory argument needs to be an optional param independent of this method calling it.
             // In should actually be the responsibility of the relationship attribute to know whether to use the resource factory or not,
-            // but this is tedious because we're of it being attributes rather than having a meta abstraction.
-            // We can consider work around it with a static internal setter.
+            // instead of the caller passing it along. But this is hard because we're working with attributes rather than having a meta abstraction / service
+            // We can consider working around it with a static internal setter.
 
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
@@ -134,14 +134,12 @@ namespace JsonApiDotNetCore.Resources.Annotations
         {
             // TODO: This method contains surprising code: Instead of returning the contents of a collection,
             // it modifies data and performs logic that is highly specific to what EntityFrameworkCoreRepository needs.
-            //     => The whole point is that we cannot return the contents of the through entity collection. We must first perform a projection.
-            //     The new bit does not add anything new that is specific to EF Core only. Instead, the added bit is only 
-            //     specific to JADNC. It is useful because only including Article.ArticleTag rather than Article.ArticleTag.Tag is the equivalent
+            //     => We cannot around this logic and data modification: we must perform a transformation of this collection before returning it.
+            //     The added bit is only an extension of this. It is not EF Core specific but JADNC specific.
+            //     I think it is relevant because only including Article.ArticleTag rather than Article.ArticleTag.Tag is the equivalent
             //     of having a primary ID only projection on the secondary resource.
-            //
-            //     Also, what data modification/logic are you referring to?
             // This method is not reusable at all, it should not be concerned if resources are loaded, so should be moved into the caller instead.
-            //     => It is actually being reused several times already.
+            //     => There are already some cases of it being reused
             // After moving the code, the unneeded copying into new collections multiple times can be removed too.
             //     => I don't think we can. There is no guarantee that a dev uses the same collection type for the join entities and right resource collections.
             
@@ -154,8 +152,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
             
             // Even if the right resources aren't loaded, we can still construct identifier objects using the ID set on the through entity.
             var rightResources = rightResourcesAreLoaded
-                ? throughEntities.Select(te => RightProperty.GetValue(te)).Cast<IIdentifiable>()
-                : throughEntities.Select(te => CreateRightResourceWithId(te, resourceFactory));
+                ? throughEntities.Select(e => RightProperty.GetValue(e)).Cast<IIdentifiable>()
+                : throughEntities.Select(e => CreateRightResourceWithId(e, resourceFactory));
 
             return (IEnumerable<IIdentifiable>)TypeHelper.CopyToTypedCollection(rightResources, Property.PropertyType);
         }
