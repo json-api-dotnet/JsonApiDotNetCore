@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.Writing
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
 {
     public sealed class WorkItemGroup : Identifiable<Guid>
     {

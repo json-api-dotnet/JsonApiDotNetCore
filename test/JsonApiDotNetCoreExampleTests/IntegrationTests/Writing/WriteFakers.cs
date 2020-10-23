@@ -1,6 +1,6 @@
 using Bogus;
 
-namespace JsonApiDotNetCoreExampleTests.Writing
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
 {
     internal static class WriteFakers
     {

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.Writing
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
 {
     public sealed class WriteDbContext : DbContext
     {

@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.Writing
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
 {
     public sealed class UserAccountsController : JsonApiController<UserAccount, long>
     {

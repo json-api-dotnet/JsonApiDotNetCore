@@ -3,12 +3,11 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.Writing.Deleting
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
 {
     public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {

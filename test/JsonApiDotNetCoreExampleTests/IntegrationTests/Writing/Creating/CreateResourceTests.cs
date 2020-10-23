@@ -6,12 +6,11 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.Writing.Creating
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 {
     public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
