@@ -212,14 +212,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         {
             // Arrange
             var existingUserAccount = WriteFakers.UserAccount.Generate();
+            var workItem = WriteFakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.UserAccounts.Add(existingUserAccount);
                 await dbContext.SaveChangesAsync();
             });
-
-            var workItem = WriteFakers.WorkItem.Generate();
 
             var requestBody = new
             {
@@ -678,14 +677,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         {
             // Arrange
             var existingTags = WriteFakers.WorkTags.Generate(3);
+            var workItemToCreate = WriteFakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.WorkTags.AddRange(existingTags);
                 await dbContext.SaveChangesAsync();
             });
-
-            var workItem = WriteFakers.WorkItem.Generate();
 
             var requestBody = new
             {
@@ -694,8 +692,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     type = "workItems",
                     attributes = new
                     {
-                        description = workItem.Description,
-                        priority = workItem.Priority
+                        description = workItemToCreate.Description,
+                        priority = workItemToCreate.Priority
                     },
                     relationships = new
                     {
@@ -734,7 +732,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["priority"].Should().Be(workItem.Priority.ToString("G"));
+            responseDocument.SingleData.Attributes["priority"].Should().Be(workItemToCreate.Priority.ToString("G"));
 
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
             

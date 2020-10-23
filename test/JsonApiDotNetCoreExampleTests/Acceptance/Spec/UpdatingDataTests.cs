@@ -505,7 +505,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = todoItem.Owner.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        ["firstName"] = "#John",
+                        ["firstName"] = "John",
                         ["lastName"] = "Doe"
                     }
                 }
@@ -520,7 +520,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["firstName"].Should().Be("#John");
+            responseDocument.SingleData.Attributes["firstName"].Should().Be("John");
             responseDocument.SingleData.Attributes["lastName"].Should().Be("Doe");
             responseDocument.SingleData.Relationships.Should().ContainKey("todoItems");
             responseDocument.SingleData.Relationships["todoItems"].Data.Should().BeNull();

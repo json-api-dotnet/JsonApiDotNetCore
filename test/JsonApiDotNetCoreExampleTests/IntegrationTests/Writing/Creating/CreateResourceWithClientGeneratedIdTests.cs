@@ -173,6 +173,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             var existingColor = WriteFakers.RgbColor.Generate();
             existingColor.Id = "#FFFFFF";
 
+            var colorToCreate = WriteFakers.RgbColor.Generate();
+            colorToCreate.Id = existingColor.Id;
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<RgbColor>();
@@ -181,18 +184,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 await dbContext.SaveChangesAsync();
             });
 
-            var color = WriteFakers.RgbColor.Generate();
-            color.Id = existingColor.Id;
-
             var requestBody = new
             {
                 data = new
                 {
                     type = "rgbColors",
-                    id = color.StringId,
+                    id = colorToCreate.StringId,
                     attributes = new
                     {
-                        displayName = color.DisplayName
+                        displayName = colorToCreate.DisplayName
                     }
                 }
             };
