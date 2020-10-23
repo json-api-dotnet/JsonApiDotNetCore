@@ -953,7 +953,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Can_Non_Existing_Resources_From_ToMany_Relationship_Through_Relationship_Endpoint_Without_Failing()
+        public async Task Can_Remove_Non_Existing_Resources_From_ToMany_Relationship_Through_Relationship_Endpoint()
         {
             // Arrange
             var existingPerson = _personFaker.Generate();
@@ -972,12 +972,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     new
                     {
                         type = "todoItems",
-                        id = "9998"
+                        id = "88888888"
                     },
                     new
                     {
                         type = "todoItems",
-                        id = "9999"
+                        id = "99999999"
                     }
                 }
             };
