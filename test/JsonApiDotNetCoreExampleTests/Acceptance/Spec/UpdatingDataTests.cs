@@ -483,8 +483,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         // TODO: Add test(s) that save a relationship, then return its data via include.
-        
-        // TODO: This test is flaky.
+
         [Fact]
         public async Task Patch_Resource_With_HasMany_Does_Not_Include_Relationships()
         {
@@ -506,7 +505,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = todoItem.Owner.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        ["firstName"] = "John",
+                        ["firstName"] = "#John",
                         ["lastName"] = "Doe"
                     }
                 }
@@ -515,26 +514,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = "/api/v1/people/" + todoItem.Owner.StringId;
 
             // Act
-            //var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
-            var (httpResponse, responseText) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
-            try
-            {
-                // Assert
-                httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-                var responseDocument = JsonConvert.DeserializeObject<Document>(responseText);
-
-                responseDocument.SingleData.Should().NotBeNull();
-                responseDocument.SingleData.Attributes["firstName"].Should().Be("John");
-                responseDocument.SingleData.Attributes["lastName"].Should().Be("Doe");
-                responseDocument.SingleData.Relationships.Should().ContainKey("todoItems");
-                responseDocument.SingleData.Relationships["todoItems"].Data.Should().BeNull();
-            }
-            catch (Exception exception)
-            {
-                throw new Exception("Flaky test failed with response status " + (int)httpResponse.StatusCode + " and body: <<" + responseText + ">>", exception);
-            }
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["firstName"].Should().Be("#John");
+            responseDocument.SingleData.Attributes["lastName"].Should().Be("Doe");
+            responseDocument.SingleData.Relationships.Should().ContainKey("todoItems");
+            responseDocument.SingleData.Relationships["todoItems"].Data.Should().BeNull();
         }
 
         [Fact]

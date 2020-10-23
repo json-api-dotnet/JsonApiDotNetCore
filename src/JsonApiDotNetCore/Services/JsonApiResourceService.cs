@@ -268,26 +268,6 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {id, resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-
-            // TODO: Remove debugging code for analyzing flaky test.
-            bool isFlakyTest = false;
-            var httpContext = new HttpContextAccessor().HttpContext;
-            if (httpContext.Request.GetDisplayUrl().StartsWith("http://localhost/api/v1/people/"))
-            {
-                var firstNameProperty = resource.GetType().GetProperty("FirstName");
-                var lastNameProperty = resource.GetType().GetProperty("LastName");
-
-                if (firstNameProperty != null && lastNameProperty != null)
-                {
-                    if ((string) firstNameProperty.GetValue(resource) == "John" &&
-                        (string) lastNameProperty.GetValue(resource) == "Doe")
-                    {
-                        isFlakyTest = true;
-                    }
-                }
-            }
-
-
             var resourceFromRequest = resource;
             _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
 
@@ -321,16 +301,6 @@ namespace JsonApiDotNetCore.Services
             _resourceChangeTracker.SetFinallyStoredAttributeValues(afterResourceFromDatabase);
 
             bool hasImplicitChanges = _resourceChangeTracker.HasImplicitChanges();
-
-
-            // TODO: Remove debugging code for analyzing flaky test.
-            if (isFlakyTest && !hasImplicitChanges)
-            {
-                string trackerData = _resourceChangeTracker.DumpContents();
-                throw new Exception("Detected failing flaky test. Tracker data: " + trackerData);
-            }
-            
-
             return hasImplicitChanges ? afterResourceFromDatabase : null;
         }
 
