@@ -145,14 +145,13 @@ namespace JsonApiDotNetCore.Resources.Annotations
             // After moving the code, the unneeded copying into new collections multiple times can be removed too.
             //     => I don't think we can. There is no guarantee that a dev uses the same collection type for the join entities and right resource collections.
             
-
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
             var value = ThroughProperty.GetValue(resource);
 
             var throughEntities = value == null ? Array.Empty<object>() : ((IEnumerable)value).Cast<object>().ToArray();
             var rightResourcesAreLoaded =  throughEntities.Any() && RightProperty.GetValue(throughEntities.First()) != null;
-
+            
             // Even if the right resources aren't loaded, we can still construct identifier objects using the ID set on the through entity.
             var rightResources = rightResourcesAreLoaded
                 ? throughEntities.Select(te => RightProperty.GetValue(te)).Cast<IIdentifiable>()
@@ -163,6 +162,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
 
         private IIdentifiable CreateRightResourceWithId(object throughEntity, IResourceFactory resourceFactory)
         {
+            if (resourceFactory == null) throw new ArgumentNullException(nameof(resourceFactory));
+
             var rightResource = resourceFactory.CreateInstance(RightType);
             rightResource.StringId = RightIdProperty.GetValue(throughEntity)!.ToString();
 
