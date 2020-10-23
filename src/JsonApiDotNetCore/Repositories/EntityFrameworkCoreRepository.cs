@@ -238,7 +238,7 @@ namespace JsonApiDotNetCore.Repositories
 
             await EnableCompleteReplacement(relationship, primaryResource);
             
-            var rightResources = relationship.GetManyValue(primaryResource, _resourceFactory).ToHashSet(IdentifiableComparer.Instance);
+            var rightResources = relationship.GetManyValue(primaryResource).ToHashSet(IdentifiableComparer.Instance);
             var currentRightResourcesCount = rightResources.Count;
 
             rightResources.ExceptWith(secondaryResourceIds);
@@ -375,7 +375,7 @@ namespace JsonApiDotNetCore.Repositories
                 .Include(hasManyThroughRelationship.ThroughPropertyName)
                 .FirstAsync();
 
-            var existingRightResources = hasManyThroughRelationship.GetManyValue(primaryResource, _resourceFactory).ToHashSet(IdentifiableComparer.Instance);
+            var existingRightResources = hasManyThroughRelationship.GetManyValue(primaryResource).ToHashSet(IdentifiableComparer.Instance);
             secondaryResourceIds.ExceptWith(existingRightResources);
         }
 

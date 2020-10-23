@@ -1,5 +1,7 @@
 using System;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -42,6 +44,9 @@ namespace JsonApiDotNetCore.Configuration
             };
 
             builder.UseMiddleware<JsonApiMiddleware>();
+
+            var resourceFactory = builder.ApplicationServices.GetRequiredService<IResourceFactory>();
+            HasManyThroughAttribute.ResourceFactory = resourceFactory;
         }
     }
 }

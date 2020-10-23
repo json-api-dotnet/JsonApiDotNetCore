@@ -43,6 +43,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class HasManyThroughAttribute : HasManyAttribute
     {
+        internal static IResourceFactory ResourceFactory { get; set; }
+    
         /// <summary>
         /// The name of the join property on the parent resource.
         /// In the example described above, this would be "ArticleTags".
@@ -115,7 +117,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
             // The resouceFactory argument needs to be an optional param independent of this method calling it.
             // In should actually be the responsibility of the relationship attribute to know whether to use the resource factory or not,
             // instead of the caller passing it along. But this is hard because we're working with attributes rather than having a meta abstraction / service
-            // We can consider working around it with a static internal setter.
+            
+            // We can consider working around it with a static internal setter. I have coded it like this right now as a draft.
 
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
@@ -130,7 +133,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
             
         }
 
-        internal override IEnumerable<IIdentifiable> GetManyValue(object resource, IResourceFactory resourceFactory = null)
+        internal override IEnumerable<IIdentifiable> GetManyValue(object resource)
         {
             // TODO: This method contains surprising code: Instead of returning the contents of a collection,
             // it modifies data and performs logic that is highly specific to what EntityFrameworkCoreRepository needs.
@@ -153,16 +156,14 @@ namespace JsonApiDotNetCore.Resources.Annotations
             // Even if the right resources aren't loaded, we can still construct identifier objects using the ID set on the through entity.
             var rightResources = rightResourcesAreLoaded
                 ? throughEntities.Select(e => RightProperty.GetValue(e)).Cast<IIdentifiable>()
-                : throughEntities.Select(e => CreateRightResourceWithId(e, resourceFactory));
+                : throughEntities.Select(CreateRightResourceWithId);
 
             return (IEnumerable<IIdentifiable>)TypeHelper.CopyToTypedCollection(rightResources, Property.PropertyType);
         }
 
-        private IIdentifiable CreateRightResourceWithId(object throughEntity, IResourceFactory resourceFactory)
+        private IIdentifiable CreateRightResourceWithId(object throughEntity)
         {
-            if (resourceFactory == null) throw new ArgumentNullException(nameof(resourceFactory));
-
-            var rightResource = resourceFactory.CreateInstance(RightType);
+            var rightResource = ResourceFactory.CreateInstance(RightType);
             rightResource.StringId = RightIdProperty.GetValue(throughEntity)!.ToString();
 
             return rightResource;
