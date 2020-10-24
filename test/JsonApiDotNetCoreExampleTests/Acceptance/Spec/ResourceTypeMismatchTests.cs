@@ -90,7 +90,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 data = new[]
                 {
                     new { type = "todoItems", id = 1 },
-                    new { type = "articles", id = 2 },
+                    new { type = "articles", id = 2 }
                 }
             });
 

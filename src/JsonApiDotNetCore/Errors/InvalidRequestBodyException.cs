@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Errors
             {
                 Title = reason != null
                     ? "Failed to deserialize request body: " + reason
-                    : "Failed to deserialize request body.",
+                    : "Failed to deserialize request body."
             }, innerException)
         {
             _details = details;

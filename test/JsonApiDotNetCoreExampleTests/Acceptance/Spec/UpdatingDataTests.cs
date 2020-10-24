@@ -349,7 +349,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = person.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        ["lastName"] = "Johnson",
+                        ["lastName"] = "Johnson"
                     }
                 }
             };

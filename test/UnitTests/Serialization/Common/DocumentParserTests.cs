@@ -28,7 +28,7 @@ namespace UnitTests.Serialization.Deserializer
                 Data = new ResourceObject
                 {
                     Type = "testResource",
-                    Id = "1",
+                    Id = "1"
                 }
             };
             var body = JsonConvert.SerializeObject(content);
@@ -65,7 +65,7 @@ namespace UnitTests.Serialization.Deserializer
                     new ResourceObject
                     {
                         Type = "testResource",
-                        Id = "1",
+                        Id = "1"
                     }
                 }
             };
