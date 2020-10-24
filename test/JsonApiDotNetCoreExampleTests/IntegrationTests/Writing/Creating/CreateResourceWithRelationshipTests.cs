@@ -887,7 +887,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         }
 
         [Fact]
-        public async Task Cannot_create_resource_for_unknown_HasMany_relationship_ID()
+        public async Task Cannot_create_resource_for_unknown_HasMany_relationship_IDs()
         {
             // Arrange
             var requestBody = new
@@ -905,6 +905,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                                 {
                                     type = "workItems",
                                     id = "12345678"
+                                },
+                                new
+                                {
+                                    type = "workItems",
+                                    id = "87654321"
                                 }
                             }
                         }
@@ -920,10 +925,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.Should().HaveCount(2);
+
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
             responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'workItems' with ID '12345678' being assigned to relationship 'assignedItems' does not exist.");
+
+            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[1].Title.Should().Be("A resource being assigned to a relationship does not exist.");
+            responseDocument.Errors[1].Detail.Should().StartWith("Resource of type 'workItems' with ID '87654321' being assigned to relationship 'assignedItems' does not exist.");
         }
 
         [Fact]
