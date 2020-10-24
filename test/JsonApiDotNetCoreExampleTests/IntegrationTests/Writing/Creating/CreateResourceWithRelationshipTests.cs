@@ -1018,9 +1018,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 newWorkItemInDatabase.AssignedTo.Should().NotBeNull();
                 newWorkItemInDatabase.AssignedTo.Id.Should().Be(existingUserAccounts[0].Id);
                 newWorkItemInDatabase.Subscribers.Should().HaveCount(1);
-                newWorkItemInDatabase.Subscribers.ElementAt(0).Id.Should().Be(existingUserAccounts[1].Id);
+                newWorkItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccounts[1].Id);
                 newWorkItemInDatabase.WorkItemTags.Should().HaveCount(1);
-                newWorkItemInDatabase.WorkItemTags.ElementAt(0).Tag.Id.Should().Be(existingTag.Id);
+                newWorkItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingTag.Id);
             });
         }
     }

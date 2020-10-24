@@ -8,26 +8,26 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relationships
 {
-    public sealed class AddToToManyRelationshipTests
+    public sealed class RemoveFromToManyRelationshipTests
         : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> _testContext;
 
-        public AddToToManyRelationshipTests(IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> testContext)
+        public RemoveFromToManyRelationshipTests(IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> testContext)
         {
             _testContext = testContext;
         }
 
         [Fact]
-        public async Task Cannot_add_to_HasOne_relationship()
+        public async Task Cannot_remove_from_HasOne_relationship()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
-            var existingUserAccount = WriteFakers.UserAccount.Generate();
+            existingWorkItem.AssignedTo = WriteFakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AddRange(existingWorkItem, existingUserAccount);
+                dbContext.WorkItems.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     new
                     {
                         type = "userAccounts",
-                        id = existingUserAccount.StringId
+                        id = existingWorkItem.AssignedTo.StringId
                     }
                 }
             };
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
@@ -58,17 +58,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact]
-        public async Task Can_add_to_HasMany_relationship()
+        public async Task Can_remove_from_HasMany_relationship()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
             existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(2).ToHashSet();
 
-            var existingSubscriber = WriteFakers.UserAccount.Generate();
-
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AddRange(existingWorkItem, existingSubscriber);
+                await dbContext.ClearTableAsync<UserAccount>();
+                dbContext.WorkItems.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -79,7 +78,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     new
                     {
                         type = "userAccounts",
-                        id = existingSubscriber.StringId
+                        id = existingWorkItem.Subscribers.ElementAt(0).StringId
                     }
                 }
             };
@@ -87,7 +86,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -101,15 +100,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     .Where(workItem => workItem.Id == existingWorkItem.Id)
                     .FirstAsync();
 
-                workItemInDatabase.Subscribers.Should().HaveCount(3);
-                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingWorkItem.Subscribers.ElementAt(0).Id);
-                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingWorkItem.Subscribers.ElementAt(1).Id);
-                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingSubscriber.Id);
+                workItemInDatabase.Subscribers.Should().HaveCount(1);
+                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
+
+                var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
+                userAccountsInDatabase.Should().HaveCount(2);
             });
         }
 
         [Fact]
-        public async Task Can_add_to_HasManyThrough_relationship()
+        public async Task Can_remove_from_HasManyThrough_relationship()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
@@ -118,15 +118,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 new WorkItemTag
                 {
                     Tag = WriteFakers.WorkTags.Generate()
+                },
+                new WorkItemTag
+                {
+                    Tag = WriteFakers.WorkTags.Generate()
+                },
+                new WorkItemTag
+                {
+                    Tag = WriteFakers.WorkTags.Generate()
                 }
             };
 
-            var existingTags = WriteFakers.WorkTags.Generate(2);
-
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                await dbContext.ClearTableAsync<WorkTag>();
                 dbContext.WorkItems.Add(existingWorkItem);
-                dbContext.WorkTags.AddRange(existingTags);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -137,12 +143,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     new
                     {
                         type = "workTags",
-                        id = existingTags[0].StringId
+                        id = existingWorkItem.WorkItemTags.ElementAt(0).Tag.StringId
                     },
                     new
                     {
                         type = "workTags",
-                        id = existingTags[1].StringId
+                        id = existingWorkItem.WorkItemTags.ElementAt(1).Tag.StringId
                     }
                 }
             };
@@ -150,7 +156,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -165,18 +171,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     .Where(workItem => workItem.Id == existingWorkItem.Id)
                     .FirstAsync();
 
-                workItemInDatabase.WorkItemTags.Should().HaveCount(3);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingWorkItem.WorkItemTags.ElementAt(0).Tag.Id);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[0].Id);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[1].Id);
+                workItemInDatabase.WorkItemTags.Should().HaveCount(1);
+                workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingWorkItem.WorkItemTags.ElementAt(2).Tag.Id);
+
+                var tagsInDatabase = await dbContext.WorkTags.ToListAsync();
+                tagsInDatabase.Should().HaveCount(3);
             });
         }
 
         [Fact]
-        public async Task Cannot_add_for_missing_type()
+        public async Task Cannot_remove_for_missing_type()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -190,7 +198,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 {
                     new
                     {
-                        id = 99999999
+                        id = existingWorkItem.Subscribers.ElementAt(0).StringId
                     }
                 }
             };
@@ -198,7 +206,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
@@ -210,7 +218,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact]
-        public async Task Cannot_add_for_unknown_type()
+        public async Task Cannot_remove_for_unknown_type()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
@@ -236,7 +244,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
@@ -248,7 +256,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
-        public async Task Cannot_add_for_missing_ID()
+        public async Task Cannot_remove_for_missing_ID()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
@@ -273,7 +281,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
@@ -284,8 +292,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in 'data' element. - Request body: <<");
         }
 
-        [Fact]
-        public async Task Cannot_add_for_unknown_IDs()
+        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        public async Task Cannot_remove_unknown_IDs_from_HasMany_relationship()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
@@ -316,7 +324,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -324,24 +332,72 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(2);
 
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'userAccounts' with ID '88888888' being assigned to relationship 'subscribers' does not exist.");
+            responseDocument.Errors[0].Title.Should().Be("A resource being removed from a relationship does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'userAccounts' with ID '88888888' being removed from relationship 'subscribers' does not exist.");
 
             responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[1].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[1].Detail.Should().Be("Resource of type 'userAccounts' with ID '99999999' being assigned to relationship 'subscribers' does not exist.");
+            responseDocument.Errors[1].Title.Should().Be("A resource being removed from a relationship does not exist.");
+            responseDocument.Errors[1].Detail.Should().Be("Resource of type 'userAccounts' with ID '99999999' being removed from relationship 'subscribers' does not exist.");
         }
 
-        [Fact]
-        public async Task Cannot_add_to_unknown_resource_type_in_url()
+        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        public async Task Cannot_remove_unknown_IDs_from_HasManyThrough_relationship()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
-            var existingSubscriber = WriteFakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AddRange(existingWorkItem, existingSubscriber);
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "workTags",
+                        id = 88888888
+                    },
+                    new
+                    {
+                        type = "workTags",
+                        id = 99999999
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            responseDocument.Errors.Should().HaveCount(2);
+
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[0].Title.Should().Be("A resource being removed from a relationship does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'workTags' with ID '88888888' being removed from relationship 'tags' does not exist.");
+
+            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[1].Title.Should().Be("A resource being removed from a relationship does not exist.");
+            responseDocument.Errors[1].Detail.Should().Be("Resource of type 'workTags' with ID '99999999' being removed from relationship 'tags' does not exist.");
+        }
+
+        [Fact]
+        public async Task Cannot_remove_from_unknown_resource_type_in_url()
+        {
+            // Arrange
+            var existingWorkItem = WriteFakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(1).ToHashSet();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -352,7 +408,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     new
                     {
                         type = "userAccounts",
-                        id = existingSubscriber.StringId
+                        id = existingWorkItem.Subscribers.ElementAt(0).StringId
                     }
                 }
             };
@@ -360,7 +416,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             var route = $"/doesNotExist/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -368,16 +424,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Should().BeEmpty();
         }
 
-        [Fact]
-        public async Task Cannot_add_to_unknown_resource_ID_in_url()
+        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        public async Task Cannot_remove_from_unknown_resource_ID_in_url()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
-            var existingSubscriber = WriteFakers.UserAccount.Generate();
+            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AddRange(existingWorkItem, existingSubscriber);
+                dbContext.WorkItems.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -388,7 +444,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     new
                     {
                         type = "userAccounts",
-                        id = existingSubscriber.StringId
+                        id = existingWorkItem.Subscribers.ElementAt(0).StringId
                     }
                 }
             };
@@ -396,7 +452,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             var route = "/workItems/99999999/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -408,7 +464,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact]
-        public async Task Cannot_add_to_unknown_relationship_in_url()
+        public async Task Cannot_remove_from_unknown_relationship_in_url()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
@@ -434,7 +490,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             var route = $"/workItems/{existingWorkItem.StringId}/relationships/doesNotExist";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -445,47 +501,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named 'doesNotExist'.");
         }
 
-        [Fact]
-        public async Task Cannot_add_for_relationship_mismatch_between_url_and_body()
-        {
-            // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            var existingSubscriber = WriteFakers.UserAccount.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddRange(existingWorkItem, existingSubscriber);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingSubscriber.StringId
-                    }
-                }
-            };
-
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
-
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Conflict);
-            responseDocument.Errors[0].Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
-            responseDocument.Errors[0].Detail.Should().Be($"Expected resource of type 'workTags' in POST request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
-        }
-
-        [Fact]
-        public async Task Can_add_already_attached_resource()
+        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        public async Task Cannot_remove_for_relationship_mismatch_between_url_and_body()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
@@ -509,10 +526,56 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 }
             };
 
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Conflict);
+            responseDocument.Errors[0].Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
+            responseDocument.Errors[0].Detail.Should().Be($"Expected resource of type 'workTags' in DELETE request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
+        }
+
+        [Fact]
+        public async Task Can_remove_from_HasMany_relationship_with_unrelated_existing_resource()
+        {
+            // Arrange
+            var existingWorkItem = WriteFakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(2).ToHashSet();
+            var existingSubscriber = WriteFakers.UserAccount.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<UserAccount>();
+                dbContext.AddRange(existingWorkItem, existingSubscriber);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "userAccounts",
+                        id = existingSubscriber.StringId
+                    },
+                    new
+                    {
+                        type = "userAccounts",
+                        id = existingWorkItem.Subscribers.ElementAt(0).StringId
+                    }
+                }
+            };
+
             var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -527,22 +590,91 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     .FirstAsync();
 
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
-                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(0).Id);
+                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
+
+                var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
+                userAccountsInDatabase.Should().HaveCount(3);
             });
         }
 
         [Fact]
-        public async Task Can_add_to_HasMany_relationship_with_already_attached_resources()
+        public async Task Can_remove_from_HasManyThrough_relationship_with_unrelated_existing_resource()
+        {
+            // Arrange
+            var existingWorkItem = WriteFakers.WorkItem.Generate();
+            existingWorkItem.WorkItemTags = new[]
+            {
+                new WorkItemTag
+                {
+                    Tag = WriteFakers.WorkTags.Generate()
+                },
+                new WorkItemTag
+                {
+                    Tag = WriteFakers.WorkTags.Generate()
+                }
+            };
+            var existingTag = WriteFakers.WorkTags.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<WorkTag>();
+                dbContext.AddRange(existingWorkItem, existingTag);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "workTags",
+                        id = existingWorkItem.WorkItemTags.ElementAt(1).Tag.StringId
+                    },
+                    new
+                    {
+                        type = "workTags",
+                        id = existingTag.StringId
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.WorkItemTags)
+                    .ThenInclude(workItemTag => workItemTag.Tag)
+                    .Where(workItem => workItem.Id == existingWorkItem.Id)
+                    .FirstAsync();
+
+                workItemInDatabase.WorkItemTags.Should().HaveCount(1);
+                workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingWorkItem.WorkItemTags.ElementAt(0).Tag.Id);
+
+                var tagsInDatabase = await dbContext.WorkTags.ToListAsync();
+                tagsInDatabase.Should().HaveCount(3);
+            });
+        }
+
+        [Fact]
+        public async Task Can_remove_with_duplicates()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
             existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(2).ToHashSet();
 
-            var existingSubscriber = WriteFakers.UserAccount.Generate();
-
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AddRange(existingWorkItem, existingSubscriber);
+                dbContext.WorkItems.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -558,12 +690,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     new
                     {
                         type = "userAccounts",
-                        id = existingWorkItem.Subscribers.ElementAt(1).StringId
-                    },
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingSubscriber.StringId
+                        id = existingWorkItem.Subscribers.ElementAt(0).StringId
                     }
                 }
             };
@@ -571,123 +698,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Subscribers)
-                    .Where(workItem => workItem.Id == existingWorkItem.Id)
-                    .FirstAsync();
-
-                workItemInDatabase.Subscribers.Should().HaveCount(3);
-                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingWorkItem.Subscribers.ElementAt(0).Id);
-                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingWorkItem.Subscribers.ElementAt(1).Id);
-                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingSubscriber.Id);
-            });
-        }
-
-        [Fact]
-        public async Task Can_add_to_HasManyThrough_relationship_with_already_attached_resource()
-        {
-            // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            existingWorkItem.WorkItemTags = new[]
-            {
-                new WorkItemTag
-                {
-                    Tag = WriteFakers.WorkTags.Generate()
-                }
-            };
-
-            var existingTag = WriteFakers.WorkTags.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddRange(existingWorkItem, existingTag);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "workTags",
-                        id = existingWorkItem.WorkItemTags.ElementAt(0).Tag.StringId
-                    },
-                    new
-                    {
-                        type = "workTags",
-                        id = existingTag.StringId
-                    }
-                }
-            };
-
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.WorkItemTags)
-                    .ThenInclude(workItemTag => workItemTag.Tag)
-                    .Where(workItem => workItem.Id == existingWorkItem.Id)
-                    .FirstAsync();
-
-                workItemInDatabase.WorkItemTags.Should().HaveCount(2);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingWorkItem.WorkItemTags.ElementAt(0).Tag.Id);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTag.Id);
-            });
-        }
-
-        [Fact]
-        public async Task Can_add_with_duplicates()
-        {
-            // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            var existingSubscriber = WriteFakers.UserAccount.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddRange(existingWorkItem, existingSubscriber);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingSubscriber.StringId
-                    },
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingSubscriber.StringId
-                    }
-                }
-            };
-
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -702,15 +713,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     .FirstAsync();
 
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
-                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingSubscriber.Id);
+                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
             });
         }
 
         [Fact]
-        public async Task Can_add_with_empty_list()
+        public async Task Can_remove_with_empty_list()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -740,7 +752,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     .Where(workItem => workItem.Id == existingWorkItem.Id)
                     .FirstAsync();
 
-                workItemInDatabase.Subscribers.Should().HaveCount(0);
+                workItemInDatabase.Subscribers.Should().HaveCount(1);
+                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(0).Id);
             });
         }
     }
