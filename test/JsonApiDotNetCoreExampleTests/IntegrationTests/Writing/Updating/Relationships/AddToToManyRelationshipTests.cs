@@ -285,7 +285,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact]
-        public async Task Cannot_add_for_unknown_IDs()
+        public async Task Cannot_add_unknown_IDs_to_HasMany_relationship()
         {
             // Arrange
             var existingWorkItem = WriteFakers.WorkItem.Generate();
@@ -330,6 +330,54 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[1].Title.Should().Be("A resource being assigned to a relationship does not exist.");
             responseDocument.Errors[1].Detail.Should().Be("Resource of type 'userAccounts' with ID '99999999' being assigned to relationship 'subscribers' does not exist.");
+        }
+
+        [Fact]
+        public async Task Cannot_add_unknown_IDs_to_HasManyThrough_relationship()
+        {
+            // Arrange
+            var existingWorkItem = WriteFakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "workTags",
+                        id = 88888888
+                    },
+                    new
+                    {
+                        type = "workTags",
+                        id = 99999999
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            responseDocument.Errors.Should().HaveCount(2);
+
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'workTags' with ID '88888888' being assigned to relationship 'tags' does not exist.");
+
+            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[1].Title.Should().Be("A resource being assigned to a relationship does not exist.");
+            responseDocument.Errors[1].Detail.Should().Be("Resource of type 'workTags' with ID '99999999' being assigned to relationship 'tags' does not exist.");
         }
 
         [Fact]
@@ -482,53 +530,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Conflict);
             responseDocument.Errors[0].Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
             responseDocument.Errors[0].Detail.Should().Be($"Expected resource of type 'workTags' in POST request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
-        }
-
-        [Fact]
-        public async Task Can_add_already_attached_resource()
-        {
-            // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(1).ToHashSet();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WorkItems.Add(existingWorkItem);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingWorkItem.Subscribers.ElementAt(0).StringId
-                    }
-                }
-            };
-
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Subscribers)
-                    .Where(workItem => workItem.Id == existingWorkItem.Id)
-                    .FirstAsync();
-
-                workItemInDatabase.Subscribers.Should().HaveCount(1);
-                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(0).Id);
-            });
         }
 
         [Fact]
