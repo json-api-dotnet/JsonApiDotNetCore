@@ -220,7 +220,10 @@ namespace JsonApiDotNetCore.Serialization
                 || foreignKey.PropertyType == typeof(string);
             if (id == null && !foreignKeyPropertyIsNullableType)
             {
-                // this happens when a non-optional relationship is deliberately set to null.
+                // TODO: FormatException does not look like the right exception type here.
+                // I would expect such constraints to be checked in the ResourceService layer instead.
+
+                // This happens when a non-optional relationship is deliberately set to null.
                 // For a server deserializer, it should be mapped to a BadRequest HTTP error code.
                 throw new FormatException($"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
             }
