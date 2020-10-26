@@ -85,8 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 var todoItemInDatabase = await dbContext.TodoItems
                     .Include(item => item.ChildrenTodos)
-                    .Where(item => item.Id == todoItem.Id)
-                    .FirstAsync();
+                    .FirstAsync(item => item.Id == todoItem.Id);
 
                 todoItemInDatabase.ChildrenTodos.Should().HaveCount(2);
                 todoItemInDatabase.ChildrenTodos.Should().ContainSingle(x => x.Id == todoItem.Id);
@@ -138,8 +137,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 var todoItemInDatabase = await dbContext.TodoItems
                     .Include(item => item.DependentOnTodo)
-                    .Where(item => item.Id == todoItem.Id)
-                    .FirstAsync();
+                    .FirstAsync(item => item.Id == todoItem.Id);
 
                 todoItemInDatabase.DependentOnTodoId.Should().Be(todoItem.Id);
             });
@@ -206,8 +204,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 var todoItemInDatabase = await dbContext.TodoItems
                     .Include(item => item.ParentTodo)
-                    .Where(item => item.Id == todoItem.Id)
-                    .FirstAsync();
+                    .FirstAsync(item => item.Id == todoItem.Id);
 
                 todoItemInDatabase.ParentTodoId.Should().Be(todoItem.Id);
             });
@@ -347,8 +344,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 var todoCollectionInDatabase = await dbContext.TodoItemCollections
                     .Include(collection => collection.TodoItems)
-                    .Where(collection => collection.Id == todoCollection.Id)
-                    .FirstAsync();
+                    .FirstAsync(collection => collection.Id == todoCollection.Id);
 
                 todoCollectionInDatabase.TodoItems.Should().HaveCount(2);
             });
@@ -395,8 +391,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 var todoItemInDatabase = await dbContext.TodoItems
                     .Include(item => item.Owner)
-                    .Where(item => item.Id == todoItem.Id)
-                    .FirstAsync();
+                    .FirstAsync(item => item.Id == todoItem.Id);
 
                 todoItemInDatabase.Owner.Should().BeNull();
             });
@@ -447,8 +442,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 var todoItemInDatabase = await dbContext.TodoItems
                     .Include(item => item.Owner)
-                    .Where(item => item.Id == todoItem.Id)
-                    .FirstAsync();
+                    .FirstAsync(item => item.Id == todoItem.Id);
 
                 todoItemInDatabase.Owner.Should().NotBeNull();
                 todoItemInDatabase.Owner.Id.Should().Be(person.Id);
@@ -501,8 +495,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 var personInDatabase = await dbContext.People
                     .Include(p => p.TodoItems)
-                    .Where(p => p.Id == person.Id)
-                    .FirstAsync();
+                    .FirstAsync(p => p.Id == person.Id);
 
                 personInDatabase.TodoItems.Should().BeEmpty();
             });
@@ -609,8 +602,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 var personInDatabase = await dbContext.People
                     .Include(p => p.TodoItems)
-                    .Where(p => p.Id == person.Id)
-                    .FirstAsync();
+                    .FirstAsync(p => p.Id == person.Id);
 
                 personInDatabase.TodoItems.Should().HaveCount(1);
                 personInDatabase.TodoItems.ElementAt(0).Id.Should().Be(otherTodoItem.Id);

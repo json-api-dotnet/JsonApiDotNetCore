@@ -98,8 +98,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .Where(workItem => workItem.Id == existingWorkItem.Id)
-                    .FirstAsync();
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
@@ -169,8 +168,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.WorkItemTags)
                     .ThenInclude(workItemTag => workItemTag.Tag)
-                    .Where(workItem => workItem.Id == existingWorkItem.Id)
-                    .FirstAsync();
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
 
                 workItemInDatabase.WorkItemTags.Should().HaveCount(1);
                 workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingWorkItem.WorkItemTags.ElementAt(2).Tag.Id);
@@ -587,8 +585,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .Where(workItem => workItem.Id == existingWorkItem.Id)
-                    .FirstAsync();
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
@@ -655,8 +652,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.WorkItemTags)
                     .ThenInclude(workItemTag => workItemTag.Tag)
-                    .Where(workItem => workItem.Id == existingWorkItem.Id)
-                    .FirstAsync();
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
 
                 workItemInDatabase.WorkItemTags.Should().HaveCount(1);
                 workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingWorkItem.WorkItemTags.ElementAt(0).Tag.Id);
@@ -710,8 +706,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .Where(workItem => workItem.Id == existingWorkItem.Id)
-                    .FirstAsync();
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
@@ -750,8 +745,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .Where(workItem => workItem.Id == existingWorkItem.Id)
-                    .FirstAsync();
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(0).Id);
