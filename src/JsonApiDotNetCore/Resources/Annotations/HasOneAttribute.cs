@@ -42,6 +42,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             if (resourceFactory == null) throw new ArgumentNullException(nameof(resourceFactory));
 
+            // TODO: Given recent changes, does the following code still need access to foreign keys, or can this be handled by the caller now?
+
             // If we're deleting the relationship (setting it to null), we set the foreignKey to null.
             // We could also set the actual property to null, but then we would first need to load the
             // current relationship, which requires an extra query.

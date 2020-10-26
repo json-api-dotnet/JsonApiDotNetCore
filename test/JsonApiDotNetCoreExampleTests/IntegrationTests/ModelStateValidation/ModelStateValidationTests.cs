@@ -826,8 +826,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 var directoryInDatabase = await dbContext.Directories
                     .Include(d => d.Parent)
-                    .Where(d => d.Id == directory.Id)
-                    .FirstAsync();
+                    .FirstAsync(d => d.Id == directory.Id);
 
                 directoryInDatabase.Parent.Id.Should().Be(otherParent.Id);
             });

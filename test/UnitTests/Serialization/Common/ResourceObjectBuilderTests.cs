@@ -91,7 +91,7 @@ namespace UnitTests.Serialization.Serializer
             // Arrange
             var resource = new MultipleRelationshipsPrincipalPart
             {
-                PopulatedToOne = new OneToOneDependent { Id = 10 },
+                PopulatedToOne = new OneToOneDependent { Id = 10 }
             };
 
             // Act

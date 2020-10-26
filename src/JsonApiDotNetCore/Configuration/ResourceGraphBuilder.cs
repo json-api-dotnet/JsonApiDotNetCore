@@ -107,7 +107,7 @@ namespace JsonApiDotNetCore.Configuration
             IdentityType = idType,
             Attributes = GetAttributes(resourceType),
             Relationships = GetRelationships(resourceType),
-            EagerLoads = GetEagerLoads(resourceType),
+            EagerLoads = GetEagerLoads(resourceType)
         };
 
         private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)

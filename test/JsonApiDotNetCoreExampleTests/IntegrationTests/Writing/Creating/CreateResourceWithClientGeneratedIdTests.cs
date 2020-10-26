@@ -6,16 +6,17 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.Writing.Creating
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 {
-    public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
+    public sealed class CreateResourceWithClientGeneratedIdTests
+        : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> _testContext;
+        private readonly WriteFakers _fakers = new WriteFakers();
 
         public CreateResourceWithClientGeneratedIdTests(IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> testContext)
         {
@@ -29,7 +30,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects()
         {
             // Arrange
-            var group = WriteFakers.WorkItemGroup.Generate();
+            var group = _fakers.WorkItemGroup.Generate();
             group.Id = Guid.NewGuid();
 
             var requestBody = new
@@ -74,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects_with_fieldset()
         {
             // Arrange
-            var group = WriteFakers.WorkItemGroup.Generate();
+            var group = _fakers.WorkItemGroup.Generate();
             group.Id = Guid.NewGuid();
 
             var requestBody = new
@@ -120,11 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_client_generated_string_ID_having_no_side_effects()
         {
             // Arrange
-            var color = new RgbColor
-            {
-                Id = "#FF0000",
-                DisplayName = "Red"
-            };
+            var color = _fakers.RgbColor.Generate();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -170,8 +167,10 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Cannot_create_resource_for_existing_client_generated_ID()
         {
             // Arrange
-            var existingColor = WriteFakers.RgbColor.Generate();
-            existingColor.Id = "#FFFFFF";
+            var existingColor = _fakers.RgbColor.Generate();
+
+            var colorToCreate = _fakers.RgbColor.Generate();
+            colorToCreate.Id = existingColor.Id;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -181,18 +180,15 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
                 await dbContext.SaveChangesAsync();
             });
 
-            var color = WriteFakers.RgbColor.Generate();
-            color.Id = existingColor.Id;
-
             var requestBody = new
             {
                 data = new
                 {
                     type = "rgbColors",
-                    id = color.StringId,
+                    id = colorToCreate.StringId,
                     attributes = new
                     {
-                        displayName = color.DisplayName
+                        displayName = colorToCreate.DisplayName
                     }
                 }
             };

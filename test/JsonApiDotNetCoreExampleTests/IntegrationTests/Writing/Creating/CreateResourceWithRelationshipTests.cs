@@ -4,16 +4,17 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.Writing.Creating
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 {
-    public sealed class CreateResourceWithRelationshipTests : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
+    public sealed class CreateResourceWithRelationshipTests
+        : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> _testContext;
+        private readonly WriteFakers _fakers = new WriteFakers();
 
         public CreateResourceWithRelationshipTests(IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> testContext)
         {
@@ -27,8 +28,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_OneToOne_relationship_from_principal_side()
         {
             // Arrange
-            var existingGroup = WriteFakers.WorkItemGroup.Generate();
-            existingGroup.Color = WriteFakers.RgbColor.Generate();
+            var existingGroup = _fakers.WorkItemGroup.Generate();
+            existingGroup.Color = _fakers.RgbColor.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -85,11 +86,11 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         }
 
         [Fact]
-        public async Task Can_create_resource_with_OneToOne_relationship_from_dependent_side_with_implicit_remove()
+        public async Task Can_create_resource_with_OneToOne_relationship_from_dependent_side()
         {
             // Arrange
-            var existingColor = WriteFakers.RgbColor.Generate();
-            existingColor.Group = WriteFakers.WorkItemGroup.Generate();
+            var existingColor = _fakers.RgbColor.Generate();
+            existingColor.Group = _fakers.WorkItemGroup.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -148,7 +149,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_HasOne_relationship_with_include()
         {
             // Arrange
-            var existingUserAccount = WriteFakers.UserAccount.Generate();
+            var existingUserAccount = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -211,15 +212,14 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_HasOne_relationship_with_include_and_primary_fieldset()
         {
             // Arrange
-            var existingUserAccount = WriteFakers.UserAccount.Generate();
+            var existingUserAccount = _fakers.UserAccount.Generate();
+            var workItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.UserAccounts.Add(existingUserAccount);
                 await dbContext.SaveChangesAsync();
             });
-
-            var workItem = WriteFakers.WorkItem.Generate();
 
             var requestBody = new
             {
@@ -314,7 +314,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload must include 'type' element.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in relationship 'assignedTo'. - Request body: <<");
         }
 
@@ -350,7 +350,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload must include 'id' element.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in relationship 'assignedTo'. - Request body: <<");
         }
 
@@ -395,7 +395,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_HasMany_relationship()
         {
             // Arrange
-            var existingUserAccounts = WriteFakers.UserAccount.Generate(2);
+            var existingUserAccounts = _fakers.UserAccount.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -453,8 +453,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
 
                 var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
                 newWorkItemInDatabase.Subscribers.Should().HaveCount(2);
-                newWorkItemInDatabase.Subscribers.Should().ContainSingle(x => x.Id == existingUserAccounts[0].Id);
-                newWorkItemInDatabase.Subscribers.Should().ContainSingle(x => x.Id == existingUserAccounts[1].Id);
+                newWorkItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingUserAccounts[0].Id);
+                newWorkItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingUserAccounts[1].Id);
             });
         }
 
@@ -462,7 +462,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_HasMany_relationship_with_include()
         {
             // Arrange
-            var existingUserAccounts = WriteFakers.UserAccount.Generate(2);
+            var existingUserAccounts = _fakers.UserAccount.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -535,7 +535,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_HasMany_relationship_with_include_and_secondary_fieldset()
         {
             // Arrange
-            var existingUserAccounts = WriteFakers.UserAccount.Generate(2);
+            var existingUserAccounts = _fakers.UserAccount.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -608,7 +608,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_duplicate_HasMany_relationships()
         {
             // Arrange
-            var existingUserAccount = WriteFakers.UserAccount.Generate();
+            var existingUserAccount = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -677,15 +677,14 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_HasManyThrough_relationship_with_include_and_fieldsets()
         {
             // Arrange
-            var existingTags = WriteFakers.WorkTags.Generate(3);
+            var existingTags = _fakers.WorkTags.Generate(3);
+            var workItemToCreate = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.WorkTags.AddRange(existingTags);
                 await dbContext.SaveChangesAsync();
             });
-
-            var workItem = WriteFakers.WorkItem.Generate();
 
             var requestBody = new
             {
@@ -694,8 +693,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
                     type = "workItems",
                     attributes = new
                     {
-                        description = workItem.Description,
-                        priority = workItem.Priority
+                        description = workItemToCreate.Description,
+                        priority = workItemToCreate.Priority
                     },
                     relationships = new
                     {
@@ -734,7 +733,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["priority"].Should().Be(workItem.Priority.ToString("G"));
+            responseDocument.SingleData.Attributes["priority"].Should().Be(workItemToCreate.Priority.ToString("G"));
 
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
             
@@ -779,7 +778,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
                         {
                             data = new
                             {
-                                type = "doesNotExists",
+                                type = "doesNotExist",
                                 id = "12345678"
                             }
                         }
@@ -845,7 +844,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload must include 'type' element.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in relationship 'subscribers'. - Request body: <<");
         }
 
@@ -884,12 +883,12 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload must include 'id' element.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in relationship 'subscribers'. - Request body: <<");
         }
 
         [Fact]
-        public async Task Cannot_create_resource_for_unknown_HasMany_relationship_ID()
+        public async Task Cannot_create_resource_for_unknown_HasMany_relationship_IDs()
         {
             // Arrange
             var requestBody = new
@@ -907,6 +906,11 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
                                 {
                                     type = "workItems",
                                     id = "12345678"
+                                },
+                                new
+                                {
+                                    type = "workItems",
+                                    id = "87654321"
                                 }
                             }
                         }
@@ -922,18 +926,23 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.Should().HaveCount(2);
+
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
             responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'workItems' with ID '12345678' being assigned to relationship 'assignedItems' does not exist.");
+
+            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[1].Title.Should().Be("A resource being assigned to a relationship does not exist.");
+            responseDocument.Errors[1].Detail.Should().StartWith("Resource of type 'workItems' with ID '87654321' being assigned to relationship 'assignedItems' does not exist.");
         }
 
         [Fact]
         public async Task Can_create_resource_with_multiple_relationship_types()
         {
             // Arrange
-            var existingUserAccounts = WriteFakers.UserAccount.Generate(2);
-            var existingTag = WriteFakers.WorkTags.Generate();
+            var existingUserAccounts = _fakers.UserAccount.Generate(2);
+            var existingTag = _fakers.WorkTags.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1010,9 +1019,9 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
                 newWorkItemInDatabase.AssignedTo.Should().NotBeNull();
                 newWorkItemInDatabase.AssignedTo.Id.Should().Be(existingUserAccounts[0].Id);
                 newWorkItemInDatabase.Subscribers.Should().HaveCount(1);
-                newWorkItemInDatabase.Subscribers.ElementAt(0).Id.Should().Be(existingUserAccounts[1].Id);
+                newWorkItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccounts[1].Id);
                 newWorkItemInDatabase.WorkItemTags.Should().HaveCount(1);
-                newWorkItemInDatabase.WorkItemTags.ElementAt(0).Tag.Id.Should().Be(existingTag.Id);
+                newWorkItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingTag.Id);
             });
         }
     }

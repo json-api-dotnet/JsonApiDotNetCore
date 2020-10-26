@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -13,7 +12,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
@@ -227,7 +225,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload must include 'id' element.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Request body: <<");
         }
 
@@ -273,7 +271,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Respond_422_If_Broken_JSON_Payload()
+        public async Task Respond_422_If_Broken_JSON_Request_Body()
         {
             // Arrange
             var requestBody = "{ \"data\" {";
@@ -351,7 +349,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = person.StringId,
                     attributes = new Dictionary<string, object>
                     {
-                        ["lastName"] = "Johnson",
+                        ["lastName"] = "Johnson"
                     }
                 }
             };
@@ -483,8 +481,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         // TODO: Add test(s) that save a relationship, then return its data via include.
-        
-        // TODO: This test is flaky.
+
         [Fact]
         public async Task Patch_Resource_With_HasMany_Does_Not_Include_Relationships()
         {
@@ -515,26 +512,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = "/api/v1/people/" + todoItem.Owner.StringId;
 
             // Act
-            //var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
-            var (httpResponse, responseText) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
-            try
-            {
-                // Assert
-                httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-                var responseDocument = JsonConvert.DeserializeObject<Document>(responseText);
-
-                responseDocument.SingleData.Should().NotBeNull();
-                responseDocument.SingleData.Attributes["firstName"].Should().Be("John");
-                responseDocument.SingleData.Attributes["lastName"].Should().Be("Doe");
-                responseDocument.SingleData.Relationships.Should().ContainKey("todoItems");
-                responseDocument.SingleData.Relationships["todoItems"].Data.Should().BeNull();
-            }
-            catch (Exception exception)
-            {
-                throw new Exception("Flaky test failed with response status " + (int)httpResponse.StatusCode + " and body: <<" + responseText + ">>", exception);
-            }
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["firstName"].Should().Be("John");
+            responseDocument.SingleData.Attributes["lastName"].Should().Be("Doe");
+            responseDocument.SingleData.Relationships.Should().ContainKey("todoItems");
+            responseDocument.SingleData.Relationships["todoItems"].Data.Should().BeNull();
         }
 
         [Fact]

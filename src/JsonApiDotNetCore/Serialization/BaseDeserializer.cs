@@ -53,22 +53,20 @@ namespace JsonApiDotNetCore.Serialization
 
             var bodyJToken = LoadJToken(body);
             Document = bodyJToken.ToObject<Document>();
-            if (Document.IsManyData)
+            if (Document != null)
             {
-                if (Document.ManyData.Count == 0)
+                if (Document.IsManyData)
                 {
-                    return new HashSet<IIdentifiable>();
+                    return Document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
                 }
 
-                return Document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
+                if (Document.SingleData != null)
+                {
+                    return ParseResourceObject(Document.SingleData);
+                }
             }
 
-            if (Document.SingleData == null)
-            {
-                return null;
-            }
-
-            return ParseResourceObject(Document.SingleData);
+            return null;
         }
 
         /// <summary>
@@ -160,10 +158,8 @@ namespace JsonApiDotNetCore.Serialization
             var resourceContext = ResourceContextProvider.GetResourceContext(data.Type);
             if (resourceContext == null)
             {
-                throw new InvalidRequestBodyException("Payload includes unknown resource type.",
-                    $"The resource type '{data.Type}' is not registered on the resource graph. " +
-                    "If you are using Entity Framework Core, make sure the DbSet matches the expected resource name. " +
-                    "If you have manually registered the resource, check that the call to Add correctly sets the public name.", null);
+                throw new InvalidRequestBodyException("Request body includes unknown resource type.",
+                    $"Resource of type '{data.Type}' does not exist.", null);
             }
 
             var resource = ResourceFactory.CreateInstance(resourceContext.ResourceType);
@@ -225,7 +221,10 @@ namespace JsonApiDotNetCore.Serialization
                 || foreignKey.PropertyType == typeof(string);
             if (id == null && !foreignKeyPropertyIsNullableType)
             {
-                // this happens when a non-optional relationship is deliberately set to null.
+                // TODO: FormatException does not look like the right exception type here.
+                // I would expect such constraints to be checked in the ResourceService layer instead.
+
+                // This happens when a non-optional relationship is deliberately set to null.
                 // For a server deserializer, it should be mapped to a BadRequest HTTP error code.
                 throw new FormatException($"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
             }
@@ -295,7 +294,7 @@ namespace JsonApiDotNetCore.Serialization
                     ? $"Expected 'type' element in relationship '{relationship.PublicName}'."
                     : "Expected 'type' element in 'data' element.";
 
-                throw new InvalidRequestBodyException("Payload must include 'type' element.", details, null);
+                throw new InvalidRequestBodyException("Request body must include 'type' element.", details, null);
             }
         }
 
@@ -303,7 +302,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (resourceIdentifierObject.Id == null)
             {
-                throw new InvalidRequestBodyException("Payload must include 'id' element.",
+                throw new InvalidRequestBodyException("Request body must include 'id' element.",
                     $"Expected 'id' element in relationship '{relationship.PublicName}'.", null);
             }
         }

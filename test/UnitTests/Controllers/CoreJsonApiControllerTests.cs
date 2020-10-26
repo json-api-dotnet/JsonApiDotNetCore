@@ -23,7 +23,7 @@ namespace UnitTests
             {
                 new Error(HttpStatusCode.OK) {Title = "weird"},
                 new Error(HttpStatusCode.BadRequest) {Title = "bad"},
-                new Error(HttpStatusCode.UnprocessableEntity) {Title = "bad specific"},
+                new Error(HttpStatusCode.UnprocessableEntity) {Title = "bad specific"}
             };
 
             var errors500 = new List<Error>
@@ -32,7 +32,7 @@ namespace UnitTests
                 new Error(HttpStatusCode.BadRequest) {Title = "bad"},
                 new Error(HttpStatusCode.UnprocessableEntity) {Title = "bad specific"},
                 new Error(HttpStatusCode.InternalServerError) {Title = "really bad"},
-                new Error(HttpStatusCode.BadGateway) {Title = "really bad specific"},
+                new Error(HttpStatusCode.BadGateway) {Title = "really bad specific"}
             };
             
             // Act

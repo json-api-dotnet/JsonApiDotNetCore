@@ -1,4 +1,4 @@
-namespace JsonApiDotNetCoreExampleTests.Writing
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
 {
     public sealed class WorkItemTag
     {

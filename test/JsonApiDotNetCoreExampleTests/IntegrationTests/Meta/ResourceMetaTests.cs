@@ -60,7 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             {
                 TodoItems = new HashSet<TodoItem>
                 {
-                    new TodoItem {Id = 1, Description = "Important: Pay the bills"},
+                    new TodoItem {Id = 1, Description = "Important: Pay the bills"}
                 }
             };
 

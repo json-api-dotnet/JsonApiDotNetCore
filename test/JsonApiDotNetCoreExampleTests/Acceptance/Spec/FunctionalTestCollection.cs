@@ -87,9 +87,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
         protected void AssertEqualStatusCode(HttpStatusCode expected, HttpResponseMessage response)
         {
-            var content = response.Content.ReadAsStringAsync();
-            content.Wait();
-            Assert.True(expected == response.StatusCode, $"Got {response.StatusCode} status code with payload instead of {expected}. Payload: {content.Result}");
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            Assert.True(expected == response.StatusCode, $"Got {response.StatusCode} status code instead of {expected}. Response body: {responseBody}");
         }
 
         protected void ClearDbContext()

@@ -3,16 +3,17 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.Writing.Deleting
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
 {
-    public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
+    public sealed class DeleteResourceTests
+        : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> _testContext;
+        private readonly WriteFakers _fakers = new WriteFakers();
 
         public DeleteResourceTests(IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> testContext)
         {
@@ -23,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Deleting
         public async Task Can_delete_existing_resource()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
+            var existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -73,8 +74,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Deleting
         public async Task Can_delete_resource_with_OneToOne_relationship_from_dependent_side()
         {
             // Arrange
-            var existingColor = WriteFakers.RgbColor.Generate();
-            existingColor.Group = WriteFakers.WorkItemGroup.Generate();
+            var existingColor = _fakers.RgbColor.Generate();
+            existingColor.Group = _fakers.WorkItemGroup.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -113,8 +114,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Deleting
         public async Task Cannot_delete_existing_resource_with_OneToOne_relationship_from_principal_side()
         {
             // Arrange
-            var existingGroup = WriteFakers.WorkItemGroup.Generate();
-            existingGroup.Color = WriteFakers.RgbColor.Generate();
+            var existingGroup = _fakers.WorkItemGroup.Generate();
+            existingGroup.Color = _fakers.RgbColor.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -143,8 +144,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Deleting
         public async Task Cannot_delete_existing_resource_with_HasMany_relationship()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(2).ToHashSet();
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -175,8 +176,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Deleting
             // Arrange
             var existingWorkItemTag = new WorkItemTag
             {
-                Item = WriteFakers.WorkItem.Generate(),
-                Tag = WriteFakers.WorkTags.Generate()
+                Item = _fakers.WorkItem.Generate(),
+                Tag = _fakers.WorkTags.Generate()
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

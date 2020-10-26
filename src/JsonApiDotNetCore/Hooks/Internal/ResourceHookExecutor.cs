@@ -353,7 +353,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             if (!implicitAffected.Any()) return;
             var inverse = implicitAffected.ToDictionary(kvp => _resourceGraph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
             var resourcesByRelationship = CreateRelationshipHelper(resourceTypeToInclude, inverse);
-            CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { resourcesByRelationship, pipeline, });
+            CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { resourcesByRelationship, pipeline});
         }
 
         /// <summary>

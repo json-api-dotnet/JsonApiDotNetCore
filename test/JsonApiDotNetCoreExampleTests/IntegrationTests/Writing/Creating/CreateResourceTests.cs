@@ -6,16 +6,17 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.Writing.Creating
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 {
-    public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
+    public sealed class CreateResourceTests
+        : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> _testContext;
+        private readonly WriteFakers _fakers = new WriteFakers();
 
         public CreateResourceTests(IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> testContext)
         {
@@ -30,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Sets_location_header_for_created_resource()
         {
             // Arrange
-            var workItem = WriteFakers.WorkItem.Generate();
+            var workItem = _fakers.WorkItem.Generate();
 
             var requestBody = new
             {
@@ -63,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_int_ID()
         {
             // Arrange
-            var workItem = WriteFakers.WorkItem.Generate();
+            var workItem = _fakers.WorkItem.Generate();
             workItem.DueAt = null;
 
             var requestBody = new
@@ -113,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_long_ID()
         {
             // Arrange
-            var userAccount = WriteFakers.UserAccount.Generate();
+            var userAccount = _fakers.UserAccount.Generate();
 
             var requestBody = new
             {
@@ -163,7 +164,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_guid_ID()
         {
             // Arrange
-            var group = WriteFakers.WorkItemGroup.Generate();
+            var group = _fakers.WorkItemGroup.Generate();
 
             var requestBody = new
             {
@@ -256,7 +257,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
         public async Task Can_create_resource_with_unknown_attribute()
         {
             // Arrange
-            var workItem = WriteFakers.WorkItem.Generate();
+            var workItem = _fakers.WorkItem.Generate();
 
             var requestBody = new
             {
@@ -351,7 +352,7 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload must include 'type' element.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
         }
 
@@ -380,8 +381,8 @@ namespace JsonApiDotNetCoreExampleTests.Writing.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Payload includes unknown resource type.");
-            responseDocument.Errors[0].Detail.Should().StartWith("The resource type 'doesNotExist' is not registered on the resource graph.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist.");
             responseDocument.Errors[0].Detail.Should().Contain("Request body: <<");
         }
 
