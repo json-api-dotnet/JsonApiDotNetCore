@@ -85,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         }
 
         [Fact]
-        public async Task Can_create_resource_with_OneToOne_relationship_from_dependent_side_with_implicit_remove()
+        public async Task Can_create_resource_with_OneToOne_relationship_from_dependent_side()
         {
             // Arrange
             var existingColor = WriteFakers.RgbColor.Generate();
