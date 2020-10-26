@@ -12,6 +12,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> _testContext;
+        private readonly WriteFakers _fakers = new WriteFakers();
 
         public RemoveFromToManyRelationshipTests(IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> testContext)
         {
@@ -22,8 +23,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Cannot_remove_from_HasOne_relationship()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            existingWorkItem.AssignedTo = WriteFakers.UserAccount.Generate();
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.AssignedTo = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -61,8 +62,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Can_remove_from_HasMany_relationship()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(2).ToHashSet();
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -112,20 +113,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Can_remove_from_HasManyThrough_relationship()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
+            var existingWorkItem = _fakers.WorkItem.Generate();
             existingWorkItem.WorkItemTags = new[]
             {
                 new WorkItemTag
                 {
-                    Tag = WriteFakers.WorkTags.Generate()
+                    Tag = _fakers.WorkTags.Generate()
                 },
                 new WorkItemTag
                 {
-                    Tag = WriteFakers.WorkTags.Generate()
+                    Tag = _fakers.WorkTags.Generate()
                 },
                 new WorkItemTag
                 {
-                    Tag = WriteFakers.WorkTags.Generate()
+                    Tag = _fakers.WorkTags.Generate()
                 }
             };
 
@@ -183,8 +184,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Cannot_remove_for_missing_type()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(1).ToHashSet();
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -221,7 +222,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Cannot_remove_for_unknown_type()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
+            var existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -259,7 +260,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Cannot_remove_for_missing_ID()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
+            var existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -296,7 +297,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Cannot_remove_unknown_IDs_from_HasMany_relationship()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
+            var existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -344,7 +345,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Cannot_remove_unknown_IDs_from_HasManyThrough_relationship()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
+            var existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -392,8 +393,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Cannot_remove_from_unknown_resource_type_in_url()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(1).ToHashSet();
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -428,8 +429,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Cannot_remove_from_unknown_resource_ID_in_url()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(1).ToHashSet();
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -467,7 +468,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Cannot_remove_from_unknown_relationship_in_url()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
+            var existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -505,8 +506,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Cannot_remove_for_relationship_mismatch_between_url_and_body()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(1).ToHashSet();
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -544,9 +545,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Can_remove_from_HasMany_relationship_with_unrelated_existing_resource()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(2).ToHashSet();
-            var existingSubscriber = WriteFakers.UserAccount.Generate();
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
+            var existingSubscriber = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -601,19 +602,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Can_remove_from_HasManyThrough_relationship_with_unrelated_existing_resource()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
+            var existingWorkItem = _fakers.WorkItem.Generate();
             existingWorkItem.WorkItemTags = new[]
             {
                 new WorkItemTag
                 {
-                    Tag = WriteFakers.WorkTags.Generate()
+                    Tag = _fakers.WorkTags.Generate()
                 },
                 new WorkItemTag
                 {
-                    Tag = WriteFakers.WorkTags.Generate()
+                    Tag = _fakers.WorkTags.Generate()
                 }
             };
-            var existingTag = WriteFakers.WorkTags.Generate();
+            var existingTag = _fakers.WorkTags.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -669,8 +670,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Can_remove_with_duplicates()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(2).ToHashSet();
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -721,8 +722,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Can_remove_with_empty_list()
         {
             // Arrange
-            var existingWorkItem = WriteFakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = WriteFakers.UserAccount.Generate(1).ToHashSet();
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

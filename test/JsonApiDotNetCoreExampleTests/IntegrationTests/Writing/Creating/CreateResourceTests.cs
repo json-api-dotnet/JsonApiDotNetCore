@@ -16,6 +16,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> _testContext;
+        private readonly WriteFakers _fakers = new WriteFakers();
 
         public CreateResourceTests(IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> testContext)
         {
@@ -30,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Sets_location_header_for_created_resource()
         {
             // Arrange
-            var workItem = WriteFakers.WorkItem.Generate();
+            var workItem = _fakers.WorkItem.Generate();
 
             var requestBody = new
             {
@@ -63,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_int_ID()
         {
             // Arrange
-            var workItem = WriteFakers.WorkItem.Generate();
+            var workItem = _fakers.WorkItem.Generate();
             workItem.DueAt = null;
 
             var requestBody = new
@@ -113,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_long_ID()
         {
             // Arrange
-            var userAccount = WriteFakers.UserAccount.Generate();
+            var userAccount = _fakers.UserAccount.Generate();
 
             var requestBody = new
             {
@@ -163,7 +164,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_guid_ID()
         {
             // Arrange
-            var group = WriteFakers.WorkItemGroup.Generate();
+            var group = _fakers.WorkItemGroup.Generate();
 
             var requestBody = new
             {
@@ -256,7 +257,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_unknown_attribute()
         {
             // Arrange
-            var workItem = WriteFakers.WorkItem.Generate();
+            var workItem = _fakers.WorkItem.Generate();
 
             var requestBody = new
             {

@@ -16,6 +16,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> _testContext;
+        private readonly WriteFakers _fakers = new WriteFakers();
 
         public CreateResourceWithClientGeneratedIdTests(IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> testContext)
         {
@@ -29,7 +30,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects()
         {
             // Arrange
-            var group = WriteFakers.WorkItemGroup.Generate();
+            var group = _fakers.WorkItemGroup.Generate();
             group.Id = Guid.NewGuid();
 
             var requestBody = new
@@ -74,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects_with_fieldset()
         {
             // Arrange
-            var group = WriteFakers.WorkItemGroup.Generate();
+            var group = _fakers.WorkItemGroup.Generate();
             group.Id = Guid.NewGuid();
 
             var requestBody = new
@@ -120,11 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_client_generated_string_ID_having_no_side_effects()
         {
             // Arrange
-            var color = new RgbColor
-            {
-                Id = "#FF0000",
-                DisplayName = "Red"
-            };
+            var color = _fakers.RgbColor.Generate();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -170,10 +167,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Cannot_create_resource_for_existing_client_generated_ID()
         {
             // Arrange
-            var existingColor = WriteFakers.RgbColor.Generate();
-            existingColor.Id = "#FFFFFF";
+            var existingColor = _fakers.RgbColor.Generate();
 
-            var colorToCreate = WriteFakers.RgbColor.Generate();
+            var colorToCreate = _fakers.RgbColor.Generate();
             colorToCreate.Id = existingColor.Id;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

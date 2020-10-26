@@ -14,6 +14,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> _testContext;
+        private readonly WriteFakers _fakers = new WriteFakers();
 
         public CreateResourceWithRelationshipTests(IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> testContext)
         {
@@ -27,8 +28,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_OneToOne_relationship_from_principal_side()
         {
             // Arrange
-            var existingGroup = WriteFakers.WorkItemGroup.Generate();
-            existingGroup.Color = WriteFakers.RgbColor.Generate();
+            var existingGroup = _fakers.WorkItemGroup.Generate();
+            existingGroup.Color = _fakers.RgbColor.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -88,8 +89,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_OneToOne_relationship_from_dependent_side()
         {
             // Arrange
-            var existingColor = WriteFakers.RgbColor.Generate();
-            existingColor.Group = WriteFakers.WorkItemGroup.Generate();
+            var existingColor = _fakers.RgbColor.Generate();
+            existingColor.Group = _fakers.WorkItemGroup.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -148,7 +149,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_HasOne_relationship_with_include()
         {
             // Arrange
-            var existingUserAccount = WriteFakers.UserAccount.Generate();
+            var existingUserAccount = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -211,8 +212,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_HasOne_relationship_with_include_and_primary_fieldset()
         {
             // Arrange
-            var existingUserAccount = WriteFakers.UserAccount.Generate();
-            var workItem = WriteFakers.WorkItem.Generate();
+            var existingUserAccount = _fakers.UserAccount.Generate();
+            var workItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -394,7 +395,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_HasMany_relationship()
         {
             // Arrange
-            var existingUserAccounts = WriteFakers.UserAccount.Generate(2);
+            var existingUserAccounts = _fakers.UserAccount.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -461,7 +462,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_HasMany_relationship_with_include()
         {
             // Arrange
-            var existingUserAccounts = WriteFakers.UserAccount.Generate(2);
+            var existingUserAccounts = _fakers.UserAccount.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -534,7 +535,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_HasMany_relationship_with_include_and_secondary_fieldset()
         {
             // Arrange
-            var existingUserAccounts = WriteFakers.UserAccount.Generate(2);
+            var existingUserAccounts = _fakers.UserAccount.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -607,7 +608,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_duplicate_HasMany_relationships()
         {
             // Arrange
-            var existingUserAccount = WriteFakers.UserAccount.Generate();
+            var existingUserAccount = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -676,8 +677,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_HasManyThrough_relationship_with_include_and_fieldsets()
         {
             // Arrange
-            var existingTags = WriteFakers.WorkTags.Generate(3);
-            var workItemToCreate = WriteFakers.WorkItem.Generate();
+            var existingTags = _fakers.WorkTags.Generate(3);
+            var workItemToCreate = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -940,8 +941,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_multiple_relationship_types()
         {
             // Arrange
-            var existingUserAccounts = WriteFakers.UserAccount.Generate(2);
-            var existingTag = WriteFakers.WorkTags.Generate();
+            var existingUserAccounts = _fakers.UserAccount.Generate(2);
+            var existingTag = _fakers.WorkTags.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
