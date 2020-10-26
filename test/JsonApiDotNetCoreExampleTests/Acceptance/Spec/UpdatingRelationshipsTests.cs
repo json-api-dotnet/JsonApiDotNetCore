@@ -562,54 +562,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Can_Set_ToMany_Relationship_Through_Relationship_Endpoint()
-        {
-            // Arrange
-            var person = _personFaker.Generate();
-            person.TodoItems = _todoItemFaker.Generate(3).ToHashSet();
-
-            var otherTodoItem = _todoItemFaker.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddRange(person, otherTodoItem);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "todoItems",
-                        id = otherTodoItem.StringId
-                    }
-                }
-            };
-
-            var route = $"/api/v1/people/{person.StringId}/relationships/todoItems";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var personInDatabase = await dbContext.People
-                    .Include(p => p.TodoItems)
-                    .FirstAsync(p => p.Id == person.Id);
-
-                personInDatabase.TodoItems.Should().HaveCount(1);
-                personInDatabase.TodoItems.ElementAt(0).Id.Should().Be(otherTodoItem.Id);
-            });
-        }
-
-        [Fact]
         public async Task Fails_When_Patching_On_Primary_Endpoint_With_Missing_Secondary_Resources()
         {
             // Arrange

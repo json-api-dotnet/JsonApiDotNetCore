@@ -310,6 +310,12 @@ namespace JsonApiDotNetCore.Services
 
             AssertRelationshipExists(relationshipName);
 
+            if (_request.Relationship is HasManyAttribute && secondaryResourceIds == null)
+            {
+                // TODO: Usage of InvalidRequestBodyException (here and in BaseJsonApiController) is probably not the nest choice, because they do not contain request body.
+                throw new InvalidRequestBodyException("Expected data[] for to-many relationship.", null, null);
+            }
+
             TResource primaryResource = null;
             
             if (_hookExecutor != null)

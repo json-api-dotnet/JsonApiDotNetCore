@@ -225,56 +225,5 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 articleInDatabase.ArticleTags.Should().ContainSingle(articleTag => articleTag.TagId == existingTag.Id);
             });
         }
-
-        [Fact]
-        public async Task Can_Set_HasManyThrough_Relationship_Through_Relationships_Endpoint()
-        {
-            // Arrange
-            var existingArticleTag = new ArticleTag
-            {
-                Article = _articleFaker.Generate(),
-                Tag = _tagFaker.Generate()
-            };
-
-            var existingTag = _tagFaker.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddRange(existingArticleTag, existingTag);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "tags",
-                        id = existingTag.StringId
-                    }
-                }
-            };
-
-            var route = $"/api/v1/articles/{existingArticleTag.Article.StringId}/relationships/tags";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var articleInDatabase = await dbContext.Articles
-                    .Include(article => article.ArticleTags)
-                    .FirstAsync(article => article.Id == existingArticleTag.Article.Id);
-
-                articleInDatabase.ArticleTags.Should().HaveCount(1);
-                articleInDatabase.ArticleTags.Single().TagId.Should().Be(existingTag.Id);
-            });
-        }
     }
 }
