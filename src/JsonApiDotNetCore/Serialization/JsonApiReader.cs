@@ -78,7 +78,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private void ValidateIncomingResourceType(InputFormatterContext context, object model)
         {
-            if (context.HttpContext.IsJsonApiRequest() && IsPatchOrPostRequest(context.HttpContext.Request))
+            if (context.HttpContext.IsJsonApiRequest() && context.HttpContext.Request.Method != HttpMethods.Get)
             {
                 var endpointResourceType = GetEndpointResourceType();
                 if (endpointResourceType == null)
@@ -169,11 +169,6 @@ namespace JsonApiDotNetCore.Serialization
             // Synchronous IO operations are 
             // https://github.com/aspnet/AspNetCore/issues/7644
             return await reader.ReadToEndAsync();
-        }
-        
-        private bool IsPatchOrPostRequest(HttpRequest request)
-        {
-            return request.Method == HttpMethods.Patch || request.Method == HttpMethods.Post;
         }
 
         private IEnumerable<Type> GetBodyResourceTypes(object model)
