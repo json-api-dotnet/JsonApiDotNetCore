@@ -106,17 +106,6 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public override object GetValue(object resource)
         {
-
-            // if (resource == null) throw new ArgumentNullException(nameof(resource));
-            //
-            // // TODO: Passing null for the resourceFactory parameter is wrong here. Instead, GetManyValue() should properly throw when null is passed in.
-            // return GetManyValue(resource);
-            
-            // The resouceFactory argument needs to be an optional param independent of this method calling it.
-            // In should actually be the responsibility of the relationship attribute to know whether to use the resource factory or not,
-            // instead of the caller passing it along. But this is hard because we're working with attributes rather than having a meta abstraction / service
-            // We can consider working around it with a static internal setter.
-
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
             IEnumerable throughEntities = (IEnumerable)ThroughProperty.GetValue(resource) ?? Array.Empty<object>();
@@ -126,53 +115,13 @@ namespace JsonApiDotNetCore.Resources.Annotations
                 .Select(te =>  RightProperty.GetValue(te));
 
             return TypeHelper.CopyToTypedCollection(rightResources, Property.PropertyType);
-            
-            
-        }
-
-        internal override IEnumerable<IIdentifiable> GetManyValue(object resource, IResourceFactory resourceFactory = null)
-        {
-            // TODO: This method contains surprising code: Instead of returning the contents of a collection,
-            // it modifies data and performs logic that is highly specific to what EntityFrameworkCoreRepository needs.
-            //     => We cannot around this logic and data modification: we must perform a transformation of this collection before returning it.
-            //     The added bit is only an extension of this. It is not EF Core specific but JADNC specific.
-            //     I think it is relevant because only including Article.ArticleTag rather than Article.ArticleTag.Tag is the equivalent
-            //     of having a primary ID only projection on the secondary resource.
-            // This method is not reusable at all, it should not be concerned if resources are loaded, so should be moved into the caller instead.
-            //     => There are already some cases of it being reused
-            // After moving the code, the unneeded copying into new collections multiple times can be removed too.
-            //     => I don't think we can. There is no guarantee that a dev uses the same collection type for the join entities and right resource collections.
-            
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-
-            var value = ThroughProperty.GetValue(resource);
-
-            var throughEntities = value == null ? Array.Empty<object>() : ((IEnumerable)value).Cast<object>().ToArray();
-            var rightResourcesAreLoaded =  throughEntities.Any() && RightProperty.GetValue(throughEntities.First()) != null;
-            
-            // Even if the right resources aren't loaded, we can still construct identifier objects using the ID set on the through entity.
-            var rightResources = rightResourcesAreLoaded
-                ? throughEntities.Select(e => RightProperty.GetValue(e)).Cast<IIdentifiable>()
-                : throughEntities.Select(e => CreateRightResourceWithId(e, resourceFactory));
-
-            return (IEnumerable<IIdentifiable>)TypeHelper.CopyToTypedCollection(rightResources, Property.PropertyType);
-        }
-
-        private IIdentifiable CreateRightResourceWithId(object throughEntity, IResourceFactory resourceFactory)
-        {
-            if (resourceFactory == null) throw new ArgumentNullException(nameof(resourceFactory));
-
-            var rightResource = resourceFactory.CreateInstance(RightType);
-            rightResource.StringId = RightIdProperty.GetValue(throughEntity)!.ToString();
-
-            return rightResource;
         }
 
         /// <summary>
         /// Traverses through the provided resource and sets the value of the relationship on the other side of the through type.
         /// In the example described above, this would be the value of "Articles.ArticleTags.Tag".
         /// </summary>
-        public override void SetValue(object resource, object newValue, IResourceFactory resourceFactory)
+        public override void SetValue(object resource, object newValue, IResourceFactory resourceFactory) // TODO: delete resource factory: is this possible?
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             if (resourceFactory == null) throw new ArgumentNullException(nameof(resourceFactory));

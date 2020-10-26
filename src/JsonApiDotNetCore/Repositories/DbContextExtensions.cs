@@ -36,5 +36,18 @@ namespace JsonApiDotNetCore.Repositories
 
             return entityEntry?.Entity;
         }
+        
+        public static IQueryable Set(this DbContext dbContext, Type entityType)
+        {
+            if (dbContext == null) throw new ArgumentNullException(nameof(dbContext));
+            if (entityType == null) throw new ArgumentNullException(nameof(entityType));
+
+            var getDbSetOpen = typeof(DbContext).GetMethod(nameof(DbContext.Set));
+
+            var getDbSetGeneric = getDbSetOpen!.MakeGenericMethod(entityType);
+            var dbSet = (IQueryable)getDbSetGeneric.Invoke(dbContext, null);
+
+            return dbSet;
+        }
     }
 }

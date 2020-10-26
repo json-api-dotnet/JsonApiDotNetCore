@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         private readonly Expression _source;
         private readonly Type _extensionType;
 
-        public WhereClauseBuilder(Expression source, LambdaScope lambdaScope, Type extensionType)
+        public WhereClauseBuilder(Expression source, LambdaScope lambdaScope, Type extensionType) 
             : base(lambdaScope)
         {
             _source = source ?? throw new ArgumentNullException(nameof(source));
@@ -95,6 +95,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public override Expression VisitEqualsAnyOf(EqualsAnyOfExpression expression, Type argument)
         {
+
             Expression property = Visit(expression.TargetAttribute, argument);
 
             var valueList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(property.Type));

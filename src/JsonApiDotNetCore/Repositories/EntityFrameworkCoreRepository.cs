@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -13,7 +14,6 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Repositories
@@ -163,7 +163,7 @@ namespace JsonApiDotNetCore.Repositories
             if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
             {
                 // In the case of many-to-many relationships, creating a duplicate entry in the join table results in a uniqueness constraint violation.
-                await RemoveAlreadyRelatedResourcesFromAssignment(hasManyThroughRelationship, id, secondaryResourceIds);
+                await RemoveAlreadyRelatedResourcesFromAssignment(hasManyThroughRelationship, secondaryResourceIds);
             }
             
             var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
@@ -239,14 +239,11 @@ namespace JsonApiDotNetCore.Repositories
 
             await EnableCompleteReplacement(relationship, primaryResource);
             
-            var rightResources = relationship.GetManyValue(primaryResource, _resourceFactory).ToHashSet(IdentifiableComparer.Instance);
+            var rightResources = ((IEnumerable<IIdentifiable>)relationship.GetValue(primaryResource)).ToHashSet(IdentifiableComparer.Instance);
             var currentRightResourcesCount = rightResources.Count;
 
             rightResources.ExceptWith(secondaryResourceIds);
             
-            // TODO: with introduction of HasManyAttribute.GetManyValue, I think we don't have to abstract away subtraction of two sets any longer.
-            // var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources, secondaryResourceIds);
-
             // todo: why has it been reverted to != again?
             bool hasChanges = rightResources.Count != currentRightResourcesCount;
             if (hasChanges)
@@ -258,6 +255,8 @@ namespace JsonApiDotNetCore.Repositories
 
         // TODO: Restore or remove commented-out code.
         /*
+        // var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources, secondaryResourceIds);
+        //
         /// <summary>
         /// Removes resources from <paramref name="existingRightResources"/> whose ID exists in <paramref name="resourcesToRemove"/>.
         /// </summary>
@@ -351,38 +350,126 @@ namespace JsonApiDotNetCore.Repositories
             // If the left resource is the dependent side of the relationship, complete replacement is already guaranteed.
             if (!HasForeignKeyAtLeftSide(relationship))
             {
-                var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
-                await navigationEntry.LoadAsync();
+                if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
+                {
+                    await _dbContext
+                        .Set<TResource>()
+                        .Include(relationship.RelationshipPath)
+                        .FirstAsync(r => r.Id.Equals(resource.Id));
+                }
+                else
+                {
+                    var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
+                    await navigationEntry.LoadAsync();
+                }
+                
             }
         }
 
         private void FlushFromCache(IIdentifiable resource)
         {
             var trackedResource = _dbContext.GetTrackedIdentifiable(resource);
-            _dbContext.Entry(trackedResource).State = EntityState.Detached;
+            Detach(trackedResource);
         }
 
-        private async Task RemoveAlreadyRelatedResourcesFromAssignment(HasManyThroughAttribute hasManyThroughRelationship, TId primaryResourceId, ISet<IIdentifiable> secondaryResourceIds)
+        private async Task RemoveAlreadyRelatedResourcesFromAssignment(HasManyThroughAttribute hasManyThroughRelationship, ISet<IIdentifiable> secondaryResourceIds)
         {
-            // TODO: This is a no-go, because it loads the complete set of related entities, which can be massive.
-            // Instead, it should only load the subset of related entities that is in secondaryResourceIds, and the deduce what still needs to be added.
+            object[] throughEntities;
             
-            // => What you're describing is not possible because we cannot be sure that ArticleTags is defined as a DbSet on DbContext.
-            // We would need to load them through filtered includes, for which we need to wait for EF Core 5.
-            
-            var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(primaryResourceId));
-    
-            var navigationEntry = GetNavigationEntryForRelationship(hasManyThroughRelationship, primaryResource);
-            await navigationEntry.LoadAsync();
-            
-            var existingRightResources = hasManyThroughRelationship.GetManyValue(primaryResource, _resourceFactory).ToHashSet(IdentifiableComparer.Instance);
-            secondaryResourceIds.ExceptWith(existingRightResources);
+            throughEntities = await GetRightResourcesWhereIdInSet_GenericCall(hasManyThroughRelationship, secondaryResourceIds);
 
-            _dbContext.Entry(primaryResource).State = EntityState.Detached;
-            foreach (var resource in existingRightResources)
-            {
-                _dbContext.Entry(resource).State = EntityState.Detached;
-            }
+            // throughEntities = await GetRightResourcesWhereIdInSet_DynamicCall(hasManyThroughRelationship, secondaryResourceIds);
+
+            // throughEntities = await GetRightResourcesWhereIdInSet_QueryBuilderCall(hasManyThroughRelationship, secondaryResourceIds);
+
+
+            var rightResources = throughEntities.Select(entity => ConstructRightResourceOfHasManyRelationship(entity, hasManyThroughRelationship)).ToHashSet();
+            secondaryResourceIds.ExceptWith(rightResources);
+            
+            Detach(throughEntities);
+        }
+
+        private async Task<object[]> GetRightResourcesWhereIdInSet_GenericCall(HasManyThroughAttribute hasManyThroughRelationship, ISet<IIdentifiable> secondaryResourceIds)
+        {
+            var genericCallMethod = GetType().GetMethod(nameof(GetRightResourcesWhereIdInSet_GenericCall))!.MakeGenericMethod(hasManyThroughRelationship.ThroughType);
+            object[] throughEntities = await (dynamic) genericCallMethod.Invoke(this, new object[] {hasManyThroughRelationship, secondaryResourceIds});
+            
+            return throughEntities;
+        }
+
+        public async Task<object[]> GetRightResourcesWhereIdInSet_GenericCall<TThroughType>(HasManyThroughAttribute relationship, ISet<IIdentifiable> secondaryResourceIds) where TThroughType : class
+        {
+            var namingFactory = new LambdaParameterNameFactory();
+            var throughEntityParameter = Expression.Parameter(relationship.ThroughType, namingFactory.Create(relationship.ThroughType.Name).Name);
+            
+            var containsCall = GetContainsCall(relationship, secondaryResourceIds, throughEntityParameter);
+
+            var containsPredicate = Expression.Lambda<Func<TThroughType, bool>>(containsCall, throughEntityParameter);
+            var result = await _dbContext.Set<TThroughType>().Where(containsPredicate).ToListAsync();
+
+            return result.Cast<object>().ToArray();
+        }
+
+        private async Task<object[]> GetRightResourcesWhereIdInSet_DynamicCall(HasManyThroughAttribute relationship, ISet<IIdentifiable> secondaryResourceIds)
+        {
+            var namingFactory = new LambdaParameterNameFactory();
+            var parameterName = namingFactory.Create(relationship.ThroughType.Name).Name;
+            var throughEntityParameter = Expression.Parameter(relationship.ThroughType, parameterName);
+            
+            var containsCall = GetContainsCall(relationship, secondaryResourceIds, throughEntityParameter);
+            var containsPredicate = Expression.Lambda(containsCall, throughEntityParameter);
+
+            IQueryable throughSource = _dbContext.Set(relationship.ThroughType);
+            var whereClause = Expression.Call(typeof(Queryable), nameof(Queryable.Where), new[] { relationship.ThroughType }, throughSource.Expression, containsPredicate);
+            
+            dynamic query = throughSource.Provider.CreateQuery(whereClause);
+            IEnumerable result = await EntityFrameworkQueryableExtensions.ToListAsync(query);
+            
+            return result.Cast<object>().ToArray();
+        }
+        
+        private async Task<object[]> GetRightResourcesWhereIdInSet_QueryBuilderCall(HasManyThroughAttribute relationship, ISet<IIdentifiable> secondaryResourceIds)
+        {
+            var targetAttributes = new ResourceFieldChainExpression(new AttrAttribute { Property =  relationship.RightIdProperty, PublicName = relationship.RightIdProperty.Name });
+            var ids = secondaryResourceIds.Select(r => new LiteralConstantExpression(r.StringId)).ToList().AsReadOnly();
+            var equalsAnyOf = new EqualsAnyOfExpression(targetAttributes, ids);
+
+            IQueryable throughSource = _dbContext.Set(relationship.ThroughType);
+
+            var scopeFactory = new LambdaScopeFactory(new LambdaParameterNameFactory());
+            var scope = scopeFactory.CreateScope(relationship.ThroughType);
+            
+            var whereClauseBuilder = new WhereClauseBuilder(throughSource.Expression, scope, typeof(Queryable));
+            var whereClause = whereClauseBuilder.ApplyWhere(equalsAnyOf);
+            
+            dynamic query = throughSource.Provider.CreateQuery(whereClause);
+            IEnumerable result = await EntityFrameworkQueryableExtensions.ToListAsync(query);
+
+            return result.Cast<object>().ToArray();
+        }
+
+        private IIdentifiable ConstructRightResourceOfHasManyRelationship(object entity, HasManyThroughAttribute relationship)
+        {
+             var rightResource = _resourceFactory.CreateInstance(relationship.RightType);
+            rightResource.StringId = relationship.RightIdProperty.GetValue(entity).ToString();
+    
+            return rightResource;
+        }
+
+        private MethodCallExpression GetContainsCall(HasManyThroughAttribute relationship,
+            ISet<IIdentifiable> secondaryResourceIds, ParameterExpression throughEntityParameter)
+        {
+            
+            var tagIdProperty = Expression.Property(throughEntityParameter, relationship.RightIdProperty.Name);
+
+            var intType = relationship.RightIdProperty.PropertyType;
+            var typedIds = TypeHelper.CopyToList(secondaryResourceIds.Select(r => r.GetTypedId()), intType);
+            var idCollectionConstant = Expression.Constant(typedIds);
+
+            var containsCall = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), new[] {intType},
+                idCollectionConstant, tagIdProperty);
+            
+            return containsCall;
         }
 
         private NavigationEntry GetNavigationEntryForRelationship(RelationshipAttribute relationship, TResource resource)
@@ -391,10 +478,10 @@ namespace JsonApiDotNetCore.Repositories
 
             switch (relationship)
             {
-                case HasManyThroughAttribute hasManyThroughRelationship:
-                {
-                    return entityEntry.Collection(hasManyThroughRelationship.ThroughProperty.Name);
-                }
+                // case HasManyThroughAttribute hasManyThroughRelationship:
+                // {
+                //     return entityEntry.Collection(hasManyThroughRelationship.ThroughProperty.Name);
+                // }
                 case HasManyAttribute hasManyRelationship:
                 {
                     return entityEntry.Collection(hasManyRelationship.Property.Name);
@@ -407,7 +494,7 @@ namespace JsonApiDotNetCore.Repositories
 
             return null;
         }
-
+        
         /// <summary>
         /// See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
         /// </summary>
@@ -446,7 +533,7 @@ namespace JsonApiDotNetCore.Repositories
             relationship.SetValue(leftResource, placeholderRightResource, _resourceFactory);
             _dbContext.Entry(leftResource).DetectChanges();
             
-            _dbContext.Entry(placeholderRightResource).State = EntityState.Detached;
+            Detach(placeholderRightResource);
         }
 
         private void EnsurePrimaryKeyPropertiesAreNotNull(object entity)
@@ -477,7 +564,7 @@ namespace JsonApiDotNetCore.Repositories
             if (Nullable.GetUnderlyingType(propertyType) != null)
             {
                 var underlyingType = propertyInfo.PropertyType.GetGenericArguments()[0];
-
+                // TODO: Write test with primary key property type int? or equivalent. 
                 return Activator.CreateInstance(underlyingType);
             }
 
@@ -526,15 +613,21 @@ namespace JsonApiDotNetCore.Repositories
 
                 if (rightValue is IEnumerable<IIdentifiable> rightResources)
                 {
-                    foreach (var rightResource in rightResources)
-                    {
-                        _dbContext.Entry(rightResource).State = EntityState.Detached;
-                    }
+                    Detach(rightResources.ToArray());
                 }
                 else if (rightValue != null)
                 {
+                    Detach(rightValue);
                     _dbContext.Entry(rightValue).State = EntityState.Detached;
                 }
+            }
+        }
+        
+        private void Detach(params object[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                _dbContext.Entry(entity).State = EntityState.Detached;
             }
         }
     }

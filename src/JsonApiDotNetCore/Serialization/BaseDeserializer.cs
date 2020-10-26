@@ -14,6 +14,9 @@ using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Serialization
 {
+    // TODO: check if FK assignments are still required.
+    // TODO: add test with duplicate dictionary entry in body.
+
     /// <summary>
     /// Abstract base class for deserialization. Deserializes JSON content into <see cref="Objects.Document"/>s
     /// and constructs instances of the resource(s) in the document body.
@@ -21,7 +24,7 @@ namespace JsonApiDotNetCore.Serialization
     public abstract class BaseDeserializer
     {
         protected IResourceContextProvider ResourceContextProvider { get; }
-        protected IResourceFactory ResourceFactory{ get; }
+        protected IResourceFactory ResourceFactory { get; }
         protected Document Document { get; set; }
 
         protected BaseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory)

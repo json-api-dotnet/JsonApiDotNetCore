@@ -334,18 +334,18 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Add_Already_Related_Resource_Without_It_Being_Readded_To_HasManyThrough_Relationship_Through_Relationships_Endpoint()
         {
             // Arrange
-            var existingArticle = _articleFaker.Generate();
-            existingArticle.ArticleTags = new HashSet<ArticleTag>
+            var article = _articleFaker.Generate();
+            article.ArticleTags = new HashSet<ArticleTag>
             {
-                new ArticleTag {Tag = _tagFaker.Generate()},
-                new ArticleTag {Tag = _tagFaker.Generate()}
+                new ArticleTag { Tag = _tagFaker.Generate() },
+                new ArticleTag { Tag = _tagFaker.Generate() }
             };
 
-            var existingTag = _tagFaker.Generate();
+            var tag = _tagFaker.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AddRange(existingArticle, existingTag);
+                dbContext.AddRange(article, tag);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -356,17 +356,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     new
                     {
                         type = "tags",
-                        id = existingArticle.ArticleTags.ElementAt(1).Tag.StringId
+                        id = article.ArticleTags.ElementAt(0).Tag.StringId
                     },
                     new
                     {
                         type = "tags",
-                        id = existingTag.StringId
+                        id = tag.StringId
                     }
                 }
             };
 
-            var route = $"/api/v1/articles/{existingArticle.StringId}/relationships/tags";
+            var route = $"/api/v1/articles/{article.StringId}/relationships/tags";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
@@ -379,13 +379,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var articleInDatabase = await dbContext.Articles
-                    .Include(article => article.ArticleTags)
-                    .FirstAsync(article => article.Id == existingArticle.Id);
+                    .Include(a => a.ArticleTags)
+                    .FirstAsync(a => a.Id == article.Id);
 
                 articleInDatabase.ArticleTags.Should().HaveCount(3);
-                articleInDatabase.ArticleTags.Should().ContainSingle(articleTag => articleTag.TagId == existingArticle.ArticleTags.ElementAt(0).Tag.Id);
-                articleInDatabase.ArticleTags.Should().ContainSingle(articleTag => articleTag.TagId == existingArticle.ArticleTags.ElementAt(1).Tag.Id);
-                articleInDatabase.ArticleTags.Should().ContainSingle(articleTag => articleTag.TagId == existingTag.Id);
+                articleInDatabase.ArticleTags.Should().ContainSingle(articleTag => articleTag.TagId == article.ArticleTags.ElementAt(0).Tag.Id);
+                articleInDatabase.ArticleTags.Should().ContainSingle(articleTag => articleTag.TagId == article.ArticleTags.ElementAt(1).Tag.Id);
+                articleInDatabase.ArticleTags.Should().ContainSingle(articleTag => articleTag.TagId == tag.Id);
             });
         }
 
