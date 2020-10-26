@@ -58,30 +58,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Patching_Through_Relationship_Link_With_Mismatching_Resource_Type_Returns_Conflict()
-        {
-            // Arrange
-            string content = JsonConvert.SerializeObject(new
-            {
-                data = new
-                {
-                    type = "todoItems",
-                    id = 1
-                }
-            });
-
-            // Act
-            var (body, _) = await Patch("/api/v1/todoItems/1/relationships/owner", content);
-
-            // Assert
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-            Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.Conflict, errorDocument.Errors[0].StatusCode);
-            Assert.Equal("Resource type mismatch between request body and endpoint URL.", errorDocument.Errors[0].Title);
-            Assert.Equal("Expected resource of type 'people' in PATCH request body at endpoint '/api/v1/todoItems/1/relationships/owner', instead of 'todoItems'.", errorDocument.Errors[0].Detail);
-        }
-        
-        [Fact]
         public async Task Patching_Through_Relationship_Link_With_Multiple_Resources_Types_Returns_Conflict()
         {
             // Arrange
