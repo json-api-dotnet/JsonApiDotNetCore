@@ -50,22 +50,20 @@ namespace JsonApiDotNetCore.Serialization
 
             var bodyJToken = LoadJToken(body);
             Document = bodyJToken.ToObject<Document>();
-            if (Document.IsManyData)
+            if (Document != null)
             {
-                if (Document.ManyData.Count == 0)
+                if (Document.IsManyData)
                 {
-                    return new HashSet<IIdentifiable>();
+                    return Document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
                 }
 
-                return Document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
+                if (Document.SingleData != null)
+                {
+                    return ParseResourceObject(Document.SingleData);
+                }
             }
 
-            if (Document.SingleData == null)
-            {
-                return null;
-            }
-
-            return ParseResourceObject(Document.SingleData);
+            return null;
         }
 
         /// <summary>
