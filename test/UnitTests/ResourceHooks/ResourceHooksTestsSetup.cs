@@ -173,8 +173,7 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, _resourceGraph, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var resourceFactory = new Mock<IResourceFactory>().Object;
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph, resourceFactory);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph);
 
             return (constraintsMock, hookExecutor, primaryResource);
         }
@@ -207,8 +206,7 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, _resourceGraph, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var resourceFactory = new Mock<IResourceFactory>().Object;
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph, resourceFactory);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph);
 
             return (constraintsMock, ufMock, hookExecutor, primaryResource, secondaryResource);
         }
@@ -246,8 +244,7 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, _resourceGraph, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var resourceFactory = new Mock<IResourceFactory>().Object;
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph, resourceFactory);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph);
 
             return (constraintsMock, hookExecutor, primaryResource, firstSecondaryResource, secondSecondaryResource);
         }

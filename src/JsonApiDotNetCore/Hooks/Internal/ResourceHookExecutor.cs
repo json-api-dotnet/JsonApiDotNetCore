@@ -23,22 +23,19 @@ namespace JsonApiDotNetCore.Hooks.Internal
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceGraph _resourceGraph;
-        private readonly IResourceFactory _resourceFactory;
 
         public ResourceHookExecutor(
             IHookExecutorHelper executorHelper,
             ITraversalHelper traversalHelper,
             ITargetedFields targetedFields,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IResourceGraph resourceGraph,
-            IResourceFactory resourceFactory)
+            IResourceGraph resourceGraph)
         {
             _executorHelper = executorHelper;
             _traversalHelper = traversalHelper;
             _targetedFields = targetedFields;
             _constraintProviders = constraintProviders;
             _resourceGraph = resourceGraph;
-            _resourceFactory = resourceFactory;
         }
 
         /// <inheritdoc />

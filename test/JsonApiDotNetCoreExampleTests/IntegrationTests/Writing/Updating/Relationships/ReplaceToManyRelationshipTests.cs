@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
             var requestBody = new
             {
-                data = new object[0]
+                data = Array.Empty<object>()
             };
 
             var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
@@ -78,7 +79,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
             var requestBody = new
             {
-                data = new object[0]
+                data = Array.Empty<object>()
             };
 
             var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";

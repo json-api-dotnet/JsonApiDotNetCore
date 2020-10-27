@@ -297,6 +297,10 @@ namespace JsonApiDotNetCore.Repositories
     
             if (ShouldLoadInverseRelationship(relationship, trackedValueToAssign))
             {
+                // TODO: Similar to like the EnableCompleteReplacement todo, we dont actually need to load the inverse relationship.
+                // all we need to do is clear the inverse relationship such that no uniqueness constraint is violated
+                // (or have EF core do it efficiently, i.e without having to first fetch the data).
+                // For one to one it isn't much of a performance issue to because it is a ToOne relationship rather than a large collection. But it would be cleaner to not load it.
                 var entityEntry = _dbContext.Entry(trackedValueToAssign); 
                 var inversePropertyName = relationship.InverseNavigationProperty.Name;
                 await entityEntry.Reference(inversePropertyName).LoadAsync();
@@ -347,14 +351,15 @@ namespace JsonApiDotNetCore.Repositories
             _traceWriter.LogMethodStart(new {relationship, resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             if (relationship == null) throw new ArgumentNullException(nameof(relationship));
-
-            // TODO: FK Uniqueness constraints can also be violated from principal side (formerly referred to as implicit removals). Ensure that the Can_replace_OneToOne_relationship_from_principal_side test adequately covers this.
+            
             // If the left resource is the dependent side of the relationship, complete replacement is already guaranteed.
             if (!HasForeignKeyAtLeftSide(relationship))
             {
                 if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
                 {
-                    // TODO: For a complete replacement, all we need is to delete the existing relationships, which is a single query. Figure out how to trick EF Core into doing this without having to first load all the data.
+                    // TODO: For a complete replacement, all we need is to delete the existing relationships, which is a single query.
+                    // Figure out how to trick EF Core into doing this without having to first load all the data (or do it ourselves).
+                    // If we do it ourselves it would probably involve a writing a DeleteWhere extension method.
                     var throughEntities = await GetFilteredThroughEntities_StaticQueryBuilding(hasManyThroughRelationship, resource.Id, null);
                     hasManyThroughRelationship.ThroughProperty.SetValue(resource, TypeHelper.CopyToTypedCollection(throughEntities,  hasManyThroughRelationship.ThroughProperty.PropertyType));
                     
@@ -367,7 +372,9 @@ namespace JsonApiDotNetCore.Repositories
                 else
                 {
                     var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
-                    // TODO: For a complete replacement, all we need is to delete the existing relationships, which is a single query. Figure out how to trick EF Core into doing this without having to first load all the data.
+                    // TODO: For a complete replacement, all we need is to delete the existing relationships, which is a single query.
+                    // Figure out how to trick EF Core into doing this without having to first load all the data (or do it ourselves).
+                    // If we do it ourselves it would probably involve a writing a DeleteWhere extension method.
                     // var dummy = _resourceFactory.CreateInstance(relationship.RightType);
                     // dummy.StringId = "999";
                     // _dbContext.Entry(dummy).State = EntityState.Unchanged;

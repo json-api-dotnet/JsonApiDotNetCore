@@ -81,7 +81,6 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// </summary>
         /// <param name="resource">Parent resource.</param>
         /// <param name="value">The relationship value.</param>
-        /// <param name="resourceFactory"></param>
         public void SetValue(IIdentifiable resource, object value)
         {
             if (Attribute is HasManyThroughAttribute hasManyThrough)
