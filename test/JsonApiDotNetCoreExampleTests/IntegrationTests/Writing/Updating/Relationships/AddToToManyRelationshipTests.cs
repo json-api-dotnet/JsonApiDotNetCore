@@ -532,7 +532,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact]
-        public async Task Can_add_to_HasMany_relationship_with_already_attached_resources()
+        public async Task Can_add_to_HasMany_relationship_with_already_assigned_resources()
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
@@ -592,7 +592,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact]
-        public async Task Can_add_to_HasManyThrough_relationship_with_already_attached_resource()
+        public async Task Can_add_to_HasManyThrough_relationship_with_already_assigned_resource()
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
