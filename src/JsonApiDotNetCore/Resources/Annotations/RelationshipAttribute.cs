@@ -98,10 +98,9 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// <summary>
         /// Sets the value of the resource property this attribute was declared on.
         /// </summary>
-        public virtual void SetValue(object resource, object newValue, IResourceFactory resourceFactory)
+        public virtual void SetValue(object resource, object newValue)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (resourceFactory == null) throw new ArgumentNullException(nameof(resourceFactory));
 
             Property.SetValue(resource, newValue);
         }

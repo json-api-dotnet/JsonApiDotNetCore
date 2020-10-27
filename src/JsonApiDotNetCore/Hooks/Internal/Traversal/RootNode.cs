@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
             _uniqueResources = new HashSet<TResource>(intersected);
         }
 
-        public void Reassign(IResourceFactory resourceFactory, IEnumerable source = null)
+        public void Reassign(IEnumerable source = null)
         {
             var ids = _uniqueResources.Select(ue => ue.StringId);
 

@@ -121,12 +121,11 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// Traverses through the provided resource and sets the value of the relationship on the other side of the through type.
         /// In the example described above, this would be the value of "Articles.ArticleTags.Tag".
         /// </summary>
-        public override void SetValue(object resource, object newValue, IResourceFactory resourceFactory) // TODO: delete resource factory: is this possible?
+        public override void SetValue(object resource, object newValue)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (resourceFactory == null) throw new ArgumentNullException(nameof(resourceFactory));
 
-            base.SetValue(resource, newValue, resourceFactory);
+            base.SetValue(resource, newValue);
 
             if (newValue == null)
             {
@@ -137,9 +136,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
                 List<object> throughResources = new List<object>();
                 foreach (IIdentifiable identifiable in (IEnumerable)newValue)
                 {
-                    var throughResource = TypeHelper.IsOrImplementsInterface(ThroughType, typeof(IIdentifiable))
-                        ? resourceFactory.CreateInstance(ThroughType)
-                        : TypeHelper.CreateInstance(ThroughType);
+                    var throughResource = TypeHelper.CreateInstance(ThroughType);
 
                     LeftProperty.SetValue(throughResource, resource);
                     RightProperty.SetValue(throughResource, identifiable);
