@@ -155,13 +155,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             AssertHasType(data, null);
 
-            var resourceContext = ResourceContextProvider.GetResourceContext(data.Type);
-            if (resourceContext == null)
-            {
-                throw new InvalidRequestBodyException("Request body includes unknown resource type.",
-                    $"Resource of type '{data.Type}' does not exist.", null);
-            }
-
+            var resourceContext = GetExistingResourceContext(data.Type);
             var resource = ResourceFactory.CreateInstance(resourceContext.ResourceType);
 
             resource = SetAttributes(resource, data.Attributes, resourceContext.Attributes);
@@ -171,6 +165,18 @@ namespace JsonApiDotNetCore.Serialization
                 resource.StringId = data.Id;
 
             return resource;
+        }
+
+        private ResourceContext GetExistingResourceContext(string publicName)
+        {
+            var resourceContext = ResourceContextProvider.GetResourceContext(publicName);
+            if (resourceContext == null)
+            {
+                throw new InvalidRequestBodyException("Request body includes unknown resource type.",
+                    $"Resource of type '{publicName}' does not exist.", null);
+            }
+
+            return resourceContext;
         }
 
         /// <summary>
@@ -185,15 +191,16 @@ namespace JsonApiDotNetCore.Serialization
             var rio = (ResourceIdentifierObject)relationshipData.Data;
             var relatedId = rio?.Id;
 
+            Type relationshipType = hasOneRelationship.RightType;
+
             if (relationshipData.SingleData != null)
             {
                 AssertHasType(relationshipData.SingleData, hasOneRelationship);
                 AssertHasId(relationshipData.SingleData, hasOneRelationship);
-            }
 
-            var relationshipType = relationshipData.SingleData == null
-                ? hasOneRelationship.RightType
-                : ResourceContextProvider.GetResourceContext(relationshipData.SingleData.Type).ResourceType;
+                var resourceContext = GetExistingResourceContext(relationshipData.SingleData.Type);
+                relationshipType = resourceContext.ResourceType;
+            }
 
             // TODO: this does not make sense in the following case: if we're setting the dependent of a one-to-one relationship, IdentifiablePropertyName should be null.
             var foreignKeyProperty = resourceProperties.FirstOrDefault(p => p.Name == hasOneRelationship.IdentifiablePropertyName);
@@ -263,11 +270,11 @@ namespace JsonApiDotNetCore.Serialization
             // If the relationship data is null, there is no need to set the navigation property to null: this is the default value.
             if (relationshipData.ManyData != null)
             {
-                var relatedResources = relationshipData.ManyData
+                var rightResources = relationshipData.ManyData
                     .Select(rio => CreateRightResourceForHasMany(hasManyRelationship, rio))
                     .ToHashSet(IdentifiableComparer.Instance);
 
-                var convertedCollection = TypeHelper.CopyToTypedCollection(relatedResources, hasManyRelationship.Property.PropertyType);
+                var convertedCollection = TypeHelper.CopyToTypedCollection(rightResources, hasManyRelationship.Property.PropertyType);
                 hasManyRelationship.SetValue(resource, convertedCollection, ResourceFactory);
             }
 
@@ -279,11 +286,11 @@ namespace JsonApiDotNetCore.Serialization
             AssertHasType(rio, hasManyRelationship);
             AssertHasId(rio, hasManyRelationship);
 
-            var relationshipType = ResourceContextProvider.GetResourceContext(rio.Type).ResourceType;
-            var relatedInstance = ResourceFactory.CreateInstance(relationshipType);
-            relatedInstance.StringId = rio.Id;
+            var resourceContext = GetExistingResourceContext(rio.Type);
+            var rightInstance = ResourceFactory.CreateInstance(resourceContext.ResourceType);
+            rightInstance.StringId = rio.Id;
 
-            return relatedInstance;
+            return rightInstance;
         }
 
         private void AssertHasType(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)
@@ -291,7 +298,7 @@ namespace JsonApiDotNetCore.Serialization
             if (resourceIdentifierObject.Type == null)
             {
                 var details = relationship != null
-                    ? $"Expected 'type' element in relationship '{relationship.PublicName}'."
+                    ? $"Expected 'type' element in '{relationship.PublicName}' relationship."
                     : "Expected 'type' element in 'data' element.";
 
                 throw new InvalidRequestBodyException("Request body must include 'type' element.", details, null);
@@ -303,7 +310,7 @@ namespace JsonApiDotNetCore.Serialization
             if (resourceIdentifierObject.Id == null)
             {
                 throw new InvalidRequestBodyException("Request body must include 'id' element.",
-                    $"Expected 'id' element in relationship '{relationship.PublicName}'.", null);
+                    $"Expected 'id' element in '{relationship.PublicName}' relationship.", null);
             }
         }
 

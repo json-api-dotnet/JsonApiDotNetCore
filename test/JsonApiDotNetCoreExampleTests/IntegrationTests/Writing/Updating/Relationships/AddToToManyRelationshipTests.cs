@@ -552,12 +552,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Cannot_add_to_unknown_resource_ID_in_url()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
             var existingSubscriber = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AddRange(existingWorkItem, existingSubscriber);
+                dbContext.UserAccounts.Add(existingSubscriber);
                 await dbContext.SaveChangesAsync();
             });
 
