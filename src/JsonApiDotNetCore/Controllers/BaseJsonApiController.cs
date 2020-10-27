@@ -198,7 +198,8 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Updates an existing resource with attributes, relationships or both. May contain a partial set of attributes.
+        /// Updates the attributes and/or relationships of an existing resource.
+        /// Only the values of sent attributes are replaced. And only the values of sent relationships are replaced.
         /// Example: PATCH /articles/1 HTTP/1.1
         /// </summary>
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource)

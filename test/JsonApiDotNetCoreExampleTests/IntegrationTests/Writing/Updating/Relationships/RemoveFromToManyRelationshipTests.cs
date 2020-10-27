@@ -179,6 +179,129 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact]
+        public async Task Can_remove_from_HasMany_relationship_with_unrelated_existing_resource()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
+            var existingSubscriber = _fakers.UserAccount.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<UserAccount>();
+                dbContext.AddRange(existingWorkItem, existingSubscriber);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "userAccounts",
+                        id = existingSubscriber.StringId
+                    },
+                    new
+                    {
+                        type = "userAccounts",
+                        id = existingWorkItem.Subscribers.ElementAt(0).StringId
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Subscribers)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Subscribers.Should().HaveCount(1);
+                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
+
+                var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
+                userAccountsInDatabase.Should().HaveCount(3);
+            });
+        }
+
+        [Fact]
+        public async Task Can_remove_from_HasManyThrough_relationship_with_unrelated_existing_resource()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.WorkItemTags = new[]
+            {
+                new WorkItemTag
+                {
+                    Tag = _fakers.WorkTags.Generate()
+                },
+                new WorkItemTag
+                {
+                    Tag = _fakers.WorkTags.Generate()
+                }
+            };
+            var existingTag = _fakers.WorkTags.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<WorkTag>();
+                dbContext.AddRange(existingWorkItem, existingTag);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "workTags",
+                        id = existingWorkItem.WorkItemTags.ElementAt(1).Tag.StringId
+                    },
+                    new
+                    {
+                        type = "workTags",
+                        id = existingTag.StringId
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.WorkItemTags)
+                    .ThenInclude(workItemTag => workItemTag.Tag)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.WorkItemTags.Should().HaveCount(1);
+                workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingWorkItem.WorkItemTags.ElementAt(0).Tag.Id);
+
+                var tagsInDatabase = await dbContext.WorkTags.ToListAsync();
+                tagsInDatabase.Should().HaveCount(3);
+            });
+        }
+
+        [Fact]
         public async Task Cannot_remove_for_missing_type()
         {
             // Arrange
@@ -427,12 +550,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Cannot_remove_from_unknown_resource_ID_in_url()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
+            var existingSubscriber = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.WorkItems.Add(existingWorkItem);
+                dbContext.UserAccounts.Add(existingSubscriber);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -443,7 +565,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     new
                     {
                         type = "userAccounts",
-                        id = existingWorkItem.Subscribers.ElementAt(0).StringId
+                        id = existingSubscriber.StringId
                     }
                 }
             };
@@ -537,129 +659,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Conflict);
             responseDocument.Errors[0].Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
             responseDocument.Errors[0].Detail.Should().Be($"Expected resource of type 'workTags' in DELETE request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
-        }
-
-        [Fact]
-        public async Task Can_remove_from_HasMany_relationship_with_unrelated_existing_resource()
-        {
-            // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
-            var existingSubscriber = _fakers.UserAccount.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<UserAccount>();
-                dbContext.AddRange(existingWorkItem, existingSubscriber);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingSubscriber.StringId
-                    },
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingWorkItem.Subscribers.ElementAt(0).StringId
-                    }
-                }
-            };
-
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Subscribers)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
-
-                workItemInDatabase.Subscribers.Should().HaveCount(1);
-                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
-
-                var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
-                userAccountsInDatabase.Should().HaveCount(3);
-            });
-        }
-
-        [Fact]
-        public async Task Can_remove_from_HasManyThrough_relationship_with_unrelated_existing_resource()
-        {
-            // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-            existingWorkItem.WorkItemTags = new[]
-            {
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTags.Generate()
-                },
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTags.Generate()
-                }
-            };
-            var existingTag = _fakers.WorkTags.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<WorkTag>();
-                dbContext.AddRange(existingWorkItem, existingTag);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "workTags",
-                        id = existingWorkItem.WorkItemTags.ElementAt(1).Tag.StringId
-                    },
-                    new
-                    {
-                        type = "workTags",
-                        id = existingTag.StringId
-                    }
-                }
-            };
-
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.WorkItemTags)
-                    .ThenInclude(workItemTag => workItemTag.Tag)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
-
-                workItemInDatabase.WorkItemTags.Should().HaveCount(1);
-                workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingWorkItem.WorkItemTags.ElementAt(0).Tag.Id);
-
-                var tagsInDatabase = await dbContext.WorkTags.ToListAsync();
-                tagsInDatabase.Should().HaveCount(3);
-            });
         }
 
         [Fact]

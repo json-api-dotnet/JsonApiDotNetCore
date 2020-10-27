@@ -172,6 +172,139 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact]
+        public async Task Can_add_to_HasMany_relationship_with_already_assigned_resources()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
+
+            var existingSubscriber = _fakers.UserAccount.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(existingWorkItem, existingSubscriber);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "userAccounts",
+                        id = existingWorkItem.Subscribers.ElementAt(0).StringId
+                    },
+                    new
+                    {
+                        type = "userAccounts",
+                        id = existingWorkItem.Subscribers.ElementAt(1).StringId
+                    },
+                    new
+                    {
+                        type = "userAccounts",
+                        id = existingSubscriber.StringId
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Subscribers)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Subscribers.Should().HaveCount(3);
+                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingWorkItem.Subscribers.ElementAt(0).Id);
+                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingWorkItem.Subscribers.ElementAt(1).Id);
+                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingSubscriber.Id);
+            });
+        }
+
+        [Fact]
+        public async Task Can_add_to_HasManyThrough_relationship_with_already_assigned_resource()
+        {
+            // Arrange
+            var existingWorkItems = _fakers.WorkItem.Generate(2);
+            existingWorkItems[0].WorkItemTags = new[]
+            {
+                new WorkItemTag
+                {
+                    Tag = _fakers.WorkTags.Generate()
+                }
+            };
+            existingWorkItems[1].WorkItemTags = new[]
+            {
+                new WorkItemTag
+                {
+                    Tag = _fakers.WorkTags.Generate()
+                }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.AddRange(existingWorkItems);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "workTags",
+                        id = existingWorkItems[0].WorkItemTags.ElementAt(0).Tag.StringId
+                    },
+                    new
+                    {
+                        type = "workTags",
+                        id = existingWorkItems[1].WorkItemTags.ElementAt(0).Tag.StringId
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItems[0].StringId}/relationships/tags";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemsInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.WorkItemTags)
+                    .ThenInclude(workItemTag => workItemTag.Tag)
+                    .ToListAsync();
+
+                var workItemInDatabase1 = workItemsInDatabase.Single(workItem => workItem.Id == existingWorkItems[0].Id);
+
+                workItemInDatabase1.WorkItemTags.Should().HaveCount(2);
+                workItemInDatabase1.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingWorkItems[0].WorkItemTags.ElementAt(0).Tag.Id);
+                workItemInDatabase1.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingWorkItems[1].WorkItemTags.ElementAt(0).Tag.Id);
+
+                var workItemInDatabase2 = workItemsInDatabase.Single(workItem => workItem.Id == existingWorkItems[1].Id);
+
+                workItemInDatabase2.WorkItemTags.Should().HaveCount(1);
+                workItemInDatabase2.WorkItemTags.ElementAt(0).Tag.Id.Should().Be(existingWorkItems[1].WorkItemTags.ElementAt(0).Tag.Id);
+            });
+        }
+
+        [Fact]
         public async Task Cannot_add_for_missing_type()
         {
             // Arrange
@@ -419,12 +552,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Cannot_add_to_unknown_resource_ID_in_url()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
             var existingSubscriber = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AddRange(existingWorkItem, existingSubscriber);
+                dbContext.UserAccounts.Add(existingSubscriber);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -529,134 +661,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Conflict);
             responseDocument.Errors[0].Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
             responseDocument.Errors[0].Detail.Should().Be($"Expected resource of type 'workTags' in POST request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
-        }
-
-        [Fact]
-        public async Task Can_add_to_HasMany_relationship_with_already_attached_resources()
-        {
-            // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
-
-            var existingSubscriber = _fakers.UserAccount.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddRange(existingWorkItem, existingSubscriber);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingWorkItem.Subscribers.ElementAt(0).StringId
-                    },
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingWorkItem.Subscribers.ElementAt(1).StringId
-                    },
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingSubscriber.StringId
-                    }
-                }
-            };
-
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Subscribers)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
-
-                workItemInDatabase.Subscribers.Should().HaveCount(3);
-                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingWorkItem.Subscribers.ElementAt(0).Id);
-                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingWorkItem.Subscribers.ElementAt(1).Id);
-                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingSubscriber.Id);
-            });
-        }
-
-        [Fact]
-        public async Task Can_add_to_HasManyThrough_relationship_with_already_attached_resource()
-        {
-            // Arrange
-            var workItem = _fakers.WorkItem.Generate();
-            workItem.WorkItemTags = new[]
-            {
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTags.Generate()
-                }
-            };
-            
-            var differentWorkItem = _fakers.WorkItem.Generate();
-            differentWorkItem.WorkItemTags = new[]
-            {
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTags.Generate()
-                }
-            };
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddRange(workItem, differentWorkItem);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "workTags",
-                        id = workItem.WorkItemTags.ElementAt(0).Tag.StringId
-                    },
-                    new
-                    {
-                        type = "workTags",
-                        id = differentWorkItem.WorkItemTags.ElementAt(0).Tag.StringId
-                    }
-                }
-            };
-
-            var route = $"/workItems/{workItem.StringId}/relationships/tags";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(wi => wi.WorkItemTags)
-                    .ThenInclude(wit => wit.Tag)
-                    .FirstAsync(wi => wi.Id == workItem.Id);
-
-                workItemInDatabase.WorkItemTags.Should().HaveCount(2);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == workItem.WorkItemTags.ElementAt(0).Tag.Id);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == differentWorkItem.WorkItemTags.ElementAt(0).Tag.Id);
-            });
         }
 
         [Fact]

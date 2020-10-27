@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relationships
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resources
 {
     public sealed class UpdateToOneRelationshipTests
         : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
@@ -34,18 +34,29 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
             var requestBody = new
             {
-                data = (object)null
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        assignedTo = new
+                        {
+                            data = (object)null
+                        }
+                    }
+                }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Should().BeEmpty();
+            responseDocument.SingleData.Should().NotBeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -65,7 +76,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact]
-        public async Task Can_create_OneToOne_relationship_from_dependent_side()
+        public async Task Can_create_OneToOne_relationship_from_principal_side()
         {
             // Arrange
             var existingGroup = _fakers.WorkItemGroup.Generate();
@@ -84,19 +95,29 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 data = new
                 {
                     type = "workItemGroups",
-                    id = existingGroup.StringId
+                    id = existingGroup.StringId,
+                    relationships = new
+                    {
+                        color = new
+                        {
+                            data = new
+                            {
+                                type = "rgbColors",
+                                id = existingColor.StringId
+                            }
+                        }
+                    }
                 }
             };
 
-            var route = $"/rgbColors/{existingColor.StringId}/relationships/group";
+            var route = "/workItemGroups/" + existingGroup.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Should().BeEmpty();
+            responseDocument.SingleData.Should().NotBeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -114,7 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact]
-        public async Task Can_replace_OneToOne_relationship_from_principal_side()
+        public async Task Can_replace_OneToOne_relationship_from_dependent_side()
         {
             // Arrange
             var existingGroups = _fakers.WorkItemGroup.Generate(2);
@@ -132,15 +153,27 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 data = new
                 {
                     type = "rgbColors",
-                    id = existingGroups[0].Color.StringId
+                    id = existingGroups[0].Color.StringId,
+                    relationships = new
+                    {
+                        group = new
+                        {
+                            data = new
+                            {
+                                type = "workItemGroups",
+                                id = existingGroups[1].StringId
+                            }
+                        }
+                    }
                 }
             };
 
-            var route = $"/workItemGroups/{existingGroups[1].StringId}/relationships/color";
+            var route = "/rgbColors/" + existingGroups[0].Color.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
+            // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             responseDocument.Should().BeEmpty();
@@ -188,19 +221,30 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             {
                 data = new
                 {
-                    type = "userAccounts",
-                    id = existingUserAccounts[1].StringId
+                    type = "workItems",
+                    id = existingUserAccounts[0].AssignedItems.ElementAt(1).StringId,
+                    relationships = new
+                    {
+                        assignedTo = new
+                        {
+                            data = new
+                            {
+                                type = "userAccounts",
+                                id = existingUserAccounts[1].StringId
+                            }
+                        }
+                    }
                 }
             };
 
-            var route = $"/workItems/{existingUserAccounts[0].AssignedItems.ElementAt(1).StringId}/relationships/assignedTo";
+            var route = "/workItems/" + existingUserAccounts[0].AssignedItems.ElementAt(1).StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Should().BeEmpty();
+            responseDocument.SingleData.Should().NotBeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -227,7 +271,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact]
-        public async Task Cannot_create_for_missing_type()
+        public async Task Cannot_create_for_missing_relationship_type()
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
@@ -242,11 +286,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             {
                 data = new
                 {
-                    id = 99999999
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        assignedTo = new
+                        {
+                            data = new
+                            {
+                                id = 99999999
+                            }
+                        }
+                    }
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -257,11 +312,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'assignedTo' relationship. - Request body: <<");
         }
 
         [Fact]
-        public async Task Cannot_create_for_unknown_type()
+        public async Task Cannot_create_for_unknown_relationship_type()
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
@@ -276,12 +331,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             {
                 data = new
                 {
-                    type = "doesNotExist",
-                    id = 99999999
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        assignedTo = new
+                        {
+                            data = new
+                            {
+                                type = "doesNotExist",
+                                id = 99999999
+                            }
+                        }
+                    }
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -295,8 +361,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist. - Request body: <<");
         }
 
-        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
-        public async Task Cannot_create_for_missing_ID()
+        [Fact]
+        public async Task Cannot_create_for_missing_relationship_ID()
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
@@ -311,11 +377,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             {
                 data = new
                 {
-                    type = "userAccounts"
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        assignedTo = new
+                        {
+                            data = new
+                            {
+                                type = "userAccounts"
+                            }
+                        }
+                    }
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -326,11 +403,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in 'data' element. - Request body: <<");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in 'assignedTo' relationship. - Request body: <<");
         }
 
         [Fact]
-        public async Task Cannot_create_with_unknown_ID()
+        public async Task Cannot_create_with_unknown_relationship_ID()
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
@@ -345,12 +422,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             {
                 data = new
                 {
-                    type = "userAccounts",
-                    id = 99999999
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        assignedTo = new
+                        {
+                            data = new
+                            {
+                                type = "userAccounts",
+                                id = 99999999
+                            }
+                        }
+                    }
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -382,12 +470,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             {
                 data = new
                 {
-                    type = "userAccounts",
-                    id = existingUserAccount.StringId
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        assignedTo = new
+                        {
+                            data = new
+                            {
+                                type = "userAccounts",
+                                id = existingUserAccount.StringId
+                            }
+                        }
+                    }
                 }
             };
 
-            var route = $"/doesNotExist/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = "/doesNotExist/" + existingWorkItem.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -414,12 +513,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             {
                 data = new
                 {
-                    type = "userAccounts",
-                    id = existingUserAccount.StringId
+                    type = "workItems",
+                    id = 99999999,
+                    relationships = new
+                    {
+                        assignedTo = new
+                        {
+                            data = new
+                            {
+                                type = "userAccounts",
+                                id = existingUserAccount.StringId
+                            }
+                        }
+                    }
                 }
             };
 
-            var route = "/workItems/99999999/relationships/assignedTo";
+            var route = "/workItems/99999999";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -431,77 +541,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[0].Title.Should().Be("The requested resource does not exist.");
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'workItems' with ID '99999999' does not exist.");
-        }
-
-        [Fact]
-        public async Task Cannot_create_on_unknown_relationship_in_url()
-        {
-            // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WorkItems.Add(existingWorkItem);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "userAccounts",
-                    id = 99999999
-                }
-            };
-
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/doesNotExist";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("The requested relationship does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named 'doesNotExist'.");
-        }
-
-        [Fact]
-        public async Task Cannot_create_on_relationship_mismatch_between_url_and_body()
-        {
-            // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-            var existingColor = _fakers.RgbColor.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddRange(existingWorkItem, existingColor);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "rgbColors",
-                    id = existingColor.StringId
-                }
-            };
-
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
-
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Conflict);
-            responseDocument.Errors[0].Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
-            responseDocument.Errors[0].Detail.Should().Be($"Expected resource of type 'userAccounts' in PATCH request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/assignedTo', instead of 'rgbColors'.");
         }
     }
 }
