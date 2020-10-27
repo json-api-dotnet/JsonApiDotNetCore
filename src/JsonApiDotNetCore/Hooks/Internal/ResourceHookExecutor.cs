@@ -70,7 +70,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 var diff = new DiffableResourceHashSet<TResource>(node.UniqueResources, dbValues, node.LeftsToNextLayer(), _targetedFields);
                 IEnumerable<TResource> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
-                node.Reassign(_resourceFactory, resources);
+                node.Reassign(resources);
             }
 
             FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(node));
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 var affected = new ResourceHashSet<TResource>((HashSet<TResource>)node.UniqueResources, node.LeftsToNextLayer());
                 IEnumerable<TResource> updated = container.BeforeCreate(affected, pipeline);
                 node.UpdateUnique(updated);
-                node.Reassign(_resourceFactory, resources);
+                node.Reassign(resources);
             }
             FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(node));
             return resources;
@@ -102,7 +102,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
                 IEnumerable<TResource> updated = container.BeforeDelete(affected, pipeline);
                 node.UpdateUnique(updated);
-                node.Reassign(_resourceFactory, resources);
+                node.Reassign(resources);
             }
 
             // If we're deleting an article, we're implicitly affected any owners related to it.
@@ -126,14 +126,14 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 IEnumerable<TResource> updated = container.OnReturn((HashSet<TResource>)node.UniqueResources, pipeline);
                 ValidateHookResponse(updated);
                 node.UpdateUnique(updated);
-                node.Reassign(_resourceFactory, resources);
+                node.Reassign(resources);
             }
 
             Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.OnReturn, (nextContainer, nextNode) =>
             {
                 var filteredUniqueSet = CallHook(nextContainer, ResourceHook.OnReturn, new object[] { nextNode.UniqueResources, pipeline });
                 nextNode.UpdateUnique(filteredUniqueSet);
-                nextNode.Reassign(_resourceFactory);
+                nextNode.Reassign();
             });
             return resources;
         }
@@ -283,7 +283,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                         var allowedIds = CallHook(nestedHookContainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueResources), resourcesByRelationship, pipeline }).Cast<string>();
                         var updated = GetAllowedResources(uniqueResources, allowedIds);
                         node.UpdateUnique(updated);
-                        node.Reassign(_resourceFactory);
+                        node.Reassign();
                     }
                 }
 

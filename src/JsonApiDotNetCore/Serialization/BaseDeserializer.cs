@@ -249,13 +249,13 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (relatedId == null)
             {
-                attr.SetValue(resource, null, ResourceFactory);
+                attr.SetValue(resource, null);
             }
             else
             {
                 var relatedInstance = ResourceFactory.CreateInstance(relationshipType);
                 relatedInstance.StringId = relatedId;
-                attr.SetValue(resource, relatedInstance, ResourceFactory);
+                attr.SetValue(resource, relatedInstance);
             }
         }
 
@@ -275,7 +275,7 @@ namespace JsonApiDotNetCore.Serialization
                     .ToHashSet(IdentifiableComparer.Instance);
 
                 var convertedCollection = TypeHelper.CopyToTypedCollection(rightResources, hasManyRelationship.Property.PropertyType);
-                hasManyRelationship.SetValue(resource, convertedCollection, ResourceFactory);
+                hasManyRelationship.SetValue(resource, convertedCollection);
             }
 
             AfterProcessField(resource, hasManyRelationship, relationshipData);

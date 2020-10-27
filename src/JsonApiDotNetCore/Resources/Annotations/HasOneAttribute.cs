@@ -37,10 +37,9 @@ namespace JsonApiDotNetCore.Resources.Annotations
         }
 
         /// <inheritdoc />
-        public override void SetValue(object resource, object newValue, IResourceFactory resourceFactory)
+        public override void SetValue(object resource, object newValue)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (resourceFactory == null) throw new ArgumentNullException(nameof(resourceFactory));
 
             // TODO: Given recent changes, does the following code still need access to foreign keys, or can this be handled by the caller now?
 
