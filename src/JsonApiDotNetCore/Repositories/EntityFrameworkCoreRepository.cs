@@ -404,7 +404,7 @@ namespace JsonApiDotNetCore.Repositories
                     return await (dynamic) task;
                 }
             }
-            
+
             throw new InvalidOperationException();
         }
 
@@ -520,7 +520,7 @@ namespace JsonApiDotNetCore.Repositories
 
             return null;
         }
-        
+
         /// <summary>
         /// See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
         /// </summary>
