@@ -362,7 +362,6 @@ namespace JsonApiDotNetCore.Repositories
                     var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
                     await navigationEntry.LoadAsync();
                 }
-                
             }
         }
 
@@ -391,7 +390,7 @@ namespace JsonApiDotNetCore.Repositories
 
         private async Task<object[]> GetRightResourcesWhereIdInSet_GenericCall(HasManyThroughAttribute hasManyThroughRelationship, ISet<IIdentifiable> secondaryResourceIds)
         {
-            var genericCallMethod = GetType().GetMethod(nameof(GetRightResourcesWhereIdInSet_GenericCall))!.MakeGenericMethod(hasManyThroughRelationship.ThroughType);
+            var genericCallMethod = GetType().GetMethod(nameof(GetRightResourcesWhereIdInSet_GenericCall)).MakeGenericMethod(hasManyThroughRelationship.ThroughType);
             object[] throughEntities = await (dynamic) genericCallMethod.Invoke(this, new object[] {hasManyThroughRelationship, secondaryResourceIds});
             
             return throughEntities;
@@ -494,7 +493,7 @@ namespace JsonApiDotNetCore.Repositories
 
             return null;
         }
-        
+
         /// <summary>
         /// See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
         /// </summary>

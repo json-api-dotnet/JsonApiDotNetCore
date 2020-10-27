@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Repositories
 
             var getDbSetOpen = typeof(DbContext).GetMethod(nameof(DbContext.Set));
 
-            var getDbSetGeneric = getDbSetOpen!.MakeGenericMethod(entityType);
+            var getDbSetGeneric = getDbSetOpen.MakeGenericMethod(entityType);
             var dbSet = (IQueryable)getDbSetGeneric.Invoke(dbContext, null);
 
             return dbSet;
