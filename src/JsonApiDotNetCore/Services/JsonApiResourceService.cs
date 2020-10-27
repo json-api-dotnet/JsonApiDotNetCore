@@ -266,6 +266,12 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {id, resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
+            foreach (var hasManyRelationship in _targetedFields.Relationships.OfType<HasManyAttribute>())
+            {
+                var rightResources = hasManyRelationship.GetValue(resource);
+                AssertHasManyRelationshipValueIsNotNull(rightResources);
+            }
+
             var resourceFromRequest = resource;
             _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
 
@@ -310,10 +316,9 @@ namespace JsonApiDotNetCore.Services
 
             AssertRelationshipExists(relationshipName);
 
-            if (_request.Relationship is HasManyAttribute && secondaryResourceIds == null)
+            if (_request.Relationship is HasManyAttribute)
             {
-                // TODO: Usage of InvalidRequestBodyException (here and in BaseJsonApiController) is probably not the nest choice, because they do not contain request body.
-                throw new InvalidRequestBodyException("Expected data[] for to-many relationship.", null, null);
+                AssertHasManyRelationshipValueIsNotNull(secondaryResourceIds);
             }
 
             TResource primaryResource = null;
@@ -553,8 +558,7 @@ namespace JsonApiDotNetCore.Services
 
         private void AssertRelationshipExists(string relationshipName)
         {
-            var relationship = _request.Relationship;
-            if (relationship == null)
+            if (_request.Relationship == null)
             {
                 throw new RelationshipNotFoundException(relationshipName, _request.PrimaryResource.PublicName);
             }
@@ -566,6 +570,16 @@ namespace JsonApiDotNetCore.Services
             if (!(relationship is HasManyAttribute))
             {
                 throw new ToManyRelationshipRequiredException(relationship.PublicName);
+            }
+        }
+
+        private void AssertHasManyRelationshipValueIsNotNull(object secondaryResourceIds)
+        {
+            if (secondaryResourceIds == null)
+            {
+                // TODO: Usage of InvalidRequestBodyException (here and in BaseJsonApiController) is probably not the nest choice, because they do not contain request body.
+                // We should either make it include the request body -or- throw a different exception.
+                throw new InvalidRequestBodyException("Expected data[] for to-many relationship.", null, null);
             }
         }
 

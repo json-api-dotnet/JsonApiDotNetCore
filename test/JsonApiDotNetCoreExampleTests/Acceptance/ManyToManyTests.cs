@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
@@ -7,7 +6,6 @@ using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
@@ -94,136 +92,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             responseDocument.ManyData[0].Type.Should().Be("tags");
             responseDocument.ManyData[0].Id.Should().Be(existingArticleTag.Tag.StringId);
             responseDocument.ManyData[0].Attributes.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task Can_Set_HasManyThrough_Relationship_Through_Primary_Endpoint()
-        {
-            // Arrange
-            var existingArticleTag = new ArticleTag
-            {
-                Article = _articleFaker.Generate(),
-                Tag = _tagFaker.Generate()
-            };
-
-            var existingTag = _tagFaker.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddRange(existingArticleTag, existingTag);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "articles",
-                    id = existingArticleTag.Article.StringId,
-                    relationships = new
-                    {
-                        tags = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "tags",
-                                    id = existingTag.StringId
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = $"/api/v1/articles/{existingArticleTag.Article.StringId}";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var articleInDatabase = await dbContext.Articles
-                    .Include(article => article.ArticleTags)
-                    .FirstAsync(article => article.Id == existingArticleTag.Article.Id);
-
-                articleInDatabase.ArticleTags.Should().HaveCount(1);
-                articleInDatabase.ArticleTags.Single().TagId.Should().Be(existingTag.Id);
-            });
-        }
-
-        [Fact]
-        public async Task Can_Set_With_Overlap_To_HasManyThrough_Relationship_Through_Primary_Endpoint()
-        {
-            // Arrange
-            var existingArticleTag = new ArticleTag
-            {
-                Article = _articleFaker.Generate(),
-                Tag = _tagFaker.Generate()
-            };
-
-            var existingTag = _tagFaker.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddRange(existingArticleTag, existingTag);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "articles",
-                    id = existingArticleTag.Article.StringId,
-                    relationships = new
-                    {
-                        tags = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "tags",
-                                    id = existingArticleTag.Tag.StringId
-                                },
-                                new
-                                {
-                                    type = "tags",
-                                    id = existingTag.StringId
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = $"/api/v1/articles/{existingArticleTag.Article.StringId}";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var articleInDatabase = await dbContext.Articles
-                    .Include(article => article.ArticleTags)
-                    .FirstAsync(article => article.Id == existingArticleTag.Article.Id);
-
-                articleInDatabase.ArticleTags.Should().HaveCount(2);
-                articleInDatabase.ArticleTags.Should().ContainSingle(articleTag => articleTag.TagId == existingArticleTag.Tag.Id);
-                articleInDatabase.ArticleTags.Should().ContainSingle(articleTag => articleTag.TagId == existingTag.Id);
-            });
         }
     }
 }
