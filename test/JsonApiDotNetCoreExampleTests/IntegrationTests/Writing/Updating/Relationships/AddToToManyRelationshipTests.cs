@@ -595,8 +595,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         public async Task Can_add_to_HasManyThrough_relationship_with_already_attached_resource()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-            existingWorkItem.WorkItemTags = new[]
+            var workItem = _fakers.WorkItem.Generate();
+            workItem.WorkItemTags = new[]
+            {
+                new WorkItemTag
+                {
+                    Tag = _fakers.WorkTags.Generate()
+                }
+            };
+            
+            var differentWorkItem = _fakers.WorkItem.Generate();
+            differentWorkItem.WorkItemTags = new[]
             {
                 new WorkItemTag
                 {
@@ -604,11 +613,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 }
             };
 
-            var existingTag = _fakers.WorkTags.Generate();
-
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AddRange(existingWorkItem, existingTag);
+                dbContext.AddRange(workItem, differentWorkItem);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -619,17 +626,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     new
                     {
                         type = "workTags",
-                        id = existingWorkItem.WorkItemTags.ElementAt(0).Tag.StringId
+                        id = workItem.WorkItemTags.ElementAt(0).Tag.StringId
                     },
                     new
                     {
                         type = "workTags",
-                        id = existingTag.StringId
+                        id = differentWorkItem.WorkItemTags.ElementAt(0).Tag.StringId
                     }
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+            var route = $"/workItems/{workItem.StringId}/relationships/tags";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
@@ -642,13 +649,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.WorkItemTags)
-                    .ThenInclude(workItemTag => workItemTag.Tag)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                    .Include(wi => wi.WorkItemTags)
+                    .ThenInclude(wit => wit.Tag)
+                    .FirstAsync(wi => wi.Id == workItem.Id);
 
                 workItemInDatabase.WorkItemTags.Should().HaveCount(2);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingWorkItem.WorkItemTags.ElementAt(0).Tag.Id);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTag.Id);
+                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == workItem.WorkItemTags.ElementAt(0).Tag.Id);
+                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == differentWorkItem.WorkItemTags.ElementAt(0).Tag.Id);
             });
         }
 

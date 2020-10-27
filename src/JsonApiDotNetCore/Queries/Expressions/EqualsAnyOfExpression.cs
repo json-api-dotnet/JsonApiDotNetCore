@@ -20,10 +20,11 @@ namespace JsonApiDotNetCore.Queries.Expressions
             TargetAttribute = targetAttribute ?? throw new ArgumentNullException(nameof(targetAttribute));
             Constants = constants ?? throw new ArgumentNullException(nameof(constants));
 
-            if (constants.Count < 2)
-            {
-                throw new ArgumentException("At least two constants are required.", nameof(constants));
-            }
+            // TODO: Why is this necessary? Removing this does not lead to failing tests
+            // if (constants.Count < 2)
+            // {
+            //     throw new ArgumentException("At least two constants are required.", nameof(constants));
+            // }
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)

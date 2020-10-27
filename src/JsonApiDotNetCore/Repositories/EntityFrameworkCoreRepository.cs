@@ -163,7 +163,7 @@ namespace JsonApiDotNetCore.Repositories
             if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
             {
                 // In the case of many-to-many relationships, creating a duplicate entry in the join table results in a uniqueness constraint violation.
-                await RemoveAlreadyRelatedResourcesFromAssignment(hasManyThroughRelationship, secondaryResourceIds);
+                await RemoveAlreadyRelatedResourcesFromAssignment(hasManyThroughRelationship, id, secondaryResourceIds);
             }
             
             var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
@@ -352,17 +352,20 @@ namespace JsonApiDotNetCore.Repositories
             {
                 if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
                 {
-                    await _dbContext
-                        .Set<TResource>()
-                        .Include(relationship.RelationshipPath)
-                        .FirstAsync(r => r.Id.Equals(resource.Id));
+                    var throughEntities = await GetFilteredThroughEntities_QueryBuilderCall(hasManyThroughRelationship, resource.Id, null);
+                    hasManyThroughRelationship.ThroughProperty.SetValue(resource, TypeHelper.CopyToTypedCollection(throughEntities,  hasManyThroughRelationship.ThroughProperty.PropertyType));
+                    
+                    foreach (var throughEntity in throughEntities)
+                    {
+                        var rightResource = ConstructRightResourceOfHasManyRelationship(throughEntity, hasManyThroughRelationship);
+                        hasManyThroughRelationship.RightProperty.SetValue(throughEntity, rightResource);
+                    }
                 }
                 else
                 {
                     var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
                     await navigationEntry.LoadAsync();
                 }
-                
             }
         }
 
@@ -372,15 +375,15 @@ namespace JsonApiDotNetCore.Repositories
             Detach(trackedResource);
         }
 
-        private async Task RemoveAlreadyRelatedResourcesFromAssignment(HasManyThroughAttribute hasManyThroughRelationship, ISet<IIdentifiable> secondaryResourceIds)
+        private async Task RemoveAlreadyRelatedResourcesFromAssignment(HasManyThroughAttribute hasManyThroughRelationship, TId primaryResourceId, ISet<IIdentifiable> secondaryResourceIds)
         {
             object[] throughEntities;
             
-            throughEntities = await GetRightResourcesWhereIdInSet_GenericCall(hasManyThroughRelationship, secondaryResourceIds);
+            throughEntities = await GetFilteredThroughEntities_GenericCall(hasManyThroughRelationship, primaryResourceId, secondaryResourceIds);
 
-            // throughEntities = await GetRightResourcesWhereIdInSet_DynamicCall(hasManyThroughRelationship, secondaryResourceIds);
+            throughEntities = await GetFilteredThroughEntities_DynamicCall(hasManyThroughRelationship, primaryResourceId, secondaryResourceIds);
 
-            // throughEntities = await GetRightResourcesWhereIdInSet_QueryBuilderCall(hasManyThroughRelationship, secondaryResourceIds);
+            throughEntities = await GetFilteredThroughEntities_QueryBuilderCall(hasManyThroughRelationship, primaryResourceId, secondaryResourceIds);
 
 
             var rightResources = throughEntities.Select(entity => ConstructRightResourceOfHasManyRelationship(entity, hasManyThroughRelationship)).ToHashSet();
@@ -389,38 +392,51 @@ namespace JsonApiDotNetCore.Repositories
             Detach(throughEntities);
         }
 
-        private async Task<object[]> GetRightResourcesWhereIdInSet_GenericCall(HasManyThroughAttribute hasManyThroughRelationship, ISet<IIdentifiable> secondaryResourceIds)
+        private async Task<object[]> GetFilteredThroughEntities_GenericCall(HasManyThroughAttribute hasManyThroughRelationship, TId leftIdFilter, ISet<IIdentifiable> rightIdFilter)
         {
-            var genericCallMethod = GetType().GetMethod(nameof(GetRightResourcesWhereIdInSet_GenericCall))!.MakeGenericMethod(hasManyThroughRelationship.ThroughType);
-            object[] throughEntities = await (dynamic) genericCallMethod.Invoke(this, new object[] {hasManyThroughRelationship, secondaryResourceIds});
+            var openGenericCallMethod = GetType().GetMethod(nameof(GetFilteredThroughEntities_GenericCall));
+            if (openGenericCallMethod != null)
+            {
+                var genericCallMethod = openGenericCallMethod.MakeGenericMethod(hasManyThroughRelationship.ThroughType);
+                var task = genericCallMethod.Invoke(this, new object[] {hasManyThroughRelationship, leftIdFilter, rightIdFilter});
+                if (task != null)
+                {
+                    return await (dynamic) task;
+                }
+            }
             
-            return throughEntities;
+            throw new InvalidOperationException();
         }
 
-        public async Task<object[]> GetRightResourcesWhereIdInSet_GenericCall<TThroughType>(HasManyThroughAttribute relationship, ISet<IIdentifiable> secondaryResourceIds) where TThroughType : class
+        public async Task<object[]> GetFilteredThroughEntities_GenericCall<TThroughType>(HasManyThroughAttribute relationship, TId leftIdFilter, ISet<IIdentifiable> rightIdFilter) where TThroughType : class
         {
             var namingFactory = new LambdaParameterNameFactory();
             var throughEntityParameter = Expression.Parameter(relationship.ThroughType, namingFactory.Create(relationship.ThroughType.Name).Name);
             
-            var containsCall = GetContainsCall(relationship, secondaryResourceIds, throughEntityParameter);
-
-            var containsPredicate = Expression.Lambda<Func<TThroughType, bool>>(containsCall, throughEntityParameter);
-            var result = await _dbContext.Set<TThroughType>().Where(containsPredicate).ToListAsync();
+            var containsCall = GetContainsCall(relationship, throughEntityParameter, rightIdFilter);
+            var equalsCall = GetEqualsCall(relationship, throughEntityParameter, leftIdFilter);
+            var conjunction = Expression.AndAlso(equalsCall, containsCall);
+            
+            var predicate = Expression.Lambda<Func<TThroughType, bool>>(conjunction, throughEntityParameter);
+            var result = await _dbContext.Set<TThroughType>().Where(predicate).ToListAsync();
 
             return result.Cast<object>().ToArray();
         }
-
-        private async Task<object[]> GetRightResourcesWhereIdInSet_DynamicCall(HasManyThroughAttribute relationship, ISet<IIdentifiable> secondaryResourceIds)
+        
+        private async Task<object[]> GetFilteredThroughEntities_DynamicCall(HasManyThroughAttribute relationship, TId primaryResourceId, ISet<IIdentifiable> secondaryResourceIds)
         {
             var namingFactory = new LambdaParameterNameFactory();
             var parameterName = namingFactory.Create(relationship.ThroughType.Name).Name;
             var throughEntityParameter = Expression.Parameter(relationship.ThroughType, parameterName);
             
-            var containsCall = GetContainsCall(relationship, secondaryResourceIds, throughEntityParameter);
-            var containsPredicate = Expression.Lambda(containsCall, throughEntityParameter);
+            var containsCall = GetContainsCall(relationship, throughEntityParameter, secondaryResourceIds) ;
+            var equalsCall = GetEqualsCall(relationship, throughEntityParameter, primaryResourceId);
+            var conjunction = Expression.AndAlso(equalsCall, containsCall);
 
+            var predicate = Expression.Lambda(conjunction, throughEntityParameter);
+        
             IQueryable throughSource = _dbContext.Set(relationship.ThroughType);
-            var whereClause = Expression.Call(typeof(Queryable), nameof(Queryable.Where), new[] { relationship.ThroughType }, throughSource.Expression, containsPredicate);
+            var whereClause = Expression.Call(typeof(Queryable), nameof(Queryable.Where), new[] { relationship.ThroughType }, throughSource.Expression, predicate);
             
             dynamic query = throughSource.Provider.CreateQuery(whereClause);
             IEnumerable result = await EntityFrameworkQueryableExtensions.ToListAsync(query);
@@ -428,20 +444,28 @@ namespace JsonApiDotNetCore.Repositories
             return result.Cast<object>().ToArray();
         }
         
-        private async Task<object[]> GetRightResourcesWhereIdInSet_QueryBuilderCall(HasManyThroughAttribute relationship, ISet<IIdentifiable> secondaryResourceIds)
+        private async Task<object[]> GetFilteredThroughEntities_QueryBuilderCall(HasManyThroughAttribute relationship, TId leftIdFilter, ISet<IIdentifiable> rightIdFilter)
         {
-            var targetAttributes = new ResourceFieldChainExpression(new AttrAttribute { Property =  relationship.RightIdProperty, PublicName = relationship.RightIdProperty.Name });
-            var ids = secondaryResourceIds.Select(r => new LiteralConstantExpression(r.StringId)).ToList().AsReadOnly();
-            var equalsAnyOf = new EqualsAnyOfExpression(targetAttributes, ids);
+            var comparisonTargetField = new ResourceFieldChainExpression(new AttrAttribute { Property =  relationship.LeftIdProperty });
+            var comparisionId = new LiteralConstantExpression(leftIdFilter.ToString());
+            FilterExpression filter = new ComparisonExpression(ComparisonOperator.Equals, comparisonTargetField, comparisionId);
 
+            if (rightIdFilter != null)
+            {
+                var equalsAnyOfTargetField = new ResourceFieldChainExpression(new AttrAttribute { Property =  relationship.RightIdProperty });
+                var equalsAnyOfIds = rightIdFilter.Select(r => new LiteralConstantExpression(r.StringId)).ToArray();
+                var equalsAnyOf = new EqualsAnyOfExpression(equalsAnyOfTargetField, equalsAnyOfIds);                
+                filter = new LogicalExpression(LogicalOperator.And, new QueryExpression[] { filter, equalsAnyOf } );
+            }
+            
             IQueryable throughSource = _dbContext.Set(relationship.ThroughType);
 
             var scopeFactory = new LambdaScopeFactory(new LambdaParameterNameFactory());
             var scope = scopeFactory.CreateScope(relationship.ThroughType);
             
             var whereClauseBuilder = new WhereClauseBuilder(throughSource.Expression, scope, typeof(Queryable));
-            var whereClause = whereClauseBuilder.ApplyWhere(equalsAnyOf);
-            
+            var whereClause = whereClauseBuilder.ApplyWhere(filter);
+
             dynamic query = throughSource.Provider.CreateQuery(whereClause);
             IEnumerable result = await EntityFrameworkQueryableExtensions.ToListAsync(query);
 
@@ -456,20 +480,26 @@ namespace JsonApiDotNetCore.Repositories
             return rightResource;
         }
 
-        private MethodCallExpression GetContainsCall(HasManyThroughAttribute relationship,
-            ISet<IIdentifiable> secondaryResourceIds, ParameterExpression throughEntityParameter)
+        private MethodCallExpression GetContainsCall(HasManyThroughAttribute relationship, ParameterExpression throughEntityParameter, ISet<IIdentifiable> secondaryResourceIds)
         {
-            
-            var tagIdProperty = Expression.Property(throughEntityParameter, relationship.RightIdProperty.Name);
+            var rightIdProperty = Expression.Property(throughEntityParameter, relationship.RightIdProperty.Name);
 
             var intType = relationship.RightIdProperty.PropertyType;
             var typedIds = TypeHelper.CopyToList(secondaryResourceIds.Select(r => r.GetTypedId()), intType);
             var idCollectionConstant = Expression.Constant(typedIds);
 
             var containsCall = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), new[] {intType},
-                idCollectionConstant, tagIdProperty);
+                idCollectionConstant, rightIdProperty);
             
             return containsCall;
+        }
+        
+        private BinaryExpression GetEqualsCall(HasManyThroughAttribute relationship, ParameterExpression throughEntityParameter, TId primaryResourceId)
+        {
+            var leftIdProperty = Expression.Property(throughEntityParameter, relationship.LeftIdProperty.Name);
+            var idConstant = Expression.Constant(primaryResourceId, typeof(TId));
+
+            return Expression.Equal(leftIdProperty, idConstant);
         }
 
         private NavigationEntry GetNavigationEntryForRelationship(RelationshipAttribute relationship, TResource resource)
@@ -478,10 +508,6 @@ namespace JsonApiDotNetCore.Repositories
 
             switch (relationship)
             {
-                // case HasManyThroughAttribute hasManyThroughRelationship:
-                // {
-                //     return entityEntry.Collection(hasManyThroughRelationship.ThroughProperty.Name);
-                // }
                 case HasManyAttribute hasManyRelationship:
                 {
                     return entityEntry.Collection(hasManyRelationship.Property.Name);
