@@ -108,11 +108,15 @@ namespace JsonApiDotNetCore.Resources.Annotations
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            IEnumerable throughEntities = (IEnumerable)ThroughProperty.GetValue(resource) ?? Array.Empty<object>();
+            var value = ThroughProperty.GetValue(resource);
+            if (value == null)
+            {
+                return null;
+            }
 
-            IEnumerable<object> rightResources = throughEntities
+            IEnumerable<object> rightResources = ((IEnumerable) value)
                 .Cast<object>()
-                .Select(te =>  RightProperty.GetValue(te));
+                .Select(joinEntity => RightProperty.GetValue(joinEntity));
 
             return TypeHelper.CopyToTypedCollection(rightResources, Property.PropertyType);
         }
