@@ -387,6 +387,32 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_resource_on_unknown_resource_type_in_url()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    attributes = new
+                    {
+                    }
+                }
+            };
+
+            var route = "/doesNotExist";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            responseDocument.Should().BeEmpty();
+        }
+
+        [Fact]
         public async Task Cannot_create_resource_with_blocked_attribute()
         {
             // Arrange
