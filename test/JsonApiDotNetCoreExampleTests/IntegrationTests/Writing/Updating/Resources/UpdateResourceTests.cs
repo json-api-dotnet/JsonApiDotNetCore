@@ -482,6 +482,34 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
         }
 
         [Fact]
+        public async Task Cannot_update_resource_for_missing_request_body()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = string.Empty;
+
+            var route = "/workItems/" + existingWorkItem.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            responseDocument.Errors[0].Title.Should().Be("Missing request body.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+        }
+
+        [Fact]
         public async Task Cannot_update_resource_for_missing_type()
         {
             // Arrange

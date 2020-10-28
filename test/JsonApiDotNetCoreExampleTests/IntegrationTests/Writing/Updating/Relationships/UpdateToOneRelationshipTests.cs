@@ -227,6 +227,34 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact]
+        public async Task Cannot_replace_for_missing_request_body()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = string.Empty;
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            responseDocument.Errors[0].Title.Should().Be("Missing request body.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+        }
+
+        [Fact]
         public async Task Cannot_create_for_missing_type()
         {
             // Arrange
@@ -295,7 +323,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist. - Request body: <<");
         }
 
-        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        [Fact]
         public async Task Cannot_create_for_missing_ID()
         {
             // Arrange
@@ -326,7 +354,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in 'data' element. - Request body: <<");
+            responseDocument.Errors[0].Detail.Should().StartWith("Request body: <<");
         }
 
         [Fact]
