@@ -139,10 +139,7 @@ namespace JsonApiDotNetCore.Configuration
             AddSerializationLayer();
             AddQueryStringLayer();
 
-            if (_options.EnableResourceHooks)
-            {
-                AddResourceHooks();
-            }
+            AddResourceHooks();
 
             _services.AddScoped<IGenericServiceFactory, GenericServiceFactory>();
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
@@ -240,12 +237,19 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         private void AddResourceHooks()
-        {
-            _services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));
-            _services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceHooksDefinition<>));
-            _services.AddTransient(typeof(IResourceHookExecutor), typeof(ResourceHookExecutor));
-            _services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
-            _services.AddTransient<ITraversalHelper, TraversalHelper>();
+        { 
+            if (_options.EnableResourceHooks)
+            {
+                _services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));
+                _services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceHooksDefinition<>));
+                _services.AddTransient<IResourceHookExecutor, ResourceHookExecutor>();
+                _services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
+                _services.AddTransient<ITraversalHelper, TraversalHelper>();
+            }
+            else
+            {
+                _services.AddTransient<IResourceHookExecutor, NullResourceHookExecutor>();
+            }
         }
 
         private void AddSerializationLayer()
