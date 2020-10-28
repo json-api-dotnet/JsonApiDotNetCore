@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         [Fact]
-        public async Task Can_clear_HasOne_relationship()
+        public async Task Can_clear_ManyToOne_relationship()
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
@@ -54,13 +54,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
 
                 workItemInDatabase.AssignedTo.Should().BeNull();
-
-                var userAccountInDatabase = await dbContext.UserAccounts
-                    .Include(userAccount => userAccount.AssignedItems)
-                    .FirstOrDefaultAsync(userAccount => userAccount.Id == existingWorkItem.AssignedTo.Id);
-
-                userAccountInDatabase.Should().NotBeNull();
-                userAccountInDatabase.AssignedItems.Should().BeEmpty();
             });
         }
 
@@ -211,18 +204,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 var workItemInDatabase2 = workItemsInDatabase.Single(p => p.Id == existingUserAccounts[0].AssignedItems.ElementAt(1).Id);
                 workItemInDatabase2.AssignedTo.Should().NotBeNull();
                 workItemInDatabase2.AssignedTo.Id.Should().Be(existingUserAccounts[1].Id);
-
-                var userAccountsInDatabase = await dbContext.UserAccounts
-                    .Include(userAccount => userAccount.AssignedItems)
-                    .ToListAsync();
-
-                var userAccountInDatabase1 = userAccountsInDatabase.Single(userAccount => userAccount.Id == existingUserAccounts[0].Id);
-                userAccountInDatabase1.AssignedItems.Should().HaveCount(1);
-                userAccountInDatabase1.AssignedItems.Single().Id.Should().Be(existingUserAccounts[0].AssignedItems.ElementAt(0).Id);
-
-                var userAccountInDatabase2 = userAccountsInDatabase.Single(userAccount => userAccount.Id == existingUserAccounts[1].Id);
-                userAccountInDatabase2.AssignedItems.Should().HaveCount(1);
-                userAccountInDatabase2.AssignedItems.Single().Id.Should().Be(existingUserAccounts[0].AssignedItems.ElementAt(1).Id);
             });
         }
 
