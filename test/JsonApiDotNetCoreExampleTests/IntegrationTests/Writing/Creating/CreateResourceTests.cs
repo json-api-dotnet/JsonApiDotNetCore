@@ -471,5 +471,25 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
             responseDocument.Errors[0].Detail.Should().StartWith("Property 'WorkItemGroup.ConcurrencyToken' is read-only. - Request body:");
         }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_broken_JSON_request_body()
+        {
+            // Arrange
+            var requestBody = "{ \"data\" {";
+
+            var route = "/workItemGroups";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Invalid character after parsing");
+        }
     }
 }
