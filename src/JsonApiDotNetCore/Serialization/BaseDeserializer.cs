@@ -202,7 +202,7 @@ namespace JsonApiDotNetCore.Serialization
                 relationshipType = resourceContext.ResourceType;
             }
 
-            // TODO: this does not make sense in the following case: if we're setting the dependent of a one-to-one relationship, IdentifiablePropertyName should be null.
+            // TODO: this does not make sense in the following case: if we're setting the principal side of a one-to-one relationship, IdentifiablePropertyName should be null.
             var foreignKeyProperty = resourceProperties.FirstOrDefault(p => p.Name == hasOneRelationship.IdentifiablePropertyName);
 
             if (foreignKeyProperty != null)

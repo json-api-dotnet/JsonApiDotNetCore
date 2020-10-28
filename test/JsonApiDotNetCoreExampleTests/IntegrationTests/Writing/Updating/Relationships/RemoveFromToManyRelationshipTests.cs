@@ -377,7 +377,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist. - Request body: <<");
         }
 
-        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        // TODO: Consider moving to RequestDeserializerTests
+        [Fact]
         public async Task Cannot_remove_for_missing_ID()
         {
             // Arrange

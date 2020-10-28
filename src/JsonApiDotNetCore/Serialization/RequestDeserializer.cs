@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -37,12 +38,16 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (body == null) throw new ArgumentNullException(nameof(body));
 
+            var result = DeserializeBody(body);
+            
             if (_request.Kind == EndpointKind.Relationship)
             {
                 _targetedFields.Relationships.Add(_request.Relationship);
+                
+                // AssertHasId(result);
             }
             
-            return DeserializeBody(body);
+            return result;
         }
 
         /// <summary>
@@ -76,6 +81,31 @@ namespace JsonApiDotNetCore.Serialization
             }
             else if (field is RelationshipAttribute relationship)
                 _targetedFields.Relationships.Add(relationship);
+        }
+        
+        private void AssertHasId(object deserialized)
+        {
+            if (deserialized != null)
+            {
+                IEnumerable<IIdentifiable> resources;
+
+                if (deserialized is IIdentifiable identifiable)
+                {
+                    resources = new[] { identifiable };
+                }
+                else
+                {
+                    resources = (IEnumerable<IIdentifiable>) deserialized;
+                }
+
+                foreach (var r in resources)
+                {
+                    if (string.IsNullOrEmpty(r.StringId)) 
+                    {
+                        throw new InvalidRequestBodyException("Request body must include 'id' element.", "Expected 'id' element in 'data' element.",null);
+                    }
+                }
+            }
         }
     }
 }

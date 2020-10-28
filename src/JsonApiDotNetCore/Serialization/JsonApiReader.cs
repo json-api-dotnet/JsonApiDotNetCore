@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -69,13 +70,14 @@ namespace JsonApiDotNetCore.Serialization
                 throw new InvalidRequestBodyException(null, null, body, exception);
             }
 
-            ValidatePatchRequestIncludesId(context, model, body);
+            ValidateRequestIncludesId(context, model, body);
 
             ValidateIncomingResourceType(context, model);
             
             return await InputFormatterResult.SuccessAsync(model);
         }
 
+        // TODO: Consider moving these assertions to RequestDeserializer. See next todo.
         private void ValidateIncomingResourceType(InputFormatterContext context, object model)
         {
             if (context.HttpContext.IsJsonApiRequest() && context.HttpContext.Request.Method != HttpMethods.Get)
@@ -102,16 +104,21 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        private void ValidatePatchRequestIncludesId(InputFormatterContext context, object model, string body)
+        // TODO: Consider moving these assertions to RequestDeserializer.
+        // Right now, BaseDeserializer is responsible for throwing errors when id/type is missing in scenarios that this is ALWAYS true,
+        // regardless of server/client side deserialization. The assertions below are only relevant for server deserializers since they depend on
+        // IJsonApiRequest and HttpContextAccessor. Right now these two are already used to check the http request method and endpoint kind, so might as well move this into there.
+        // Additional up side: testability improves.
+        private void ValidateRequestIncludesId(InputFormatterContext context, object model, string body)
         {
-            if (context.HttpContext.Request.Method == HttpMethods.Patch)
+            if (context.HttpContext.Request.Method == HttpMethods.Patch || _request.Kind == EndpointKind.Relationship)
             {
-                bool hasMissingId = model is IList list ? HasMissingId(list) : HasMissingId(model);
+                bool hasMissingId = model is IEnumerable collection ? HasMissingId(collection) : HasMissingId(model);
                 if (hasMissingId)
                 {
-                    throw new InvalidRequestBodyException("Request body must include 'id' element.", null, body);
+                    throw new InvalidRequestBodyException("Request body must include 'id' element.", "Expected 'id' element in 'data' element.", body);
                 }
-
+                
                 if (_request.Kind == EndpointKind.Primary && TryGetId(model, out var bodyId) && bodyId != _request.PrimaryId)
                 {
                     throw new ResourceIdMismatchException(bodyId, _request.PrimaryId, context.HttpContext.Request.GetDisplayUrl());
@@ -141,12 +148,6 @@ namespace JsonApiDotNetCore.Serialization
 
         private static bool TryGetId(object model, out string id)
         {
-            if (model is ResourceObject resourceObject)
-            {
-                id = resourceObject.Id;
-                return true;
-            }
-
             if (model is IIdentifiable identifiable)
             {
                 id = identifiable.StringId;

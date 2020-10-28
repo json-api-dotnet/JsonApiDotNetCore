@@ -304,6 +304,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             });
         }
 
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Cannot_add_for_missing_type()
         {
@@ -340,7 +341,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
         }
-
+        
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Cannot_add_for_unknown_type()
         {
@@ -379,7 +381,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist. - Request body: <<");
         }
 
-        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        // TODO: Consider moving to RequestDeserializerTests
+        [Fact]
         public async Task Cannot_add_for_missing_ID()
         {
             // Arrange
@@ -624,6 +627,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named 'doesNotExist'.");
         }
 
+        // TODO: Consider moving to RequestDeserializerTests
         [Fact]
         public async Task Cannot_add_for_relationship_mismatch_between_url_and_body()
         {

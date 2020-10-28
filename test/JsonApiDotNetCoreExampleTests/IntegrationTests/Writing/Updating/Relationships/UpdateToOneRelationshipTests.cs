@@ -8,6 +8,21 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relationships
 {
+    // TODO:
+    // consider using workItem instead of 'existingWorkItem'. 
+    //     - understandable without while not as verbose, less = more
+    //     - in line with what we had/have
+    
+    // TODO:
+    // Consider using abbreviations instead of full parameter names in lambdas
+    //    - in line with what we had
+    //    - more readable because less verbose
+    
+    // TODO: 
+    // Array.Empty<object>() vs new object[0]
+    
+    // TODO:
+    // Double assertions
     public sealed class UpdateToOneRelationshipTests
         : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
@@ -18,7 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         {
             _testContext = testContext;
         }
-
+ 
         [Fact]
         public async Task Can_clear_HasOne_relationship()
         {
@@ -55,6 +70,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
                 workItemInDatabase.AssignedTo.Should().BeNull();
 
+                // TODO: When checking if workItemInDatabase.AssignedTo is null, there is no need to also check that userAccountInDatabase.AssignedItems is empty
+                
                 var userAccountInDatabase = await dbContext.UserAccounts
                     .Include(userAccount => userAccount.AssignedItems)
                     .FirstOrDefaultAsync(userAccount => userAccount.Id == existingWorkItem.AssignedTo.Id);
@@ -104,6 +121,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     .Include(rgbColor => rgbColor.Group)
                     .ToListAsync();
 
+                // TODO: Redundant: given that we're working with a OneToOne relationship, if colorInDatabase2 is assigned to existingGroup
+                // then it CANNOT be associated with colorInDatabase1 any more. this double assertion we're merely
+                // verifying that EF Core knows how to deals with relationships correctly, which I think is not the scope of this test.
                 var colorInDatabase1 = colorsInDatabase.Single(p => p.Id == existingGroup.Color.Id);
                 colorInDatabase1.Group.Should().BeNull();
 
@@ -150,7 +170,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 var groupsInDatabase = await dbContext.Groups
                     .Include(group => group.Color)
                     .ToListAsync();
-
+                
                 var groupInDatabase1 = groupsInDatabase.Single(p => p.Id == existingGroups[0].Id);
                 groupInDatabase1.Color.Should().BeNull();
 
@@ -226,6 +246,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             });
         }
 
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Cannot_create_for_missing_type()
         {
@@ -260,6 +281,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
         }
 
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Cannot_create_for_unknown_type()
         {
@@ -295,7 +317,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist. - Request body: <<");
         }
 
-        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        // TODO: Consider moving to RequestDeserializerTests
+        [Fact]
         public async Task Cannot_create_for_missing_ID()
         {
             // Arrange
@@ -365,6 +388,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'userAccounts' with ID '99999999' being assigned to relationship 'assignedTo' does not exist.");
         }
 
+        // TODO: This test is not specific to the XX Endpoint.
         [Fact]
         public async Task Cannot_create_on_unknown_resource_type_in_url()
         {
@@ -468,6 +492,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named 'doesNotExist'.");
         }
 
+        // TODO: Consider moving to RequestDeserializerTests
         [Fact]
         public async Task Cannot_create_on_relationship_mismatch_between_url_and_body()
         {
