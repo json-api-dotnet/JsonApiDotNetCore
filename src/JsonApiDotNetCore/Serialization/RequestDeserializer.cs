@@ -66,8 +66,8 @@ namespace JsonApiDotNetCore.Serialization
                     !attr.Capabilities.HasFlag(AttrCapabilities.AllowCreate))
                 {
                     throw new InvalidRequestBodyException(
-                        "Assigning to the requested attribute is not allowed.",
-                        $"Assigning to '{attr.PublicName}' is not allowed.", null);
+                        "Setting the initial value of the requested attribute is not allowed.",
+                        $"Setting the initial value of '{attr.PublicName}' is not allowed.", null);
                 }
 
                 if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Patch.Method &&

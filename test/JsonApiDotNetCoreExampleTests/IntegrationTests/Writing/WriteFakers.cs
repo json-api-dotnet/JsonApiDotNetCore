@@ -31,7 +31,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
         private readonly Lazy<Faker<WorkItemGroup>> _lazyWorkItemGroupFaker = new Lazy<Faker<WorkItemGroup>>(() =>
             new Faker<WorkItemGroup>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(p => p.Name, f => f.Lorem.Word()));
+                .RuleFor(p => p.Name, f => f.Lorem.Word())
+                .RuleFor(p => p.IsPublic, f => f.Random.Bool()));
 
         private readonly Lazy<Faker<RgbColor>> _lazyRgbColorFaker = new Lazy<Faker<RgbColor>>(() =>
             new Faker<RgbColor>()

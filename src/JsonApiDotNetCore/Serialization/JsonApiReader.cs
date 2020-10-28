@@ -119,7 +119,7 @@ namespace JsonApiDotNetCore.Serialization
                 
                 if (_request.Kind == EndpointKind.Primary && TryGetId(model, out var bodyId) && bodyId != _request.PrimaryId)
                 {
-                    throw new ResourceIdMismatchException(bodyId, _request.PrimaryId, context.HttpContext.Request.GetDisplayUrl());
+                    throw new ResourceIdMismatchException(bodyId, _request.PrimaryId, context.HttpContext.Request.Path);
                 }
             }
         }

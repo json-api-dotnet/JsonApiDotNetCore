@@ -385,8 +385,33 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist.");
-            responseDocument.Errors[0].Detail.Should().Contain("Request body: <<");
+            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist. - Request body: <<");
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_on_unknown_resource_type_in_url()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    attributes = new
+                    {
+                    }
+                }
+            };
+
+            var route = "/doesNotExist";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            responseDocument.Should().BeEmpty();
         }
 
         // TODO: Can we rename this to something with "AttrCapabilities" to be more explicit? Right now I needed to go to the model to understand the test.
@@ -416,8 +441,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Assigning to the requested attribute is not allowed.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Assigning to 'concurrencyToken' is not allowed. - Request body:");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Setting the initial value of the requested attribute is not allowed.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Setting the initial value of 'concurrencyToken' is not allowed. - Request body:");
         }
 
         // TODO: Deserialization issues because of properties not having setters is something I would prefer testing in unit tests.
@@ -450,6 +475,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
             responseDocument.Errors[0].Detail.Should().StartWith("Property 'WorkItemGroup.ConcurrencyToken' is read-only. - Request body:");
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_broken_JSON_request_body()
+        {
+            // Arrange
+            var requestBody = "{ \"data\" {";
+
+            var route = "/workItemGroups";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Invalid character after parsing");
         }
     }
 }

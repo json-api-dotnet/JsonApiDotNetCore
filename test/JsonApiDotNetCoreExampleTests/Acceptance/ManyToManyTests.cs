@@ -10,6 +10,8 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
+    // TODO: Move left-over tests in this file.
+
     public sealed class ManyToManyTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
     {
         private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
