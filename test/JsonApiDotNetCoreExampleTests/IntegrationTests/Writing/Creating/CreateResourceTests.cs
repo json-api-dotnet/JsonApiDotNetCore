@@ -382,8 +382,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist.");
-            responseDocument.Errors[0].Detail.Should().Contain("Request body: <<");
+            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist. - Request body: <<");
         }
 
         [Fact]
@@ -438,8 +437,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Assigning to the requested attribute is not allowed.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Assigning to 'concurrencyToken' is not allowed. - Request body:");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Setting the initial value of the requested attribute is not allowed.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Setting the initial value of 'concurrencyToken' is not allowed. - Request body:");
         }
 
         [Fact]
