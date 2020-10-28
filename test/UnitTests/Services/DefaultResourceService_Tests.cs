@@ -4,6 +4,7 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Internal;
@@ -91,7 +92,7 @@ namespace UnitTests.Services
 
             return new JsonApiResourceService<TodoItem>(_repositoryMock.Object, repositoryAccessor, composer,
                 paginationContext, options, NullLoggerFactory.Instance, request, changeTracker, resourceFactory,
-                targetedFields, resourceContextProvider);
+                targetedFields, resourceContextProvider, NullResourceHookExecutor.Instance);
         }
     }
 }
