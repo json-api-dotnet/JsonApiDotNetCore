@@ -72,14 +72,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // TODO: Consistency: use FirstAsync().
                 var groupsInDatabase = await dbContext.Groups
                     .Include(group => group.Color)
                     .ToListAsync();
-
+                
                 var newGroupInDatabase = groupsInDatabase.Single(p => p.StringId == newGroupId);
                 newGroupInDatabase.Color.Should().NotBeNull();
                 newGroupInDatabase.Color.Id.Should().Be(existingGroup.Color.Id);
 
+                // TODO: Double assertions.
                 var existingGroupInDatabase = groupsInDatabase.Single(p => p.Id == existingGroup.Id);
                 existingGroupInDatabase.Color.Should().BeNull();
             });
@@ -140,6 +142,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 newColorInDatabase.Group.Should().NotBeNull();
                 newColorInDatabase.Group.Id.Should().Be(existingColor.Group.Id);
 
+                // TODO: Double assertions.
                 var existingColorInDatabase = colorsInDatabase.Single(p => p.Id == existingColor.Id);
                 existingColorInDatabase.Group.Should().BeNull();
             });
@@ -198,6 +201,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // TODO: Consistency: use FirstAsync().
                 var workItemsInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.AssignedTo)
                     .ToListAsync();
@@ -270,6 +274,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // TODO: Consistency: use FirstAsync().
                 var workItemsInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.AssignedTo)
                     .ToListAsync();
@@ -282,6 +287,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             });
         }
 
+
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Cannot_create_resource_for_missing_HasOne_relationship_type()
         {
@@ -318,6 +325,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'assignedTo' relationship. - Request body: <<");
         }
 
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Cannot_create_resource_for_missing_HasOne_relationship_ID()
         {
@@ -763,6 +771,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             });
         }
 
+        // TODO: It is interesting that this one does not fail. Because of the unknown type it doesn't make it further than the serializer
+        // If the type was known it would fail. That seems inconsistent. Consider changing the serializer to throw on invalid relationships.
         [Fact]
         public async Task Can_create_resource_with_unknown_relationship()
         {
@@ -809,6 +819,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             });
         }
 
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Cannot_create_resource_for_missing_HasMany_relationship_type()
         {
@@ -848,6 +859,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'subscribers' relationship. - Request body: <<");
         }
 
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Cannot_create_resource_for_missing_HasMany_relationship_ID()
         {

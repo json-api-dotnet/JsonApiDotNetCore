@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
 {
+    // TODO: What does a WorkItemGroup represent? I'm not so sure about this being an intuitive model like Article with Authors etc. 
     public sealed class WorkItemGroup : Identifiable<Guid>
     {
         [Attr]

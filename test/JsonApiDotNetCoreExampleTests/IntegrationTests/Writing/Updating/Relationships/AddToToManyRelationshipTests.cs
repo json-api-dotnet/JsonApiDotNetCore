@@ -515,6 +515,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[1].Detail.Should().Be("Resource of type 'workTags' with ID '99999999' being assigned to relationship 'tags' does not exist.");
         }
 
+        // TODO: This is a very general 404 test which is not exclusive to this or any of the other endpoints where it is duplicated.
         [Fact]
         public async Task Cannot_add_to_unknown_resource_type_in_url()
         {
@@ -628,6 +629,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
 
         // TODO: Consider moving to RequestDeserializerTests
+        // TODO: Inconsistent naming: "on" vs for" compared to equivalent tests in UpdateToOneRelationshipTests and ReplaceToManyRelationshipTests
         [Fact]
         public async Task Cannot_add_for_relationship_mismatch_between_url_and_body()
         {
@@ -732,6 +734,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
             var requestBody = new
             {
+                // TODO: Array.Empty<object>()
                 data = new object[0]
             };
 

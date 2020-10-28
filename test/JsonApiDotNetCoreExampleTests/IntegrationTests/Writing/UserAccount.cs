@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
 {
+    // TODO: Why not just "User"? That would seem more intuitive to me.
     public sealed class UserAccount : Identifiable<long>
     {
         [Attr]

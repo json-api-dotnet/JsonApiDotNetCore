@@ -103,6 +103,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
 
+                // TODO: Seems unnecessary.
                 var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
                 userAccountsInDatabase.Should().HaveCount(2);
             });
@@ -173,6 +174,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 workItemInDatabase.WorkItemTags.Should().HaveCount(1);
                 workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingWorkItem.WorkItemTags.ElementAt(2).Tag.Id);
 
+                // TODO: Seems unnecessary.
                 var tagsInDatabase = await dbContext.WorkTags.ToListAsync();
                 tagsInDatabase.Should().HaveCount(3);
             });
@@ -229,6 +231,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
 
+                // TODO: Seems unnecessary.
                 var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
                 userAccountsInDatabase.Should().HaveCount(3);
             });
@@ -301,6 +304,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             });
         }
 
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Cannot_remove_for_missing_type()
         {
@@ -339,6 +343,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
         }
 
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Cannot_remove_for_unknown_type()
         {
@@ -415,6 +420,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in 'data' element. - Request body: <<");
         }
 
+        // TODO: These might be by design (404 vs 403 and Primary vs Relationship endpoint spec issue). 
         [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
         public async Task Cannot_remove_unknown_IDs_from_HasMany_relationship()
         {
@@ -463,6 +469,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[1].Detail.Should().Be("Resource of type 'userAccounts' with ID '99999999' being removed from relationship 'subscribers' does not exist.");
         }
 
+        // TODO: These might be by design (404 vs 403 and Primary vs Relationship endpoint spec issue). 
         [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
         public async Task Cannot_remove_unknown_IDs_from_HasManyThrough_relationship()
         {
@@ -511,6 +518,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[1].Detail.Should().Be("Resource of type 'workTags' with ID '99999999' being removed from relationship 'tags' does not exist.");
         }
 
+        // TODO: This is a very general 404 test which is not exclusive to this or any of the other endpoints where it is duplicated.
         [Fact]
         public async Task Cannot_remove_from_unknown_resource_type_in_url()
         {
@@ -547,6 +555,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Should().BeEmpty();
         }
 
+        // TODO: These might be by design (404 vs 403 and Primary vs Relationship endpoint spec issue). 
         [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
         public async Task Cannot_remove_from_unknown_resource_ID_in_url()
         {
@@ -623,6 +632,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named 'doesNotExist'.");
         }
 
+        // TODO: Consider moving to RequestDeserializerTests
+        // TODO: Inconsistent naming: "on" vs for" compared to equivalent tests in UpdateToOneRelationshipTests and ReplaceToManyRelationshipTests
         [Fact]
         public async Task Cannot_remove_for_relationship_mismatch_between_url_and_body()
         {
@@ -662,6 +673,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().Be($"Expected resource of type 'workTags' in DELETE request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
         }
 
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Can_remove_with_duplicates()
         {
@@ -728,6 +740,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
             var requestBody = new
             {
+                // TODO: Array.Empty<object>()
                 data = new object[0]
             };
 

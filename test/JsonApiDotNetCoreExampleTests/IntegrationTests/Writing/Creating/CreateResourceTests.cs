@@ -99,6 +99,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // TODO: For consistency, fetch with FirstAsync and check for null
                 var workItemsInDatabase = await dbContext.WorkItems.ToListAsync();
 
                 var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
@@ -149,6 +150,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // TODO: For consistency, fetch with FirstAsync and check for null
                 var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
 
                 var newUserAccountInDatabase = userAccountsInDatabase.Single(p => p.StringId == newUserAccountId);
@@ -356,6 +358,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
         }
 
+        // TODO: Consider moving to BaseDocumentParserTests.
         [Fact]
         public async Task Cannot_create_resource_for_unknown_type()
         {
@@ -386,6 +389,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors[0].Detail.Should().Contain("Request body: <<");
         }
 
+        // TODO: Can we rename this to something with "AttrCapabilities" to be more explicit? Right now I needed to go to the model to understand the test.
         [Fact]
         public async Task Cannot_create_resource_with_blocked_attribute()
         {
@@ -416,6 +420,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors[0].Detail.Should().StartWith("Assigning to 'concurrencyToken' is not allowed. - Request body:");
         }
 
+        // TODO: Deserialization issues because of properties not having setters is something I would prefer testing in unit tests.
+        // the other one above with "blocked" attributes seems more suitable for a unit test because there it is about a feature that is transcends just the serializer.
         [Fact]
         public async Task Cannot_create_resource_with_readonly_attribute()
         {

@@ -8,21 +8,13 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relationships
 {
-    // TODO:
-    // consider using workItem instead of 'existingWorkItem'. 
+    // TODO: consider using <resourceName> instead of existing<ResourceName>
     //     - understandable without while not as verbose, less = more
     //     - in line with what we had/have
-    
-    // TODO:
-    // Consider using abbreviations instead of full parameter names in lambdas
+
+    // TODO: Consider using abbreviations instead of full parameter names in lambdas
     //    - in line with what we had
     //    - more readable because less verbose
-    
-    // TODO: 
-    // Array.Empty<object>() vs new object[0]
-    
-    // TODO:
-    // Double assertions
     public sealed class UpdateToOneRelationshipTests
         : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
@@ -70,8 +62,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
                 workItemInDatabase.AssignedTo.Should().BeNull();
 
-                // TODO: When checking if workItemInDatabase.AssignedTo is null, there is no need to also check that userAccountInDatabase.AssignedItems is empty
-                
+                // TODO: When checking if workItemInDatabase.AssignedTo is null, there is no need to also check that userAccountInDatabase.AssignedItems is empty.
                 var userAccountInDatabase = await dbContext.UserAccounts
                     .Include(userAccount => userAccount.AssignedItems)
                     .FirstOrDefaultAsync(userAccount => userAccount.Id == existingWorkItem.AssignedTo.Id);
@@ -122,8 +113,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     .ToListAsync();
 
                 // TODO: Redundant: given that we're working with a OneToOne relationship, if colorInDatabase2 is assigned to existingGroup
-                // then it CANNOT be associated with colorInDatabase1 any more. this double assertion we're merely
-                // verifying that EF Core knows how to deals with relationships correctly, which I think is not the scope of this test.
+                // then it CANNOT be associated with colorInDatabase1 any more. With this double assertion we're merely
+                // verifying that EF Core knows how to deals with relationships correctly.
                 var colorInDatabase1 = colorsInDatabase.Single(p => p.Id == existingGroup.Color.Id);
                 colorInDatabase1.Group.Should().BeNull();
 
@@ -388,7 +379,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'userAccounts' with ID '99999999' being assigned to relationship 'assignedTo' does not exist.");
         }
 
-        // TODO: This test is not specific to the XX Endpoint.
+        // TODO: This is a very general 404 test which is not exclusive to this or any of the other endpoints where it is duplicated.
         [Fact]
         public async Task Cannot_create_on_unknown_resource_type_in_url()
         {

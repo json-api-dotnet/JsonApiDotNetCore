@@ -52,6 +52,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
             });
         }
 
+        // TODO: Should this really fail?
+        // spec says: "A server SHOULD return a 404 Not Found status code if a deletion request fails due to the resource not existing.
+        // Given the technical implementation, the deletion requests does not have to "fail". Deleting from a table where record.id = X where the X does not exist in the table is not a failure. 
         [Fact]
         public async Task Cannot_delete_missing_resource()
         {
@@ -110,6 +113,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
             });
         }
 
+        // TODO: How do we want JADNC to deal with this?
+        // I think this should only fail if the relationships are required in the models. Otherwise we should be able to work around the constraint violation.
+        // If we can delete from dependent side, why shouldn't we be able to delete from principal side? This leaks implementation details.
+        // In any case we shouldn't return 500.
         [Fact]
         public async Task Cannot_delete_existing_resource_with_OneToOne_relationship_from_principal_side()
         {
@@ -140,6 +147,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
             stackTrace.Should().Contain("violates foreign key constraint");
         }
 
+        // TODO: How do we want JADNC to deal with this?
+        // I think this should only fail if the relationships are required in the models. Otherwise we should be able to work around the constraint violation.
+        // In any case we shouldn't return 500.
         [Fact]
         public async Task Cannot_delete_existing_resource_with_HasMany_relationship()
         {

@@ -44,6 +44,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 _targetedFields.Relationships.Add(_request.Relationship);
                 
+                // TODO: consider doing assertions from JsonApiReader here.
                 // AssertHasId(result);
             }
             

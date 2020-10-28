@@ -552,6 +552,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[1].Detail.Should().Be("Resource of type 'workTags' with ID '99999999' being assigned to relationship 'tags' does not exist.");
         }
 
+        // TODO: This is a very general 404 test which is not exclusive to this or any of the other endpoints where it is duplicated.
         [Fact]
         public async Task Cannot_replace_on_unknown_resource_type_in_url()
         {
@@ -703,7 +704,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
             responseDocument.Errors[0].Detail.Should().Be($"Expected resource of type 'workTags' in PATCH request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
         }
-
+        
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Can_replace_with_duplicates()
         {
@@ -757,6 +759,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             });
         }
 
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Cannot_replace_with_null_data_in_HasMany_relationship()
         {
@@ -788,6 +791,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
+        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Cannot_replace_with_null_data_in_HasManyThrough_relationship()
         {
