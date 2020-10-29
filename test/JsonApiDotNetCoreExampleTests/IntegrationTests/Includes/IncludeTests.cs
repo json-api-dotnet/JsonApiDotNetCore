@@ -720,7 +720,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Includes
         }
 
         [Fact]
-        public async Task Cannot_include_blocked_relationship()
+        public async Task Cannot_include_relationship_with_blocked_capability()
         {
             // Arrange
             var route = "/api/v1/people?include=unIncludeableItem";

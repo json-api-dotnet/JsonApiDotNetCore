@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         }
 
         [Fact]
-        public async Task Include_from_resource_definition_is_blocked()
+        public async Task Include_from_resource_definition_has_blocked_capability()
         {
             // Arrange
             var userRolesService = (FakeUserRolesService) _testContext.Factory.Services.GetRequiredService<IUserRolesService>();

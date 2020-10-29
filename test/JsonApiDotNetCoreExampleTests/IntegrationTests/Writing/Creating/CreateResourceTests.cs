@@ -429,9 +429,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Should().BeEmpty();
         }
 
-        // TODO: @Bart Can we rename this to something with "AttrCapabilities" to be more explicit instead of "blocked"? Currently I needed to go to the model to understand the test.
         [Fact]
-        public async Task Cannot_create_resource_with_blocked_attribute()
+        public async Task Cannot_create_resource_attribute_with_blocked_capability()
         {
             // Arrange
             var requestBody = new

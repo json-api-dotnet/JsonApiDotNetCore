@@ -603,7 +603,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
         }
 
         [Fact]
-        public async Task Cannot_select_blocked_attribute()
+        public async Task Cannot_select_attribute_with_blocked_capability()
         {
             // Arrange
             var user = _userFaker.Generate();

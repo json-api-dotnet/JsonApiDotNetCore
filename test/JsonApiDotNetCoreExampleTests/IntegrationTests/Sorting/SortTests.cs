@@ -663,7 +663,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Sorting
         }
 
         [Fact]
-        public async Task Cannot_sort_on_blocked_attribute()
+        public async Task Cannot_sort_on_attribute_with_blocked_capability()
         {
             // Arrange
             var route = "/api/v1/todoItems?sort=achievedDate";

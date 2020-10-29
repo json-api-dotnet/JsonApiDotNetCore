@@ -63,7 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
         }
 
         [Fact]
-        public async Task Cannot_filter_on_blocked_attribute()
+        public async Task Cannot_filter_on_attribute_with_blocked_capability()
         {
             // Arrange
             var route = "/api/v1/todoItems?filter=equals(achievedDate,null)";

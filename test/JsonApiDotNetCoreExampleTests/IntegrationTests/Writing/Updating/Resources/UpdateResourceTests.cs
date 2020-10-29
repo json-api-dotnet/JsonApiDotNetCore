@@ -741,9 +741,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             responseDocument.Errors[0].Detail.Should().Be($"Expected resource ID '{existingWorkItems[1].StringId}' in PATCH request body at endpoint '/workItems/{existingWorkItems[1].StringId}', instead of '{existingWorkItems[0].StringId}'.");
         }
 
-        // TODO: @Bart Improve "blocked" naming, see other todo item in update test suite.
         [Fact]
-        public async Task Cannot_update_resource_with_blocked_attribute()
+        public async Task Cannot_update_resource_attribute_with_blocked_capability()
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
