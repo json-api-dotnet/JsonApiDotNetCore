@@ -101,12 +101,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
 
                 colorsInDatabase.Should().BeEmpty();
 
-                var groupsInDatabase = await dbContext.Groups
-                    .Where(group => group.Id == existingColor.Group.Id)
-                    .ToListAsync();
+                var groupInDatabase = await dbContext.Groups
+                    .FirstAsync(group => group.Id == existingColor.Group.Id);
 
-                groupsInDatabase.Should().HaveCount(1);
-                groupsInDatabase[0].Color.Should().BeNull();
+                groupInDatabase.Color.Should().BeNull();
             });
         }
 

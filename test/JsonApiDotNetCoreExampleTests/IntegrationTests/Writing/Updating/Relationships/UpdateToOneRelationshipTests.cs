@@ -97,10 +97,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     .Include(rgbColor => rgbColor.Group)
                     .ToListAsync();
 
-                var colorInDatabase1 = colorsInDatabase.Single(p => p.Id == existingGroup.Color.Id);
+                var colorInDatabase1 = colorsInDatabase.Single(color => color.Id == existingGroup.Color.Id);
                 colorInDatabase1.Group.Should().BeNull();
 
-                var colorInDatabase2 = colorsInDatabase.Single(p => p.Id == existingColor.Id);
+                var colorInDatabase2 = colorsInDatabase.Single(color => color.Id == existingColor.Id);
                 colorInDatabase2.Group.Should().NotBeNull();
                 colorInDatabase2.Group.Id.Should().Be(existingGroup.Id);
             });
@@ -144,10 +144,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     .Include(group => group.Color)
                     .ToListAsync();
 
-                var groupInDatabase1 = groupsInDatabase.Single(p => p.Id == existingGroups[0].Id);
+                var groupInDatabase1 = groupsInDatabase.Single(group => group.Id == existingGroups[0].Id);
                 groupInDatabase1.Color.Should().BeNull();
 
-                var groupInDatabase2 = groupsInDatabase.Single(p => p.Id == existingGroups[1].Id);
+                var groupInDatabase2 = groupsInDatabase.Single(group => group.Id == existingGroups[1].Id);
                 groupInDatabase2.Color.Should().NotBeNull();
                 groupInDatabase2.Color.Id.Should().Be(existingGroups[0].Color.Id);
 
@@ -197,11 +197,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems
+                var workItemInDatabase2 = await dbContext.WorkItems
                     .Include(workItem => workItem.AssignedTo)
-                    .ToListAsync();
+                    .FirstAsync(workItem => workItem.Id == existingUserAccounts[0].AssignedItems.ElementAt(1).Id);
 
-                var workItemInDatabase2 = workItemsInDatabase.Single(p => p.Id == existingUserAccounts[0].AssignedItems.ElementAt(1).Id);
                 workItemInDatabase2.AssignedTo.Should().NotBeNull();
                 workItemInDatabase2.AssignedTo.Id.Should().Be(existingUserAccounts[1].Id);
             });

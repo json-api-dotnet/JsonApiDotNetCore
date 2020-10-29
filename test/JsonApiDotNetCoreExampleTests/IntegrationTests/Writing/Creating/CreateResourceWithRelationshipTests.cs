@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-// TODO: @Bart In all assertion blocks, use FirstAsync with a non-null assertion check (except for the two cases where its a OneToOne).
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 {
     public sealed class CreateResourceWithRelationshipTests
@@ -77,11 +76,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     .Include(group => group.Color)
                     .ToListAsync();
 
-                var newGroupInDatabase = groupsInDatabase.Single(p => p.StringId == newGroupId);
+                var newGroupInDatabase = groupsInDatabase.Single(group => group.StringId == newGroupId);
                 newGroupInDatabase.Color.Should().NotBeNull();
                 newGroupInDatabase.Color.Id.Should().Be(existingGroup.Color.Id);
 
-                var existingGroupInDatabase = groupsInDatabase.Single(p => p.Id == existingGroup.Id);
+                var existingGroupInDatabase = groupsInDatabase.Single(group => group.Id == existingGroup.Id);
                 existingGroupInDatabase.Color.Should().BeNull();
             });
         }
@@ -137,11 +136,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     .Include(rgbColor => rgbColor.Group)
                     .ToListAsync();
 
-                var newColorInDatabase = colorsInDatabase.Single(p => p.Id == colorId);
+                var newColorInDatabase = colorsInDatabase.Single(color => color.Id == colorId);
                 newColorInDatabase.Group.Should().NotBeNull();
                 newColorInDatabase.Group.Id.Should().Be(existingColor.Group.Id);
 
-                var existingColorInDatabase = colorsInDatabase.Single(p => p.Id == existingColor.Id);
+                var existingColorInDatabase = colorsInDatabase.Single(color => color.Id == existingColor.Id);
                 existingColorInDatabase.Group.Should().BeNull();
             });
         }
@@ -194,18 +193,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Included[0].Attributes["firstName"].Should().Be(existingUserAccount.FirstName);
             responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccount.LastName);
 
-            var newWorkItemId = responseDocument.SingleData.Id;
-            newWorkItemId.Should().NotBeNullOrEmpty();
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems
+                var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.AssignedTo)
-                    .ToListAsync();
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
-                newWorkItemInDatabase.AssignedTo.Should().NotBeNull();
-                newWorkItemInDatabase.AssignedTo.Id.Should().Be(existingUserAccount.Id);
+                workItemInDatabase.AssignedTo.Should().NotBeNull();
+                workItemInDatabase.AssignedTo.Id.Should().Be(existingUserAccount.Id);
             });
         }
 
@@ -214,7 +211,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         {
             // Arrange
             var existingUserAccount = _fakers.UserAccount.Generate();
-            var workItem = _fakers.WorkItem.Generate();
+            var newWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -229,8 +226,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     type = "workItems",
                     attributes = new
                     {
-                        description = workItem.Description,
-                        priority = workItem.Priority
+                        description = newWorkItem.Description,
+                        priority = newWorkItem.Priority
                     },
                     relationships = new
                     {
@@ -256,7 +253,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["description"].Should().Be(workItem.Description);
+            responseDocument.SingleData.Attributes["description"].Should().Be(newWorkItem.Description);
 
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
@@ -266,20 +263,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Included[0].Attributes["firstName"].Should().Be(existingUserAccount.FirstName);
             responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccount.LastName);
 
-            var newWorkItemId = responseDocument.SingleData.Id;
-            newWorkItemId.Should().NotBeNullOrEmpty();
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems
+                var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.AssignedTo)
-                    .ToListAsync();
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
-                newWorkItemInDatabase.Description.Should().Be(workItem.Description);
-                newWorkItemInDatabase.Priority.Should().Be(workItem.Priority);
-                newWorkItemInDatabase.AssignedTo.Should().NotBeNull();
-                newWorkItemInDatabase.AssignedTo.Id.Should().Be(existingUserAccount.Id);
+                workItemInDatabase.Description.Should().Be(newWorkItem.Description);
+                workItemInDatabase.Priority.Should().Be(newWorkItem.Priority);
+                workItemInDatabase.AssignedTo.Should().NotBeNull();
+                workItemInDatabase.AssignedTo.Id.Should().Be(existingUserAccount.Id);
             });
         }
 
@@ -443,19 +438,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
             responseDocument.Included.Should().BeNull();
 
-            var newWorkItemId = responseDocument.SingleData.Id;
-            newWorkItemId.Should().NotBeNullOrEmpty();
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems
+                var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .ToListAsync();
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
-                newWorkItemInDatabase.Subscribers.Should().HaveCount(2);
-                newWorkItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingUserAccounts[0].Id);
-                newWorkItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingUserAccounts[1].Id);
+                workItemInDatabase.Subscribers.Should().HaveCount(2);
+                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingUserAccounts[0].Id);
+                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingUserAccounts[1].Id);
             });
         }
 
@@ -510,25 +503,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
             
             responseDocument.Included.Should().HaveCount(2);
-            responseDocument.Included.Should().OnlyContain(p => p.Type == "userAccounts");
-            responseDocument.Included.Should().ContainSingle(p => p.Id == existingUserAccounts[0].StringId);
-            responseDocument.Included.Should().ContainSingle(p => p.Id == existingUserAccounts[1].StringId);
-            responseDocument.Included.Should().OnlyContain(p => p.Attributes["firstName"] != null);
-            responseDocument.Included.Should().OnlyContain(p => p.Attributes["lastName"] != null);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Type == "userAccounts");
+            responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[0].StringId);
+            responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[1].StringId);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["firstName"] != null);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["lastName"] != null);
 
-            var newWorkItemId = responseDocument.SingleData.Id;
-            newWorkItemId.Should().NotBeNullOrEmpty();
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems
+                var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .ToListAsync();
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
-                newWorkItemInDatabase.Subscribers.Should().HaveCount(2);
-                newWorkItemInDatabase.Subscribers.Should().ContainSingle(p => p.Id == existingUserAccounts[0].Id);
-                newWorkItemInDatabase.Subscribers.Should().ContainSingle(p => p.Id == existingUserAccounts[1].Id);
+                workItemInDatabase.Subscribers.Should().HaveCount(2);
+                workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingUserAccounts[0].Id);
+                workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingUserAccounts[1].Id);
             });
         }
 
@@ -583,25 +574,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
             
             responseDocument.Included.Should().HaveCount(2);
-            responseDocument.Included.Should().OnlyContain(p => p.Type == "userAccounts");
-            responseDocument.Included.Should().ContainSingle(p => p.Id == existingUserAccounts[0].StringId);
-            responseDocument.Included.Should().ContainSingle(p => p.Id == existingUserAccounts[1].StringId);
-            responseDocument.Included.Should().OnlyContain(p => p.Attributes.Count == 1);
-            responseDocument.Included.Should().OnlyContain(p => p.Attributes["firstName"] != null);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Type == "userAccounts");
+            responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[0].StringId);
+            responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[1].StringId);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.Count == 1);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["firstName"] != null);
 
-            var newWorkItemId = responseDocument.SingleData.Id;
-            newWorkItemId.Should().NotBeNullOrEmpty();
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems
+                var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .ToListAsync();
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
-                newWorkItemInDatabase.Subscribers.Should().HaveCount(2);
-                newWorkItemInDatabase.Subscribers.Should().ContainSingle(p => p.Id == existingUserAccounts[0].Id);
-                newWorkItemInDatabase.Subscribers.Should().ContainSingle(p => p.Id == existingUserAccounts[1].Id);
+                workItemInDatabase.Subscribers.Should().HaveCount(2);
+                workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingUserAccounts[0].Id);
+                workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingUserAccounts[1].Id);
             });
         }
 
@@ -659,18 +648,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Included[0].Type.Should().Be("userAccounts");
             responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
 
-            var newWorkItemId = responseDocument.SingleData.Id;
-            newWorkItemId.Should().NotBeNullOrEmpty();
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems
+                var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .ToListAsync();
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
-                newWorkItemInDatabase.Subscribers.Should().HaveCount(1);
-                newWorkItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccount.Id);
+                workItemInDatabase.Subscribers.Should().HaveCount(1);
+                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccount.Id);
             });
         }
 
@@ -739,28 +726,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
             
             responseDocument.Included.Should().HaveCount(3);
-            responseDocument.Included.Should().OnlyContain(p => p.Type == "workTags");
-            responseDocument.Included.Should().ContainSingle(p => p.Id == existingTags[0].StringId);
-            responseDocument.Included.Should().ContainSingle(p => p.Id == existingTags[1].StringId);
-            responseDocument.Included.Should().ContainSingle(p => p.Id == existingTags[2].StringId);
-            responseDocument.Included.Should().OnlyContain(p => p.Attributes.Count == 1);
-            responseDocument.Included.Should().OnlyContain(p => p.Attributes["text"] != null);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Type == "workTags");
+            responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingTags[0].StringId);
+            responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingTags[1].StringId);
+            responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingTags[2].StringId);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.Count == 1);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["text"] != null);
 
-            var newWorkItemId = responseDocument.SingleData.Id;
-            newWorkItemId.Should().NotBeNullOrEmpty();
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems
+                var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.WorkItemTags)
                     .ThenInclude(workItemTag => workItemTag.Tag)
-                    .ToListAsync();
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
-                newWorkItemInDatabase.WorkItemTags.Should().HaveCount(3);
-                newWorkItemInDatabase.WorkItemTags.Should().ContainSingle(p => p.Tag.Id == existingTags[0].Id);
-                newWorkItemInDatabase.WorkItemTags.Should().ContainSingle(p => p.Tag.Id == existingTags[1].Id);
-                newWorkItemInDatabase.WorkItemTags.Should().ContainSingle(p => p.Tag.Id == existingTags[2].Id);
+                workItemInDatabase.WorkItemTags.Should().HaveCount(3);
+                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[0].Id);
+                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[1].Id);
+                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[2].Id);
             });
         }
 
@@ -798,15 +783,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
-            var newWorkItemId = responseDocument.SingleData.Id;
-            newWorkItemId.Should().NotBeNullOrEmpty();
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems.ToListAsync();
+                var workItemInDatabase = await dbContext.WorkItems
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
-                newWorkItemInDatabase.Description.Should().BeNull();
+                workItemInDatabase.Description.Should().BeNull();
             });
         }
 
@@ -1004,25 +988,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
-            var newWorkItemId = responseDocument.SingleData.Id;
-            newWorkItemId.Should().NotBeNullOrEmpty();
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems
+                var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.AssignedTo)
                     .Include(workItem => workItem.Subscribers)
                     .Include(workItem => workItem.WorkItemTags)
                     .ThenInclude(workItemTag => workItemTag.Tag)
-                    .ToListAsync();
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
-                newWorkItemInDatabase.AssignedTo.Should().NotBeNull();
-                newWorkItemInDatabase.AssignedTo.Id.Should().Be(existingUserAccounts[0].Id);
-                newWorkItemInDatabase.Subscribers.Should().HaveCount(1);
-                newWorkItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccounts[1].Id);
-                newWorkItemInDatabase.WorkItemTags.Should().HaveCount(1);
-                newWorkItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingTag.Id);
+                workItemInDatabase.AssignedTo.Should().NotBeNull();
+                workItemInDatabase.AssignedTo.Id.Should().Be(existingUserAccounts[0].Id);
+                workItemInDatabase.Subscribers.Should().HaveCount(1);
+                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccounts[1].Id);
+                workItemInDatabase.WorkItemTags.Should().HaveCount(1);
+                workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingTag.Id);
             });
         }
     }

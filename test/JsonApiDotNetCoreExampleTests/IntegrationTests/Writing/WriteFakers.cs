@@ -12,33 +12,33 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
         private readonly Lazy<Faker<WorkItem>> _lazyWorkItemFaker = new Lazy<Faker<WorkItem>>(() =>
             new Faker<WorkItem>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(p => p.Description, f => f.Lorem.Sentence())
-                .RuleFor(p => p.DueAt, f => f.Date.Future())
-                .RuleFor(p => p.Priority, f => f.PickRandom<WorkItemPriority>()));
+                .RuleFor(workItem => workItem.Description, f => f.Lorem.Sentence())
+                .RuleFor(workItem => workItem.DueAt, f => f.Date.Future())
+                .RuleFor(workItem => workItem.Priority, f => f.PickRandom<WorkItemPriority>()));
 
         private readonly Lazy<Faker<WorkTag>> _lazyWorkTagsFaker = new Lazy<Faker<WorkTag>>(() =>
             new Faker<WorkTag>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(p => p.Text, f => f.Lorem.Word())
-                .RuleFor(p => p.IsBuiltIn, f => f.Random.Bool()));
+                .RuleFor(workTag => workTag.Text, f => f.Lorem.Word())
+                .RuleFor(workTag => workTag.IsBuiltIn, f => f.Random.Bool()));
 
         private readonly Lazy<Faker<UserAccount>> _lazyUserAccountFaker = new Lazy<Faker<UserAccount>>(() =>
             new Faker<UserAccount>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(p => p.FirstName, f => f.Name.FirstName())
-                .RuleFor(p => p.LastName, f => f.Name.LastName()));
+                .RuleFor(userAccount => userAccount.FirstName, f => f.Name.FirstName())
+                .RuleFor(userAccount => userAccount.LastName, f => f.Name.LastName()));
 
         private readonly Lazy<Faker<WorkItemGroup>> _lazyWorkItemGroupFaker = new Lazy<Faker<WorkItemGroup>>(() =>
             new Faker<WorkItemGroup>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(p => p.Name, f => f.Lorem.Word())
-                .RuleFor(p => p.IsPublic, f => f.Random.Bool()));
+                .RuleFor(group => group.Name, f => f.Lorem.Word())
+                .RuleFor(group => group.IsPublic, f => f.Random.Bool()));
 
         private readonly Lazy<Faker<RgbColor>> _lazyRgbColorFaker = new Lazy<Faker<RgbColor>>(() =>
             new Faker<RgbColor>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(p => p.Id, f => f.Random.Hexadecimal(6))
-                .RuleFor(p => p.DisplayName, f => f.Lorem.Word()));
+                .RuleFor(color => color.Id, f => f.Random.Hexadecimal(6))
+                .RuleFor(color => color.DisplayName, f => f.Lorem.Word()));
 
         public Faker<WorkItem> WorkItem => _lazyWorkItemFaker.Value;
         public Faker<WorkTag> WorkTags => _lazyWorkTagsFaker.Value;

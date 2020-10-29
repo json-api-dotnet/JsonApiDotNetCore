@@ -30,18 +30,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects()
         {
             // Arrange
-            var group = _fakers.WorkItemGroup.Generate();
-            group.Id = Guid.NewGuid();
+            var newGroup = _fakers.WorkItemGroup.Generate();
+            newGroup.Id = Guid.NewGuid();
 
             var requestBody = new
             {
                 data = new
                 {
                     type = "workItemGroups",
-                    id = group.StringId,
+                    id = newGroup.StringId,
                     attributes = new
                     {
-                        name = group.Name
+                        name = newGroup.Name
                     }
                 }
             };
@@ -56,15 +56,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("workItemGroups");
-            responseDocument.SingleData.Id.Should().Be(group.StringId);
-            responseDocument.SingleData.Attributes["name"].Should().Be(group.Name);
+            responseDocument.SingleData.Id.Should().Be(newGroup.StringId);
+            responseDocument.SingleData.Attributes["name"].Should().Be(newGroup.Name);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var groupsInDatabase = await dbContext.Groups.ToListAsync();
+                var groupInDatabase = await dbContext.Groups
+                    .FirstAsync(group => group.Id == newGroup.Id);
 
-                var newGroupInDatabase = groupsInDatabase.Single(p => p.Id == group.Id);
-                newGroupInDatabase.Name.Should().Be(group.Name);
+                groupInDatabase.Name.Should().Be(newGroup.Name);
             });
 
             var property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));
@@ -75,18 +75,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects_with_fieldset()
         {
             // Arrange
-            var group = _fakers.WorkItemGroup.Generate();
-            group.Id = Guid.NewGuid();
+            var newGroup = _fakers.WorkItemGroup.Generate();
+            newGroup.Id = Guid.NewGuid();
 
             var requestBody = new
             {
                 data = new
                 {
                     type = "workItemGroups",
-                    id = group.StringId,
+                    id = newGroup.StringId,
                     attributes = new
                     {
-                        name = group.Name
+                        name = newGroup.Name
                     }
                 }
             };
@@ -101,16 +101,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("workItemGroups");
-            responseDocument.SingleData.Id.Should().Be(group.StringId);
+            responseDocument.SingleData.Id.Should().Be(newGroup.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["name"].Should().Be(group.Name);
+            responseDocument.SingleData.Attributes["name"].Should().Be(newGroup.Name);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var groupsInDatabase = await dbContext.Groups.ToListAsync();
+                var groupInDatabase = await dbContext.Groups
+                    .FirstAsync(group => group.Id == newGroup.Id);
 
-                var newGroupInDatabase = groupsInDatabase.Single(p => p.Id == group.Id);
-                newGroupInDatabase.Name.Should().Be(group.Name);
+                groupInDatabase.Name.Should().Be(newGroup.Name);
             });
 
             var property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));
@@ -121,22 +121,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_client_generated_string_ID_having_no_side_effects()
         {
             // Arrange
-            var color = _fakers.RgbColor.Generate();
+            var newColor = _fakers.RgbColor.Generate();
             
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<RgbColor>();
-            });
-
             var requestBody = new
             {
                 data = new
                 {
                     type = "rgbColors",
-                    id = color.StringId,
+                    id = newColor.StringId,
                     attributes = new
                     {
-                        displayName = color.DisplayName
+                        displayName = newColor.DisplayName
                     }
                 }
             };
@@ -153,10 +148,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var colorsInDatabase = await dbContext.RgbColors.ToListAsync();
+                var colorInDatabase = await dbContext.RgbColors
+                    .FirstAsync(color => color.Id == newColor.Id);
 
-                var newColorInDatabase = colorsInDatabase.Single(p => p.Id == color.Id);
-                newColorInDatabase.DisplayName.Should().Be(color.DisplayName);
+                colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
             });
 
             var property = typeof(RgbColor).GetProperty(nameof(Identifiable.Id));
@@ -174,7 +169,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<RgbColor>();
                 dbContext.RgbColors.Add(existingColor);
                 
                 await dbContext.SaveChangesAsync();

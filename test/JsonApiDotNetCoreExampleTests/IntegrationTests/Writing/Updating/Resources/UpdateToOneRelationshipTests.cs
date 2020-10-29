@@ -121,10 +121,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
                     .Include(rgbColor => rgbColor.Group)
                     .ToListAsync();
 
-                var colorInDatabase1 = colorsInDatabase.Single(p => p.Id == existingGroup.Color.Id);
+                var colorInDatabase1 = colorsInDatabase.Single(color => color.Id == existingGroup.Color.Id);
                 colorInDatabase1.Group.Should().BeNull();
 
-                var colorInDatabase2 = colorsInDatabase.Single(p => p.Id == existingColor.Id);
+                var colorInDatabase2 = colorsInDatabase.Single(color => color.Id == existingColor.Id);
                 colorInDatabase2.Group.Should().NotBeNull();
                 colorInDatabase2.Group.Id.Should().Be(existingGroup.Id);
             });
@@ -180,10 +180,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
                     .Include(group => group.Color)
                     .ToListAsync();
 
-                var groupInDatabase1 = groupsInDatabase.Single(p => p.Id == existingGroups[0].Id);
+                var groupInDatabase1 = groupsInDatabase.Single(group => group.Id == existingGroups[0].Id);
                 groupInDatabase1.Color.Should().BeNull();
 
-                var groupInDatabase2 = groupsInDatabase.Single(p => p.Id == existingGroups[1].Id);
+                var groupInDatabase2 = groupsInDatabase.Single(group => group.Id == existingGroups[1].Id);
                 groupInDatabase2.Color.Should().NotBeNull();
                 groupInDatabase2.Color.Id.Should().Be(existingGroups[0].Color.Id);
 

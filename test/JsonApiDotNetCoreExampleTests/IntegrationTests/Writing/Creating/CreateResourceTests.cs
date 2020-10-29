@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Sets_location_header_for_created_resource()
         {
             // Arrange
-            var workItem = _fakers.WorkItem.Generate();
+            var newWorkItem = _fakers.WorkItem.Generate();
 
             var requestBody = new
             {
@@ -40,7 +40,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     type = "workItems",
                     attributes = new
                     {
-                        description = workItem.Description
+                        description = newWorkItem.Description
                     }
                 }
             };
@@ -162,7 +162,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_guid_ID()
         {
             // Arrange
-            var group = _fakers.WorkItemGroup.Generate();
+            var newGroup = _fakers.WorkItemGroup.Generate();
 
             var requestBody = new
             {
@@ -171,7 +171,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     type = "workItemGroups",
                     attributes = new
                     {
-                        name = group.Name
+                        name = newGroup.Name
                     }
                 }
             };
@@ -186,19 +186,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("workItemGroups");
-            responseDocument.SingleData.Attributes["name"].Should().Be(group.Name);
+            responseDocument.SingleData.Attributes["name"].Should().Be(newGroup.Name);
 
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
-            var newGroupId = responseDocument.SingleData.Id;
-            newGroupId.Should().NotBeNullOrEmpty();
+            var newGroupId = Guid.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var groupsInDatabase = await dbContext.Groups.ToListAsync();
+                var groupInDatabase = await dbContext.Groups
+                    .FirstAsync(group => group.Id == newGroupId);
 
-                var newGroupInDatabase = groupsInDatabase.Single(p => p.StringId == newGroupId);
-                newGroupInDatabase.Name.Should().Be(group.Name);
+                groupInDatabase.Name.Should().Be(newGroup.Name);
             });
 
             var property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));
@@ -238,16 +237,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
-            var newWorkItemId = responseDocument.SingleData.Id;
-            newWorkItemId.Should().NotBeNullOrEmpty();
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems.ToListAsync();
+                var workItemInDatabase = await dbContext.WorkItems
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
-                newWorkItemInDatabase.Description.Should().BeNull();
-                newWorkItemInDatabase.DueAt.Should().BeNull();
+                workItemInDatabase.Description.Should().BeNull();
+                workItemInDatabase.DueAt.Should().BeNull();
             });
         }
 
@@ -255,7 +253,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_unknown_attribute()
         {
             // Arrange
-            var workItem = _fakers.WorkItem.Generate();
+            var newWorkItem = _fakers.WorkItem.Generate();
 
             var requestBody = new
             {
@@ -265,7 +263,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     attributes = new
                     {
                         doesNotExist = "ignored",
-                        description = workItem.Description
+                        description = newWorkItem.Description
                     }
                 }
             };
@@ -280,17 +278,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Attributes["description"].Should().Be(workItem.Description);
+            responseDocument.SingleData.Attributes["description"].Should().Be(newWorkItem.Description);
 
-            var newWorkItemId = responseDocument.SingleData.Id;
-            newWorkItemId.Should().NotBeNullOrEmpty();
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems.ToListAsync();
+                var workItemInDatabase = await dbContext.WorkItems
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
-                newWorkItemInDatabase.Description.Should().Be(workItem.Description);
+                workItemInDatabase.Description.Should().Be(newWorkItem.Description);
             });
         }
 
