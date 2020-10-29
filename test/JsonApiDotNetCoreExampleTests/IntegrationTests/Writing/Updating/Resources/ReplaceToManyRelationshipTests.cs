@@ -124,141 +124,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             });
         }
 
-        // TODO: @Bart This case is already covered by the Can_replace_HasManyThrough_relationship_with_already_assigned_resources test.
-        [Fact]
-        public async Task Can_replace_HasMany_relationship()
-        {
-            // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
-
-            var existingSubscriber = _fakers.UserAccount.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddRange(existingWorkItem, existingSubscriber);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingSubscriber.StringId
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/workItems/" + existingWorkItem.StringId;
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.SingleData.Should().NotBeNull();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Subscribers)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
-
-                workItemInDatabase.Subscribers.Should().HaveCount(1);
-                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingSubscriber.Id);
-            });
-        }
-
-        // TODO: @Bart This case is already covered by the Can_replace_HasMany_relationship_with_already_assigned_resources test.
-        [Fact]
-        public async Task Can_replace_HasManyThrough_relationship()
-        {
-            // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-            existingWorkItem.WorkItemTags = new[]
-            {
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTags.Generate()
-                }
-            };
-
-            var existingTags = _fakers.WorkTags.Generate(2);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WorkItems.Add(existingWorkItem);
-                dbContext.WorkTags.AddRange(existingTags);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        tags = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "workTags",
-                                    id = existingTags[0].StringId
-                                },
-                                new
-                                {
-                                    type = "workTags",
-                                    id = existingTags[1].StringId
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/workItems/" + existingWorkItem.StringId;
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.SingleData.Should().NotBeNull();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.WorkItemTags)
-                    .ThenInclude(workItemTag => workItemTag.Tag)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
-
-                workItemInDatabase.WorkItemTags.Should().HaveCount(2);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[0].Id);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[1].Id);
-            });
-        }
-
-        // TODO: @Bart Currently: [1] => [1,2,3]. Proposed => [1,2] => [1,3,4]
         [Fact]
         public async Task Can_replace_HasMany_relationship_with_already_assigned_resources()
         {
@@ -286,11 +151,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
                         {
                             data = new[]
                             {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingWorkItem.Subscribers.ElementAt(0).StringId
-                                },
                                 new
                                 {
                                     type = "userAccounts",
@@ -323,21 +183,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
                     .Include(workItem => workItem.Subscribers)
                     .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
 
-                workItemInDatabase.Subscribers.Should().HaveCount(3);
-                workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingWorkItem.Subscribers.ElementAt(0).Id);
+                workItemInDatabase.Subscribers.Should().HaveCount(2);
                 workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingWorkItem.Subscribers.ElementAt(1).Id);
                 workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingSubscriber.Id);
             });
         }
 
-        // TODO: @Bart Currently: [1] => [1,2,3]. Proposed => [1,2] => [1,3,4]
         [Fact]
-        public async Task Can_replace_HasManyThrough_relationship_with_already_assigned_resource()
+        public async Task Can_replace_HasManyThrough_relationship_with_already_assigned_resources()
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
             existingWorkItem.WorkItemTags = new[]
             {
+                new WorkItemTag
+                {
+                    Tag = _fakers.WorkTags.Generate()
+                },
                 new WorkItemTag
                 {
                     Tag = _fakers.WorkTags.Generate()
