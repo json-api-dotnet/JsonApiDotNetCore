@@ -847,7 +847,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             responseDocument.Errors[0].Detail.Should().StartWith("Invalid character after parsing");
         }
 
-        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        [Fact]
         public async Task Cannot_change_ID_of_existing_resource()
         {
             // Arrange

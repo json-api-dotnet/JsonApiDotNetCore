@@ -255,6 +255,8 @@ namespace JsonApiDotNetCore.Services
                 AssertHasManyRelationshipValueIsNotNull(rightResources);
             }
 
+            AssertResourceIdIsNotTargeted();
+
             var resourceFromRequest = resource;
             _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
 
@@ -283,6 +285,14 @@ namespace JsonApiDotNetCore.Services
 
             bool hasImplicitChanges = _resourceChangeTracker.HasImplicitChanges();
             return hasImplicitChanges ? afterResourceFromDatabase : null;
+        }
+
+        private void AssertResourceIdIsNotTargeted()
+        {
+            if (_targetedFields.Attributes.Any(attribute => attribute.Property.Name == nameof(Identifiable.Id)))
+            {
+                throw new ResourceIdIsReadOnlyException();
+            }
         }
 
         /// <inheritdoc />
