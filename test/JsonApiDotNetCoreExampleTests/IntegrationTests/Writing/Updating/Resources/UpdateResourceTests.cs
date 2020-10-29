@@ -449,7 +449,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
-            existingWorkItem.AssignedTo = _fakers.UserAccount.Generate();
+            existingWorkItem.Assignee = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

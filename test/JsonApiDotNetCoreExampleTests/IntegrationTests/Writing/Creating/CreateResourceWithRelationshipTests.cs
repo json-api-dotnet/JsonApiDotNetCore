@@ -164,7 +164,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     type = "workItems",
                     relationships = new
                     {
-                        assignedTo = new
+                        assignee = new
                         {
                             data = new
                             {
@@ -176,7 +176,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 }
             };
 
-            var route = "/workItems?include=assignedTo";
+            var route = "/workItems?include=assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -198,11 +198,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.AssignedTo)
+                    .Include(workItem => workItem.Assignee)
                     .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                workItemInDatabase.AssignedTo.Should().NotBeNull();
-                workItemInDatabase.AssignedTo.Id.Should().Be(existingUserAccount.Id);
+                workItemInDatabase.Assignee.Should().NotBeNull();
+                workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
             });
         }
 
@@ -231,7 +231,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     },
                     relationships = new
                     {
-                        assignedTo = new
+                        assignee = new
                         {
                             data = new
                             {
@@ -243,7 +243,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 }
             };
 
-            var route = "/workItems?fields=description&include=assignedTo";
+            var route = "/workItems?fields=description&include=assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -268,13 +268,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.AssignedTo)
+                    .Include(workItem => workItem.Assignee)
                     .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
                 workItemInDatabase.Description.Should().Be(newWorkItem.Description);
                 workItemInDatabase.Priority.Should().Be(newWorkItem.Priority);
-                workItemInDatabase.AssignedTo.Should().NotBeNull();
-                workItemInDatabase.AssignedTo.Id.Should().Be(existingUserAccount.Id);
+                workItemInDatabase.Assignee.Should().NotBeNull();
+                workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
             });
         }
 
@@ -289,7 +289,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     type = "workItems",
                     relationships = new
                     {
-                        assignedTo = new
+                        assignee = new
                         {
                             data = new
                             {
@@ -311,7 +311,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'assignedTo' relationship. - Request body: <<");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'assignee' relationship. - Request body: <<");
         }
 
         [Fact]
@@ -325,7 +325,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     type = "workItems",
                     relationships = new
                     {
-                        assignedTo = new
+                        assignee = new
                         {
                             data = new
                             {
@@ -347,7 +347,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in 'assignedTo' relationship. - Request body: <<");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in 'assignee' relationship. - Request body: <<");
         }
 
         [Fact]
@@ -361,7 +361,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     type = "workItems",
                     relationships = new
                     {
-                        assignedTo = new
+                        assignee = new
                         {
                             data = new
                             {
@@ -384,7 +384,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'userAccounts' with ID '12345678' being assigned to relationship 'assignedTo' does not exist.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'userAccounts' with ID '12345678' being assigned to relationship 'assignee' does not exist.");
         }
 
         [Fact]
@@ -943,7 +943,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     type = "workItems",
                     relationships = new
                     {
-                        assignedTo = new
+                        assignee = new
                         {
                             data = new
                             {
@@ -993,14 +993,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.AssignedTo)
+                    .Include(workItem => workItem.Assignee)
                     .Include(workItem => workItem.Subscribers)
                     .Include(workItem => workItem.WorkItemTags)
                     .ThenInclude(workItemTag => workItemTag.Tag)
                     .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                workItemInDatabase.AssignedTo.Should().NotBeNull();
-                workItemInDatabase.AssignedTo.Id.Should().Be(existingUserAccounts[0].Id);
+                workItemInDatabase.Assignee.Should().NotBeNull();
+                workItemInDatabase.Assignee.Id.Should().Be(existingUserAccounts[0].Id);
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccounts[1].Id);
                 workItemInDatabase.WorkItemTags.Should().HaveCount(1);

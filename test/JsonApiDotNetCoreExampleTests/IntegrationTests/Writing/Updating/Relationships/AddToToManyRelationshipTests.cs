@@ -44,7 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
             responseDocument.Errors[0].Title.Should().Be("Only to-many relationships can be updated through this endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'assignedTo' must be a to-many relationship.");
+            responseDocument.Errors[0].Detail.Should().Be("Relationship 'assignee' must be a to-many relationship.");
         }
 
         [Fact]

@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
-            existingWorkItem.AssignedTo = _fakers.UserAccount.Generate();
+            existingWorkItem.Assignee = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 data = (object)null
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -50,10 +50,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.AssignedTo)
+                    .Include(workItem => workItem.Assignee)
                     .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
 
-                workItemInDatabase.AssignedTo.Should().BeNull();
+                workItemInDatabase.Assignee.Should().BeNull();
             });
         }
 
@@ -186,7 +186,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 }
             };
 
-            var route = $"/workItems/{existingUserAccounts[0].AssignedItems.ElementAt(1).StringId}/relationships/assignedTo";
+            var route = $"/workItems/{existingUserAccounts[0].AssignedItems.ElementAt(1).StringId}/relationships/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -198,11 +198,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var workItemInDatabase2 = await dbContext.WorkItems
-                    .Include(workItem => workItem.AssignedTo)
+                    .Include(workItem => workItem.Assignee)
                     .FirstAsync(workItem => workItem.Id == existingUserAccounts[0].AssignedItems.ElementAt(1).Id);
 
-                workItemInDatabase2.AssignedTo.Should().NotBeNull();
-                workItemInDatabase2.AssignedTo.Id.Should().Be(existingUserAccounts[1].Id);
+                workItemInDatabase2.Assignee.Should().NotBeNull();
+                workItemInDatabase2.Assignee.Id.Should().Be(existingUserAccounts[1].Id);
             });
         }
 
@@ -220,7 +220,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
             var requestBody = string.Empty;
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -254,7 +254,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -289,7 +289,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -323,7 +323,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -358,7 +358,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -369,7 +369,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'userAccounts' with ID '99999999' being assigned to relationship 'assignedTo' does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'userAccounts' with ID '99999999' being assigned to relationship 'assignee' does not exist.");
         }
 
         [Fact]
@@ -394,7 +394,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 }
             };
 
-            var route = $"/doesNotExist/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = $"/doesNotExist/{existingWorkItem.StringId}/relationships/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -426,7 +426,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 }
             };
 
-            var route = "/workItems/99999999/relationships/assignedTo";
+            var route = "/workItems/99999999/relationships/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -497,7 +497,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -508,7 +508,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Conflict);
             responseDocument.Errors[0].Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
-            responseDocument.Errors[0].Detail.Should().Be($"Expected resource of type 'userAccounts' in PATCH request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/assignedTo', instead of 'rgbColors'.");
+            responseDocument.Errors[0].Detail.Should().Be($"Expected resource of type 'userAccounts' in PATCH request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/assignee', instead of 'rgbColors'.");
         }
     }
 }

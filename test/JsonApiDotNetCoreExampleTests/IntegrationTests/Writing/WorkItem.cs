@@ -21,9 +21,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
         [Attr(Capabilities = ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
         public Guid ConcurrencyToken { get; set; } = Guid.NewGuid();
 
-        // TODO: @Bart Assignee?
         [HasOne]
-        public UserAccount AssignedTo { get; set; }
+        public UserAccount Assignee { get; set; }
 
         [HasMany]
         public ISet<UserAccount> Subscribers { get; set; }

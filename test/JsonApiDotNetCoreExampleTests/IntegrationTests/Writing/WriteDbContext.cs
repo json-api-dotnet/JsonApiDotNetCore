@@ -19,7 +19,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<WorkItem>()
-                .HasOne(workItem => workItem.AssignedTo)
+                .HasOne(workItem => workItem.Assignee)
                 .WithMany(userAccount => userAccount.AssignedItems);
 
             builder.Entity<WorkItem>()
