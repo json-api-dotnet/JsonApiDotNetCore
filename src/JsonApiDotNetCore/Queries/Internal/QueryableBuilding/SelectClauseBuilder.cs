@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         private Expression CreateLambdaBodyInitializer(IDictionary<ResourceFieldAttribute, QueryLayer> selectors, ResourceContext resourceContext,
             LambdaScope lambdaScope, bool lambdaAccessorRequiresTestForNull)
         {
-            var propertySelectors = ToPropertySelectors(selectors, resourceContext, lambdaScope.Parameter.Type);
+            var propertySelectors = ToPropertySelectors(selectors, resourceContext, lambdaScope.Accessor.Type);
             MemberBinding[] propertyAssignments = propertySelectors.Select(selector => CreatePropertyAssignment(selector, lambdaScope)).Cast<MemberBinding>().ToArray();
 
             NewExpression newExpression = _resourceFactory.CreateNewExpression(lambdaScope.Accessor.Type);
