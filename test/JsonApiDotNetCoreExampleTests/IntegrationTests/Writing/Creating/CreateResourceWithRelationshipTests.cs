@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 
-// TODO: In all assertion blocks, use FirstAsync with a non-null assertion check (except for the two cases where its a OneToOne).
+// TODO: @Bart In all assertion blocks, use FirstAsync with a non-null assertion check (except for the two cases where its a OneToOne).
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 {
     public sealed class CreateResourceWithRelationshipTests

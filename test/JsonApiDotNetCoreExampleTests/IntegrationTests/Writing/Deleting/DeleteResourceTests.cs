@@ -142,6 +142,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
         }
 
         // TODO: Verify if 500 is desired. If so, change test name to reflect that, because deleting resources even if they have a relationship should be possible.
+        // Two possibilities:
+        //    - Either OnDelete(DeleteBehaviour.SetNull) is the default behaviour, in which case this should not fail
+        //    - Or it is not, in which case it should fail like it does now.
+        // related: https://stackoverflow.com/questions/33912625/how-to-update-fk-to-null-when-deleting-optional-related-entity
         [Fact]
         public async Task Cannot_delete_existing_resource_with_HasMany_relationship()
         {
@@ -206,7 +210,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
 
                 workItemsInDatabase.Should().BeEmpty();
 
-                // TODO: Redundant double assertion that tests EF Core rather than JADNC.
                 var workItemTagsInDatabase = await dbContext.WorkItemTags
                     .Where(workItemTag => workItemTag.Item.Id == existingWorkItemTag.Item.Id)
                     .ToListAsync();

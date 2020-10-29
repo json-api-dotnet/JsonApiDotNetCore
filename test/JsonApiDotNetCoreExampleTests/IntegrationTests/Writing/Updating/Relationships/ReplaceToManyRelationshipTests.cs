@@ -215,6 +215,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             });
         }
         
+        // TODO: Currently: [1] => [1,2,3]. Proposed => [1,2] => [1,3,4]
         [Fact]
         public async Task Can_replace_HasMany_relationship_with_already_assigned_resources()
         {
@@ -275,6 +276,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             });
         }
 
+        // TODO: Currently: [1] => [1,2,3]. Proposed => [1,2] => [1,3,4]
         [Fact]
         public async Task Can_replace_HasManyThrough_relationship_with_already_assigned_resource()
         {

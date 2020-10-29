@@ -88,6 +88,8 @@ namespace JsonApiDotNetCore.Serialization
                 if (attributeValues.TryGetValue(attr.PublicName, out object newValue))
                 {
                     var convertedValue = ConvertAttrValue(newValue, attr.Property.PropertyType);
+                    
+                    // TODO: check for read-only attributes.
                     attr.SetValue(resource, convertedValue);
                     AfterProcessField(resource, attr);
                 }

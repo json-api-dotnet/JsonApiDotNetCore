@@ -8,7 +8,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resources
 {
-    // TODO: Tests for mismatch between type in relationship data versus expected clr type based on the relationship being populated./
+    // TODO: Tests for mismatch between type in relationship data versus expected clr type based on the relationship being populated.
     //     - POST /primaryResource    (HasOne, HasMany and HasManyThrough)
     //     - PATCH /primary resource  (HasOne, HasMany and HasManyThrough)
     public sealed class UpdateToOneRelationshipTests
@@ -244,7 +244,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // TODO: Use FirstAsync with non-null assertion.
+                // TODO: @Bart Use FirstAsync with non-null assertion.
                 var workItemsInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.AssignedTo)
                     .ToListAsync();

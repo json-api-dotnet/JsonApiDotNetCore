@@ -124,7 +124,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             });
         }
         
-        // TODO: This case is already covered by the Can_replace_HasManyThrough_relationship_with_already_assigned_resources test.
+        // TODO: @Bart This case is already covered by the Can_replace_HasManyThrough_relationship_with_already_assigned_resources test.
         [Fact]
         public async Task Can_replace_HasMany_relationship()
         {
@@ -184,7 +184,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             });
         }
 
-        // TODO: This case is already covered by the Can_replace_HasMany_relationship_with_already_assigned_resources test.
+        // TODO: @Bart This case is already covered by the Can_replace_HasMany_relationship_with_already_assigned_resources test.
         [Fact]
         public async Task Can_replace_HasManyThrough_relationship()
         {
@@ -258,6 +258,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             });
         }
 
+        // TODO: @Bart Currently: [1] => [1,2,3]. Proposed => [1,2] => [1,3,4]
         [Fact]
         public async Task Can_replace_HasMany_relationship_with_already_assigned_resources()
         {
@@ -329,6 +330,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             });
         }
 
+        // TODO: @Bart Currently: [1] => [1,2,3]. Proposed => [1,2] => [1,3,4]
         [Fact]
         public async Task Can_replace_HasManyThrough_relationship_with_already_assigned_resource()
         {

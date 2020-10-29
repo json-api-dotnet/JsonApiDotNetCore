@@ -102,8 +102,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
-
-                // TODO: Redundant double assertion that tests EF Core rather than JADNC.
+    
                 var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
                 userAccountsInDatabase.Should().HaveCount(2);
             });
@@ -174,7 +173,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 workItemInDatabase.WorkItemTags.Should().HaveCount(1);
                 workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingWorkItem.WorkItemTags.ElementAt(2).Tag.Id);
 
-                // TODO: Redundant double assertion that tests EF Core rather than JADNC.
                 var tagsInDatabase = await dbContext.WorkTags.ToListAsync();
                 tagsInDatabase.Should().HaveCount(3);
             });
@@ -231,7 +229,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
 
-                // TODO: Redundant double assertion that tests EF Core rather than JADNC.
                 var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
                 userAccountsInDatabase.Should().HaveCount(3);
             });
@@ -577,7 +574,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Should().BeEmpty();
         }
 
-        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        // [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        [Fact]
         public async Task Cannot_remove_from_unknown_resource_ID_in_url()
         {
             // Arrange

@@ -46,7 +46,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
                     type = "userAccounts",
                     id = existingUserAccount.StringId,
                     attributes = new
-                    { // TODO: can we just inline this?
+                    {
                     },
                     relationships = new
                     {
