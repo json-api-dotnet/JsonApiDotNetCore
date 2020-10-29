@@ -103,6 +103,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             });
         }
 
+        // TODO: This case is already covered by the Can_replace_HasMany_relationship_with_already_assigned_resources test.
         [Fact]
         public async Task Can_replace_HasMany_relationship()
         {
@@ -151,6 +152,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             });
         }
 
+        // TODO: This case is already covered by the Can_replace_HasManyThrough_relationship_with_already_assigned_resources test.
         [Fact]
         public async Task Can_replace_HasManyThrough_relationship()
         {
@@ -212,7 +214,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[1].Id);
             });
         }
-
+        
         [Fact]
         public async Task Can_replace_HasMany_relationship_with_already_assigned_resources()
         {
