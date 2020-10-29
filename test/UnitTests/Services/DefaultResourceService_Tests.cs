@@ -80,7 +80,8 @@ namespace UnitTests.Services
             var repositoryAccessor = new Mock<IResourceRepositoryAccessor>().Object;
             var targetedFields = new Mock<ITargetedFields>().Object;
             var resourceContextProvider = new Mock<IResourceContextProvider>().Object;
-            
+            var resourceHookExecutor = new NullResourceHookExecutor();
+
             var composer = new QueryLayerComposer(new List<IQueryConstraintProvider>(), _resourceGraph, resourceDefinitionAccessor, options, paginationContext);
             var request = new JsonApiRequest
             {
@@ -92,7 +93,7 @@ namespace UnitTests.Services
 
             return new JsonApiResourceService<TodoItem>(_repositoryMock.Object, repositoryAccessor, composer,
                 paginationContext, options, NullLoggerFactory.Instance, request, changeTracker, resourceFactory,
-                targetedFields, resourceContextProvider, NullResourceHookExecutor.Instance);
+                targetedFields, resourceContextProvider, resourceHookExecutor);
         }
     }
 }

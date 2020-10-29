@@ -5,10 +5,8 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Hooks.Internal
 {
-    internal sealed class NullResourceHookExecutor : IResourceHookExecutor
+    public sealed class NullResourceHookExecutor : IResourceHookExecutor
     {
-        internal static NullResourceHookExecutor Instance = new NullResourceHookExecutor();
-
         public void BeforeRead<TResource>(ResourcePipeline pipeline, string stringId = null) where TResource : class, IIdentifiable => throw new NotImplementedException();
 
         public void AfterRead<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable => throw new NotImplementedException();

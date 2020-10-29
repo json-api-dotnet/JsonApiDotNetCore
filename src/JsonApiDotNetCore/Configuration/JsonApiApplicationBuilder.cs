@@ -248,7 +248,7 @@ namespace JsonApiDotNetCore.Configuration
             }
             else
             {
-                _services.AddTransient<IResourceHookExecutor>(_ => NullResourceHookExecutor.Instance);
+                _services.AddSingleton<IResourceHookExecutor, NullResourceHookExecutor>();
             }
         }
 
