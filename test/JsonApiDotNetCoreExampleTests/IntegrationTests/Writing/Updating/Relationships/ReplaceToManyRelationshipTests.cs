@@ -214,7 +214,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[1].Id);
             });
         }
-        
+
         // TODO: Currently: [1] => [1,2,3]. Proposed => [1,2] => [1,3,4]
         [Fact]
         public async Task Can_replace_HasMany_relationship_with_already_assigned_resources()
@@ -447,7 +447,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
             responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist. - Request body: <<");
         }
-
 
         [Fact]
         public async Task Cannot_replace_for_missing_ID()
@@ -732,7 +731,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
             responseDocument.Errors[0].Detail.Should().Be($"Expected resource of type 'workTags' in PATCH request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
         }
-        
+
         [Fact]
         public async Task Can_replace_with_duplicates()
         {

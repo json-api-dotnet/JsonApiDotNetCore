@@ -102,7 +102,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
-    
+
                 var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
                 userAccountsInDatabase.Should().HaveCount(2);
             });
@@ -489,7 +489,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[1].Title.Should().Be("A resource being removed from a relationship does not exist.");
             responseDocument.Errors[1].Detail.Should().Be("Resource of type 'userAccounts' with ID '99999999' being removed from relationship 'subscribers' does not exist.");
         }
- 
+
         [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
         public async Task Cannot_remove_unknown_IDs_from_HasManyThrough_relationship()
         {

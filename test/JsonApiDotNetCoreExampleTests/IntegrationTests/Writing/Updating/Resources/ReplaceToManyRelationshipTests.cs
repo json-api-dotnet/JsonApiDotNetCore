@@ -123,7 +123,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
                 workItemInDatabase.WorkItemTags.Should().BeEmpty();
             });
         }
-        
+
         // TODO: @Bart This case is already covered by the Can_replace_HasManyThrough_relationship_with_already_assigned_resources test.
         [Fact]
         public async Task Can_replace_HasMany_relationship()

@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         {
             _testContext = testContext;
         }
- 
+
         [Fact]
         public async Task Can_clear_ManyToOne_relationship()
         {
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 var colorsInDatabase = await dbContext.RgbColors
                     .Include(rgbColor => rgbColor.Group)
                     .ToListAsync();
-    
+
                 var colorInDatabase1 = colorsInDatabase.Single(p => p.Id == existingGroup.Color.Id);
                 colorInDatabase1.Group.Should().BeNull();
 
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 var groupsInDatabase = await dbContext.Groups
                     .Include(group => group.Color)
                     .ToListAsync();
-                
+
                 var groupInDatabase1 = groupsInDatabase.Single(p => p.Id == existingGroups[0].Id);
                 groupInDatabase1.Color.Should().BeNull();
 
