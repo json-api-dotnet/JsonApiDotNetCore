@@ -8,13 +8,6 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relationships
 {
-    // TODO: consider using <resourceName> instead of existing<ResourceName>
-    //     - understandable without while not as verbose, less = more
-    //     - in line with what we had/have
-
-    // TODO: Consider using abbreviations instead of full parameter names in lambdas
-    //    - in line with what we had
-    //    - more readable because less verbose
     public sealed class UpdateToOneRelationshipTests
         : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
@@ -27,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         }
  
         [Fact]
-        public async Task Can_clear_HasOne_relationship()
+        public async Task Can_clear_ManyToOne_relationship()
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
@@ -61,14 +54,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
 
                 workItemInDatabase.AssignedTo.Should().BeNull();
-
-                // TODO: When checking if workItemInDatabase.AssignedTo is null, there is no need to also check that userAccountInDatabase.AssignedItems is empty.
-                var userAccountInDatabase = await dbContext.UserAccounts
-                    .Include(userAccount => userAccount.AssignedItems)
-                    .FirstOrDefaultAsync(userAccount => userAccount.Id == existingWorkItem.AssignedTo.Id);
-
-                userAccountInDatabase.Should().NotBeNull();
-                userAccountInDatabase.AssignedItems.Should().BeEmpty();
             });
         }
 
@@ -111,10 +96,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 var colorsInDatabase = await dbContext.RgbColors
                     .Include(rgbColor => rgbColor.Group)
                     .ToListAsync();
-
-                // TODO: Redundant: given that we're working with a OneToOne relationship, if colorInDatabase2 is assigned to existingGroup
-                // then it CANNOT be associated with colorInDatabase1 any more. With this double assertion we're merely
-                // verifying that EF Core knows how to deals with relationships correctly.
+    
                 var colorInDatabase1 = colorsInDatabase.Single(p => p.Id == existingGroup.Color.Id);
                 colorInDatabase1.Group.Should().BeNull();
 
@@ -222,22 +204,37 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                 var workItemInDatabase2 = workItemsInDatabase.Single(p => p.Id == existingUserAccounts[0].AssignedItems.ElementAt(1).Id);
                 workItemInDatabase2.AssignedTo.Should().NotBeNull();
                 workItemInDatabase2.AssignedTo.Id.Should().Be(existingUserAccounts[1].Id);
-
-                var userAccountsInDatabase = await dbContext.UserAccounts
-                    .Include(userAccount => userAccount.AssignedItems)
-                    .ToListAsync();
-
-                var userAccountInDatabase1 = userAccountsInDatabase.Single(userAccount => userAccount.Id == existingUserAccounts[0].Id);
-                userAccountInDatabase1.AssignedItems.Should().HaveCount(1);
-                userAccountInDatabase1.AssignedItems.Single().Id.Should().Be(existingUserAccounts[0].AssignedItems.ElementAt(0).Id);
-
-                var userAccountInDatabase2 = userAccountsInDatabase.Single(userAccount => userAccount.Id == existingUserAccounts[1].Id);
-                userAccountInDatabase2.AssignedItems.Should().HaveCount(1);
-                userAccountInDatabase2.AssignedItems.Single().Id.Should().Be(existingUserAccounts[0].AssignedItems.ElementAt(1).Id);
             });
         }
 
-        // TODO: Consider moving to BaseDocumentParserTests
+        [Fact]
+        public async Task Cannot_replace_for_missing_request_body()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = string.Empty;
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignedTo";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            responseDocument.Errors[0].Title.Should().Be("Missing request body.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+        }
+
         [Fact]
         public async Task Cannot_create_for_missing_type()
         {
@@ -272,7 +269,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
         }
 
-        // TODO: Consider moving to BaseDocumentParserTests
         [Fact]
         public async Task Cannot_create_for_unknown_type()
         {
@@ -308,7 +304,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist. - Request body: <<");
         }
 
-        // TODO: Consider moving to RequestDeserializerTests
         [Fact]
         public async Task Cannot_create_for_missing_ID()
         {
@@ -340,7 +335,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in 'data' element. - Request body: <<");
+            responseDocument.Errors[0].Detail.Should().StartWith("Request body: <<");
         }
 
         [Fact]
@@ -378,7 +373,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'userAccounts' with ID '99999999' being assigned to relationship 'assignedTo' does not exist.");
         }
 
-        // TODO: This is a very general 404 test which is not exclusive to this or any of the other endpoints where it is duplicated.
         [Fact]
         public async Task Cannot_create_on_unknown_resource_type_in_url()
         {
@@ -482,7 +476,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named 'doesNotExist'.");
         }
 
-        // TODO: Consider moving to RequestDeserializerTests
         [Fact]
         public async Task Cannot_create_on_relationship_mismatch_between_url_and_body()
         {

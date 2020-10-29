@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
         }
 
         [Fact]
-        public async Task Can_clear_HasOne_relationship()
+        public async Task Can_clear_ManyToOne_relationship()
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
@@ -65,13 +65,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
                     .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
 
                 workItemInDatabase.AssignedTo.Should().BeNull();
-
-                var userAccountInDatabase = await dbContext.UserAccounts
-                    .Include(userAccount => userAccount.AssignedItems)
-                    .FirstOrDefaultAsync(userAccount => userAccount.Id == existingWorkItem.AssignedTo.Id);
-
-                userAccountInDatabase.Should().NotBeNull();
-                userAccountInDatabase.AssignedItems.Should().BeEmpty();
             });
         }
 
@@ -255,18 +248,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
                 var workItemInDatabase2 = workItemsInDatabase.Single(p => p.Id == existingUserAccounts[0].AssignedItems.ElementAt(1).Id);
                 workItemInDatabase2.AssignedTo.Should().NotBeNull();
                 workItemInDatabase2.AssignedTo.Id.Should().Be(existingUserAccounts[1].Id);
-
-                var userAccountsInDatabase = await dbContext.UserAccounts
-                    .Include(userAccount => userAccount.AssignedItems)
-                    .ToListAsync();
-
-                var userAccountInDatabase1 = userAccountsInDatabase.Single(userAccount => userAccount.Id == existingUserAccounts[0].Id);
-                userAccountInDatabase1.AssignedItems.Should().HaveCount(1);
-                userAccountInDatabase1.AssignedItems.Single().Id.Should().Be(existingUserAccounts[0].AssignedItems.ElementAt(0).Id);
-
-                var userAccountInDatabase2 = userAccountsInDatabase.Single(userAccount => userAccount.Id == existingUserAccounts[1].Id);
-                userAccountInDatabase2.AssignedItems.Should().HaveCount(1);
-                userAccountInDatabase2.AssignedItems.Single().Id.Should().Be(existingUserAccounts[0].AssignedItems.ElementAt(1).Id);
             });
         }
 
@@ -450,96 +431,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'userAccounts' with ID '99999999' being assigned to relationship 'assignedTo' does not exist.");
-        }
-
-        [Fact]
-        public async Task Cannot_create_on_unknown_resource_type_in_url()
-        {
-            // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-            var existingUserAccount = _fakers.UserAccount.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddRange(existingWorkItem, existingUserAccount);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        assignedTo = new
-                        {
-                            data = new
-                            {
-                                type = "userAccounts",
-                                id = existingUserAccount.StringId
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/doesNotExist/" + existingWorkItem.StringId;
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Cannot_create_on_unknown_resource_ID_in_url()
-        {
-            // Arrange
-            var existingUserAccount = _fakers.UserAccount.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.UserAccounts.Add(existingUserAccount);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    id = 99999999,
-                    relationships = new
-                    {
-                        assignedTo = new
-                        {
-                            data = new
-                            {
-                                type = "userAccounts",
-                                id = existingUserAccount.StringId
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/workItems/99999999";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("The requested resource does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'workItems' with ID '99999999' does not exist.");
         }
     }
 }

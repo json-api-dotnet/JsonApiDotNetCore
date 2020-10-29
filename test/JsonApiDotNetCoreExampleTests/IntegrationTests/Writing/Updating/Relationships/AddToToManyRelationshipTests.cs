@@ -304,7 +304,34 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             });
         }
 
-        // TODO: Consider moving to BaseDocumentParserTests
+        [Fact]
+        public async Task Cannot_add_for_missing_request_body()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = string.Empty;
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            responseDocument.Errors[0].Title.Should().Be("Missing request body.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+        }
+
         [Fact]
         public async Task Cannot_add_for_missing_type()
         {
@@ -341,8 +368,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
         }
-        
-        // TODO: Consider moving to BaseDocumentParserTests
+
         [Fact]
         public async Task Cannot_add_for_unknown_type()
         {
@@ -381,7 +407,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist. - Request body: <<");
         }
 
-        // TODO: Consider moving to RequestDeserializerTests
         [Fact]
         public async Task Cannot_add_for_missing_ID()
         {
@@ -416,7 +441,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in 'data' element. - Request body: <<");
+            responseDocument.Errors[0].Detail.Should().StartWith("Request body: <<");
         }
 
         [Fact]
@@ -515,7 +540,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[1].Detail.Should().Be("Resource of type 'workTags' with ID '99999999' being assigned to relationship 'tags' does not exist.");
         }
 
-        // TODO: This is a very general 404 test which is not exclusive to this or any of the other endpoints where it is duplicated.
         [Fact]
         public async Task Cannot_add_to_unknown_resource_type_in_url()
         {
@@ -628,8 +652,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named 'doesNotExist'.");
         }
 
-        // TODO: Consider moving to RequestDeserializerTests
-        // TODO: Inconsistent naming: "on" vs for" compared to equivalent tests in UpdateToOneRelationshipTests and ReplaceToManyRelationshipTests
         [Fact]
         public async Task Cannot_add_for_relationship_mismatch_between_url_and_body()
         {
@@ -734,7 +756,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
             var requestBody = new
             {
-                // TODO: Array.Empty<object>()
                 data = new object[0]
             };
 

@@ -99,7 +99,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // TODO: For consistency, fetch with FirstAsync and check for null
+                // TODO: Use FirstAsync with non-null assertion.
                 var workItemsInDatabase = await dbContext.WorkItems.ToListAsync();
 
                 var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
@@ -150,7 +150,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // TODO: For consistency, fetch with FirstAsync and check for null
+                // TODO: Use FirstAsync with non-null assertion.
                 var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
 
                 var newUserAccountInDatabase = userAccountsInDatabase.Single(p => p.StringId == newUserAccountId);
@@ -331,6 +331,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_resource_for_missing_request_body()
+        {
+            // Arrange
+            var requestBody = string.Empty;
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            responseDocument.Errors[0].Title.Should().Be("Missing request body.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+        }
+
+        [Fact]
         public async Task Cannot_create_resource_for_missing_type()
         {
             // Arrange
@@ -358,7 +378,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
         }
 
-        // TODO: Consider moving to BaseDocumentParserTests.
         [Fact]
         public async Task Cannot_create_resource_for_unknown_type()
         {
@@ -414,7 +433,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Should().BeEmpty();
         }
 
-        // TODO: Can we rename this to something with "AttrCapabilities" to be more explicit? Right now I needed to go to the model to understand the test.
+        // TODO: Can we rename this to something with "AttrCapabilities" to be more explicit instead of "blocked"? Currently I needed to go to the model to understand the test.
         [Fact]
         public async Task Cannot_create_resource_with_blocked_attribute()
         {
@@ -445,8 +464,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors[0].Detail.Should().StartWith("Setting the initial value of 'concurrencyToken' is not allowed. - Request body:");
         }
 
-        // TODO: Deserialization issues because of properties not having setters is something I would prefer testing in unit tests.
-        // the other one above with "blocked" attributes seems more suitable for a unit test because there it is about a feature that is transcends just the serializer.
+        // TODO: Deserialization issues because of properties not having setters is very implementation specific, hence something I think we should test in unit tests.
+        // the other one above with "blocked" attributes seems more suitable for an integration test because there it is about a feature that is transcends just the serializer.
         [Fact]
         public async Task Cannot_create_resource_with_readonly_attribute()
         {
@@ -495,6 +514,36 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
             responseDocument.Errors[0].Detail.Should().StartWith("Invalid character after parsing");
+        }
+
+        [Fact]
+        public async Task Cannot_update_resource_with_incompatible_attribute_value()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    attributes = new
+                    {
+                        dueAt = "not-a-valid-time"
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Failed to convert 'not-a-valid-time' of type 'String' to type 'Nullable`1'. - Request body: <<");
         }
     }
 }

@@ -113,6 +113,7 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             var resourceProperties = resource.GetType().GetProperties();
+
             foreach (var attr in relationshipAttributes)
             {
                 var relationshipIsProvided = relationshipValues.TryGetValue(attr.PublicName, out RelationshipEntry relationshipData);
@@ -121,6 +122,7 @@ namespace JsonApiDotNetCore.Serialization
                     continue;
                 }
 
+                // TODO: Extra validation to make sure there are no list-like data for HasOne relationships and vice versa (Write test)
                 if (attr is HasOneAttribute hasOneAttribute)
                 {
                     SetHasOneRelationship(resource, resourceProperties, hasOneAttribute, relationshipData);
