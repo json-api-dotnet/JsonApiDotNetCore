@@ -87,9 +87,12 @@ namespace JsonApiDotNetCore.Serialization
             {
                 if (attributeValues.TryGetValue(attr.PublicName, out object newValue))
                 {
+                    if (attr.Property.SetMethod == null)
+                    {
+                        throw new InvalidRequestBodyException("Attribute is read-only.", $"Attribute '{attr.PublicName}' is read-only.", null);
+                    }
+
                     var convertedValue = ConvertAttrValue(newValue, attr.Property.PropertyType);
-                    
-                    // TODO: check for read-only attributes.
                     attr.SetValue(resource, convertedValue);
                     AfterProcessField(resource, attr);
                 }

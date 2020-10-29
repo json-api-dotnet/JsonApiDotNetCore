@@ -816,8 +816,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Property 'WorkItemGroup.ConcurrencyToken' is read-only. - Request body:");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Attribute 'concurrencyToken' is read-only. - Request body:");
         }
         
         [Fact]
