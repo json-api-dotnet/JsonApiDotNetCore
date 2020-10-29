@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-
 // TODO: @Bart In all assertion blocks, use FirstAsync with a non-null assertion check (except for the two cases where its a OneToOne).
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 {
@@ -77,11 +76,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 var groupsInDatabase = await dbContext.Groups
                     .Include(group => group.Color)
                     .ToListAsync();
-                
+
                 var newGroupInDatabase = groupsInDatabase.Single(p => p.StringId == newGroupId);
                 newGroupInDatabase.Color.Should().NotBeNull();
                 newGroupInDatabase.Color.Id.Should().Be(existingGroup.Color.Id);
-                
+
                 var existingGroupInDatabase = groupsInDatabase.Single(p => p.Id == existingGroup.Id);
                 existingGroupInDatabase.Color.Should().BeNull();
             });
@@ -141,7 +140,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 var newColorInDatabase = colorsInDatabase.Single(p => p.Id == colorId);
                 newColorInDatabase.Group.Should().NotBeNull();
                 newColorInDatabase.Group.Id.Should().Be(existingColor.Group.Id);
-    
+
                 var existingColorInDatabase = colorsInDatabase.Single(p => p.Id == existingColor.Id);
                 existingColorInDatabase.Group.Should().BeNull();
             });
@@ -283,7 +282,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 newWorkItemInDatabase.AssignedTo.Id.Should().Be(existingUserAccount.Id);
             });
         }
-
 
         [Fact]
         public async Task Cannot_create_resource_for_missing_HasOne_relationship_type()
