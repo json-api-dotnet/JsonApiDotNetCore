@@ -195,6 +195,12 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
+                var existingResource = await TryGetPrimaryResourceById(resource.Id, TopFieldSelection.OnlyIdAttribute);
+                if (existingResource != null)
+                {
+                    throw new ResourceAlreadyExistsException(resource.StringId, _request.PrimaryResource.PublicName);
+                }
+
                 await AssertRightResourcesInRelationshipsExistAsync(_targetedFields.Relationships, resourceFromRequest);
                 throw;
             }
@@ -229,7 +235,6 @@ namespace JsonApiDotNetCore.Services
                 catch (DataStoreUpdateException)
                 {
                     var primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
-                    AssertPrimaryResourceExists(primaryResource);
 
                     await AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
 
@@ -294,7 +299,6 @@ namespace JsonApiDotNetCore.Services
             }
 
             var primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
-            AssertPrimaryResourceExists(primaryResource);
             _hookExecutor.BeforeUpdate(ToList(primaryResource), ResourcePipeline.PatchRelationship);
 
             try
@@ -303,12 +307,6 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                if (primaryResource == null)
-                {
-                    primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
-                    AssertPrimaryResourceExists(primaryResource);
-                }
-
                 await AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
                 throw;
             }
@@ -328,18 +326,15 @@ namespace JsonApiDotNetCore.Services
             resource.Id = id;
             _hookExecutor.BeforeDelete(ToList(resource), ResourcePipeline.Delete);
 
-            var succeeded = true;
-
+            bool succeeded = false;
             try
             {
                 await _repository.DeleteAsync(id);
+                succeeded = true;
             }
             catch (DataStoreUpdateException)
             {
-                succeeded = false;
                 resource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
-                AssertPrimaryResourceExists(resource);
-
                 throw;
             }
             finally
@@ -364,14 +359,21 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                var resource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
-                AssertPrimaryResourceExists(resource);
-                
+                await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
                 throw;
             }
         }
 
         private async Task<TResource> GetPrimaryResourceById(TId id, TopFieldSelection fieldSelection)
+        {
+            var primaryResource = await TryGetPrimaryResourceById(id, fieldSelection);
+
+            AssertPrimaryResourceExists(primaryResource);
+
+            return primaryResource;
+        }
+
+        private async Task<TResource> TryGetPrimaryResourceById(TId id, TopFieldSelection fieldSelection)
         {
             var primaryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
             primaryLayer.Sort = null;
@@ -393,11 +395,7 @@ namespace JsonApiDotNetCore.Services
             } 
 
             var primaryResources = await _repository.GetAsync(primaryLayer);
-
-            var primaryResource = primaryResources.SingleOrDefault();
-            AssertPrimaryResourceExists(primaryResource);
-
-            return primaryResource;
+            return primaryResources.SingleOrDefault();
         }
 
         private FilterExpression IncludeFilterById(TId id, FilterExpression existingFilter)

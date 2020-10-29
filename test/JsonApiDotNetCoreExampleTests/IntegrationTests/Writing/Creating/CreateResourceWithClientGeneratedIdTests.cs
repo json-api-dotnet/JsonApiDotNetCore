@@ -193,10 +193,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
 
-            // TODO: Produce a better error (409:Conflict) and assert on its details here.
             responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Conflict);
+            responseDocument.Errors[0].Title.Should().Be("Another resource with the specified ID already exists.");
+            responseDocument.Errors[0].Detail.Should().Be($"Another resource of type 'rgbColors' with ID '{existingColor.StringId}' already exists.");
         }
     }
 }
