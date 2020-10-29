@@ -87,7 +87,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 return true;
             }
-            
+
             return requestMethod == HttpMethods.Delete && _request.Kind == EndpointKind.Relationship;
         }
 

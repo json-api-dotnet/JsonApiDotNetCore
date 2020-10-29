@@ -118,7 +118,6 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             var resourceProperties = resource.GetType().GetProperties();
-
             foreach (var attr in relationshipAttributes)
             {
                 var relationshipIsProvided = relationshipValues.TryGetValue(attr.PublicName, out RelationshipEntry relationshipData);

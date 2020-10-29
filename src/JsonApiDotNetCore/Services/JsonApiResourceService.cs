@@ -70,10 +70,7 @@ namespace JsonApiDotNetCore.Services
         {
             _traceWriter.LogMethodStart();
 
-            if (_hookExecutor is ResourceHookExecutor)
-            {
-                _hookExecutor.BeforeRead<TResource>(ResourcePipeline.Get);
-            }
+            _hookExecutor.BeforeRead<TResource>(ResourcePipeline.Get);
 
             if (_options.IncludeTotalResourceCount)
             {
@@ -89,18 +86,13 @@ namespace JsonApiDotNetCore.Services
             var queryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
             var resources = await _repository.GetAsync(queryLayer);
 
-            if (_hookExecutor is ResourceHookExecutor)
-            {
-                _hookExecutor.AfterRead(resources, ResourcePipeline.Get);
-                return _hookExecutor.OnReturn(resources, ResourcePipeline.Get).ToArray();
-            }
-
             if (queryLayer.Pagination?.PageSize != null && queryLayer.Pagination.PageSize.Value == resources.Count)
             {
                 _paginationContext.IsPageFull = true;
             }
 
-            return resources;
+            _hookExecutor.AfterRead(resources, ResourcePipeline.Get);
+            return _hookExecutor.OnReturn(resources, ResourcePipeline.Get).ToArray();
         }
 
         /// <inheritdoc />
@@ -108,20 +100,12 @@ namespace JsonApiDotNetCore.Services
         {
             _traceWriter.LogMethodStart(new {id});
 
-            if (_hookExecutor is ResourceHookExecutor)
-            {
-                _hookExecutor.BeforeRead<TResource>(ResourcePipeline.GetSingle, id.ToString());
-            }
+            _hookExecutor.BeforeRead<TResource>(ResourcePipeline.GetSingle, id.ToString());
 
             var primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.PreserveExisting);
 
-            if (_hookExecutor is ResourceHookExecutor)
-            {
-                _hookExecutor.AfterRead(ToList(primaryResource), ResourcePipeline.GetSingle);
-                return _hookExecutor.OnReturn(ToList(primaryResource), ResourcePipeline.GetSingle).Single();
-            }
-
-            return primaryResource;
+            _hookExecutor.AfterRead(ToList(primaryResource), ResourcePipeline.GetSingle);
+            return _hookExecutor.OnReturn(ToList(primaryResource), ResourcePipeline.GetSingle).Single();
         }
 
         /// <inheritdoc />
@@ -130,10 +114,7 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {id, relationshipName});
             AssertRelationshipExists(relationshipName);
 
-            if (_hookExecutor is ResourceHookExecutor)
-            {
-                _hookExecutor.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
-            }
+            _hookExecutor.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
 
             var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
             var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
@@ -151,11 +132,8 @@ namespace JsonApiDotNetCore.Services
             var primaryResource = primaryResources.SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
 
-            if (_hookExecutor is ResourceHookExecutor)
-            {   
-                _hookExecutor.AfterRead(ToList(primaryResource), ResourcePipeline.GetRelationship);
-                primaryResource = _hookExecutor.OnReturn(ToList(primaryResource), ResourcePipeline.GetRelationship).Single();
-            }
+            _hookExecutor.AfterRead(ToList(primaryResource), ResourcePipeline.GetRelationship);
+            primaryResource = _hookExecutor.OnReturn(ToList(primaryResource), ResourcePipeline.GetRelationship).Single();
 
             var secondaryResource = _request.Relationship.GetValue(primaryResource);
 
@@ -176,10 +154,7 @@ namespace JsonApiDotNetCore.Services
 
             AssertRelationshipExists(relationshipName);
 
-            if (_hookExecutor is ResourceHookExecutor)
-            {
-                _hookExecutor.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
-            }
+            _hookExecutor.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
 
             var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
             secondaryLayer.Projection = _queryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(_request.SecondaryResource);
@@ -192,11 +167,8 @@ namespace JsonApiDotNetCore.Services
             var primaryResource = primaryResources.SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
 
-            if (_hookExecutor is ResourceHookExecutor)
-            {
-                _hookExecutor.AfterRead(ToList(primaryResource), ResourcePipeline.GetRelationship);
-                primaryResource = _hookExecutor.OnReturn(ToList(primaryResource), ResourcePipeline.GetRelationship).Single();
-            }
+            _hookExecutor.AfterRead(ToList(primaryResource), ResourcePipeline.GetRelationship);
+            primaryResource = _hookExecutor.OnReturn(ToList(primaryResource), ResourcePipeline.GetRelationship).Single();
 
             return _request.Relationship.GetValue(primaryResource);
         }
@@ -215,10 +187,7 @@ namespace JsonApiDotNetCore.Services
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(defaultResource);
 
-            if (_hookExecutor is ResourceHookExecutor)
-            {
-                resourceFromRequest = _hookExecutor.BeforeCreate(ToList(resourceFromRequest), ResourcePipeline.Post).Single();
-            }
+            resourceFromRequest = _hookExecutor.BeforeCreate(ToList(resourceFromRequest), ResourcePipeline.Post).Single();
 
             try
             {
@@ -231,12 +200,9 @@ namespace JsonApiDotNetCore.Services
             }
 
             var resourceFromDatabase = await GetPrimaryResourceById(resourceFromRequest.Id, TopFieldSelection.PreserveExisting);
-    
-            if (_hookExecutor is ResourceHookExecutor)
-            {
-                _hookExecutor.AfterCreate(ToList(resourceFromDatabase), ResourcePipeline.Post);
-                resourceFromDatabase = _hookExecutor.OnReturn(ToList(resourceFromDatabase), ResourcePipeline.Post).Single();
-            }
+
+            _hookExecutor.AfterCreate(ToList(resourceFromDatabase), ResourcePipeline.Post);
+            resourceFromDatabase = _hookExecutor.OnReturn(ToList(resourceFromDatabase), ResourcePipeline.Post).Single();
 
             _resourceChangeTracker.SetFinallyStoredAttributeValues(resourceFromDatabase);
 
@@ -292,10 +258,7 @@ namespace JsonApiDotNetCore.Services
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
 
-            if (_hookExecutor is ResourceHookExecutor)
-            {
-                resourceFromRequest = _hookExecutor.BeforeUpdate(ToList(resourceFromRequest), ResourcePipeline.Patch).Single();
-            }
+            resourceFromRequest = _hookExecutor.BeforeUpdate(ToList(resourceFromRequest), ResourcePipeline.Patch).Single();
 
             try
             {
@@ -307,11 +270,8 @@ namespace JsonApiDotNetCore.Services
                 throw;
             }
 
-            if (_hookExecutor is ResourceHookExecutor)
-            {
-                _hookExecutor.AfterUpdate(ToList(resourceFromDatabase), ResourcePipeline.Patch);
-                _hookExecutor.OnReturn(ToList(resourceFromDatabase), ResourcePipeline.Patch);
-            }
+            _hookExecutor.AfterUpdate(ToList(resourceFromDatabase), ResourcePipeline.Patch);
+            _hookExecutor.OnReturn(ToList(resourceFromDatabase), ResourcePipeline.Patch);
 
             TResource afterResourceFromDatabase = await GetPrimaryResourceById(id, fieldsToSelect);
             _resourceChangeTracker.SetFinallyStoredAttributeValues(afterResourceFromDatabase);
@@ -333,15 +293,10 @@ namespace JsonApiDotNetCore.Services
                 AssertHasManyRelationshipValueIsNotNull(secondaryResourceIds);
             }
 
-            TResource primaryResource = null;
-            
-            if (_hookExecutor is ResourceHookExecutor)
-            {
-                primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute); 
-                AssertPrimaryResourceExists(primaryResource);
-                _hookExecutor.BeforeUpdate(ToList(primaryResource), ResourcePipeline.PatchRelationship);
-            }
-            
+            var primaryResource = await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
+            AssertPrimaryResourceExists(primaryResource);
+            _hookExecutor.BeforeUpdate(ToList(primaryResource), ResourcePipeline.PatchRelationship);
+
             try
             {
                 await _repository.SetRelationshipAsync(id, secondaryResourceIds);
@@ -358,7 +313,7 @@ namespace JsonApiDotNetCore.Services
                 throw;
             }
 
-            if (_hookExecutor is ResourceHookExecutor && primaryResource != null)
+            if (primaryResource != null)
             {
                 _hookExecutor.AfterUpdate(ToList(primaryResource), ResourcePipeline.PatchRelationship);
             }
@@ -369,13 +324,9 @@ namespace JsonApiDotNetCore.Services
         {
             _traceWriter.LogMethodStart(new {id});
 
-            TResource resource = null;
-            if (_hookExecutor is ResourceHookExecutor)
-            {
-                resource = _resourceFactory.CreateInstance<TResource>();
-                resource.Id = id;
-                _hookExecutor.BeforeDelete(ToList(resource), ResourcePipeline.Delete);
-            }
+            var resource = _resourceFactory.CreateInstance<TResource>();
+            resource.Id = id;
+            _hookExecutor.BeforeDelete(ToList(resource), ResourcePipeline.Delete);
 
             var succeeded = true;
 
@@ -393,10 +344,7 @@ namespace JsonApiDotNetCore.Services
             }
             finally
             {
-                if (_hookExecutor is ResourceHookExecutor)
-                {
-                    _hookExecutor.AfterDelete(ToList(resource), ResourcePipeline.Delete, succeeded);
-                }
+                _hookExecutor.AfterDelete(ToList(resource), ResourcePipeline.Delete, succeeded);
             }
         }
 

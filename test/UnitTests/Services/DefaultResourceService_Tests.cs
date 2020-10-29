@@ -80,7 +80,7 @@ namespace UnitTests.Services
             var repositoryAccessor = new Mock<IResourceRepositoryAccessor>().Object;
             var targetedFields = new Mock<ITargetedFields>().Object;
             var resourceContextProvider = new Mock<IResourceContextProvider>().Object;
-            var resourceHookExecutor = new NullResourceHookExecutor();
+            var resourceHookExecutor = new NeverResourceHookExecutor();
 
             var composer = new QueryLayerComposer(new List<IQueryConstraintProvider>(), _resourceGraph, resourceDefinitionAccessor, options, paginationContext);
             var request = new JsonApiRequest
