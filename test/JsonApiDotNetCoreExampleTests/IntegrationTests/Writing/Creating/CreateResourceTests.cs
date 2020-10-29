@@ -64,8 +64,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_int_ID()
         {
             // Arrange
-            var workItem = _fakers.WorkItem.Generate();
-            workItem.DueAt = null;
+            var newWorkItem = _fakers.WorkItem.Generate();
+            newWorkItem.DueAt = null;
 
             var requestBody = new
             {
@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     type = "workItems",
                     attributes = new
                     {
-                        description = workItem.Description
+                        description = newWorkItem.Description
                     }
                 }
             };
@@ -89,22 +89,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Attributes["description"].Should().Be(workItem.Description);
-            responseDocument.SingleData.Attributes["dueAt"].Should().Be(workItem.DueAt);
+            responseDocument.SingleData.Attributes["description"].Should().Be(newWorkItem.Description);
+            responseDocument.SingleData.Attributes["dueAt"].Should().Be(newWorkItem.DueAt);
 
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
-            var newWorkItemId = responseDocument.SingleData.Id;
-            newWorkItemId.Should().NotBeNullOrEmpty();
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // TODO: @Bart Use FirstAsync with non-null assertion.
-                var workItemsInDatabase = await dbContext.WorkItems.ToListAsync();
+                var workItemInDatabase = await dbContext.WorkItems
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
-                var newWorkItemInDatabase = workItemsInDatabase.Single(p => p.StringId == newWorkItemId);
-                newWorkItemInDatabase.Description.Should().Be(workItem.Description);
-                newWorkItemInDatabase.DueAt.Should().Be(workItem.DueAt);
+                workItemInDatabase.Description.Should().Be(newWorkItem.Description);
+                workItemInDatabase.DueAt.Should().Be(newWorkItem.DueAt);
             });
 
             var property = typeof(WorkItem).GetProperty(nameof(Identifiable.Id));
@@ -115,7 +113,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         public async Task Can_create_resource_with_long_ID()
         {
             // Arrange
-            var userAccount = _fakers.UserAccount.Generate();
+            var newUserAccount = _fakers.UserAccount.Generate();
 
             var requestBody = new
             {
@@ -124,8 +122,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     type = "userAccounts",
                     attributes = new
                     {
-                        firstName = userAccount.FirstName,
-                        lastName = userAccount.LastName
+                        firstName = newUserAccount.FirstName,
+                        lastName = newUserAccount.LastName
                     }
                 }
             };
@@ -140,22 +138,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("userAccounts");
-            responseDocument.SingleData.Attributes["firstName"].Should().Be(userAccount.FirstName);
-            responseDocument.SingleData.Attributes["lastName"].Should().Be(userAccount.LastName);
+            responseDocument.SingleData.Attributes["firstName"].Should().Be(newUserAccount.FirstName);
+            responseDocument.SingleData.Attributes["lastName"].Should().Be(newUserAccount.LastName);
 
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
-            var newUserAccountId = responseDocument.SingleData.Id;
-            newUserAccountId.Should().NotBeNullOrEmpty();
+            var newUserAccountId = long.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // TODO: @Bart Use FirstAsync with non-null assertion.
-                var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
+                var userAccountInDatabase = await dbContext.UserAccounts
+                    .FirstAsync(userAccount => userAccount.Id == newUserAccountId);
 
-                var newUserAccountInDatabase = userAccountsInDatabase.Single(p => p.StringId == newUserAccountId);
-                newUserAccountInDatabase.FirstName.Should().Be(userAccount.FirstName);
-                newUserAccountInDatabase.LastName.Should().Be(userAccount.LastName);
+                userAccountInDatabase.FirstName.Should().Be(newUserAccount.FirstName);
+                userAccountInDatabase.LastName.Should().Be(newUserAccount.LastName);
             });
 
             var property = typeof(UserAccount).GetProperty(nameof(Identifiable.Id));

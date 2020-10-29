@@ -244,12 +244,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // TODO: @Bart Use FirstAsync with non-null assertion.
-                var workItemsInDatabase = await dbContext.WorkItems
+                var workItemInDatabase2 = await dbContext.WorkItems
                     .Include(workItem => workItem.AssignedTo)
-                    .ToListAsync();
+                    .FirstAsync(workItem => workItem.Id == existingUserAccounts[0].AssignedItems.ElementAt(1).Id);
 
-                var workItemInDatabase2 = workItemsInDatabase.Single(p => p.Id == existingUserAccounts[0].AssignedItems.ElementAt(1).Id);
                 workItemInDatabase2.AssignedTo.Should().NotBeNull();
                 workItemInDatabase2.AssignedTo.Id.Should().Be(existingUserAccounts[1].Id);
             });
