@@ -40,7 +40,7 @@ namespace DiscoveryTests
             _services.AddScoped(_ => new Mock<IPaginationContext>().Object);
             _services.AddScoped(_ => new Mock<IQueryLayerComposer>().Object);
             _services.AddScoped(_ => new Mock<IResourceRepositoryAccessor>().Object);
-            _services.AddScoped(_ => new Mock<IResourceHookExecutor>().Object);
+            _services.AddScoped(_ => new Mock<IResourceHookExecutorFacade>().Object);
 
             _resourceGraphBuilder = new ResourceGraphBuilder(_options, NullLoggerFactory.Instance);
         }
@@ -158,7 +158,7 @@ namespace DiscoveryTests
                 IResourceFactory resourceFactory,
                 ITargetedFields targetedFields,
                 IResourceContextProvider resourceContextProvider,
-                IResourceHookExecutor hookExecutor)
+                IResourceHookExecutorFacade hookExecutor)
                 : base(repository, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory,
                     request, resourceChangeTracker, resourceFactory, targetedFields, resourceContextProvider,
                     hookExecutor)
