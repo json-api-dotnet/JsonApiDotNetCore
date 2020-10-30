@@ -330,6 +330,51 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Includes
         }
 
         [Fact]
+        public async Task Can_include_HasManyThrough_relationship_in_secondary_resource()
+        {
+            // Arrange
+            var article = new Article
+            {
+                Caption = "One",
+                ArticleTags = new HashSet<ArticleTag>
+                {
+                    new ArticleTag
+                    {
+                        Tag = new Tag
+                        {
+                            Name = "Hot"
+                        }
+                    }
+                }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Articles.Add(article);
+
+                await dbContext.SaveChangesAsync();
+            });
+
+            var route = $"/api/v1/articles/{article.StringId}/tags?include=articles";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Type.Should().Be("tags");
+            responseDocument.ManyData[0].Id.Should().Be(article.ArticleTags.ElementAt(0).Tag.StringId);
+            responseDocument.ManyData[0].Attributes["name"].Should().Be(article.ArticleTags.Single().Tag.Name);
+
+            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Type.Should().Be("articles");
+            responseDocument.Included[0].Id.Should().Be(article.StringId);
+            responseDocument.Included[0].Attributes["caption"].Should().Be(article.Caption);
+        }
+
+        [Fact]
         public async Task Can_include_chain_of_HasOne_relationships()
         {
             // Arrange
