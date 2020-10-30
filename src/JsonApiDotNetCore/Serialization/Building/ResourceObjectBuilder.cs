@@ -121,6 +121,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         private bool IsRequiredToOneRelationship(HasOneAttribute attr, IIdentifiable resource)
         {
+            // TODO: @Maurits Based on recent changes, do we still need logic related to foreign keys here?
+
             var foreignKey = resource.GetType().GetProperty(attr.IdentifiablePropertyName);
             if (foreignKey != null && Nullable.GetUnderlyingType(foreignKey.PropertyType) == null)
                 return true;

@@ -184,8 +184,7 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <summary>
-        /// Sets a HasOne relationship on a parsed resource. If present, also
-        /// populates the foreign key.
+        /// Sets a HasOne relationship on a parsed resource.
         /// </summary>
         private void SetHasOneRelationship(IIdentifiable resource,
             PropertyInfo[] resourceProperties,
@@ -206,18 +205,14 @@ namespace JsonApiDotNetCore.Serialization
                 relationshipType = resourceContext.ResourceType;
             }
 
-            SetNavigation(resource, hasOneRelationship, relatedId, relationshipType);
+            SetPrincipalSideOfHasOneRelationship(resource, hasOneRelationship, relatedId, relationshipType);
 
             // depending on if this base parser is used client-side or server-side,
             // different additional processing per field needs to be executed.
             AfterProcessField(resource, hasOneRelationship, relationshipData);
         }
 
-        /// <summary>
-        /// Sets the principal side of a HasOne relationship, which means no
-        /// foreign key is involved.
-        /// </summary>
-        private void SetNavigation(IIdentifiable resource, HasOneAttribute attr, string relatedId,
+        private void SetPrincipalSideOfHasOneRelationship(IIdentifiable resource, HasOneAttribute attr, string relatedId,
             Type relationshipType)
         {
             if (relatedId == null)
