@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
@@ -142,6 +143,77 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
                 var existingColorInDatabase = colorsInDatabase.Single(color => color.Id == existingColor.Id);
                 existingColorInDatabase.Group.Should().BeNull();
+            });
+        }
+
+        [Fact]
+        public async Task Can_create_resource_with_duplicate_HasOne_relationship_member()
+        {
+            // Arrange
+            var existingUserAccounts = _fakers.UserAccount.Generate(2);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.UserAccounts.AddRange(existingUserAccounts);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        assignee = new
+                        {
+                            data = new
+                            {
+                                type = "userAccounts",
+                                id = existingUserAccounts[0].StringId
+                            }
+                        },
+                        assignee_duplicate = new
+                        {
+                            data = new
+                            {
+                                type = "userAccounts",
+                                id = existingUserAccounts[1].StringId
+                            }
+                        }
+                    }
+                }
+            };
+
+            var serializedRequestBody = JsonConvert.SerializeObject(requestBody).Replace("assignee_duplicate", "assignee");
+
+            var route = "/workItems?include=assignee";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, serializedRequestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+
+            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Type.Should().Be("userAccounts");
+            responseDocument.Included[0].Id.Should().Be(existingUserAccounts[1].StringId);
+            responseDocument.Included[0].Attributes["firstName"].Should().Be(existingUserAccounts[1].FirstName);
+            responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccounts[1].LastName);
+
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Assignee)
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+
+                workItemInDatabase.Assignee.Should().NotBeNull();
+                workItemInDatabase.Assignee.Id.Should().Be(existingUserAccounts[1].Id);
             });
         }
 
