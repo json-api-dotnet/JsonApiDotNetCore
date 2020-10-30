@@ -14,9 +14,6 @@ using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Serialization
 {
-    // TODO: check if FK assignments are still required.
-    // TODO: add test with duplicate dictionary entry in body.
-
     /// <summary>
     /// Abstract base class for deserialization. Deserializes JSON content into <see cref="Objects.Document"/>s
     /// and constructs instances of the resource(s) in the document body.
@@ -89,6 +86,7 @@ namespace JsonApiDotNetCore.Serialization
                 {
                     if (attr.Property.SetMethod == null)
                     {
+                        // TODO: Base deserializer code should be agnostic of whether the usage is server or client side. Throwing a request body exception violates this, as this is server side specific.
                         throw new InvalidRequestBodyException("Attribute is read-only.", $"Attribute '{attr.PublicName}' is read-only.", null);
                     }
 
@@ -208,42 +206,11 @@ namespace JsonApiDotNetCore.Serialization
                 relationshipType = resourceContext.ResourceType;
             }
 
-            // TODO: this does not make sense in the following case: if we're setting the principal side of a one-to-one relationship, IdentifiablePropertyName should be null.
-            var foreignKeyProperty = resourceProperties.FirstOrDefault(p => p.Name == hasOneRelationship.IdentifiablePropertyName);
-
-            if (foreignKeyProperty != null)
-                // there is a FK from the current resource pointing to the related object,
-                // i.e. we're populating the relationship from the dependent side.
-                SetForeignKey(resource, foreignKeyProperty, hasOneRelationship, relatedId, relationshipType);
-
             SetNavigation(resource, hasOneRelationship, relatedId, relationshipType);
 
             // depending on if this base parser is used client-side or server-side,
             // different additional processing per field needs to be executed.
             AfterProcessField(resource, hasOneRelationship, relationshipData);
-        }
-
-        /// <summary>
-        /// Sets the dependent side of a HasOne relationship, which means that a
-        /// foreign key also will be populated.
-        /// </summary>
-        private void SetForeignKey(IIdentifiable resource, PropertyInfo foreignKey, HasOneAttribute attr, string id,
-            Type relationshipType)
-        {
-            bool foreignKeyPropertyIsNullableType = Nullable.GetUnderlyingType(foreignKey.PropertyType) != null
-                || foreignKey.PropertyType == typeof(string);
-            if (id == null && !foreignKeyPropertyIsNullableType)
-            {
-                // TODO: FormatException does not look like the right exception type here.
-                // I would expect such constraints to be checked in the ResourceService layer instead.
-
-                // This happens when a non-optional relationship is deliberately set to null.
-                // For a server deserializer, it should be mapped to a BadRequest HTTP error code.
-                throw new FormatException($"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
-            }
-
-            var typedId = TypeHelper.ConvertStringIdToTypedId(relationshipType, id, ResourceFactory);
-            foreignKey.SetValue(resource, typedId);
         }
 
         /// <summary>

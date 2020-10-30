@@ -248,7 +248,7 @@ namespace UnitTests.Serialization.Deserializer
         }
 
         [Fact]
-        public void DeserializeRelationships_EmptyOneToOnePrincipal_NavigationPropertyAndForeignKeyAreNull()
+        public void DeserializeRelationships_EmptyOneToOnePrincipal_NavigationIsNull()
         {
             // Arrange
             var content = CreateDocumentWithRelationships("oneToOneDependents", "principal");
@@ -260,7 +260,6 @@ namespace UnitTests.Serialization.Deserializer
             // Assert
             Assert.Equal(1, result.Id);
             Assert.Null(result.Principal);
-            Assert.Null(result.PrincipalId);
         }
 
         [Fact]
@@ -270,12 +269,16 @@ namespace UnitTests.Serialization.Deserializer
             var content = CreateDocumentWithRelationships("oneToOneRequiredDependents", "principal");
             var body = JsonConvert.SerializeObject(content);
 
-            // Act, assert
-            Assert.Throws<FormatException>(() => _deserializer.Deserialize(body));
+            // Act
+            var result = (OneToOneRequiredDependent) _deserializer.Deserialize(body);
+
+            // assert
+            Assert.Equal(1, result.Id);
+            Assert.Null(result.Principal);
         }
 
         [Fact]
-        public void DeserializeRelationships_PopulatedOneToOnePrincipal_NavigationPropertyAndForeignKeyArePopulated()
+        public void DeserializeRelationships_PopulatedOneToOnePrincipal_NavigationIsPopulated()
         {
             // Arrange
             var content = CreateDocumentWithRelationships("oneToOneDependents", "principal", "oneToOnePrincipals");
@@ -288,12 +291,11 @@ namespace UnitTests.Serialization.Deserializer
             Assert.Equal(1, result.Id);
             Assert.NotNull(result.Principal);
             Assert.Equal(10, result.Principal.Id);
-            Assert.Equal(10, result.PrincipalId);
             Assert.Null(result.AttributeMember);
         }
 
         [Fact]
-        public void DeserializeRelationships_EmptyOneToManyPrincipal_NavigationAndForeignKeyAreNull()
+        public void DeserializeRelationships_EmptyOneToManyPrincipal_NavigationIsNull()
         {
             // Arrange
             var content = CreateDocumentWithRelationships("oneToManyDependents", "principal");
@@ -305,23 +307,27 @@ namespace UnitTests.Serialization.Deserializer
             // Assert
             Assert.Equal(1, result.Id);
             Assert.Null(result.Principal);
-            Assert.Null(result.PrincipalId);
             Assert.Null(result.AttributeMember);
         }
 
         [Fact]
-        public void DeserializeRelationships_EmptyOneToManyRequiredPrincipal_ThrowsFormatException()
+        public void DeserializeRelationships_EmptyOneToManyRequiredPrincipal_NavigationIsNull()
         {
             // Arrange
             var content = CreateDocumentWithRelationships("oneToMany-requiredDependents", "principal");
             var body = JsonConvert.SerializeObject(content);
 
-            // Act, assert
-            Assert.Throws<FormatException>(() => _deserializer.Deserialize(body));
+            // Act
+            var result = (OneToManyRequiredDependent) _deserializer.Deserialize(body);
+
+            // assert
+            Assert.Equal(1, result.Id);
+            Assert.Null(result.Principal);
+            Assert.Null(result.AttributeMember);
         }
 
         [Fact]
-        public void DeserializeRelationships_PopulatedOneToManyPrincipal_NavigationAndForeignKeyArePopulated()
+        public void DeserializeRelationships_PopulatedOneToManyPrincipal_NavigationIsPopulated()
         {
             // Arrange
             var content = CreateDocumentWithRelationships("oneToManyDependents", "principal", "oneToManyPrincipals");
@@ -334,7 +340,6 @@ namespace UnitTests.Serialization.Deserializer
             Assert.Equal(1, result.Id);
             Assert.NotNull(result.Principal);
             Assert.Equal(10, result.Principal.Id);
-            Assert.Equal(10, result.PrincipalId);
             Assert.Null(result.AttributeMember);
         }
 

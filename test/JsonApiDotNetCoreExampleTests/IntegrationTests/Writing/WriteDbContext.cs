@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
 
             builder.Entity<WorkItemGroup>()
                 .HasOne(workItemGroup => workItemGroup.Color)
-                .WithOne(x => x.Group)
+                .WithOne(color => color.Group)
                 .HasForeignKey<RgbColor>();
 
             builder.Entity<WorkItemTag>()
