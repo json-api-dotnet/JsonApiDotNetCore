@@ -214,7 +214,7 @@ namespace JsonApiDotNetCore.Services
                 throw;
             }
 
-            var resourceFromDatabase = await GetPrimaryResourceById(resourceFromRequest.Id, TopFieldSelection.PreserveExisting);
+            var resourceFromDatabase = await GetPrimaryResourceById(resourceFromRequest.Id, TopFieldSelection.WithAllAttributes);
 
             _hookExecutor.AfterCreate(resourceFromDatabase);
 
@@ -275,8 +275,7 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.BeforeUpdateResource(resourceFromRequest);
 
-            var fieldsToSelect = _targetedFields.Attributes.Any() ? TopFieldSelection.AllAttributes : TopFieldSelection.OnlyIdAttribute;
-            TResource resourceFromDatabase = await GetPrimaryResourceById(id, fieldsToSelect);
+            TResource resourceFromDatabase = await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes);
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
 
@@ -290,7 +289,7 @@ namespace JsonApiDotNetCore.Services
                 throw;
             }
 
-            TResource afterResourceFromDatabase = await GetPrimaryResourceById(id, fieldsToSelect);
+            TResource afterResourceFromDatabase = await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes);
 
             _hookExecutor.AfterUpdateResource(afterResourceFromDatabase);
 
@@ -328,7 +327,7 @@ namespace JsonApiDotNetCore.Services
             }
 
             await _hookExecutor.BeforeUpdateRelationshipAsync(id,
-                async () => await GetPrimaryResourceById(id, TopFieldSelection.AllAttributes));
+                async () => await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes));
 
             try
             {
@@ -343,7 +342,7 @@ namespace JsonApiDotNetCore.Services
             }
 
             await _hookExecutor.AfterUpdateRelationshipAsync(id,
-                async () => await GetPrimaryResourceById(id, TopFieldSelection.AllAttributes));
+                async () => await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes));
         }
 
         /// <inheritdoc />
@@ -352,7 +351,7 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {id});
 
             await _hookExecutor.BeforeDeleteAsync(id,
-                async () => await GetPrimaryResourceById(id, TopFieldSelection.AllAttributes));
+                async () => await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes));
 
             try
             {
@@ -365,7 +364,7 @@ namespace JsonApiDotNetCore.Services
             }
 
             await _hookExecutor.AfterDeleteAsync(id,
-                async () => await GetPrimaryResourceById(id, TopFieldSelection.AllAttributes));
+                async () => await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes));
         }
 
         /// <inheritdoc />
@@ -410,14 +409,14 @@ namespace JsonApiDotNetCore.Services
                 var idAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
                 primaryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
             }
-            else if (fieldSelection == TopFieldSelection.AllAttributes && primaryLayer.Projection != null)
+            else if (fieldSelection == TopFieldSelection.WithAllAttributes && primaryLayer.Projection != null)
             {
-                // Discard any top-level ?fields= or attribute exclusions from resource definition, because we need the full record.
+                // Discard any top-level ?fields= or attribute exclusions from resource definition, because we need the full database row.
                 while (primaryLayer.Projection.Any(p => p.Key is AttrAttribute))
                 {
                     primaryLayer.Projection.Remove(primaryLayer.Projection.First(p => p.Key is AttrAttribute));
                 }
-            } 
+            }
 
             var primaryResources = await _repository.GetAsync(primaryLayer);
             return primaryResources.SingleOrDefault();
@@ -571,8 +570,17 @@ namespace JsonApiDotNetCore.Services
 
         private enum TopFieldSelection
         {
-            AllAttributes,
+            /// <summary>
+            /// Preserves included relationships, but selects all resource attributes.
+            /// </summary>
+            WithAllAttributes,
+            /// <summary>
+            /// Discards any included relationships and selects only resource ID.
+            /// </summary>
             OnlyIdAttribute,
+            /// <summary>
+            /// Preserves the existing selection of attributes and/or relationships.
+            /// </summary>
             PreserveExisting
         }
     }

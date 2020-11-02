@@ -274,6 +274,137 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             });
         }
 
+        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        public async Task Can_create_relationship_with_include()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            var existingUserAccount = _fakers.UserAccount.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(existingWorkItem, existingUserAccount);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        assignee = new
+                        {
+                            data = new
+                            {
+                                type = "userAccounts",
+                                id = existingUserAccount.StringId
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}?include=assignee";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Type.Should().Be("workItems");
+            responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
+            responseDocument.SingleData.Attributes["description"].Should().Be(existingWorkItem.Description);
+            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            
+            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Type.Should().Be("userAccounts");
+            responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
+            responseDocument.Included[0].Attributes["firstName"].Should().Be(existingUserAccount.FirstName);
+            responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccount.LastName);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Assignee)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Assignee.Should().NotBeNull();
+                workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
+            });
+        }
+
+        [Fact]
+        public async Task Can_replace_relationship_with_include_and_fieldsets()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Assignee = _fakers.UserAccount.Generate();
+
+            var existingUserAccount = _fakers.UserAccount.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(existingWorkItem, existingUserAccount);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        assignee = new
+                        {
+                            data = new
+                            {
+                                type = "userAccounts",
+                                id = existingUserAccount.StringId
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}?fields=description&include=assignee&fields[assignee]=lastName";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Type.Should().Be("workItems");
+            responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
+            responseDocument.SingleData.Attributes.Should().HaveCount(1);
+            responseDocument.SingleData.Attributes["description"].Should().Be(existingWorkItem.Description);
+            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            
+            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Type.Should().Be("userAccounts");
+            responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
+            responseDocument.Included[0].Attributes.Should().HaveCount(1);
+            responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccount.LastName);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Assignee)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Assignee.Should().NotBeNull();
+                workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
+            });
+        }
+
         [Fact]
         public async Task Cannot_create_for_missing_relationship_type()
         {
