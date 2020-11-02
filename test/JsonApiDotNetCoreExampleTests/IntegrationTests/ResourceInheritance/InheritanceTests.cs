@@ -124,7 +124,67 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 manInDatabase.HealthInsurance.Id.Should().Be(existingInsurance.Id);
             });
         }
-        
+
+        [Fact]
+        public async Task Can_update_resource_through_primary_endpoint()
+        {
+            // Arrange
+            var existingMan = new Man
+            {
+                FamilyName = "Smith",
+                IsRetired = false,
+                HasBeard = true
+            };
+
+            var newMan = new Man
+            {
+                FamilyName = "Jackson",
+                IsRetired = true,
+                HasBeard = false
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Men.Add(existingMan);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "men",
+                    id = existingMan.StringId,
+                    attributes = new
+                    {
+                        familyName = newMan.FamilyName,
+                        isRetired = newMan.IsRetired,
+                        hasBeard = newMan.HasBeard
+                    }
+                }
+            };
+
+            var route = "/men/" + existingMan.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var manInDatabase = await dbContext.Men
+                    .FirstAsync(man => man.Id == existingMan.Id);
+
+                manInDatabase.FamilyName.Should().Be(newMan.FamilyName);
+                manInDatabase.IsRetired.Should().Be(newMan.IsRetired);
+                manInDatabase.HasBeard.Should().Be(newMan.HasBeard);
+            });
+        }
+
         [Fact]
         public async Task Can_update_resource_with_ToOne_relationship_through_relationship_endpoint()
         {
