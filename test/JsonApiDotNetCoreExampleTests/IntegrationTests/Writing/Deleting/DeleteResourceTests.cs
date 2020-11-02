@@ -103,11 +103,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
 
                 var groupInDatabase = await dbContext.Groups
                     .FirstAsync(group => group.Id == existingColor.Group.Id);
-                
+
                 groupInDatabase.Color.Should().BeNull();
             });
         }
 
+        // TODO: Revert changes to this test, it is supposed to fail like it did. If cascading behavior is desired, users can configure that in EF Core. JADNC should not try to be smart and guess what the user actually wanted.
         [Fact]
         public async Task Cannot_delete_existing_resource_with_OneToOne_relationship_from_principal_side()
         {
@@ -145,6 +146,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
             });
         }
 
+        // TODO: Revert changes to this test, it is supposed to fail like it did. If cascading behavior is desired, users can configure that in EF Core. JADNC should not try to be smart and guess what the user actually wanted.
         [Fact]
         public async Task Cannot_delete_existing_resource_with_HasMany_relationship()
         {
