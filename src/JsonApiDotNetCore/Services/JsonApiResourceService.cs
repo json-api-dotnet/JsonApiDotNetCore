@@ -378,7 +378,7 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                // await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
+                await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
                 throw;
             }
         }
