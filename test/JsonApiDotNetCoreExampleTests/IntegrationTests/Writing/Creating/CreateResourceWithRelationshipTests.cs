@@ -147,6 +147,71 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         }
 
         [Fact]
+        public async Task Can_create_resource_with_HasMany_relationship()
+        {
+            // Arrange
+            var existingUserAccounts = _fakers.UserAccount.Generate(2);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.UserAccounts.AddRange(existingUserAccounts);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        subscribers = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "userAccounts",
+                                    id = existingUserAccounts[0].StringId
+                                },
+                                new
+                                {
+                                    type = "userAccounts",
+                                    id = existingUserAccounts[1].StringId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Included.Should().BeNull();
+
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Subscribers)
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+
+                workItemInDatabase.Subscribers.Should().HaveCount(2);
+                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingUserAccounts[0].Id);
+                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingUserAccounts[1].Id);
+            });
+        }
+
+        [Fact]
         public async Task Can_create_resource_with_HasOne_relationship_with_include()
         {
             // Arrange
@@ -204,6 +269,77 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
                 workItemInDatabase.Assignee.Should().NotBeNull();
                 workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
+            });
+        }
+
+        [Fact]
+        public async Task Can_create_resource_with_HasMany_relationship_with_include()
+        {
+            // Arrange
+            var existingUserAccounts = _fakers.UserAccount.Generate(2);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.UserAccounts.AddRange(existingUserAccounts);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        subscribers = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "userAccounts",
+                                    id = existingUserAccounts[0].StringId
+                                },
+                                new
+                                {
+                                    type = "userAccounts",
+                                    id = existingUserAccounts[1].StringId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems?include=subscribers";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            
+            responseDocument.Included.Should().HaveCount(2);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Type == "userAccounts");
+            responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[0].StringId);
+            responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[1].StringId);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["firstName"] != null);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["lastName"] != null);
+
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Subscribers)
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+
+                workItemInDatabase.Subscribers.Should().HaveCount(2);
+                workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingUserAccounts[0].Id);
+                workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingUserAccounts[1].Id);
             });
         }
 
@@ -280,251 +416,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         }
 
         [Fact]
-        public async Task Cannot_create_resource_for_missing_HasOne_relationship_type()
-        {
-            // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = new
-                            {
-                                id = "12345678"
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/workItems";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'assignee' relationship. - Request body: <<");
-        }
-
-        [Fact]
-        public async Task Cannot_create_resource_for_missing_HasOne_relationship_ID()
-        {
-            // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = new
-                            {
-                                type = "userAccounts"
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/workItems";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in 'assignee' relationship. - Request body: <<");
-        }
-
-        [Fact]
-        public async Task Cannot_create_resource_for_unknown_HasOne_relationship_ID()
-        {
-            // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = new
-                            {
-                                type = "userAccounts",
-                                id = "12345678"
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/workItems";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'userAccounts' with ID '12345678' being assigned to relationship 'assignee' does not exist.");
-        }
-
-        [Fact]
-        public async Task Can_create_resource_with_HasMany_relationship()
-        {
-            // Arrange
-            var existingUserAccounts = _fakers.UserAccount.Generate(2);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.UserAccounts.AddRange(existingUserAccounts);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccounts[0].StringId
-                                },
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccounts[1].StringId
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/workItems";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
-
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.Included.Should().BeNull();
-
-            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Subscribers)
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
-
-                workItemInDatabase.Subscribers.Should().HaveCount(2);
-                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingUserAccounts[0].Id);
-                workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingUserAccounts[1].Id);
-            });
-        }
-
-        [Fact]
-        public async Task Can_create_resource_with_HasMany_relationship_with_include()
-        {
-            // Arrange
-            var existingUserAccounts = _fakers.UserAccount.Generate(2);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.UserAccounts.AddRange(existingUserAccounts);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccounts[0].StringId
-                                },
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccounts[1].StringId
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/workItems?include=subscribers";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
-
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
-            
-            responseDocument.Included.Should().HaveCount(2);
-            responseDocument.Included.Should().OnlyContain(resource => resource.Type == "userAccounts");
-            responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[0].StringId);
-            responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[1].StringId);
-            responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["firstName"] != null);
-            responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["lastName"] != null);
-
-            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Subscribers)
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
-
-                workItemInDatabase.Subscribers.Should().HaveCount(2);
-                workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingUserAccounts[0].Id);
-                workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingUserAccounts[1].Id);
-            });
-        }
-
-        [Fact]
         public async Task Can_create_resource_with_HasMany_relationship_with_include_and_secondary_fieldset()
         {
             // Arrange
@@ -592,73 +483,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 workItemInDatabase.Subscribers.Should().HaveCount(2);
                 workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingUserAccounts[0].Id);
                 workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingUserAccounts[1].Id);
-            });
-        }
-
-        [Fact]
-        public async Task Can_create_resource_with_duplicate_HasMany_relationships()
-        {
-            // Arrange
-            var existingUserAccount = _fakers.UserAccount.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.UserAccounts.Add(existingUserAccount);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccount.StringId
-                                },
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccount.StringId
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/workItems?include=subscribers";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
-
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
-            
-            responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Type.Should().Be("userAccounts");
-            responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
-
-            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Subscribers)
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
-
-                workItemInDatabase.Subscribers.Should().HaveCount(1);
-                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccount.Id);
             });
         }
 
@@ -748,6 +572,204 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[1].Id);
                 workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[2].Id);
             });
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_missing_HasOne_relationship_type()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        assignee = new
+                        {
+                            data = new
+                            {
+                                id = "12345678"
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'assignee' relationship. - Request body: <<");
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_missing_HasMany_relationship_type()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        subscribers = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    id = "12345678"
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'subscribers' relationship. - Request body: <<");
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_missing_HasOne_relationship_ID()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        assignee = new
+                        {
+                            data = new
+                            {
+                                type = "userAccounts"
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'id' element in 'assignee' relationship. - Request body: <<");
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_unknown_HasOne_relationship_ID()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        assignee = new
+                        {
+                            data = new
+                            {
+                                type = "userAccounts",
+                                id = "12345678"
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'userAccounts' with ID '12345678' being assigned to relationship 'assignee' does not exist.");
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_unknown_HasMany_relationship_IDs()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "userAccounts",
+                    relationships = new
+                    {
+                        assignedItems = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "workItems",
+                                    id = "12345678"
+                                },
+                                new
+                                {
+                                    type = "workItems",
+                                    id = "87654321"
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/userAccounts";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            responseDocument.Errors.Should().HaveCount(2);
+
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'workItems' with ID '12345678' being assigned to relationship 'assignedItems' does not exist.");
+
+            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[1].Title.Should().Be("A resource being assigned to a relationship does not exist.");
+            responseDocument.Errors[1].Detail.Should().StartWith("Resource of type 'workItems' with ID '87654321' being assigned to relationship 'assignedItems' does not exist.");
         }
 
         [Fact]
@@ -867,9 +889,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         }
 
         [Fact]
-        public async Task Cannot_create_resource_for_missing_HasMany_relationship_type()
+        public async Task Can_create_resource_with_duplicate_HasMany_relationships()
         {
             // Arrange
+            var existingUserAccount = _fakers.UserAccount.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.UserAccounts.Add(existingUserAccount);
+                await dbContext.SaveChangesAsync();
+            });
+
             var requestBody = new
             {
                 data = new
@@ -883,52 +913,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                             {
                                 new
                                 {
-                                    id = "12345678"
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/workItems";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'subscribers' relationship. - Request body: <<");
-        }
-
-        [Fact]
-        public async Task Cannot_create_resource_for_unknown_HasMany_relationship_IDs()
-        {
-            // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "userAccounts",
-                    relationships = new
-                    {
-                        assignedItems = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "workItems",
-                                    id = "12345678"
+                                    type = "userAccounts",
+                                    id = existingUserAccount.StringId
                                 },
                                 new
                                 {
-                                    type = "workItems",
-                                    id = "87654321"
+                                    type = "userAccounts",
+                                    id = existingUserAccount.StringId
                                 }
                             }
                         }
@@ -936,23 +927,32 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 }
             };
 
-            var route = "/userAccounts";
+            var route = "/workItems?include=subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Errors.Should().HaveCount(2);
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            
+            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Type.Should().Be("userAccounts");
+            responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
 
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'workItems' with ID '12345678' being assigned to relationship 'assignedItems' does not exist.");
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
-            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[1].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[1].Detail.Should().StartWith("Resource of type 'workItems' with ID '87654321' being assigned to relationship 'assignedItems' does not exist.");
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Subscribers)
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+
+                workItemInDatabase.Subscribers.Should().HaveCount(1);
+                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccount.Id);
+            });
         }
 
         [Fact]
