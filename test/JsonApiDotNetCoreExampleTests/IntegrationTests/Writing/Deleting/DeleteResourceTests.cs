@@ -9,8 +9,6 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
 {
-    // TODO: Now that the tests with expected 500 have been converted to the desired behavior, we should consider having
-    // a (few) test(s) that cover the case of a DeletionBehavior configuration that will lead to a 500.
     public sealed class DeleteResourceTests
         : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
@@ -108,9 +106,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
             });
         }
 
-        // TODO: Revert changes to this test, it is supposed to fail like it did. If cascading behavior is desired, users can configure that in EF Core. JADNC should not try to be smart and guess what the user actually wanted.
         [Fact]
-        public async Task Cannot_delete_existing_resource_with_OneToOne_relationship_from_principal_side()
+        public async Task Can_delete_existing_resource_with_OneToOne_relationship_from_principal_side()
         {
             // Arrange
             var existingGroup = _fakers.WorkItemGroup.Generate();
@@ -136,19 +133,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
             {
                 var groupsInDatabase = await dbContext.Groups
                     .FirstOrDefaultAsync(group => group.Id == existingGroup.Id);
-                
+
                 groupsInDatabase.Should().BeNull();
 
                 var colorInDatabase = await dbContext.RgbColors
                     .FirstAsync(color => color.Id == existingGroup.Color.Id);
-                
+
                 colorInDatabase.Group.Should().BeNull();
             });
         }
 
-        // TODO: Revert changes to this test, it is supposed to fail like it did. If cascading behavior is desired, users can configure that in EF Core. JADNC should not try to be smart and guess what the user actually wanted.
         [Fact]
-        public async Task Cannot_delete_existing_resource_with_HasMany_relationship()
+        public async Task Can_delete_existing_resource_with_HasMany_relationship()
         {
             // Arrange
             var existingWorkItem = _fakers.WorkItem.Generate();
@@ -179,8 +175,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
 
                 var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
 
-                userAccountsInDatabase.Should().ContainSingle(userAccount => userAccount.Id ==  existingWorkItem.Subscribers.ElementAt(0).Id);
-                userAccountsInDatabase.Should().ContainSingle(userAccount => userAccount.Id ==  existingWorkItem.Subscribers.ElementAt(1).Id);
+                userAccountsInDatabase.Should().ContainSingle(userAccount => userAccount.Id == existingWorkItem.Subscribers.ElementAt(0).Id);
+                userAccountsInDatabase.Should().ContainSingle(userAccount => userAccount.Id == existingWorkItem.Subscribers.ElementAt(1).Id);
             });
         }
 
