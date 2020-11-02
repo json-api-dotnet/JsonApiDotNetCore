@@ -291,38 +291,11 @@ namespace JsonApiDotNetCore.Repositories
             
             var rightResources = ((IEnumerable<IIdentifiable>)relationship.GetValue(primaryResource)).ToHashSet(IdentifiableComparer.Instance);
 
-            // var rightResourcesFromDatabase = GetFilteredThroughEntities_StaticQueryBuilding( ,.., . secondaryResourceIds));
-            
-            
             rightResources.ExceptWith(secondaryResourceIds);
             
             await ApplyRelationshipUpdate(relationship, primaryResource, rightResources);
             await SaveChangesAsync();
         }
-
-        // TODO: Restore or remove commented-out code.
-        /*
-        // var newRightResources = GetResourcesToAssignForRemoveFromToManyRelationship(existingRightResources, secondaryResourceIds);
-        //
-        /// <summary>
-        /// Removes resources from <paramref name="existingRightResources"/> whose ID exists in <paramref name="resourcesToRemove"/>.
-        /// </summary>
-        /// <example>
-        /// <code><![CDATA[
-        /// existingRightResources = { 1, 2, 3 }
-        /// resourcesToRemove = { 3, 4, 5 }
-        /// returns { 1, 2 }
-        /// ]]></code>
-        /// </example>
-        private ICollection<IIdentifiable> GetResourcesToAssignForRemoveFromToManyRelationship(
-            ISet<IIdentifiable> existingRightResources, ISet<IIdentifiable> resourcesToRemove)
-        {
-            var newRightResources = new HashSet<IIdentifiable>(existingRightResources, IdentifiableComparer.Instance);
-            newRightResources.ExceptWith(resourcesToRemove);
-
-            return newRightResources;
-        }
-        */
 
         private async Task SaveChangesAsync()
         {
