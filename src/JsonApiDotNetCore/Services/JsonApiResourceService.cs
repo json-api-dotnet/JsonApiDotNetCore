@@ -182,6 +182,12 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
+            foreach (var hasManyRelationship in _targetedFields.Relationships.OfType<HasManyAttribute>())
+            {
+                var rightResources = hasManyRelationship.GetValue(resource);
+                AssertHasManyRelationshipValueIsNotNull(rightResources);
+            }
+
             var resourceFromRequest = resource;
             _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
 

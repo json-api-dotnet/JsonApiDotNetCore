@@ -1233,5 +1233,71 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingTag.Id);
             });
         }
+
+        [Fact]
+        public async Task Cannot_create_with_null_data_in_HasMany_relationship()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        subscribers = new
+                        {
+                            data = (object)null
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] for to-many relationship.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task Cannot_create_with_null_data_in_HasManyThrough_relationship()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        tags = new
+                        {
+                            data = (object)null
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] for to-many relationship.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+        }
     }
 }
