@@ -8,30 +8,6 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resources
 {
-    // TODO: Tests for mismatch between type in relationship data versus expected clr type based on the relationship being populated.
-    //     - POST /primaryResource    (HasOne, HasMany and HasManyThrough)
-    //     - PATCH /primary resource  (HasOne, HasMany and HasManyThrough)
-    // example:
-    // var requestBody = new
-    // {
-    //     data = new
-    //     {
-    //         type = "workItems",
-    //         id = 1,
-    //         attributes = new
-    //         {
-    //         },
-    //         relationships = new
-    //         {
-    //             assignee = new
-    //             {
-    //                 type = "rgbColors", // mismatch: expected userAccount (because of assignee)
-    //                 id = 2
-    //             }
-    //         }
-    //     }
-    // };
-
     public sealed class UpdateToOneRelationshipTests
         : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
