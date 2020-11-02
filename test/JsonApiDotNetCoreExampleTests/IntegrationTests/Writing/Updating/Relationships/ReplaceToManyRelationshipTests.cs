@@ -501,6 +501,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Should().BeEmpty();
         }
 
+
+        // TODO: replacing primary data with new object[0] should still fail, but it doesn't.
         [Fact]
         public async Task Cannot_replace_on_unknown_resource_ID_in_url()
         {

@@ -9,8 +9,6 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
 {
-    // TODO: Now that the tests with expected 500 have been converted to the desired behavior, we should consider having
-    // a (few) test(s) that cover the case of a DeletionBehavior configuration that will lead to a 500.
     public sealed class DeleteResourceTests
         : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
@@ -185,8 +183,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
         [Fact]
         public async Task Can_delete_resource_with_HasManyThrough_relationship()
         {
-            // Arrange
-            var existingWorkItemTag = new WorkItemTag
+           // Arrange
+           var existingWorkItemTag = new WorkItemTag
             {
                 Item = _fakers.WorkItem.Generate(),
                 Tag = _fakers.WorkTags.Generate()

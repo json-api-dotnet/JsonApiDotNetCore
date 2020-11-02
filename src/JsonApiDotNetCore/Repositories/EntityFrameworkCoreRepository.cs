@@ -18,10 +18,12 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
-
 // TODO: Tests that cover relationship updates with required relationships. All relationships right are currently optional.
 //    - Setting a required relationship to null
-//    - ??
+//    - Creating resource with resource
+//    - One-to-one required / optional => what is the current behavior?
+// tangent:
+//     - How and where to read EF Core metadata when "required-relationship-error" is triggered?
 namespace JsonApiDotNetCore.Repositories
 {
     /// <summary>
@@ -239,8 +241,6 @@ namespace JsonApiDotNetCore.Repositories
                 }
             }
 
-            _resourceGraph.GetRelationships<TResource>();
-
             _dbContext.Remove(resource);
 
             await SaveChangesAsync();
@@ -265,6 +265,19 @@ namespace JsonApiDotNetCore.Repositories
             return _dbContext.Model.FindEntityType(typeof(TResource)).FindNavigation(relationship.Property.Name);
         }
 
+        /*                                            in service                                                                         in   repo
+         * Primary resource                        possible, but inefficient with additional queryside-loading data                  X  no objections, other than complicated to bubble up the error back to service
+         *                                         in repo (overruled)
+         *                                        
+         * Newly assigned set of resources         possible, but complicated to access People repo from Article serivce              X    no objections, other than complicated to bubble up the error back to service   
+         *
+         * Existing set of resources               possible, but violation of concern is.                                            X   no objections, other than complicated to bubble up the error back to service
+         *
+         *
+         *
+         *
+         *
+         */
         /// <inheritdoc />
         public virtual async Task RemoveFromToManyRelationshipAsync(TId id, ISet<IIdentifiable> secondaryResourceIds)
         {
@@ -277,17 +290,14 @@ namespace JsonApiDotNetCore.Repositories
             await EnableCompleteReplacement(relationship, primaryResource);
             
             var rightResources = ((IEnumerable<IIdentifiable>)relationship.GetValue(primaryResource)).ToHashSet(IdentifiableComparer.Instance);
-            var currentRightResourcesCount = rightResources.Count;
 
+            // var rightResourcesFromDatabase = GetFilteredThroughEntities_StaticQueryBuilding( ,.., . secondaryResourceIds));
+            
+            
             rightResources.ExceptWith(secondaryResourceIds);
             
-            // TODO: Why has it been reverted to != again?
-            bool hasChanges = rightResources.Count != currentRightResourcesCount;
-            if (hasChanges)
-            {
-                await ApplyRelationshipUpdate(relationship, primaryResource, rightResources);
-                await SaveChangesAsync();
-            }
+            await ApplyRelationshipUpdate(relationship, primaryResource, rightResources);
+            await SaveChangesAsync();
         }
 
         // TODO: Restore or remove commented-out code.

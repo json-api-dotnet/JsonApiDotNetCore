@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
                 .HasForeignKey<RgbColor>();
 
             builder.Entity<WorkItemTag>()
-                .HasKey(workItemTag => new {workItemTag.ItemId, workItemTag.TagId});
+                .HasKey(workItemTag => new { workItemTag.ItemId, workItemTag.TagId});
         }
     }
 }

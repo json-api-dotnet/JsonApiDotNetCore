@@ -459,7 +459,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
         {
             // Arrange
             var existingSubscriber = _fakers.UserAccount.Generate();
-
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.UserAccounts.Add(existingSubscriber);
