@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -924,5 +925,113 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
             responseDocument.Errors[0].Detail.Should().StartWith("Failed to convert 'not-a-valid-time' of type 'String' to type 'Nullable`1'. - Request body: <<");
         }
+
+        [Fact]
+        public async Task Can_update_resource_with_attributes_and_multiple_relationship_types()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Assignee = _fakers.UserAccount.Generate();
+            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
+            existingWorkItem.WorkItemTags = new List<WorkItemTag>
+            {
+                new WorkItemTag
+                {
+                    Tag = _fakers.WorkTags.Generate()
+                }
+            };
+
+            var existingUserAccounts = _fakers.UserAccount.Generate(2);
+            var existingTag = _fakers.WorkTags.Generate();
+
+            var newDescription = _fakers.WorkItem.Generate().Description;
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(existingWorkItem, existingTag);
+                dbContext.UserAccounts.AddRange(existingUserAccounts);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    attributes = new
+                    {
+                        description = newDescription
+                    },
+                    relationships = new
+                    {
+                        assignee = new
+                        {
+                            data = new
+                            {
+                                type = "userAccounts",
+                                id = existingUserAccounts[0].StringId
+                            }
+                        },
+                        subscribers = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "userAccounts",
+                                    id = existingUserAccounts[1].StringId
+                                }
+                            }
+                        },
+                        tags = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "workTags",
+                                    id = existingTag.StringId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems/" + existingWorkItem.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["description"].Should().Be(newDescription);
+            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Assignee)
+                    .Include(workItem => workItem.Subscribers)
+                    .Include(workItem => workItem.WorkItemTags)
+                    .ThenInclude(workItemTag => workItemTag.Tag)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Description.Should().Be(newDescription);
+
+                workItemInDatabase.Assignee.Should().NotBeNull();
+                workItemInDatabase.Assignee.Id.Should().Be(existingUserAccounts[0].Id);
+
+                workItemInDatabase.Subscribers.Should().HaveCount(1);
+                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccounts[1].Id);
+
+                workItemInDatabase.WorkItemTags.Should().HaveCount(1);
+                workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingTag.Id);
+            });
+        }
+
     }
 }

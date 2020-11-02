@@ -1149,11 +1149,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         }
 
         [Fact]
-        public async Task Can_create_resource_with_multiple_relationship_types()
+        public async Task Can_create_resource_with_attributes_and_multiple_relationship_types()
         {
             // Arrange
             var existingUserAccounts = _fakers.UserAccount.Generate(2);
             var existingTag = _fakers.WorkTags.Generate();
+
+            var newDescription = _fakers.WorkItem.Generate().Description;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1167,6 +1169,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 data = new
                 {
                     type = "workItems",
+                    attributes = new
+                    {
+                        description = newDescription
+                    },
                     relationships = new
                     {
                         assignee = new
@@ -1212,6 +1218,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["description"].Should().Be(newDescription);
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
             var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
@@ -1225,10 +1232,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                     .ThenInclude(workItemTag => workItemTag.Tag)
                     .FirstAsync(workItem => workItem.Id == newWorkItemId);
 
+                workItemInDatabase.Description.Should().Be(newDescription);
+
                 workItemInDatabase.Assignee.Should().NotBeNull();
                 workItemInDatabase.Assignee.Id.Should().Be(existingUserAccounts[0].Id);
+
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccounts[1].Id);
+
                 workItemInDatabase.WorkItemTags.Should().HaveCount(1);
                 workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingTag.Id);
             });
