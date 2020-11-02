@@ -9,6 +9,8 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
 {
+    // TODO: Now that the tests with expected 500 have been converted to the desired behavior, we should consider having
+    // a (few) test(s) that cover the case of a DeletionBehavior configuration that will lead to a 500.
     public sealed class DeleteResourceTests
         : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
     {
@@ -45,10 +47,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var workItemsInDatabase = await dbContext.WorkItems
-                    .Where(workItem => workItem.Id == existingWorkItem.Id)
-                    .ToListAsync();
+                    .FirstOrDefaultAsync(workItem => workItem.Id == existingWorkItem.Id);
 
-                workItemsInDatabase.Should().BeEmpty();
+                workItemsInDatabase.Should().BeNull();
             });
         }
 
@@ -96,19 +97,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var colorsInDatabase = await dbContext.RgbColors
-                    .Where(color => color.Id == existingColor.Id)
-                    .ToListAsync();
-
-                colorsInDatabase.Should().BeEmpty();
+                    .FirstOrDefaultAsync(color => color.Id == existingColor.Id);
+                
+                colorsInDatabase.Should().BeNull();
 
                 var groupInDatabase = await dbContext.Groups
                     .FirstAsync(group => group.Id == existingColor.Group.Id);
-
+                
                 groupInDatabase.Color.Should().BeNull();
             });
         }
 
-        // TODO: Verify if 500 is desired. If so, change test name to reflect that, because deleting one-to-ones from principal side should work out of the box.
         [Fact]
         public async Task Cannot_delete_existing_resource_with_OneToOne_relationship_from_principal_side()
         {
@@ -125,25 +124,27 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
             var route = "/workItemGroups/" + existingGroup.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-            responseDocument.Errors[0].Title.Should().Be("An unhandled error occurred while processing this request.");
-            responseDocument.Errors[0].Detail.Should().Be("Failed to persist changes in the underlying data store.");
+            responseDocument.Should().BeEmpty();
 
-            var stackTrace = JsonConvert.SerializeObject(responseDocument.Errors[0].Meta.Data["stackTrace"], Formatting.Indented);
-            stackTrace.Should().Contain("violates foreign key constraint");
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var groupsInDatabase = await dbContext.Groups
+                    .FirstOrDefaultAsync(group => group.Id == existingGroup.Id);
+                
+                groupsInDatabase.Should().BeNull();
+
+                var colorInDatabase = await dbContext.RgbColors
+                    .FirstAsync(color => color.Id == existingGroup.Color.Id);
+                
+                colorInDatabase.Group.Should().BeNull();
+            });
         }
 
-        // TODO: Verify if 500 is desired. If so, change test name to reflect that, because deleting resources even if they have a relationship should be possible.
-        // Two possibilities:
-        //    - Either OnDelete(DeleteBehaviour.SetNull) is the default behaviour, in which case this should not fail
-        //    - Or it is not, in which case it should fail like it does now.
-        // related: https://stackoverflow.com/questions/33912625/how-to-update-fk-to-null-when-deleting-optional-related-entity
         [Fact]
         public async Task Cannot_delete_existing_resource_with_HasMany_relationship()
         {
@@ -160,18 +161,25 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
             var route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-            responseDocument.Errors[0].Title.Should().Be("An unhandled error occurred while processing this request.");
-            responseDocument.Errors[0].Detail.Should().Be("Failed to persist changes in the underlying data store.");
+            responseDocument.Should().BeEmpty();
 
-            var stackTrace = JsonConvert.SerializeObject(responseDocument.Errors[0].Meta.Data["stackTrace"], Formatting.Indented);
-            stackTrace.Should().Contain("violates foreign key constraint");
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .FirstOrDefaultAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Should().BeNull();
+
+                var userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
+
+                userAccountsInDatabase.Should().ContainSingle(userAccount => userAccount.Id ==  existingWorkItem.Subscribers.ElementAt(0).Id);
+                userAccountsInDatabase.Should().ContainSingle(userAccount => userAccount.Id ==  existingWorkItem.Subscribers.ElementAt(1).Id);
+            });
         }
 
         [Fact]
@@ -203,16 +211,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Deleting
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var workItemsInDatabase = await dbContext.WorkItems
-                    .Where(workItem => workItem.Id == existingWorkItemTag.Item.Id)
-                    .ToListAsync();
+                    .FirstOrDefaultAsync(workItem => workItem.Id == existingWorkItemTag.Item.Id);
 
-                workItemsInDatabase.Should().BeEmpty();
+                workItemsInDatabase.Should().BeNull();
 
                 var workItemTagsInDatabase = await dbContext.WorkItemTags
-                    .Where(workItemTag => workItemTag.Item.Id == existingWorkItemTag.Item.Id)
-                    .ToListAsync();
+                    .FirstOrDefaultAsync(workItemTag => workItemTag.Item.Id == existingWorkItemTag.Item.Id);
 
-                workItemTagsInDatabase.Should().BeEmpty();
+                workItemTagsInDatabase.Should().BeNull();
             });
         }
     }

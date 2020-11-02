@@ -16,6 +16,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Repositories
@@ -224,10 +226,41 @@ namespace JsonApiDotNetCore.Repositories
         {
             _traceWriter.LogMethodStart(new {id});
 
-            var resource = _dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
+            var resource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
+
+            foreach (var relationship in _resourceGraph.GetRelationships<TResource>())
+            {
+                if (ShouldLoadRelationshipForSafeDeletion(relationship))
+                {
+                    var navigation = GetNavigationEntry(resource, relationship);
+                    await navigation.LoadAsync();
+                }
+            }
+
+            _resourceGraph.GetRelationships<TResource>();
+
             _dbContext.Remove(resource);
 
             await SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Loads the data of the relationship if in EF Core it is configured in such a way that loading the related
+        /// entities into memory is required for successfully executing the selected deletion behavior. 
+        /// </summary>
+        private bool ShouldLoadRelationshipForSafeDeletion(RelationshipAttribute relationship)
+        {
+            var navigationMeta = GetNavigationMetadata(relationship);
+            var clientIsResponsibleForClearingForeignKeys = navigationMeta?.ForeignKey.DeleteBehavior == DeleteBehavior.ClientSetNull;
+
+            var isPrincipalSide = !HasForeignKeyAtLeftSide(relationship);
+
+            return isPrincipalSide && clientIsResponsibleForClearingForeignKeys;
+        }
+
+        private INavigation GetNavigationMetadata(RelationshipAttribute relationship)
+        {
+            return _dbContext.Model.FindEntityType(typeof(TResource)).FindNavigation(relationship.Property.Name);
         }
 
         /// <inheritdoc />
@@ -296,12 +329,9 @@ namespace JsonApiDotNetCore.Repositories
             // Ensures the new relationship assignment will not result in entities being tracked more than once.
             var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
     
+            // TODO: Similar to like the EnableCompleteReplacement performance related todo item, we shouldn't have to load the inversely related entity into memory. Clearing any existing relation is enough.
             if (ShouldLoadInverseRelationship(relationship, trackedValueToAssign))
             {
-                // TODO: Similar to like the EnableCompleteReplacement todo, we dont actually need to load the inverse relationship.
-                // all we need to do is clear the inverse relationship such that no uniqueness constraint is violated
-                // (or have EF core do it efficiently, i.e without having to first fetch the data).
-                // For one to one it isn't much of a performance issue to because it is a ToOne relationship rather than a large collection. But it would be cleaner to not load it.
                 var entityEntry = _dbContext.Entry(trackedValueToAssign); 
                 var inversePropertyName = relationship.InverseNavigationProperty.Name;
                 await entityEntry.Reference(inversePropertyName).LoadAsync();
@@ -319,10 +349,9 @@ namespace JsonApiDotNetCore.Repositories
         {
             if (relationship is HasOneAttribute)
             {
-                var entityType = _dbContext.Model.FindEntityType(typeof(TResource));
-                var navigationMetadata = entityType.FindNavigation(relationship.Property.Name);
-    
-                return navigationMetadata.IsDependentToPrincipal();
+                var navigation = GetNavigationMetadata(relationship);
+            
+                return navigation.IsDependentToPrincipal();
             }
 
             return false;
@@ -335,8 +364,6 @@ namespace JsonApiDotNetCore.Repositories
 
             return resource;
         }
-        
-
         
         // TODO: This does not perform well. Currently related entities are loaded into memory,
         // and when SaveChangesAsync() is called later in the pipeline, the following happens:
@@ -379,7 +406,7 @@ namespace JsonApiDotNetCore.Repositories
                 }
                 else
                 {
-                    var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
+                    var navigationEntry = GetNavigationEntry(resource, relationship);
                     await navigationEntry.LoadAsync();
                 }
             }
@@ -515,7 +542,7 @@ namespace JsonApiDotNetCore.Repositories
             return Expression.Equal(leftIdProperty, idConstant);
         }
 
-        private NavigationEntry GetNavigationEntryForRelationship(RelationshipAttribute relationship, TResource resource)
+        private NavigationEntry GetNavigationEntry(TResource resource, RelationshipAttribute relationship)
         {
             EntityEntry<TResource> entityEntry = _dbContext.Entry(resource);
 
@@ -523,8 +550,6 @@ namespace JsonApiDotNetCore.Repositories
             {
                 case HasManyAttribute hasManyRelationship:
                 {
-                    // TODO: See if we can get around this by fiddling around with "IsLoaded"? Does EF Core execute one query to delete when saving a complete replacement?
-                    // Consider clearing the entire relationship first rather than fetching it and then letting EF do it inefficiently.
                     return entityEntry.Collection(hasManyRelationship.Property.Name);
                 }
                 case HasOneAttribute hasOneRelationship:
