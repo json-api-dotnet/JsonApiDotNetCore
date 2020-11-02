@@ -336,8 +336,18 @@ namespace JsonApiDotNetCore.Repositories
             return resource;
         }
         
+
+        
+        // TODO: This does not perform well. Currently related entities are loaded into memory,
+        // and when SaveChangesAsync() is called later in the pipeline, the following happens:
+        //    - FKs of records that need to be detached are nulled out one by one, one query each (or the join table entries are deleted one by one in case of many-to-many).
+        //    - FKs records that need to be attached are updated one by one (or join table entries are created one by one).
+        // Possible approaches forward:
+        //    - Writing raw sql to get around this.
+        //    - Throw when a certain limit of update statements is reached to ensure the developer is aware of these performance issues.
+        //    - Include a 3rd party library that handles batching.
         /// <summary>
-        /// Prepares a relationship for complete replacement.
+        /// Performs side-loading of data such that EF Core correctly performs a complete replacement. 
         /// </summary>
         /// <remarks>
         /// For example: a person `p1` has 2 todo-items: `t1` and `t2`.
@@ -358,9 +368,6 @@ namespace JsonApiDotNetCore.Repositories
             {
                 if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
                 {
-                    // TODO: For a complete replacement, all we need is to delete the existing relationships, which is a single query.
-                    // Figure out how to trick EF Core into doing this without having to first load all the data (or do it ourselves).
-                    // If we do it ourselves it would probably involve a writing a DeleteWhere extension method.
                     var throughEntities = await GetFilteredThroughEntities_StaticQueryBuilding(hasManyThroughRelationship, resource.Id, null);
                     hasManyThroughRelationship.ThroughProperty.SetValue(resource, TypeHelper.CopyToTypedCollection(throughEntities,  hasManyThroughRelationship.ThroughProperty.PropertyType));
                     
@@ -372,55 +379,10 @@ namespace JsonApiDotNetCore.Repositories
                 }
                 else
                 {
-                    // TODO: For a complete replacement, all we need is to delete the existing relationships, which is a single query.
                     var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
                     await navigationEntry.LoadAsync();
-
-                    /*
-                     *
-                        WorkItem.Subscribers = [2,3]    --- PATCH -->  WorkItem.Subscribers = [1]
-
-                        Microsoft.EntityFrameworkCore.Database.Command: Information: Executed DbCommand (3ms) [Parameters=[@p1='1', @p0='1' (Nullable = true), @p3='2', @p2=NULL (DbType = Int32), @p5='3', @p4=NULL (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-                        UPDATE "UserAccounts" SET "WorkItemId" = @p0 WHERE "Id" = @p1;
-                        UPDATE "UserAccounts" SET "WorkItemId" = @p2
-                        WHERE "Id" = @p3;
-                        UPDATE "UserAccounts" SET "WorkItemId" = @p4
-                        WHERE "Id" = @p5;
-                     *
-                     *
-                     */
-
-
-                    var tableName = GetTableName(relationship.RightType);
-                    var fkColumnName = GetForeignKeyColumnName(relationship, resource);
-
-                    await _dbContext.Database.ExecuteSqlRawAsync(
-                        $"UPDATE \"{tableName}\" SET \"{fkColumnName}\" = {{0}} WHERE \"{fkColumnName}\" = {{1}}", null,
-                        resource.Id);
-
-
                 }
             }
-        }
-
-        private string GetForeignKeyColumnName(RelationshipAttribute relationship, TResource resource)
-        {
-            var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
-            var fkColumnName = navigationEntry.Metadata.ForeignKey.Properties.First().Name;
-
-            return fkColumnName;
-        }
-
-        private string GetTableName(Type entityType)
-        {
-            var findEntityType = _dbContext.Model.FindEntityType(entityType);
-            RelationalEntityTypeExtensions.GetTableName(findEntityType);
-            RelationalEntityTypeExtensions.GetSchema(findEntityType);
-            var tableNameAnnotation = findEntityType.GetAnnotation("Relational:TableName");
-
-            var tableName = (string)tableNameAnnotation.Value;
-
-            return tableName;
         }
 
         private void FlushFromCache(IIdentifiable resource)
