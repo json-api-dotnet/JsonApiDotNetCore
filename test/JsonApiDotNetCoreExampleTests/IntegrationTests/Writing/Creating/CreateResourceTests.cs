@@ -427,6 +427,32 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_on_resource_type_mismatch_between_url_and_body()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "rgbColors",
+                    id = "0A0B0C"
+                }
+            };
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Conflict);
+            responseDocument.Errors[0].Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
+            responseDocument.Errors[0].Detail.Should().Be("Expected resource of type 'workItems' in POST request body at endpoint '/workItems', instead of 'rgbColors'.");
+        }
+
+        [Fact]
         public async Task Cannot_create_resource_attribute_with_blocked_capability()
         {
             // Arrange
