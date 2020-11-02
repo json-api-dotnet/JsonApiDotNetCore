@@ -12,14 +12,5 @@ namespace JsonApiDotNetCore.Resources.Annotations
         {
             Links = LinkTypes.NotConfigured;
         }
-
-        /// <inheritdoc />
-        public override void SetValue(object resource, object newValue)
-        {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-
-            var navigationProperty = resource.GetType().GetProperty(RelationshipPath);
-            navigationProperty!.SetValue(resource, newValue);
-        }
     }
 }

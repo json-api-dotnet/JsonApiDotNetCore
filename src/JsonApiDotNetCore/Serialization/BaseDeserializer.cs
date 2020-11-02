@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
@@ -115,7 +114,6 @@ namespace JsonApiDotNetCore.Serialization
                 return resource;
             }
 
-            var resourceProperties = resource.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
                 var relationshipIsProvided = relationshipValues.TryGetValue(attr.PublicName, out RelationshipEntry relationshipData);
@@ -127,7 +125,7 @@ namespace JsonApiDotNetCore.Serialization
                 // TODO: Extra validation to make sure there are no list-like data for HasOne relationships and vice versa (Write test)
                 if (attr is HasOneAttribute hasOneAttribute)
                 {
-                    SetHasOneRelationship(resource, resourceProperties, hasOneAttribute, relationshipData);
+                    SetHasOneRelationship(resource, hasOneAttribute, relationshipData);
                 }
                 else
                 {
@@ -187,7 +185,6 @@ namespace JsonApiDotNetCore.Serialization
         /// Sets a HasOne relationship on a parsed resource.
         /// </summary>
         private void SetHasOneRelationship(IIdentifiable resource,
-            PropertyInfo[] resourceProperties,
             HasOneAttribute hasOneRelationship,
             RelationshipEntry relationshipData)
         {
@@ -201,8 +198,10 @@ namespace JsonApiDotNetCore.Serialization
                 AssertHasType(relationshipData.SingleData, hasOneRelationship);
                 AssertHasId(relationshipData.SingleData, hasOneRelationship);
 
-                var resourceContext = GetExistingResourceContext(relationshipData.SingleData.Type);
-                relationshipType = resourceContext.ResourceType;
+                var rightResourceContext = GetExistingResourceContext(relationshipData.SingleData.Type);
+                AssertRightTypeIsCompatible(rightResourceContext, hasOneRelationship);
+
+                relationshipType = rightResourceContext.ResourceType;
             }
 
             SetPrincipalSideOfHasOneRelationship(resource, hasOneRelationship, relatedId, relationshipType);
@@ -254,8 +253,10 @@ namespace JsonApiDotNetCore.Serialization
             AssertHasType(rio, hasManyRelationship);
             AssertHasId(rio, hasManyRelationship);
 
-            var resourceContext = GetExistingResourceContext(rio.Type);
-            var rightInstance = ResourceFactory.CreateInstance(resourceContext.ResourceType);
+            var rightResourceContext = GetExistingResourceContext(rio.Type);
+            AssertRightTypeIsCompatible(rightResourceContext, hasManyRelationship);
+
+            var rightInstance = ResourceFactory.CreateInstance(rightResourceContext.ResourceType);
             rightInstance.StringId = rio.Id;
 
             return rightInstance;
@@ -279,6 +280,16 @@ namespace JsonApiDotNetCore.Serialization
             {
                 throw new InvalidRequestBodyException("Request body must include 'id' element.",
                     $"Expected 'id' element in '{relationship.PublicName}' relationship.", null);
+            }
+        }
+
+        private void AssertRightTypeIsCompatible(ResourceContext rightResourceContext, RelationshipAttribute relationship)
+        {
+            if (!relationship.RightType.IsAssignableFrom(rightResourceContext.ResourceType))
+            {
+                throw new InvalidRequestBodyException("Relationship contains incompatible resource type.",
+                    $"Relationship '{relationship.PublicName}' contains incompatible resource type '{rightResourceContext.PublicName}'.",
+                    null);
             }
         }
 

@@ -43,7 +43,6 @@ namespace JsonApiDotNetCore.Resources.Annotations
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class HasManyThroughAttribute : HasManyAttribute
     {
-
         /// <summary>
         /// The name of the join property on the parent resource.
         /// In the example described above, this would be "ArticleTags".
@@ -92,21 +91,30 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public override string RelationshipPath => $"{ThroughProperty.Name}.{RightProperty.Name}";
 
-        internal string RightIdPropertyName { get; }
+        // TODO: Setting these doesn't even work. Use them on ArticleTag and lots of tests start to fail.
+        // Either make it work or remove the feature.
 
-        internal string LeftIdPropertyName { get; }
+        /// <summary>
+        /// Optional. Can be used to indicate a non-default name for the ID property back to the parent resource from the through type.
+        /// Defaults to the name of <see cref="HasManyThroughAttribute.LeftProperty"/> suffixed with "Id".
+        /// In the example described above, this would be "ArticleId".
+        /// </summary>
+        public string LeftIdPropertyName { get; set; }
+
+        /// <summary>
+        /// Optional. Can be used to indicate a non-default name for the ID property to the related resource from the through type.
+        /// Defaults to the name of <see cref="HasManyThroughAttribute.RightProperty"/> suffixed with "Id".
+        /// In the example described above, this would be "TagId".
+        /// </summary>
+        public string RightIdPropertyName { get; set; }
 
         /// <summary>
         /// Creates a HasMany relationship through a many-to-many join relationship.
         /// </summary>
         /// <param name="throughPropertyName">The name of the navigation property that will be used to access the join relationship.</param>
-        /// <param name="leftIdPropertyName">The name of the left id property on the join relationship. The default value is the name of <see cref="HasManyThroughAttribute.LeftProperty"/> appended with "Id".</param>
-        /// <param name="rightIdPropertyName">The name of the right id property on the join relationship. The default value is the name of <see cref="HasManyThroughAttribute.RightProperty"/> appended with "Id".</param>
-        public HasManyThroughAttribute(string throughPropertyName, string leftIdPropertyName = null, string rightIdPropertyName = null)
+        public HasManyThroughAttribute(string throughPropertyName)
         {
             ThroughPropertyName = throughPropertyName ?? throw new ArgumentNullException(nameof(throughPropertyName));
-            LeftIdPropertyName = leftIdPropertyName;
-            RightIdPropertyName = rightIdPropertyName;
         }
 
         /// <summary>
