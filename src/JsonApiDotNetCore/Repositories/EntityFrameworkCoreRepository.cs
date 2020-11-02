@@ -15,6 +15,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Repositories
@@ -371,19 +372,55 @@ namespace JsonApiDotNetCore.Repositories
                 }
                 else
                 {
-                    var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
                     // TODO: For a complete replacement, all we need is to delete the existing relationships, which is a single query.
-                    // Figure out how to trick EF Core into doing this without having to first load all the data (or do it ourselves).
-                    // If we do it ourselves it would probably involve a writing a DeleteWhere extension method.
-                    // var dummy = _resourceFactory.CreateInstance(relationship.RightType);
-                    // dummy.StringId = "999";
-                    // _dbContext.Entry(dummy).State = EntityState.Unchanged;
-                    // var list = new[] {dummy};
-                    // relationship.SetValue(resource, TypeHelper.CopyToTypedCollection(list, relationship.Property.PropertyType));
-                    // navigationEntry.IsLoaded = true;
+                    var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
                     await navigationEntry.LoadAsync();
+
+                    /*
+                     *
+                        WorkItem.Subscribers = [2,3]    --- PATCH -->  WorkItem.Subscribers = [1]
+
+                        Microsoft.EntityFrameworkCore.Database.Command: Information: Executed DbCommand (3ms) [Parameters=[@p1='1', @p0='1' (Nullable = true), @p3='2', @p2=NULL (DbType = Int32), @p5='3', @p4=NULL (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+                        UPDATE "UserAccounts" SET "WorkItemId" = @p0 WHERE "Id" = @p1;
+                        UPDATE "UserAccounts" SET "WorkItemId" = @p2
+                        WHERE "Id" = @p3;
+                        UPDATE "UserAccounts" SET "WorkItemId" = @p4
+                        WHERE "Id" = @p5;
+                     *
+                     *
+                     */
+
+
+                    var tableName = GetTableName(relationship.RightType);
+                    var fkColumnName = GetForeignKeyColumnName(relationship, resource);
+
+                    await _dbContext.Database.ExecuteSqlRawAsync(
+                        $"UPDATE \"{tableName}\" SET \"{fkColumnName}\" = {{0}} WHERE \"{fkColumnName}\" = {{1}}", null,
+                        resource.Id);
+
+
                 }
             }
+        }
+
+        private string GetForeignKeyColumnName(RelationshipAttribute relationship, TResource resource)
+        {
+            var navigationEntry = GetNavigationEntryForRelationship(relationship, resource);
+            var fkColumnName = navigationEntry.Metadata.ForeignKey.Properties.First().Name;
+
+            return fkColumnName;
+        }
+
+        private string GetTableName(Type entityType)
+        {
+            var findEntityType = _dbContext.Model.FindEntityType(entityType);
+            RelationalEntityTypeExtensions.GetTableName(findEntityType);
+            RelationalEntityTypeExtensions.GetSchema(findEntityType);
+            var tableNameAnnotation = findEntityType.GetAnnotation("Relational:TableName");
+
+            var tableName = (string)tableNameAnnotation.Value;
+
+            return tableName;
         }
 
         private void FlushFromCache(IIdentifiable resource)
