@@ -115,15 +115,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {                                                                               
                dbContext.AddRange(existingWorkItem, existingSubscriber);
-
-               // _dbContext.Set<TResource>().FromRawSql("UPDATE UserAccounts SET WorkItemId = {0} WHERE Id = {1}", null, "2");
-               //  var commandText = "UPDATE UserAccounts SET WorkItemId = {0} WHERE WorkItemId = {1}";
-               //  var name = new SqlParameter("@WorkItemId", "Test");
-               //  var name = new SqlParameter("@NewId", "Test");
-                await dbContext.SaveChangesAsync();
-
-                await dbContext.Database.ExecuteSqlRawAsync($"UPDATE \"UserAccounts\" SET \"WorkItemId\" = {{0}} WHERE \"WorkItemId\" = {{1}}", null, 2);
-
+               await dbContext.SaveChangesAsync();
             });
 
             var requestBody = new
