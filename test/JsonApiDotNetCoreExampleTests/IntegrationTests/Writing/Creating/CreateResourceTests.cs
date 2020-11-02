@@ -300,7 +300,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 data = new
                 {
                     type = "rgbColors",
-                    id = "#000000",
+                    id = "0A0B0C",
                     attributes = new
                     {
                         name = "Black"

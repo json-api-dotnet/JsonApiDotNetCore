@@ -99,7 +99,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                 await dbContext.SaveChangesAsync();
             });
 
-            string colorId = "#112233";
+            string colorId = "0A0B0C";
 
             var requestBody = new
             {
@@ -589,7 +589,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                         {
                             data = new
                             {
-                                id = "12345678"
+                                id = 12345678
                             }
                         }
                     }
@@ -627,7 +627,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                             {
                                 new
                                 {
-                                    id = "12345678"
+                                    id = 12345678
                                 }
                             }
                         }
@@ -647,6 +647,83 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected 'type' element in 'subscribers' relationship. - Request body: <<");
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_unknown_HasOne_relationship_type()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        assignee = new
+                        {
+                            data = new
+                            {
+                                type = "doesNotExist",
+                                id = 12345678
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist. - Request body: <<");
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_unknown_HasMany_relationship_type()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        subscribers = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "doesNotExist",
+                                    id = 12345678
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'doesNotExist' does not exist. - Request body: <<");
         }
 
         [Fact]
@@ -701,7 +778,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                             data = new
                             {
                                 type = "userAccounts",
-                                id = "12345678"
+                                id = 12345678
                             }
                         }
                     }
@@ -779,12 +856,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                                 new
                                 {
                                     type = "workItems",
-                                    id = "12345678"
+                                    id = 12345678
                                 },
                                 new
                                 {
                                     type = "workItems",
-                                    id = "87654321"
+                                    id = 87654321
                                 }
                             }
                         }
@@ -812,6 +889,83 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_resource_on_HasOne_relationship_type_mismatch()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        assignee = new
+                        {
+                            data = new
+                            {
+                                type = "rgbColors",
+                                id = "0A0B0C"
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Relationship 'assignee' contains incompatible resource type 'rgbColors'. - Request body: <<");
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_on_HasMany_relationship_type_mismatch()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        subscribers = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "rgbColors",
+                                    id = "0A0B0C"
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Relationship 'subscribers' contains incompatible resource type 'rgbColors'. - Request body: <<");
+        }
+
+        [Fact]
         public async Task Can_create_resource_with_unknown_relationship()
         {
             // Arrange
@@ -827,7 +981,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
                             data = new
                             {
                                 type = "doesNotExist",
-                                id = "12345678"
+                                id = 12345678
                             }
                         }
                     }
