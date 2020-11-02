@@ -76,11 +76,11 @@ namespace JsonApiDotNetCore.Serialization.Building
         private ResourceIdentifierObject GetRelatedResourceLinkageForHasOne(HasOneAttribute relationship, IIdentifiable resource)
         {
             var relatedResource = (IIdentifiable)relationship.GetValue(resource);
-            if (relatedResource == null && IsRequiredToOneRelationship(relationship, resource))
-                throw new NotSupportedException("Cannot serialize a required to one relationship that is not populated but was included in the set of relationships to be serialized.");
 
             if (relatedResource != null)
+            {
                 return GetResourceIdentifier(relatedResource);
+            }
 
             return null;
         }
@@ -114,20 +114,6 @@ namespace JsonApiDotNetCore.Serialization.Building
                 Type = resourceName,
                 Id = resource.StringId
             };
-        }
-
-        /// <summary>
-        /// Checks if the to-one relationship is required by checking if the foreign key is nullable.
-        /// </summary>
-        private bool IsRequiredToOneRelationship(HasOneAttribute attr, IIdentifiable resource)
-        {
-            // TODO: @Maurits Based on recent changes, do we still need logic related to foreign keys here?
-
-            var foreignKey = resource.GetType().GetProperty(attr.IdentifiablePropertyName);
-            if (foreignKey != null && Nullable.GetUnderlyingType(foreignKey.PropertyType) == null)
-                return true;
-
-            return false;
         }
 
         /// <summary>

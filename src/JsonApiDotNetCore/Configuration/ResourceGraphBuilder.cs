@@ -191,7 +191,7 @@ namespace JsonApiDotNetCore.Configuration
                         ?? throw new InvalidConfigurationException($"{throughType} does not contain a navigation property to type {resourceType}");
 
                     // ArticleTag.ArticleId
-                    var leftIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.LeftProperty.Name);
+                    var leftIdPropertyName = hasManyThroughAttribute.LeftIdPropertyName ?? hasManyThroughAttribute.LeftProperty.Name + "Id";
                     hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(x => x.Name == leftIdPropertyName)
                         ?? throw new InvalidConfigurationException($"{throughType} does not contain a relationship ID property to type {resourceType} with name {leftIdPropertyName}");
 
@@ -200,7 +200,7 @@ namespace JsonApiDotNetCore.Configuration
                         ?? throw new InvalidConfigurationException($"{throughType} does not contain a navigation property to type {hasManyThroughAttribute.RightType}");
 
                     // ArticleTag.TagId
-                    var rightIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.RightProperty.Name);
+                    var rightIdPropertyName = hasManyThroughAttribute.RightIdPropertyName ?? hasManyThroughAttribute.RightProperty.Name + "Id";
                     hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName)
                         ?? throw new InvalidConfigurationException($"{throughType} does not contain a relationship ID property to type {hasManyThroughAttribute.RightType} with name {rightIdPropertyName}");
                 }

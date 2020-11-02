@@ -43,6 +43,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class HasManyThroughAttribute : HasManyAttribute
     {
+
         /// <summary>
         /// The name of the join property on the parent resource.
         /// In the example described above, this would be "ArticleTags".
@@ -91,13 +92,21 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public override string RelationshipPath => $"{ThroughProperty.Name}.{RightProperty.Name}";
 
+        internal string RightIdPropertyName { get; }
+
+        internal string LeftIdPropertyName { get; }
+
         /// <summary>
         /// Creates a HasMany relationship through a many-to-many join relationship.
         /// </summary>
         /// <param name="throughPropertyName">The name of the navigation property that will be used to access the join relationship.</param>
-        public HasManyThroughAttribute(string throughPropertyName)
+        /// <param name="leftIdPropertyName">The name of the left id property on the join relationship. The default value is the name of <see cref="HasManyThroughAttribute.LeftProperty"/> appended with "Id".</param>
+        /// <param name="rightIdPropertyName">The name of the right id property on the join relationship. The default value is the name of <see cref="HasManyThroughAttribute.RightProperty"/> appended with "Id".</param>
+        public HasManyThroughAttribute(string throughPropertyName, string leftIdPropertyName = null, string rightIdPropertyName = null)
         {
             ThroughPropertyName = throughPropertyName ?? throw new ArgumentNullException(nameof(throughPropertyName));
+            LeftIdPropertyName = leftIdPropertyName;
+            RightIdPropertyName = rightIdPropertyName;
         }
 
         /// <summary>

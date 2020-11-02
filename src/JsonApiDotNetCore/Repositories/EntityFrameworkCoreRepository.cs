@@ -15,11 +15,13 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
+
+// TODO: Tests that cover relationship updates with required relationships. All relationships right are currently optional.
+//    - Setting a required relationship to null
+//    - ??
 namespace JsonApiDotNetCore.Repositories
 {
     /// <summary>

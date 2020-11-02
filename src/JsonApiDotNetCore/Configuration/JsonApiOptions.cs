@@ -76,11 +76,6 @@ namespace JsonApiDotNetCore.Configuration
             }
         };
 
-        /// <summary>
-        /// Provides an interface for formatting relationship ID properties given the navigation property name.
-        /// </summary>
-        public static IRelatedIdMapper RelatedIdMapper { get; set; } = new RelatedIdMapper();
-
         // Workaround for https://github.com/dotnet/efcore/issues/21026
         internal bool DisableTopPagination { get; set; }
         internal bool DisableChildrenPagination { get; set; }
