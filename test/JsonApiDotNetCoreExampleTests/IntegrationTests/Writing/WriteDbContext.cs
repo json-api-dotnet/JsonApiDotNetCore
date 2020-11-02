@@ -27,9 +27,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
                 .WithOne();
 
             builder.Entity<WorkItemGroup>()
-                .Ignore(workItemGroup => workItemGroup.ConcurrencyToken);
-
-            builder.Entity<WorkItemGroup>()
                 .HasOne(workItemGroup => workItemGroup.Color)
                 .WithOne(color => color.Group)
                 .HasForeignKey<RgbColor>();
