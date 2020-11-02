@@ -114,6 +114,49 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
         }
 
         [Fact]
+        public async Task Can_update_resource_with_unknown_relationship()
+        {
+            // Arrange
+            var existingUserAccount = _fakers.UserAccount.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.UserAccounts.Add(existingUserAccount);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "userAccounts",
+                    id = existingUserAccount.StringId,
+                    relationships = new
+                    {
+                        doesNotExist = new
+                        {
+                            data = new
+                            {
+                                type = "doesNotExist",
+                                id = 12345678
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/userAccounts/" + existingUserAccount.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+        }
+
+        [Fact]
         public async Task Can_partially_update_resource_with_guid_ID()
         {
             // Arrange
@@ -1032,6 +1075,5 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
                 workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingTag.Id);
             });
         }
-
     }
 }
