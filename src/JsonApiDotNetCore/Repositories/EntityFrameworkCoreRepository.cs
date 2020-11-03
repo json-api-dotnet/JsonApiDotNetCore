@@ -184,11 +184,11 @@ namespace JsonApiDotNetCore.Repositories
         {
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
 
-            var primaryResource = await TryGetPrimaryResource(id);
+            var primaryResource = await TryGetPrimaryResourceForCompleteReplacement(id);
             
             var relationship = _targetedFields.Relationships.Single();
 
-            await EnableCompleteReplacement(relationship, primaryResource);
+            // await EnableCompleteReplacement(relationship, primaryResource);
             await ApplyRelationshipUpdate(relationship, primaryResource, secondaryResourceIds);
             
             await SaveChangesAsync();
@@ -281,12 +281,12 @@ namespace JsonApiDotNetCore.Repositories
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
             
-            var primaryResource = await TryGetPrimaryResource(id);
+            var primaryResource = await TryGetPrimaryResourceForCompleteReplacement(id);
 
             var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
             await AssertSecondaryResourcesExist(secondaryResourceIds, relationship);
 
-            await EnableCompleteReplacement(relationship, primaryResource);
+            // await EnableCompleteReplacement(relationship, primaryResource);
 
             var rightResources = ((IEnumerable<IIdentifiable>)relationship.GetValue(primaryResource)).ToHashSet(IdentifiableComparer.Instance);
             rightResources.ExceptWith(secondaryResourceIds);
@@ -673,9 +673,25 @@ namespace JsonApiDotNetCore.Repositories
             return TypeHelper.CopyToTypedCollection(rightResourcesTracked, rightCollectionType);
         }
 
-        private async Task<TResource> TryGetPrimaryResource(TId id)
+        private async Task<TResource> TryGetPrimaryResourceForCompleteReplacement(TId id)
         {
-            var primaryResource = await _dbContext.FindAsync<TResource>(id);
+            TResource primaryResource;
+
+            if (_targetedFields.Relationships.Any())
+            {
+                var query = _dbContext.Set<TResource>().Where(resource => resource.Id.Equals(id));
+                foreach (var relationship in _targetedFields.Relationships)
+                {
+                    query = query.Include(relationship.RelationshipPath);
+                }
+
+                primaryResource = query.FirstOrDefault();
+            }
+            else
+            {
+                primaryResource = await _dbContext.FindAsync<TResource>(id);
+            }
+
             if (primaryResource == null)
             {
                 throw new DataStoreUpdateException();
