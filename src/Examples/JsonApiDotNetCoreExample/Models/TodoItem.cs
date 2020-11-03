@@ -15,9 +15,6 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public long Ordinal { get; set; }
 
-        [Attr]
-        public Guid GuidProperty { get; set; } = Guid.NewGuid();
-
         [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowCreate)]
         public string AlwaysChangingValue
         {
@@ -30,9 +27,6 @@ namespace JsonApiDotNetCoreExample.Models
 
         [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort))]
         public DateTime? AchievedDate { get; set; }
-
-        [Attr]
-        public DateTime? UpdatedDate { get; set; }
 
         [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
         public string CalculatedValue => "calculated";
