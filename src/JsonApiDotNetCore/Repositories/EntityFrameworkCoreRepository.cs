@@ -424,8 +424,11 @@ namespace JsonApiDotNetCore.Repositories
 
         private async Task<object[]> GetFilteredRightEntities_StaticQueryBuilding(object idToEqual, PropertyInfo equaledIdProperty, ISet<IIdentifiable> idsToContain, PropertyInfo containedIdProperty)
         {
-            var rightType =  equaledIdProperty?.ReflectedType ?? idsToContain.First().GetType();
-            dynamic runtimeTypeParameter = _resourceFactory.CreateInstance(rightType);
+            var rightType = equaledIdProperty?.ReflectedType ?? idsToContain.First().GetType();
+
+            dynamic runtimeTypeParameter = TypeHelper.IsOrImplementsInterface(rightType, typeof(IIdentifiable)) 
+                ? _resourceFactory.CreateInstance(rightType) 
+                : TypeHelper.CreateInstance(rightType);  
 
             return await ((dynamic)this).GetFilteredRightEntities_StaticQueryBuilding(idToEqual, equaledIdProperty, idsToContain, containedIdProperty, runtimeTypeParameter);
         }
