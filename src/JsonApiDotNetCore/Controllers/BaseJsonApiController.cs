@@ -155,12 +155,10 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> PostAsync([FromBody] TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
 
             if (_create == null)
                 throw new RequestMethodNotAllowedException(HttpMethod.Post);
-
-            if (resource == null)
-                throw new InvalidRequestBodyException(null, null, null);
 
             if (!_options.AllowClientGeneratedIds && !string.IsNullOrEmpty(resource.StringId))
                 throw new ResourceIdInPostRequestNotAllowedException();
@@ -205,10 +203,9 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource)
         {
             _traceWriter.LogMethodStart(new {id, resource});
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
 
             if (_update == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
-            if (resource == null)
-                throw new InvalidRequestBodyException(null, null, null);
 
             if (_options.ValidateModelState && !ModelState.IsValid)
             {
