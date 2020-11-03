@@ -234,16 +234,18 @@ namespace JsonApiDotNetCore.Serialization
             HasManyAttribute hasManyRelationship,
             RelationshipEntry relationshipData)
         {
-            // If the relationship data is null, there is no need to set the navigation property to null: this is the default value.
-            if (relationshipData.ManyData != null)
+            if (relationshipData.ManyData == null)
             {
-                var rightResources = relationshipData.ManyData
-                    .Select(rio => CreateRightResourceForHasMany(hasManyRelationship, rio))
-                    .ToHashSet(IdentifiableComparer.Instance);
-
-                var convertedCollection = TypeHelper.CopyToTypedCollection(rightResources, hasManyRelationship.Property.PropertyType);
-                hasManyRelationship.SetValue(resource, convertedCollection);
+                throw new InvalidRequestBodyException("Expected data[] for to-many relationship.", 
+                    $"Expected data[] for '{hasManyRelationship.PublicName}' relationship.", null);
             }
+
+            var rightResources = relationshipData.ManyData
+                .Select(rio => CreateRightResourceForHasMany(hasManyRelationship, rio))
+                .ToHashSet(IdentifiableComparer.Instance);
+
+            var convertedCollection = TypeHelper.CopyToTypedCollection(rightResources, hasManyRelationship.Property.PropertyType);
+            hasManyRelationship.SetValue(resource, convertedCollection);
 
             AfterProcessField(resource, hasManyRelationship, relationshipData);
         }

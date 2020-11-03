@@ -699,7 +699,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] for to-many relationship.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected data[] for 'subscribers' relationship. - Request body: <<");
         }
 
         [Fact]
@@ -730,7 +730,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] for to-many relationship.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected data[] for 'tags' relationship. - Request body: <<");
         }
     }
 }

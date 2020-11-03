@@ -182,12 +182,6 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            foreach (var hasManyRelationship in _targetedFields.Relationships.OfType<HasManyAttribute>())
-            {
-                var rightResources = hasManyRelationship.GetValue(resource);
-                AssertHasManyRelationshipValueIsNotNull(rightResources);
-            }
-
             var resourceFromRequest = resource;
             _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
 
@@ -262,12 +256,6 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {id, resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            foreach (var hasManyRelationship in _targetedFields.Relationships.OfType<HasManyAttribute>())
-            {
-                var rightResources = hasManyRelationship.GetValue(resource);
-                AssertHasManyRelationshipValueIsNotNull(rightResources);
-            }
-
             AssertResourceIdIsNotTargeted();
 
             var resourceFromRequest = resource;
@@ -320,11 +308,6 @@ namespace JsonApiDotNetCore.Services
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
-
-            if (_request.Relationship is HasManyAttribute)
-            {
-                AssertHasManyRelationshipValueIsNotNull(secondaryResourceIds);
-            }
 
             await _hookExecutor.BeforeUpdateRelationshipAsync(id,
                 async () => await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes));
@@ -555,16 +538,6 @@ namespace JsonApiDotNetCore.Services
             if (!(relationship is HasManyAttribute))
             {
                 throw new ToManyRelationshipRequiredException(relationship.PublicName);
-            }
-        }
-
-        private void AssertHasManyRelationshipValueIsNotNull(object secondaryResourceIds)
-        {
-            if (secondaryResourceIds == null)
-            {
-                // TODO: Usage of InvalidRequestBodyException (here and in BaseJsonApiController) is probably not the best choice, because they do not contain request body.
-                // We should either make it include the request body -or- throw a different exception.
-                throw new InvalidRequestBodyException("Expected data[] for to-many relationship.", null, null);
             }
         }
 
