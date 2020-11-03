@@ -39,23 +39,21 @@ namespace JsonApiDotNetCoreExample.Data
 
             modelBuilder.Entity<TodoItem>()
                 .HasOne(t => t.Assignee)
-                .WithMany(p => p.AssignedTodoItems)
-                .HasForeignKey(t => t.AssigneeId);
+                .WithMany(p => p.AssignedTodoItems);
 
             modelBuilder.Entity<TodoItem>()
                 .HasOne(t => t.Owner)
                 .WithMany(p => p.TodoItems);
 
             modelBuilder.Entity<ArticleTag>()
-                .HasKey(bc => new { bc.ArticleId, bc.TagId });
+                .HasKey(bc => new {bc.ArticleId, bc.TagId});
 
             modelBuilder.Entity<IdentifiableArticleTag>()
-                .HasKey(bc => new { bc.ArticleId, bc.TagId });
+                .HasKey(bc => new {bc.ArticleId, bc.TagId});
 
             modelBuilder.Entity<Person>()
                 .HasOne(t => t.StakeHolderTodoItem)
                 .WithMany(t => t.StakeHolders)
-                .HasForeignKey(t => t.StakeHolderTodoItemId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<TodoItem>()
@@ -63,13 +61,12 @@ namespace JsonApiDotNetCoreExample.Data
 
             modelBuilder.Entity<TodoItem>()
                 .HasMany(t => t.ChildrenTodos)
-                .WithOne(t => t.ParentTodo)
-                .HasForeignKey(t => t.ParentTodoId);
+                .WithOne(t => t.ParentTodo);
 
             modelBuilder.Entity<Passport>()
                 .HasOne(p => p.Person)
                 .WithOne(p => p.Passport)
-                .HasForeignKey<Person>(p => p.PassportId)
+                .HasForeignKey<Person>("PassportKey")
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Passport>()
@@ -80,7 +77,7 @@ namespace JsonApiDotNetCoreExample.Data
             modelBuilder.Entity<TodoItem>()
                 .HasOne(p => p.OneToOnePerson)
                 .WithOne(p => p.OneToOneTodoItem)
-                .HasForeignKey<TodoItem>(p => p.OneToOnePersonId);
+                .HasForeignKey<TodoItem>("OneToOnePersonKey");
 
             modelBuilder.Entity<TodoItemCollection>()
                 .HasOne(p => p.Owner)
@@ -88,9 +85,9 @@ namespace JsonApiDotNetCoreExample.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Person>()
-                .HasOne(p => p.OneToOneTodoItem)
-                .WithOne(p => p.OneToOnePerson)
-                .HasForeignKey<TodoItem>(p => p.OneToOnePersonId);
+                .HasOne(p => p.Role)
+                .WithOne(p => p.Person)
+                .HasForeignKey<Person>("PersonRoleKey");
         }
     }
 }

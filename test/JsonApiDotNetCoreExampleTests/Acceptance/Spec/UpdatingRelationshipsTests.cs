@@ -140,7 +140,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     .Include(item => item.DependentOnTodo)
                     .FirstAsync(item => item.Id == todoItem.Id);
 
-                todoItemInDatabase.DependentOnTodoId.Should().Be(todoItem.Id);
+                todoItemInDatabase.DependentOnTodo.Id.Should().Be(todoItem.Id);
             });
         }
 
@@ -207,7 +207,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     .Include(item => item.ParentTodo)
                     .FirstAsync(item => item.Id == todoItem.Id);
 
-                todoItemInDatabase.ParentTodoId.Should().Be(todoItem.Id);
+                todoItemInDatabase.ParentTodo.Id.Should().Be(todoItem.Id);
             });
         }
     }

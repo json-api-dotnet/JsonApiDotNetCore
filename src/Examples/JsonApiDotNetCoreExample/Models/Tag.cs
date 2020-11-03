@@ -11,11 +11,4 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public TagColor Color { get; set; }
     }
-
-    public enum TagColor
-    {
-        Red,
-        Green,
-        Blue
-    }
 }

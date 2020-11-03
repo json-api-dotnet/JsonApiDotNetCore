@@ -31,6 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             _fixture = fixture;
             _context = fixture.GetRequiredService<AppDbContext>();
+
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
@@ -46,19 +47,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Get_TodoItems_Paginate_Check()
         {
             // Arrange
-            await _context.ClearTableAsync<TodoItem>();
-            await _context.SaveChangesAsync();
             var expectedResourcesPerPage = _fixture.GetRequiredService<IJsonApiOptions>().DefaultPageSize.Value;
-            var person = new Person();
+
+            var person = _personFaker.Generate();
             var todoItems = _todoItemFaker.Generate(expectedResourcesPerPage + 1);
 
             foreach (var todoItem in todoItems)
             {
                 todoItem.Owner = person;
                 _context.TodoItems.Add(todoItem);
-                await _context.SaveChangesAsync();
-
             }
+
+            await _context.ClearTableAsync<TodoItem>();
+            await _context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todoItems";
@@ -79,9 +80,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Get_TodoItem_ById()
         {
             // Arrange
-            var person = new Person();
             var todoItem = _todoItemFaker.Generate();
-            todoItem.Owner = person;
+            todoItem.Owner = _personFaker.Generate();
+            
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
 
@@ -107,14 +108,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Post_TodoItem()
         {
             // Arrange
-            var person = new Person();
-            _context.People.Add(person);
-            await _context.SaveChangesAsync();
-
             var serializer = _fixture.GetSerializer<TodoItem>(e => new { e.Description, e.OffsetDate, e.Ordinal, e.CreatedDate }, e => new { e.Owner });
+            var nowOffset = new DateTimeOffset();
 
             var todoItem = _todoItemFaker.Generate();
-            var nowOffset = new DateTimeOffset();
             todoItem.OffsetDate = nowOffset;
 
             var httpMethod = new HttpMethod("POST");
@@ -144,13 +141,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Post_TodoItem_With_Different_Owner_And_Assignee()
         {
             // Arrange
-            var person1 = new Person();
-            var person2 = new Person();
-            _context.People.Add(person1);
-            _context.People.Add(person2);
+            var person1 = _personFaker.Generate();
+            var person2 = _personFaker.Generate();
+            
+            _context.People.AddRange(person1, person2);
             await _context.SaveChangesAsync();
 
             var todoItem = _todoItemFaker.Generate();
+
             var content = new
             {
                 data = new
@@ -203,22 +201,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var resultId = int.Parse(document.SingleData.Id);
 
             // Assert -- database
-            var todoItemResult = await _context.TodoItems.SingleAsync(t => t.Id == resultId);
+            var todoItemResult = await _context.TodoItems
+                .Include(t => t.Owner)
+                .Include(t => t.Assignee)
+                .SingleAsync(t => t.Id == resultId);
 
             Assert.Equal(person1.Id, todoItemResult.Owner.Id);
-            Assert.Equal(person2.Id, todoItemResult.AssigneeId);
+            Assert.Equal(person2.Id, todoItemResult.Assignee.Id);
         }
 
         [Fact]
         public async Task Can_Patch_TodoItem()
         {
             // Arrange
-            var person = new Person();
-            _context.People.Add(person);
-            await _context.SaveChangesAsync();
-
             var todoItem = _todoItemFaker.Generate();
-            todoItem.Owner = person;
+            todoItem.Owner = _personFaker.Generate();
+
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
 
@@ -266,13 +264,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Patch_TodoItemWithNullable()
         {
             // Arrange
-            var person = new Person();
-            _context.People.Add(person);
-            await _context.SaveChangesAsync();
-
             var todoItem = _todoItemFaker.Generate();
             todoItem.AchievedDate = new DateTime(2002, 2,2);
-            todoItem.Owner = person;
+            todoItem.Owner = _personFaker.Generate();
+
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
 
@@ -321,13 +316,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Patch_TodoItemWithNullValue()
         {
             // Arrange
-            var person = new Person();
-            _context.People.Add(person);
-            await _context.SaveChangesAsync();
-
             var todoItem = _todoItemFaker.Generate();
             todoItem.AchievedDate = new DateTime(2002, 2,2);
-            todoItem.Owner = person;
+            todoItem.Owner = _personFaker.Generate();
+
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
 
