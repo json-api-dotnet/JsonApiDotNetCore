@@ -250,7 +250,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             });
         }
 
-        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        [Fact]
         public async Task Can_create_relationship_with_include()
         {
             // Arrange

@@ -272,7 +272,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             });
         }
 
-        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        [Fact]
         public async Task Can_replace_HasMany_relationship_with_include()
         {
             // Arrange
@@ -339,7 +339,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             });
         }
 
-        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        [Fact]
         public async Task Can_replace_HasManyThrough_relationship_with_include_and_fieldsets()
         {
             // Arrange

@@ -221,7 +221,7 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             await SaveChangesAsync();
-            
+
             FlushFromCache(resourceFromDatabase);
         }
 
@@ -399,8 +399,9 @@ namespace JsonApiDotNetCore.Repositories
 
         private void FlushFromCache(IIdentifiable resource)
         {
-            var trackedResource = _dbContext.GetTrackedIdentifiable(resource);
-            Detach(trackedResource);
+            resource = (IIdentifiable)_dbContext.GetTrackedIdentifiable(resource);
+            Detach(resource);
+            DetachRelationships(resource);
         }
 
         private async Task RemoveAlreadyRelatedResourcesFromAssignment(HasManyThroughAttribute hasManyThroughRelationship, TId primaryResourceId, ISet<IIdentifiable> secondaryResourceIds)
@@ -656,7 +657,7 @@ namespace JsonApiDotNetCore.Repositories
             return TypeHelper.CopyToTypedCollection(rightResourcesTracked, rightCollectionType);
         }
 
-        private void DetachRelationships(TResource resource)
+        private void DetachRelationships(IIdentifiable resource)
         {
             foreach (var relationship in _targetedFields.Relationships)
             {
