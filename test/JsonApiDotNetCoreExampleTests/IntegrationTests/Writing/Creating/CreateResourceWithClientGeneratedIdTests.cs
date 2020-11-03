@@ -159,6 +159,47 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         }
 
         [Fact]
+        public async Task Can_create_resource_with_client_generated_string_ID_having_no_side_effects_with_fieldset()
+        {
+            // Arrange
+            var newColor = _fakers.RgbColor.Generate();
+            
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "rgbColors",
+                    id = newColor.StringId,
+                    attributes = new
+                    {
+                        displayName = newColor.DisplayName
+                    }
+                }
+            };
+
+            var route = "/rgbColors?fields=id";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var colorInDatabase = await dbContext.RgbColors
+                    .FirstAsync(color => color.Id == newColor.Id);
+
+                colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
+            });
+
+            var property = typeof(RgbColor).GetProperty(nameof(Identifiable.Id));
+            property.Should().NotBeNull().And.Subject.PropertyType.Should().Be(typeof(string));
+        }
+
+        [Fact]
         public async Task Cannot_create_resource_for_existing_client_generated_ID()
         {
             // Arrange

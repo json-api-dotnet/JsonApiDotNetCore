@@ -292,6 +292,51 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         }
 
         [Fact]
+        public async Task Can_create_resource_with_unknown_relationship()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        doesNotExist = new
+                        {
+                            data = new
+                            {
+                                type = "doesNotExist",
+                                id = 12345678
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Type.Should().Be("workItems");
+
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .FirstOrDefaultAsync(workItem => workItem.Id == newWorkItemId);
+
+                workItemInDatabase.Should().NotBeNull();
+            });
+        }
+
+        [Fact]
         public async Task Cannot_create_resource_with_client_generated_ID()
         {
             // Arrange
@@ -427,6 +472,32 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_on_resource_type_mismatch_between_url_and_body()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "rgbColors",
+                    id = "0A0B0C"
+                }
+            };
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Conflict);
+            responseDocument.Errors[0].Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
+            responseDocument.Errors[0].Detail.Should().Be("Expected resource of type 'workItems' in POST request body at endpoint '/workItems', instead of 'rgbColors'.");
+        }
+
+        [Fact]
         public async Task Cannot_create_resource_attribute_with_blocked_capability()
         {
             // Arrange
@@ -534,6 +605,103 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
             responseDocument.Errors[0].Detail.Should().StartWith("Failed to convert 'not-a-valid-time' of type 'String' to type 'Nullable`1'. - Request body: <<");
+        }
+
+        [Fact]
+        public async Task Can_create_resource_with_attributes_and_multiple_relationship_types()
+        {
+            // Arrange
+            var existingUserAccounts = _fakers.UserAccount.Generate(2);
+            var existingTag = _fakers.WorkTags.Generate();
+
+            var newDescription = _fakers.WorkItem.Generate().Description;
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.UserAccounts.AddRange(existingUserAccounts);
+                dbContext.WorkTags.Add(existingTag);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    attributes = new
+                    {
+                        description = newDescription
+                    },
+                    relationships = new
+                    {
+                        assignee = new
+                        {
+                            data = new
+                            {
+                                type = "userAccounts",
+                                id = existingUserAccounts[0].StringId
+                            }
+                        },
+                        subscribers = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "userAccounts",
+                                    id = existingUserAccounts[1].StringId
+                                }
+                            }
+                        },
+                        tags = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "workTags",
+                                    id = existingTag.StringId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["description"].Should().Be(newDescription);
+            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+
+            var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Assignee)
+                    .Include(workItem => workItem.Subscribers)
+                    .Include(workItem => workItem.WorkItemTags)
+                    .ThenInclude(workItemTag => workItemTag.Tag)
+                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+
+                workItemInDatabase.Description.Should().Be(newDescription);
+
+                workItemInDatabase.Assignee.Should().NotBeNull();
+                workItemInDatabase.Assignee.Id.Should().Be(existingUserAccounts[0].Id);
+
+                workItemInDatabase.Subscribers.Should().HaveCount(1);
+                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccounts[1].Id);
+
+                workItemInDatabase.WorkItemTags.Should().HaveCount(1);
+                workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingTag.Id);
+            });
         }
     }
 }

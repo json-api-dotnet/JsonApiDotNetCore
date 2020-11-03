@@ -26,9 +26,9 @@ namespace JsonApiDotNetCoreExampleTests
 
         internal sealed class FakeLogger : ILogger
         {
-            private readonly ConcurrentBag<(LogLevel LogLevel, string Text)> _messages = new ConcurrentBag<(LogLevel LogLevel, string Text)>();
+            private readonly ConcurrentBag<LogMessage> _messages = new ConcurrentBag<LogMessage>();
 
-            public IReadOnlyCollection<(LogLevel LogLevel, string Text)> Messages => _messages;
+            public IReadOnlyCollection<LogMessage> Messages => _messages;
 
             public bool IsEnabled(LogLevel logLevel) => true;
 
@@ -41,10 +41,22 @@ namespace JsonApiDotNetCoreExampleTests
                 Func<TState, Exception, string> formatter)
             {
                 var message = formatter(state, exception);
-                _messages.Add((logLevel, message));
+                _messages.Add(new LogMessage(logLevel, message));
             }
 
             public IDisposable BeginScope<TState>(TState state) => null;
+        }
+
+        internal sealed class LogMessage
+        {
+            public LogLevel LogLevel { get; }
+            public string Text { get; }
+
+            public LogMessage(LogLevel logLevel, string text)
+            {
+                LogLevel = logLevel;
+                Text = text;
+            }
         }
     }
 }
