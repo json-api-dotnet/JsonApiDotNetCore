@@ -362,7 +362,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(2);
 
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            // TODO: Make error message more general so that it can be reused for this case.
+                                                        // Proposed: A referenced secondary resource does not exist.
             responseDocument.Errors[0].Title.Should().Be("A resource being removed from a relationship does not exist.");
+                                                        // Proposed: "Resource of type 'userAccounts' with ID '88888888' referenced through the relationship 'subscribers' does not exist."
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'userAccounts' with ID '88888888' being removed from relationship 'subscribers' does not exist.");
 
             responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -370,7 +373,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[1].Detail.Should().Be("Resource of type 'userAccounts' with ID '99999999' being removed from relationship 'subscribers' does not exist.");
         }
 
-        [Fact(Skip = "TODO: Fix bug that prevents this test from succeeding.")]
+        [Fact]
         public async Task Cannot_remove_unknown_IDs_from_HasManyThrough_relationship()
         {
             // Arrange

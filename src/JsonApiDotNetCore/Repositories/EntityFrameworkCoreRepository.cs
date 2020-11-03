@@ -154,10 +154,6 @@ namespace JsonApiDotNetCore.Repositories
             await SaveChangesAsync();
 
             FlushFromCache(resource);
-
-            // This ensures relationships get reloaded from the database if they have
-            // been requested. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343.
-            DetachRelationships(resource);
         }
 
         /// <inheritdoc />
@@ -188,9 +184,10 @@ namespace JsonApiDotNetCore.Repositories
         {
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
 
-            var relationship = _targetedFields.Relationships.Single();
-            TResource primaryResource = (TResource) _dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
+            var primaryResource = await TryGetPrimaryResource(id);
             
+            var relationship = _targetedFields.Relationships.Single();
+
             await EnableCompleteReplacement(relationship, primaryResource);
             await ApplyRelationshipUpdate(relationship, primaryResource, secondaryResourceIds);
             
@@ -283,14 +280,15 @@ namespace JsonApiDotNetCore.Repositories
         {
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
+            
+            var primaryResource = await TryGetPrimaryResource(id);
 
             var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
-            var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
+            await AssertSecondaryResourcesExist(secondaryResourceIds, relationship);
 
             await EnableCompleteReplacement(relationship, primaryResource);
-            
-            var rightResources = ((IEnumerable<IIdentifiable>)relationship.GetValue(primaryResource)).ToHashSet(IdentifiableComparer.Instance);
 
+            var rightResources = ((IEnumerable<IIdentifiable>)relationship.GetValue(primaryResource)).ToHashSet(IdentifiableComparer.Instance);
             rightResources.ExceptWith(secondaryResourceIds);
             
             await ApplyRelationshipUpdate(relationship, primaryResource, rightResources);
@@ -380,7 +378,7 @@ namespace JsonApiDotNetCore.Repositories
             {
                 if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
                 {
-                    var throughEntities = await GetFilteredThroughEntities_StaticQueryBuilding(hasManyThroughRelationship, resource.Id, null);
+                    var throughEntities = await GetFilteredRightEntities_StaticQueryBuilding(resource.Id,  hasManyThroughRelationship.LeftIdProperty, null, null);
                     hasManyThroughRelationship.ThroughProperty.SetValue(resource, TypeHelper.CopyToTypedCollection(throughEntities,  hasManyThroughRelationship.ThroughProperty.PropertyType));
                     
                     foreach (var throughEntity in throughEntities)
@@ -397,11 +395,14 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        private void FlushFromCache(IIdentifiable resource)
+        private void FlushFromCache(IIdentifiable resource)                                                                                                                                    
         {
             resource = (IIdentifiable)_dbContext.GetTrackedIdentifiable(resource);
-            Detach(resource);
-            DetachRelationships(resource);
+            if (resource != null)
+            {
+                DetachEntities(resource);
+                DetachRelationships(resource);
+            }
         }
 
         private async Task RemoveAlreadyRelatedResourcesFromAssignment(HasManyThroughAttribute hasManyThroughRelationship, TId primaryResourceId, ISet<IIdentifiable> secondaryResourceIds)
@@ -409,7 +410,7 @@ namespace JsonApiDotNetCore.Repositories
             object[] throughEntities;
 
             // TODO: Finalize this.
-            throughEntities = await GetFilteredThroughEntities_StaticQueryBuilding(hasManyThroughRelationship, primaryResourceId, secondaryResourceIds);
+            throughEntities = await GetFilteredRightEntities_StaticQueryBuilding(primaryResourceId, hasManyThroughRelationship.LeftIdProperty, secondaryResourceIds,hasManyThroughRelationship.RightIdProperty, hasManyThroughRelationship.ThroughType);
             
             // Alternative approaches:
             // throughEntities = await GetFilteredThroughEntities_DynamicQueryBuilding(hasManyThroughRelationship, primaryResourceId, secondaryResourceIds);
@@ -418,114 +419,129 @@ namespace JsonApiDotNetCore.Repositories
             var rightResources = throughEntities.Select(entity => ConstructRightResourceOfHasManyRelationship(entity, hasManyThroughRelationship)).ToHashSet();
             secondaryResourceIds.ExceptWith(rightResources);
             
-            Detach(throughEntities);
+            DetachEntities(throughEntities);
         }
 
-        private async Task<object[]> GetFilteredThroughEntities_StaticQueryBuilding(HasManyThroughAttribute hasManyThroughRelationship, TId leftIdFilter, ISet<IIdentifiable> rightIdFilter)
+        private async Task<object[]> GetFilteredRightEntities_StaticQueryBuilding(object idToEqual, PropertyInfo equaledIdProperty, ISet<IIdentifiable> idsToContain, PropertyInfo containedIdProperty)
         {
-            dynamic dummyInstance = Activator.CreateInstance(hasManyThroughRelationship.ThroughType);
-            return await ((dynamic)this).GetFilteredThroughEntities_StaticQueryBuilding(dummyInstance, hasManyThroughRelationship, leftIdFilter, rightIdFilter);
+            var rightType = equaledIdProperty?.ReflectedType ?? idsToContain.First().GetType();
+
+            dynamic runtimeTypeParameter = TypeHelper.IsOrImplementsInterface(rightType, typeof(IIdentifiable)) 
+                ? _resourceFactory.CreateInstance(rightType) 
+                : TypeHelper.CreateInstance(rightType);  
+
+            return await ((dynamic)this).GetFilteredRightEntities_StaticQueryBuilding(idToEqual, equaledIdProperty, idsToContain, containedIdProperty, runtimeTypeParameter);
         }
 
-        public async Task<object[]> GetFilteredThroughEntities_StaticQueryBuilding<TThroughType>(TThroughType _,  HasManyThroughAttribute relationship, TId leftIdFilter, ISet<IIdentifiable> rightIdFilter) where TThroughType : class
+        private async Task<object[]> GetFilteredRightEntities_StaticQueryBuilding<TRightType>(object idToEqual, PropertyInfo equaledIdProperty, ISet<IIdentifiable> idsToContain, PropertyInfo containedIdProperty, TRightType _) where TRightType : class
         {
-            var filter = GetThroughEntityFilterExpression<TThroughType>(relationship, leftIdFilter, rightIdFilter);
+            var filter = GetThroughEntityFilterExpression<TRightType>(idToEqual, equaledIdProperty, idsToContain, containedIdProperty);
             
-            var result = await _dbContext.Set<TThroughType>().Where(filter).ToListAsync();
+            var result = await _dbContext.Set<TRightType>().Where(filter).ToListAsync();
             
             return result.Cast<object>().ToArray();
         }
 
-        private Expression<Func<TThroughType, bool>> GetThroughEntityFilterExpression<TThroughType>(HasManyThroughAttribute relationship, TId leftIdFilter, ISet<IIdentifiable> rightIdFilter) where TThroughType : class
+        private Expression<Func<TRightType, bool>> GetThroughEntityFilterExpression<TRightType>(object idToEqual, PropertyInfo equaledIdProperty, ISet<IIdentifiable> idsToContain, PropertyInfo containedIdProperty) where TRightType : class
         {
-            var throughEntityParameter = Expression.Parameter(relationship.ThroughType, relationship.ThroughType.Name.Camelize());
+            var rightType = typeof(TRightType);
+            var rightEntityParameter = Expression.Parameter(rightType, rightType.Name.Camelize());
 
-            Expression filter = GetEqualsCall(relationship, throughEntityParameter, leftIdFilter);
+            Expression filter = null;
 
-            if (rightIdFilter != null)
+            if (idToEqual != null)
             {
-                var containsCall = GetContainsCall(relationship, throughEntityParameter, rightIdFilter);
-                filter = Expression.AndAlso(filter, containsCall);
+              filter = GetEqualsCall(idToEqual, rightEntityParameter, equaledIdProperty);
+            } 
+
+            if (idsToContain != null)
+            {
+                var containsFilter = GetContainsCall(idsToContain, rightEntityParameter, containedIdProperty);
+                filter = filter == null ? (Expression) containsFilter : Expression.AndAlso(filter, containsFilter);
             }
 
-            return Expression.Lambda<Func<TThroughType, bool>>(filter, throughEntityParameter);
+            return filter == null ? null : Expression.Lambda<Func<TRightType, bool>>(filter, rightEntityParameter);
         }
 
-        private async Task<object[]> GetFilteredThroughEntities_DynamicQueryBuilding(HasManyThroughAttribute relationship, TId primaryResourceId, ISet<IIdentifiable> secondaryResourceIds)
-        {
-            var throughEntityParameter = Expression.Parameter(relationship.ThroughType, relationship.ThroughType.Name.Camelize());
-
-            var containsCall = GetContainsCall(relationship, throughEntityParameter, secondaryResourceIds) ;
-            var equalsCall = GetEqualsCall(relationship, throughEntityParameter, primaryResourceId);
-            var conjunction = Expression.AndAlso(equalsCall, containsCall);
-
-            var predicate = Expression.Lambda(conjunction, throughEntityParameter);
+        // private async Task<object[]> GetFilteredThroughEntities_DynamicQueryBuilding(TId primaryResourceId, ISet<IIdentifiable> secondaryResourceIds)
+        // {
+        //     var throughEntityParameter = Expression.Parameter(relationship.ThroughType, relationship.ThroughType.Name.Camelize());
+        //
+        //     var containsCall = GetContainsCall(relationship, throughEntityParameter, secondaryResourceIds) ;
+        //     var equalsCall = GetEqualsCall(relationship, throughEntityParameter, primaryResourceId);
+        //     var conjunction = Expression.AndAlso(equalsCall, containsCall);
+        //
+        //     var predicate = Expression.Lambda(conjunction, throughEntityParameter);
+        //
+        //     IQueryable throughSource = _dbContext.Set(relationship.ThroughType);
+        //     var whereClause = Expression.Call(typeof(Queryable), nameof(Queryable.Where), new[] { relationship.ThroughType }, throughSource.Expression, predicate);
+        //     
+        //     dynamic query = throughSource.Provider.CreateQuery(whereClause);
+        //     IEnumerable result = await EntityFrameworkQueryableExtensions.ToListAsync(query);
+        //     
+        //     return result.Cast<object>().ToArray();
+        // }
         
-            IQueryable throughSource = _dbContext.Set(relationship.ThroughType);
-            var whereClause = Expression.Call(typeof(Queryable), nameof(Queryable.Where), new[] { relationship.ThroughType }, throughSource.Expression, predicate);
-            
-            dynamic query = throughSource.Provider.CreateQuery(whereClause);
-            IEnumerable result = await EntityFrameworkQueryableExtensions.ToListAsync(query);
-            
-            return result.Cast<object>().ToArray();
-        }
-        
-        private async Task<object[]> GetFilteredThroughEntities_QueryBuilderCall(HasManyThroughAttribute relationship, TId leftIdFilter, ISet<IIdentifiable> rightIdFilter)
-        {
-            var comparisonTargetField = new ResourceFieldChainExpression(new AttrAttribute { Property = relationship.LeftIdProperty });
-            var comparisionId = new LiteralConstantExpression(leftIdFilter.ToString());
-            FilterExpression filter = new ComparisonExpression(ComparisonOperator.Equals, comparisonTargetField, comparisionId);
-
-            if (rightIdFilter != null)
-            {
-                var equalsAnyOfTargetField = new ResourceFieldChainExpression(new AttrAttribute { Property =  relationship.RightIdProperty });
-                var equalsAnyOfIds = rightIdFilter.Select(r => new LiteralConstantExpression(r.StringId)).ToArray();
-                var equalsAnyOf = new EqualsAnyOfExpression(equalsAnyOfTargetField, equalsAnyOfIds);                
-                filter = new LogicalExpression(LogicalOperator.And, new QueryExpression[] { filter, equalsAnyOf } );
-            }
-            
-            IQueryable throughSource = _dbContext.Set(relationship.ThroughType);
-
-            var scopeFactory = new LambdaScopeFactory(new LambdaParameterNameFactory());
-            var scope = scopeFactory.CreateScope(relationship.ThroughType);
-            
-            var whereClauseBuilder = new WhereClauseBuilder(throughSource.Expression, scope, typeof(Queryable));
-            var whereClause = whereClauseBuilder.ApplyWhere(filter);
-
-            dynamic query = throughSource.Provider.CreateQuery(whereClause);
-            IEnumerable result = await EntityFrameworkQueryableExtensions.ToListAsync(query);
-
-            return result.Cast<object>().ToArray();
-        }
+        // private async Task<object[]> GetFilteredThroughEntities_QueryBuilderCall(HasManyThroughAttribute relationship, TId leftIdFilter, ISet<IIdentifiable> rightIdFilter)
+        // {
+        //     var comparisonTargetField = new ResourceFieldChainExpression(new AttrAttribute { Property = relationship.LeftIdProperty });
+        //     var comparisionId = new LiteralConstantExpression(leftIdFilter.ToString());
+        //     FilterExpression filter = new ComparisonExpression(ComparisonOperator.Equals, comparisonTargetField, comparisionId);
+        //
+        //     if (rightIdFilter != null)
+        //     {
+        //         var equalsAnyOfTargetField = new ResourceFieldChainExpression(new AttrAttribute { Property =  relationship.RightIdProperty });
+        //         var equalsAnyOfIds = rightIdFilter.Select(r => new LiteralConstantExpression(r.StringId)).ToArray();
+        //         var equalsAnyOf = new EqualsAnyOfExpression(equalsAnyOfTargetField, equalsAnyOfIds);                
+        //         filter = new LogicalExpression(LogicalOperator.And, new QueryExpression[] { filter, equalsAnyOf } );
+        //     }
+        //     
+        //     IQueryable throughSource = _dbContext.Set(relationship.ThroughType);
+        //
+        //     var scopeFactory = new LambdaScopeFactory(new LambdaParameterNameFactory());
+        //     var scope = scopeFactory.CreateScope(relationship.ThroughType);
+        //     
+        //     var whereClauseBuilder = new WhereClauseBuilder(throughSource.Expression, scope, typeof(Queryable));
+        //     var whereClause = whereClauseBuilder.ApplyWhere(filter);
+        //
+        //     dynamic query = throughSource.Provider.CreateQuery(whereClause);
+        //     IEnumerable result = await EntityFrameworkQueryableExtensions.ToListAsync(query);
+        //
+        //     return result.Cast<object>().ToArray();
+        // }
 
         private IIdentifiable ConstructRightResourceOfHasManyRelationship(object entity, HasManyThroughAttribute relationship)
         {
              var rightResource = _resourceFactory.CreateInstance(relationship.RightType);
             rightResource.StringId = relationship.RightIdProperty.GetValue(entity).ToString();
-    
+        
             return rightResource;
         }
-
-        private MethodCallExpression GetContainsCall(HasManyThroughAttribute relationship, ParameterExpression throughEntityParameter, ISet<IIdentifiable> secondaryResourceIds)
+        
+        private MethodCallExpression GetContainsCall(ISet<IIdentifiable> secondaryResourceIds, ParameterExpression rightEntityParameter, PropertyInfo rightIdProperty)
         {
-            var rightIdProperty = Expression.Property(throughEntityParameter, relationship.RightIdProperty.Name);
-
-            var idType = relationship.RightIdProperty.PropertyType;
+            var rightIdMember = Expression.Property(rightEntityParameter, rightIdProperty.Name);
+        
+            var idType = rightIdProperty.PropertyType;
             var typedIds = TypeHelper.CopyToList(secondaryResourceIds.Select(r => r.GetTypedId()), idType);
             var idCollectionConstant = Expression.Constant(typedIds);
-
-            var containsCall = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), new[] {idType},
-                idCollectionConstant, rightIdProperty);
+        
+            var containsCall = Expression.Call(
+                typeof(Enumerable), 
+                nameof(Enumerable.Contains), 
+                new[] {idType},
+                idCollectionConstant, 
+                rightIdMember);
             
             return containsCall;
         }
         
-        private BinaryExpression GetEqualsCall(HasManyThroughAttribute relationship, ParameterExpression throughEntityParameter, TId primaryResourceId)
+        private BinaryExpression GetEqualsCall(object id, ParameterExpression rightEntityParameter, PropertyInfo leftIdProperty)
         {
-            var leftIdProperty = Expression.Property(throughEntityParameter, relationship.LeftIdProperty.Name);
-            var idConstant = Expression.Constant(primaryResourceId, typeof(TId));
-
-            return Expression.Equal(leftIdProperty, idConstant);
+            var leftIdMember = Expression.Property(rightEntityParameter, leftIdProperty.Name);
+            var idConstant = Expression.Constant(id, id.GetType());
+        
+            return Expression.Equal(leftIdMember, idConstant);
         }
 
         private NavigationEntry GetNavigationEntry(TResource resource, RelationshipAttribute relationship)
@@ -585,7 +601,7 @@ namespace JsonApiDotNetCore.Repositories
             relationship.SetValue(leftResource, placeholderRightResource);
             _dbContext.Entry(leftResource).DetectChanges();
             
-            Detach(placeholderRightResource);
+            DetachEntities(placeholderRightResource);
         }
 
         private void EnsurePrimaryKeyPropertiesAreNotNull(object entity)
@@ -657,6 +673,30 @@ namespace JsonApiDotNetCore.Repositories
             return TypeHelper.CopyToTypedCollection(rightResourcesTracked, rightCollectionType);
         }
 
+        private async Task<TResource> TryGetPrimaryResource(TId id)
+        {
+            var primaryResource = await _dbContext.FindAsync<TResource>(id);
+            if (primaryResource == null)
+            {
+                throw new DataStoreUpdateException();
+            }
+
+            return primaryResource;
+        }
+
+        private async Task AssertSecondaryResourcesExist(ISet<IIdentifiable> secondaryResourceIds, HasManyAttribute relationship)
+        {
+            var rightPrimaryKey = relationship.RightType.GetProperty(nameof(Identifiable.Id));
+            var secondaryResourcesFromDatabase =
+                (await GetFilteredRightEntities_StaticQueryBuilding(null, null, secondaryResourceIds, rightPrimaryKey))
+                .Cast<IIdentifiable>().ToArray();
+
+            if (secondaryResourcesFromDatabase.Length < secondaryResourceIds.Count)
+            {
+                throw new DataStoreUpdateException();
+            }
+        }
+
         private void DetachRelationships(IIdentifiable resource)
         {
             foreach (var relationship in _targetedFields.Relationships)
@@ -665,17 +705,17 @@ namespace JsonApiDotNetCore.Repositories
 
                 if (rightValue is IEnumerable<IIdentifiable> rightResources)
                 {
-                    Detach(rightResources.ToArray());
+                    DetachEntities(rightResources.ToArray());
                 }
                 else if (rightValue != null)
                 {
-                    Detach(rightValue);
+                    DetachEntities(rightValue);
                     _dbContext.Entry(rightValue).State = EntityState.Detached;
                 }
             }
         }
         
-        private void Detach(params object[] entities)
+        private void DetachEntities(params object[] entities)
         {
             foreach (var entity in entities)
             {

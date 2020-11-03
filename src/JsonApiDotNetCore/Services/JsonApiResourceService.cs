@@ -367,6 +367,8 @@ namespace JsonApiDotNetCore.Services
             catch (DataStoreUpdateException)
             {
                 await GetPrimaryResourceById(id, TopFieldSelection.OnlyIdAttribute);
+
+                await AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
                 throw;
             }
         }
