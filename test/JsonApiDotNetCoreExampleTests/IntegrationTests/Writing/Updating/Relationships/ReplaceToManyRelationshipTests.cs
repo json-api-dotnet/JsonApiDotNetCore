@@ -501,14 +501,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Should().BeEmpty();
         }
 
-
-        // TODO: replacing primary data with new object[0] should still fail, but it doesn't.
         [Fact]
         public async Task Cannot_replace_on_unknown_resource_ID_in_url()
         {
             // Arrange
             var existingSubscriber = _fakers.UserAccount.Generate();
-
+    
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.UserAccounts.Add(existingSubscriber);
@@ -517,14 +515,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
             var requestBody = new
             {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingSubscriber.StringId
-                    }
-                }
+                data = new object[0]
             };
 
             var route = "/workItems/99999999/relationships/subscribers";
