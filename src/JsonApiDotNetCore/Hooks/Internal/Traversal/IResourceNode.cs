@@ -1,5 +1,4 @@
 using System.Collections;
-using JsonApiDotNetCore.Resources;
 using RightType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Traversal

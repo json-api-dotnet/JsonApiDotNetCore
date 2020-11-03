@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Client.Internal;
@@ -85,8 +84,7 @@ namespace JsonApiDotNetCore.Serialization
                 {
                     if (attr.Property.SetMethod == null)
                     {
-                        // TODO: Base deserializer code should be agnostic of whether the usage is server or client side. Throwing a request body exception violates this, as this is server side specific.
-                        throw new InvalidRequestBodyException("Attribute is read-only.", $"Attribute '{attr.PublicName}' is read-only.", null);
+                        throw new JsonApiSerializationException("Attribute is read-only.", $"Attribute '{attr.PublicName}' is read-only.");
                     }
 
                     var convertedValue = ConvertAttrValue(newValue, attr.Property.PropertyType);
@@ -174,8 +172,8 @@ namespace JsonApiDotNetCore.Serialization
             var resourceContext = ResourceContextProvider.GetResourceContext(publicName);
             if (resourceContext == null)
             {
-                throw new InvalidRequestBodyException("Request body includes unknown resource type.",
-                    $"Resource of type '{publicName}' does not exist.", null);
+                throw new JsonApiSerializationException("Request body includes unknown resource type.",
+                    $"Resource of type '{publicName}' does not exist.");
             }
 
             return resourceContext;
@@ -236,8 +234,8 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (relationshipData.ManyData == null)
             {
-                throw new InvalidRequestBodyException("Expected data[] for to-many relationship.", 
-                    $"Expected data[] for '{hasManyRelationship.PublicName}' relationship.", null);
+                throw new JsonApiSerializationException("Expected data[] for to-many relationship.", 
+                    $"Expected data[] for '{hasManyRelationship.PublicName}' relationship.");
             }
 
             var rightResources = relationshipData.ManyData
@@ -272,7 +270,7 @@ namespace JsonApiDotNetCore.Serialization
                     ? $"Expected 'type' element in '{relationship.PublicName}' relationship."
                     : "Expected 'type' element in 'data' element.";
 
-                throw new InvalidRequestBodyException("Request body must include 'type' element.", details, null);
+                throw new JsonApiSerializationException("Request body must include 'type' element.", details);
             }
         }
 
@@ -280,8 +278,8 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (resourceIdentifierObject.Id == null)
             {
-                throw new InvalidRequestBodyException("Request body must include 'id' element.",
-                    $"Expected 'id' element in '{relationship.PublicName}' relationship.", null);
+                throw new JsonApiSerializationException("Request body must include 'id' element.",
+                    $"Expected 'id' element in '{relationship.PublicName}' relationship.");
             }
         }
 
@@ -289,9 +287,8 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (!relationship.RightType.IsAssignableFrom(rightResourceContext.ResourceType))
             {
-                throw new InvalidRequestBodyException("Relationship contains incompatible resource type.",
-                    $"Relationship '{relationship.PublicName}' contains incompatible resource type '{rightResourceContext.PublicName}'.",
-                    null);
+                throw new JsonApiSerializationException("Relationship contains incompatible resource type.",
+                    $"Relationship '{relationship.PublicName}' contains incompatible resource type '{rightResourceContext.PublicName}'.");
             }
         }
 

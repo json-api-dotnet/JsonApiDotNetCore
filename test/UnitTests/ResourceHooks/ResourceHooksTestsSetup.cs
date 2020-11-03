@@ -19,7 +19,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using IResourceFactory = JsonApiDotNetCore.Resources.IResourceFactory;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace UnitTests.ResourceHooks

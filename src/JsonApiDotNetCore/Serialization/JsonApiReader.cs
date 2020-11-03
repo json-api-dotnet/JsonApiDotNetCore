@@ -57,10 +57,9 @@ namespace JsonApiDotNetCore.Serialization
                 {
                     model = _deserializer.Deserialize(body);
                 }
-                catch (InvalidRequestBodyException exception)
+                catch (JsonApiSerializationException exception)
                 {
-                    exception.SetRequestBody(body);
-                    throw;
+                    throw new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, body, exception);
                 }
                 catch (Exception exception)
                 {

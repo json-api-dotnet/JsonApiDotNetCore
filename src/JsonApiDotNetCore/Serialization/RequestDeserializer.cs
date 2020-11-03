@@ -1,7 +1,6 @@
 using System;
 using System.Net.Http;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -59,17 +58,17 @@ namespace JsonApiDotNetCore.Serialization
                 if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Post.Method &&
                     !attr.Capabilities.HasFlag(AttrCapabilities.AllowCreate))
                 {
-                    throw new InvalidRequestBodyException(
+                    throw new JsonApiSerializationException(
                         "Setting the initial value of the requested attribute is not allowed.",
-                        $"Setting the initial value of '{attr.PublicName}' is not allowed.", null);
+                        $"Setting the initial value of '{attr.PublicName}' is not allowed.");
                 }
 
                 if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Patch.Method &&
                     !attr.Capabilities.HasFlag(AttrCapabilities.AllowChange))
                 {
-                    throw new InvalidRequestBodyException(
+                    throw new JsonApiSerializationException(
                         "Changing the value of the requested attribute is not allowed.",
-                        $"Changing the value of '{attr.PublicName}' is not allowed.", null);
+                        $"Changing the value of '{attr.PublicName}' is not allowed.");
                 }
 
                 _targetedFields.Attributes.Add(attr);
