@@ -91,19 +91,16 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public override string RelationshipPath => $"{ThroughProperty.Name}.{RightProperty.Name}";
 
-        // TODO: Setting these doesn't even work. Use them on ArticleTag and lots of tests start to fail.
-        // Either make it work or remove the feature.
-
         /// <summary>
         /// Optional. Can be used to indicate a non-default name for the ID property back to the parent resource from the through type.
-        /// Defaults to the name of <see cref="HasManyThroughAttribute.LeftProperty"/> suffixed with "Id".
+        /// Defaults to the name of <see cref="LeftProperty"/> suffixed with "Id".
         /// In the example described above, this would be "ArticleId".
         /// </summary>
         public string LeftIdPropertyName { get; set; }
 
         /// <summary>
         /// Optional. Can be used to indicate a non-default name for the ID property to the related resource from the through type.
-        /// Defaults to the name of <see cref="HasManyThroughAttribute.RightProperty"/> suffixed with "Id".
+        /// Defaults to the name of <see cref="RightProperty"/> suffixed with "Id".
         /// In the example described above, this would be "TagId".
         /// </summary>
         public string RightIdPropertyName { get; set; }

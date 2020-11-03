@@ -562,7 +562,7 @@ namespace JsonApiDotNetCore.Services
         {
             if (secondaryResourceIds == null)
             {
-                // TODO: Usage of InvalidRequestBodyException (here and in BaseJsonApiController) is probably not the nest choice, because they do not contain request body.
+                // TODO: Usage of InvalidRequestBodyException (here and in BaseJsonApiController) is probably not the best choice, because they do not contain request body.
                 // We should either make it include the request body -or- throw a different exception.
                 throw new InvalidRequestBodyException("Expected data[] for to-many relationship.", null, null);
             }
