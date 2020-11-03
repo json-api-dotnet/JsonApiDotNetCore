@@ -263,6 +263,7 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.BeforeUpdateResource(resourceFromRequest);
 
+            // TODO: Call with OnlyAllAttributes (impl: clear all projections => selects all fields, no includes and all eager-loads)
             TResource resourceFromDatabase = await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes);
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);

@@ -184,7 +184,7 @@ namespace JsonApiDotNetCore.Repositories
         {
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
 
-            var primaryResource = await TryGetPrimaryResource(id);
+            var primaryResource = await GetPrimaryResourceById(id);
             
             var relationship = _targetedFields.Relationships.Single();
 
@@ -281,7 +281,7 @@ namespace JsonApiDotNetCore.Repositories
             _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
             
-            var primaryResource = await TryGetPrimaryResource(id);
+            var primaryResource = await GetPrimaryResourceById(id);
 
             var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
             await AssertSecondaryResourcesExist(secondaryResourceIds, relationship);
@@ -395,7 +395,7 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        private void FlushFromCache(IIdentifiable resource)                                                                                                                                    
+        private void FlushFromCache(IIdentifiable resource)
         {
             resource = (IIdentifiable)_dbContext.GetTrackedIdentifiable(resource);
             if (resource != null)
@@ -673,7 +673,7 @@ namespace JsonApiDotNetCore.Repositories
             return TypeHelper.CopyToTypedCollection(rightResourcesTracked, rightCollectionType);
         }
 
-        private async Task<TResource> TryGetPrimaryResource(TId id)
+        private async Task<TResource> GetPrimaryResourceById(TId id)
         {
             var primaryResource = await _dbContext.FindAsync<TResource>(id);
             if (primaryResource == null)
@@ -686,10 +686,9 @@ namespace JsonApiDotNetCore.Repositories
 
         private async Task AssertSecondaryResourcesExist(ISet<IIdentifiable> secondaryResourceIds, HasManyAttribute relationship)
         {
-            var rightPrimaryKey = relationship.RightType.GetProperty(nameof(Identifiable.Id));
+            var rightId = relationship.RightType.GetProperty(nameof(Identifiable.Id));
             var secondaryResourcesFromDatabase =
-                (await GetFilteredRightEntities_StaticQueryBuilding(null, null, secondaryResourceIds, rightPrimaryKey))
-                .Cast<IIdentifiable>().ToArray();
+                await GetFilteredRightEntities_StaticQueryBuilding(null, null, secondaryResourceIds, rightId);
 
             if (secondaryResourcesFromDatabase.Length < secondaryResourceIds.Count)
             {

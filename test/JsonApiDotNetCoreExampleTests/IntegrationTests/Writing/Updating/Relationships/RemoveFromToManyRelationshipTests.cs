@@ -364,6 +364,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
             // TODO: Make error message more general so that it can be reused for this case.
                                                         // Proposed: A referenced secondary resource does not exist.
+                                                        // => "A related resource does not exist."
+                                                        // => "Related resource of type 'workItems' with ID '12345678' in relationship 'assignedItems' does not exist."
             responseDocument.Errors[0].Title.Should().Be("A resource being removed from a relationship does not exist.");
                                                         // Proposed: "Resource of type 'userAccounts' with ID '88888888' referenced through the relationship 'subscribers' does not exist."
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'userAccounts' with ID '88888888' being removed from relationship 'subscribers' does not exist.");
