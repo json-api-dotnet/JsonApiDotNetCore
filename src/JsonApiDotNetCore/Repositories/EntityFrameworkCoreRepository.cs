@@ -154,10 +154,6 @@ namespace JsonApiDotNetCore.Repositories
             await SaveChangesAsync();
 
             FlushFromCache(resource);
-
-            // This ensures relationships get reloaded from the database if they have
-            // been requested. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343.
-            DetachRelationships(resource);
         }
 
         /// <inheritdoc />
@@ -402,8 +398,11 @@ namespace JsonApiDotNetCore.Repositories
         private void FlushFromCache(IIdentifiable resource)                                                                                                                                    
         {
             resource = (IIdentifiable)_dbContext.GetTrackedIdentifiable(resource);
-            Detach(resource);
-            DetachRelationships(resource);
+            if (resource != null)
+            {
+                DetachEntities(resource);
+                DetachRelationships(resource);
+            }
         }
 
         private async Task RemoveAlreadyRelatedResourcesFromAssignment(HasManyThroughAttribute hasManyThroughRelationship, TId primaryResourceId, ISet<IIdentifiable> secondaryResourceIds)
@@ -420,7 +419,7 @@ namespace JsonApiDotNetCore.Repositories
             var rightResources = throughEntities.Select(entity => ConstructRightResourceOfHasManyRelationship(entity, hasManyThroughRelationship)).ToHashSet();
             secondaryResourceIds.ExceptWith(rightResources);
             
-            Detach(throughEntities);
+            DetachEntities(throughEntities);
         }
 
         private async Task<object[]> GetFilteredRightEntities_StaticQueryBuilding(object idToEqual, PropertyInfo equaledIdProperty, ISet<IIdentifiable> idsToContain, PropertyInfo containedIdProperty)
@@ -599,7 +598,7 @@ namespace JsonApiDotNetCore.Repositories
             relationship.SetValue(leftResource, placeholderRightResource);
             _dbContext.Entry(leftResource).DetectChanges();
             
-            Detach(placeholderRightResource);
+            DetachEntities(placeholderRightResource);
         }
 
         private void EnsurePrimaryKeyPropertiesAreNotNull(object entity)
@@ -703,17 +702,17 @@ namespace JsonApiDotNetCore.Repositories
 
                 if (rightValue is IEnumerable<IIdentifiable> rightResources)
                 {
-                    Detach(rightResources.ToArray());
+                    DetachEntities(rightResources.ToArray());
                 }
                 else if (rightValue != null)
                 {
-                    Detach(rightValue);
+                    DetachEntities(rightValue);
                     _dbContext.Entry(rightValue).State = EntityState.Detached;
                 }
             }
         }
         
-        private void Detach(params object[] entities)
+        private void DetachEntities(params object[] entities)
         {
             foreach (var entity in entities)
             {
