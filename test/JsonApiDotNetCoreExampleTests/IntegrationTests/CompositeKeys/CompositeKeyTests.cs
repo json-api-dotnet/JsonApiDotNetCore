@@ -23,6 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddScoped<IResourceRepository<Car, string>, CarRepository>();
+                services.AddScoped<IResourceReadRepository<Car, string>, CarRepository>();
             });
 
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
@@ -301,7 +302,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             // Arrange
             var existingDealership = new Dealership()
             {
-                Destination = "Amsterdam, the Netherlands",
+                Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
                 Inventory = new HashSet<Car>
                 {
                     new Car
@@ -363,7 +364,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             // Arrange
             var existingDealership = new Dealership()
             {
-                Destination = "Amsterdam, the Netherlands"
+                Address = "Dam 1, 1012JS Amsterdam, the Netherlands"
             };
             var existingCar = new Car
             {
@@ -416,7 +417,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             // Arrange
             var existingDealership = new Dealership()
             {
-                Destination = "Amsterdam, the Netherlands",
+                Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
                 Inventory = new HashSet<Car>
                 {
                     new Car
@@ -490,7 +491,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             // Arrange
             var dealership = new Dealership()
             {
-                Destination = "Amsterdam, the Netherlands",
+                Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
                 Inventory = new HashSet<Car>
                 {
                     new Car

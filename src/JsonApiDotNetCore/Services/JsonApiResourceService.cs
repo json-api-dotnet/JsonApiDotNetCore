@@ -263,7 +263,7 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.BeforeUpdateResource(resourceFromRequest);
 
-            TResource resourceFromDatabase = await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes);
+            TResource resourceFromDatabase = await GetPrimaryResourceById(id, TopFieldSelection.OnlyAllAttributes);
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
 
@@ -311,7 +311,7 @@ namespace JsonApiDotNetCore.Services
             AssertRelationshipExists(relationshipName);
 
             await _hookExecutor.BeforeUpdateRelationshipAsync(id,
-                async () => await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes));
+                async () => await GetPrimaryResourceById(id, TopFieldSelection.OnlyAllAttributes));
 
             try
             {
@@ -402,6 +402,11 @@ namespace JsonApiDotNetCore.Services
                 {
                     primaryLayer.Projection.Remove(primaryLayer.Projection.First(p => p.Key is AttrAttribute));
                 }
+            }
+            else if (fieldSelection == TopFieldSelection.OnlyAllAttributes)
+            {
+                primaryLayer.Include = null;
+                primaryLayer.Projection = null;
             }
 
             var primaryResources = await _repository.GetAsync(primaryLayer);
