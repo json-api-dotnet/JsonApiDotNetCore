@@ -201,12 +201,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
         public async Task Can_clear_OneToOne_relationship()
         {
             // Arrange
-            var existingGroup = _fakers.WorkItemGroup.Generate();
-            existingGroup.Color = _fakers.RgbColor.Generate();
+            var existingColor = _fakers.RgbColor.Generate();
+            existingColor.Group = _fakers.WorkItemGroup.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Groups.AddRange(existingGroup);
+                dbContext.RgbColors.AddRange(existingColor);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -215,7 +215,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
                 data = new
                 {
                     type = "rgbColors",
-                    id = existingGroup.Color.StringId,
+                    id = existingColor.StringId,
                     relationships = new
                     {
                         group = new
@@ -226,7 +226,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
                 }
             };
 
-            var route = "/rgbColors/" + existingGroup.Color.StringId;
+            var route = "/rgbColors/" + existingColor.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -238,11 +238,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var groupInDatabase = await dbContext.Groups
-                    .Include(group => group.Color)
-                    .FirstOrDefaultAsync(group => group.Id == existingGroup.Id);
+                var colorInDatabase = await dbContext.RgbColors
+                    .Include(color => color.Group)
+                    .FirstOrDefaultAsync(color => color.Id == existingColor.Id);
                 
-                groupInDatabase.Color.Should().BeNull();
+                colorInDatabase.Group.Should().BeNull();
             });
         }
 
