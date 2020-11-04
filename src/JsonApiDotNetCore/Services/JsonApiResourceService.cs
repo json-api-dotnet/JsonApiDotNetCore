@@ -514,22 +514,8 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        // TODO: two dimensions: preserve clients: yes or no, and attributes: add all or id only 
         private enum TopFieldSelection
         {
-            // TODO: Consider using flags. We have two degrees of freedom: client selection => ignore/preserve and attributes => only-id/all. Is this a use-case where flags make sense?
-            // PreserveClientSelection = 1 << 0,
-            // IgnoreClientSelection = 1 << 1,
-            // AllAttributes = 1 << 2,
-            // OnlyIdAttribute = 1 << 3
-            //
-            // usage:    
-            //              old                        new
-            //        PreserveExisting     -->    PreserveClientSelection
-            //        WithAllAttributes    -->    PreserveClientSelection | AllAttributes
-            //        OnlyAllAttributes    -->    IgnoreClientSelection   | AllAttributes
-            //        OnlyIdAttribute      -->    IgnoreClientSelection   | OnlyIdAttribute
-
             /// <summary>
             /// Discards any included relationships and selects all resource attributes.
             /// </summary>

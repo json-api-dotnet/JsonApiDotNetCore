@@ -13,13 +13,11 @@ namespace JsonApiDotNetCore.Repositories
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IResourceContextProvider _resourceContextProvider;
-        private readonly IResourceFactory _resourceFactory;
 
-        public ResourceRepositoryAccessor(IServiceProvider serviceProvider, IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory)
+        public ResourceRepositoryAccessor(IServiceProvider serviceProvider, IResourceContextProvider resourceContextProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentException(nameof(serviceProvider));
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentException(nameof(serviceProvider));
-            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
         }
 
         /// <inheritdoc />
@@ -28,17 +26,27 @@ namespace JsonApiDotNetCore.Repositories
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
             if (layer == null) throw new ArgumentNullException(nameof(layer));
 
-            dynamic runtimeResourceTypeParameter = _resourceFactory.CreateInstance(resourceType);
-            dynamic runtimeIdTypeParameter = ((IIdentifiable)runtimeResourceTypeParameter).GetTypedId();
-
-            dynamic repository = GetRepository(runtimeResourceTypeParameter, runtimeIdTypeParameter);
-
+            dynamic repository = GetRepository(resourceType);
             return (IReadOnlyCollection<IIdentifiable>) await repository.GetAsync(layer);
         }
 
-        private object GetRepository<TResource, TId>(TResource _, TId __) where TResource : class, IIdentifiable<TId>
+        protected object GetRepository(Type resourceType)
         {
-            return _serviceProvider.GetRequiredService<IResourceRepository<TResource,TId>>();
+            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+
+            if (resourceContext.IdentityType == typeof(int))
+            {
+                var intRepositoryType = typeof(IResourceReadRepository<>).MakeGenericType(resourceContext.ResourceType);
+                var intRepository = _serviceProvider.GetService(intRepositoryType);
+
+                if (intRepository != null)
+                {
+                    return intRepository;
+                }
+            }
+
+            var resourceDefinitionType = typeof(IResourceReadRepository<,>).MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
+            return _serviceProvider.GetRequiredService(resourceDefinitionType);
         }
     }
 }

@@ -295,14 +295,13 @@ namespace JsonApiDotNetCore.Repositories
 
         private async Task ApplyRelationshipUpdate(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
         {
-            // Ensures the new relationship assignment will not result in entities being tracked more than once.
             var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
     
             if (ShouldLoadInverseRelationship(relationship, trackedValueToAssign))
             {
                 var entityEntry = _dbContext.Entry(trackedValueToAssign); 
                 var inversePropertyName = relationship.InverseNavigationProperty.Name;
-                // TODO: Just clearing the relationship should be enough rather than first loading the related entity in memory.   
+  
                 await entityEntry.Reference(inversePropertyName).LoadAsync();
             }
             
@@ -339,23 +338,13 @@ namespace JsonApiDotNetCore.Repositories
             resource = (IIdentifiable)_dbContext.GetTrackedIdentifiable(resource);
             if (resource != null)
             {
-                DetachEntities(resource);
+                DetachEntities(new [] { resource });
                 DetachRelationships(resource);
             }
         }
 
         private async Task RemoveAlreadyRelatedResourcesFromAssignment(HasManyThroughAttribute relationship, TId primaryResourceId, ISet<IIdentifiable> secondaryResourceIds)
         {
-            // // Unfortunately this does not work because we cannot guarantee a inverse navigation to exist. 
-            //
-            // var inverseRelationship = _resourceGraph.GetResourceContext(relationship.RightType).Relationships.FirstOrDefault(rightRelationship =>
-            //     rightRelationship is HasManyThroughAttribute rightHasManyThrough &&
-            //     rightHasManyThrough.ThroughType == relationship.ThroughType);
-            //
-            // var typedIds = secondaryResourceIds.Select(resource => resource.GetTypedId());
-            // var rightResources = await _getResourcesByIdsService.Get(relationship.RightType, typedIds, inverseRelationship);
-            
-
             // TODO: Finalize this.
             var throughEntitiesFilter = new ThroughEntitiesFilter(_dbContext, relationship);
             var typedRightIds = secondaryResourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
@@ -481,7 +470,7 @@ namespace JsonApiDotNetCore.Repositories
             relationship.SetValue(leftResource, placeholderRightResource);
             _dbContext.Entry(leftResource).DetectChanges();
             
-            DetachEntities(placeholderRightResource);
+            DetachEntities(new [] { placeholderRightResource });
         }
 
         private void EnsurePrimaryKeyPropertiesAreNotNull(object entity)
@@ -553,14 +542,6 @@ namespace JsonApiDotNetCore.Repositories
             return TypeHelper.CopyToTypedCollection(rightResourcesTracked, rightCollectionType);
         }
 
-        // TODO: This does not perform well. Currently related entities are loaded into memory,
-        // and when SaveChangesAsync() is called later in the pipeline, the following happens:
-        //    - FKs of records that need to be detached are nulled out one by one, one query each (or the join table entries are deleted one by one in case of many-to-many).
-        //    - FKs records that need to be attached are updated one by one (or join table entries are created one by one).
-        // Possible approaches forward:
-        //    - Writing raw sql to get around this.
-        //    - Throw when a certain limit of update statements is reached to ensure the developer is aware of these performance issues.
-        //    - Include a 3rd party library that handles batching.
         /// <summary>
         /// Gets the primary resource by id and performs side-loading of data such that EF Core correctly performs complete replacements of relationships. 
         /// </summary>
@@ -593,7 +574,7 @@ namespace JsonApiDotNetCore.Repositories
 
             if (primaryResource == null)
             {
-                throw new DataStoreUpdateException($"Resource of type {typeof(TResource)} with id ${id} does not exist.");
+                throw new DataStoreUpdateException($"Resource of type '{typeof(TResource)}' with id '{id}' does not exist.");
             }
 
             return primaryResource;
@@ -606,7 +587,7 @@ namespace JsonApiDotNetCore.Repositories
 
             if (secondaryResourcesFromDatabase.Count < secondaryResourceIds.Count)
             {
-                throw new DataStoreUpdateException($"One or more related resources of type {relationship.RightType} do not exist.");
+                throw new DataStoreUpdateException($"One or more related resources of type '{relationship.RightType}' do not exist.");
             }
 
             DetachEntities(secondaryResourcesFromDatabase.ToArray());
@@ -624,13 +605,13 @@ namespace JsonApiDotNetCore.Repositories
                 }
                 else if (rightValue != null)
                 {
-                    DetachEntities(rightValue);
+                    DetachEntities(new [] { rightValue });
                     _dbContext.Entry(rightValue).State = EntityState.Detached;
                 }
             }
         }
         
-        private void DetachEntities(params object[] entities)
+        private void DetachEntities(IEnumerable<object> entities)
         {
             foreach (var entity in entities)
             {
