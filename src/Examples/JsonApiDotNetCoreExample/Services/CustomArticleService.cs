@@ -15,7 +15,7 @@ namespace JsonApiDotNetCoreExample.Services
     {
         public CustomArticleService(
             IResourceRepository<Article> repository,
-            IResourceRepositoryAccessor repositoryAccessor,
+            IGetResourcesByIds getResourcesById,
             IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext,
             IJsonApiOptions options,
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExample.Services
             ITargetedFields targetedFields,
             IResourceContextProvider resourceContextProvider,
             IResourceHookExecutorFacade hookExecutor)
-            : base(repository, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory,
+            : base(repository, getResourcesById, queryLayerComposer, paginationContext, options, loggerFactory,
                 request, resourceChangeTracker, resourceFactory, targetedFields, resourceContextProvider, hookExecutor)
         { }
 

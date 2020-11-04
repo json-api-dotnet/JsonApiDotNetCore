@@ -191,10 +191,11 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
+            var resource = new Resource();
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.PatchAsync(id, It.IsAny<Resource>()));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.PatchAsync(id, resource));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);

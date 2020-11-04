@@ -41,6 +41,7 @@ namespace DiscoveryTests
             _services.AddScoped(_ => new Mock<IQueryLayerComposer>().Object);
             _services.AddScoped(_ => new Mock<IResourceRepositoryAccessor>().Object);
             _services.AddScoped(_ => new Mock<IResourceHookExecutorFacade>().Object);
+            _services.AddScoped(_ => new Mock<IGetResourcesByIds>().Object);
 
             _resourceGraphBuilder = new ResourceGraphBuilder(_options, NullLoggerFactory.Instance);
         }
@@ -148,7 +149,7 @@ namespace DiscoveryTests
         {
             public TestModelService(
                 IResourceRepository<TestModel> repository,
-                IResourceRepositoryAccessor repositoryAccessor,
+                IGetResourcesByIds getResourcesByIds,
                 IQueryLayerComposer queryLayerComposer,
                 IPaginationContext paginationContext,
                 IJsonApiOptions options,
@@ -159,7 +160,7 @@ namespace DiscoveryTests
                 ITargetedFields targetedFields,
                 IResourceContextProvider resourceContextProvider,
                 IResourceHookExecutorFacade hookExecutor)
-                : base(repository, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory,
+                : base(repository, getResourcesByIds, queryLayerComposer, paginationContext, options, loggerFactory,
                     request, resourceChangeTracker, resourceFactory, targetedFields, resourceContextProvider,
                     hookExecutor)
             {
@@ -174,8 +175,9 @@ namespace DiscoveryTests
                 IResourceGraph resourceGraph,
                 IResourceFactory resourceFactory,
                 IEnumerable<IQueryConstraintProvider> constraintProviders,
+                IGetResourcesByIds getResourcesByIds,
                 ILoggerFactory loggerFactory)
-                : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory)
+                : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, getResourcesByIds, loggerFactory)
             { }
         }
         

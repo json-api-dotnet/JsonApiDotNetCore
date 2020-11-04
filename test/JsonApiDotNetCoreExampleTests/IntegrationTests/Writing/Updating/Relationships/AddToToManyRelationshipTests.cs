@@ -366,12 +366,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(2);
 
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'userAccounts' with ID '88888888' being assigned to relationship 'subscribers' does not exist.");
+            responseDocument.Errors[0].Title.Should().Be("A related resource does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be("Related resource of type 'userAccounts' with ID '88888888' in relationship 'subscribers' does not exist.");
 
             responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[1].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[1].Detail.Should().Be("Resource of type 'userAccounts' with ID '99999999' being assigned to relationship 'subscribers' does not exist.");
+            responseDocument.Errors[1].Title.Should().Be("A related resource does not exist.");
+            responseDocument.Errors[1].Detail.Should().Be("Related resource of type 'userAccounts' with ID '99999999' in relationship 'subscribers' does not exist.");
         }
 
         [Fact]
@@ -414,12 +414,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors.Should().HaveCount(2);
 
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'workTags' with ID '88888888' being assigned to relationship 'tags' does not exist.");
+            responseDocument.Errors[0].Title.Should().Be("A related resource does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be("Related resource of type 'workTags' with ID '88888888' in relationship 'tags' does not exist.");
 
             responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[1].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[1].Detail.Should().Be("Resource of type 'workTags' with ID '99999999' being assigned to relationship 'tags' does not exist.");
+            responseDocument.Errors[1].Title.Should().Be("A related resource does not exist.");
+            responseDocument.Errors[1].Detail.Should().Be("Related resource of type 'workTags' with ID '99999999' in relationship 'tags' does not exist.");
         }
 
         [Fact]

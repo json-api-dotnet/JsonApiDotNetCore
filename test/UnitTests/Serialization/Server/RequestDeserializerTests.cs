@@ -25,7 +25,7 @@ namespace UnitTests.Serialization.Server
         public void DeserializeAttributes_VariousUpdatedMembers_RegistersTargetedFields()
         {
             // Arrange
-            SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);
+            SetupFieldsManager(out HashSet<AttrAttribute> attributesToUpdate, out HashSet<RelationshipAttribute> relationshipsToUpdate);
             Document content = CreateTestResourceDocument();
             var body = JsonConvert.SerializeObject(content);
 
@@ -41,7 +41,7 @@ namespace UnitTests.Serialization.Server
         public void DeserializeRelationships_MultipleDependentRelationships_RegistersUpdatedRelationships()
         {
             // Arrange
-            SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);
+            SetupFieldsManager(out HashSet<AttrAttribute> attributesToUpdate, out HashSet<RelationshipAttribute> relationshipsToUpdate);
             var content = CreateDocumentWithRelationships("multiPrincipals");
             content.SingleData.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOneDependents"));
             content.SingleData.Relationships.Add("emptyToOne", CreateRelationshipData());
@@ -61,7 +61,7 @@ namespace UnitTests.Serialization.Server
         public void DeserializeRelationships_MultiplePrincipalRelationships_RegistersUpdatedRelationships()
         {
             // Arrange
-            SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);
+            SetupFieldsManager(out HashSet<AttrAttribute> attributesToUpdate, out HashSet<RelationshipAttribute> relationshipsToUpdate);
             var content = CreateDocumentWithRelationships("multiDependents");
             content.SingleData.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOnePrincipals"));
             content.SingleData.Relationships.Add("emptyToOne", CreateRelationshipData());
@@ -77,10 +77,10 @@ namespace UnitTests.Serialization.Server
             Assert.Empty(attributesToUpdate);
         }
 
-        private void SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate)
+        private void SetupFieldsManager(out HashSet<AttrAttribute> attributesToUpdate, out HashSet<RelationshipAttribute> relationshipsToUpdate)
         {
-            attributesToUpdate = new List<AttrAttribute>();
-            relationshipsToUpdate = new List<RelationshipAttribute>();
+            attributesToUpdate = new HashSet<AttrAttribute>();
+            relationshipsToUpdate = new HashSet<RelationshipAttribute>();
             _fieldsManagerMock.Setup(m => m.Attributes).Returns(attributesToUpdate);
             _fieldsManagerMock.Setup(m => m.Relationships).Returns(relationshipsToUpdate);
         }

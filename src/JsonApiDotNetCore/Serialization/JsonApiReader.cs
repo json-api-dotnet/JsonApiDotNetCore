@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -56,10 +57,9 @@ namespace JsonApiDotNetCore.Serialization
                 {
                     model = _deserializer.Deserialize(body);
                 }
-                catch (InvalidRequestBodyException exception)
+                catch (JsonApiSerializationException exception)
                 {
-                    exception.SetRequestBody(body);
-                    throw;
+                    throw new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, body, exception);
                 }
                 catch (Exception exception)
                 {
@@ -107,6 +107,12 @@ namespace JsonApiDotNetCore.Serialization
             {
                 ValidateRequestIncludesId(model, body);
                 ValidatePrimaryIdValue(model, httpRequest.Path);
+            }
+
+            if (IsPatchRequestForToManyRelationship(httpRequest.Method) && model == null)
+            {
+                throw new InvalidRequestBodyException("Expected data[] for to-many relationship.", 
+                    $"Expected data[] for '{_request.Relationship.PublicName}' relationship.", body);
             }
         }
 
@@ -203,6 +209,12 @@ namespace JsonApiDotNetCore.Serialization
 
             id = null;
             return false;
+        }
+
+        private bool IsPatchRequestForToManyRelationship(string requestMethod)
+        {
+            return requestMethod == HttpMethods.Patch && _request.Kind == EndpointKind.Relationship &&
+                   _request.Relationship is HasManyAttribute;
         }
     }
 }

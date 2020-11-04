@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Errors
     public sealed class InvalidRequestBodyException : JsonApiException
     {
         private readonly string _details;
-        private string _requestBody;
+        private readonly string _requestBody;
 
         public InvalidRequestBodyException(string reason, string details, string requestBody, Exception innerException = null)
             : base(new Error(HttpStatusCode.UnprocessableEntity)
@@ -41,12 +41,6 @@ namespace JsonApiDotNetCore.Errors
             }
 
             Error.Detail = text;
-        }
-
-        public void SetRequestBody(string requestBody)
-        {
-            _requestBody = requestBody;
-            UpdateErrorDetail();
         }
     }
 }

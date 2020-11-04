@@ -13,13 +13,13 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using IResourceFactory = JsonApiDotNetCore.Resources.IResourceFactory;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace UnitTests.ResourceHooks
@@ -369,7 +369,15 @@ namespace UnitTests.ResourceHooks
             var resourceFactory = new ResourceFactory(serviceProvider);
             IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
             var targetedFields = new TargetedFields();
-            return new EntityFrameworkCoreRepository<TModel, int>(targetedFields, resolver, resourceGraph, resourceFactory, new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
+            var getResourcesByIds = new Mock<IGetResourcesByIds>().Object;
+            return new EntityFrameworkCoreRepository<TModel, int>(
+                targetedFields,
+                resolver,
+                resourceGraph,
+                resourceFactory,
+                new List<IQueryConstraintProvider>(),
+                getResourcesByIds,
+                NullLoggerFactory.Instance);
         }
 
         private IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>

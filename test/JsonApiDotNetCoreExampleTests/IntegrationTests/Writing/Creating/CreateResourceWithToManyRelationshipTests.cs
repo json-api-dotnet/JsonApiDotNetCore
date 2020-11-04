@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
@@ -480,12 +479,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors.Should().HaveCount(2);
 
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'workItems' with ID '12345678' being assigned to relationship 'assignedItems' does not exist.");
+            responseDocument.Errors[0].Title.Should().Be("A related resource does not exist.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Related resource of type 'workItems' with ID '12345678' in relationship 'assignedItems' does not exist.");
 
             responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[1].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[1].Detail.Should().StartWith("Resource of type 'workItems' with ID '87654321' being assigned to relationship 'assignedItems' does not exist.");
+            responseDocument.Errors[1].Title.Should().Be("A related resource does not exist.");
+            responseDocument.Errors[1].Detail.Should().StartWith("Related resource of type 'workItems' with ID '87654321' in relationship 'assignedItems' does not exist.");
         }
 
         [Fact]
@@ -625,7 +624,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] for to-many relationship.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected data[] for 'subscribers' relationship. - Request body: <<");
         }
 
         [Fact]
@@ -658,7 +657,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] for to-many relationship.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected data[] for 'tags' relationship. - Request body: <<");
         }
     }
 }

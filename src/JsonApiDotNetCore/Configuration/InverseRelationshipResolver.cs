@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +40,7 @@ namespace JsonApiDotNetCore.Configuration
                 {
                     foreach (var relationship in resourceContext.Relationships)
                     {
-                        if (!(relationship is HasManyThroughAttribute))
+                        if ( !(relationship is HasManyThroughAttribute))
                         {
                             INavigation inverseNavigation = entityType.FindNavigation(relationship.Property.Name)?.FindInverse();
                             relationship.InverseNavigationProperty = inverseNavigation?.PropertyInfo;

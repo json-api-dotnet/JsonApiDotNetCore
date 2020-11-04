@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<TId>
     {
         private readonly IResourceRepository<TResource, TId> _repository;
-        private readonly IResourceRepositoryAccessor _repositoryAccessor;
+        private readonly IGetResourcesByIds _getResourcesByIds;
         private readonly IQueryLayerComposer _queryLayerComposer;
         private readonly IPaginationContext _paginationContext;
         private readonly IJsonApiOptions _options;
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Services
 
         public JsonApiResourceService(
             IResourceRepository<TResource, TId> repository,
-            IResourceRepositoryAccessor repositoryAccessor,
+            IGetResourcesByIds getResourcesByIds,
             IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext,
             IJsonApiOptions options,
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Services
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _repositoryAccessor = repositoryAccessor ?? throw new ArgumentNullException(nameof(repositoryAccessor));
+            _getResourcesByIds = getResourcesByIds ?? throw new ArgumentNullException(nameof(getResourcesByIds));
             _queryLayerComposer = queryLayerComposer ?? throw new ArgumentNullException(nameof(queryLayerComposer));
             _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
             _options = options ?? throw new ArgumentNullException(nameof(options));
@@ -182,12 +182,6 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            foreach (var hasManyRelationship in _targetedFields.Relationships.OfType<HasManyAttribute>())
-            {
-                var rightResources = hasManyRelationship.GetValue(resource);
-                AssertHasManyRelationshipValueIsNotNull(rightResources);
-            }
-
             var resourceFromRequest = resource;
             _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
 
@@ -262,12 +256,6 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {id, resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            foreach (var hasManyRelationship in _targetedFields.Relationships.OfType<HasManyAttribute>())
-            {
-                var rightResources = hasManyRelationship.GetValue(resource);
-                AssertHasManyRelationshipValueIsNotNull(rightResources);
-            }
-
             AssertResourceIdIsNotTargeted();
 
             var resourceFromRequest = resource;
@@ -281,7 +269,7 @@ namespace JsonApiDotNetCore.Services
 
             try
             {
-                await _repository.UpdateAsync(resourceFromRequest, resourceFromDatabase);
+                await _repository.UpdateAsync(resourceFromRequest);
             }
             catch (DataStoreUpdateException)
             {
@@ -289,6 +277,7 @@ namespace JsonApiDotNetCore.Services
                 throw;
             }
 
+            // TODO: Call with OnlyAllAttributes (impl: clear all projections => selects all fields, no includes and all eager-loads)
             TResource afterResourceFromDatabase = await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes);
 
             _hookExecutor.AfterUpdateResource(afterResourceFromDatabase);
@@ -320,11 +309,6 @@ namespace JsonApiDotNetCore.Services
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
-
-            if (_request.Relationship is HasManyAttribute)
-            {
-                AssertHasManyRelationshipValueIsNotNull(secondaryResourceIds);
-            }
 
             await _hookExecutor.BeforeUpdateRelationshipAsync(id,
                 async () => await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes));
@@ -451,7 +435,7 @@ namespace JsonApiDotNetCore.Services
 
             if (missingResources.Any())
             {
-                throw new ResourcesInRelationshipAssignmentsNotFoundException(missingResources);
+                throw new SecondaryResourcesNotFoundException(missingResources);
             }
         }
 
@@ -462,7 +446,7 @@ namespace JsonApiDotNetCore.Services
             var missingResources = await GetMissingResourcesInRelationshipAsync(relationship, rightResources).ToListAsync();
             if (missingResources.Any())
             {
-                throw new ResourcesInRelationshipAssignmentsNotFoundException(missingResources);
+                throw new SecondaryResourcesNotFoundException(missingResources);
             }
         }
 
@@ -471,9 +455,10 @@ namespace JsonApiDotNetCore.Services
         {
             if (rightResources.Any())
             {
-                var rightIds = rightResources.Select(resource => resource.GetTypedId());
-                var existingResourceStringIds = await GetSecondaryResourceStringIdsAsync(relationship.RightType, rightIds);
+                var rightIds = rightResources.Select(resource => resource.GetTypedId()).ToHashSet();
+                var existingRightResources = await _getResourcesByIds.Get(relationship.RightType, rightIds);
 
+                var existingResourceStringIds = existingRightResources.Select(resource => resource.StringId).ToArray();
                 foreach (var rightResource in rightResources)
                 {
                     if (existingResourceStringIds.Contains(rightResource.StringId))
@@ -504,37 +489,6 @@ namespace JsonApiDotNetCore.Services
             return Array.Empty<IIdentifiable>();
         }
 
-        private async Task<ICollection<string>> GetSecondaryResourceStringIdsAsync(Type resourceType, IEnumerable<object> typedIds)
-        {
-            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
-
-            var idValues = typedIds.Select(id => id.ToString()).ToArray();
-            var idsFilter = CreateFilterByIds(idValues, resourceContext);
-
-            var queryLayer = new QueryLayer(resourceContext)
-            {
-                Filter = idsFilter
-            };
-
-            var resources = await _repositoryAccessor.GetAsync(resourceType, queryLayer);
-            return resources.Select(resource => resource.StringId).ToArray();
-        }
-
-        private FilterExpression CreateFilterByIds(ICollection<string> ids, ResourceContext resourceContext)
-        {
-            var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
-            var idChain = new ResourceFieldChainExpression(idAttribute);
-
-            if (ids.Count == 1)
-            {
-                var constant = new LiteralConstantExpression(ids.Single());
-                return new ComparisonExpression(ComparisonOperator.Equals, idChain, constant);
-            }
-
-            var constants = ids.Select(id => new LiteralConstantExpression(id)).ToList();
-            return new EqualsAnyOfExpression(idChain, constants);
-        }
-
         private void AssertPrimaryResourceExists(TResource resource)
         {
             if (resource == null)
@@ -560,18 +514,26 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private void AssertHasManyRelationshipValueIsNotNull(object secondaryResourceIds)
-        {
-            if (secondaryResourceIds == null)
-            {
-                // TODO: Usage of InvalidRequestBodyException (here and in BaseJsonApiController) is probably not the best choice, because they do not contain request body.
-                // We should either make it include the request body -or- throw a different exception.
-                throw new InvalidRequestBodyException("Expected data[] for to-many relationship.", null, null);
-            }
-        }
-
+        // TODO: two dimensions: preserve clients: yes or no, and attributes: add all or id only 
         private enum TopFieldSelection
         {
+            // TODO: Consider using flags. We have two degrees of freedom: client selection => ignore/preserve and attributes => only-id/all. Is this a use-case where flags make sense?
+            // PreserveClientSelection = 1 << 0,
+            // IgnoreClientSelection = 1 << 1,
+            // AllAttributes = 1 << 2,
+            // OnlyIdAttribute = 1 << 3
+            //
+            // usage:    
+            //              old                        new
+            //        PreserveExisting     -->    PreserveClientSelection
+            //        WithAllAttributes    -->    PreserveClientSelection | AllAttributes
+            //        OnlyAllAttributes    -->    IgnoreClientSelection   | AllAttributes
+            //        OnlyIdAttribute      -->    IgnoreClientSelection   | OnlyIdAttribute
+
+            /// <summary>
+            /// Discards any included relationships and selects all resource attributes.
+            /// </summary>
+            OnlyAllAttributes,
             /// <summary>
             /// Preserves included relationships, but selects all resource attributes.
             /// </summary>
@@ -597,7 +559,7 @@ namespace JsonApiDotNetCore.Services
     {
         public JsonApiResourceService(
             IResourceRepository<TResource> repository,
-            IResourceRepositoryAccessor repositoryAccessor,
+            IGetResourcesByIds getResourcesByIds,
             IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext,
             IJsonApiOptions options,
@@ -608,7 +570,7 @@ namespace JsonApiDotNetCore.Services
             ITargetedFields targetedFields,
             IResourceContextProvider resourceContextProvider,
             IResourceHookExecutorFacade hookExecutor)
-            : base(repository, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory,
+            : base(repository, getResourcesByIds, queryLayerComposer, paginationContext, options, loggerFactory,
                 request, resourceChangeTracker, resourceFactory, targetedFields, resourceContextProvider, hookExecutor)
         { }
     }

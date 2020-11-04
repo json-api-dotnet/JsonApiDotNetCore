@@ -421,8 +421,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("A resource being assigned to a relationship does not exist.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Resource of type 'userAccounts' with ID '12345678' being assigned to relationship 'assignee' does not exist.");
+            responseDocument.Errors[0].Title.Should().Be("A related resource does not exist.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Related resource of type 'userAccounts' with ID '12345678' in relationship 'assignee' does not exist.");
         }
 
         [Fact]

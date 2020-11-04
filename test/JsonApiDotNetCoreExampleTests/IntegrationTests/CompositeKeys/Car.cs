@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -37,5 +38,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
         [HasOne]
         public Engine Engine { get; set; }
+
+        [HasMany]
+        public ISet<Journey> Journeys { get; set; }
     }
 }

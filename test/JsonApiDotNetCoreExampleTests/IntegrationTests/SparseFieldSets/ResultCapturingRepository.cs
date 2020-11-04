@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
@@ -23,9 +24,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             IResourceFactory resourceFactory,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             ILoggerFactory loggerFactory,
+            IGetResourcesByIds getResourcesByIds,
             ResourceCaptureStore captureStore)
             : base(targetedFields, contextResolver, resourceGraph, resourceFactory,
-                constraintProviders, loggerFactory)
+                constraintProviders, getResourcesByIds, loggerFactory)
         {
             _captureStore = captureStore;
         }

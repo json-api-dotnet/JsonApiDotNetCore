@@ -347,7 +347,7 @@ namespace UnitTests.Serialization.Deserializer
         public void DeserializeRelationships_EmptyOneToManyDependent_NavigationIsNull()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents");
+            var content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents", isToManyData: true);
             var body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -355,7 +355,7 @@ namespace UnitTests.Serialization.Deserializer
 
             // Assert
             Assert.Equal(1, result.Id);
-            Assert.Null(result.Dependents);
+            Assert.Empty(result.Dependents);
             Assert.Null(result.AttributeMember);
         }
 

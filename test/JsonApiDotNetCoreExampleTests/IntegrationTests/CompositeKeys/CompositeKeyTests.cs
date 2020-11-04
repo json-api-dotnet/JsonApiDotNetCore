@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -177,7 +179,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         }
 
         [Fact]
-        public async Task Can_remove_relationship_from_resource_with_composite_foreign_key()
+        public async Task Can_remove_ToOne_relationship_from_resource_with_composite_foreign_key()
         {
             // Arrange
             var engine = new Engine
@@ -233,8 +235,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             });
         }
 
+
         [Fact]
-        public async Task Can_assign_relationship_to_resource_with_composite_foreign_key()
+        public async Task Can_assign_ToOne_relationship_to_resource_with_composite_foreign_key()
         {
             // Arrange
             var car = new Car

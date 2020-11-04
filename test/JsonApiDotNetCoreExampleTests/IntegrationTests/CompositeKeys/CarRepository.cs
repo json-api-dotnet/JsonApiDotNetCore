@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
@@ -15,8 +16,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
         public CarRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver,
             IResourceGraph resourceGraph, IResourceFactory resourceFactory,
-            IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory)
+            IEnumerable<IQueryConstraintProvider> constraintProviders, IGetResourcesByIds getResourcesByIds,
+            ILoggerFactory loggerFactory)
+            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, getResourcesByIds, loggerFactory)
         {
             _resourceGraph = resourceGraph;
         }

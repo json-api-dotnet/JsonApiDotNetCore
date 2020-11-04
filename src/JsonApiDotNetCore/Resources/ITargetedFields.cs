@@ -11,11 +11,11 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// List of attributes that are targeted by a request.
         /// </summary>
-        IList<AttrAttribute> Attributes { get; set; }
+        ISet<AttrAttribute> Attributes { get; set; }
 
         /// <summary>
         /// List of relationships that are targeted by a request.
         /// </summary>
-        IList<RelationshipAttribute> Relationships { get; set; }
+        ISet<RelationshipAttribute> Relationships { get; set; }
     }
 }

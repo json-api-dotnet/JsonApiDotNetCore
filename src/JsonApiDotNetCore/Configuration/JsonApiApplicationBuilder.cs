@@ -191,6 +191,8 @@ namespace JsonApiDotNetCore.Configuration
         {
             RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ServiceInterfaces, 
                 typeof(JsonApiResourceService<>), typeof(JsonApiResourceService<,>));
+
+            _services.AddScoped<IGetResourcesByIds, GetResourcesByIds>();
         }
 
         private void RegisterImplementationForOpenInterfaces(HashSet<Type> openGenericInterfaces, Type intImplementation, Type implementation)
