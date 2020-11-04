@@ -593,7 +593,7 @@ namespace JsonApiDotNetCore.Repositories
 
             if (primaryResource == null)
             {
-                throw new DataStoreUpdateException();
+                throw new DataStoreUpdateException($"Resource of type {typeof(TResource)} with id ${id} does not exist.");
             }
 
             return primaryResource;
@@ -606,7 +606,7 @@ namespace JsonApiDotNetCore.Repositories
 
             if (secondaryResourcesFromDatabase.Count < secondaryResourceIds.Count)
             {
-                throw new DataStoreUpdateException();
+                throw new DataStoreUpdateException($"One or more related resources of type {relationship.RightType} do not exist.");
             }
         }
 
