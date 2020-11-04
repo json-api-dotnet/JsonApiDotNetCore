@@ -30,7 +30,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         }
 
         [Fact]
-        public async Task Can_filter_on_composite_key_in_primary_resources()
+        public async Task Can_filter_by_ID_in_primary_resources()
         {
             // Arrange
             var car = new Car
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         }
 
         [Fact]
-        public async Task Can_sort_on_composite_primary_key()
+        public async Task Can_sort_by_ID()
         {
             // Arrange
             var car = new Car
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         }
 
         [Fact]
-        public async Task Can_select_composite_primary_key()
+        public async Task Can_select_ID()
         {
             // Arrange
             var car = new Car
@@ -146,7 +146,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         }
 
         [Fact]
-        public async Task Can_create_resource_with_composite_primary_key()
+        public async Task Can_create_resource()
         {
             // Arrange
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -179,7 +179,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         }
 
         [Fact]
-        public async Task Can_remove_ToOne_relationship_from_resource_with_composite_foreign_key()
+        public async Task Can_remove_OneToOne_relationship()
         {
             // Arrange
             var engine = new Engine
@@ -235,9 +235,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             });
         }
 
-
         [Fact]
-        public async Task Can_assign_ToOne_relationship_to_resource_with_composite_foreign_key()
+        public async Task Can_assign_OneToOne_relationship()
         {
             // Arrange
             var car = new Car
@@ -300,7 +299,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         }
 
         [Fact]
-        public async Task Can_delete_resource_with_composite_primary_key()
+        public async Task Can_delete_resource()
         {
             // Arrange
             var car = new Car
