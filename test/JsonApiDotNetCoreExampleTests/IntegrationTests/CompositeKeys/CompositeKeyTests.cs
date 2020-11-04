@@ -179,7 +179,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         }
 
         [Fact]
-        public async Task Can_remove_OneToOne_relationship()
+        public async Task Can_remove_OneToOne_relationship_with_composite_key_on_right_side()
         {
             // Arrange
             var engine = new Engine
@@ -236,7 +236,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         }
 
         [Fact]
-        public async Task Can_assign_OneToOne_relationship()
+        public async Task Can_assign_OneToOne_relationship_with_composite_key_on_right_side()
         {
             // Arrange
             var car = new Car
@@ -296,6 +296,76 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 engineInDatabase.Car.Should().NotBeNull();
                 engineInDatabase.Car.Id.Should().Be(car.StringId);
             });
+        }
+
+        [Fact(Skip = "TODO: Write this test")]
+        public async Task Can_remove_from_OneToMany_relationship_with_composite_key_on_right_side()
+        {
+            // Arrange
+            var dealership = new Journey()
+            {
+                Destination = "Amsterda, the Netherlands",
+                Car = 
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<Car>();
+                dbContext.Dealerships.Add(dealership);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "dealerships",
+                    id = dealership.StringId,
+                    relationships = new
+                    {
+                        cars = new
+                        {
+                            data = new
+                            {
+                                type = "car",
+                                id = "123:AA-BB-11"
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/dealerships/" + dealership.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var dealershipInDatabase = await dbContext.Dealerships
+                    .Include(d => dealership.Cars)
+                    .FirstOrDefaultAsync(d => d.Id == dealership.Id);
+
+                dealershipInDatabase.Should().NotBeNull();
+                dealershipInDatabase.Cars.Should().ContainSingle(car => car.Id == dealership.Cars.ElementAt(1).Id);
+            });
+        }
+
+        [Fact(Skip = "TODO: Write this test")]
+        public async Task Can_add_to_OneToMany_relationship_with_composite_key_on_right_side()
+        {
+
+        }
+
+        [Fact(Skip = "TODO: Write this test")]
+        public async Task Cannot_add_to_ManyToOne_relationship_with_composite_key_on_left_side_for_missing_relationship_ID()
+        {
+
         }
 
         [Fact]
