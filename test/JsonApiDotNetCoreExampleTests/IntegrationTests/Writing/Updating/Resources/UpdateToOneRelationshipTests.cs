@@ -198,6 +198,55 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
         }
 
         [Fact]
+        public async Task Can_clear_OneToOne_relationship()
+        {
+            // Arrange
+            var existingGroup = _fakers.WorkItemGroup.Generate();
+            existingGroup.Color = _fakers.RgbColor.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Groups.AddRange(existingGroup);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "rgbColors",
+                    id = existingGroup.Color.StringId,
+                    relationships = new
+                    {
+                        group = new
+                        {
+                            data = (object)null
+                        }
+                    }
+                }
+            };
+
+            var route = "/rgbColors/" + existingGroup.Color.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var groupInDatabase = await dbContext.Groups
+                    .Include(group => group.Color)
+                    .FirstOrDefaultAsync(group => group.Id == existingGroup.Id);
+                
+                groupInDatabase.Color.Should().BeNull();
+            });
+        }
+
+        [Fact]
         public async Task Can_replace_ManyToOne_relationship()
         {
             // Arrange
