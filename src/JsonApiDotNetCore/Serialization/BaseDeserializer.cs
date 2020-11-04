@@ -186,6 +186,12 @@ namespace JsonApiDotNetCore.Serialization
             HasOneAttribute hasOneRelationship,
             RelationshipEntry relationshipData)
         {
+            if (relationshipData.ManyData != null)
+            {
+                throw new JsonApiSerializationException("Expected single data for to-one relationship.", 
+                    $"Expected single data for '{hasOneRelationship.PublicName}' relationship.");
+            }
+
             var rio = (ResourceIdentifierObject)relationshipData.Data;
             var relatedId = rio?.Id;
 

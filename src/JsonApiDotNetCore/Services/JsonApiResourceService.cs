@@ -277,7 +277,6 @@ namespace JsonApiDotNetCore.Services
                 throw;
             }
 
-            // TODO: Call with OnlyAllAttributes (impl: clear all projections => selects all fields, no includes and all eager-loads)
             TResource afterResourceFromDatabase = await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes);
 
             _hookExecutor.AfterUpdateResource(afterResourceFromDatabase);
@@ -311,7 +310,7 @@ namespace JsonApiDotNetCore.Services
             AssertRelationshipExists(relationshipName);
 
             await _hookExecutor.BeforeUpdateRelationshipAsync(id,
-                async () => await GetPrimaryResourceById(id, TopFieldSelection.OnlyAllAttributes));
+                async () => await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes));
 
             try
             {

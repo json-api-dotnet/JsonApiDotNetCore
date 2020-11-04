@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 using UnitTests.TestModels;
@@ -216,6 +217,30 @@ namespace UnitTests.Serialization.Deserializer
         }
 
         [Fact]
+        public void DeserializeRelationship_SingleDataForToOneRelationship_CannotDeserialize()
+        {
+            // Arrange
+            var content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents");
+            content.SingleData.Relationships["dependents"] = new RelationshipEntry { Data = new ResourceIdentifierObject { Type = "Dependents", Id = "1"  } };
+            var body = JsonConvert.SerializeObject(content);
+
+            // Act, assert
+            Assert.Throws<JsonApiSerializationException>(() => _deserializer.Deserialize(body));
+        }
+
+        [Fact]
+        public void DeserializeRelationship_ManyDataForToManyRelationship_CannotDeserialize()
+        {
+            // Arrange
+            var content = CreateDocumentWithRelationships("oneToOnePrincipals", "dependent");
+            content.SingleData.Relationships["dependent"] = new RelationshipEntry { Data = new List<ResourceIdentifierObject> { new ResourceIdentifierObject { Type = "Dependent", Id = "1"  } }};
+            var body = JsonConvert.SerializeObject(content);
+
+            // Act, assert
+            Assert.Throws<JsonApiSerializationException>(() => _deserializer.Deserialize(body));
+        }
+
+        [Fact]
         public void DeserializeRelationships_EmptyOneToOneDependent_NavigationPropertyIsNull()
         {
             // Arrange
@@ -263,7 +288,7 @@ namespace UnitTests.Serialization.Deserializer
         }
 
         [Fact]
-        public void DeserializeRelationships_EmptyRequiredOneToOnePrincipal_ThrowsFormatException()
+        public void DeserializeRelationships_EmptyRequiredOneToOnePrincipal_NavigationIsNull()
         {
             // Arrange
             var content = CreateDocumentWithRelationships("oneToOneRequiredDependents", "principal");
