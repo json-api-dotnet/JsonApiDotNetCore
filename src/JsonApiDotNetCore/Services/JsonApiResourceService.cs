@@ -310,7 +310,7 @@ namespace JsonApiDotNetCore.Services
             AssertRelationshipExists(relationshipName);
 
             await _hookExecutor.BeforeUpdateRelationshipAsync(id,
-                async () => await GetPrimaryResourceById(id, TopFieldSelection.OnlyAllAttributes)); // was: WithAllAttributes
+                async () => await GetPrimaryResourceById(id, TopFieldSelection.WithAllAttributes));
 
             try
             {

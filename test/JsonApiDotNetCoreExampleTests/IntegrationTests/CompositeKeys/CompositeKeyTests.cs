@@ -24,6 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddScoped<IResourceRepository<Car, string>, CarRepository>();
+                services.AddScoped<IResourceReadRepository<Car, string>, CarRepository>();
             });
 
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
