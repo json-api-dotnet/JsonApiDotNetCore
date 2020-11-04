@@ -199,23 +199,22 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task UpdateAsync(TResource resourceFromRequest)
+        public virtual async Task UpdateAsync(TResource resource)
         {
-            _traceWriter.LogMethodStart(new {resourceFromRequest});
-            if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
+            _traceWriter.LogMethodStart(new {resource});
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            var resourceFromDatabase = await GetPrimaryResourceForCompleteReplacement(resourceFromRequest.Id, _targetedFields.Relationships);
+            var resourceFromDatabase = await GetPrimaryResourceForCompleteReplacement(resource.Id, _targetedFields.Relationships);
 
             foreach (var relationship in _targetedFields.Relationships)
             {
-
-                var rightResources = relationship.GetValue(resourceFromRequest);
+                var rightResources = relationship.GetValue(resource);
                 await ApplyRelationshipUpdate(relationship, resourceFromDatabase, rightResources);
             }
 
             foreach (var attribute in _targetedFields.Attributes)
             {
-                attribute.SetValue(resourceFromDatabase, attribute.GetValue(resourceFromRequest));
+                attribute.SetValue(resourceFromDatabase, attribute.GetValue(resource));
             }
 
             await SaveChangesAsync();
@@ -365,8 +364,8 @@ namespace JsonApiDotNetCore.Repositories
             var relationship = (HasManyThroughAttribute)_targetedFields.Relationships.Single();
 
             var rightResource = _resourceFactory.CreateInstance(relationship.RightType);
-            rightResource.StringId = relationship.RightIdProperty.GetValue(entity)!.ToString();
-        
+            rightResource.StringId = relationship.RightIdProperty.GetValue(entity).ToString();
+
             return rightResource;
         }
 
@@ -557,7 +556,7 @@ namespace JsonApiDotNetCore.Repositories
         {
             TResource primaryResource;
 
-            if (relationships?.Any() == true)
+            if (relationships.Any())
             {
                 var query = _dbContext.Set<TResource>().Where(resource => resource.Id.Equals(id));
                 foreach (var relationship in relationships)

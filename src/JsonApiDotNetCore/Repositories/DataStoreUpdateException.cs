@@ -7,10 +7,10 @@ namespace JsonApiDotNetCore.Repositories
     /// </summary>
     public sealed class DataStoreUpdateException : Exception
     {
-        public DataStoreUpdateException(Exception exception) 
+        public DataStoreUpdateException(Exception exception)
             : base("Failed to persist changes in the underlying data store.", exception) { }
 
-        public DataStoreUpdateException(string message) 
-            : base(message, null) { }
+        public DataStoreUpdateException(string message)
+            : base(message) { }
     }
 }

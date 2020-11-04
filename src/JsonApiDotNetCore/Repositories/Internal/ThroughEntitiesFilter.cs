@@ -5,12 +5,12 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using Humanizer;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Repositories.Internal
 {
+    // TODO: Refactor this type (it is a helper method).
     internal sealed class ThroughEntitiesFilter
     {
         private readonly DbContext _dbContext;

@@ -12,7 +12,8 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 {
-    public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext>>
+    public sealed class CompositeKeyTests 
+        : IClassFixture<IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> _testContext;
 
@@ -31,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         }
 
         [Fact]
-        public async Task Can_filter_by_ID_in_primary_resources()
+        public async Task Can_filter_on_ID_in_primary_resources()
         {
             // Arrange
             var car = new Car
@@ -89,7 +90,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         }
 
         [Fact]
-        public async Task Can_sort_by_ID()
+        public async Task Can_sort_on_ID()
         {
             // Arrange
             var car = new Car
@@ -150,7 +151,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Can_create_resource()
         {
             // Arrange
-            await _testContext.RunOnDatabaseAsync(async dbContext => { await dbContext.ClearTableAsync<Car>(); });
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<Car>();
+            });
 
             var requestBody = new
             {
@@ -300,7 +304,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Can_remove_from_OneToMany_relationship()
         {
             // Arrange
-            var existingDealership = new Dealership()
+            var existingDealership = new Dealership
             {
                 Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
                 Inventory = new HashSet<Car>
@@ -325,11 +329,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-
             var requestBody = new
             {
-                data = new []
-                {  new
+                data = new[]
+                {
+                    new
                     {
                         type = "cars",
                         id = "123:AA-BB-11"
@@ -362,7 +366,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Can_add_to_OneToMany_relationship()
         {
             // Arrange
-            var existingDealership = new Dealership()
+            var existingDealership = new Dealership
             {
                 Address = "Dam 1, 1012JS Amsterdam, the Netherlands"
             };
@@ -381,8 +385,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
             var requestBody = new
             {
-                data = new []
-                {  new
+                data = new[]
+                {
+                    new
                     {
                         type = "cars",
                         id = "123:AA-BB-11"
@@ -415,7 +420,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Can_replace_OneToMany_relationship()
         {
             // Arrange
-            var existingDealership = new Dealership()
+            var existingDealership = new Dealership
             {
                 Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
                 Inventory = new HashSet<Car>
@@ -447,8 +452,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
             var requestBody = new
             {
-                data = new []
-                {  
+                data = new[]
+                {
                     new
                     {
                         type = "cars",
@@ -458,7 +463,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                     {
                         type = "cars",
                         id = "789:EE-FF-33"
-                    },
+                    }
 
                 }
             };
@@ -489,30 +494,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Cannot_remove_from_ManyToOne_relationship_for_unknown_relationship_ID()
         {
             // Arrange
-            var dealership = new Dealership()
+            var existingDealership = new Dealership
             {
                 Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
-                Inventory = new HashSet<Car>
-                {
-                    new Car
-                    {
-                        RegionId = 123,
-                        LicensePlate = "AA-BB-11"
-                    }
-                }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<Car>();
-                dbContext.Dealerships.Add(dealership);
+                dbContext.Dealerships.Add(existingDealership);
                 await dbContext.SaveChangesAsync();
             });
 
             var requestBody = new
             {
-                data = new []
-                {  new
+                data = new[]
+                {
+                    new
                     {
                         type = "cars",
                         id = "999:XX-YY-22"
@@ -520,7 +518,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 }
             };
 
-            var route = $"/dealerships/{dealership.StringId}/relationships/inventory";
+            var route = $"/dealerships/{existingDealership.StringId}/relationships/inventory";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
@@ -539,7 +537,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Can_delete_resource()
         {
             // Arrange
-            var car = new Car
+            var existingCar = new Car
             {
                 RegionId = 123,
                 LicensePlate = "AA-BB-11"
@@ -548,11 +546,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<Car>();
-                dbContext.Cars.Add(car);
+                dbContext.Cars.Add(existingCar);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/cars/" + car.StringId;
+            var route = "/cars/" + existingCar.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -561,6 +559,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var carInDatabase = await dbContext.Cars
+                    .FirstOrDefaultAsync(car => car.RegionId == existingCar.RegionId && car.LicensePlate == existingCar.LicensePlate);
+
+                carInDatabase.Should().BeNull();
+            });
         }
     }
 }

@@ -5,12 +5,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
     public sealed class CompositeDbContext : DbContext
     {
         public DbSet<Car> Cars { get; set; }
-
         public DbSet<Engine> Engines { get; set; }
-
         public DbSet<Dealership> Dealerships { get; set; }
 
-        public CompositeDbContext(DbContextOptions<CompositeDbContext> options) 
+        public CompositeDbContext(DbContextOptions<CompositeDbContext> options)
             : base(options)
         {
         }
@@ -18,16 +16,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Car>()
-                .HasKey(c => new {c.RegionId, c.LicensePlate});
+                .HasKey(car => new {car.RegionId, car.LicensePlate});
 
             modelBuilder.Entity<Engine>()
-                .HasOne(e => e.Car)
-                .WithOne(c => c.Engine)
+                .HasOne(engine => engine.Car)
+                .WithOne(car => car.Engine)
                 .HasForeignKey<Engine>();
 
             modelBuilder.Entity<Dealership>()
-                .HasMany<Car>(e => e.Inventory)
-                .WithOne(c => c.Dealership);
+                .HasMany(dealership => dealership.Inventory)
+                .WithOne(car => car.Dealership);
         }
     }
 }

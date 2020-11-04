@@ -13,6 +13,7 @@ namespace JsonApiDotNetCore.Services
 {
     // TODO: Reconsider responsibilities (IQueryLayerComposer?)
     /// <inheritdoc/>
+    // TODO: Refactor this type (it is a helper method).
     public class GetResourcesByIds : IGetResourcesByIds
     {
         private readonly IResourceGraph _resourceGraph;

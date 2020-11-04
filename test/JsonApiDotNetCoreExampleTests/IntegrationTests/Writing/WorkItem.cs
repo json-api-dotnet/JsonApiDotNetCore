@@ -12,7 +12,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
         public string Description { get; set; }
 
         [Attr]
-        public DateTime? DueAt { get; set; }
+        public DateTimeOffset? DueAt { get; set; }
 
         [Attr]
         public WorkItemPriority Priority { get; set; }
