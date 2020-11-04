@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 {
-    // TODO: Fix auto-discovery of services. CarRepository is only registered as IResourceRepository, not IResourceReadRepository and IResourceWriteRepository. 
     public sealed class CarRepository : EntityFrameworkCoreRepository<Car, string>
     {
         private readonly IResourceGraph _resourceGraph;

@@ -305,7 +305,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             // Arrange
             var existingDealership = new Dealership
             {
-                Destination = "Amsterdam, the Netherlands",
+                Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
                 Inventory = new HashSet<Car>
                 {
                     new Car
@@ -367,7 +367,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             // Arrange
             var existingDealership = new Dealership
             {
-                Destination = "Amsterdam, the Netherlands"
+                Address = "Dam 1, 1012JS Amsterdam, the Netherlands"
             };
             var existingCar = new Car
             {
@@ -421,7 +421,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             // Arrange
             var existingDealership = new Dealership
             {
-                Destination = "Amsterdam, the Netherlands",
+                Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
                 Inventory = new HashSet<Car>
                 {
                     new Car
@@ -495,7 +495,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             // Arrange
             var existingDealership = new Dealership
             {
-                Destination = "Amsterdam, the Netherlands"
+                Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

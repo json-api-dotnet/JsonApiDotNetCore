@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
     public sealed class Dealership : Identifiable
     {
         [Attr]
-        public string Destination { get; set; }
+        public string Address { get; set; }
 
         [HasMany] 
         public ISet<Car> Inventory { get; set; }
