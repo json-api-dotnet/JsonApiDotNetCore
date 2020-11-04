@@ -12,6 +12,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Services
 {
     /// <inheritdoc/>
+    // TODO: Refactor this type (it is a helper method).
     public class GetResourcesByIds : IGetResourcesByIds
     {
         private readonly IResourceGraph _resourceGraph;

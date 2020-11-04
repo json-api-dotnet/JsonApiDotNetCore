@@ -9,12 +9,12 @@ namespace JsonApiDotNetCore.Resources
     public interface ITargetedFields
     {
         /// <summary>
-        /// List of attributes that are targeted by a request.
+        /// The set of attributes that are targeted by a request.
         /// </summary>
         ISet<AttrAttribute> Attributes { get; set; }
 
         /// <summary>
-        /// List of relationships that are targeted by a request.
+        /// The set of relationships that are targeted by a request.
         /// </summary>
         ISet<RelationshipAttribute> Relationships { get; set; }
     }
