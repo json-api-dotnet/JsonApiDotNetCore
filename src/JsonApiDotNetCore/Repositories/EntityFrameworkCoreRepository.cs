@@ -298,11 +298,11 @@ namespace JsonApiDotNetCore.Repositories
             // Ensures the new relationship assignment will not result in entities being tracked more than once.
             var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
     
-            // TODO: Similar to like the EnableCompleteReplacement performance related todo item, we shouldn't have to load the inversely related entity into memory. Clearing any existing relation is enough.
             if (ShouldLoadInverseRelationship(relationship, trackedValueToAssign))
             {
                 var entityEntry = _dbContext.Entry(trackedValueToAssign); 
                 var inversePropertyName = relationship.InverseNavigationProperty.Name;
+                // TODO: Just clearing the relationship should be enough rather than first loading the related entity in memory.   
                 await entityEntry.Reference(inversePropertyName).LoadAsync();
             }
             
@@ -608,6 +608,8 @@ namespace JsonApiDotNetCore.Repositories
             {
                 throw new DataStoreUpdateException($"One or more related resources of type {relationship.RightType} do not exist.");
             }
+
+            DetachEntities(secondaryResourcesFromDatabase.ToArray());
         }
 
         private void DetachRelationships(IIdentifiable resource)

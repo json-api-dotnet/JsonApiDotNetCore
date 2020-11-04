@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Repositories
 
         private object GetRepository<TResource, TId>(TResource _, TId __) where TResource : class, IIdentifiable<TId>
         {
-            return _serviceProvider.GetRequiredService<IResourceReadRepository<TResource,TId>>();
+            return _serviceProvider.GetRequiredService<IResourceRepository<TResource,TId>>();
         }
     }
 }

@@ -39,7 +39,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         [HasOne]
         public Engine Engine { get; set; }
 
-        [HasMany]
-        public ISet<Journey> Journeys { get; set; }
+        [HasOne]
+        public Dealership Dealership { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
         public DbSet<Engine> Engines { get; set; }
 
-        public DbSet<Journey> Journeys { get; set; }
+        public DbSet<Dealership> Dealerships { get; set; }
 
         public CompositeDbContext(DbContextOptions<CompositeDbContext> options) 
             : base(options)
@@ -25,9 +25,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 .WithOne(c => c.Engine)
                 .HasForeignKey<Engine>();
 
-            modelBuilder.Entity<Journey>()
-                .HasOne(e => e.Car)
-                .WithMany(c => c.Journeys);
+            modelBuilder.Entity<Dealership>()
+                .HasMany<Car>(e => e.Inventory)
+                .WithOne(c => c.Dealership);
         }
     }
 }
