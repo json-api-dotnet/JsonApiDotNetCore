@@ -146,6 +146,7 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IPaginationContext, PaginationContext>();
             _services.AddScoped<IQueryLayerComposer, QueryLayerComposer>();
             _services.TryAddScoped<IInverseNavigationResolver, InverseNavigationResolver>();
+            _services.AddScoped<IDataStoreUpdateFailureInspector, DataStoreUpdateFailureInspector>();
         }
 
         private void AddMiddlewareLayer()

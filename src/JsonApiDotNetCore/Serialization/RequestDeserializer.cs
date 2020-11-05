@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -41,7 +42,19 @@ namespace JsonApiDotNetCore.Serialization
                 _targetedFields.Relationships.Add(_request.Relationship);
             }
             
-            return DeserializeBody(body);
+            var instance = DeserializeBody(body);
+
+            AssertResourceIdIsNotTargeted();
+            
+            return instance;
+        }
+
+        private void AssertResourceIdIsNotTargeted()
+        {
+            if (!_request.IsReadOnly && _targetedFields.Attributes.Any(attribute => attribute.Property.Name == nameof(Identifiable.Id)))
+            {
+                throw new JsonApiSerializationException("Resource ID is read-only.", null);
+            }
         }
 
         /// <summary>

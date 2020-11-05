@@ -16,12 +16,12 @@ namespace JsonApiDotNetCore.Services
     // TODO: Refactor this type (it is a helper method).
     public class GetResourcesByIds : IGetResourcesByIds
     {
-        private readonly IResourceGraph _resourceGraph;
+        private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IResourceRepositoryAccessor _resourceRepositoryAccessor;
 
-        public GetResourcesByIds(IResourceGraph resourceGraph, IResourceRepositoryAccessor resourceRepositoryAccessor)
+        public GetResourcesByIds(IResourceContextProvider resourceContextProvider, IResourceRepositoryAccessor resourceRepositoryAccessor)
         {
-            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _resourceRepositoryAccessor = resourceRepositoryAccessor ?? throw new ArgumentNullException(nameof(resourceRepositoryAccessor));
         }
 
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Services
 
             if (typedIds.Any())
             {
-                var resourceContext = _resourceGraph.GetResourceContext(resourceType);
+                var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
 
                 var primaryIdProjection = CreatePrimaryIdProjection(resourceContext);
                 

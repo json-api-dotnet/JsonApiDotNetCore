@@ -77,9 +77,10 @@ namespace UnitTests.Services
             var resourceFactory = new ResourceFactory(serviceProvider);
             var resourceDefinitionAccessor = new Mock<IResourceDefinitionAccessor>().Object;
             var paginationContext = new PaginationContext();
-            var getResourcesByIds = new Mock<IGetResourcesByIds>().Object;
             var targetedFields = new Mock<ITargetedFields>().Object;
             var resourceContextProvider = new Mock<IResourceContextProvider>().Object;
+            var getResourcesByIds = new Mock<IGetResourcesByIds>().Object;
+            var dataStoreUpdateFailureInspector = new DataStoreUpdateFailureInspector(resourceContextProvider, targetedFields, getResourcesByIds);
             var resourceHookExecutor = new NeverResourceHookExecutorFacade();
 
             var composer = new QueryLayerComposer(new List<IQueryConstraintProvider>(), _resourceGraph, resourceDefinitionAccessor, options, paginationContext);
@@ -91,9 +92,9 @@ namespace UnitTests.Services
                     .Single(x => x.PublicName == "collection")
             };
 
-            return new JsonApiResourceService<TodoItem>(_repositoryMock.Object, getResourcesByIds, composer,
-                paginationContext, options, NullLoggerFactory.Instance, request, changeTracker, resourceFactory,
-                targetedFields, resourceContextProvider, resourceHookExecutor);
+            return new JsonApiResourceService<TodoItem>(_repositoryMock.Object, composer, paginationContext, options,
+                NullLoggerFactory.Instance, request, changeTracker, resourceFactory, dataStoreUpdateFailureInspector,
+                resourceHookExecutor);
         }
     }
 }

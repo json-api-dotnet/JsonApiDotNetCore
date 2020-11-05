@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -542,7 +543,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <summary>
-        /// Gets the primary resource by id and performs side-loading of data such that EF Core correctly performs complete replacements of relationships. 
+        /// Gets the primary resource by ID and performs side-loading of data such that EF Core correctly performs complete replacements of relationships. 
         /// </summary>
         /// <remarks>
         /// For example: a person `p1` has 2 todo-items: `t1` and `t2`.
@@ -558,13 +559,13 @@ namespace JsonApiDotNetCore.Repositories
 
             if (relationships.Any())
             {
-                var query = _dbContext.Set<TResource>().Where(resource => resource.Id.Equals(id));
+                IQueryable<TResource> query = _dbContext.Set<TResource>();
                 foreach (var relationship in relationships)
                 {
                     query = query.Include(relationship.RelationshipPath);
                 }
 
-                primaryResource = query.FirstOrDefault();
+                primaryResource = query.FirstOrDefault(resource => resource.Id.Equals(id));
             }
             else
             {
@@ -573,7 +574,11 @@ namespace JsonApiDotNetCore.Repositories
 
             if (primaryResource == null)
             {
-                throw new DataStoreUpdateException($"Resource of type '{typeof(TResource)}' with id '{id}' does not exist.");
+                var tempResource = _resourceFactory.CreateInstance<TResource>();
+                tempResource.Id = id;
+
+                var resourceContext = _resourceGraph.GetResourceContext<TResource>();
+                throw new ResourceNotFoundException(tempResource.StringId, resourceContext.PublicName);
             }
 
             return primaryResource;
