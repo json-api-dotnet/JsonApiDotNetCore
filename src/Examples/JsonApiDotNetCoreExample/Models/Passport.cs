@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreExample.Models
         [NotMapped]
         public string BirthCountryName
         {
-            get => BirthCountry.Name;
+            get => BirthCountry?.Name;
             set
             {
                 BirthCountry ??= new Country();

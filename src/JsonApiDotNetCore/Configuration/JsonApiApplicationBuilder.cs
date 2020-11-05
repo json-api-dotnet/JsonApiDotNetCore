@@ -139,17 +139,13 @@ namespace JsonApiDotNetCore.Configuration
             AddSerializationLayer();
             AddQueryStringLayer();
 
-            if (_options.EnableResourceHooks)
-            {
-                AddResourceHooks();
-            }
+            AddResourceHooks();
 
             _services.AddScoped<IGenericServiceFactory, GenericServiceFactory>();
-            _services.AddScoped(typeof(RepositoryRelationshipUpdateHelper<>));
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
             _services.AddScoped<IPaginationContext, PaginationContext>();
             _services.AddScoped<IQueryLayerComposer, QueryLayerComposer>();
-            _services.TryAddScoped<IInverseRelationships, InverseRelationships>();
+            _services.TryAddScoped<IInverseRelationshipResolver, InverseRelationshipResolver>();
         }
 
         private void AddMiddlewareLayer()
@@ -175,55 +171,40 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddResourceLayer()
         {
-            _services.AddScoped(typeof(IResourceDefinition<>), typeof(JsonApiResourceDefinition<>));
-            _services.AddScoped(typeof(IResourceDefinition<,>), typeof(JsonApiResourceDefinition<,>));
+            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ResourceDefinitionInterfaces, 
+                typeof(JsonApiResourceDefinition<>), typeof(JsonApiResourceDefinition<,>));
+
             _services.AddScoped<IResourceDefinitionAccessor, ResourceDefinitionAccessor>();
-
             _services.AddScoped<IResourceFactory, ResourceFactory>();
-
             _services.AddSingleton<IResourceContextProvider>(sp => sp.GetRequiredService<IResourceGraph>());
         }
 
         private void AddRepositoryLayer()
         {
-            _services.AddScoped(typeof(IResourceRepository<>), typeof(EntityFrameworkCoreRepository<>));
-            _services.AddScoped(typeof(IResourceRepository<,>), typeof(EntityFrameworkCoreRepository<,>));
+            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.RepositoryInterfaces, 
+                typeof(EntityFrameworkCoreRepository<>), typeof(EntityFrameworkCoreRepository<,>));
 
-            _services.AddScoped(typeof(IResourceReadRepository<,>), typeof(EntityFrameworkCoreRepository<,>));
-            _services.AddScoped(typeof(IResourceWriteRepository<,>), typeof(EntityFrameworkCoreRepository<,>));
+            _services.AddScoped<IResourceRepositoryAccessor, ResourceRepositoryAccessor>();
         }
 
         private void AddServiceLayer()
         {
-            _services.AddScoped(typeof(ICreateService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(ICreateService<,>), typeof(JsonApiResourceService<,>));
+            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ServiceInterfaces, 
+                typeof(JsonApiResourceService<>), typeof(JsonApiResourceService<,>));
 
-            _services.AddScoped(typeof(IGetAllService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IGetAllService<,>), typeof(JsonApiResourceService<,>));
+            _services.AddScoped<IGetResourcesByIds, GetResourcesByIds>();
+        }
 
-            _services.AddScoped(typeof(IGetByIdService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IGetByIdService<,>), typeof(JsonApiResourceService<,>));
+        private void RegisterImplementationForOpenInterfaces(HashSet<Type> openGenericInterfaces, Type intImplementation, Type implementation)
+        {
+            foreach (var openGenericInterface in openGenericInterfaces)
+            {
+                var implementationType = openGenericInterface.GetGenericArguments().Length == 1
+                    ? intImplementation
+                    : implementation;
 
-            _services.AddScoped(typeof(IGetRelationshipService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(JsonApiResourceService<,>));
-
-            _services.AddScoped(typeof(IGetSecondaryService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IGetSecondaryService<,>), typeof(JsonApiResourceService<,>));
-
-            _services.AddScoped(typeof(IUpdateService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IUpdateService<,>), typeof(JsonApiResourceService<,>));
-
-            _services.AddScoped(typeof(IDeleteService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IDeleteService<,>), typeof(JsonApiResourceService<,>));
-
-            _services.AddScoped(typeof(IResourceService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IResourceService<,>), typeof(JsonApiResourceService<,>));
-
-            _services.AddScoped(typeof(IResourceQueryService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IResourceQueryService<,>), typeof(JsonApiResourceService<,>));
-            
-            _services.AddScoped(typeof(IResourceCommandService<>), typeof(JsonApiResourceService<>));
-            _services.AddScoped(typeof(IResourceCommandService<,>), typeof(JsonApiResourceService<,>));
+                _services.AddScoped(openGenericInterface, implementationType);
+            }
         }
 
         private void AddQueryStringLayer()
@@ -258,12 +239,20 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         private void AddResourceHooks()
-        {
-            _services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));
-            _services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceHooksDefinition<>));
-            _services.AddTransient(typeof(IResourceHookExecutor), typeof(ResourceHookExecutor));
-            _services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
-            _services.AddTransient<ITraversalHelper, TraversalHelper>();
+        { 
+            if (_options.EnableResourceHooks)
+            {
+                _services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));
+                _services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceHooksDefinition<>));
+                _services.AddTransient<IResourceHookExecutor, ResourceHookExecutor>();
+                _services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
+                _services.AddScoped<ITraversalHelper, TraversalHelper>();
+                _services.AddScoped<IResourceHookExecutorFacade, ResourceHookExecutorFacade>();
+            }
+            else
+            {
+                _services.AddSingleton<IResourceHookExecutorFacade, NeverResourceHookExecutorFacade>();
+            }
         }
 
         private void AddSerializationLayer()

@@ -90,10 +90,14 @@ namespace JsonApiDotNetCore.Configuration
         {
             if (relationship == null) throw new ArgumentNullException(nameof(relationship));
 
-            if (relationship.InverseNavigation == null) return null;
+            if (relationship.InverseNavigationProperty == null)
+            {
+                return null;
+            }
+
             return GetResourceContext(relationship.RightType)
-                            .Relationships
-                            .SingleOrDefault(r => r.Property.Name == relationship.InverseNavigation);
+                .Relationships
+                .SingleOrDefault(r => r.Property == relationship.InverseNavigationProperty);
         }
 
         private IReadOnlyCollection<ResourceFieldAttribute> Getter<TResource>(Expression<Func<TResource, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where TResource : class, IIdentifiable

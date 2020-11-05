@@ -22,11 +22,8 @@ namespace JsonApiDotNetCore.Serialization
     /// </remarks>
     /// <typeparam name="TResource">Type of the resource associated with the scope of the request
     /// for which this serializer is used.</typeparam>
-    public class ResponseSerializer<TResource> : BaseSerializer, IJsonApiSerializer, IResponseSerializer
-        where TResource : class, IIdentifiable
+    public class ResponseSerializer<TResource> : BaseSerializer, IJsonApiSerializer where TResource : class, IIdentifiable
     {
-        public RelationshipAttribute RequestRelationship { get; set; }
-        
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IJsonApiOptions _options;
         private readonly IMetaBuilder _metaBuilder;
@@ -84,17 +81,13 @@ namespace JsonApiDotNetCore.Serialization
         /// </remarks>
         internal string SerializeSingle(IIdentifiable resource)
         {
-            if (RequestRelationship != null && resource != null)
-            {
-                var relationship = ((ResponseResourceObjectBuilder)ResourceObjectBuilder).Build(resource, RequestRelationship);
-                return SerializeObject(relationship, _options.SerializerSettings, serializer => { serializer.NullValueHandling = NullValueHandling.Include; });
-            }
-
             var (attributes, relationships) = GetFieldsToSerialize();
             var document = Build(resource, attributes, relationships);
             var resourceObject = document.SingleData;
             if (resourceObject != null)
+            {
                 resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
+            }
 
             AddTopLevelObjects(document);
 
@@ -120,7 +113,9 @@ namespace JsonApiDotNetCore.Serialization
             {
                 var links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
                 if (links == null)
+                {
                     break;
+                }
 
                 resourceObject.Links = links;
             }

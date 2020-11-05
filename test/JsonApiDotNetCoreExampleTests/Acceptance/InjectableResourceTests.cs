@@ -107,7 +107,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             }
         }
 
-        [Fact(Skip = "Requires fix for https://github.com/dotnet/efcore/issues/20502")]
+        [Fact]
         public async Task Can_Get_Passports_With_Filter()
         {
             // Arrange
@@ -147,7 +147,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal("Joe", document.Included[0].Attributes["firstName"]);
         }
 
-        [Fact(Skip = "https://github.com/dotnet/efcore/issues/20502")]
+        [Fact]
         public async Task Can_Get_Passports_With_Sparse_Fieldset()
         {
             // Arrange

@@ -15,6 +15,7 @@ namespace JsonApiDotNetCoreExample.Services
     {
         public CustomArticleService(
             IResourceRepository<Article> repository,
+            IGetResourcesByIds getResourcesById,
             IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext,
             IJsonApiOptions options,
@@ -22,9 +23,11 @@ namespace JsonApiDotNetCoreExample.Services
             IJsonApiRequest request,
             IResourceChangeTracker<Article> resourceChangeTracker,
             IResourceFactory resourceFactory,
-            IResourceHookExecutor hookExecutor = null)
-            : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                resourceChangeTracker, resourceFactory, hookExecutor)
+            ITargetedFields targetedFields,
+            IResourceContextProvider resourceContextProvider,
+            IResourceHookExecutorFacade hookExecutor)
+            : base(repository, getResourcesById, queryLayerComposer, paginationContext, options, loggerFactory,
+                request, resourceChangeTracker, resourceFactory, targetedFields, resourceContextProvider, hookExecutor)
         { }
 
         public override async Task<Article> GetAsync(int id)

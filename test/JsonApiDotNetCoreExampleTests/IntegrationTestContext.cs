@@ -120,9 +120,9 @@ namespace JsonApiDotNetCoreExampleTests
         }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)>
-            ExecuteDeleteAsync<TResponseDocument>(string requestUrl)
+            ExecuteDeleteAsync<TResponseDocument>(string requestUrl, object requestBody = null)
         {
-            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Delete, requestUrl);
+            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Delete, requestUrl, requestBody);
         }
 
         private async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)>

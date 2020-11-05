@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -20,35 +19,91 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         }
         
         [Fact]
-        public async Task Can_create_resource_with_to_one_relationship()
+        public async Task Can_create_resource_with_inherited_attributes()
         {
             // Arrange
-            var insurance = new CompanyHealthInsurance();
+            var man = new Man
+            {
+                FamilyName = "Smith",
+                IsRetired = true,
+                HasBeard = true
+            };
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "men",
+                    attributes = new
+                    {
+                        familyName = man.FamilyName,
+                        isRetired = man.IsRetired,
+                        hasBeard = man.HasBeard
+                    }
+                }
+            };
+
+            var route = "/men";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Type.Should().Be("men");
+            responseDocument.SingleData.Attributes["familyName"].Should().Be(man.FamilyName);
+            responseDocument.SingleData.Attributes["isRetired"].Should().Be(man.IsRetired);
+            responseDocument.SingleData.Attributes["hasBeard"].Should().Be(man.HasBeard);
+
+            var newManId = int.Parse(responseDocument.SingleData.Id);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var manInDatabase = await dbContext.Men
+                    .FirstAsync(m => m.Id == newManId);
+                
+                manInDatabase.FamilyName.Should().Be(man.FamilyName);
+                manInDatabase.IsRetired.Should().Be(man.IsRetired);
+                manInDatabase.HasBeard.Should().Be(man.HasBeard);
+            });
+        }
+
+        [Fact]
+        public async Task Can_create_resource_with_ToOne_relationship()
+        {
+            // Arrange
+            var existingInsurance = new CompanyHealthInsurance();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<CompanyHealthInsurance>();
-                dbContext.CompanyHealthInsurances.Add(insurance);
+                dbContext.CompanyHealthInsurances.Add(existingInsurance);
+
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/men";
             var requestBody = new
             {
                 data = new
                 {
                     type = "men",
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
+                        healthInsurance = new
                         {
-                            "healthInsurance", new
+                            data = new
                             {
-                                data = new { type = "companyHealthInsurances", id = insurance.StringId }
+                                type = "companyHealthInsurances",
+                                id = existingInsurance.StringId
                             }
                         }
                     }
                 }
             };
+
+            var route = "/men";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -56,83 +111,160 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
+            responseDocument.SingleData.Should().NotBeNull();
+            var newManId = int.Parse(responseDocument.SingleData.Id);
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertMan = await dbContext.Men
-                    .Include(m => m.HealthInsurance)
-                    .SingleAsync(m => m.Id == int.Parse(responseDocument.SingleData.Id));
+                var manInDatabase = await dbContext.Men
+                    .Include(man => man.HealthInsurance)
+                    .FirstAsync(man => man.Id == newManId);
                 
-                assertMan.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
+                manInDatabase.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
+                manInDatabase.HealthInsurance.Id.Should().Be(existingInsurance.Id);
             });
         }
-        
+
         [Fact]
-        public async Task Can_patch_resource_with_to_one_relationship_through_relationship_link()
+        public async Task Can_update_resource_through_primary_endpoint()
         {
             // Arrange
-            var man = new Man();
-            var insurance = new CompanyHealthInsurance();
+            var existingMan = new Man
+            {
+                FamilyName = "Smith",
+                IsRetired = false,
+                HasBeard = true
+            };
+
+            var newMan = new Man
+            {
+                FamilyName = "Jackson",
+                IsRetired = true,
+                HasBeard = false
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Men.Add(existingMan);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "men",
+                    id = existingMan.StringId,
+                    attributes = new
+                    {
+                        familyName = newMan.FamilyName,
+                        isRetired = newMan.IsRetired,
+                        hasBeard = newMan.HasBeard
+                    }
+                }
+            };
+
+            var route = "/men/" + existingMan.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var manInDatabase = await dbContext.Men
+                    .FirstAsync(man => man.Id == existingMan.Id);
+
+                manInDatabase.FamilyName.Should().Be(newMan.FamilyName);
+                manInDatabase.IsRetired.Should().Be(newMan.IsRetired);
+                manInDatabase.HasBeard.Should().Be(newMan.HasBeard);
+            });
+        }
+
+        [Fact]
+        public async Task Can_update_resource_with_ToOne_relationship_through_relationship_endpoint()
+        {
+            // Arrange
+            var existingMan = new Man();
+            var existingInsurance = new CompanyHealthInsurance();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTablesAsync<Man, CompanyHealthInsurance>();
-                dbContext.AddRange(man, insurance);
+                dbContext.AddRange(existingMan, existingInsurance);
+
                 await dbContext.SaveChangesAsync();
             });
-            
-            var route = $"/men/{man.Id}/relationships/healthInsurance";
 
             var requestBody = new
             {
-                data = new { type = "companyHealthInsurances", id = insurance.StringId }
+                data = new
+                {
+                    type = "companyHealthInsurances",
+                    id = existingInsurance.StringId
+                }
             };
 
+            var route = $"/men/{existingMan.StringId}/relationships/healthInsurance";
+
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertMan = await dbContext.Men
-                    .Include(m => m.HealthInsurance)
-                    .SingleAsync(h => h.Id == man.Id);
+                var manInDatabase = await dbContext.Men
+                    .Include(man => man.HealthInsurance)
+                    .FirstAsync(man => man.Id == existingMan.Id);
 
-                assertMan.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
+                manInDatabase.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
+                manInDatabase.HealthInsurance.Id.Should().Be(existingInsurance.Id);
             });
         }
 
-
         [Fact]
-        public async Task Can_create_resource_with_to_many_relationship()
+        public async Task Can_create_resource_with_ToMany_relationship()
         {
             // Arrange
-            var father = new Man();
-            var mother = new Woman();
+            var existingFather = new Man();
+            var existingMother = new Woman();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTablesAsync<Woman, Man>();
-                dbContext.Humans.AddRange(father, mother);
+                dbContext.Humans.AddRange(existingFather, existingMother);
+
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/men";
             var requestBody = new
             {
                 data = new
                 {
                     type = "men",
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
+                        parents = new
                         {
-                            "parents", new
+                            data = new[]
                             {
-                                data = new[]
+                                new
                                 {
-                                    new { type = "men", id = father.StringId },
-                                    new { type = "women", id = mother.StringId }
+                                    type = "men",
+                                    id = existingFather.StringId
+                                },
+                                new
+                                {
+                                    type = "women",
+                                    id = existingMother.StringId
                                 }
                             }
                         }
@@ -140,163 +272,203 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 }
             };
 
+            var route = "/men";
+
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
+            responseDocument.SingleData.Should().NotBeNull();
+            var newManId = int.Parse(responseDocument.SingleData.Id);
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertMan = await dbContext.Men
-                    .Include(m => m.Parents)
-                    .SingleAsync(m => m.Id == int.Parse(responseDocument.SingleData.Id));
+                var manInDatabase = await dbContext.Men
+                    .Include(man => man.Parents)
+                    .FirstAsync(man => man.Id == newManId);
 
-                assertMan.Parents.Should().HaveCount(2);
-                assertMan.Parents.Should().ContainSingle(h => h is Man);
-                assertMan.Parents.Should().ContainSingle(h => h is Woman);
+                manInDatabase.Parents.Should().HaveCount(2);
+                manInDatabase.Parents.Should().ContainSingle(human => human is Man);
+                manInDatabase.Parents.Should().ContainSingle(human => human is Woman);
             });
         }
 
         [Fact]
-        public async Task Can_patch_resource_with_to_many_relationship_through_relationship_link()
+        public async Task Can_update_resource_with_ToMany_relationship_through_relationship_endpoint()
         {
-            // Arrange   
-            var child = new Man();
-            var father = new Man();
-            var mother = new Woman();
+            // Arrange
+            var existingChild = new Man();
+            var existingFather = new Man();
+            var existingMother = new Woman();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTablesAsync<Woman, Man>();
-                dbContext.Humans.AddRange(child, father, mother);
+                dbContext.Humans.AddRange(existingChild, existingFather, existingMother);
+
                 await dbContext.SaveChangesAsync();
             });
-        
-            var route = $"/men/{child.StringId}/relationships/parents";
+
             var requestBody = new
             {
                 data = new[]
                 {
-                    new { type = "men", id = father.StringId },
-                    new { type = "women", id = mother.StringId }
+                    new
+                    {
+                        type = "men",
+                        id = existingFather.StringId
+                    },
+                    new
+                    {
+                        type = "women",
+                        id = existingMother.StringId
+                    }
                 }
             };
-        
+
+            var route = $"/men/{existingChild.StringId}/relationships/parents";
+
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
         
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-        
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var assertChild = await dbContext.Men
-                    .Include(m => m.Parents)
-                    .SingleAsync(m => m.Id == child.Id);
+                var manInDatabase = await dbContext.Men
+                    .Include(man => man.Parents)
+                    .FirstAsync(man => man.Id == existingChild.Id);
                 
-                assertChild.Parents.Should().HaveCount(2);
-                assertChild.Parents.Should().ContainSingle(h => h is Man);
-                assertChild.Parents.Should().ContainSingle(h => h is Woman);
+                manInDatabase.Parents.Should().HaveCount(2);
+                manInDatabase.Parents.Should().ContainSingle(human => human is Man);
+                manInDatabase.Parents.Should().ContainSingle(human => human is Woman);
             });
         }
 
         [Fact]
-        public async Task Can_create_resource_with_many_to_many_relationship()
+        public async Task Can_create_resource_with_ManyToMany_relationship()
         {
             // Arrange
-            var book = new Book();
-            var video = new Video();
+            var existingBook = new Book();
+            var existingVideo = new Video();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTablesAsync<Book, Video, Man>();
-                dbContext.ContentItems.AddRange(book, video);
+                dbContext.ContentItems.AddRange(existingBook, existingVideo);
+
                 await dbContext.SaveChangesAsync();
             });
-        
-            var route = "/men";
+
             var requestBody = new
             {
                 data = new
                 {
                     type = "men",
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
+                        favoriteContent = new
                         {
-                            "favoriteContent", new
+                            data = new[]
                             {
-                                data = new[]
+                                new
                                 {
-                                    new { type = "books", id = book.StringId },
-                                    new { type = "videos", id = video.StringId }
+                                    type = "books",
+                                    id = existingBook.StringId
+                                },
+                                new
+                                {
+                                    type = "videos",
+                                    id = existingVideo.StringId
                                 }
                             }
                         }
                     }
                 }
             };
-        
+
+            var route = "/men";
+
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
         
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
+            responseDocument.SingleData.Should().NotBeNull();
+            var newManId = int.Parse(responseDocument.SingleData.Id);
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var contentItems = await dbContext.HumanFavoriteContentItems
-                    .Where(hfci => hfci.Human.Id == int.Parse(responseDocument.SingleData.Id))
-                    .Select(hfci => hfci.ContentItem)
+                    .Where(favorite => favorite.Human.Id == newManId)
+                    .Select(favorite => favorite.ContentItem)
                     .ToListAsync();
-                
+
                 contentItems.Should().HaveCount(2);
-                contentItems.Should().ContainSingle(ci => ci is Book);
-                contentItems.Should().ContainSingle(ci => ci is Video);
+                contentItems.Should().ContainSingle(item => item is Book);
+                contentItems.Should().ContainSingle(item => item is Video);
             });
         }
 
         [Fact]
-        public async Task Can_patch_resource_with_many_to_many_relationship_through_relationship_link()
+        public async Task Can_update_resource_with_ManyToMany_relationship_through_relationship_endpoint()
         {
             // Arrange
-            var book = new Book();
-            var video = new Video();
-            var man = new Man();
+            var existingBook = new Book();
+            var existingVideo = new Video();
+            var existingMan = new Man();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTablesAsync<HumanFavoriteContentItem, Book, Video, Man>();
-                dbContext.AddRange(book, video, man);
+                dbContext.AddRange(existingBook, existingVideo, existingMan);
+
                 await dbContext.SaveChangesAsync();
             });
-        
-            var route = $"/men/{man.Id}/relationships/favoriteContent";
+
             var requestBody = new
             {
                 data = new[]
                 {
-                    new { type = "books", id = book.StringId },
-                    new { type = "videos", id = video.StringId }
+                    new
+                    {
+                        type = "books",
+                        id = existingBook.StringId
+                    },
+                    new
+                    {
+                        type = "videos",
+                        id = existingVideo.StringId
+                    }
                 }
             };
-        
+
+            var route = $"/men/{existingMan.StringId}/relationships/favoriteContent";
+
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
-        
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-        
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var contentItems = await dbContext.HumanFavoriteContentItems
-                    .Where(hfci => hfci.Human.Id == man.Id)
-                    .Select(hfci => hfci.ContentItem)
+                    .Where(favorite => favorite.Human.Id == existingMan.Id)
+                    .Select(favorite => favorite.ContentItem)
                     .ToListAsync();
 
                 contentItems.Should().HaveCount(2);
-                contentItems.Should().ContainSingle(ci => ci is Book);
-                contentItems.Should().ContainSingle(ci => ci is Video);
+                contentItems.Should().ContainSingle(item => item is Book);
+                contentItems.Should().ContainSingle(item => item is Video);
             });
         }
     }

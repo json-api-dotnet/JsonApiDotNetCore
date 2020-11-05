@@ -4,6 +4,7 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Internal;
@@ -76,6 +77,11 @@ namespace UnitTests.Services
             var resourceFactory = new ResourceFactory(serviceProvider);
             var resourceDefinitionAccessor = new Mock<IResourceDefinitionAccessor>().Object;
             var paginationContext = new PaginationContext();
+            var getResourcesByIds = new Mock<IGetResourcesByIds>().Object;
+            var targetedFields = new Mock<ITargetedFields>().Object;
+            var resourceContextProvider = new Mock<IResourceContextProvider>().Object;
+            var resourceHookExecutor = new NeverResourceHookExecutorFacade();
+
             var composer = new QueryLayerComposer(new List<IQueryConstraintProvider>(), _resourceGraph, resourceDefinitionAccessor, options, paginationContext);
             var request = new JsonApiRequest
             {
@@ -85,8 +91,9 @@ namespace UnitTests.Services
                     .Single(x => x.PublicName == "collection")
             };
 
-            return new JsonApiResourceService<TodoItem>(_repositoryMock.Object, composer, paginationContext, options,
-                NullLoggerFactory.Instance, request, changeTracker, resourceFactory, null);
+            return new JsonApiResourceService<TodoItem>(_repositoryMock.Object, getResourcesByIds, composer,
+                paginationContext, options, NullLoggerFactory.Instance, request, changeTracker, resourceFactory,
+                targetedFields, resourceContextProvider, resourceHookExecutor);
         }
     }
 }

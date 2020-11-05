@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Configuration;
 using NoEntityFrameworkExample.Models;
@@ -40,7 +41,7 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        public Task<WorkItem> GetRelationshipAsync(int id, string relationshipName)
+        public Task<object> GetRelationshipAsync(int id, string relationshipName)
         {
             throw new NotImplementedException();
         }
@@ -61,12 +62,22 @@ namespace NoEntityFrameworkExample.Services
                 await connection.QueryAsync<WorkItem>(@"delete from ""WorkItems"" where ""Id""=@id", new { id }));
         }
 
-        public Task<WorkItem> UpdateAsync(int id, WorkItem requestResource)
+        public Task<WorkItem> UpdateAsync(int id, WorkItem resource)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateRelationshipAsync(int id, string relationshipName, object relationships)
+        public Task SetRelationshipAsync(int id, string relationshipName, object secondaryResourceIds)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public Task AddToToManyRelationshipAsync(int id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveFromToManyRelationshipAsync(int id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
         {
             throw new NotImplementedException();
         }

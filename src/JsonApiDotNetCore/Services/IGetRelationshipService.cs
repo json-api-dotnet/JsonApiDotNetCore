@@ -15,6 +15,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Handles a json:api request to retrieve a single relationship.
         /// </summary>
-        Task<TResource> GetRelationshipAsync(TId id, string relationshipName);
+        Task<object> GetRelationshipAsync(TId id, string relationshipName);
     }
 }

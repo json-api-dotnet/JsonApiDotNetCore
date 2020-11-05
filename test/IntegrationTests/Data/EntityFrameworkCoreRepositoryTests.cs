@@ -9,6 +9,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -51,11 +52,11 @@ namespace JADNC.IntegrationTests.Data
                     PublicName = "description",
                     Property = typeof(TodoItem).GetProperty(nameof(TodoItem.Description))
                 };
-                targetedFields.Setup(m => m.Attributes).Returns(new List<AttrAttribute> { descAttr });
-                targetedFields.Setup(m => m.Relationships).Returns(new List<RelationshipAttribute>());
+                targetedFields.Setup(m => m.Attributes).Returns(new HashSet<AttrAttribute> { descAttr });
+                targetedFields.Setup(m => m.Relationships).Returns(new HashSet<RelationshipAttribute>());
 
                 // Act
-                await repository.UpdateAsync(todoItemUpdates, databaseResource);
+                await repository.UpdateAsync(todoItemUpdates);
             }
 
             // Assert - in different context
@@ -88,8 +89,10 @@ namespace JADNC.IntegrationTests.Data
             contextResolverMock.Setup(m => m.GetContext()).Returns(context);
             var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TodoItem>().Build();
             var targetedFields = new Mock<ITargetedFields>();
-            var serviceFactory = new Mock<IGenericServiceFactory>().Object;
-            var repository = new EntityFrameworkCoreRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph, serviceFactory, resourceFactory, new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
+            var getResourcesByIds = new Mock<IGetResourcesByIds>().Object;
+            var repository = new EntityFrameworkCoreRepository<TodoItem>(targetedFields.Object,
+                contextResolverMock.Object, resourceGraph, resourceFactory, new List<IQueryConstraintProvider>(),
+                getResourcesByIds, NullLoggerFactory.Instance);
             return (repository, targetedFields, resourceGraph);
         }
 

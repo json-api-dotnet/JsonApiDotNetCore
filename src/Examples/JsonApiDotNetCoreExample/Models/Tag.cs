@@ -18,11 +18,4 @@ namespace JsonApiDotNetCoreExample.Models
         public ISet<Article> Articles { get; set; }
         public ISet<ArticleTag> ArticleTags { get; set; }
     }
-
-    public enum TagColor
-    {
-        Red,
-        Green,
-        Blue
-    }
 }

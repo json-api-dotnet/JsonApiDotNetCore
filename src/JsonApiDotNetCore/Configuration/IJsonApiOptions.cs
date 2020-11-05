@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Configuration
         bool IncludeExceptionStackTraceInErrors { get; }
 
         /// <summary>
-        /// Use relative links for all resources.
+        /// Use relative links for all resources. False by default.
         /// </summary>
         /// <example>
         /// <code>

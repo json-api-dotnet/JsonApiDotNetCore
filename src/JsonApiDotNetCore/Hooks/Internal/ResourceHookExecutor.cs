@@ -23,22 +23,19 @@ namespace JsonApiDotNetCore.Hooks.Internal
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceGraph _resourceGraph;
-        private readonly IResourceFactory _resourceFactory;
 
         public ResourceHookExecutor(
             IHookExecutorHelper executorHelper,
             ITraversalHelper traversalHelper,
             ITargetedFields targetedFields,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IResourceGraph resourceGraph,
-            IResourceFactory resourceFactory)
+            IResourceGraph resourceGraph)
         {
             _executorHelper = executorHelper;
             _traversalHelper = traversalHelper;
             _targetedFields = targetedFields;
             _constraintProviders = constraintProviders;
             _resourceGraph = resourceGraph;
-            _resourceFactory = resourceFactory;
         }
 
         /// <inheritdoc />
@@ -70,7 +67,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 var diff = new DiffableResourceHashSet<TResource>(node.UniqueResources, dbValues, node.LeftsToNextLayer(), _targetedFields);
                 IEnumerable<TResource> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
-                node.Reassign(_resourceFactory, resources);
+                node.Reassign(resources);
             }
 
             FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(node));
@@ -85,7 +82,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 var affected = new ResourceHashSet<TResource>((HashSet<TResource>)node.UniqueResources, node.LeftsToNextLayer());
                 IEnumerable<TResource> updated = container.BeforeCreate(affected, pipeline);
                 node.UpdateUnique(updated);
-                node.Reassign(_resourceFactory, resources);
+                node.Reassign(resources);
             }
             FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(node));
             return resources;
@@ -102,7 +99,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
                 IEnumerable<TResource> updated = container.BeforeDelete(affected, pipeline);
                 node.UpdateUnique(updated);
-                node.Reassign(_resourceFactory, resources);
+                node.Reassign(resources);
             }
 
             // If we're deleting an article, we're implicitly affected any owners related to it.
@@ -126,14 +123,14 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 IEnumerable<TResource> updated = container.OnReturn((HashSet<TResource>)node.UniqueResources, pipeline);
                 ValidateHookResponse(updated);
                 node.UpdateUnique(updated);
-                node.Reassign(_resourceFactory, resources);
+                node.Reassign(resources);
             }
 
             Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.OnReturn, (nextContainer, nextNode) =>
             {
                 var filteredUniqueSet = CallHook(nextContainer, ResourceHook.OnReturn, new object[] { nextNode.UniqueResources, pipeline });
                 nextNode.UpdateUnique(filteredUniqueSet);
-                nextNode.Reassign(_resourceFactory);
+                nextNode.Reassign();
             });
             return resources;
         }
@@ -283,7 +280,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                         var allowedIds = CallHook(nestedHookContainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueResources), resourcesByRelationship, pipeline }).Cast<string>();
                         var updated = GetAllowedResources(uniqueResources, allowedIds);
                         node.UpdateUnique(updated);
-                        node.Reassign(_resourceFactory);
+                        node.Reassign();
                     }
                 }
 
@@ -337,7 +334,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             // that the inverse attribute was also set (Owner has one Article: HasOneAttr:article).
             // If it isn't, JADNC currently knows nothing about this relationship pointing back, and it 
             // currently cannot fire hooks for resources resolved through inverse relationships.
-            var inversableRelationshipAttributes = resourcesByRelationship.Where(kvp => kvp.Key.InverseNavigation != null);
+            var inversableRelationshipAttributes = resourcesByRelationship.Where(kvp => kvp.Key.InverseNavigationProperty != null);
             return inversableRelationshipAttributes.ToDictionary(kvp => _resourceGraph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
         }
 
@@ -353,7 +350,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             if (!implicitAffected.Any()) return;
             var inverse = implicitAffected.ToDictionary(kvp => _resourceGraph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
             var resourcesByRelationship = CreateRelationshipHelper(resourceTypeToInclude, inverse);
-            CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { resourcesByRelationship, pipeline, });
+            CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { resourcesByRelationship, pipeline});
         }
 
         /// <summary>

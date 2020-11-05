@@ -92,6 +92,20 @@ namespace JsonApiDotNetCore.Resources.Annotations
         public override string RelationshipPath => $"{ThroughProperty.Name}.{RightProperty.Name}";
 
         /// <summary>
+        /// Optional. Can be used to indicate a non-default name for the ID property back to the parent resource from the through type.
+        /// Defaults to the name of <see cref="LeftProperty"/> suffixed with "Id".
+        /// In the example described above, this would be "ArticleId".
+        /// </summary>
+        public string LeftIdPropertyName { get; set; }
+
+        /// <summary>
+        /// Optional. Can be used to indicate a non-default name for the ID property to the related resource from the through type.
+        /// Defaults to the name of <see cref="RightProperty"/> suffixed with "Id".
+        /// In the example described above, this would be "TagId".
+        /// </summary>
+        public string RightIdPropertyName { get; set; }
+
+        /// <summary>
         /// Creates a HasMany relationship through a many-to-many join relationship.
         /// </summary>
         /// <param name="throughPropertyName">The name of the navigation property that will be used to access the join relationship.</param>
@@ -108,11 +122,15 @@ namespace JsonApiDotNetCore.Resources.Annotations
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            IEnumerable throughResources = (IEnumerable)ThroughProperty.GetValue(resource) ?? Array.Empty<object>();
+            var value = ThroughProperty.GetValue(resource);
+            if (value == null)
+            {
+                return null;
+            }
 
-            IEnumerable<object> rightResources = throughResources
+            IEnumerable<object> rightResources = ((IEnumerable) value)
                 .Cast<object>()
-                .Select(rightResource =>  RightProperty.GetValue(rightResource));
+                .Select(joinEntity => RightProperty.GetValue(joinEntity));
 
             return TypeHelper.CopyToTypedCollection(rightResources, Property.PropertyType);
         }
@@ -121,12 +139,11 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// Traverses through the provided resource and sets the value of the relationship on the other side of the through type.
         /// In the example described above, this would be the value of "Articles.ArticleTags.Tag".
         /// </summary>
-        public override void SetValue(object resource, object newValue, IResourceFactory resourceFactory)
+        public override void SetValue(object resource, object newValue)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (resourceFactory == null) throw new ArgumentNullException(nameof(resourceFactory));
 
-            base.SetValue(resource, newValue, resourceFactory);
+            base.SetValue(resource, newValue);
 
             if (newValue == null)
             {
@@ -137,7 +154,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
                 List<object> throughResources = new List<object>();
                 foreach (IIdentifiable identifiable in (IEnumerable)newValue)
                 {
-                    object throughResource = resourceFactory.CreateInstance(ThroughType);
+                    var throughResource = TypeHelper.CreateInstance(ThroughType);
+
                     LeftProperty.SetValue(throughResource, resource);
                     RightProperty.SetValue(throughResource, identifiable);
                     throughResources.Add(throughResource);

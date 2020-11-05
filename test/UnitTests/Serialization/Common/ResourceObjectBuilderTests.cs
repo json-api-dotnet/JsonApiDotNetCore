@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,7 +90,7 @@ namespace UnitTests.Serialization.Serializer
             // Arrange
             var resource = new MultipleRelationshipsPrincipalPart
             {
-                PopulatedToOne = new OneToOneDependent { Id = 10 },
+                PopulatedToOne = new OneToOneDependent { Id = 10 }
             };
 
             // Act
@@ -178,28 +177,6 @@ namespace UnitTests.Serialization.Serializer
             Assert.NotNull(resourceObject.Relationships["principal"].Data);
             var ro = (ResourceIdentifierObject)resourceObject.Relationships["principal"].Data;
             Assert.Equal("10", ro.Id);
-        }
-
-        [Fact]
-        public void ResourceWithRequiredRelationshipsToResourceObject_DeviatingForeignKeyAndNoNavigationWhileRelationshipIncluded_ThrowsNotSupportedException()
-        {
-            // Arrange
-            var resource = new OneToOneRequiredDependent { Principal = null, PrincipalId = 123 };
-            var relationships = _resourceGraph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
-
-            // Act & assert
-            Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(resource, relationships: relationships));
-        }
-
-        [Fact]
-        public void ResourceWithRequiredRelationshipsToResourceObject_EmptyResourceWhileRelationshipIncluded_ThrowsNotSupportedException()
-        {
-            // Arrange
-            var resource = new OneToOneRequiredDependent();
-            var relationships = _resourceGraph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
-
-            // Act & assert
-            Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(resource, relationships: relationships));
         }
     }
 }

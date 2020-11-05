@@ -54,7 +54,6 @@ namespace UnitTests.Extensions
             Assert.NotNull(provider.GetService<IJsonApiReader>());
             Assert.NotNull(provider.GetService<IJsonApiDeserializer>());
             Assert.NotNull(provider.GetService<IGenericServiceFactory>());
-            Assert.NotNull(provider.GetService(typeof(RepositoryRelationshipUpdateHelper<TodoItem>)));
         }
 
         [Fact]
@@ -165,9 +164,11 @@ namespace UnitTests.Extensions
             public Task<IReadOnlyCollection<IntResource>> GetAsync() => throw new NotImplementedException();
             public Task<IntResource> GetAsync(int id) => throw new NotImplementedException();
             public Task<object> GetSecondaryAsync(int id, string relationshipName) => throw new NotImplementedException();
-            public Task<IntResource> GetRelationshipAsync(int id, string relationshipName) => throw new NotImplementedException();
-            public Task<IntResource> UpdateAsync(int id, IntResource requestResource) => throw new NotImplementedException();
-            public Task UpdateRelationshipAsync(int id, string relationshipName, object relationships) => throw new NotImplementedException();
+            public Task<object> GetRelationshipAsync(int id, string relationshipName) => throw new NotImplementedException();
+            public Task<IntResource> UpdateAsync(int id, IntResource resource) => throw new NotImplementedException();
+            public Task SetRelationshipAsync(int id, string relationshipName, object secondaryResourceIds) => throw new NotImplementedException();
+            public Task AddToToManyRelationshipAsync(int id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
+            public Task RemoveFromToManyRelationshipAsync(int id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
         }
 
         private class GuidResourceService : IResourceService<GuidResource, Guid>
@@ -177,9 +178,11 @@ namespace UnitTests.Extensions
             public Task<IReadOnlyCollection<GuidResource>> GetAsync() => throw new NotImplementedException();
             public Task<GuidResource> GetAsync(Guid id) => throw new NotImplementedException();
             public Task<object> GetSecondaryAsync(Guid id, string relationshipName) => throw new NotImplementedException();
-            public Task<GuidResource> GetRelationshipAsync(Guid id, string relationshipName) => throw new NotImplementedException();
-            public Task<GuidResource> UpdateAsync(Guid id, GuidResource requestResource) => throw new NotImplementedException();
-            public Task UpdateRelationshipAsync(Guid id, string relationshipName, object relationships) => throw new NotImplementedException();
+            public Task<object> GetRelationshipAsync(Guid id, string relationshipName) => throw new NotImplementedException();
+            public Task<GuidResource> UpdateAsync(Guid id, GuidResource resource) => throw new NotImplementedException();
+            public Task SetRelationshipAsync(Guid id, string relationshipName, object secondaryResourceIds) => throw new NotImplementedException();
+            public Task AddToToManyRelationshipAsync(Guid id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
+            public Task RemoveFromToManyRelationshipAsync(Guid id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
         }
 
 

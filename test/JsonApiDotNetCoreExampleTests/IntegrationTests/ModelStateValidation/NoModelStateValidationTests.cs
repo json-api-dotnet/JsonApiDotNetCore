@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
@@ -21,20 +19,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task When_posting_resource_with_invalid_attribute_value_it_must_succeed()
         {
             // Arrange
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "!@#$%^&*().-",
-                        ["isCaseSensitive"] = "false"
+                        name = "!@#$%^&*().-",
+                        isCaseSensitive = "false"
                     }
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories";
 
             // Act
@@ -63,29 +60,28 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "!@#$%^&*().-"
+                        name = "!@#$%^&*().-"
                     }
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories/" + directory.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Should().BeEmpty();
         }
     }
 }

@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 using MultiDbContextExample.Data;
 
@@ -12,11 +13,10 @@ namespace MultiDbContextExample.Repositories
         where TResource : class, IIdentifiable<int>
     {
         public DbContextARepository(ITargetedFields targetedFields, DbContextResolver<DbContextA> contextResolver,
-            IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
-            IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders,
-            ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory,
-                constraintProviders, loggerFactory)
+            IResourceGraph resourceGraph, IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, 
+            IGetResourcesByIds getResourcesByIds, ILoggerFactory loggerFactory)
+            : base(targetedFields, contextResolver, resourceGraph, resourceFactory,
+                constraintProviders, getResourcesByIds, loggerFactory)
         {
         }
     }

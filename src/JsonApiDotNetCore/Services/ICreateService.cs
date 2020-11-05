@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<TId>
     {
         /// <summary>
-        /// Handles a json:api request to create a new resource.
+        /// Handles a json:api request to create a new resource with attributes, relationships or both.
         /// </summary>
         Task<TResource> CreateAsync(TResource resource);
     }

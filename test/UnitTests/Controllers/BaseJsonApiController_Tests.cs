@@ -40,12 +40,15 @@ namespace UnitTests
                 IGetSecondaryService<Resource, int> getSecondary = null,
                 IGetRelationshipService<Resource, int> getRelationship = null,
                 ICreateService<Resource, int> create = null,
+                IAddToRelationshipService<Resource, int> addToRelationship = null,
                 IUpdateService<Resource, int> update = null,
-                IUpdateRelationshipService<Resource, int> updateRelationships = null,
-                IDeleteService<Resource, int> delete = null)
-                : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create,
-                    update, updateRelationships, delete)
-            { }
+                ISetRelationshipService<Resource, int> setRelationship = null,
+                IDeleteService<Resource, int> delete = null,
+                IRemoveFromRelationshipService<Resource, int> removeFromRelationship = null)
+                : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship,
+                    update, setRelationship, delete, removeFromRelationship)
+            {
+            }
         }
 
         [Fact]
@@ -188,10 +191,11 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
+            var resource = new Resource();
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.PatchAsync(id, It.IsAny<Resource>()));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.PatchAsync(id, resource));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
@@ -221,14 +225,14 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
-            var serviceMock = new Mock<IUpdateRelationshipService<Resource>>();
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, updateRelationships: serviceMock.Object);
+            var serviceMock = new Mock<ISetRelationshipService<Resource>>();
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, setRelationship: serviceMock.Object);
 
             // Act
             await controller.PatchRelationshipAsync(id, string.Empty, null);
 
             // Assert
-            serviceMock.Verify(m => m.UpdateRelationshipAsync(id, string.Empty, null), Times.Once);
+            serviceMock.Verify(m => m.SetRelationshipAsync(id, string.Empty, null), Times.Once);
         }
 
         [Fact]

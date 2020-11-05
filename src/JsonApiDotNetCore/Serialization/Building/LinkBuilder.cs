@@ -109,6 +109,11 @@ namespace JsonApiDotNetCore.Serialization.Building
                 builder.Append(_request.PrimaryId);
             }
 
+            if (_request.Kind == EndpointKind.Relationship)
+            {
+                builder.Append("/relationships");
+            }
+
             if (_request.Relationship != null)
             {
                 builder.Append("/");
@@ -274,6 +279,11 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         private bool ShouldAddResourceLink(ResourceContext resourceContext, LinkTypes link)
         {
+            if (_request.Kind == EndpointKind.Relationship)
+            {
+                return false;
+            }
+            
             if (resourceContext.ResourceLinks != LinkTypes.NotConfigured)
             {
                 return resourceContext.ResourceLinks.HasFlag(link);

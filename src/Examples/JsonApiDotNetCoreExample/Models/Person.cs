@@ -57,20 +57,17 @@ namespace JsonApiDotNetCoreExample.Models
 
         [HasOne]
         public PersonRole Role { get; set; }
-        public int? PersonRoleId { get; set; }
 
         [HasOne]
         public TodoItem OneToOneTodoItem { get; set; }
 
         [HasOne]
         public TodoItem StakeHolderTodoItem { get; set; }
-        public int? StakeHolderTodoItemId { get; set; }
 
         [HasOne(Links = LinkTypes.All, CanInclude = false)]
         public TodoItem UnIncludeableItem { get; set; }
 
         [HasOne]
         public Passport Passport { get; set; }
-        public int? PassportId { get; set; }
     }
 }

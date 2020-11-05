@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 
@@ -11,7 +12,25 @@ namespace JsonApiDotNetCore.Resources.Annotations
     {
         private LinkTypes _links;
 
-        public string InverseNavigation { get; set; }
+        /// <summary>
+        /// The property name of the EF Core inverse navigation, which may or may not be exposed as a json:api relationship.
+        /// </summary>
+        /// <example>
+        /// <code><![CDATA[
+        /// public class Article : Identifiable
+        /// {
+        ///     [HasOne] // InverseNavigationProperty = Person.Articles
+        ///     public Person Owner { get; set; }
+        /// }
+        /// 
+        /// public class Person : Identifiable
+        /// {
+        ///     [HasMany] // InverseNavigationProperty = Article.Owner
+        ///     public ICollection<Article> Articles { get; set; }
+        /// }
+        /// ]]></code>
+        /// </example>
+        internal PropertyInfo InverseNavigationProperty { get; set; }
 
         /// <summary>
         /// The internal navigation property path to the related resource.
@@ -67,7 +86,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         public bool CanInclude { get; set; } = true;
 
         /// <summary>
-        /// Gets the value of the resource property this attributes was declared on.
+        /// Gets the value of the resource property this attribute was declared on.
         /// </summary>
         public virtual object GetValue(object resource)
         {
@@ -77,12 +96,11 @@ namespace JsonApiDotNetCore.Resources.Annotations
         }
 
         /// <summary>
-        /// Sets the value of the resource property this attributes was declared on.
+        /// Sets the value of the resource property this attribute was declared on.
         /// </summary>
-        public virtual void SetValue(object resource, object newValue, IResourceFactory resourceFactory)
+        public virtual void SetValue(object resource, object newValue)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (resourceFactory == null) throw new ArgumentNullException(nameof(resourceFactory));
 
             Property.SetValue(resource, newValue);
         }

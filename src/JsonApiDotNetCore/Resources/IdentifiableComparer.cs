@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Resources
     /// <summary>
     /// Compares `IIdentifiable` instances with each other based on StringId.
     /// </summary>
-    internal sealed class IdentifiableComparer : IEqualityComparer<IIdentifiable>
+    public sealed class IdentifiableComparer : IEqualityComparer<IIdentifiable>
     {
         public static readonly IdentifiableComparer Instance = new IdentifiableComparer();
 

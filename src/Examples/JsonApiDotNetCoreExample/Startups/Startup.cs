@@ -35,7 +35,9 @@ namespace JsonApiDotNetCoreExample
             {
                 options.EnableSensitiveDataLogging();
                 options.UseNpgsql(_connectionString, innerOptions => innerOptions.SetPostgresVersion(new Version(9, 6)));
-            }, ServiceLifetime.Transient);
+            },
+                // TODO: Remove ServiceLifetime.Transient, after all integration tests have been converted to use IntegrationTestContext.
+                ServiceLifetime.Transient);
 
             services.AddJsonApi<AppDbContext>(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
 

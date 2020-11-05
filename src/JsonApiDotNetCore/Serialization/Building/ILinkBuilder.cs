@@ -13,10 +13,12 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// Builds the links object that is included in the top-level of the document.
         /// </summary>
         TopLevelLinks GetTopLevelLinks();
+
         /// <summary>
         /// Builds the links object for resources in the primary data.
         /// </summary>
         ResourceLinks GetResourceLinks(string resourceName, string id);
+
         /// <summary>
         /// Builds the links object that is included in the values of the <see cref="RelationshipEntry"/>.
         /// </summary>

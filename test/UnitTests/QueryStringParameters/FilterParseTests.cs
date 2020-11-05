@@ -80,6 +80,7 @@ namespace UnitTests.QueryStringParameters
         [InlineData("filter", "any(null,'a','b')", "Attribute 'null' does not exist on resource 'blogs'.")]
         [InlineData("filter", "any('a','b','c')", "Field name expected.")]
         [InlineData("filter", "any(title,'b','c',)", "Value between quotes expected.")]
+        [InlineData("filter", "any(title,'b')", ", expected.")]
         [InlineData("filter[articles]", "any(author,'a','b')", "Attribute 'author' does not exist on resource 'articles'.")]
         [InlineData("filter", "and(", "Filter function expected.")]
         [InlineData("filter", "or(equals(title,'some'),equals(title,'other')", ") expected.")]

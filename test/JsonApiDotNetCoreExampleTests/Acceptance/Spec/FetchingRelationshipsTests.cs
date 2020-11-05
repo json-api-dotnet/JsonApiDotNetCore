@@ -62,8 +62,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             string expected = @"{
   ""links"": {
-    ""self"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/relationships/owner"",
-    ""related"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/owner""
+    ""self"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/relationships/owner""
   },
   ""data"": {
     ""type"": ""people"",
@@ -116,7 +115,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var expected = @"{
   ""links"": {
     ""self"": ""http://localhost/api/v1/authors/" + author.StringId + @"/relationships/articles"",
-    ""related"": ""http://localhost/api/v1/authors/" + author.StringId + @"/articles""
+    ""first"": ""http://localhost/api/v1/authors/" + author.StringId + @"/relationships/articles""
   },
   ""data"": [
     {
@@ -335,7 +334,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested relationship does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("The resource 'todoItems' does not contain a relationship named 'invalid'.",errorDocument.Errors[0].Detail);
+            Assert.Equal("Resource of type 'todoItems' does not contain a relationship named 'invalid'.",errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -365,7 +364,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested relationship does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("The resource 'todoItems' does not contain a relationship named 'invalid'.",errorDocument.Errors[0].Detail);
+            Assert.Equal("Resource of type 'todoItems' does not contain a relationship named 'invalid'.",errorDocument.Errors[0].Detail);
         }
     }
 }

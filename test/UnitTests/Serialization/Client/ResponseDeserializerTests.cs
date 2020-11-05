@@ -262,7 +262,7 @@ namespace UnitTests.Serialization.Client
                     Type = "oneToManyPrincipals",
                     Id = "10",
                     Attributes = new Dictionary<string, object> { {"attributeMember", deeplyNestedIncludedAttributeValue } }
-                },
+                }
             };
             var body = JsonConvert.SerializeObject(content);
 
@@ -313,7 +313,7 @@ namespace UnitTests.Serialization.Client
                     Type = "oneToManyPrincipals",
                     Id = "10",
                     Attributes = new Dictionary<string, object> { {"attributeMember", deeplyNestedIncludedAttributeValue } }
-                },
+                }
             };
             var body = JsonConvert.SerializeObject(content);
 
@@ -361,7 +361,7 @@ namespace UnitTests.Serialization.Client
                     Type = "firstDerivedModels",
                     Id = "20",
                     Attributes = new Dictionary<string, object> { { "firstProperty", "true" } }
-                },
+                }
             };
             var body = JsonConvert.SerializeObject(content);
 

@@ -10,18 +10,18 @@ namespace JsonApiDotNetCore.Resources
     public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TResource> where TResource : class, IIdentifiable
     {
         private readonly IJsonApiOptions _options;
-        private readonly IResourceContextProvider _contextProvider;
+        private readonly IResourceContextProvider _resourceContextProvider;
         private readonly ITargetedFields _targetedFields;
 
         private IDictionary<string, string> _initiallyStoredAttributeValues;
         private IDictionary<string, string> _requestedAttributeValues;
         private IDictionary<string, string> _finallyStoredAttributeValues;
 
-        public ResourceChangeTracker(IJsonApiOptions options, IResourceContextProvider contextProvider,
+        public ResourceChangeTracker(IJsonApiOptions options, IResourceContextProvider resourceContextProvider,
             ITargetedFields targetedFields)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
-            _contextProvider = contextProvider ?? throw new ArgumentNullException(nameof(contextProvider));
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
         }
 
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Resources
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            var resourceContext = _contextProvider.GetResourceContext<TResource>();
+            var resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
             _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
         }
 
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Resources
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            var resourceContext = _contextProvider.GetResourceContext<TResource>();
+            var resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
             _finallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
         }
 
