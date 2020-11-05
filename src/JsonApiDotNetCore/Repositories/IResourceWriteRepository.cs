@@ -50,9 +50,8 @@ namespace JsonApiDotNetCore.Repositories
         Task RemoveFromToManyRelationshipAsync(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds);
 
         /// <summary>
-        /// Attempts to retrieve the primary resource during a create/update/delete request.
+        /// Retrieves a resource with all of its attributes, including the set of targeted relationships, in preparation for update.
         /// </summary>
-        /// <returns></returns>
-        Task<TResource> TryGetPrimaryResourceForUpdateAsync(QueryLayer queryLayer);
+        Task<TResource> GetForUpdateAsync(QueryLayer queryLayer);
     }
 }

@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Queries
         /// <summary>
         /// Collects constraints and builds the secondary layer for a relationship endpoint.
         /// </summary>
-        QueryLayer ComposeLayerForRelationship(ResourceContext secondaryResourceContext);
+        QueryLayer ComposeSecondaryLayerForRelationship(ResourceContext secondaryResourceContext);
 
         /// <summary>
         /// Builds a query that filters on the specified IDs and selects them.

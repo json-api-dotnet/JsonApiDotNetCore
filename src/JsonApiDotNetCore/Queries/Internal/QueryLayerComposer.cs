@@ -234,7 +234,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                 new LogicalExpression(LogicalOperator.And, new[] {filter, existingFilter});
         }
 
-        public QueryLayer ComposeLayerForRelationship(ResourceContext secondaryResourceContext)
+        public QueryLayer ComposeSecondaryLayerForRelationship(ResourceContext secondaryResourceContext)
         {
             var secondaryLayer = ComposeFromConstraints(secondaryResourceContext);
             secondaryLayer.Projection = GetProjectionForRelationship(secondaryResourceContext);

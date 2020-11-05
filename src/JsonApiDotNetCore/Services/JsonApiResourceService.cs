@@ -118,7 +118,7 @@ namespace JsonApiDotNetCore.Services
             if (_request.IsCollection && _options.IncludeTotalResourceCount)
             {
                 // TODO: Consider support for pagination links on secondary resource collection. This requires to call Count() on the inverse relationship (which may not exist).
-                // For /blogs/{id}/articles we need to execute Count(Articles.Where(article => article.Blog.Id == 1 && article.Blog.existingFilter))) to determine TotalResourceCount.
+                // For /blogs/1/articles we need to execute Count(Articles.Where(article => article.Blog.Id == 1 && article.Blog.existingFilter))) to determine TotalResourceCount.
                 // This also means we need to invoke ResourceRepository<Article>.CountAsync() from ResourceService<Blog>.
                 // And we should call BlogResourceDefinition.OnApplyFilter to filter out soft-deleted blogs and translate from equals('IsDeleted','false') to equals('Blog.IsDeleted','false')
             }
@@ -133,8 +133,7 @@ namespace JsonApiDotNetCore.Services
             var secondaryResourceOrResources = _request.Relationship.GetValue(primaryResource);
 
             if (secondaryResourceOrResources is ICollection secondaryResources &&
-                secondaryLayer.Pagination?.PageSize != null &&
-                secondaryLayer.Pagination.PageSize.Value == secondaryResources.Count)
+                secondaryLayer.Pagination?.PageSize?.Value == secondaryResources.Count)
             {
                 _paginationContext.IsPageFull = true;
             }
@@ -152,7 +151,7 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.BeforeReadSingle<TResource, TId>(id, ResourcePipeline.GetRelationship);
 
-            var secondaryLayer = _queryLayerComposer.ComposeLayerForRelationship(_request.SecondaryResource);
+            var secondaryLayer = _queryLayerComposer.ComposeSecondaryLayerForRelationship(_request.SecondaryResource);
             var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
 
             var primaryResources = await _repository.GetAsync(primaryLayer);
@@ -386,7 +385,7 @@ namespace JsonApiDotNetCore.Services
         private async Task<TResource> GetPrimaryResourceForUpdateAsync(TId id)
         {
             var queryLayer = _queryLayerComposer.ComposeForUpdate(id, _request.PrimaryResource);
-            var resourceFromDatabase = await _repository.TryGetPrimaryResourceForUpdateAsync(queryLayer);
+            var resourceFromDatabase = await _repository.GetForUpdateAsync(queryLayer);
             AssertPrimaryResourceExists(resourceFromDatabase);
             return resourceFromDatabase;
         }

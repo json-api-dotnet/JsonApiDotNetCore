@@ -167,7 +167,7 @@ namespace JsonApiDotNetCore.Repositories
 
             if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
             {
-                // In the case of many-to-many relationships, creating a duplicate entry in the join table results in a uniqueness constraint violation.
+                // In the case of many-to-many relationships, creating a duplicate entry in the join table results in a unique constraint violation.
                 await RemoveAlreadyRelatedResourcesFromAssignment(hasManyThroughRelationship, primaryId, secondaryResourceIds);
             }
             
@@ -271,7 +271,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResource> TryGetPrimaryResourceForUpdateAsync(QueryLayer queryLayer)
+        public virtual async Task<TResource> GetForUpdateAsync(QueryLayer queryLayer)
         {
             var resources = await GetAsync(queryLayer);
             return resources.FirstOrDefault();
@@ -289,9 +289,9 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        private async Task ApplyRelationshipUpdate(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
+        private async Task ApplyRelationshipUpdate(RelationshipAttribute relationship, TResource leftResource, object rightValue)
         {
-            var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
+            var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(rightValue, relationship.Property.PropertyType);
     
             if (ShouldLoadInverseRelationship(relationship, trackedValueToAssign))
             {
@@ -509,33 +509,19 @@ namespace JsonApiDotNetCore.Repositories
             return null;
         }
 
-        private object EnsureRelationshipValueToAssignIsTracked(object valueToAssign, Type relationshipPropertyType)
+        private object EnsureRelationshipValueToAssignIsTracked(object rightValue, Type relationshipPropertyType)
         {
-            if (valueToAssign is IReadOnlyCollection<IIdentifiable> rightResourcesInToManyRelationship)
+            if (rightValue == null)
             {
-                return EnsureToManyRelationshipValueToAssignIsTracked(rightResourcesInToManyRelationship, relationshipPropertyType);
+                return null;
             }
 
-            if (valueToAssign is IIdentifiable rightResourceInToOneRelationship)
-            {
-                return _dbContext.GetTrackedOrAttach(rightResourceInToOneRelationship);
-            }
+            var rightResources = TypeHelper.ExtractResources(rightValue);
+            var rightResourcesTracked = rightResources.Select(resource => _dbContext.GetTrackedOrAttach(resource)).ToArray();
 
-            return null;
-        }
-
-        private IEnumerable EnsureToManyRelationshipValueToAssignIsTracked(IReadOnlyCollection<IIdentifiable> rightResources, Type rightCollectionType)
-        {
-            var rightResourcesTracked = new object[rightResources.Count];
-
-            int index = 0;
-            foreach (var rightResource in rightResources)
-            {
-                rightResourcesTracked[index] = _dbContext.GetTrackedOrAttach(rightResource);
-                index++;
-            }
-
-            return TypeHelper.CopyToTypedCollection(rightResourcesTracked, rightCollectionType);
+            return rightValue is IEnumerable
+                ? (object) TypeHelper.CopyToTypedCollection(rightResourcesTracked, relationshipPropertyType)
+                : rightResourcesTracked.Single();
         }
 
         private void DetachRelationships(IIdentifiable resource)
@@ -543,16 +529,9 @@ namespace JsonApiDotNetCore.Repositories
             foreach (var relationship in _targetedFields.Relationships)
             {
                 var rightValue = relationship.GetValue(resource);
-
-                if (rightValue is IEnumerable<IIdentifiable> rightResources)
-                {
-                    DetachEntities(rightResources.ToArray());
-                }
-                else if (rightValue != null)
-                {
-                    DetachEntities(new [] { rightValue });
-                    _dbContext.Entry(rightValue).State = EntityState.Detached;
-                }
+                var rightResources = TypeHelper.ExtractResources(rightValue);
+                
+                DetachEntities(rightResources);
             }
         }
         
