@@ -41,7 +41,6 @@ namespace DiscoveryTests
             _services.AddScoped(_ => new Mock<IQueryLayerComposer>().Object);
             _services.AddScoped(_ => new Mock<IResourceRepositoryAccessor>().Object);
             _services.AddScoped(_ => new Mock<IResourceHookExecutorFacade>().Object);
-            _services.AddScoped(_ => new Mock<IGetResourcesByIds>().Object);
             _services.AddScoped(_ => new Mock<IDataStoreUpdateFailureInspector>().Object);
 
             _resourceGraphBuilder = new ResourceGraphBuilder(_options, NullLoggerFactory.Instance);
@@ -174,9 +173,9 @@ namespace DiscoveryTests
                 IResourceGraph resourceGraph,
                 IResourceFactory resourceFactory,
                 IEnumerable<IQueryConstraintProvider> constraintProviders,
-                IGetResourcesByIds getResourcesByIds,
+                IDataStoreUpdateFailureInspector dataStoreUpdateFailureInspector,
                 ILoggerFactory loggerFactory)
-                : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, getResourcesByIds, loggerFactory)
+                : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, dataStoreUpdateFailureInspector, loggerFactory)
             { }
         }
         

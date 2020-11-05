@@ -13,7 +13,6 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -369,10 +368,10 @@ namespace UnitTests.ResourceHooks
             var resourceFactory = new ResourceFactory(serviceProvider);
             IDbContextResolver resolver = CreateTestDbResolver(dbContext);
             var targetedFields = new TargetedFields();
-            var getResourcesByIds = new Mock<IGetResourcesByIds>().Object;
+            var dataStoreUpdateFailureInspector = new Mock<IDataStoreUpdateFailureInspector>().Object;
 
-            return new EntityFrameworkCoreRepository<TModel, int>(targetedFields, resolver, resourceGraph,
-                resourceFactory, new List<IQueryConstraintProvider>(), getResourcesByIds, NullLoggerFactory.Instance);
+            return new EntityFrameworkCoreRepository<TModel, int>(targetedFields, resolver, resourceGraph, resourceFactory,
+                new List<IQueryConstraintProvider>(), dataStoreUpdateFailureInspector, NullLoggerFactory.Instance);
         }
 
         private IDbContextResolver CreateTestDbResolver(AppDbContext dbContext)

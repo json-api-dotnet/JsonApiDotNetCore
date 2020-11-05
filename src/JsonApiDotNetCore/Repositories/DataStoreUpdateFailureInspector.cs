@@ -14,9 +14,8 @@ namespace JsonApiDotNetCore.Repositories
     public interface IDataStoreUpdateFailureInspector
     {
         Task AssertRightResourcesInRelationshipsExistAsync(IIdentifiable leftResource);
-
-        Task AssertRightResourcesInRelationshipExistAsync(RelationshipAttribute relationship,
-            object secondaryResourceIds);
+        Task AssertRightResourcesInRelationshipExistAsync(RelationshipAttribute relationship, object secondaryResourceIds);
+        Task AssertResourcesExist(Type resourceType, ISet<IIdentifiable> resourceIds);
     }
 
     internal sealed class DataStoreUpdateFailureInspector : IDataStoreUpdateFailureInspector
@@ -45,8 +44,7 @@ namespace JsonApiDotNetCore.Repositories
                 object rightValue = relationship.GetValue(leftResource);
                 ICollection<IIdentifiable> rightResources = ExtractResources(rightValue);
 
-                var missingResourcesInRelationship =
-                    GetMissingResourcesInRelationshipAsync(relationship, rightResources);
+                var missingResourcesInRelationship = GetMissingResourcesAsync(relationship, rightResources);
                 await missingResources.AddRangeAsync(missingResourcesInRelationship);
             }
 
@@ -61,12 +59,21 @@ namespace JsonApiDotNetCore.Repositories
         {
             ICollection<IIdentifiable> rightResources = ExtractResources(secondaryResourceIds);
 
-            var missingResources =
-                await GetMissingResourcesInRelationshipAsync(relationship, rightResources).ToListAsync();
-
+            var missingResources = await GetMissingResourcesAsync(relationship, rightResources).ToListAsync();
             if (missingResources.Any())
             {
                 throw new ResourcesInRelationshipsNotFoundException(missingResources);
+            }
+        }
+
+        public async Task AssertResourcesExist(Type resourceType, ISet<IIdentifiable> resourceIds)
+        {
+            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            var existingResourceIds = await GetExistingResourceIds(resourceIds, resourceContext);
+
+            if (existingResourceIds.Count < resourceIds.Count)
+            {
+                throw new DataStoreUpdateException($"One or more related resources of type '{resourceType}' do not exist.");
             }
         }
 
@@ -85,30 +92,35 @@ namespace JsonApiDotNetCore.Repositories
             return Array.Empty<IIdentifiable>();
         }
 
-        private async IAsyncEnumerable<MissingResourceInRelationship> GetMissingResourcesInRelationshipAsync(
-            RelationshipAttribute relationship, ICollection<IIdentifiable> rightResources)
+        private async IAsyncEnumerable<MissingResourceInRelationship> GetMissingResourcesAsync(RelationshipAttribute relationship, ICollection<IIdentifiable> rightResources)
         {
-            if (rightResources.Any())
+            var rightResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
+            var existingResourceIds = await GetExistingResourceIds(rightResources, rightResourceContext);
+
+            foreach (var rightResource in rightResources)
             {
-                var rightIds = rightResources.Select(resource => resource.GetTypedId()).ToHashSet();
-                var rightResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
-
-                var queryLayer = _queryLayerComposer.ComposeForSecondaryResourceIds(rightIds, rightResourceContext);
-
-                var existingRightResources = await _resourceRepositoryAccessor.GetAsync(relationship.RightType, queryLayer);
-                var existingResourceStringIds = existingRightResources.Select(resource => resource.StringId).ToArray();
-
-                foreach (var rightResource in rightResources)
+                if (!existingResourceIds.Contains(rightResource.StringId))
                 {
-                    if (!existingResourceStringIds.Contains(rightResource.StringId))
-                    {
-                        var resourceContext = _resourceContextProvider.GetResourceContext(rightResource.GetType());
+                    var resourceContext = _resourceContextProvider.GetResourceContext(rightResource.GetType());
 
-                        yield return new MissingResourceInRelationship(relationship.PublicName,
-                            resourceContext.PublicName, rightResource.StringId);
-                    }
+                    yield return new MissingResourceInRelationship(relationship.PublicName,
+                        resourceContext.PublicName, rightResource.StringId);
                 }
             }
+        }
+
+        private async Task<ICollection<string>> GetExistingResourceIds(ICollection<IIdentifiable> resourceIds, ResourceContext resourceContext)
+        {
+            if (!resourceIds.Any())
+            {
+                return Array.Empty<string>();
+            }
+
+            var typedIds = resourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
+            var queryLayer = _queryLayerComposer.ComposeForSecondaryResourceIds(typedIds, resourceContext);
+
+            var resources = await _resourceRepositoryAccessor.GetAsync(resourceContext.ResourceType, queryLayer);
+            return resources.Select(resource => resource.StringId).ToArray();
         }
     }
 }

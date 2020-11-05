@@ -9,7 +9,6 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -89,10 +88,12 @@ namespace JADNC.IntegrationTests.Data
             contextResolverMock.Setup(m => m.GetContext()).Returns(context);
             var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TodoItem>().Build();
             var targetedFields = new Mock<ITargetedFields>();
-            var getResourcesByIds = new Mock<IGetResourcesByIds>().Object;
+            var dataStoreUpdateFailureInspector = new Mock<IDataStoreUpdateFailureInspector>().Object;
+            
             var repository = new EntityFrameworkCoreRepository<TodoItem>(targetedFields.Object,
                 contextResolverMock.Object, resourceGraph, resourceFactory, new List<IQueryConstraintProvider>(),
-                getResourcesByIds, NullLoggerFactory.Instance);
+                dataStoreUpdateFailureInspector, NullLoggerFactory.Instance);
+            
             return (repository, targetedFields, resourceGraph);
         }
 

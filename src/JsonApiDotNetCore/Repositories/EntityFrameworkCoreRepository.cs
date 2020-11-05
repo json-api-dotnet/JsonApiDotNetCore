@@ -15,7 +15,6 @@ using JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
 using JsonApiDotNetCore.Repositories.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -41,9 +40,9 @@ namespace JsonApiDotNetCore.Repositories
             IResourceGraph resourceGraph,
             IResourceFactory resourceFactory,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IGetResourcesByIds getResourcesByIds,
+            IDataStoreUpdateFailureInspector dataStoreUpdateFailureInspector,
             ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, getResourcesByIds, loggerFactory) 
+            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, dataStoreUpdateFailureInspector, loggerFactory) 
         { }
     }
 
@@ -58,7 +57,7 @@ namespace JsonApiDotNetCore.Repositories
         private readonly IResourceGraph _resourceGraph;
         private readonly IResourceFactory _resourceFactory;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
-        private readonly IGetResourcesByIds _getResourcesByIds;
+        private readonly IDataStoreUpdateFailureInspector _dataStoreUpdateFailureInspector;
         private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
 
         public EntityFrameworkCoreRepository(ITargetedFields targetedFields,
@@ -66,7 +65,7 @@ namespace JsonApiDotNetCore.Repositories
             IResourceGraph resourceGraph,
             IResourceFactory resourceFactory,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IGetResourcesByIds getResourcesByIds,
+            IDataStoreUpdateFailureInspector dataStoreUpdateFailureInspector,
             ILoggerFactory loggerFactory)
         {
             if (contextResolver == null) throw new ArgumentNullException(nameof(contextResolver));
@@ -76,7 +75,8 @@ namespace JsonApiDotNetCore.Repositories
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
             _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
             _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
-            _getResourcesByIds = getResourcesByIds ?? throw new ArgumentNullException(nameof(getResourcesByIds));
+            _dataStoreUpdateFailureInspector = dataStoreUpdateFailureInspector ?? throw new ArgumentNullException(nameof(dataStoreUpdateFailureInspector));
+            
             _dbContext = contextResolver.GetContext();
             _traceWriter = new TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>>(loggerFactory);
         }
@@ -272,7 +272,7 @@ namespace JsonApiDotNetCore.Repositories
             var primaryResource = await GetPrimaryResourceForCompleteReplacement(id, _targetedFields.Relationships);
 
             var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
-            await AssertSecondaryResourcesExist(secondaryResourceIds, relationship);
+            await _dataStoreUpdateFailureInspector.AssertResourcesExist(relationship.RightType, secondaryResourceIds);
 
             var rightResources = ((IEnumerable<IIdentifiable>)relationship.GetValue(primaryResource)).ToHashSet(IdentifiableComparer.Instance);
             rightResources.ExceptWith(secondaryResourceIds);
@@ -582,19 +582,6 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             return primaryResource;
-        }
-
-        private async Task AssertSecondaryResourcesExist(ISet<IIdentifiable> secondaryResourceIds, HasManyAttribute relationship)
-        {
-            var typedIds = secondaryResourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
-            var secondaryResourcesFromDatabase = await _getResourcesByIds.Get(relationship.RightType, typedIds);
-
-            if (secondaryResourcesFromDatabase.Count < secondaryResourceIds.Count)
-            {
-                throw new DataStoreUpdateException($"One or more related resources of type '{relationship.RightType}' do not exist.");
-            }
-
-            DetachEntities(secondaryResourcesFromDatabase.ToArray());
         }
 
         private void DetachRelationships(IIdentifiable resource)
