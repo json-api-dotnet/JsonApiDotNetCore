@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Services;
@@ -22,15 +23,17 @@ namespace JsonApiDotNetCore.Repositories
     {
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly ITargetedFields _targetedFields;
-        private readonly IGetResourcesByIds _getResourcesByIds;
+        private readonly IQueryLayerComposer _queryLayerComposer;
+        private readonly IResourceRepositoryAccessor _resourceRepositoryAccessor;
 
         public DataStoreUpdateFailureInspector(IResourceContextProvider resourceContextProvider,
-            ITargetedFields targetedFields, IGetResourcesByIds getResourcesByIds)
+            ITargetedFields targetedFields, IQueryLayerComposer queryLayerComposer,
+            IResourceRepositoryAccessor resourceRepositoryAccessor)
         {
-            _resourceContextProvider = resourceContextProvider ??
-                                       throw new ArgumentNullException(nameof(resourceContextProvider));
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
-            _getResourcesByIds = getResourcesByIds ?? throw new ArgumentNullException(nameof(getResourcesByIds));
+            _queryLayerComposer = queryLayerComposer ?? throw new ArgumentNullException(nameof(queryLayerComposer));
+            _resourceRepositoryAccessor = resourceRepositoryAccessor ?? throw new ArgumentNullException(nameof(resourceRepositoryAccessor));
         }
 
         public async Task AssertRightResourcesInRelationshipsExistAsync(IIdentifiable leftResource)
@@ -88,9 +91,13 @@ namespace JsonApiDotNetCore.Repositories
             if (rightResources.Any())
             {
                 var rightIds = rightResources.Select(resource => resource.GetTypedId()).ToHashSet();
-                var existingRightResources = await _getResourcesByIds.Get(relationship.RightType, rightIds);
+                var rightResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
 
+                var queryLayer = _queryLayerComposer.ComposeForSecondaryResourceIds(rightIds, rightResourceContext);
+
+                var existingRightResources = await _resourceRepositoryAccessor.GetAsync(relationship.RightType, queryLayer);
                 var existingResourceStringIds = existingRightResources.Select(resource => resource.StringId).ToArray();
+
                 foreach (var rightResource in rightResources)
                 {
                     if (!existingResourceStringIds.Contains(rightResource.StringId))

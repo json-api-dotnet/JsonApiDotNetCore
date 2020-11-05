@@ -76,14 +76,14 @@ namespace UnitTests.Services
             var serviceProvider = new ServiceContainer();
             var resourceFactory = new ResourceFactory(serviceProvider);
             var resourceDefinitionAccessor = new Mock<IResourceDefinitionAccessor>().Object;
+            var resourceRepositoryAccessor = new Mock<IResourceRepositoryAccessor>().Object;
             var paginationContext = new PaginationContext();
             var targetedFields = new Mock<ITargetedFields>().Object;
             var resourceContextProvider = new Mock<IResourceContextProvider>().Object;
-            var getResourcesByIds = new Mock<IGetResourcesByIds>().Object;
-            var dataStoreUpdateFailureInspector = new DataStoreUpdateFailureInspector(resourceContextProvider, targetedFields, getResourcesByIds);
             var resourceHookExecutor = new NeverResourceHookExecutorFacade();
-
             var composer = new QueryLayerComposer(new List<IQueryConstraintProvider>(), _resourceGraph, resourceDefinitionAccessor, options, paginationContext);
+            var dataStoreUpdateFailureInspector = new DataStoreUpdateFailureInspector(resourceContextProvider, targetedFields, composer, resourceRepositoryAccessor);
+
             var request = new JsonApiRequest
             {
                 PrimaryResource = _resourceGraph.GetResourceContext<TodoItem>(),

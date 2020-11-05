@@ -194,7 +194,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             return new QueryLayer(primaryResourceContext)
             {
                 Include = RewriteIncludeForSecondaryEndpoint(innerInclude, secondaryRelationship),
-                Filter = IncludeFilterById(primaryId, primaryResourceContext, primaryFilter),
+                Filter = CreateFilterByIds(new[] {primaryId}, primaryResourceContext, primaryFilter),
                 Projection = primaryProjection
             };
         }
@@ -208,16 +208,27 @@ namespace JsonApiDotNetCore.Queries.Internal
             return new IncludeExpression(new[] {parentElement});
         }
 
-        private FilterExpression IncludeFilterById<TId>(TId id, ResourceContext resourceContext, FilterExpression existingFilter)
+        private FilterExpression CreateFilterByIds<TId>(ICollection<TId> ids, ResourceContext resourceContext, FilterExpression existingFilter)
         {
             var primaryIdAttribute = resourceContext.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+            var idChain = new ResourceFieldChainExpression(primaryIdAttribute);
 
-            FilterExpression filterById = new ComparisonExpression(ComparisonOperator.Equals,
-                new ResourceFieldChainExpression(primaryIdAttribute), new LiteralConstantExpression(id.ToString()));
+            FilterExpression filter = null;
 
-            return existingFilter == null
-                ? filterById
-                : new LogicalExpression(LogicalOperator.And, new[] {filterById, existingFilter});
+            if (ids.Count == 1)
+            {
+                var constant = new LiteralConstantExpression(ids.Single().ToString());
+                filter = new ComparisonExpression(ComparisonOperator.Equals, idChain, constant);
+            }
+            else if (ids.Count > 1)
+            {
+                var constants = ids.Select(id => new LiteralConstantExpression(id.ToString())).ToList();
+                filter = new EqualsAnyOfExpression(idChain, constants);
+            }
+
+            return filter == null ? existingFilter :
+                existingFilter == null ? filter :
+                new LogicalExpression(LogicalOperator.And, new[] {filter, existingFilter});
         }
 
         public IDictionary<ResourceFieldAttribute, QueryLayer> GetSecondaryProjectionForRelationshipEndpoint(ResourceContext secondaryResourceContext)
@@ -229,6 +240,24 @@ namespace JsonApiDotNetCore.Queries.Internal
             secondaryProjection[secondaryIdAttribute] = null;
 
             return secondaryProjection;
+        }
+
+        /// <inheritdoc />
+        public QueryLayer ComposeForSecondaryResourceIds(ISet<object> typedIds, ResourceContext resourceContext)
+        {
+            var idAttribute = resourceContext.Attributes.Single(x => x.Property.Name == nameof(Identifiable.Id));
+
+            var baseFilter = GetFilter(Array.Empty<QueryExpression>(), resourceContext);
+            var idsFilter = CreateFilterByIds(typedIds, resourceContext, baseFilter);
+
+            return new QueryLayer(resourceContext)
+            {
+                Filter = idsFilter,
+                Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
+                {
+                    [idAttribute] = null
+                }
+            };
         }
 
         protected virtual IReadOnlyCollection<IncludeElementExpression> GetIncludeElements(IReadOnlyCollection<IncludeElementExpression> includeElements, ResourceContext resourceContext)

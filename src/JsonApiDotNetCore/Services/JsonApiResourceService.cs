@@ -344,16 +344,19 @@ namespace JsonApiDotNetCore.Services
             AssertRelationshipExists(relationshipName);
             AssertRelationshipIsToMany();
 
-            try
+            if (secondaryResourceIds.Any())
             {
-                await _repository.RemoveFromToManyRelationshipAsync(id, secondaryResourceIds);
-            }
-            catch (DataStoreUpdateException)
-            {
-                await GetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute);
+                try
+                {
+                    await _repository.RemoveFromToManyRelationshipAsync(id, secondaryResourceIds);
+                }
+                catch (DataStoreUpdateException)
+                {
+                    await GetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute);
+                    await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
 
-                await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
-                throw;
+                    throw;
+                }
             }
         }
 

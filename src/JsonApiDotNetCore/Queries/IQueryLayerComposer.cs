@@ -31,5 +31,10 @@ namespace JsonApiDotNetCore.Queries
         /// </summary>
         IDictionary<ResourceFieldAttribute, QueryLayer> GetSecondaryProjectionForRelationshipEndpoint(
             ResourceContext secondaryResourceContext);
+
+        /// <summary>
+        /// Builds a query that filters on the specified IDs and selects them.
+        /// </summary>
+        QueryLayer ComposeForSecondaryResourceIds(ISet<object> typedIds, ResourceContext resourceContext);
     }
 }
