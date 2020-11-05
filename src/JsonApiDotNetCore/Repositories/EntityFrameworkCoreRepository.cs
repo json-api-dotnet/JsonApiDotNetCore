@@ -39,9 +39,8 @@ namespace JsonApiDotNetCore.Repositories
             IResourceGraph resourceGraph,
             IResourceFactory resourceFactory,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IDataStoreUpdateFailureInspector dataStoreUpdateFailureInspector,
             ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, dataStoreUpdateFailureInspector, loggerFactory) 
+            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory) 
         { }
     }
 
@@ -56,7 +55,6 @@ namespace JsonApiDotNetCore.Repositories
         private readonly IResourceGraph _resourceGraph;
         private readonly IResourceFactory _resourceFactory;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
-        private readonly IDataStoreUpdateFailureInspector _dataStoreUpdateFailureInspector;
         private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
 
         public EntityFrameworkCoreRepository(ITargetedFields targetedFields,
@@ -64,7 +62,6 @@ namespace JsonApiDotNetCore.Repositories
             IResourceGraph resourceGraph,
             IResourceFactory resourceFactory,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IDataStoreUpdateFailureInspector dataStoreUpdateFailureInspector,
             ILoggerFactory loggerFactory)
         {
             if (contextResolver == null) throw new ArgumentNullException(nameof(contextResolver));
@@ -74,7 +71,6 @@ namespace JsonApiDotNetCore.Repositories
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
             _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
             _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
-            _dataStoreUpdateFailureInspector = dataStoreUpdateFailureInspector ?? throw new ArgumentNullException(nameof(dataStoreUpdateFailureInspector));
             
             _dbContext = contextResolver.GetContext();
             _traceWriter = new TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>>(loggerFactory);
@@ -266,7 +262,6 @@ namespace JsonApiDotNetCore.Repositories
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
-            await _dataStoreUpdateFailureInspector.AssertResourcesExist(relationship.RightType, secondaryResourceIds);
 
             var rightResources = ((IEnumerable<IIdentifiable>)relationship.GetValue(primaryResource)).ToHashSet(IdentifiableComparer.Instance);
             rightResources.ExceptWith(secondaryResourceIds);

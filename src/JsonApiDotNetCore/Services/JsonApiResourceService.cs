@@ -341,20 +341,11 @@ namespace JsonApiDotNetCore.Services
             AssertRelationshipIsToMany();
 
             TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId);
+            await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
 
             if (secondaryResourceIds.Any())
             {
-                try
-                {
-                    await _repository.RemoveFromToManyRelationshipAsync(resourceFromDatabase, secondaryResourceIds);
-                }
-                catch (DataStoreUpdateException)
-                {
-                    await GetPrimaryResourceForReadAsync(primaryId, TopFieldSelection.OnlyIdAttribute);
-                    await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
-
-                    throw;
-                }
+                await _repository.RemoveFromToManyRelationshipAsync(resourceFromDatabase, secondaryResourceIds);
             }
         }
 

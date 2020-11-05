@@ -12,10 +12,9 @@ namespace MultiDbContextExample.Repositories
         where TResource : class, IIdentifiable<int>
     {
         public DbContextBRepository(ITargetedFields targetedFields, DbContextResolver<DbContextB> contextResolver,
-            IResourceGraph resourceGraph, IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, 
-            IDataStoreUpdateFailureInspector dataStoreUpdateFailureInspector, ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory,
-                constraintProviders, dataStoreUpdateFailureInspector, loggerFactory)
+            IResourceGraph resourceGraph, IResourceFactory resourceFactory,
+            IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
+            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory)
         {
         }
     }

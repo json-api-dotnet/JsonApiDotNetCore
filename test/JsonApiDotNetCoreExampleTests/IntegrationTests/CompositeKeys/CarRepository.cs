@@ -15,9 +15,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
         public CarRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver,
             IResourceGraph resourceGraph, IResourceFactory resourceFactory,
-            IEnumerable<IQueryConstraintProvider> constraintProviders, IDataStoreUpdateFailureInspector dataStoreUpdateFailureInspector,
-            ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, dataStoreUpdateFailureInspector, loggerFactory)
+            IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
+            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory)
         {
             _resourceGraph = resourceGraph;
         }

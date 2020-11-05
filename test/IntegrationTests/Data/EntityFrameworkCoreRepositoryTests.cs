@@ -88,11 +88,9 @@ namespace JADNC.IntegrationTests.Data
             contextResolverMock.Setup(m => m.GetContext()).Returns(context);
             var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TodoItem>().Build();
             var targetedFields = new Mock<ITargetedFields>();
-            var dataStoreUpdateFailureInspector = new Mock<IDataStoreUpdateFailureInspector>().Object;
             
             var repository = new EntityFrameworkCoreRepository<TodoItem>(targetedFields.Object,
-                contextResolverMock.Object, resourceGraph, resourceFactory, new List<IQueryConstraintProvider>(),
-                dataStoreUpdateFailureInspector, NullLoggerFactory.Instance);
+                contextResolverMock.Object, resourceGraph, resourceFactory, new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
             
             return (repository, targetedFields, resourceGraph);
         }

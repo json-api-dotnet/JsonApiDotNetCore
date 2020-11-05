@@ -15,7 +15,6 @@ namespace JsonApiDotNetCore.Repositories
     {
         Task AssertRightResourcesInRelationshipsExistAsync(IIdentifiable leftResource);
         Task AssertRightResourcesInRelationshipExistAsync(RelationshipAttribute relationship, ICollection<IIdentifiable> rightResourceIds);
-        Task AssertResourcesExist(Type resourceType, ISet<IIdentifiable> resourceIds);
     }
 
     internal sealed class DataStoreUpdateFailureInspector : IDataStoreUpdateFailureInspector
@@ -61,17 +60,6 @@ namespace JsonApiDotNetCore.Repositories
             if (missingResources.Any())
             {
                 throw new ResourcesInRelationshipsNotFoundException(missingResources);
-            }
-        }
-
-        public async Task AssertResourcesExist(Type resourceType, ISet<IIdentifiable> resourceIds)
-        {
-            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
-            var existingResourceIds = await GetExistingResourceIds(resourceIds, resourceContext);
-
-            if (existingResourceIds.Count < resourceIds.Count)
-            {
-                throw new DataStoreUpdateException($"One or more related resources of type '{resourceType}' do not exist.");
             }
         }
 

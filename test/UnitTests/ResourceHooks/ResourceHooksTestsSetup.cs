@@ -368,10 +368,9 @@ namespace UnitTests.ResourceHooks
             var resourceFactory = new ResourceFactory(serviceProvider);
             IDbContextResolver resolver = CreateTestDbResolver(dbContext);
             var targetedFields = new TargetedFields();
-            var dataStoreUpdateFailureInspector = new Mock<IDataStoreUpdateFailureInspector>().Object;
 
             return new EntityFrameworkCoreRepository<TModel, int>(targetedFields, resolver, resourceGraph, resourceFactory,
-                new List<IQueryConstraintProvider>(), dataStoreUpdateFailureInspector, NullLoggerFactory.Instance);
+                new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
         }
 
         private IDbContextResolver CreateTestDbResolver(AppDbContext dbContext)
