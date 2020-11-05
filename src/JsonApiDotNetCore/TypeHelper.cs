@@ -92,7 +92,7 @@ namespace JsonApiDotNetCore
             return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
         }
 
-        internal static object GetDefaultValue(Type type)
+        public static object GetDefaultValue(Type type)
         {
             return type.IsValueType ? CreateInstance(type) : null;
         }
@@ -264,6 +264,21 @@ namespace JsonApiDotNetCore
             var property = resourceType.GetProperty(nameof(Identifiable.Id));
             if (property == null) throw new ArgumentException("Type does not have 'Id' property.");
             return property.PropertyType;
+        }
+
+        public static ICollection<IIdentifiable> ExtractResources(object value)
+        {
+            if (value is IEnumerable<IIdentifiable> resources)
+            {
+                return resources.ToList();
+            }
+
+            if (value is IIdentifiable resource)
+            {
+                return new[] {resource};
+            }
+
+            return Array.Empty<IIdentifiable>();
         }
 
         public static object CreateInstance(Type type)

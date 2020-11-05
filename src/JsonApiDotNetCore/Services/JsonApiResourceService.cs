@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Services
 
             if (_options.IncludeTotalResourceCount)
             {
-                var topFilter = _queryLayerComposer.GetTopFilter();
+                var topFilter = _queryLayerComposer.GetTopFilterFromConstraints();
                 _paginationContext.TotalResourceCount = await _repository.CountAsync(topFilter);
 
                 if (_paginationContext.TotalResourceCount == 0)
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Services
                 }
             }
 
-            var queryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
+            var queryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResource);
             var resources = await _repository.GetAsync(queryLayer);
 
             if (queryLayer.Pagination?.PageSize != null && queryLayer.Pagination.PageSize.Value == resources.Count)
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.BeforeReadSingle<TResource, TId>(id, ResourcePipeline.GetSingle);
 
-            var primaryResource = await GetPrimaryResourceByIdAsync(id, TopFieldSelection.PreserveExisting);
+            var primaryResource = await GetPrimaryResourceForReadAsync(id, TopFieldSelection.PreserveExisting);
 
             _hookExecutor.AfterReadSingle(primaryResource, ResourcePipeline.GetSingle);
             _hookExecutor.OnReturnSingle(primaryResource, ResourcePipeline.GetSingle);
@@ -112,7 +112,7 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.BeforeReadSingle<TResource, TId>(id, ResourcePipeline.GetRelationship);
 
-            var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
+            var secondaryLayer = _queryLayerComposer.ComposeFromConstraints(_request.SecondaryResource);
             var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
 
             if (_request.IsCollection && _options.IncludeTotalResourceCount)
@@ -152,10 +152,7 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.BeforeReadSingle<TResource, TId>(id, ResourcePipeline.GetRelationship);
 
-            var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
-            secondaryLayer.Projection = _queryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(_request.SecondaryResource);
-            secondaryLayer.Include = null;
-
+            var secondaryLayer = _queryLayerComposer.ComposeLayerForRelationship(_request.SecondaryResource);
             var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
 
             var primaryResources = await _repository.GetAsync(primaryLayer);
@@ -192,7 +189,7 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                var existingResource = await TryGetPrimaryResourceByIdAsync(resource.Id, TopFieldSelection.OnlyIdAttribute);
+                var existingResource = await TryGetPrimaryResourceForReadAsync(resource.Id, TopFieldSelection.OnlyIdAttribute);
                 if (existingResource != null)
                 {
                     throw new ResourceAlreadyExistsException(resource.StringId, _request.PrimaryResource.PublicName);
@@ -202,7 +199,7 @@ namespace JsonApiDotNetCore.Services
                 throw;
             }
 
-            var resourceFromDatabase = await GetPrimaryResourceByIdAsync(resourceFromRequest.Id, TopFieldSelection.WithAllAttributes);
+            var resourceFromDatabase = await GetPrimaryResourceForReadAsync(resourceFromRequest.Id, TopFieldSelection.WithAllAttributes);
 
             _hookExecutor.AfterCreate(resourceFromDatabase);
 
@@ -219,9 +216,9 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public async Task AddToToManyRelationshipAsync(TId id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
+        public async Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new { id, secondaryResourceIds });
+            _traceWriter.LogMethodStart(new { primaryId, secondaryResourceIds });
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
@@ -232,11 +229,11 @@ namespace JsonApiDotNetCore.Services
             {
                 try
                 {
-                    await _repository.AddToToManyRelationshipAsync(id, secondaryResourceIds);
+                    await _repository.AddToToManyRelationshipAsync(primaryId, secondaryResourceIds);
                 }
                 catch (DataStoreUpdateException)
                 {
-                    await GetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute);
+                    await GetPrimaryResourceForReadAsync(primaryId, TopFieldSelection.OnlyIdAttribute);
                     await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
 
                     throw;
@@ -255,13 +252,13 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.BeforeUpdateResource(resourceFromRequest);
 
-            TResource resourceFromDatabase = await GetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyAllAttributes);
+            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(id);
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
 
             try
             {
-                await _repository.UpdateAsync(resourceFromRequest);
+                await _repository.UpdateAsync(resourceFromRequest, resourceFromDatabase);
             }
             catch (DataStoreUpdateException)
             {
@@ -269,7 +266,7 @@ namespace JsonApiDotNetCore.Services
                 throw;
             }
 
-            TResource afterResourceFromDatabase = await GetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes);
+            TResource afterResourceFromDatabase = await GetPrimaryResourceForReadAsync(id, TopFieldSelection.WithAllAttributes);
 
             _hookExecutor.AfterUpdateResource(afterResourceFromDatabase);
 
@@ -286,30 +283,29 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public virtual async Task SetRelationshipAsync(TId id, string relationshipName, object secondaryResourceIds)
+        public virtual async Task SetRelationshipAsync(TId primaryId, string relationshipName, object secondaryResourceIds)
         {
-             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
+             _traceWriter.LogMethodStart(new {primaryId, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertRelationshipExists(relationshipName);
 
-            await _hookExecutor.BeforeUpdateRelationshipAsync(id,
-                async () => await GetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes));
+            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId);
+
+            _hookExecutor.BeforeUpdateRelationshipAsync(resourceFromDatabase);
 
             try
             {
-                await _repository.SetRelationshipAsync(id, secondaryResourceIds);
+                await _repository.SetRelationshipAsync(resourceFromDatabase, secondaryResourceIds);
             }
             catch (DataStoreUpdateException)
             {
-                await GetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute);
-                await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
+                await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipExistAsync(_request.Relationship, TypeHelper.ExtractResources(secondaryResourceIds));
 
                 throw;
             }
 
-            await _hookExecutor.AfterUpdateRelationshipAsync(id,
-                async () => await GetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes));
+            _hookExecutor.AfterUpdateRelationshipAsync(resourceFromDatabase);
         }
 
         /// <inheritdoc />
@@ -318,7 +314,7 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {id});
 
             await _hookExecutor.BeforeDeleteAsync(id,
-                async () => await GetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes));
+                async () => await GetPrimaryResourceForReadAsync(id, TopFieldSelection.WithAllAttributes));
 
             try
             {
@@ -326,33 +322,35 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                await GetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute);
+                await GetPrimaryResourceForReadAsync(id, TopFieldSelection.OnlyIdAttribute);
                 throw;
             }
 
             await _hookExecutor.AfterDeleteAsync(id,
-                async () => await GetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes));
+                async () => await GetPrimaryResourceForReadAsync(id, TopFieldSelection.WithAllAttributes));
         }
 
         /// <inheritdoc />
-        public async Task RemoveFromToManyRelationshipAsync(TId id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
+        public async Task RemoveFromToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
+            _traceWriter.LogMethodStart(new {primaryId, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             AssertRelationshipExists(relationshipName);
             AssertRelationshipIsToMany();
 
+            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId);
+
             if (secondaryResourceIds.Any())
             {
                 try
                 {
-                    await _repository.RemoveFromToManyRelationshipAsync(id, secondaryResourceIds);
+                    await _repository.RemoveFromToManyRelationshipAsync(resourceFromDatabase, secondaryResourceIds);
                 }
                 catch (DataStoreUpdateException)
                 {
-                    await GetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute);
+                    await GetPrimaryResourceForReadAsync(primaryId, TopFieldSelection.OnlyIdAttribute);
                     await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
 
                     throw;
@@ -360,18 +358,18 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private async Task<TResource> GetPrimaryResourceByIdAsync(TId id, TopFieldSelection fieldSelection)
+        private async Task<TResource> GetPrimaryResourceForReadAsync(TId id, TopFieldSelection fieldSelection)
         {
-            var primaryResource = await TryGetPrimaryResourceByIdAsync(id, fieldSelection);
+            var primaryResource = await TryGetPrimaryResourceForReadAsync(id, fieldSelection);
 
             AssertPrimaryResourceExists(primaryResource);
 
             return primaryResource;
         }
 
-        private async Task<TResource> TryGetPrimaryResourceByIdAsync(TId id, TopFieldSelection fieldSelection)
+        private async Task<TResource> TryGetPrimaryResourceForReadAsync(TId id, TopFieldSelection fieldSelection)
         {
-            var primaryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
+            var primaryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResource);
             primaryLayer.Sort = null;
             primaryLayer.Pagination = null;
             primaryLayer.Filter = IncludeFilterById(id, primaryLayer.Filter);
@@ -389,14 +387,17 @@ namespace JsonApiDotNetCore.Services
                     primaryLayer.Projection.Remove(primaryLayer.Projection.First(p => p.Key is AttrAttribute));
                 }
             }
-            else if (fieldSelection == TopFieldSelection.OnlyAllAttributes)
-            {
-                primaryLayer.Include = null;
-                primaryLayer.Projection = null;
-            }
 
             var primaryResources = await _repository.GetAsync(primaryLayer);
             return primaryResources.SingleOrDefault();
+        }
+
+        private async Task<TResource> GetPrimaryResourceForUpdateAsync(TId id)
+        {
+            var queryLayer = _queryLayerComposer.ComposeForUpdate(id, _request.PrimaryResource);
+            var resourceFromDatabase = await _repository.TryGetPrimaryResourceForUpdateAsync(queryLayer);
+            AssertPrimaryResourceExists(resourceFromDatabase);
+            return resourceFromDatabase;
         }
 
         private FilterExpression IncludeFilterById(TId id, FilterExpression existingFilter)
@@ -438,10 +439,6 @@ namespace JsonApiDotNetCore.Services
 
         private enum TopFieldSelection
         {
-            /// <summary>
-            /// Discards any included relationships and selects all resource attributes.
-            /// </summary>
-            OnlyAllAttributes,
             /// <summary>
             /// Preserves included relationships, but selects all resource attributes.
             /// </summary>

@@ -13,12 +13,12 @@ namespace JsonApiDotNetCore.Queries
         /// <summary>
         /// Builds a top-level filter from constraints, used to determine total resource count.
         /// </summary>
-        FilterExpression GetTopFilter();
+        FilterExpression GetTopFilterFromConstraints();
 
         /// <summary>
         /// Collects constraints and builds a <see cref="QueryLayer"/> out of them, used to retrieve the actual resources.
         /// </summary>
-        QueryLayer Compose(ResourceContext requestResource);
+        QueryLayer ComposeFromConstraints(ResourceContext requestResource);
 
         /// <summary>
         /// Wraps a layer for a secondary endpoint into a primary layer, rewriting top-level includes.
@@ -27,14 +27,18 @@ namespace JsonApiDotNetCore.Queries
             TId primaryId, RelationshipAttribute secondaryRelationship);
 
         /// <summary>
-        /// Gets the secondary projection for a relationship endpoint.
+        /// Collects constraints and builds the secondary layer for a relationship endpoint.
         /// </summary>
-        IDictionary<ResourceFieldAttribute, QueryLayer> GetSecondaryProjectionForRelationshipEndpoint(
-            ResourceContext secondaryResourceContext);
+        QueryLayer ComposeLayerForRelationship(ResourceContext secondaryResourceContext);
 
         /// <summary>
         /// Builds a query that filters on the specified IDs and selects them.
         /// </summary>
-        QueryLayer ComposeForSecondaryResourceIds(ISet<object> typedIds, ResourceContext resourceContext);
+        QueryLayer ComposeForFilterOnResourceIds(ISet<object> typedIds, ResourceContext resourceContext);
+
+        /// <summary>
+        /// Builds a query that retrieves the primary resource, including all of its attributes and all targeted relationships, during a create/update/delete request.
+        /// </summary>
+        QueryLayer ComposeForUpdate<TId>(TId id, ResourceContext primaryResource);
     }
 }

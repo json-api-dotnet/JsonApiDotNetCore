@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Repositories
     public interface IDataStoreUpdateFailureInspector
     {
         Task AssertRightResourcesInRelationshipsExistAsync(IIdentifiable leftResource);
-        Task AssertRightResourcesInRelationshipExistAsync(RelationshipAttribute relationship, object secondaryResourceIds);
+        Task AssertRightResourcesInRelationshipExistAsync(RelationshipAttribute relationship, ICollection<IIdentifiable> rightResourceIds);
         Task AssertResourcesExist(Type resourceType, ISet<IIdentifiable> resourceIds);
     }
 
@@ -42,9 +42,9 @@ namespace JsonApiDotNetCore.Repositories
             foreach (var relationship in _targetedFields.Relationships)
             {
                 object rightValue = relationship.GetValue(leftResource);
-                ICollection<IIdentifiable> rightResources = ExtractResources(rightValue);
+                ICollection<IIdentifiable> rightResources = TypeHelper.ExtractResources(rightValue);
 
-                var missingResourcesInRelationship = GetMissingResourcesAsync(relationship, rightResources);
+                var missingResourcesInRelationship = GetMissingRightResourcesAsync(rightResources, relationship);
                 await missingResources.AddRangeAsync(missingResourcesInRelationship);
             }
 
@@ -55,11 +55,9 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         public async Task AssertRightResourcesInRelationshipExistAsync(RelationshipAttribute relationship,
-            object secondaryResourceIds)
+            ICollection<IIdentifiable> rightResourceIds)
         {
-            ICollection<IIdentifiable> rightResources = ExtractResources(secondaryResourceIds);
-
-            var missingResources = await GetMissingResourcesAsync(relationship, rightResources).ToListAsync();
+            var missingResources = await GetMissingRightResourcesAsync(rightResourceIds, relationship).ToListAsync();
             if (missingResources.Any())
             {
                 throw new ResourcesInRelationshipsNotFoundException(missingResources);
@@ -77,22 +75,8 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        private static ICollection<IIdentifiable> ExtractResources(object value)
-        {
-            if (value is IEnumerable<IIdentifiable> resources)
-            {
-                return resources.ToList();
-            }
-
-            if (value is IIdentifiable resource)
-            {
-                return new[] {resource};
-            }
-
-            return Array.Empty<IIdentifiable>();
-        }
-
-        private async IAsyncEnumerable<MissingResourceInRelationship> GetMissingResourcesAsync(RelationshipAttribute relationship, ICollection<IIdentifiable> rightResources)
+        private async IAsyncEnumerable<MissingResourceInRelationship> GetMissingRightResourcesAsync(
+            ICollection<IIdentifiable> rightResources, RelationshipAttribute relationship)
         {
             var rightResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
             var existingResourceIds = await GetExistingResourceIds(rightResources, rightResourceContext);
@@ -117,7 +101,7 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             var typedIds = resourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
-            var queryLayer = _queryLayerComposer.ComposeForSecondaryResourceIds(typedIds, resourceContext);
+            var queryLayer = _queryLayerComposer.ComposeForFilterOnResourceIds(typedIds, resourceContext);
 
             var resources = await _resourceRepositoryAccessor.GetAsync(resourceContext.ResourceType, queryLayer);
             return resources.Select(resource => resource.StringId).ToArray();

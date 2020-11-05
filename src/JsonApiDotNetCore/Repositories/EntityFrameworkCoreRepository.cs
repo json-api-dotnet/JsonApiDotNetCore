@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -163,9 +162,9 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task AddToToManyRelationshipAsync(TId id, ISet<IIdentifiable> secondaryResourceIds)
+        public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
+            _traceWriter.LogMethodStart(new {primaryId, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             var relationship = _targetedFields.Relationships.Single();
@@ -173,10 +172,10 @@ namespace JsonApiDotNetCore.Repositories
             if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
             {
                 // In the case of many-to-many relationships, creating a duplicate entry in the join table results in a uniqueness constraint violation.
-                await RemoveAlreadyRelatedResourcesFromAssignment(hasManyThroughRelationship, id, secondaryResourceIds);
+                await RemoveAlreadyRelatedResourcesFromAssignment(hasManyThroughRelationship, primaryId, secondaryResourceIds);
             }
             
-            var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
+            var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(primaryId));
 
             if (secondaryResourceIds.Any())
             {
@@ -186,36 +185,33 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task SetRelationshipAsync(TId id, object secondaryResourceIds)
+        public virtual async Task SetRelationshipAsync(TResource primaryResource, object secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
+            _traceWriter.LogMethodStart(new {primaryResource, secondaryResourceIds});
 
-            var primaryResource = await GetPrimaryResourceForCompleteReplacement(id, _targetedFields.Relationships);
-            
             var relationship = _targetedFields.Relationships.Single();
 
             await ApplyRelationshipUpdate(relationship, primaryResource, secondaryResourceIds);
-            
+
             await SaveChangesAsync();
         }
 
         /// <inheritdoc />
-        public virtual async Task UpdateAsync(TResource resource)
+        public virtual async Task UpdateAsync(TResource resourceFromRequest, TResource resourceFromDatabase)
         {
-            _traceWriter.LogMethodStart(new {resource});
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-
-            var resourceFromDatabase = await GetPrimaryResourceForCompleteReplacement(resource.Id, _targetedFields.Relationships);
+            _traceWriter.LogMethodStart(new {resourceFromRequest, resourceFromDatabase});
+            if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
+            if (resourceFromDatabase == null) throw new ArgumentNullException(nameof(resourceFromDatabase));
 
             foreach (var relationship in _targetedFields.Relationships)
             {
-                var rightResources = relationship.GetValue(resource);
+                var rightResources = relationship.GetValue(resourceFromRequest);
                 await ApplyRelationshipUpdate(relationship, resourceFromDatabase, rightResources);
             }
 
             foreach (var attribute in _targetedFields.Attributes)
             {
-                attribute.SetValue(resourceFromDatabase, attribute.GetValue(resource));
+                attribute.SetValue(resourceFromDatabase, attribute.GetValue(resourceFromRequest));
             }
 
             await SaveChangesAsync();
@@ -264,12 +260,10 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task RemoveFromToManyRelationshipAsync(TId id, ISet<IIdentifiable> secondaryResourceIds)
+        public virtual async Task RemoveFromToManyRelationshipAsync(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new {id, secondaryResourceIds});
+            _traceWriter.LogMethodStart(new {primaryResource, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
-            
-            var primaryResource = await GetPrimaryResourceForCompleteReplacement(id, _targetedFields.Relationships);
 
             var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
             await _dataStoreUpdateFailureInspector.AssertResourcesExist(relationship.RightType, secondaryResourceIds);
@@ -279,6 +273,13 @@ namespace JsonApiDotNetCore.Repositories
             
             await ApplyRelationshipUpdate(relationship, primaryResource, rightResources);
             await SaveChangesAsync();
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<TResource> TryGetPrimaryResourceForUpdateAsync(QueryLayer queryLayer)
+        {
+            var resources = await GetAsync(queryLayer);
+            return resources.FirstOrDefault();
         }
 
         private async Task SaveChangesAsync()
@@ -540,48 +541,6 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             return TypeHelper.CopyToTypedCollection(rightResourcesTracked, rightCollectionType);
-        }
-
-        /// <summary>
-        /// Gets the primary resource by ID and performs side-loading of data such that EF Core correctly performs complete replacements of relationships. 
-        /// </summary>
-        /// <remarks>
-        /// For example: a person `p1` has 2 todo-items: `t1` and `t2`.
-        /// If we want to update this set to `t3` and `t4`, simply assigning
-        /// `p1.todoItems = [t3, t4]` will result in EF Core adding them to the set,
-        /// resulting in `[t1 ... t4]`. Instead, we should first include `[t1, t2]`,
-        /// after which the reassignment `p1.todoItems = [t3, t4]` will actually 
-        /// make EF Core perform a complete replacement. This method does the loading of `[t1, t2]`.
-        /// </remarks>
-        private async Task<TResource> GetPrimaryResourceForCompleteReplacement(TId id, ISet<RelationshipAttribute> relationships)
-        {
-            TResource primaryResource;
-
-            if (relationships.Any())
-            {
-                IQueryable<TResource> query = _dbContext.Set<TResource>();
-                foreach (var relationship in relationships)
-                {
-                    query = query.Include(relationship.RelationshipPath);
-                }
-
-                primaryResource = query.FirstOrDefault(resource => resource.Id.Equals(id));
-            }
-            else
-            {
-                primaryResource = await _dbContext.FindAsync<TResource>(id);
-            }
-
-            if (primaryResource == null)
-            {
-                var tempResource = _resourceFactory.CreateInstance<TResource>();
-                tempResource.Id = id;
-
-                var resourceContext = _resourceGraph.GetResourceContext<TResource>();
-                throw new ResourceNotFoundException(tempResource.StringId, resourceContext.PublicName);
-            }
-
-            return primaryResource;
         }
 
         private void DetachRelationships(IIdentifiable resource)

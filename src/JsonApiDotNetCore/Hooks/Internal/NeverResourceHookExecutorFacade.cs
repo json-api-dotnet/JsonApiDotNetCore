@@ -52,16 +52,14 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
         }
 
-        public Task BeforeUpdateRelationshipAsync<TResource, TId>(TId id, Func<Task<TResource>> getResourceAsync)
-            where TResource : class, IIdentifiable<TId>
+        public void BeforeUpdateRelationshipAsync<TResource>(TResource resource)
+            where TResource : class, IIdentifiable
         {
-            return Task.CompletedTask;
         }
 
-        public Task AfterUpdateRelationshipAsync<TResource, TId>(TId id, Func<Task<TResource>> getResourceAsync)
-            where TResource : class, IIdentifiable<TId>
+        public void AfterUpdateRelationshipAsync<TResource>(TResource resource)
+            where TResource : class, IIdentifiable
         {
-            return Task.CompletedTask;
         }
 
         public Task BeforeDeleteAsync<TResource, TId>(TId id, Func<Task<TResource>> getResourceAsync)

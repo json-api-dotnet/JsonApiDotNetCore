@@ -61,7 +61,7 @@ namespace NoEntityFrameworkExample.Services
             })).SingleOrDefault();
         }
 
-        public Task AddToToManyRelationshipAsync(int id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
+        public Task AddToToManyRelationshipAsync(int primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
         {
             throw new NotImplementedException();
         }
@@ -71,7 +71,7 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        public Task SetRelationshipAsync(int id, string relationshipName, object secondaryResourceIds)
+        public Task SetRelationshipAsync(int primaryId, string relationshipName, object secondaryResourceIds)
         {
             throw new NotImplementedException();
         }
@@ -82,7 +82,7 @@ namespace NoEntityFrameworkExample.Services
                 await connection.QueryAsync<WorkItem>(@"delete from ""WorkItems"" where ""Id""=@id", new {id}));
         }
 
-        public Task RemoveFromToManyRelationshipAsync(int id, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
+        public Task RemoveFromToManyRelationshipAsync(int primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
         {
             throw new NotImplementedException();
         }

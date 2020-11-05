@@ -55,7 +55,7 @@ namespace JADNC.IntegrationTests.Data
                 targetedFields.Setup(m => m.Relationships).Returns(new HashSet<RelationshipAttribute>());
 
                 // Act
-                await repository.UpdateAsync(todoItemUpdates);
+                await repository.UpdateAsync(todoItemUpdates, databaseResource);
             }
 
             // Assert - in different context

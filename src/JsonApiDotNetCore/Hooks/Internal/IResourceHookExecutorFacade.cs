@@ -35,11 +35,11 @@ namespace JsonApiDotNetCore.Hooks.Internal
         void AfterUpdateResource<TResource>(TResource resource)
             where TResource : class, IIdentifiable;
 
-        Task BeforeUpdateRelationshipAsync<TResource, TId>(TId id, Func<Task<TResource>> getResourceAsync)
-            where TResource : class, IIdentifiable<TId>;
+        void BeforeUpdateRelationshipAsync<TResource>(TResource resource)
+            where TResource : class, IIdentifiable;
 
-        Task AfterUpdateRelationshipAsync<TResource, TId>(TId id, Func<Task<TResource>> getResourceAsync)
-            where TResource : class, IIdentifiable<TId>;
+        void AfterUpdateRelationshipAsync<TResource>(TResource resource)
+            where TResource : class, IIdentifiable;
 
         Task BeforeDeleteAsync<TResource, TId>(TId id, Func<Task<TResource>> getResourceAsync)
             where TResource : class, IIdentifiable<TId>;

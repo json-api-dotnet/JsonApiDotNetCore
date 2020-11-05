@@ -76,17 +76,15 @@ namespace JsonApiDotNetCore.Hooks.Internal
             _resourceHookExecutor.AfterUpdate(ToList(resource), ResourcePipeline.Patch);
         }
 
-        public async Task BeforeUpdateRelationshipAsync<TResource, TId>(TId id, Func<Task<TResource>> getResourceAsync)
-            where TResource : class, IIdentifiable<TId>
+        public void BeforeUpdateRelationshipAsync<TResource>(TResource resource)
+            where TResource : class, IIdentifiable
         {
-            var resource = await getResourceAsync();
             _resourceHookExecutor.BeforeUpdate(ToList(resource), ResourcePipeline.PatchRelationship);
         }
 
-        public async Task AfterUpdateRelationshipAsync<TResource, TId>(TId id, Func<Task<TResource>> getResourceAsync)
-            where TResource : class, IIdentifiable<TId>
+        public void AfterUpdateRelationshipAsync<TResource>(TResource resource)
+            where TResource : class, IIdentifiable
         {
-            var resource = await getResourceAsync();
             _resourceHookExecutor.AfterUpdate(ToList(resource), ResourcePipeline.PatchRelationship);
         }
 
