@@ -9,7 +9,8 @@ namespace JsonApiDotNetCore.Services
     { }
 
     /// <summary />
-    public interface ISetRelationshipService<TResource, in TId> where TResource : class, IIdentifiable<TId>
+    public interface ISetRelationshipService<TResource, in TId>
+        where TResource : class, IIdentifiable<TId>
     {
         /// <summary>
         /// Handles a json:api request to perform a complete replacement of a relationship on an existing resource.

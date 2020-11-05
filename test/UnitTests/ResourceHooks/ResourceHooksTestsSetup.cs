@@ -367,20 +367,15 @@ namespace UnitTests.ResourceHooks
         {
             var serviceProvider = ((IInfrastructure<IServiceProvider>) dbContext).Instance;
             var resourceFactory = new ResourceFactory(serviceProvider);
-            IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
+            IDbContextResolver resolver = CreateTestDbResolver(dbContext);
             var targetedFields = new TargetedFields();
             var getResourcesByIds = new Mock<IGetResourcesByIds>().Object;
-            return new EntityFrameworkCoreRepository<TModel, int>(
-                targetedFields,
-                resolver,
-                resourceGraph,
-                resourceFactory,
-                new List<IQueryConstraintProvider>(),
-                getResourcesByIds,
-                NullLoggerFactory.Instance);
+
+            return new EntityFrameworkCoreRepository<TModel, int>(targetedFields, resolver, resourceGraph,
+                resourceFactory, new List<IQueryConstraintProvider>(), getResourcesByIds, NullLoggerFactory.Instance);
         }
 
-        private IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>
+        private IDbContextResolver CreateTestDbResolver(AppDbContext dbContext)
         {
             var mock = new Mock<IDbContextResolver>();
             mock.Setup(r => r.GetContext()).Returns(dbContext);
@@ -390,7 +385,7 @@ namespace UnitTests.ResourceHooks
         private void ResolveInverseRelationships(AppDbContext context)
         {
             var dbContextResolvers = new[] {new DbContextResolver<AppDbContext>(context)};
-            var inverseRelationships = new InverseRelationshipResolver(_resourceGraph, dbContextResolvers);
+            var inverseRelationships = new InverseNavigationResolver(_resourceGraph, dbContextResolvers);
             inverseRelationships.Resolve();
         }
 

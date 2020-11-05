@@ -439,7 +439,7 @@ namespace JsonApiDotNetCore.Services
 
             if (missingResources.Any())
             {
-                throw new SecondaryResourcesNotFoundException(missingResources);
+                throw new ResourcesInRelationshipsNotFoundException(missingResources);
             }
         }
 
@@ -450,7 +450,7 @@ namespace JsonApiDotNetCore.Services
             var missingResources = await GetMissingResourcesInRelationshipAsync(relationship, rightResources).ToListAsync();
             if (missingResources.Any())
             {
-                throw new SecondaryResourcesNotFoundException(missingResources);
+                throw new ResourcesInRelationshipsNotFoundException(missingResources);
             }
         }
 

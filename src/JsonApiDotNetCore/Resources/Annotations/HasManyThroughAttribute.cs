@@ -122,15 +122,15 @@ namespace JsonApiDotNetCore.Resources.Annotations
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            var value = ThroughProperty.GetValue(resource);
-            if (value == null)
+            var throughEntity = ThroughProperty.GetValue(resource);
+            if (throughEntity == null)
             {
                 return null;
             }
 
-            IEnumerable<object> rightResources = ((IEnumerable) value)
+            IEnumerable<object> rightResources = ((IEnumerable) throughEntity)
                 .Cast<object>()
-                .Select(joinEntity => RightProperty.GetValue(joinEntity));
+                .Select(rightResource => RightProperty.GetValue(rightResource));
 
             return TypeHelper.CopyToTypedCollection(rightResources, Property.PropertyType);
         }
@@ -152,13 +152,13 @@ namespace JsonApiDotNetCore.Resources.Annotations
             else
             {
                 List<object> throughResources = new List<object>();
-                foreach (IIdentifiable identifiable in (IEnumerable)newValue)
+                foreach (IIdentifiable rightResource in (IEnumerable)newValue)
                 {
-                    var throughResource = TypeHelper.CreateInstance(ThroughType);
+                    var throughEntity = TypeHelper.CreateInstance(ThroughType);
 
-                    LeftProperty.SetValue(throughResource, resource);
-                    RightProperty.SetValue(throughResource, identifiable);
-                    throughResources.Add(throughResource);
+                    LeftProperty.SetValue(throughEntity, resource);
+                    RightProperty.SetValue(throughEntity, rightResource);
+                    throughResources.Add(throughEntity);
                 }
 
                 var typedCollection = TypeHelper.CopyToTypedCollection(throughResources, ThroughProperty.PropertyType);

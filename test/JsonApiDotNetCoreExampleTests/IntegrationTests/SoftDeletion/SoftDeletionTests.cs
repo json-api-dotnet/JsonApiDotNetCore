@@ -393,5 +393,48 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             responseDocument.Errors[0].Detail.Should().Be($"Resource of type 'companies' with ID '{company.StringId}' does not exist.");
             responseDocument.Errors[0].Source.Parameter.Should().BeNull();
         }
+
+        [Fact(Skip = "TODO: Make this test work again, now that we fetch the primary resource.")]
+        public async Task Cannot_update_relationship_for_deleted_parent()
+        {
+            // Arrange
+            var company = new Company
+            {
+                IsSoftDeleted = true,
+                Departments = new List<Department>
+                {
+                    new Department
+                    {
+                        Name = "Marketing"
+                    }
+                }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Companies.Add(company);
+
+                await dbContext.SaveChangesAsync();
+            });
+
+            var route = $"/companies/{company.StringId}/relationships/departments";
+
+            var requestBody = new
+            {
+                data = new object[0]
+            };
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[0].Title.Should().Be("The requested resource does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be($"Resource of type 'companies' with ID '{company.StringId}' does not exist.");
+            responseDocument.Errors[0].Source.Parameter.Should().BeNull();
+        }
     }
 }

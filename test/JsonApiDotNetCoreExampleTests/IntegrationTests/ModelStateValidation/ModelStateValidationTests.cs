@@ -820,15 +820,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var directoryInDatabase = await dbContext.Directories
-                    .Include(d => d.Parent)
-                    .FirstAsync(d => d.Id == directory.Id);
-
-                directoryInDatabase.Parent.Id.Should().Be(otherParent.Id);
-            });
         }
 
         [Fact]

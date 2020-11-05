@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.Hooks.Internal
 {
     /// <summary>
-    /// Facade for hooks that does nothing, which is used when <see cref="IJsonApiOptions.EnableResourceHooks"/> is false.
+    /// Facade for hooks that never executes any callbacks, which is used when <see cref="IJsonApiOptions.EnableResourceHooks"/> is false.
     /// </summary>
     public sealed class NeverResourceHookExecutorFacade : IResourceHookExecutorFacade
     {

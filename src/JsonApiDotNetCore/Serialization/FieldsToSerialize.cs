@@ -16,18 +16,18 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IResourceGraph _resourceGraph;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
-        private readonly IJsonApiRequest _jsonApiRequest;
+        private readonly IJsonApiRequest _request;
 
         public FieldsToSerialize(
             IResourceGraph resourceGraph,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             IResourceDefinitionAccessor resourceDefinitionAccessor,
-            IJsonApiRequest jsonApiRequest)
+            IJsonApiRequest request)
         {
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
             _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
             _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
-            _jsonApiRequest = jsonApiRequest ?? throw new ArgumentNullException(nameof(jsonApiRequest));
+            _request = request ?? throw new ArgumentNullException(nameof(request));
         }
 
         /// <inheritdoc />
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
-            if (_jsonApiRequest.Kind == EndpointKind.Relationship)
+            if (_request.Kind == EndpointKind.Relationship)
             {
                 return Array.Empty<AttrAttribute>();
             }
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            return _jsonApiRequest.Kind == EndpointKind.Relationship
+            return _request.Kind == EndpointKind.Relationship
                 ? Array.Empty<RelationshipAttribute>()
                 : _resourceGraph.GetRelationships(type);
         }

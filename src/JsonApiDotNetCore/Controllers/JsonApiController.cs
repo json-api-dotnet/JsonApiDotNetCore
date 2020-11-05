@@ -50,12 +50,12 @@ namespace JsonApiDotNetCore.Controllers
         /// <inheritdoc />
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(TId id) => await base.GetAsync(id);
-        
+
         /// <inheritdoc />
         [HttpGet("{id}/{relationshipName}")]
         public override async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName)
             => await base.GetSecondaryAsync(id, relationshipName);
-        
+
         /// <inheritdoc />
         [HttpGet("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCore.Controllers
         /// <inheritdoc />
         [HttpDelete("{id}")]
         public override async Task<IActionResult> DeleteAsync(TId id) => await base.DeleteAsync(id);
-        
+
         /// <inheritdoc />
         [HttpDelete("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds)

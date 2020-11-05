@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 
 namespace JsonApiDotNetCore.Resources
 {
     /// <summary>
-    /// Compares `IIdentifiable` instances with each other based on StringId.
+    /// Compares `IIdentifiable` instances with each other based on their type and <see cref="IIdentifiable.StringId"/>.
     /// </summary>
     public sealed class IdentifiableComparer : IEqualityComparer<IIdentifiable>
     {
@@ -30,7 +31,7 @@ namespace JsonApiDotNetCore.Resources
 
         public int GetHashCode(IIdentifiable obj)
         {
-            return obj.StringId != null ? obj.StringId.GetHashCode() : 0;
+            return obj.StringId != null ? HashCode.Combine(obj.GetType(), obj.StringId) : 0;
         }
     }
 }

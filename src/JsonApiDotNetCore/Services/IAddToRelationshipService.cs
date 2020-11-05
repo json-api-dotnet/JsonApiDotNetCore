@@ -6,10 +6,12 @@ namespace JsonApiDotNetCore.Services
 {
     /// <inheritdoc />
     public interface IAddToRelationshipService<TResource> : IAddToRelationshipService<TResource, int>
-        where TResource : class, IIdentifiable<int> { }
+        where TResource : class, IIdentifiable<int>
+    { }
 
     /// <summary />
-    public interface IAddToRelationshipService<TResource, in TId> where TResource : class, IIdentifiable<TId>
+    public interface IAddToRelationshipService<TResource, in TId>
+        where TResource : class, IIdentifiable<TId>
     {
         /// <summary>
         /// Handles a json:api request to add resources to a to-many relationship.

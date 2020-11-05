@@ -283,7 +283,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             {
                 return false;
             }
-            
+
             if (resourceContext.ResourceLinks != LinkTypes.NotConfigured)
             {
                 return resourceContext.ResourceLinks.HasFlag(link);

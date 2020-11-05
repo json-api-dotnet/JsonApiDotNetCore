@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <inheritdoc />
-    public class InverseRelationshipResolver : IInverseRelationshipResolver
+    public class InverseNavigationResolver : IInverseNavigationResolver
     {
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IEnumerable<IDbContextResolver> _dbContextResolvers;
 
-        public InverseRelationshipResolver(IResourceContextProvider resourceContextProvider,
+        public InverseNavigationResolver(IResourceContextProvider resourceContextProvider,
             IEnumerable<IDbContextResolver> dbContextResolvers)
         {
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));

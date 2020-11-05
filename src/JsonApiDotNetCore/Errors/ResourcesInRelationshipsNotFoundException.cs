@@ -9,11 +9,11 @@ namespace JsonApiDotNetCore.Errors
     /// <summary>
     /// The error that is thrown when referencing one or more non-existing resources in one or more relationships.
     /// </summary>
-    public sealed class SecondaryResourcesNotFoundException : Exception
+    public sealed class ResourcesInRelationshipsNotFoundException : Exception, IHasMultipleErrors
     {
         public IReadOnlyCollection<Error> Errors { get; }
 
-        public SecondaryResourcesNotFoundException(IEnumerable<MissingResourceInRelationship> missingResources)
+        public ResourcesInRelationshipsNotFoundException(IEnumerable<MissingResourceInRelationship> missingResources)
         {
             Errors = missingResources.Select(CreateError).ToList();
         }

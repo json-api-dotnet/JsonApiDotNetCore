@@ -82,7 +82,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = _personFaker.Generate();
-            
+
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
 
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var person1 = _personFaker.Generate();
             var person2 = _personFaker.Generate();
-            
+
             _context.People.AddRange(person1, person2);
             await _context.SaveChangesAsync();
 

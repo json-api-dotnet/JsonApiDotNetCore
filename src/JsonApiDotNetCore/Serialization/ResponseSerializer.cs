@@ -22,7 +22,8 @@ namespace JsonApiDotNetCore.Serialization
     /// </remarks>
     /// <typeparam name="TResource">Type of the resource associated with the scope of the request
     /// for which this serializer is used.</typeparam>
-    public class ResponseSerializer<TResource> : BaseSerializer, IJsonApiSerializer where TResource : class, IIdentifiable
+    public class ResponseSerializer<TResource> : BaseSerializer, IJsonApiSerializer
+        where TResource : class, IIdentifiable
     {
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IJsonApiOptions _options;

@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Resources
 
             return InnerCreateInstance(resourceType, _serviceProvider);
         }
-        
+
         /// <inheritdoc />
         public TResource CreateInstance<TResource>()
             where TResource : IIdentifiable

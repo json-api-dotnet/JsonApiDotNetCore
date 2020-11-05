@@ -23,6 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
+                // TODO: Replace with single call (see TODO in ServiceCollectionExtensions).
                 services.AddScoped<IResourceRepository<Car, string>, CarRepository>();
                 services.AddScoped<IResourceReadRepository<Car, string>, CarRepository>();
             });

@@ -13,7 +13,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
         private LinkTypes _links;
 
         /// <summary>
-        /// The property name of the EF Core inverse navigation, which may or may not be exposed as a json:api relationship.
+        /// The property name of the EF Core inverse navigation, which may or may not exist.
+        /// Even if it exists, it may not be exposed as a json:api relationship.
         /// </summary>
         /// <example>
         /// <code><![CDATA[

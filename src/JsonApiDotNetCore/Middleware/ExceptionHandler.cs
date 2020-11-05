@@ -66,15 +66,9 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
 
-            if (exception is InvalidModelStateException modelStateException)
+            if (exception is IHasMultipleErrors exceptionWithMultipleErrors)
             {
-                return new ErrorDocument(modelStateException.Errors);
-            }
-
-            if (exception is SecondaryResourcesNotFoundException
-                resourcesInRelationshipAssignmentNotFound)
-            {
-                return new ErrorDocument(resourcesInRelationshipAssignmentNotFound.Errors);
+                return new ErrorDocument(exceptionWithMultipleErrors.Errors);
             }
 
             Error error = exception is JsonApiException jsonApiException

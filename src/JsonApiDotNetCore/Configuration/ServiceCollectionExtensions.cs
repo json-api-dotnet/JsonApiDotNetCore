@@ -78,9 +78,8 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <summary>
         /// Adds IoC container registrations for the various JsonApiDotNetCore resource service interfaces,
-        /// such as <see cref="IGetAllService{TResource}"/>, <see cref="ICreateService{TResource}"/> and various others.
+        /// such as <see cref="IGetAllService{TResource}"/>, <see cref="ICreateService{TResource}"/> and the various others.
         /// </summary>
-        /// <exception cref="InvalidConfigurationException"/>
         public static IServiceCollection AddResourceService<TService>(this IServiceCollection services)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
@@ -119,6 +118,8 @@ namespace JsonApiDotNetCore.Configuration
 
             return services;
         }
+
+        // TODO: Should add AddResourceRepository, which registers the read/write/shared interfaces (similar to AddResourceService) + update docs.
 
         private static ResourceDescriptor TryGetResourceTypeFromServiceImplementation(Type serviceType)
         {

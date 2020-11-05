@@ -26,11 +26,11 @@ namespace JsonApiDotNetCore.Repositories
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
             if (layer == null) throw new ArgumentNullException(nameof(layer));
 
-            dynamic repository = GetRepository(resourceType);
+            dynamic repository = GetReadRepository(resourceType);
             return (IReadOnlyCollection<IIdentifiable>) await repository.GetAsync(layer);
         }
 
-        protected object GetRepository(Type resourceType)
+        protected object GetReadRepository(Type resourceType)
         {
             var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
 

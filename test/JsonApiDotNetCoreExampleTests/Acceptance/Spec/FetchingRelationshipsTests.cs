@@ -60,6 +60,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var json = JsonConvert.DeserializeObject<JObject>(body).ToString();
 
+            // TODO: links/related was removed from the expected response body here, which violates the json:api spec.
+
             string expected = @"{
   ""links"": {
     ""self"": ""http://localhost/api/v1/todoItems/" + todoItem.StringId + @"/relationships/owner""

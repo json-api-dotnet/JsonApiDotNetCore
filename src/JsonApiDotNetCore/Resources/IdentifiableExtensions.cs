@@ -3,9 +3,9 @@ using System.Reflection;
 
 namespace JsonApiDotNetCore.Resources
 {
-    public static class IdentifiableExtensions
+    internal static class IdentifiableExtensions
     {
-        internal static object GetTypedId(this IIdentifiable identifiable)
+        public static object GetTypedId(this IIdentifiable identifiable)
         {
             if (identifiable == null) throw new ArgumentNullException(nameof(identifiable));
             
@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Resources
             
             if (property == null)
             {
-                throw new InvalidOperationException($"Resource of type '{identifiable.GetType()}' does not have an Id property.");
+                throw new InvalidOperationException($"Resource of type '{identifiable.GetType()}' does not have an 'Id' property.");
             }
 
             return property.GetValue(identifiable);

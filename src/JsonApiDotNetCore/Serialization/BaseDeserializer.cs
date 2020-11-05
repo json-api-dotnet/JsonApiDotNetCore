@@ -125,9 +125,9 @@ namespace JsonApiDotNetCore.Serialization
                 {
                     SetHasOneRelationship(resource, hasOneAttribute, relationshipData);
                 }
-                else
+                else if (attr is HasManyAttribute hasManyAttribute)
                 {
-                    SetHasManyRelationship(resource, (HasManyAttribute)attr, relationshipData);
+                    SetHasManyRelationship(resource, hasManyAttribute, relationshipData);
                 }
             }
     
@@ -173,7 +173,7 @@ namespace JsonApiDotNetCore.Serialization
             if (resourceContext == null)
             {
                 throw new JsonApiSerializationException("Request body includes unknown resource type.",
-                    $"Resource of type '{publicName}' does not exist.");
+                    $"Resource type '{publicName}' does not exist.");
             }
 
             return resourceContext;
@@ -182,52 +182,20 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Sets a HasOne relationship on a parsed resource.
         /// </summary>
-        private void SetHasOneRelationship(IIdentifiable resource,
-            HasOneAttribute hasOneRelationship,
-            RelationshipEntry relationshipData)
+        private void SetHasOneRelationship(IIdentifiable resource, HasOneAttribute hasOneRelationship, RelationshipEntry relationshipData)
         {
             if (relationshipData.ManyData != null)
             {
-                throw new JsonApiSerializationException("Expected single data for to-one relationship.", 
-                    $"Expected single data for '{hasOneRelationship.PublicName}' relationship.");
+                throw new JsonApiSerializationException("Expected single data element for to-one relationship.", 
+                    $"Expected single data element for '{hasOneRelationship.PublicName}' relationship.");
             }
 
-            var rio = (ResourceIdentifierObject)relationshipData.Data;
-            var relatedId = rio?.Id;
-
-            Type relationshipType = hasOneRelationship.RightType;
-
-            if (relationshipData.SingleData != null)
-            {
-                AssertHasType(relationshipData.SingleData, hasOneRelationship);
-                AssertHasId(relationshipData.SingleData, hasOneRelationship);
-
-                var rightResourceContext = GetExistingResourceContext(relationshipData.SingleData.Type);
-                AssertRightTypeIsCompatible(rightResourceContext, hasOneRelationship);
-
-                relationshipType = rightResourceContext.ResourceType;
-            }
-
-            SetPrincipalSideOfHasOneRelationship(resource, hasOneRelationship, relatedId, relationshipType);
+            var rightResource = CreateRightResource(hasOneRelationship, relationshipData.SingleData);
+            hasOneRelationship.SetValue(resource, rightResource);
 
             // depending on if this base parser is used client-side or server-side,
             // different additional processing per field needs to be executed.
             AfterProcessField(resource, hasOneRelationship, relationshipData);
-        }
-
-        private void SetPrincipalSideOfHasOneRelationship(IIdentifiable resource, HasOneAttribute attr, string relatedId,
-            Type relationshipType)
-        {
-            if (relatedId == null)
-            {
-                attr.SetValue(resource, null);
-            }
-            else
-            {
-                var relatedInstance = ResourceFactory.CreateInstance(relationshipType);
-                relatedInstance.StringId = relatedId;
-                attr.SetValue(resource, relatedInstance);
-            }
         }
 
         /// <summary>
@@ -240,12 +208,12 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (relationshipData.ManyData == null)
             {
-                throw new JsonApiSerializationException("Expected data[] for to-many relationship.", 
-                    $"Expected data[] for '{hasManyRelationship.PublicName}' relationship.");
+                throw new JsonApiSerializationException("Expected data[] element for to-many relationship.", 
+                    $"Expected data[] element for '{hasManyRelationship.PublicName}' relationship.");
             }
 
             var rightResources = relationshipData.ManyData
-                .Select(rio => CreateRightResourceForHasMany(hasManyRelationship, rio))
+                .Select(rio => CreateRightResource(hasManyRelationship, rio))
                 .ToHashSet(IdentifiableComparer.Instance);
 
             var convertedCollection = TypeHelper.CopyToTypedCollection(rightResources, hasManyRelationship.Property.PropertyType);
@@ -254,18 +222,24 @@ namespace JsonApiDotNetCore.Serialization
             AfterProcessField(resource, hasManyRelationship, relationshipData);
         }
 
-        private IIdentifiable CreateRightResourceForHasMany(HasManyAttribute hasManyRelationship, ResourceIdentifierObject rio)
+        private IIdentifiable CreateRightResource(RelationshipAttribute relationship,
+            ResourceIdentifierObject resourceIdentifierObject)
         {
-            AssertHasType(rio, hasManyRelationship);
-            AssertHasId(rio, hasManyRelationship);
+            if (resourceIdentifierObject != null)
+            {
+                AssertHasType(resourceIdentifierObject, relationship);
+                AssertHasId(resourceIdentifierObject, relationship);
 
-            var rightResourceContext = GetExistingResourceContext(rio.Type);
-            AssertRightTypeIsCompatible(rightResourceContext, hasManyRelationship);
+                var rightResourceContext = GetExistingResourceContext(resourceIdentifierObject.Type);
+                AssertRightTypeIsCompatible(rightResourceContext, relationship);
 
-            var rightInstance = ResourceFactory.CreateInstance(rightResourceContext.ResourceType);
-            rightInstance.StringId = rio.Id;
+                var rightInstance = ResourceFactory.CreateInstance(rightResourceContext.ResourceType);
+                rightInstance.StringId = resourceIdentifierObject.Id;
 
-            return rightInstance;
+                return rightInstance;
+            }
+
+            return null;
         }
 
         private void AssertHasType(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)

@@ -284,13 +284,6 @@ namespace JsonApiDotNetCore
             }
         }
 
-        public static object ConvertStringIdToTypedId(Type resourceType, string stringId, IResourceFactory resourceFactory)
-        {
-            var tempResource = resourceFactory.CreateInstance(resourceType);
-            tempResource.StringId = stringId;
-            return tempResource.GetTypedId();
-        }
-
         /// <summary>
         /// Extension to use the LINQ cast method in a non-generic way:
         /// <code>

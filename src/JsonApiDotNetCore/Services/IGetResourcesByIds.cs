@@ -8,6 +8,7 @@ namespace JsonApiDotNetCore.Services
     /// <summary>
     /// Gets resources by set of identifiers for a type that is known at runtime.
     /// </summary>
+    // TODO: Refactor this type (it is a helper method).
     public interface IGetResourcesByIds
     {
         /// <summary>

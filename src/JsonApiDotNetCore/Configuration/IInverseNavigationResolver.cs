@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Responsible for populating the <see cref="RelationshipAttribute.InverseNavigationProperty"/> property.
+    /// Responsible for populating <see cref="RelationshipAttribute.InverseNavigationProperty"/>.
     /// 
     /// This service is instantiated in the configure phase of the application.
     /// 
@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Configuration
     /// you will need to override this service, or pass along the InverseNavigationProperty in
     /// the RelationshipAttribute.
     /// </summary>
-    public interface IInverseRelationshipResolver
+    public interface IInverseNavigationResolver
     {
         /// <summary>
         /// This method is called upon startup by JsonApiDotNetCore. It resolves inverse relationships. 
