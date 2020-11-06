@@ -9,7 +9,6 @@ using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -96,7 +95,8 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.BeforeReadSingle<TResource, TId>(id, ResourcePipeline.GetSingle);
 
-            var primaryResource = await GetPrimaryResourceForReadAsync(id, TopFieldSelection.PreserveExisting);
+            var primaryResource = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.PreserveExisting);
+            AssertPrimaryResourceExists(primaryResource);
 
             _hookExecutor.AfterReadSingle(primaryResource, ResourcePipeline.GetSingle);
             _hookExecutor.OnReturnSingle(primaryResource, ResourcePipeline.GetSingle);
@@ -188,7 +188,7 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                var existingResource = await TryGetPrimaryResourceForReadAsync(resource.Id, TopFieldSelection.OnlyIdAttribute);
+                var existingResource = await TryGetPrimaryResourceByIdAsync(resource.Id, TopFieldSelection.OnlyIdAttribute);
                 if (existingResource != null)
                 {
                     throw new ResourceAlreadyExistsException(resource.StringId, _request.PrimaryResource.PublicName);
@@ -198,7 +198,8 @@ namespace JsonApiDotNetCore.Services
                 throw;
             }
 
-            var resourceFromDatabase = await GetPrimaryResourceForReadAsync(resourceFromRequest.Id, TopFieldSelection.WithAllAttributes);
+            var resourceFromDatabase = await TryGetPrimaryResourceByIdAsync(resourceFromRequest.Id, TopFieldSelection.WithAllAttributes);
+            AssertPrimaryResourceExists(resourceFromDatabase);
 
             _hookExecutor.AfterCreate(resourceFromDatabase);
 
@@ -232,7 +233,9 @@ namespace JsonApiDotNetCore.Services
                 }
                 catch (DataStoreUpdateException)
                 {
-                    await GetPrimaryResourceForReadAsync(primaryId, TopFieldSelection.OnlyIdAttribute);
+                    var primaryResource = await TryGetPrimaryResourceByIdAsync(primaryId, TopFieldSelection.OnlyIdAttribute);
+                    AssertPrimaryResourceExists(primaryResource);
+
                     await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
 
                     throw;
@@ -265,7 +268,8 @@ namespace JsonApiDotNetCore.Services
                 throw;
             }
 
-            TResource afterResourceFromDatabase = await GetPrimaryResourceForReadAsync(id, TopFieldSelection.WithAllAttributes);
+            TResource afterResourceFromDatabase = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes);
+            AssertPrimaryResourceExists(afterResourceFromDatabase);
 
             _hookExecutor.AfterUpdateResource(afterResourceFromDatabase);
 
@@ -312,8 +316,9 @@ namespace JsonApiDotNetCore.Services
         {
             _traceWriter.LogMethodStart(new {id});
 
-            await _hookExecutor.BeforeDeleteAsync(id,
-                async () => await GetPrimaryResourceForReadAsync(id, TopFieldSelection.WithAllAttributes));
+            TResource resourceForHooksCached = null;
+            await _hookExecutor.BeforeDeleteAsync(id, async () =>
+                resourceForHooksCached = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes));
 
             try
             {
@@ -321,12 +326,13 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                await GetPrimaryResourceForReadAsync(id, TopFieldSelection.OnlyIdAttribute);
+                var primaryResource = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute);
+                AssertPrimaryResourceExists(primaryResource);
+
                 throw;
             }
 
-            await _hookExecutor.AfterDeleteAsync(id,
-                async () => await GetPrimaryResourceForReadAsync(id, TopFieldSelection.WithAllAttributes));
+            await _hookExecutor.AfterDeleteAsync(id, () => Task.FromResult(resourceForHooksCached));
         }
 
         /// <inheritdoc />
@@ -348,35 +354,9 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private async Task<TResource> GetPrimaryResourceForReadAsync(TId id, TopFieldSelection fieldSelection)
+        private async Task<TResource> TryGetPrimaryResourceByIdAsync(TId id, TopFieldSelection fieldSelection)
         {
-            var primaryResource = await TryGetPrimaryResourceForReadAsync(id, fieldSelection);
-
-            AssertPrimaryResourceExists(primaryResource);
-
-            return primaryResource;
-        }
-
-        private async Task<TResource> TryGetPrimaryResourceForReadAsync(TId id, TopFieldSelection fieldSelection)
-        {
-            var primaryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResource);
-            primaryLayer.Sort = null;
-            primaryLayer.Pagination = null;
-            primaryLayer.Filter = IncludeFilterById(id, primaryLayer.Filter);
-
-            if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
-            {
-                var idAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
-                primaryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
-            }
-            else if (fieldSelection == TopFieldSelection.WithAllAttributes && primaryLayer.Projection != null)
-            {
-                // Discard any top-level ?fields= or attribute exclusions from resource definition, because we need the full database row.
-                while (primaryLayer.Projection.Any(p => p.Key is AttrAttribute))
-                {
-                    primaryLayer.Projection.Remove(primaryLayer.Projection.First(p => p.Key is AttrAttribute));
-                }
-            }
+            var primaryLayer = _queryLayerComposer.ComposeForGetById(id, _request.PrimaryResource, fieldSelection);
 
             var primaryResources = await _repository.GetAsync(primaryLayer);
             return primaryResources.SingleOrDefault();
@@ -385,21 +365,10 @@ namespace JsonApiDotNetCore.Services
         private async Task<TResource> GetPrimaryResourceForUpdateAsync(TId id)
         {
             var queryLayer = _queryLayerComposer.ComposeForUpdate(id, _request.PrimaryResource);
-            var resourceFromDatabase = await _repository.GetForUpdateAsync(queryLayer);
-            AssertPrimaryResourceExists(resourceFromDatabase);
-            return resourceFromDatabase;
-        }
-
-        private FilterExpression IncludeFilterById(TId id, FilterExpression existingFilter)
-        {
-            var primaryIdAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
-
-            FilterExpression filterById = new ComparisonExpression(ComparisonOperator.Equals,
-                new ResourceFieldChainExpression(primaryIdAttribute), new LiteralConstantExpression(id.ToString()));
-
-            return existingFilter == null
-                ? filterById
-                : new LogicalExpression(LogicalOperator.And, new[] { filterById, existingFilter });
+            var resource = await _repository.GetForUpdateAsync(queryLayer);
+            
+            AssertPrimaryResourceExists(resource);
+            return resource;
         }
 
         private void AssertPrimaryResourceExists(TResource resource)
@@ -425,22 +394,6 @@ namespace JsonApiDotNetCore.Services
             {
                 throw new ToManyRelationshipRequiredException(relationship.PublicName);
             }
-        }
-
-        private enum TopFieldSelection
-        {
-            /// <summary>
-            /// Preserves included relationships, but selects all resource attributes.
-            /// </summary>
-            WithAllAttributes,
-            /// <summary>
-            /// Discards any included relationships and selects only resource ID.
-            /// </summary>
-            OnlyIdAttribute,
-            /// <summary>
-            /// Preserves the existing selection of attributes and/or relationships.
-            /// </summary>
-            PreserveExisting
         }
     }
 

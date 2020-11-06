@@ -171,7 +171,7 @@ namespace JsonApiDotNetCore.Repositories
                 await RemoveAlreadyRelatedResourcesFromAssignment(hasManyThroughRelationship, primaryId, secondaryResourceIds);
             }
             
-            var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(primaryId));
+            var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreateResourceWithAssignedId(primaryId));
 
             if (secondaryResourceIds.Any())
             {
@@ -220,7 +220,7 @@ namespace JsonApiDotNetCore.Repositories
         {
             _traceWriter.LogMethodStart(new {id});
 
-            var resource = (TResource)_dbContext.GetTrackedOrAttach(CreatePrimaryResourceWithAssignedId(id));
+            var resource = (TResource)_dbContext.GetTrackedOrAttach(CreateResourceWithAssignedId(id));
 
             foreach (var relationship in _resourceGraph.GetRelationships<TResource>())
             {
@@ -321,7 +321,7 @@ namespace JsonApiDotNetCore.Repositories
             return false;
         }
 
-        private TResource CreatePrimaryResourceWithAssignedId(TId id)
+        private TResource CreateResourceWithAssignedId(TId id)
         {
             var resource = _resourceFactory.CreateInstance<TResource>();
             resource.Id = id;

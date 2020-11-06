@@ -16,15 +16,19 @@ namespace JsonApiDotNetCore.Queries
         FilterExpression GetTopFilterFromConstraints();
 
         /// <summary>
+        /// Builds a filter to match on the specified IDs.
+        /// </summary>
+        FilterExpression GetFilterOnResourceIds<TId>(ICollection<TId> ids, ResourceContext resourceContext);
+
+        /// <summary>
         /// Collects constraints and builds a <see cref="QueryLayer"/> out of them, used to retrieve the actual resources.
         /// </summary>
         QueryLayer ComposeFromConstraints(ResourceContext requestResource);
 
         /// <summary>
-        /// Wraps a layer for a secondary endpoint into a primary layer, rewriting top-level includes.
+        /// Collects constraints and builds a <see cref="QueryLayer"/> out of them, used to retrieve one resource.
         /// </summary>
-        QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceContext primaryResourceContext,
-            TId primaryId, RelationshipAttribute secondaryRelationship);
+        QueryLayer ComposeForGetById<TId>(TId id, ResourceContext resourceContext, TopFieldSelection fieldSelection);
 
         /// <summary>
         /// Collects constraints and builds the secondary layer for a relationship endpoint.
@@ -32,9 +36,10 @@ namespace JsonApiDotNetCore.Queries
         QueryLayer ComposeSecondaryLayerForRelationship(ResourceContext secondaryResourceContext);
 
         /// <summary>
-        /// Builds a query that filters on the specified IDs and selects them.
+        /// Wraps a layer for a secondary endpoint into a primary layer, rewriting top-level includes.
         /// </summary>
-        QueryLayer ComposeForFilterOnResourceIds(ISet<object> typedIds, ResourceContext resourceContext);
+        QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceContext primaryResourceContext,
+            TId primaryId, RelationshipAttribute secondaryRelationship);
 
         /// <summary>
         /// Builds a query that retrieves the primary resource, including all of its attributes and all targeted relationships, during a create/update/delete request.

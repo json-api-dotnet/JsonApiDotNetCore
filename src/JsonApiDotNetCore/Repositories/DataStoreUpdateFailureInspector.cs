@@ -88,8 +88,19 @@ namespace JsonApiDotNetCore.Repositories
                 return Array.Empty<string>();
             }
 
+            var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
+
             var typedIds = resourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
-            var queryLayer = _queryLayerComposer.ComposeForFilterOnResourceIds(typedIds, resourceContext);
+            var filter = _queryLayerComposer.GetFilterOnResourceIds(typedIds, resourceContext);
+
+            var queryLayer = new QueryLayer(resourceContext)
+            {
+                Filter = filter,
+                Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
+                {
+                    [idAttribute] = null
+                }
+            };
 
             var resources = await _resourceRepositoryAccessor.GetAsync(resourceContext.ResourceType, queryLayer);
             return resources.Select(resource => resource.StringId).ToArray();

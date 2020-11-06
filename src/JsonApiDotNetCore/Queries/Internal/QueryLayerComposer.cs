@@ -37,36 +37,38 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public FilterExpression GetTopFilterFromConstraints()
         {
-            var constraints = _constraintProviders.SelectMany(p => p.GetConstraints()).ToArray();
+            var constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
 
             var topFilters = constraints
-                .Where(c => c.Scope == null)
-                .Select(c => c.Expression)
+                .Where(constraint => constraint.Scope == null)
+                .Select(constraint => constraint.Expression)
                 .OfType<FilterExpression>()
                 .ToArray();
 
-            if (!topFilters.Any())
+            if (topFilters.Length > 1)
             {
-                return null;
+                return new LogicalExpression(LogicalOperator.And, topFilters);
             }
 
-            if (topFilters.Length == 1)
-            {
-                return topFilters[0];
-            }
+            return topFilters.Length == 1 ? topFilters[0] : null;
+        }
 
-            return new LogicalExpression(LogicalOperator.And, topFilters);
+        /// <inheritdoc />
+        public FilterExpression GetFilterOnResourceIds<TId>(ICollection<TId> ids, ResourceContext resourceContext)
+        {
+            if (ids == null) throw new ArgumentNullException(nameof(ids));
+            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+
+            var baseFilter = GetFilter(Array.Empty<QueryExpression>(), resourceContext);
+            return CreateFilterByIds(ids, resourceContext, baseFilter);
         }
 
         /// <inheritdoc />
         public QueryLayer ComposeFromConstraints(ResourceContext requestResource)
         {
-            if (requestResource == null)
-            {
-                throw new ArgumentNullException(nameof(requestResource));
-            }
+            if (requestResource == null) throw new ArgumentNullException(nameof(requestResource));
 
-            var constraints = _constraintProviders.SelectMany(p => p.GetConstraints()).ToArray();
+            var constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
 
             var topLayer = ComposeTopLayer(constraints, requestResource);
             topLayer.Include = ComposeChildren(topLayer, constraints);
@@ -77,8 +79,8 @@ namespace JsonApiDotNetCore.Queries.Internal
         private QueryLayer ComposeTopLayer(IEnumerable<ExpressionInScope> constraints, ResourceContext resourceContext)
         {
             var expressionsInTopScope = constraints
-                .Where(c => c.Scope == null)
-                .Select(expressionInScope => expressionInScope.Expression)
+                .Where(constraint => constraint.Scope == null)
+                .Select(constraint => constraint.Expression)
                 .ToArray();
 
             var topPagination = GetPagination(expressionsInTopScope, resourceContext);
@@ -97,11 +99,11 @@ namespace JsonApiDotNetCore.Queries.Internal
             };
         }
 
-        private IncludeExpression ComposeChildren(QueryLayer topLayer, ExpressionInScope[] constraints)
+        private IncludeExpression ComposeChildren(QueryLayer topLayer, ICollection<ExpressionInScope> constraints)
         {
             var include = constraints
-                .Where(c => c.Scope == null)
-                .Select(expressionInScope => expressionInScope.Expression).OfType<IncludeExpression>()
+                .Where(constraint => constraint.Scope == null)
+                .Select(constraint => constraint.Expression).OfType<IncludeExpression>()
                 .FirstOrDefault() ?? IncludeExpression.Empty;
 
             var includeElements =
@@ -113,7 +115,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         }
 
         private IReadOnlyCollection<IncludeElementExpression> ProcessIncludeSet(IReadOnlyCollection<IncludeElementExpression> includeElements, 
-            QueryLayer parentLayer, ICollection<RelationshipAttribute> parentRelationshipChain, ExpressionInScope[] constraints)
+            QueryLayer parentLayer, ICollection<RelationshipAttribute> parentRelationshipChain, ICollection<ExpressionInScope> constraints)
         {
             includeElements = GetIncludeElements(includeElements, parentLayer.ResourceContext) ?? Array.Empty<IncludeElementExpression>();
 
@@ -131,8 +133,9 @@ namespace JsonApiDotNetCore.Queries.Internal
                     };
 
                     var expressionsInCurrentScope = constraints
-                        .Where(c => c.Scope != null && c.Scope.Fields.SequenceEqual(relationshipChain))
-                        .Select(expressionInScope => expressionInScope.Expression)
+                        .Where(constraint =>
+                            constraint.Scope != null && constraint.Scope.Fields.SequenceEqual(relationshipChain))
+                        .Select(constraint => constraint.Expression)
                         .ToArray();
 
                     var resourceContext =
@@ -165,7 +168,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             return !updatesInChildren.Any() ? includeElements : ApplyIncludeElementUpdates(includeElements, updatesInChildren);
         }
 
-        private static IReadOnlyCollection<IncludeElementExpression> ApplyIncludeElementUpdates(IReadOnlyCollection<IncludeElementExpression> includeElements,
+        private static IReadOnlyCollection<IncludeElementExpression> ApplyIncludeElementUpdates(IEnumerable<IncludeElementExpression> includeElements,
             IDictionary<IncludeElementExpression, IReadOnlyCollection<IncludeElementExpression>> updatesInChildren)
         {
             var newIncludeElements = new List<IncludeElementExpression>(includeElements);
@@ -180,12 +183,66 @@ namespace JsonApiDotNetCore.Queries.Internal
         }
 
         /// <inheritdoc />
+        public QueryLayer ComposeForGetById<TId>(TId id, ResourceContext resourceContext, TopFieldSelection fieldSelection)
+        {
+            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+
+            var queryLayer = ComposeFromConstraints(resourceContext);
+            queryLayer.Sort = null;
+            queryLayer.Pagination = null;
+            queryLayer.Filter = CreateFilterByIds(new[] {id}, resourceContext, queryLayer.Filter);
+
+            if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
+            {
+                var idAttribute = GetIdAttribute(resourceContext);
+                queryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
+            }
+            else if (fieldSelection == TopFieldSelection.WithAllAttributes && queryLayer.Projection != null)
+            {
+                // Discard any top-level ?fields= or attribute exclusions from resource definition, because we need the full database row.
+                while (queryLayer.Projection.Any(pair => pair.Key is AttrAttribute))
+                {
+                    queryLayer.Projection.Remove(queryLayer.Projection.First(pair => pair.Key is AttrAttribute));
+                }
+            }
+
+            return queryLayer;
+        }
+
+        /// <inheritdoc />
+        public QueryLayer ComposeSecondaryLayerForRelationship(ResourceContext secondaryResourceContext)
+        {
+            if (secondaryResourceContext == null) throw new ArgumentNullException(nameof(secondaryResourceContext));
+
+            var secondaryLayer = ComposeFromConstraints(secondaryResourceContext);
+            secondaryLayer.Projection = GetProjectionForRelationship(secondaryResourceContext);
+            secondaryLayer.Include = null;
+
+            return secondaryLayer;
+        }
+
+        private IDictionary<ResourceFieldAttribute, QueryLayer> GetProjectionForRelationship(ResourceContext secondaryResourceContext)
+        {
+            var secondaryIdAttribute = GetIdAttribute(secondaryResourceContext);
+            var sparseFieldSet = new SparseFieldSetExpression(new[] {secondaryIdAttribute});
+
+            var secondaryProjection = GetSparseFieldSetProjection(new[] {sparseFieldSet}, secondaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
+            secondaryProjection[secondaryIdAttribute] = null;
+
+            return secondaryProjection;
+        }
+
+        /// <inheritdoc />
         public QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceContext primaryResourceContext, TId primaryId, RelationshipAttribute secondaryRelationship)
         {
+            if (secondaryLayer == null) throw new ArgumentNullException(nameof(secondaryLayer));
+            if (primaryResourceContext == null) throw new ArgumentNullException(nameof(primaryResourceContext));
+            if (secondaryRelationship == null) throw new ArgumentNullException(nameof(secondaryRelationship));
+
             var innerInclude = secondaryLayer.Include;
             secondaryLayer.Include = null;
 
-            var primaryIdAttribute = primaryResourceContext.Attributes.Single(x => x.Property.Name == nameof(Identifiable.Id));
+            var primaryIdAttribute = GetIdAttribute(primaryResourceContext);
             var sparseFieldSet = new SparseFieldSetExpression(new[] { primaryIdAttribute });
 
             var primaryProjection = GetSparseFieldSetProjection(new[] { sparseFieldSet }, primaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
@@ -213,7 +270,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private FilterExpression CreateFilterByIds<TId>(ICollection<TId> ids, ResourceContext resourceContext, FilterExpression existingFilter)
         {
-            var primaryIdAttribute = resourceContext.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
+            var primaryIdAttribute = GetIdAttribute(resourceContext);
             var idChain = new ResourceFieldChainExpression(primaryIdAttribute);
 
             FilterExpression filter = null;
@@ -234,60 +291,20 @@ namespace JsonApiDotNetCore.Queries.Internal
                 new LogicalExpression(LogicalOperator.And, new[] {filter, existingFilter});
         }
 
-        public QueryLayer ComposeSecondaryLayerForRelationship(ResourceContext secondaryResourceContext)
-        {
-            var secondaryLayer = ComposeFromConstraints(secondaryResourceContext);
-            secondaryLayer.Projection = GetProjectionForRelationship(secondaryResourceContext);
-            secondaryLayer.Include = null;
-
-            return secondaryLayer;
-        }
-
-        private IDictionary<ResourceFieldAttribute, QueryLayer> GetProjectionForRelationship(ResourceContext secondaryResourceContext)
-        {
-            var secondaryIdAttribute = secondaryResourceContext.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
-            var sparseFieldSet = new SparseFieldSetExpression(new[] {secondaryIdAttribute});
-
-            var secondaryProjection = GetSparseFieldSetProjection(new[] {sparseFieldSet}, secondaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
-            secondaryProjection[secondaryIdAttribute] = null;
-
-            return secondaryProjection;
-        }
-
         /// <inheritdoc />
-        public QueryLayer ComposeForFilterOnResourceIds(ISet<object> typedIds, ResourceContext resourceContext)
-        {
-            if (typedIds == null) throw new ArgumentNullException(nameof(typedIds));
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
-
-            var idAttribute = resourceContext.Attributes.Single(x => x.Property.Name == nameof(Identifiable.Id));
-
-            var baseFilter = GetFilter(Array.Empty<QueryExpression>(), resourceContext);
-            var idsFilter = CreateFilterByIds(typedIds, resourceContext, baseFilter);
-
-            return new QueryLayer(resourceContext)
-            {
-                Filter = idsFilter,
-                Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
-                {
-                    [idAttribute] = null
-                }
-            };
-        }
-
         public QueryLayer ComposeForUpdate<TId>(TId id, ResourceContext primaryResource)
         {
-            var primaryLayer = ComposeTopLayer(Array.Empty<ExpressionInScope>(), primaryResource);
-
-            primaryLayer.Filter = CreateFilterByIds(new[] {id}, primaryResource, primaryLayer.Filter);
+            if (primaryResource == null) throw new ArgumentNullException(nameof(primaryResource));
 
             var includeElements = _targetedFields.Relationships
                 .Select(relationship => new IncludeElementExpression(relationship)).ToArray();
 
-            if (includeElements.Any())
-            {
-                primaryLayer.Include = new IncludeExpression(includeElements);
-            }
+            var primaryLayer = ComposeTopLayer(Array.Empty<ExpressionInScope>(), primaryResource);
+            primaryLayer.Include = includeElements.Any() ? new IncludeExpression(includeElements) : null;
+            primaryLayer.Sort = null;
+            primaryLayer.Pagination = null;
+            primaryLayer.Filter = CreateFilterByIds(new[] {id}, primaryResource, primaryLayer.Filter);
+            primaryLayer.Projection = null;
 
             return primaryLayer;
         }
@@ -323,7 +340,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             if (sort == null)
             {
-                var idAttribute = resourceContext.Attributes.Single(x => x.Property.Name == nameof(Identifiable.Id));
+                var idAttribute = GetIdAttribute(resourceContext);
                 sort = new SortExpression(new[] {new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true)});
             }
 
@@ -361,10 +378,15 @@ namespace JsonApiDotNetCore.Queries.Internal
                 return null;
             }
 
-            var idAttribute = resourceContext.Attributes.Single(x => x.Property.Name == nameof(Identifiable.Id));
+            var idAttribute = GetIdAttribute(resourceContext);
             attributes.Add(idAttribute);
 
             return attributes.Cast<ResourceFieldAttribute>().ToDictionary(key => key, value => (QueryLayer) null);
+        }
+
+        private static AttrAttribute GetIdAttribute(ResourceContext resourceContext)
+        {
+            return resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
         }
     }
 }
