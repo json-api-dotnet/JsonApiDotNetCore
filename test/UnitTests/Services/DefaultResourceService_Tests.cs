@@ -82,7 +82,7 @@ namespace UnitTests.Services
             var resourceContextProvider = new Mock<IResourceContextProvider>().Object;
             var resourceHookExecutor = new NeverResourceHookExecutorFacade();
             var composer = new QueryLayerComposer(new List<IQueryConstraintProvider>(), _resourceGraph, resourceDefinitionAccessor, options, paginationContext, targetedFields);
-            var dataStoreUpdateFailureInspector = new DataStoreUpdateFailureInspector(resourceContextProvider, targetedFields, composer, resourceRepositoryAccessor);
+            var dataStoreUpdateFailureInspector = new SecondaryResourceResolver(resourceContextProvider, targetedFields, composer, resourceRepositoryAccessor);
 
             var request = new JsonApiRequest
             {

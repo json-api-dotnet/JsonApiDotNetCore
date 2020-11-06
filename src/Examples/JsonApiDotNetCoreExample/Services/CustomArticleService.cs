@@ -22,10 +22,10 @@ namespace JsonApiDotNetCoreExample.Services
             IJsonApiRequest request,
             IResourceChangeTracker<Article> resourceChangeTracker,
             IResourceFactory resourceFactory,
-            IDataStoreUpdateFailureInspector dataStoreUpdateFailureInspector,
+            ISecondaryResourceResolver secondaryResourceResolver,
             IResourceHookExecutorFacade hookExecutor)
             : base(repository, queryLayerComposer, paginationContext, options, loggerFactory,
-                request, resourceChangeTracker, resourceFactory, dataStoreUpdateFailureInspector,
+                request, resourceChangeTracker, resourceFactory, secondaryResourceResolver,
                 hookExecutor)
         { }
 

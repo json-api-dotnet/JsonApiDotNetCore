@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IJsonApiRequest _request;
         private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
         private readonly IResourceFactory _resourceFactory;
-        private readonly IDataStoreUpdateFailureInspector _dataStoreUpdateFailureInspector;
+        private readonly ISecondaryResourceResolver _secondaryResourceResolver;
         private readonly IResourceHookExecutorFacade _hookExecutor;
 
         public JsonApiResourceService(
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Services
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
-            IDataStoreUpdateFailureInspector dataStoreUpdateFailureInspector,
+            ISecondaryResourceResolver secondaryResourceResolver,
             IResourceHookExecutorFacade hookExecutor)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Services
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _resourceChangeTracker = resourceChangeTracker ?? throw new ArgumentNullException(nameof(resourceChangeTracker));
             _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
-            _dataStoreUpdateFailureInspector = dataStoreUpdateFailureInspector ?? throw new ArgumentNullException(nameof(dataStoreUpdateFailureInspector));
+            _secondaryResourceResolver = secondaryResourceResolver ?? throw new ArgumentNullException(nameof(secondaryResourceResolver));
             _hookExecutor = hookExecutor ?? throw new ArgumentNullException(nameof(hookExecutor));
         }
 
@@ -173,19 +173,18 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            var resourceFromRequest = resource;
-            _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
+            _resourceChangeTracker.SetRequestedAttributeValues(resource);
 
             var defaultResource = _resourceFactory.CreateInstance<TResource>();
             defaultResource.Id = resource.Id;
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(defaultResource);
 
-            _hookExecutor.BeforeCreate(resourceFromRequest);
+            _hookExecutor.BeforeCreate(resource);
 
             try
             {
-                await _repository.CreateAsync(resourceFromRequest);
+                await _repository.CreateAsync(resource);
             }
             catch (DataStoreUpdateException)
             {
@@ -195,11 +194,11 @@ namespace JsonApiDotNetCore.Services
                     throw new ResourceAlreadyExistsException(resource.StringId, _request.PrimaryResource.PublicName);
                 }
 
-                await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipsExistAsync(resourceFromRequest);
+                await AssertResourcesToAssignInRelationshipsExistAsync(resource);
                 throw;
             }
 
-            var resourceFromDatabase = await TryGetPrimaryResourceByIdAsync(resourceFromRequest.Id, TopFieldSelection.WithAllAttributes);
+            var resourceFromDatabase = await TryGetPrimaryResourceByIdAsync(resource.Id, TopFieldSelection.WithAllAttributes);
             AssertPrimaryResourceExists(resourceFromDatabase);
 
             _hookExecutor.AfterCreate(resourceFromDatabase);
@@ -214,6 +213,15 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.OnReturnSingle(resourceFromDatabase, ResourcePipeline.Post);
             return resourceFromDatabase;
+        }
+
+        private async Task AssertResourcesToAssignInRelationshipsExistAsync(TResource resource)
+        {
+            var missingResources = await _secondaryResourceResolver.GetMissingResourcesToAssignInRelationships(resource);
+            if (missingResources.Any())
+            {
+                throw new ResourcesInRelationshipsNotFoundException(missingResources);
+            }
         }
 
         /// <inheritdoc />
@@ -242,10 +250,18 @@ namespace JsonApiDotNetCore.Services
                     var primaryResource = await TryGetPrimaryResourceByIdAsync(primaryId, TopFieldSelection.OnlyIdAttribute);
                     AssertPrimaryResourceExists(primaryResource);
 
-                    await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
-
+                    await AssertResourcesExistAsync(secondaryResourceIds);
                     throw;
                 }
+            }
+        }
+
+        private async Task AssertResourcesExistAsync(ICollection<IIdentifiable> secondaryResourceIds)
+        {
+            var missingResources = await _secondaryResourceResolver.GetMissingSecondaryResources(_request.Relationship, secondaryResourceIds);
+            if (missingResources.Any())
+            {
+                throw new ResourcesInRelationshipsNotFoundException(missingResources);
             }
         }
 
@@ -270,7 +286,7 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipsExistAsync(resourceFromRequest);
+                await AssertResourcesToAssignInRelationshipsExistAsync(resourceFromRequest);
                 throw;
             }
 
@@ -309,8 +325,7 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipExistAsync(_request.Relationship, TypeHelper.ExtractResources(secondaryResourceIds));
-
+                await AssertResourcesExistAsync(TypeHelper.ExtractResources(secondaryResourceIds));
                 throw;
             }
 
@@ -334,7 +349,6 @@ namespace JsonApiDotNetCore.Services
             {
                 var primaryResource = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute);
                 AssertPrimaryResourceExists(primaryResource);
-
                 throw;
             }
 
@@ -352,7 +366,7 @@ namespace JsonApiDotNetCore.Services
             AssertRelationshipIsToMany(_request.Relationship);
 
             TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId);
-            await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
+            await AssertResourcesExistAsync(secondaryResourceIds);
 
             if (secondaryResourceIds.Any())
             {
@@ -419,10 +433,10 @@ namespace JsonApiDotNetCore.Services
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
-            IDataStoreUpdateFailureInspector dataStoreUpdateFailureInspector,
+            ISecondaryResourceResolver secondaryResourceResolver,
             IResourceHookExecutorFacade hookExecutor)
             : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                resourceChangeTracker, resourceFactory, dataStoreUpdateFailureInspector, hookExecutor)
+                resourceChangeTracker, resourceFactory, secondaryResourceResolver, hookExecutor)
         { }
     }
 }
