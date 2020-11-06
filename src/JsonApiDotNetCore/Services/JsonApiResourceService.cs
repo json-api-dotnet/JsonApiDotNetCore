@@ -9,6 +9,7 @@ using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -227,9 +228,14 @@ namespace JsonApiDotNetCore.Services
 
             if (secondaryResourceIds.Any())
             {
+                var joinTableFilter = _request.Relationship is HasManyThroughAttribute hasManyThrough
+                    ? _queryLayerComposer.GetJoinTableFilter(primaryId,
+                        secondaryResourceIds.Select(x => x.GetTypedId()).ToArray(), hasManyThrough)
+                    : null;
+
                 try
                 {
-                    await _repository.AddToToManyRelationshipAsync(primaryId, secondaryResourceIds);
+                    await _repository.AddToToManyRelationshipAsync(primaryId, secondaryResourceIds, joinTableFilter);
                 }
                 catch (DataStoreUpdateException)
                 {

@@ -21,6 +21,11 @@ namespace JsonApiDotNetCore.Queries
         FilterExpression GetFilterOnResourceIds<TId>(ICollection<TId> ids, ResourceContext resourceContext);
 
         /// <summary>
+        /// Builds a join table filter, which matches on the specified IDs.
+        /// </summary>
+        FilterExpression GetJoinTableFilter<TLeftId, TRightId>(TLeftId leftId, ICollection<TRightId> rightIds, HasManyThroughAttribute relationship);
+
+        /// <summary>
         /// Collects constraints and builds a <see cref="QueryLayer"/> out of them, used to retrieve the actual resources.
         /// </summary>
         QueryLayer ComposeFromConstraints(ResourceContext requestResource);

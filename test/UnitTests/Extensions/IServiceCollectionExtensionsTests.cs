@@ -224,7 +224,7 @@ namespace UnitTests.Extensions
             public Task<IReadOnlyCollection<IntResource>> GetAsync(QueryLayer layer) => throw new NotImplementedException();
             public Task<int> CountAsync(FilterExpression topFilter) => throw new NotImplementedException();
             public Task CreateAsync(IntResource resource) => throw new NotImplementedException();
-            public Task AddToToManyRelationshipAsync(int primaryId, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
+            public Task AddToToManyRelationshipAsync(int primaryId, ISet<IIdentifiable> secondaryResourceIds, FilterExpression joinTableFilter) => throw new NotImplementedException();
             public Task UpdateAsync(IntResource resourceFromRequest, IntResource resourceFromDatabase) => throw new NotImplementedException();
             public Task SetRelationshipAsync(IntResource primaryResource, object secondaryResourceIds) => throw new NotImplementedException();
             public Task DeleteAsync(int id) => throw new NotImplementedException();
@@ -237,7 +237,7 @@ namespace UnitTests.Extensions
             public Task<IReadOnlyCollection<GuidResource>> GetAsync(QueryLayer layer) => throw new NotImplementedException();
             public Task<int> CountAsync(FilterExpression topFilter) => throw new NotImplementedException();
             public Task CreateAsync(GuidResource resource) => throw new NotImplementedException();
-            public Task AddToToManyRelationshipAsync(Guid primaryId, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
+            public Task AddToToManyRelationshipAsync(Guid primaryId, ISet<IIdentifiable> secondaryResourceIds, FilterExpression joinTableFilter) => throw new NotImplementedException();
             public Task UpdateAsync(GuidResource resourceFromRequest, GuidResource resourceFromDatabase) => throw new NotImplementedException();
             public Task SetRelationshipAsync(GuidResource primaryResource, object secondaryResourceIds) => throw new NotImplementedException();
             public Task DeleteAsync(Guid id) => throw new NotImplementedException();

@@ -90,7 +90,7 @@ namespace JsonApiDotNetCore.Repositories
 
             var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
 
-            var typedIds = resourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
+            var typedIds = resourceIds.Select(resource => resource.GetTypedId()).ToArray();
             var filter = _queryLayerComposer.GetFilterOnResourceIds(typedIds, resourceContext);
 
             var queryLayer = new QueryLayer(resourceContext)

@@ -2,16 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
-using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
-using JsonApiDotNetCore.Repositories.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
@@ -131,7 +128,7 @@ namespace JsonApiDotNetCore.Repositories
             foreach (var relationship in _targetedFields.Relationships)
             {
                 var rightValue = relationship.GetValue(resource);
-                await UpdateRelationship(relationship, resource, rightValue);
+                await UpdateRelationshipAsync(relationship, resource, rightValue);
             }
 
             _dbContext.Set<TResource>().Add(resource);
@@ -170,96 +167,68 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds)
+        public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds,
+            FilterExpression joinTableFilter)
         {
             _traceWriter.LogMethodStart(new {primaryId, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             var relationship = _targetedFields.Relationships.Single();
 
-            if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
+            if (relationship is HasManyThroughAttribute hasManyThroughRelationship && joinTableFilter != null)
             {
-                // In the case of many-to-many relationships, creating a duplicate entry in the join table results in a unique constraint violation.
-                await RemoveAlreadyRelatedResourcesFromAssignment(hasManyThroughRelationship, primaryId, secondaryResourceIds);
+                // In the case of a many-to-many relationship, creating a duplicate entry in the join table results in a unique constraint violation.
+                // We avoid that by excluding already-existing entries from the set in advance.
+                await ExcludeExistingResourcesFromJoinTableAsync(hasManyThroughRelationship, secondaryResourceIds, joinTableFilter);
             }
-            
-            var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreateResourceWithAssignedId(primaryId));
 
             if (secondaryResourceIds.Any())
             {
-                await UpdateRelationship(relationship, primaryResource, secondaryResourceIds);
+                var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreateResourceWithAssignedId(primaryId));
+
+                await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds);
                 await SaveChangesAsync();
             }
         }
 
-        private async Task RemoveAlreadyRelatedResourcesFromAssignment(HasManyThroughAttribute relationship, TId primaryResourceId, ISet<IIdentifiable> secondaryResourceIds)
+        private async Task ExcludeExistingResourcesFromJoinTableAsync(HasManyThroughAttribute relationship,
+            ISet<IIdentifiable> secondaryResourceIds, FilterExpression joinTableFilter)
         {
-            // TODO: Finalize this.
-            var throughEntitiesFilter = new ThroughEntitiesFilter(_dbContext, relationship);
-            var typedRightIds = secondaryResourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
-            var throughEntities = await throughEntitiesFilter.GetBy(primaryResourceId, typedRightIds);
-            
-            // Alternative approaches:
-            // throughEntities = await GetFilteredThroughEntities_DynamicQueryBuilding(hasManyThroughRelationship, primaryResourceId, secondaryResourceIds);
-            // throughEntities = await GetFilteredThroughEntities_QueryBuilderCall(hasManyThroughRelationship, primaryResourceId, secondaryResourceIds);
-            
-            var rightResources = throughEntities.Select(ConstructRightResourceOfHasManyRelationship).ToHashSet();
-            secondaryResourceIds.ExceptWith(rightResources.ToHashSet());
-            
-            DetachEntities(throughEntities);
+            dynamic query = CreateJoinTableQuery(relationship, joinTableFilter);
+            IEnumerable joinTableEntities = await EntityFrameworkQueryableExtensions.ToListAsync(query);
+
+            RemoveEntitiesFromSet(joinTableEntities, secondaryResourceIds, relationship);
+
+            DetachEntities(joinTableEntities.Cast<object>());
         }
 
-        private IIdentifiable ConstructRightResourceOfHasManyRelationship(object entity)
+        private IQueryable CreateJoinTableQuery(HasManyThroughAttribute relationship, FilterExpression joinTableFilter)
         {
-            var relationship = (HasManyThroughAttribute)_targetedFields.Relationships.Single();
+            IQueryable throughEntitySet = _dbContext.Set(relationship.ThroughType);
 
-            var rightResource = _resourceFactory.CreateInstance(relationship.RightType);
-            rightResource.StringId = relationship.RightIdProperty.GetValue(entity).ToString();
-
-            return rightResource;
-        }
-
-        private async Task<object[]> GetFilteredThroughEntities_DynamicQueryBuilding(TId leftId, ISet<object> rightIds, HasManyThroughAttribute relationship)
-        {
-            var throughEntityParameter = Expression.Parameter(relationship.ThroughType, relationship.ThroughType.Name.Camelize());
-            
-            var filter = ThroughEntitiesFilter.GetEqualsAndContainsFilter(leftId, rightIds, relationship, throughEntityParameter);
-
-            var predicate = Expression.Lambda(filter, throughEntityParameter);
-
-            IQueryable throughSource = _dbContext.Set(relationship.ThroughType);
-            var whereClause = Expression.Call(typeof(Queryable), nameof(Queryable.Where), new[] { relationship.ThroughType }, throughSource.Expression, predicate);
-            
-            dynamic query = throughSource.Provider.CreateQuery(whereClause);
-            IEnumerable result = await EntityFrameworkQueryableExtensions.ToListAsync(query);
-            
-            return result.Cast<object>().ToArray();
-        }
-        
-        private async Task<object[]> GetFilteredThroughEntities_QueryBuilderCall(TId leftId, ISet<object> rightIds, HasManyThroughAttribute relationship)
-        {
-            var comparisonTargetField = new ResourceFieldChainExpression(new AttrAttribute { Property = relationship.LeftIdProperty });
-            var comparisionId = new LiteralConstantExpression(leftId.ToString());
-            FilterExpression equalsFilter = new ComparisonExpression(ComparisonOperator.Equals, comparisonTargetField, comparisionId);
-        
-            var equalsAnyOfTargetField = new ResourceFieldChainExpression(new AttrAttribute { Property =  relationship.RightIdProperty });
-            var equalsAnyOfIds = rightIds.Select(r => new LiteralConstantExpression(r.ToString())).ToArray();
-            FilterExpression containsFilter = new EqualsAnyOfExpression(equalsAnyOfTargetField, equalsAnyOfIds);
-            
-            var filter = new LogicalExpression(LogicalOperator.And, new QueryExpression[] { equalsFilter, containsFilter } );
-            
-            IQueryable throughSource = _dbContext.Set(relationship.ThroughType);
-        
             var scopeFactory = new LambdaScopeFactory(new LambdaParameterNameFactory());
-            var scope = scopeFactory.CreateScope(relationship.ThroughType);
-            
-            var whereClauseBuilder = new WhereClauseBuilder(throughSource.Expression, scope, typeof(Queryable));
-            var whereClause = whereClauseBuilder.ApplyWhere(filter);
-        
-            dynamic query = throughSource.Provider.CreateQuery(whereClause);
-            IEnumerable result = await EntityFrameworkQueryableExtensions.ToListAsync(query);
-        
-            return result.Cast<object>().ToArray();
+            using var scope = scopeFactory.CreateScope(relationship.ThroughType);
+
+            var whereClauseBuilder = new WhereClauseBuilder(throughEntitySet.Expression, scope, typeof(Queryable));
+
+            var query = whereClauseBuilder.ApplyWhere(joinTableFilter);
+            return throughEntitySet.Provider.CreateQuery(query);
+        }
+
+        private void RemoveEntitiesFromSet(IEnumerable joinTableEntities, ISet<IIdentifiable> secondaryResourceIds,
+            HasManyThroughAttribute relationship)
+        {
+            HashSet<IIdentifiable> resourcesToExclude = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
+
+            foreach (var joinTableEntity in joinTableEntities)
+            {
+                var resourceToExclude = _resourceFactory.CreateInstance(relationship.RightType);
+                resourceToExclude.StringId = relationship.RightIdProperty.GetValue(joinTableEntity)?.ToString();
+
+                resourcesToExclude.Add(resourceToExclude);
+            }
+
+            secondaryResourceIds.ExceptWith(resourcesToExclude);
         }
 
         private TResource CreateResourceWithAssignedId(TId id)
@@ -277,7 +246,7 @@ namespace JsonApiDotNetCore.Repositories
 
             var relationship = _targetedFields.Relationships.Single();
 
-            await UpdateRelationship(relationship, primaryResource, secondaryResourceIds);
+            await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds);
 
             await SaveChangesAsync();
         }
@@ -292,7 +261,7 @@ namespace JsonApiDotNetCore.Repositories
             foreach (var relationship in _targetedFields.Relationships)
             {
                 var rightResources = relationship.GetValue(resourceFromRequest);
-                await UpdateRelationship(relationship, resourceFromDatabase, rightResources);
+                await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightResources);
             }
 
             foreach (var attribute in _targetedFields.Attributes)
@@ -376,7 +345,7 @@ namespace JsonApiDotNetCore.Repositories
             var rightResources = ((IEnumerable<IIdentifiable>)rightValue).ToHashSet(IdentifiableComparer.Instance);
             rightResources.ExceptWith(secondaryResourceIds);
             
-            await UpdateRelationship(relationship, primaryResource, rightResources);
+            await UpdateRelationshipAsync(relationship, primaryResource, rightResources);
             await SaveChangesAsync();
         }
 
@@ -399,7 +368,7 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        private async Task UpdateRelationship(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
+        private async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
         {
             var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
     

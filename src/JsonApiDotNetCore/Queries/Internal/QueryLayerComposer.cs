@@ -60,7 +60,31 @@ namespace JsonApiDotNetCore.Queries.Internal
             if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
 
             var baseFilter = GetFilter(Array.Empty<QueryExpression>(), resourceContext);
-            return CreateFilterByIds(ids, resourceContext, baseFilter);
+
+            var idAttribute = GetIdAttribute(resourceContext);
+            return CreateFilterByIds(ids, idAttribute, baseFilter);
+        }
+
+        /// <inheritdoc />
+        public FilterExpression GetJoinTableFilter<TLeftId, TRightId>(TLeftId leftId, ICollection<TRightId> rightIds,
+            HasManyThroughAttribute relationship)
+        {
+            var pseudoLeftIdAttribute = new AttrAttribute
+            {
+                Property = relationship.LeftIdProperty,
+                PublicName = relationship.LeftIdProperty.Name
+            };
+
+            var pseudoRightIdAttribute = new AttrAttribute
+            {
+                Property = relationship.RightIdProperty,
+                PublicName = relationship.RightIdProperty.Name
+            };
+
+            var leftFilter = CreateFilterByIds(new[] {leftId}, pseudoLeftIdAttribute, null);
+            var rightFilter = CreateFilterByIds(rightIds, pseudoRightIdAttribute, null);
+
+            return new LogicalExpression(LogicalOperator.And, new[] {leftFilter, rightFilter});
         }
 
         /// <inheritdoc />
@@ -187,14 +211,15 @@ namespace JsonApiDotNetCore.Queries.Internal
         {
             if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
 
+            var idAttribute = GetIdAttribute(resourceContext);
+
             var queryLayer = ComposeFromConstraints(resourceContext);
             queryLayer.Sort = null;
             queryLayer.Pagination = null;
-            queryLayer.Filter = CreateFilterByIds(new[] {id}, resourceContext, queryLayer.Filter);
+            queryLayer.Filter = CreateFilterByIds(new[] {id}, idAttribute, queryLayer.Filter);
 
             if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
             {
-                var idAttribute = GetIdAttribute(resourceContext);
                 queryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
             }
             else if (fieldSelection == TopFieldSelection.WithAllAttributes && queryLayer.Projection != null)
@@ -254,7 +279,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             return new QueryLayer(primaryResourceContext)
             {
                 Include = RewriteIncludeForSecondaryEndpoint(innerInclude, secondaryRelationship),
-                Filter = CreateFilterByIds(new[] {primaryId}, primaryResourceContext, primaryFilter),
+                Filter = CreateFilterByIds(new[] {primaryId}, primaryIdAttribute, primaryFilter),
                 Projection = primaryProjection
             };
         }
@@ -268,10 +293,9 @@ namespace JsonApiDotNetCore.Queries.Internal
             return new IncludeExpression(new[] {parentElement});
         }
 
-        private FilterExpression CreateFilterByIds<TId>(ICollection<TId> ids, ResourceContext resourceContext, FilterExpression existingFilter)
+        private FilterExpression CreateFilterByIds<TId>(ICollection<TId> ids, AttrAttribute idAttribute, FilterExpression existingFilter)
         {
-            var primaryIdAttribute = GetIdAttribute(resourceContext);
-            var idChain = new ResourceFieldChainExpression(primaryIdAttribute);
+            var idChain = new ResourceFieldChainExpression(idAttribute);
 
             FilterExpression filter = null;
 
@@ -299,11 +323,13 @@ namespace JsonApiDotNetCore.Queries.Internal
             var includeElements = _targetedFields.Relationships
                 .Select(relationship => new IncludeElementExpression(relationship)).ToArray();
 
+            var primaryIdAttribute = GetIdAttribute(primaryResource);
+
             var primaryLayer = ComposeTopLayer(Array.Empty<ExpressionInScope>(), primaryResource);
             primaryLayer.Include = includeElements.Any() ? new IncludeExpression(includeElements) : null;
             primaryLayer.Sort = null;
             primaryLayer.Pagination = null;
-            primaryLayer.Filter = CreateFilterByIds(new[] {id}, primaryResource, primaryLayer.Filter);
+            primaryLayer.Filter = CreateFilterByIds(new[] {id}, primaryIdAttribute, primaryLayer.Filter);
             primaryLayer.Projection = null;
 
             return primaryLayer;
