@@ -188,6 +188,8 @@ namespace JsonApiDotNetCore.Repositories
 
                 await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds);
                 await SaveChangesAsync();
+
+                // TODO: Do we need to flush cache here?
             }
         }
 
@@ -247,8 +249,9 @@ namespace JsonApiDotNetCore.Repositories
             var relationship = _targetedFields.Relationships.Single();
 
             await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds);
-
             await SaveChangesAsync();
+
+            // TODO: Do we need to flush cache here?
         }
 
         /// <inheritdoc />
@@ -293,8 +296,9 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             _dbContext.Remove(resource);
-
             await SaveChangesAsync();
+
+            // TODO: Do we need to flush cache here?
         }
 
         private NavigationEntry GetNavigationEntry(TResource resource, RelationshipAttribute relationship)
@@ -347,6 +351,8 @@ namespace JsonApiDotNetCore.Repositories
             
             await UpdateRelationshipAsync(relationship, primaryResource, rightResources);
             await SaveChangesAsync();
+
+            // TODO: Do we need to flush cache here?
         }
 
         /// <inheritdoc />
