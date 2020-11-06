@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Repositories
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
             _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
             _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
-            
+
             _dbContext = contextResolver.GetContext();
             _traceWriter = new TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>>(loggerFactory);
         }
@@ -139,10 +139,10 @@ namespace JsonApiDotNetCore.Repositories
 
         protected void FlushFromCache(IIdentifiable resource)
         {
-            resource = (IIdentifiable)_dbContext.GetTrackedIdentifiable(resource);
+            resource = (IIdentifiable) _dbContext.GetTrackedIdentifiable(resource);
             if (resource != null)
             {
-                DetachEntities(new [] { resource });
+                DetachEntities(new[] {resource});
                 DetachRelationships(resource);
             }
         }
@@ -161,7 +161,7 @@ namespace JsonApiDotNetCore.Repositories
             {
                 var rightValue = relationship.GetValue(resource);
                 var rightResources = TypeHelper.ExtractResources(rightValue);
-                
+
                 DetachEntities(rightResources);
             }
         }
@@ -184,7 +184,7 @@ namespace JsonApiDotNetCore.Repositories
 
             if (secondaryResourceIds.Any())
             {
-                var primaryResource = (TResource)_dbContext.GetTrackedOrAttach(CreateResourceWithAssignedId(primaryId));
+                var primaryResource = (TResource) _dbContext.GetTrackedOrAttach(CreateResourceWithAssignedId(primaryId));
 
                 await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds);
                 await SaveChangesAsync();
@@ -282,7 +282,7 @@ namespace JsonApiDotNetCore.Repositories
         {
             _traceWriter.LogMethodStart(new {id});
 
-            var resource = (TResource)_dbContext.GetTrackedOrAttach(CreateResourceWithAssignedId(id));
+            var resource = (TResource) _dbContext.GetTrackedOrAttach(CreateResourceWithAssignedId(id));
 
             foreach (var relationship in _resourceGraph.GetRelationships<TResource>())
             {
@@ -343,12 +343,12 @@ namespace JsonApiDotNetCore.Repositories
             _traceWriter.LogMethodStart(new {primaryResource, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
-            var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
+            var relationship = (HasManyAttribute) _targetedFields.Relationships.Single();
 
             var rightValue = relationship.GetValue(primaryResource);
-            var rightResources = ((IEnumerable<IIdentifiable>)rightValue).ToHashSet(IdentifiableComparer.Instance);
+            var rightResources = ((IEnumerable<IIdentifiable>) rightValue).ToHashSet(IdentifiableComparer.Instance);
             rightResources.ExceptWith(secondaryResourceIds);
-            
+
             await UpdateRelationshipAsync(relationship, primaryResource, rightResources);
             await SaveChangesAsync();
 
@@ -377,20 +377,20 @@ namespace JsonApiDotNetCore.Repositories
         private async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
         {
             var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
-    
+
             if (RequireLoadOfInverseRelationship(relationship, trackedValueToAssign))
             {
-                var entityEntry = _dbContext.Entry(trackedValueToAssign); 
+                var entityEntry = _dbContext.Entry(trackedValueToAssign);
                 var inversePropertyName = relationship.InverseNavigationProperty.Name;
-  
+
                 await entityEntry.Reference(inversePropertyName).LoadAsync();
             }
-            
+
             if (IsHasOneWithForeignKeyAtLeftSide(relationship) && trackedValueToAssign == null)
             {
                 PrepareChangeTrackerForNullAssignment(relationship, leftResource);
             }
-            
+
             relationship.SetValue(leftResource, trackedValueToAssign);
         }
 
@@ -455,8 +455,8 @@ namespace JsonApiDotNetCore.Repositories
 
             relationship.SetValue(leftResource, placeholderRightResource);
             _dbContext.Entry(leftResource).DetectChanges();
-            
-            DetachEntities(new [] { placeholderRightResource });
+
+            DetachEntities(new[] {placeholderRightResource});
         }
 
         private void EnsurePrimaryKeyPropertiesAreNotNull(object entity)
@@ -475,7 +475,7 @@ namespace JsonApiDotNetCore.Repositories
         private static object GetNonNullValueForProperty(PropertyInfo propertyInfo)
         {
             var propertyType = propertyInfo.PropertyType;
-            
+
             if (propertyType == typeof(string))
             {
                 return string.Empty;
@@ -504,13 +504,14 @@ namespace JsonApiDotNetCore.Repositories
         where TResource : class, IIdentifiable<int>
     {
         public EntityFrameworkCoreRepository(
-            ITargetedFields targetedFields, 
-            IDbContextResolver contextResolver, 
+            ITargetedFields targetedFields,
+            IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
             IResourceFactory resourceFactory,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory) 
-        { }
+            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory)
+        {
+        }
     }
 }

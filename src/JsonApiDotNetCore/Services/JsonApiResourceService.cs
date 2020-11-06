@@ -125,7 +125,7 @@ namespace JsonApiDotNetCore.Services
             }
 
             var primaryResources = await _repository.GetAsync(primaryLayer);
-            
+
             var primaryResource = primaryResources.SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
 
@@ -227,7 +227,7 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc />
         public async Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
         {
-            _traceWriter.LogMethodStart(new { primaryId, secondaryResourceIds });
+            _traceWriter.LogMethodStart(new {primaryId, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
@@ -310,7 +310,7 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc />
         public virtual async Task SetRelationshipAsync(TId primaryId, string relationshipName, object secondaryResourceIds)
         {
-             _traceWriter.LogMethodStart(new {primaryId, relationshipName, secondaryResourceIds});
+            _traceWriter.LogMethodStart(new {primaryId, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertHasRelationship(_request.Relationship, relationshipName);
@@ -386,7 +386,7 @@ namespace JsonApiDotNetCore.Services
         {
             var queryLayer = _queryLayerComposer.ComposeForUpdate(id, _request.PrimaryResource);
             var resource = await _repository.GetForUpdateAsync(queryLayer);
-            
+
             AssertPrimaryResourceExists(resource);
             return resource;
         }
@@ -437,6 +437,7 @@ namespace JsonApiDotNetCore.Services
             IResourceHookExecutorFacade hookExecutor)
             : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
                 resourceChangeTracker, resourceFactory, secondaryResourceResolver, hookExecutor)
-        { }
+        {
+        }
     }
 }
