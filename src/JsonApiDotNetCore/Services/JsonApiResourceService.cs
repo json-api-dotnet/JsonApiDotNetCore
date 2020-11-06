@@ -17,6 +17,8 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Services
 {
+    // TODO: Add write operations to our documentation.
+
     /// <inheritdoc />
     public class JsonApiResourceService<TResource, TId> :
         IResourceService<TResource, TId>
