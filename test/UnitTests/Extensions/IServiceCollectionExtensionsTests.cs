@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
@@ -135,6 +137,38 @@ namespace UnitTests.Extensions
         }
 
         [Fact]
+        public void AddResourceRepository_Registers_All_Shorthand_Repository_Interfaces()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            // Act
+            services.AddResourceRepository<IntResourceRepository>();
+
+            // Assert
+            var provider = services.BuildServiceProvider();
+            Assert.IsType<IntResourceRepository>(provider.GetRequiredService(typeof(IResourceRepository<IntResource>)));
+            Assert.IsType<IntResourceRepository>(provider.GetRequiredService(typeof(IResourceReadRepository<IntResource>)));
+            Assert.IsType<IntResourceRepository>(provider.GetRequiredService(typeof(IResourceWriteRepository<IntResource>)));
+        }
+
+        [Fact]
+        public void AddResourceRepository_Registers_All_LongForm_Repository_Interfaces()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            // Act
+            services.AddResourceRepository<GuidResourceRepository>();
+
+            // Assert
+            var provider = services.BuildServiceProvider();
+            Assert.IsType<GuidResourceRepository>(provider.GetRequiredService(typeof(IResourceRepository<GuidResource, Guid>)));
+            Assert.IsType<GuidResourceRepository>(provider.GetRequiredService(typeof(IResourceReadRepository<GuidResource, Guid>)));
+            Assert.IsType<GuidResourceRepository>(provider.GetRequiredService(typeof(IResourceWriteRepository<GuidResource, Guid>)));
+        }
+
+        [Fact]
         public void AddJsonApi_With_Context_Uses_Resource_Type_Name_If_NoOtherSpecified()
         {
             // Arrange
@@ -157,7 +191,7 @@ namespace UnitTests.Extensions
         public sealed class IntResource : Identifiable { }
         public class GuidResource : Identifiable<Guid> { }
 
-        private class IntResourceService : IResourceService<IntResource>
+        private sealed class IntResourceService : IResourceService<IntResource>
         {
             public Task<IReadOnlyCollection<IntResource>> GetAsync() => throw new NotImplementedException();
             public Task<IntResource> GetAsync(int id) => throw new NotImplementedException();
@@ -171,7 +205,7 @@ namespace UnitTests.Extensions
             public Task RemoveFromToManyRelationshipAsync(int primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
         }
 
-        private class GuidResourceService : IResourceService<GuidResource, Guid>
+        private sealed class GuidResourceService : IResourceService<GuidResource, Guid>
         {
             public Task<IReadOnlyCollection<GuidResource>> GetAsync() => throw new NotImplementedException();
             public Task<GuidResource> GetAsync(Guid id) => throw new NotImplementedException();
@@ -183,6 +217,32 @@ namespace UnitTests.Extensions
             public Task SetRelationshipAsync(Guid primaryId, string relationshipName, object secondaryResourceIds) => throw new NotImplementedException();
             public Task DeleteAsync(Guid id) => throw new NotImplementedException();
             public Task RemoveFromToManyRelationshipAsync(Guid primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
+        }
+
+        private sealed class IntResourceRepository : IResourceRepository<IntResource>
+        {
+            public Task<IReadOnlyCollection<IntResource>> GetAsync(QueryLayer layer) => throw new NotImplementedException();
+            public Task<int> CountAsync(FilterExpression topFilter) => throw new NotImplementedException();
+            public Task CreateAsync(IntResource resource) => throw new NotImplementedException();
+            public Task AddToToManyRelationshipAsync(int primaryId, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
+            public Task UpdateAsync(IntResource resourceFromRequest, IntResource resourceFromDatabase) => throw new NotImplementedException();
+            public Task SetRelationshipAsync(IntResource primaryResource, object secondaryResourceIds) => throw new NotImplementedException();
+            public Task DeleteAsync(int id) => throw new NotImplementedException();
+            public Task RemoveFromToManyRelationshipAsync(IntResource primaryResource, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
+            public Task<IntResource> GetForUpdateAsync(QueryLayer queryLayer) => throw new NotImplementedException();
+        }
+
+        private sealed class GuidResourceRepository : IResourceRepository<GuidResource, Guid>
+        {
+            public Task<IReadOnlyCollection<GuidResource>> GetAsync(QueryLayer layer) => throw new NotImplementedException();
+            public Task<int> CountAsync(FilterExpression topFilter) => throw new NotImplementedException();
+            public Task CreateAsync(GuidResource resource) => throw new NotImplementedException();
+            public Task AddToToManyRelationshipAsync(Guid primaryId, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
+            public Task UpdateAsync(GuidResource resourceFromRequest, GuidResource resourceFromDatabase) => throw new NotImplementedException();
+            public Task SetRelationshipAsync(GuidResource primaryResource, object secondaryResourceIds) => throw new NotImplementedException();
+            public Task DeleteAsync(Guid id) => throw new NotImplementedException();
+            public Task RemoveFromToManyRelationshipAsync(GuidResource primaryResource, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
+            public Task<GuidResource> GetForUpdateAsync(QueryLayer queryLayer) => throw new NotImplementedException();
         }
 
         public class TestContext : DbContext

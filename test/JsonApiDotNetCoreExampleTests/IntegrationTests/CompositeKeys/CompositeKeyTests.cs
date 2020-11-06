@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,9 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                // TODO: Replace with single call (see TODO in ServiceCollectionExtensions).
-                services.AddScoped<IResourceRepository<Car, string>, CarRepository>();
-                services.AddScoped<IResourceReadRepository<Car, string>, CarRepository>();
+                services.AddResourceRepository<CarRepository>();
             });
 
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

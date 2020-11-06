@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCore.Services;
@@ -84,17 +85,36 @@ namespace JsonApiDotNetCore.Configuration
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            var typeImplementsAnExpectedInterface = false;
-            var serviceImplementationType = typeof(TService);
-            var resourceDescriptor = TryGetResourceTypeFromServiceImplementation(serviceImplementationType);
+            RegisterForConstructedType(services, typeof(TService), ServiceDiscoveryFacade.ServiceInterfaces);
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds IoC container registrations for the various JsonApiDotNetCore resource repository interfaces,
+        /// such as <see cref="IResourceReadRepository{TResource}"/> and <see cref="IResourceWriteRepository{TResource}"/>.
+        /// </summary>
+        public static IServiceCollection AddResourceRepository<TRepository>(this IServiceCollection services)
+        {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+
+            RegisterForConstructedType(services, typeof(TRepository), ServiceDiscoveryFacade.RepositoryInterfaces);
+
+            return services;
+        }
+
+        private static void RegisterForConstructedType(IServiceCollection services, Type implementationType, IEnumerable<Type> openGenericInterfaces)
+        {
+            bool seenCompatibleInterface = false;
+            var resourceDescriptor = TryGetResourceTypeFromServiceImplementation(implementationType);
 
             if (resourceDescriptor != null)
             {
-                foreach (var openGenericType in ServiceDiscoveryFacade.ServiceInterfaces)
+                foreach (var openGenericInterface in openGenericInterfaces)
                 {
                     // A shorthand interface is one where the ID type is omitted.
                     // e.g. IResourceService<TResource> is the shorthand for IResourceService<TResource, TId>
-                    var isShorthandInterface = openGenericType.GetTypeInfo().GenericTypeParameters.Length == 1;
+                    var isShorthandInterface = openGenericInterface.GetTypeInfo().GenericTypeParameters.Length == 1;
                     if (isShorthandInterface && resourceDescriptor.IdType != typeof(int))
                     {
                         // We can't create a shorthand for ID types other than int.
@@ -102,24 +122,22 @@ namespace JsonApiDotNetCore.Configuration
                     }
 
                     var constructedType = isShorthandInterface
-                        ? openGenericType.MakeGenericType(resourceDescriptor.ResourceType)
-                        : openGenericType.MakeGenericType(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
+                        ? openGenericInterface.MakeGenericType(resourceDescriptor.ResourceType)
+                        : openGenericInterface.MakeGenericType(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
 
-                    if (constructedType.IsAssignableFrom(serviceImplementationType))
+                    if (constructedType.IsAssignableFrom(implementationType))
                     {
-                        services.AddScoped(constructedType, serviceImplementationType);
-                        typeImplementsAnExpectedInterface = true;
+                        services.AddScoped(constructedType, implementationType);
+                        seenCompatibleInterface = true;
                     }
                 }
             }
 
-            if (!typeImplementsAnExpectedInterface)
-                throw new InvalidConfigurationException($"{serviceImplementationType} does not implement any of the expected JsonApiDotNetCore interfaces.");
-
-            return services;
+            if (!seenCompatibleInterface)
+            {
+                throw new InvalidConfigurationException(
+                    $"{implementationType} does not implement any of the expected JsonApiDotNetCore interfaces.");}
         }
-
-        // TODO: Should add AddResourceRepository, which registers the read/write/shared interfaces (similar to AddResourceService) + update docs.
 
         private static ResourceDescriptor TryGetResourceTypeFromServiceImplementation(Type serviceType)
         {
