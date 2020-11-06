@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
         [Attr]
         public string DisplayName { get; set; }
 
-        // TODO: Change into required relationship and add a test that fails when trying to assign null.
+        // TODO: @ThisPR Change into required relationship and add a test that fails when trying to assign null.
         [HasOne]
         public WorkItemGroup Group { get; set; }
     }

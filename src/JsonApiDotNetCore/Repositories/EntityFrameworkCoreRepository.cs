@@ -16,7 +16,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
-// TODO: Tests that cover relationship updates with required relationships. All relationships right now are currently optional.
+// TODO: @ThisPR Tests that cover relationship updates with required relationships. All relationships right now are currently optional.
 //    - Setting a required relationship to null
 //    - Creating resource with resource
 //    - One-to-one required / optional => what is the current behavior?
@@ -189,7 +189,7 @@ namespace JsonApiDotNetCore.Repositories
                 await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds);
                 await SaveChangesAsync();
 
-                // TODO: Do we need to flush cache here?
+                // TODO: @ThisPR Do we need to flush cache here?
             }
         }
 
@@ -251,7 +251,7 @@ namespace JsonApiDotNetCore.Repositories
             await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds);
             await SaveChangesAsync();
 
-            // TODO: Do we need to flush cache here?
+            // TODO: @ThisPR Do we need to flush cache here?
         }
 
         /// <inheritdoc />
@@ -298,7 +298,7 @@ namespace JsonApiDotNetCore.Repositories
             _dbContext.Remove(resource);
             await SaveChangesAsync();
 
-            // TODO: Do we need to flush cache here?
+            // TODO: @ThisPR Do we need to flush cache here?
         }
 
         private NavigationEntry GetNavigationEntry(TResource resource, RelationshipAttribute relationship)
@@ -352,7 +352,7 @@ namespace JsonApiDotNetCore.Repositories
             await UpdateRelationshipAsync(relationship, primaryResource, rightResources);
             await SaveChangesAsync();
 
-            // TODO: Do we need to flush cache here?
+            // TODO: @ThisPR Do we need to flush cache here?
         }
 
         /// <inheritdoc />
@@ -483,7 +483,7 @@ namespace JsonApiDotNetCore.Repositories
 
             if (Nullable.GetUnderlyingType(propertyType) != null)
             {
-                // TODO: Write test with primary key property type int? or equivalent. 
+                // TODO: @ThisPR Write test with primary key property type int? or equivalent. 
                 propertyType = propertyInfo.PropertyType.GetGenericArguments()[0];
             }
 
