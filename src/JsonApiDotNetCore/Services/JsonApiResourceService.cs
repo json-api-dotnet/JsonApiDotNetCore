@@ -109,7 +109,7 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<object> GetSecondaryAsync(TId id, string relationshipName)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
-            AssertRelationshipExists(relationshipName);
+            AssertHasRelationship(_request.Relationship, relationshipName);
 
             _hookExecutor.BeforeReadSingle<TResource, TId>(id, ResourcePipeline.GetRelationship);
 
@@ -148,7 +148,7 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {id, relationshipName});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
-            AssertRelationshipExists(relationshipName);
+            AssertHasRelationship(_request.Relationship, relationshipName);
 
             _hookExecutor.BeforeReadSingle<TResource, TId>(id, ResourcePipeline.GetRelationship);
 
@@ -223,8 +223,8 @@ namespace JsonApiDotNetCore.Services
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
-            AssertRelationshipExists(relationshipName);
-            AssertRelationshipIsToMany();
+            AssertHasRelationship(_request.Relationship, relationshipName);
+            AssertRelationshipIsToMany(_request.Relationship);
 
             if (secondaryResourceIds.Any())
             {
@@ -297,7 +297,7 @@ namespace JsonApiDotNetCore.Services
              _traceWriter.LogMethodStart(new {primaryId, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
-            AssertRelationshipExists(relationshipName);
+            AssertHasRelationship(_request.Relationship, relationshipName);
 
             TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId);
 
@@ -348,8 +348,8 @@ namespace JsonApiDotNetCore.Services
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
-            AssertRelationshipExists(relationshipName);
-            AssertRelationshipIsToMany();
+            AssertHasRelationship(_request.Relationship, relationshipName);
+            AssertRelationshipIsToMany(_request.Relationship);
 
             TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId);
             await _dataStoreUpdateFailureInspector.AssertRightResourcesInRelationshipExistAsync(_request.Relationship, secondaryResourceIds);
@@ -385,17 +385,16 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private void AssertRelationshipExists(string relationshipName)
+        private void AssertHasRelationship(RelationshipAttribute relationship, string name)
         {
-            if (_request.Relationship == null)
+            if (relationship == null)
             {
-                throw new RelationshipNotFoundException(relationshipName, _request.PrimaryResource.PublicName);
+                throw new RelationshipNotFoundException(name, _request.PrimaryResource.PublicName);
             }
         }
 
-        private void AssertRelationshipIsToMany()
+        private void AssertRelationshipIsToMany(RelationshipAttribute relationship)
         {
-            var relationship = _request.Relationship;
             if (!(relationship is HasManyAttribute))
             {
                 throw new ToManyRelationshipRequiredException(relationship.PublicName);
