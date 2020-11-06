@@ -394,7 +394,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             responseDocument.Errors[0].Source.Parameter.Should().BeNull();
         }
 
-        [Fact(Skip = "TODO: Make this test work again, now that we fetch the primary resource.")]
+        [Fact]
         public async Task Cannot_update_relationship_for_deleted_parent()
         {
             // Arrange
