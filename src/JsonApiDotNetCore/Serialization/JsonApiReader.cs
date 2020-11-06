@@ -180,7 +180,7 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private bool HasMissingId(object model)
         {
-            return TryGetId(model, out string id) && string.IsNullOrEmpty(id);
+            return TryGetId(model, out string id) && id == null;
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             foreach (var model in models)
             {
-                if (TryGetId(model, out string id) && string.IsNullOrEmpty(id))
+                if (TryGetId(model, out string id) && id == null)
                 {
                     return true;
                 }

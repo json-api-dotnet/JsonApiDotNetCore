@@ -200,9 +200,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Fail_When_Deleting_Missing_Passport()
         {
             // Arrange
-            string passportId = HexadecimalObfuscationCodec.Encode(1234567890);
 
-            var request = new HttpRequestMessage(HttpMethod.Delete, "/api/v1/passports/" + passportId);
+            var request = new HttpRequestMessage(HttpMethod.Delete, "/api/v1/passports/1234567890");
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
@@ -215,7 +214,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
-            Assert.Equal("Resource of type 'passports' with ID '" + passportId + "' does not exist.", errorDocument.Errors[0].Detail);
+            Assert.Equal("Resource of type 'passports' with ID '1234567890' does not exist.", errorDocument.Errors[0].Detail);
         }
     }
 }

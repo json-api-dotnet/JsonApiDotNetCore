@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Resources
         /// </summary>
         protected virtual TId GetTypedId(string value)
         {
-            return string.IsNullOrEmpty(value) ? default : (TId)TypeHelper.ConvertType(value, typeof(TId));
+            return value == null ? default : (TId)TypeHelper.ConvertType(value, typeof(TId));
         }
     }
 }

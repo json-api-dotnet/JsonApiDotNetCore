@@ -1,22 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net;
 using System.Text;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Serialization.Objects;
 
-namespace JsonApiDotNetCoreExample
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
 {
-    public static class HexadecimalObfuscationCodec
+    internal static class HexadecimalCodec
     {
         public static int Decode(string value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (value == null)
             {
                 return 0;
             }
 
             if (!value.StartsWith("x"))
             {
-                throw new InvalidOperationException("Invalid obfuscated id.");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "Invalid ID value.",
+                    Detail = $"The value '{value}' is not a valid hexadecimal value."
+                });
             }
 
             string stringValue = FromHexString(value.Substring(1));
@@ -37,11 +44,11 @@ namespace JsonApiDotNetCoreExample
             return new string(chars);
         }
 
-        public static string Encode(object value)
+        public static string Encode(int value)
         {
-            if (value is int intValue && intValue == 0)
+            if (value == 0)
             {
-                return string.Empty;
+                return null;
             }
 
             string stringValue = value.ToString();

@@ -160,7 +160,7 @@ namespace JsonApiDotNetCore.Controllers
             if (_create == null)
                 throw new RequestMethodNotAllowedException(HttpMethod.Post);
 
-            if (!_options.AllowClientGeneratedIds && !string.IsNullOrEmpty(resource.StringId))
+            if (!_options.AllowClientGeneratedIds && resource.StringId != null)
                 throw new ResourceIdInPostRequestNotAllowedException();
 
             if (_options.ValidateModelState && !ModelState.IsValid)
