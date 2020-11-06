@@ -45,22 +45,22 @@ _Note that cURL requires "[" and "]" in URLs to be escaped._
 
 # Writing data
 
-### Create
+### Create resource
 
 [!code-ps[REQUEST](010_CREATE_Person.ps1)]
 [!code-json[RESPONSE](010_CREATE_Person_Response.json)]
 
-### Create with relationship
+### Create resource with relationship
 
 [!code-ps[REQUEST](011_CREATE_Book-with-Author.ps1)]
 [!code-json[RESPONSE](011_CREATE_Book-with-Author_Response.json)]
 
-### Update
+### Update resource
 
 [!code-ps[REQUEST](012_PATCH_Book.ps1)]
 [!code-json[RESPONSE](012_PATCH_Book_Response.json)]
 
-### Delete
+### Delete resource
 
 [!code-ps[REQUEST](013_DELETE_Book.ps1)]
 [!code-json[RESPONSE](013_DELETE_Book_Response.json)]
