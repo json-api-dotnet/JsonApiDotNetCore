@@ -557,6 +557,51 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
             responseDocument.Links.Next.Should().Be($"http://localhost/api/v1/blogs/{blog.StringId}/articles?page[number]=2");
         }
 
+        [Fact]
+        public async Task Returns_all_resources_when_paging_is_disabled()
+        {
+            // Arrange
+            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.DefaultPageSize = null;
+
+            var blog = new Blog
+            {
+                Articles = new List<Article>()
+            };
+
+            for (int index = 0; index < 25; index++)
+            {
+                blog.Articles.Add(new Article
+                {
+                    Caption = $"Item {index:D3}"
+                });
+            }
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Blogs.Add(blog);
+
+                await dbContext.SaveChangesAsync();
+            });
+
+            var route = $"/api/v1/blogs/{blog.StringId}/articles";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(25);
+
+            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.First.Should().BeNull();
+            responseDocument.Links.Last.Should().BeNull();
+            responseDocument.Links.Prev.Should().BeNull();
+            responseDocument.Links.Next.Should().BeNull();
+        }
+
         [Theory]
         [InlineData(1, 1, 4, null, 2)]
         [InlineData(2, 1, 4, 1, 3)]
