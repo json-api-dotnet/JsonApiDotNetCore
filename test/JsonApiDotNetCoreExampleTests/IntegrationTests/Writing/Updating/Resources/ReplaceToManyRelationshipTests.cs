@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -833,6 +834,232 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected data[] element for 'tags' relationship. - Request body: <<");
+        }
+
+        [Fact]
+        public async Task Can_clear_cyclic_HasMany_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+
+                existingWorkItem.Children = new List<WorkItem>
+                {
+                    existingWorkItem
+                };
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        children = new
+                        {
+                            data = new object[0]
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems/" + existingWorkItem.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Children)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Children.Should().BeEmpty();
+            });
+        }
+
+        [Fact]
+        public async Task Can_clear_cyclic_HasManyThrough_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+
+                existingWorkItem.RelatedFromItems = new List<WorkItemToWorkItem>
+                {
+                    new WorkItemToWorkItem
+                    {
+                        FromItem = existingWorkItem
+                    }
+                };
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        relatedFrom = new
+                        {
+                            data = new object[0]
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems/" + existingWorkItem.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.RelatedFromItems)
+                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.FromItem)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.RelatedFromItems.Should().BeEmpty();
+            });
+        }
+
+        [Fact]
+        public async Task Can_assign_cyclic_HasMany_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        children = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "workItems",
+                                    id = existingWorkItem.StringId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems/" + existingWorkItem.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Children)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Children.Should().HaveCount(1);
+                workItemInDatabase.Children[0].Id.Should().Be(existingWorkItem.Id);
+            });
+        }
+
+        [Fact]
+        public async Task Can_assign_cyclic_HasManyThrough_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        relatedTo = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "workItems",
+                                    id = existingWorkItem.StringId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems/" + existingWorkItem.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.RelatedToItems)
+                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.ToItem)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.RelatedToItems.Should().HaveCount(1);
+                workItemInDatabase.RelatedToItems[0].FromItem.Id.Should().Be(existingWorkItem.Id);
+                workItemInDatabase.RelatedToItems[0].ToItem.Id.Should().Be(existingWorkItem.Id);
+            });
         }
     }
 }

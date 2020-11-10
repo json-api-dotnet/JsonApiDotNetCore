@@ -92,6 +92,18 @@ namespace JsonApiDotNetCore.Resources.Annotations
         public override string RelationshipPath => $"{ThroughProperty.Name}.{RightProperty.Name}";
 
         /// <summary>
+        /// Required for a self-referencing many-to-many relationship.
+        /// Contains the name of the property back to the parent resource from the through type.
+        /// </summary>
+        public string LeftPropertyName { get; set; }
+
+        /// <summary>
+        /// Required for a self-referencing many-to-many relationship.
+        /// Contains the name of the property to the related resource from the through type.
+        /// </summary>
+        public string RightPropertyName { get; set; }
+
+        /// <summary>
         /// Optional. Can be used to indicate a non-default name for the ID property back to the parent resource from the through type.
         /// Defaults to the name of <see cref="LeftProperty"/> suffixed with "Id".
         /// In the example described above, this would be "ArticleId".

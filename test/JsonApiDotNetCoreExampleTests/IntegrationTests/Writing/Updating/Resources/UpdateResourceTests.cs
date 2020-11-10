@@ -1075,5 +1075,98 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
                 workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingTag.Id);
             });
         }
+
+        [Fact]
+        public async Task Can_update_resource_with_multiple_cyclic_relationship_types()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Parent = _fakers.WorkItem.Generate();
+            existingWorkItem.Children = _fakers.WorkItem.Generate(1);
+            existingWorkItem.RelatedToItems = new List<WorkItemToWorkItem>
+            {
+                new WorkItemToWorkItem
+                {
+                    ToItem = _fakers.WorkItem.Generate()
+                }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        parent = new
+                        {
+                            data = new
+                            {
+                                type = "workItems",
+                                id = existingWorkItem.StringId
+                            }
+                        },
+                        children = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "workItems",
+                                    id = existingWorkItem.StringId
+                                }
+                            }
+                        },
+                        relatedTo = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "workItems",
+                                    id = existingWorkItem.StringId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems/" + existingWorkItem.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Parent)
+                    .Include(workItem => workItem.Children)
+                    .Include(workItem => workItem.RelatedToItems)
+                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.ToItem)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Parent.Should().NotBeNull();
+                workItemInDatabase.Parent.Id.Should().Be(existingWorkItem.Id);
+
+                workItemInDatabase.Children.Should().HaveCount(1);
+                workItemInDatabase.Children.Single().Id.Should().Be(existingWorkItem.Id);
+
+                workItemInDatabase.RelatedToItems.Should().HaveCount(1);
+                workItemInDatabase.RelatedToItems.Single().ToItem.Id.Should().Be(existingWorkItem.Id);
+            });
+        }
     }
 }

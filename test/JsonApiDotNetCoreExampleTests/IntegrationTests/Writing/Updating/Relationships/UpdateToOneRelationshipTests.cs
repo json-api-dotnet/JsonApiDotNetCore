@@ -548,5 +548,87 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             responseDocument.Errors[0].Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
             responseDocument.Errors[0].Detail.Should().Be($"Expected resource of type 'userAccounts' in PATCH request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/assignee', instead of 'rgbColors'.");
         }
+
+        [Fact]
+        public async Task Can_clear_cyclic_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+
+                existingWorkItem.Parent = existingWorkItem;
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = (object)null
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/parent";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Parent)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Parent.Should().BeNull();
+            });
+        }
+
+        [Fact]
+        public async Task Can_assign_cyclic_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.StringId
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/parent";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Parent)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Parent.Should().NotBeNull();
+                workItemInDatabase.Parent.Id.Should().Be(existingWorkItem.Id);
+            });
+        }
     }
 }

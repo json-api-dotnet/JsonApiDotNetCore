@@ -657,5 +657,109 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Resour
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
             responseDocument.Errors[0].Detail.Should().StartWith("Relationship 'assignee' contains incompatible resource type 'rgbColors'. - Request body: <<");
         }
+
+        [Fact]
+        public async Task Can_clear_cyclic_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+
+                existingWorkItem.Parent = existingWorkItem;
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        parent = new
+                        {
+                            data = (object)null
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems/" + existingWorkItem.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Parent)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Parent.Should().BeNull();
+            });
+        }
+
+        [Fact]
+        public async Task Can_assign_cyclic_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        parent = new
+                        {
+                            data = new
+                            {
+                                type = "workItems",
+                                id = existingWorkItem.StringId
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems/" + existingWorkItem.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Parent)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Parent.Should().NotBeNull();
+                workItemInDatabase.Parent.Id.Should().Be(existingWorkItem.Id);
+            });
+        }
     }
 }

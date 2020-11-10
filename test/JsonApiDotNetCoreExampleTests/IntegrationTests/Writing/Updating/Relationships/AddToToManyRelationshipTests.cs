@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -658,6 +659,108 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
                     .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(0);
+            });
+        }
+
+        [Fact]
+        public async Task Can_add_self_to_cyclic_HasMany_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Children = _fakers.WorkItem.Generate(1);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "workItems",
+                        id = existingWorkItem.StringId
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/children";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Children)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Children.Should().HaveCount(2);
+                workItemInDatabase.Children.Should().ContainSingle(workItem => workItem.Id == existingWorkItem.Children[0].Id);
+                workItemInDatabase.Children.Should().ContainSingle(workItem => workItem.Id == existingWorkItem.Id);
+            });
+        }
+
+        [Fact]
+        public async Task Can_add_self_to_cyclic_HasManyThrough_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.RelatedToItems = new List<WorkItemToWorkItem>
+            {
+                new WorkItemToWorkItem
+                {
+                    ToItem = _fakers.WorkItem.Generate()
+                }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "workItems",
+                        id = existingWorkItem.StringId
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/relatedTo";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.RelatedToItems)
+                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.ToItem)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.RelatedToItems.Should().HaveCount(2);
+                workItemInDatabase.RelatedToItems.Should().OnlyContain(workItemToWorkItem => workItemToWorkItem.FromItem.Id == existingWorkItem.Id);
+                workItemInDatabase.RelatedToItems.Should().ContainSingle(workItemToWorkItem => workItemToWorkItem.ToItem.Id == existingWorkItem.Id);
+                workItemInDatabase.RelatedToItems.Should().ContainSingle(workItemToWorkItem => workItemToWorkItem.ToItem.Id == existingWorkItem.RelatedToItems[0].ToItem.Id);
             });
         }
     }

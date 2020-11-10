@@ -33,6 +33,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing
 
             builder.Entity<WorkItemTag>()
                 .HasKey(workItemTag => new { workItemTag.ItemId, workItemTag.TagId});
+
+            builder.Entity<WorkItemToWorkItem>()
+                .HasKey(item => new { item.FromItemId, item.ToItemId});
+
+            builder.Entity<WorkItemToWorkItem>()
+                .HasOne(workItemToWorkItem => workItemToWorkItem.FromItem)
+                .WithMany(workItem => workItem.RelatedToItems)
+                .HasForeignKey(workItemToWorkItem => workItemToWorkItem.FromItemId);
+
+            builder.Entity<WorkItemToWorkItem>()
+                .HasOne(workItemToWorkItem => workItemToWorkItem.ToItem)
+                .WithMany(workItem => workItem.RelatedFromItems)
+                .HasForeignKey(workItemToWorkItem => workItemToWorkItem.ToItemId);
         }
     }
 }

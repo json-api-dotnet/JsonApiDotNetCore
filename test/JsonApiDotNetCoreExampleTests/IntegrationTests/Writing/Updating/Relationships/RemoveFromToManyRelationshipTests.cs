@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -640,7 +641,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
             var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -655,6 +656,114 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Writing.Updating.Relati
 
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(0).Id);
+            });
+        }
+
+        [Fact]
+        public async Task Can_remove_self_from_cyclic_HasMany_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Children = _fakers.WorkItem.Generate(1);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+                
+                existingWorkItem.Children.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "workItems",
+                        id = existingWorkItem.StringId
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/children";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.Children)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.Children.Should().HaveCount(1);
+                workItemInDatabase.Children[0].Id.Should().Be(existingWorkItem.Children[0].Id);
+            });
+        }
+
+        [Fact]
+        public async Task Can_remove_self_from_cyclic_HasManyThrough_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.RelatedFromItems = new List<WorkItemToWorkItem>
+            {
+                new WorkItemToWorkItem
+                {
+                    FromItem = _fakers.WorkItem.Generate()
+                }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+
+                existingWorkItem.RelatedFromItems.Add(new WorkItemToWorkItem
+                {
+                    FromItem = existingWorkItem
+                });
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "workItems",
+                        id = existingWorkItem.StringId
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/relatedFrom";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var workItemInDatabase = await dbContext.WorkItems
+                    .Include(workItem => workItem.RelatedFromItems)
+                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.FromItem)
+                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+
+                workItemInDatabase.RelatedFromItems.Should().HaveCount(1);
+                workItemInDatabase.RelatedFromItems[0].FromItem.Id.Should().Be(existingWorkItem.RelatedFromItems[0].FromItem.Id);
             });
         }
     }
