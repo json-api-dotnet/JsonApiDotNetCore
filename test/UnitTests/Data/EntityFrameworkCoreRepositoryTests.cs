@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IntegrationTests;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -17,7 +16,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 
-namespace JADNC.IntegrationTests.Data
+namespace UnitTests.Data
 {
     public sealed class EntityFrameworkCoreRepositoryTests
     {
