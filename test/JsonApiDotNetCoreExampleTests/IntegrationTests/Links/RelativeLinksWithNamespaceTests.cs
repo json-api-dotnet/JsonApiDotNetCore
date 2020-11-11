@@ -50,6 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Links.Self.Should().Be($"/api/v1/people/{person.StringId}");
+            responseDocument.Links.Related.Should().BeNull();
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
@@ -90,6 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Links.Self.Should().Be("/api/v1/people?include=todoItems");
+            responseDocument.Links.Related.Should().BeNull();
             responseDocument.Links.First.Should().Be("/api/v1/people?include=todoItems");
             responseDocument.Links.Last.Should().Be("/api/v1/people?include=todoItems");
             responseDocument.Links.Prev.Should().BeNull();
