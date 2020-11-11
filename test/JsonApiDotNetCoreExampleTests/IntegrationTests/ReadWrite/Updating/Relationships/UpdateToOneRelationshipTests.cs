@@ -550,6 +550,45 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
+        public async Task Cannot_create_with_data_array_in_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+            var existingUserAccount = _fakers.UserAccount.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(existingWorkItem, existingUserAccount);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "userAccounts",
+                        id = existingUserAccount.StringId
+                    }
+                }
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected single data element for to-one relationship.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected single data element for 'assignee' relationship. - Request body: <<");
+        }
+
+        [Fact]
         public async Task Can_clear_cyclic_relationship()
         {
             // Arrange

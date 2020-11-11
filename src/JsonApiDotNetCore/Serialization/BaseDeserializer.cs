@@ -120,7 +120,6 @@ namespace JsonApiDotNetCore.Serialization
                     continue;
                 }
 
-                // TODO: @ThisPR Extra validation to make sure there are no list-like data for HasOne relationships and vice versa (Write test)
                 if (attr is HasOneAttribute hasOneAttribute)
                 {
                     SetHasOneRelationship(resource, hasOneAttribute, relationshipData);

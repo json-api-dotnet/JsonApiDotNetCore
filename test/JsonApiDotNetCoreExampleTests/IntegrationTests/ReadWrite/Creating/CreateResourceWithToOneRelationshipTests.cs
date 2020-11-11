@@ -532,5 +532,53 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 workItemInDatabase.Assignee.Id.Should().Be(existingUserAccounts[1].Id);
             });
         }
+
+        [Fact]
+        public async Task Cannot_create_with_data_array_in_relationship()
+        {
+            // Arrange
+            var existingUserAccount = _fakers.UserAccount.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.UserAccounts.Add(existingUserAccount);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        assignee = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "userAccounts",
+                                    id = existingUserAccount.StringId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected single data element for to-one relationship.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected single data element for 'assignee' relationship. - Request body: <<");
+        }
     }
 }

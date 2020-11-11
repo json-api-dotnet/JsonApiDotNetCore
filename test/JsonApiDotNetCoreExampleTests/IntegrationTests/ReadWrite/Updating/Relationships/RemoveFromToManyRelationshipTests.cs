@@ -35,13 +35,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             var requestBody = new
             {
-                data = new[]
+                data = new
                 {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingWorkItem.Assignee.StringId
-                    }
+                    type = "userAccounts",
+                    id = existingWorkItem.Assignee.StringId
                 }
             };
 
@@ -657,6 +654,68 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(0).Id);
             });
+        }
+
+        [Fact]
+        public async Task Cannot_remove_with_null_data_in_HasMany_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = (object)null
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected data[] element for 'subscribers' relationship. - Request body: <<");
+        }
+
+        [Fact]
+        public async Task Cannot_remove_with_null_data_in_HasManyThrough_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = (object)null
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected data[] element for 'tags' relationship. - Request body: <<");
         }
 
         [Fact]

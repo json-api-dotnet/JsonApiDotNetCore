@@ -35,13 +35,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             var requestBody = new
             {
-                data = new[]
+                data = new
                 {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingUserAccount.StringId
-                    }
+                    type = "userAccounts",
+                    id = existingUserAccount.StringId
                 }
             };
 
@@ -660,6 +657,68 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
                 workItemInDatabase.Subscribers.Should().HaveCount(0);
             });
+        }
+
+        [Fact]
+        public async Task Cannot_add_with_null_data_in_HasMany_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = (object)null
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected data[] element for 'subscribers' relationship. - Request body: <<");
+        }
+
+        [Fact]
+        public async Task Cannot_add_with_null_data_in_HasManyThrough_relationship()
+        {
+            // Arrange
+            var existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = (object)null
+            };
+
+            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Expected data[] element for 'tags' relationship. - Request body: <<");
         }
 
         [Fact]

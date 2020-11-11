@@ -109,10 +109,9 @@ namespace JsonApiDotNetCore.Serialization
                 ValidatePrimaryIdValue(model, httpRequest.Path);
             }
 
-            if (IsPatchRequestForToManyRelationship(httpRequest.Method) && model == null)
+            if (_request.Kind == EndpointKind.Relationship)
             {
-                throw new InvalidRequestBodyException("Expected data[] for to-many relationship.", 
-                    $"Expected data[] for '{_request.Relationship.PublicName}' relationship.", body);
+                ValidateForRelationshipType(httpRequest.Method, model, body);
             }
         }
 
@@ -211,10 +210,27 @@ namespace JsonApiDotNetCore.Serialization
             return false;
         }
 
-        private bool IsPatchRequestForToManyRelationship(string requestMethod)
+        private void ValidateForRelationshipType(string requestMethod, object model, string body)
         {
-            return requestMethod == HttpMethods.Patch && _request.Kind == EndpointKind.Relationship &&
-                   _request.Relationship is HasManyAttribute;
+            if (_request.Relationship is HasOneAttribute)
+            {
+                if (requestMethod == HttpMethods.Post || requestMethod == HttpMethods.Delete)
+                {
+                    throw new ToManyRelationshipRequiredException(_request.Relationship.PublicName);
+                }
+
+                if (model != null && !(model is IIdentifiable))
+                {
+                    throw new InvalidRequestBodyException("Expected single data element for to-one relationship.",
+                        $"Expected single data element for '{_request.Relationship.PublicName}' relationship.", body);
+                }
+            }
+
+            if (_request.Relationship is HasManyAttribute && !(model is IEnumerable<IIdentifiable>))
+            {
+                throw new InvalidRequestBodyException("Expected data[] element for to-many relationship.",
+                    $"Expected data[] element for '{_request.Relationship.PublicName}' relationship.", body);
+            }
         }
     }
 }
