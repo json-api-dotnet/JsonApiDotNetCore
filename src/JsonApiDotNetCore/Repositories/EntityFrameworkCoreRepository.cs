@@ -483,7 +483,6 @@ namespace JsonApiDotNetCore.Repositories
 
             if (Nullable.GetUnderlyingType(propertyType) != null)
             {
-                // TODO: @ThisPR Write test with primary key property type int? or equivalent. 
                 propertyType = propertyInfo.PropertyType.GetGenericArguments()[0];
             }
 
