@@ -50,6 +50,12 @@ namespace JsonApiDotNetCore.Serialization.Building
                 topLevelLinks = new TopLevelLinks {Self = GetSelfTopLevelLink(resourceContext, null)};
             }
 
+            if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Related) && _request.Kind == EndpointKind.Relationship)
+            {   
+                topLevelLinks ??= new TopLevelLinks();
+                topLevelLinks.Related = GetRelatedRelationshipLink(_request.PrimaryResource.PublicName, _request.PrimaryId, _request.Relationship.PublicName);
+            }
+
             if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Paging) && _paginationContext.PageSize != null && _request.IsCollection)
             {   
                 SetPageLinks(resourceContext, topLevelLinks ??= new TopLevelLinks());

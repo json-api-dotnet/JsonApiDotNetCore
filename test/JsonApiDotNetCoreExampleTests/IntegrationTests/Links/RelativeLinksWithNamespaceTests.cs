@@ -129,9 +129,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // TODO: @ThisPR links/related was removed from the expected response body here, which violates the json:api spec.
-
             responseDocument.Links.Self.Should().Be($"/api/v1/people/{person.StringId}/relationships/todoItems");
+            responseDocument.Links.Related.Should().Be($"/api/v1/people/{person.StringId}/todoItems");
             responseDocument.Links.First.Should().Be($"/api/v1/people/{person.StringId}/relationships/todoItems");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
