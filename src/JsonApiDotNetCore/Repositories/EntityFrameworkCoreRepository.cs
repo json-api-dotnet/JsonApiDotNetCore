@@ -486,13 +486,29 @@ namespace JsonApiDotNetCore.Repositories
                 propertyType = propertyInfo.PropertyType.GetGenericArguments()[0];
             }
 
+            if (propertyType == typeof(Guid))
+            {
+                return Guid.NewGuid();
+            }
+
+            if (CanBeNegative(propertyType))
+            {
+                return TypeHelper.ConvertType(-1, propertyType);
+            }
+
             if (propertyType.IsValueType)
             {
                 return Activator.CreateInstance(propertyType);
             }
 
-            throw new InvalidOperationException(
-                $"Unexpected reference type '{propertyType.Name}' for primary key property '{propertyInfo.DeclaringType?.Name}.{propertyInfo.Name}'.");
+            throw new NotSupportedException(
+                $"Unsupported reference type '{propertyType.Name}' for primary key property '{propertyInfo.DeclaringType?.Name}.{propertyInfo.Name}'.");
+        }
+
+        private static bool CanBeNegative(Type type)
+        {
+            return type == typeof(int) || type == typeof(long) || type == typeof(short) || type == typeof(byte) ||
+                   type == typeof(decimal) || type == typeof(double) || type == typeof(float);
         }
     }
 

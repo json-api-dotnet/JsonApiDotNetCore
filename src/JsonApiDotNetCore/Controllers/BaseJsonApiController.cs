@@ -169,11 +169,18 @@ namespace JsonApiDotNetCore.Controllers
                 throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors, namingStrategy);
             }
 
-            resource = await _create.CreateAsync(resource);
+            var newResource = await _create.CreateAsync(resource);
 
-            return resource == null
-                ? (IActionResult) NoContent()
-                : Created($"{HttpContext.Request.Path}/{resource.StringId}", resource);
+            var resourceId = (newResource ?? resource).StringId;
+            string locationUrl = $"{HttpContext.Request.Path}/{resourceId}";
+
+            if (newResource == null)
+            {
+                HttpContext.Response.Headers["Location"] = locationUrl;
+                return NoContent();
+            }
+
+            return Created(locationUrl, newResource);
         }
 
         /// <summary>

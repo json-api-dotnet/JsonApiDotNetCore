@@ -15,5 +15,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
         [HasMany]
         public ICollection<Player> ActivePlayers { get; set; }
+
+        [HasOne]
+        public Map ActiveMap { get; set; }
+
+        [HasMany]
+        public ICollection<Map> Maps { get; set; }
     }
 }

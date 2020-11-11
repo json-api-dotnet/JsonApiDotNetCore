@@ -16,7 +16,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 .RuleFor(player => player.Id, f => f.Person.UserName)
                 .RuleFor(player => player.EmailAddress, f => f.Person.Email));
 
+        private readonly Lazy<Faker<Map>> _lazyMapFaker = new Lazy<Faker<Map>>(() =>
+            new Faker<Map>()
+                .UseSeed(GetFakerSeed())
+                .RuleFor(map => map.Id, f => f.Random.Guid())
+                .RuleFor(map => map.Name, f => f.Random.Words()));
+
         public Faker<Game> Game => _lazyGameFaker.Value;
         public Faker<Player> Player => _lazyPlayerFaker.Value;
+        public Faker<Map> Map => _lazyMapFaker.Value;
     }
 }

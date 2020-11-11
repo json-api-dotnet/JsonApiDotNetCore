@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -10,5 +11,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
         [HasOne]
         public Game ActiveGame { get; set; }
+
+        [HasMany]
+        public ICollection<Game> RecentlyPlayed { get; set; }
     }
 }
