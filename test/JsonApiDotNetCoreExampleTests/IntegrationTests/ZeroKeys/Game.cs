@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -10,8 +11,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         [Attr]
         public string Title { get; set; }
 
+        [NotMapped]
         [Attr]
-        public Guid SessionToken { get; } = Guid.NewGuid();
+        public Guid SessionToken => Guid.NewGuid();
 
         [HasMany]
         public ICollection<Player> ActivePlayers { get; set; }

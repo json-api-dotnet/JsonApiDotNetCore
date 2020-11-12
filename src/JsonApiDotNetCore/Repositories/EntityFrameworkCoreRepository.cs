@@ -125,45 +125,18 @@ namespace JsonApiDotNetCore.Repositories
             _traceWriter.LogMethodStart(new {resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+
             foreach (var relationship in _targetedFields.Relationships)
             {
                 var rightValue = relationship.GetValue(resource);
-                await UpdateRelationshipAsync(relationship, resource, rightValue);
+                await UpdateRelationshipAsync(relationship, resource, rightValue, collector);
             }
 
-            _dbContext.Set<TResource>().Add(resource);
+            var dbSet = _dbContext.Set<TResource>();
+            dbSet.Add(resource);
+
             await SaveChangesAsync();
-
-            FlushFromCache(resource);
-        }
-
-        protected void FlushFromCache(IIdentifiable resource)
-        {
-            resource = (IIdentifiable) _dbContext.GetTrackedIdentifiable(resource);
-            if (resource != null)
-            {
-                DetachEntities(new[] {resource});
-                DetachRelationships(resource);
-            }
-        }
-
-        private void DetachEntities(IEnumerable<object> entities)
-        {
-            foreach (var entity in entities)
-            {
-                _dbContext.Entry(entity).State = EntityState.Detached;
-            }
-        }
-
-        private void DetachRelationships(IIdentifiable resource)
-        {
-            foreach (var relationship in _targetedFields.Relationships)
-            {
-                var rightValue = relationship.GetValue(resource);
-                var rightResources = TypeHelper.ExtractResources(rightValue);
-
-                DetachEntities(rightResources);
-            }
         }
 
         /// <inheritdoc />
@@ -184,12 +157,12 @@ namespace JsonApiDotNetCore.Repositories
 
             if (secondaryResourceIds.Any())
             {
-                var primaryResource = (TResource) _dbContext.GetTrackedOrAttach(CreateResourceWithAssignedId(primaryId));
+                using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+                var primaryResource = collector.CreateForId<TResource, TId>(primaryId);
 
-                await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds);
+                await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector);
+
                 await SaveChangesAsync();
-
-                // TODO: @ThisPR Do we need to flush cache here?
             }
         }
 
@@ -201,7 +174,9 @@ namespace JsonApiDotNetCore.Repositories
 
             RemoveEntitiesFromSet(joinTableEntities, secondaryResourceIds, relationship);
 
-            DetachEntities(joinTableEntities.Cast<object>());
+            // We need to purge these from the change tracker, otherwise on save the pre-existing records will be deleted.
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+            collector.Register(joinTableEntities.Cast<object>());
         }
 
         private IQueryable CreateJoinTableQuery(HasManyThroughAttribute relationship, FilterExpression joinTableFilter)
@@ -233,14 +208,6 @@ namespace JsonApiDotNetCore.Repositories
             secondaryResourceIds.ExceptWith(resourcesToExclude);
         }
 
-        private TResource CreateResourceWithAssignedId(TId id)
-        {
-            var resource = _resourceFactory.CreateInstance<TResource>();
-            resource.Id = id;
-
-            return resource;
-        }
-
         /// <inheritdoc />
         public virtual async Task SetRelationshipAsync(TResource primaryResource, object secondaryResourceIds)
         {
@@ -248,10 +215,10 @@ namespace JsonApiDotNetCore.Repositories
 
             var relationship = _targetedFields.Relationships.Single();
 
-            await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds);
-            await SaveChangesAsync();
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+            await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector);
 
-            // TODO: @ThisPR Do we need to flush cache here?
+            await SaveChangesAsync();
         }
 
         /// <inheritdoc />
@@ -261,10 +228,12 @@ namespace JsonApiDotNetCore.Repositories
             if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
             if (resourceFromDatabase == null) throw new ArgumentNullException(nameof(resourceFromDatabase));
 
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+
             foreach (var relationship in _targetedFields.Relationships)
             {
                 var rightResources = relationship.GetValue(resourceFromRequest);
-                await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightResources);
+                await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightResources, collector);
             }
 
             foreach (var attribute in _targetedFields.Attributes)
@@ -273,8 +242,6 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             await SaveChangesAsync();
-
-            FlushFromCache(resourceFromDatabase);
         }
 
         /// <inheritdoc />
@@ -282,11 +249,12 @@ namespace JsonApiDotNetCore.Repositories
         {
             _traceWriter.LogMethodStart(new {id});
 
-            var resource = (TResource) _dbContext.GetTrackedOrAttach(CreateResourceWithAssignedId(id));
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+            var resource = collector.CreateForId<TResource, TId>(id);
 
             foreach (var relationship in _resourceGraph.GetRelationships<TResource>())
             {
-                // Loads the data of the relationship if in EF Core it is configured in such a way that loading the related
+                // Loads the data of the relationship, if in EF Core it is configured in such a way that loading the related
                 // entities into memory is required for successfully executing the selected deletion behavior. 
                 if (RequiresLoadOfRelationshipForDeletion(relationship))
                 {
@@ -296,9 +264,8 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             _dbContext.Remove(resource);
-            await SaveChangesAsync();
 
-            // TODO: @ThisPR Do we need to flush cache here?
+            await SaveChangesAsync();
         }
 
         private NavigationEntry GetNavigationEntry(TResource resource, RelationshipAttribute relationship)
@@ -349,10 +316,10 @@ namespace JsonApiDotNetCore.Repositories
             var rightResources = ((IEnumerable<IIdentifiable>) rightValue).ToHashSet(IdentifiableComparer.Instance);
             rightResources.ExceptWith(secondaryResourceIds);
 
-            await UpdateRelationshipAsync(relationship, primaryResource, rightResources);
-            await SaveChangesAsync();
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+            await UpdateRelationshipAsync(relationship, primaryResource, rightResources, collector);
 
-            // TODO: @ThisPR Do we need to flush cache here?
+            await SaveChangesAsync();
         }
 
         /// <inheritdoc />
@@ -374,9 +341,10 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        private async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
+        private async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource,
+            object valueToAssign, PlaceholderResourceCollector collector)
         {
-            var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
+            var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType, collector);
 
             if (RequireLoadOfInverseRelationship(relationship, trackedValueToAssign))
             {
@@ -394,7 +362,8 @@ namespace JsonApiDotNetCore.Repositories
             relationship.SetValue(leftResource, trackedValueToAssign);
         }
 
-        private object EnsureRelationshipValueToAssignIsTracked(object rightValue, Type relationshipPropertyType)
+        private object EnsureRelationshipValueToAssignIsTracked(object rightValue, Type relationshipPropertyType,
+            PlaceholderResourceCollector collector)
         {
             if (rightValue == null)
             {
@@ -402,7 +371,7 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             var rightResources = TypeHelper.ExtractResources(rightValue);
-            var rightResourcesTracked = rightResources.Select(resource => _dbContext.GetTrackedOrAttach(resource)).ToArray();
+            var rightResourcesTracked = rightResources.Select(collector.CaptureExisting).ToArray();
 
             return rightValue is IEnumerable
                 ? (object) TypeHelper.CopyToTypedCollection(rightResourcesTracked, relationshipPropertyType)
@@ -447,7 +416,8 @@ namespace JsonApiDotNetCore.Repositories
             // (as done here) is tricking the change tracker into recognizing the null assignment by first
             // assigning a placeholder entity to the navigation property, and then setting it to null.
 
-            var placeholderRightResource = _resourceFactory.CreateInstance(relationship.RightType);
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+            var placeholderRightResource = collector.CreateUntracked(relationship.RightType);
 
             // When assigning a related entity to a navigation property, it will be attached to the change tracker.
             // This fails when that entity has null reference(s) for its primary key.
@@ -455,8 +425,6 @@ namespace JsonApiDotNetCore.Repositories
 
             relationship.SetValue(leftResource, placeholderRightResource);
             _dbContext.Entry(leftResource).DetectChanges();
-
-            DetachEntities(new[] {placeholderRightResource});
         }
 
         private void EnsurePrimaryKeyPropertiesAreNotNull(object entity)

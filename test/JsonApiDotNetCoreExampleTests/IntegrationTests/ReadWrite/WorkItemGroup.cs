@@ -16,7 +16,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
 
         [NotMapped]
         [Attr]
-        public Guid ConcurrencyToken { get; } = Guid.NewGuid();
+        public Guid ConcurrencyToken => Guid.NewGuid();
 
         [HasOne]
         public RgbColor Color { get; set; }
