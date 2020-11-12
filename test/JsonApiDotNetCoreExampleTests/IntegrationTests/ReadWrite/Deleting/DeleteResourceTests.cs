@@ -136,8 +136,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
                 groupsInDatabase.Should().BeNull();
 
                 var colorInDatabase = await dbContext.RgbColors
-                    .FirstAsync(color => color.Id == existingGroup.Color.Id);
+                    .FirstOrDefaultAsync(color => color.Id == existingGroup.Color.Id);
 
+                colorInDatabase.Should().NotBeNull();
                 colorInDatabase.Group.Should().BeNull();
             });
         }

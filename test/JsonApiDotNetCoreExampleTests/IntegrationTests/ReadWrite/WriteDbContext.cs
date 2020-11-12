@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
             builder.Entity<WorkItemGroup>()
                 .HasOne(workItemGroup => workItemGroup.Color)
                 .WithOne(color => color.Group)
-                .HasForeignKey<RgbColor>();
+                .HasForeignKey<RgbColor>().IsRequired();
 
             builder.Entity<WorkItemTag>()
                 .HasKey(workItemTag => new { workItemTag.ItemId, workItemTag.TagId});

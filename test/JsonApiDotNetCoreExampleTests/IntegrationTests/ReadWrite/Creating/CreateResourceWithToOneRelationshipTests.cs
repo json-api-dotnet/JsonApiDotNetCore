@@ -25,6 +25,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             options.AllowClientGeneratedIds = true;
         }
 
+        // TODO: Name confused me: we're not creating relationships, but resources with relationships
+        // either replace to Can_create_with_.... or the more verbose Can_create_resource_with_.... 
         [Fact]
         public async Task Can_create_OneToOne_relationship_from_principal_side()
         {
@@ -141,8 +143,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 newColorInDatabase.Group.Should().NotBeNull();
                 newColorInDatabase.Group.Id.Should().Be(existingColor.Group.Id);
 
-                var existingColorInDatabase = colorsInDatabase.Single(color => color.Id == existingColor.Id);
-                existingColorInDatabase.Group.Should().BeNull();
+                var existingColorInDatabase = colorsInDatabase.SingleOrDefault(color => color.Id == existingColor.Id);
+                existingColorInDatabase.Should().NotBeNull();
+                existingColorInDatabase!.Group.Should().BeNull();
             });
         }
 
