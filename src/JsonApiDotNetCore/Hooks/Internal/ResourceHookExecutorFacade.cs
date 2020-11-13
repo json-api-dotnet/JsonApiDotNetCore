@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources;
@@ -25,11 +24,11 @@ namespace JsonApiDotNetCore.Hooks.Internal
             _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
         }
 
-        public void BeforeReadSingle<TResource, TId>(TId resourceId, ResourcePipeline pipeline)
+        public void BeforeReadSingle<TResource, TId>(TId id, ResourcePipeline pipeline)
             where TResource : class, IIdentifiable<TId>
         {
             var temporaryResource = _resourceFactory.CreateInstance<TResource>();
-            temporaryResource.Id = resourceId;
+            temporaryResource.Id = id;
 
             _resourceHookExecutor.BeforeRead<TResource>(pipeline, temporaryResource.StringId);
         }
@@ -76,30 +75,34 @@ namespace JsonApiDotNetCore.Hooks.Internal
             _resourceHookExecutor.AfterUpdate(ToList(resource), ResourcePipeline.Patch);
         }
 
-        public void BeforeUpdateRelationshipAsync<TResource>(TResource resource)
+        public void BeforeUpdateRelationship<TResource>(TResource resource)
             where TResource : class, IIdentifiable
         {
             _resourceHookExecutor.BeforeUpdate(ToList(resource), ResourcePipeline.PatchRelationship);
         }
 
-        public void AfterUpdateRelationshipAsync<TResource>(TResource resource)
+        public void AfterUpdateRelationship<TResource>(TResource resource)
             where TResource : class, IIdentifiable
         {
             _resourceHookExecutor.AfterUpdate(ToList(resource), ResourcePipeline.PatchRelationship);
         }
 
-        public async Task BeforeDeleteAsync<TResource, TId>(TId id, Func<Task<TResource>> getResourceAsync)
+        public void BeforeDelete<TResource, TId>(TId id)
             where TResource : class, IIdentifiable<TId>
         {
-            var resource = await getResourceAsync();
-            _resourceHookExecutor.BeforeDelete(ToList(resource), ResourcePipeline.Delete);
+            var temporaryResource = _resourceFactory.CreateInstance<TResource>();
+            temporaryResource.Id = id;
+
+            _resourceHookExecutor.BeforeDelete(ToList(temporaryResource), ResourcePipeline.Delete);
         }
 
-        public async Task AfterDeleteAsync<TResource, TId>(TId id, Func<Task<TResource>> getResourceAsync)
+        public void AfterDelete<TResource, TId>(TId id)
             where TResource : class, IIdentifiable<TId>
         {
-            var resource = await getResourceAsync();
-            _resourceHookExecutor.AfterDelete(ToList(resource), ResourcePipeline.Delete, true);
+            var temporaryResource = _resourceFactory.CreateInstance<TResource>();
+            temporaryResource.Id = id;
+
+            _resourceHookExecutor.AfterDelete(ToList(temporaryResource), ResourcePipeline.Delete, true);
         }
 
         public void OnReturnSingle<TResource>(TResource resource, ResourcePipeline pipeline)

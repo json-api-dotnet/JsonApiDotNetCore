@@ -374,7 +374,7 @@ namespace JsonApiDotNetCore.Services
 
             TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId);
 
-            _hookExecutor.BeforeUpdateRelationshipAsync(resourceFromDatabase);
+            _hookExecutor.BeforeUpdateRelationship(resourceFromDatabase);
 
             try
             {
@@ -386,7 +386,7 @@ namespace JsonApiDotNetCore.Services
                 throw;
             }
 
-            _hookExecutor.AfterUpdateRelationshipAsync(resourceFromDatabase);
+            _hookExecutor.AfterUpdateRelationship(resourceFromDatabase);
         }
 
         /// <inheritdoc />
@@ -394,9 +394,7 @@ namespace JsonApiDotNetCore.Services
         {
             _traceWriter.LogMethodStart(new {id});
 
-            TResource resourceForHooksCached = null;
-            await _hookExecutor.BeforeDeleteAsync(id, async () =>
-                resourceForHooksCached = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes));
+            _hookExecutor.BeforeDelete<TResource, TId>(id);
 
             try
             {
@@ -409,7 +407,7 @@ namespace JsonApiDotNetCore.Services
                 throw;
             }
 
-            await _hookExecutor.AfterDeleteAsync(id, () => Task.FromResult(resourceForHooksCached));
+            _hookExecutor.AfterDelete<TResource, TId>(id);
         }
 
         /// <inheritdoc />

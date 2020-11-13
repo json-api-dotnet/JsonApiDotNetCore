@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources;
@@ -12,7 +10,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
     /// </summary>
     public sealed class NeverResourceHookExecutorFacade : IResourceHookExecutorFacade
     {
-        public void BeforeReadSingle<TResource, TId>(TId resourceId, ResourcePipeline pipeline)
+        public void BeforeReadSingle<TResource, TId>(TId id, ResourcePipeline pipeline)
             where TResource : class, IIdentifiable<TId>
         {
         }
@@ -52,26 +50,24 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
         }
 
-        public void BeforeUpdateRelationshipAsync<TResource>(TResource resource)
+        public void BeforeUpdateRelationship<TResource>(TResource resource)
             where TResource : class, IIdentifiable
         {
         }
 
-        public void AfterUpdateRelationshipAsync<TResource>(TResource resource)
+        public void AfterUpdateRelationship<TResource>(TResource resource)
             where TResource : class, IIdentifiable
         {
         }
 
-        public Task BeforeDeleteAsync<TResource, TId>(TId id, Func<Task<TResource>> getResourceAsync)
+        public void BeforeDelete<TResource, TId>(TId id)
             where TResource : class, IIdentifiable<TId>
         {
-            return Task.CompletedTask;
         }
 
-        public Task AfterDeleteAsync<TResource, TId>(TId id, Func<Task<TResource>> getResourceAsync)
+        public void AfterDelete<TResource, TId>(TId id)
             where TResource : class, IIdentifiable<TId>
         {
-            return Task.CompletedTask;
         }
 
         public void OnReturnSingle<TResource>(TResource resource, ResourcePipeline pipeline)
