@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries
@@ -14,11 +15,6 @@ namespace JsonApiDotNetCore.Queries
         /// Builds a top-level filter from constraints, used to determine total resource count.
         /// </summary>
         FilterExpression GetTopFilterFromConstraints();
-
-        /// <summary>
-        /// Builds a filter to match on the specified IDs.
-        /// </summary>
-        FilterExpression GetFilterOnResourceIds<TId>(ICollection<TId> ids, ResourceContext resourceContext);
 
         /// <summary>
         /// Builds a join table filter, which matches on the specified IDs.
@@ -50,5 +46,15 @@ namespace JsonApiDotNetCore.Queries
         /// Builds a query that retrieves the primary resource, including all of its attributes and all targeted relationships, during a create/update/delete request.
         /// </summary>
         QueryLayer ComposeForUpdate<TId>(TId id, ResourceContext primaryResource);
+
+        /// <summary>
+        /// Builds a query for each targeted relationship with a filter to match on its right resource IDs.
+        /// </summary>
+        IEnumerable<(QueryLayer, RelationshipAttribute)> ComposeForGetTargetedSecondaryResourceIds(IIdentifiable primaryResource);
+
+        /// <summary>
+        /// Builds a query for the specified relationship with a filter to match on its right resource IDs.
+        /// </summary>
+        QueryLayer ComposeForGetRelationshipRightIds(RelationshipAttribute relationship, ICollection<IIdentifiable> rightResourceIds);
     }
 }
