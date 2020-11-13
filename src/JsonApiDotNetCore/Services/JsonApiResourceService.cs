@@ -29,7 +29,6 @@ namespace JsonApiDotNetCore.Services
         private readonly IJsonApiRequest _request;
         private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
         private readonly IResourceFactory _resourceFactory;
-        private readonly ISecondaryResourceResolver _secondaryResourceResolver;
         private readonly IResourceHookExecutorFacade _hookExecutor;
 
         public JsonApiResourceService(
@@ -41,7 +40,6 @@ namespace JsonApiDotNetCore.Services
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
-            ISecondaryResourceResolver secondaryResourceResolver,
             IResourceHookExecutorFacade hookExecutor)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
@@ -54,7 +52,6 @@ namespace JsonApiDotNetCore.Services
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _resourceChangeTracker = resourceChangeTracker ?? throw new ArgumentNullException(nameof(resourceChangeTracker));
             _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
-            _secondaryResourceResolver = secondaryResourceResolver ?? throw new ArgumentNullException(nameof(secondaryResourceResolver));
             _hookExecutor = hookExecutor ?? throw new ArgumentNullException(nameof(hookExecutor));
         }
 
@@ -216,10 +213,40 @@ namespace JsonApiDotNetCore.Services
 
         private async Task AssertResourcesToAssignInRelationshipsExistAsync(TResource resource)
         {
-            var missingResources = await _secondaryResourceResolver.GetMissingResourcesToAssignInRelationships(resource);
+            var missingResources = new List<MissingResourceInRelationship>();
+
+            foreach (var (queryLayer, relationship) in
+                _queryLayerComposer.ComposeForGetTargetedSecondaryResourceIds(resource))
+            {
+                object rightValue = relationship.GetValue(resource);
+                ICollection<IIdentifiable> rightResourceIds = TypeHelper.ExtractResources(rightValue);
+
+                var missingResourcesInRelationship = GetMissingRightResourcesAsync(queryLayer, relationship, rightResourceIds);
+                await missingResources.AddRangeAsync(missingResourcesInRelationship);
+            }
+
             if (missingResources.Any())
             {
                 throw new ResourcesInRelationshipsNotFoundException(missingResources);
+            }
+        }
+
+        private async IAsyncEnumerable<MissingResourceInRelationship> GetMissingRightResourcesAsync(
+            QueryLayer existingRightResourceIdsQueryLayer, RelationshipAttribute relationship,
+            ICollection<IIdentifiable> rightResourceIds)
+        {
+            var existingResources = await _repositoryAccessor.GetAsync(
+                existingRightResourceIdsQueryLayer.ResourceContext.ResourceType, existingRightResourceIdsQueryLayer);
+
+            var existingResourceIds = existingResources.Select(resource => resource.StringId).ToArray();
+
+            foreach (var rightResourceId in rightResourceIds)
+            {
+                if (!existingResourceIds.Contains(rightResourceId.StringId))
+                {
+                    yield return new MissingResourceInRelationship(relationship.PublicName,
+                        existingRightResourceIdsQueryLayer.ResourceContext.PublicName, rightResourceId.StringId);
+                }
             }
         }
 
@@ -256,7 +283,9 @@ namespace JsonApiDotNetCore.Services
 
         private async Task AssertResourcesExistAsync(ICollection<IIdentifiable> secondaryResourceIds)
         {
-            var missingResources = await _secondaryResourceResolver.GetMissingSecondaryResources(_request.Relationship, secondaryResourceIds);
+            var queryLayer = _queryLayerComposer.ComposeForGetRelationshipRightIds(_request.Relationship, secondaryResourceIds);
+
+            var missingResources = await GetMissingRightResourcesAsync(queryLayer, _request.Relationship, secondaryResourceIds).ToListAsync();
             if (missingResources.Any())
             {
                 throw new ResourcesInRelationshipsNotFoundException(missingResources);
@@ -422,10 +451,9 @@ namespace JsonApiDotNetCore.Services
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
-            ISecondaryResourceResolver secondaryResourceResolver,
             IResourceHookExecutorFacade hookExecutor)
             : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                resourceChangeTracker, resourceFactory, secondaryResourceResolver, hookExecutor)
+                resourceChangeTracker, resourceFactory, hookExecutor)
         {
         }
     }

@@ -145,21 +145,20 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
             _services.AddScoped<IPaginationContext, PaginationContext>();
             _services.AddScoped<IQueryLayerComposer, QueryLayerComposer>();
-            _services.TryAddScoped<IInverseNavigationResolver, InverseNavigationResolver>();
-            _services.AddScoped<ISecondaryResourceResolver, SecondaryResourceResolver>();
+            _services.AddScoped<IInverseNavigationResolver, InverseNavigationResolver>();
         }
 
         private void AddMiddlewareLayer()
         {
             _services.AddSingleton<IJsonApiOptions>(_options);
             _services.AddSingleton<IJsonApiApplicationBuilder>(this);
-            _services.TryAddSingleton<IExceptionHandler, ExceptionHandler>();
-            _services.TryAddScoped<IAsyncJsonApiExceptionFilter, AsyncJsonApiExceptionFilter>();
-            _services.TryAddScoped<IAsyncQueryStringActionFilter, AsyncQueryStringActionFilter>();
-            _services.TryAddScoped<IAsyncConvertEmptyActionResultFilter, AsyncConvertEmptyActionResultFilter>();
-            _services.TryAddSingleton<IJsonApiInputFormatter, JsonApiInputFormatter>();
-            _services.TryAddSingleton<IJsonApiOutputFormatter, JsonApiOutputFormatter>();
-            _services.TryAddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
+            _services.AddSingleton<IExceptionHandler, ExceptionHandler>();
+            _services.AddScoped<IAsyncJsonApiExceptionFilter, AsyncJsonApiExceptionFilter>();
+            _services.AddScoped<IAsyncQueryStringActionFilter, AsyncQueryStringActionFilter>();
+            _services.AddScoped<IAsyncConvertEmptyActionResultFilter, AsyncConvertEmptyActionResultFilter>();
+            _services.AddSingleton<IJsonApiInputFormatter, JsonApiInputFormatter>();
+            _services.AddSingleton<IJsonApiOutputFormatter, JsonApiOutputFormatter>();
+            _services.AddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
             _services.AddSingleton<IControllerResourceMapping>(sp => sp.GetRequiredService<IJsonApiRoutingConvention>());
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             _services.AddSingleton<IRequestScopedServiceProvider, RequestScopedServiceProvider>();
