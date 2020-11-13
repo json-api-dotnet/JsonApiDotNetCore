@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
-        private readonly IResourceRepository<TResource, TId> _repository;
+        private readonly IResourceRepositoryAccessor _repositoryAccessor;
         private readonly IQueryLayerComposer _queryLayerComposer;
         private readonly IPaginationContext _paginationContext;
         private readonly IJsonApiOptions _options;
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IResourceHookExecutorFacade _hookExecutor;
 
         public JsonApiResourceService(
-            IResourceRepository<TResource, TId> repository,
+            IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext,
             IJsonApiOptions options,
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Services
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _repositoryAccessor = repositoryAccessor ?? throw new ArgumentNullException(nameof(repositoryAccessor));
             _queryLayerComposer = queryLayerComposer ?? throw new ArgumentNullException(nameof(queryLayerComposer));
             _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
             _options = options ?? throw new ArgumentNullException(nameof(options));
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Services
             if (_options.IncludeTotalResourceCount)
             {
                 var topFilter = _queryLayerComposer.GetTopFilterFromConstraints();
-                _paginationContext.TotalResourceCount = await _repository.CountAsync(topFilter);
+                _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync(typeof(TResource), topFilter);
 
                 if (_paginationContext.TotalResourceCount == 0)
                 {
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Services
             }
 
             var queryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResource);
-            var resources = await _repository.GetAsync(queryLayer);
+            var resources = await _repositoryAccessor.GetAsync<TResource>(queryLayer);
 
             if (queryLayer.Pagination?.PageSize != null && queryLayer.Pagination.PageSize.Value == resources.Count)
             {
@@ -123,7 +123,7 @@ namespace JsonApiDotNetCore.Services
                 // And we should call BlogResourceDefinition.OnApplyFilter to filter out soft-deleted blogs and translate from equals('IsDeleted','false') to equals('Blog.IsDeleted','false')
             }
 
-            var primaryResources = await _repository.GetAsync(primaryLayer);
+            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer);
 
             var primaryResource = primaryResources.SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
@@ -154,7 +154,7 @@ namespace JsonApiDotNetCore.Services
             var secondaryLayer = _queryLayerComposer.ComposeSecondaryLayerForRelationship(_request.SecondaryResource);
             var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
 
-            var primaryResources = await _repository.GetAsync(primaryLayer);
+            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer);
 
             var primaryResource = primaryResources.SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
@@ -183,7 +183,7 @@ namespace JsonApiDotNetCore.Services
 
             try
             {
-                await _repository.CreateAsync(resource);
+                await _repositoryAccessor.CreateAsync(resource);
             }
             catch (DataStoreUpdateException)
             {
@@ -241,7 +241,7 @@ namespace JsonApiDotNetCore.Services
 
                 try
                 {
-                    await _repository.AddToToManyRelationshipAsync(primaryId, secondaryResourceIds, joinTableFilter);
+                    await _repositoryAccessor.AddToToManyRelationshipAsync(typeof(TResource), primaryId, secondaryResourceIds, joinTableFilter);
                 }
                 catch (DataStoreUpdateException)
                 {
@@ -280,7 +280,7 @@ namespace JsonApiDotNetCore.Services
 
             try
             {
-                await _repository.UpdateAsync(resourceFromRequest, resourceFromDatabase);
+                await _repositoryAccessor.UpdateAsync(resourceFromRequest, resourceFromDatabase);
             }
             catch (DataStoreUpdateException)
             {
@@ -319,7 +319,7 @@ namespace JsonApiDotNetCore.Services
 
             try
             {
-                await _repository.SetRelationshipAsync(resourceFromDatabase, secondaryResourceIds);
+                await _repositoryAccessor.SetRelationshipAsync(resourceFromDatabase, secondaryResourceIds);
             }
             catch (DataStoreUpdateException)
             {
@@ -341,7 +341,7 @@ namespace JsonApiDotNetCore.Services
 
             try
             {
-                await _repository.DeleteAsync(id);
+                await _repositoryAccessor.DeleteAsync(typeof(TResource), id);
             }
             catch (DataStoreUpdateException)
             {
@@ -367,7 +367,7 @@ namespace JsonApiDotNetCore.Services
 
             if (secondaryResourceIds.Any())
             {
-                await _repository.RemoveFromToManyRelationshipAsync(resourceFromDatabase, secondaryResourceIds);
+                await _repositoryAccessor.RemoveFromToManyRelationshipAsync(resourceFromDatabase, secondaryResourceIds);
             }
         }
 
@@ -375,14 +375,14 @@ namespace JsonApiDotNetCore.Services
         {
             var primaryLayer = _queryLayerComposer.ComposeForGetById(id, _request.PrimaryResource, fieldSelection);
 
-            var primaryResources = await _repository.GetAsync(primaryLayer);
+            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer);
             return primaryResources.SingleOrDefault();
         }
 
         private async Task<TResource> GetPrimaryResourceForUpdateAsync(TId id)
         {
             var queryLayer = _queryLayerComposer.ComposeForUpdate(id, _request.PrimaryResource);
-            var resource = await _repository.GetForUpdateAsync(queryLayer);
+            var resource = await _repositoryAccessor.GetForUpdateAsync<TResource>(queryLayer);
 
             AssertPrimaryResourceExists(resource);
             return resource;
@@ -414,7 +414,7 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<int>
     {
         public JsonApiResourceService(
-            IResourceRepository<TResource> repository,
+            IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext,
             IJsonApiOptions options,
@@ -424,7 +424,7 @@ namespace JsonApiDotNetCore.Services
             IResourceFactory resourceFactory,
             ISecondaryResourceResolver secondaryResourceResolver,
             IResourceHookExecutorFacade hookExecutor)
-            : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
+            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
                 resourceChangeTracker, resourceFactory, secondaryResourceResolver, hookExecutor)
         {
         }

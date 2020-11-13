@@ -149,7 +149,7 @@ namespace DiscoveryTests
         public class TestModelService : JsonApiResourceService<TestModel>
         {
             public TestModelService(
-                IResourceRepository<TestModel> repository,
+                IResourceRepositoryAccessor repositoryAccessor,
                 IQueryLayerComposer queryLayerComposer,
                 IPaginationContext paginationContext,
                 IJsonApiOptions options,
@@ -159,9 +159,8 @@ namespace DiscoveryTests
                 IResourceFactory resourceFactory,
                 ISecondaryResourceResolver secondaryResourceResolver,
                 IResourceHookExecutorFacade hookExecutor)
-                : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                    resourceChangeTracker, resourceFactory, secondaryResourceResolver,
-                    hookExecutor)
+                : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
+                    resourceChangeTracker, resourceFactory, secondaryResourceResolver, hookExecutor)
             {
             }
         }

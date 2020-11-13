@@ -19,10 +19,13 @@ namespace MultiDbContextExample
             services.AddDbContext<DbContextA>(options => options.UseSqlite("Data Source=A.db"));
             services.AddDbContext<DbContextB>(options => options.UseSqlite("Data Source=B.db"));
 
-            services.AddScoped<IResourceRepository<ResourceA>, DbContextARepository<ResourceA>>();
-            services.AddScoped<IResourceRepository<ResourceB>, DbContextBRepository<ResourceB>>();
+            services.AddResourceRepository<DbContextARepository<ResourceA>>();
+            services.AddResourceRepository<DbContextBRepository<ResourceB>>();
 
-            services.AddJsonApi(dbContextTypes: new[] {typeof(DbContextA), typeof(DbContextB)});
+            services.AddJsonApi(options =>
+            {
+                options.IncludeExceptionStackTraceInErrors = true;
+            }, dbContextTypes: new[] {typeof(DbContextA), typeof(DbContextB)});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
