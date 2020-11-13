@@ -17,11 +17,6 @@ namespace JsonApiDotNetCore.Queries
         FilterExpression GetTopFilterFromConstraints();
 
         /// <summary>
-        /// Builds a join table filter, which matches on the specified IDs.
-        /// </summary>
-        FilterExpression GetJoinTableFilter<TLeftId, TRightId>(TLeftId leftId, ICollection<TRightId> rightIds, HasManyThroughAttribute relationship);
-
-        /// <summary>
         /// Collects constraints and builds a <see cref="QueryLayer"/> out of them, used to retrieve the actual resources.
         /// </summary>
         QueryLayer ComposeFromConstraints(ResourceContext requestResource);
@@ -56,5 +51,10 @@ namespace JsonApiDotNetCore.Queries
         /// Builds a query for the specified relationship with a filter to match on its right resource IDs.
         /// </summary>
         QueryLayer ComposeForGetRelationshipRightIds(RelationshipAttribute relationship, ICollection<IIdentifiable> rightResourceIds);
+
+        /// <summary>
+        /// Builds a query that retrieves filtered join table entries for a <see cref="HasManyThroughAttribute"/> relationship.
+        /// </summary>
+        QueryLayer ComposeForJoinTable<TLeftId, TRightId>(TLeftId leftId, ICollection<TRightId> rightIds, HasManyThroughAttribute relationship);
     }
 }

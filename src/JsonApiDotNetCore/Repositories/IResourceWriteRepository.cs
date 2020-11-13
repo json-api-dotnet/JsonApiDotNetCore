@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Repositories
@@ -28,7 +27,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Adds resources to a to-many relationship in the underlying data store.
         /// </summary>
-        Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, FilterExpression joinTableFilter);
+        Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds);
 
         /// <summary>
         /// Updates the attributes and relationships of an existing resource in the underlying data store.

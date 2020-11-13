@@ -48,6 +48,15 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
+        public async Task<IReadOnlyCollection<object>> GetFromJoinTableAsync(Type resourceType, Type entityType, QueryLayer layer)
+        {
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+
+            dynamic repository = GetReadRepository(resourceType);
+            return await repository.GetFromJoinTableAsync(entityType, layer);
+        }
+
+        /// <inheritdoc />
         public async Task CreateAsync<TResource>(TResource resource)
             where TResource : class, IIdentifiable
         {
@@ -56,10 +65,12 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task AddToToManyRelationshipAsync<TId>(Type resourceType, TId primaryId, ISet<IIdentifiable> secondaryResourceIds, FilterExpression joinTableFilter)
+        public async Task AddToToManyRelationshipAsync<TId>(Type resourceType, TId primaryId, ISet<IIdentifiable> secondaryResourceIds)
         {
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+
             dynamic repository = GetWriteRepository(resourceType);
-            await repository.AddToToManyRelationshipAsync(primaryId, secondaryResourceIds, joinTableFilter);
+            await repository.AddToToManyRelationshipAsync(primaryId, secondaryResourceIds);
         }
 
         /// <inheritdoc />
@@ -81,6 +92,8 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public async Task DeleteAsync<TId>(Type resourceType, TId id)
         {
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+
             dynamic repository = GetWriteRepository(resourceType);
             await repository.DeleteAsync(id);
         }

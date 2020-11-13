@@ -261,14 +261,16 @@ namespace JsonApiDotNetCore.Services
 
             if (secondaryResourceIds.Any())
             {
-                var joinTableFilter = _request.Relationship is HasManyThroughAttribute hasManyThrough
-                    ? _queryLayerComposer.GetJoinTableFilter(primaryId,
-                        secondaryResourceIds.Select(x => x.GetTypedId()).ToArray(), hasManyThrough)
-                    : null;
+                if (_request.Relationship is HasManyThroughAttribute hasManyThrough)
+                {
+                    // In the case of a many-to-many relationship, creating a duplicate entry in the join table results in a
+                    // unique constraint violation. We avoid that by excluding already-existing entries from the set in advance.
+                    await RemoveExistingIdsFromSecondarySet(primaryId, secondaryResourceIds, hasManyThrough);
+                }
 
                 try
                 {
-                    await _repositoryAccessor.AddToToManyRelationshipAsync(typeof(TResource), primaryId, secondaryResourceIds, joinTableFilter);
+                    await _repositoryAccessor.AddToToManyRelationshipAsync(typeof(TResource), primaryId, secondaryResourceIds);
                 }
                 catch (DataStoreUpdateException)
                 {
@@ -279,6 +281,34 @@ namespace JsonApiDotNetCore.Services
                     throw;
                 }
             }
+        }
+
+        private async Task RemoveExistingIdsFromSecondarySet(TId primaryId, ISet<IIdentifiable> secondaryResourceIds,
+            HasManyThroughAttribute hasManyThrough)
+        {
+            var rightTypedIds = secondaryResourceIds.Select(resource => resource.GetTypedId()).ToArray();
+            QueryLayer joinTableLayer = _queryLayerComposer.ComposeForJoinTable(primaryId, rightTypedIds, hasManyThrough);
+
+            var joinTableEntities =
+                await _repositoryAccessor.GetFromJoinTableAsync(typeof(TResource), hasManyThrough.ThroughType, joinTableLayer);
+
+            RemoveEntitiesFromSet(joinTableEntities, secondaryResourceIds, hasManyThrough);
+        }
+
+        private void RemoveEntitiesFromSet(IEnumerable joinTableEntities, ISet<IIdentifiable> secondaryResourceIds,
+            HasManyThroughAttribute relationship)
+        {
+            HashSet<IIdentifiable> resourcesToExclude = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
+
+            foreach (var joinTableEntity in joinTableEntities)
+            {
+                var resourceToExclude = _resourceFactory.CreateInstance(relationship.RightType);
+                resourceToExclude.StringId = relationship.RightIdProperty.GetValue(joinTableEntity)?.ToString();
+
+                resourcesToExclude.Add(resourceToExclude);
+            }
+
+            secondaryResourceIds.ExceptWith(resourcesToExclude);
         }
 
         private async Task AssertResourcesExistAsync(ICollection<IIdentifiable> secondaryResourceIds)

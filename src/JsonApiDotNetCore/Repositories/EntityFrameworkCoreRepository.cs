@@ -120,6 +120,32 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
+        public virtual async Task<IReadOnlyCollection<object>> GetFromJoinTableAsync(Type entityType, QueryLayer layer)
+        {
+            if (entityType == null) throw new ArgumentNullException(nameof(entityType));
+            if (layer == null) throw new ArgumentNullException(nameof(layer));
+
+            IQueryable query = ApplyJoinTableQueryLayer(entityType, layer);
+
+            // We need to prevent these from entering the change tracker, so that when changes are saved
+            // in AddToToManyRelationshipAsync(), only new records are added (without deleting existing ones).
+            var noTrackingQuery = query.Cast<object>().AsNoTracking();
+
+            return await noTrackingQuery.ToListAsync();
+        }
+
+        protected virtual IQueryable ApplyJoinTableQueryLayer(Type entityType, QueryLayer layer)
+        {
+            var source = _dbContext.Set(entityType);
+
+            var nameFactory = new LambdaParameterNameFactory();
+            var builder = new QueryableBuilder(source.Expression, source.ElementType, typeof(Queryable), nameFactory, _resourceFactory, _resourceGraph, _dbContext.Model);
+
+            var expression = builder.ApplyQuery(layer);
+            return source.Provider.CreateQuery(expression);
+        }
+
+        /// <inheritdoc />
         public virtual async Task CreateAsync(TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});
@@ -140,20 +166,12 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds,
-            FilterExpression joinTableFilter)
+        public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new {primaryId, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             var relationship = _targetedFields.Relationships.Single();
-
-            if (relationship is HasManyThroughAttribute hasManyThroughRelationship && joinTableFilter != null)
-            {
-                // In the case of a many-to-many relationship, creating a duplicate entry in the join table results in a unique constraint violation.
-                // We avoid that by excluding already-existing entries from the set in advance.
-                await ExcludeExistingResourcesFromJoinTableAsync(hasManyThroughRelationship, secondaryResourceIds, joinTableFilter);
-            }
 
             if (secondaryResourceIds.Any())
             {
@@ -164,48 +182,6 @@ namespace JsonApiDotNetCore.Repositories
 
                 await SaveChangesAsync();
             }
-        }
-
-        private async Task ExcludeExistingResourcesFromJoinTableAsync(HasManyThroughAttribute relationship,
-            ISet<IIdentifiable> secondaryResourceIds, FilterExpression joinTableFilter)
-        {
-            dynamic query = CreateJoinTableQuery(relationship, joinTableFilter);
-            IEnumerable joinTableEntities = await EntityFrameworkQueryableExtensions.ToListAsync(query);
-
-            RemoveEntitiesFromSet(joinTableEntities, secondaryResourceIds, relationship);
-
-            // We need to purge these from the change tracker, otherwise on save the pre-existing records will be deleted.
-            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
-            collector.Register(joinTableEntities.Cast<object>());
-        }
-
-        private IQueryable CreateJoinTableQuery(HasManyThroughAttribute relationship, FilterExpression joinTableFilter)
-        {
-            IQueryable throughEntitySet = _dbContext.Set(relationship.ThroughType);
-
-            var scopeFactory = new LambdaScopeFactory(new LambdaParameterNameFactory());
-            using var scope = scopeFactory.CreateScope(relationship.ThroughType);
-
-            var whereClauseBuilder = new WhereClauseBuilder(throughEntitySet.Expression, scope, typeof(Queryable));
-
-            var query = whereClauseBuilder.ApplyWhere(joinTableFilter);
-            return throughEntitySet.Provider.CreateQuery(query);
-        }
-
-        private void RemoveEntitiesFromSet(IEnumerable joinTableEntities, ISet<IIdentifiable> secondaryResourceIds,
-            HasManyThroughAttribute relationship)
-        {
-            HashSet<IIdentifiable> resourcesToExclude = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
-
-            foreach (var joinTableEntity in joinTableEntities)
-            {
-                var resourceToExclude = _resourceFactory.CreateInstance(relationship.RightType);
-                resourceToExclude.StringId = relationship.RightIdProperty.GetValue(joinTableEntity)?.ToString();
-
-                resourcesToExclude.Add(resourceToExclude);
-            }
-
-            secondaryResourceIds.ExceptWith(resourcesToExclude);
         }
 
         /// <inheritdoc />

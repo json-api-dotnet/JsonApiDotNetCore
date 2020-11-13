@@ -54,28 +54,6 @@ namespace JsonApiDotNetCore.Queries.Internal
         }
 
         /// <inheritdoc />
-        public FilterExpression GetJoinTableFilter<TLeftId, TRightId>(TLeftId leftId, ICollection<TRightId> rightIds,
-            HasManyThroughAttribute relationship)
-        {
-            var pseudoLeftIdAttribute = new AttrAttribute
-            {
-                Property = relationship.LeftIdProperty,
-                PublicName = relationship.LeftIdProperty.Name
-            };
-
-            var pseudoRightIdAttribute = new AttrAttribute
-            {
-                Property = relationship.RightIdProperty,
-                PublicName = relationship.RightIdProperty.Name
-            };
-
-            var leftFilter = CreateFilterByIds(new[] {leftId}, pseudoLeftIdAttribute, null);
-            var rightFilter = CreateFilterByIds(rightIds, pseudoRightIdAttribute, null);
-
-            return new LogicalExpression(LogicalOperator.And, new[] {leftFilter, rightFilter});
-        }
-
-        /// <inheritdoc />
         public QueryLayer ComposeFromConstraints(ResourceContext requestResource)
         {
             if (requestResource == null) throw new ArgumentNullException(nameof(requestResource));
@@ -344,6 +322,39 @@ namespace JsonApiDotNetCore.Queries.Internal
         {
             var rightResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
             return CreateQueryLayerForResourceIds(rightResourceIds, rightResourceContext);
+        }
+
+        /// <inheritdoc />
+        public QueryLayer ComposeForJoinTable<TLeftId, TRightId>(TLeftId leftId, ICollection<TRightId> rightIds,
+            HasManyThroughAttribute relationship)
+        {
+            if (rightIds == null) throw new ArgumentNullException(nameof(rightIds));
+            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
+
+            var pseudoLeftIdAttribute = new AttrAttribute
+            {
+                Property = relationship.LeftIdProperty,
+                PublicName = relationship.LeftIdProperty.Name
+            };
+
+            var pseudoRightIdAttribute = new AttrAttribute
+            {
+                Property = relationship.RightIdProperty,
+                PublicName = relationship.RightIdProperty.Name
+            };
+
+            var pseudoResourceContext = new ResourceContext
+            {
+                PublicName = relationship.ThroughType.Name
+            };
+
+            var leftFilter = CreateFilterByIds(new[] {leftId}, pseudoLeftIdAttribute, null);
+            var rightFilter = CreateFilterByIds(rightIds, pseudoRightIdAttribute, null);
+
+            return new QueryLayer(pseudoResourceContext)
+            {
+                Filter = new LogicalExpression(LogicalOperator.And, new[] {leftFilter, rightFilter})
+            };
         }
 
         private QueryLayer CreateQueryLayerForResourceIds(IEnumerable<IIdentifiable> resourceIds, ResourceContext resourceContext)
