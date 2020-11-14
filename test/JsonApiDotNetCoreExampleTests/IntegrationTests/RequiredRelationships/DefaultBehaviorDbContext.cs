@@ -2,13 +2,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 {
-    public sealed class RequiredRelationshipsDbContext : DbContext
+    public sealed class DefaultBehaviorDbContext : DbContext
     {
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Order> Deliveries { get; set; }
+        public DbSet<Shipment> Shipments { get; set; }
 
-        public RequiredRelationshipsDbContext(DbContextOptions<RequiredRelationshipsDbContext> options)
+        public DefaultBehaviorDbContext(DbContextOptions<DefaultBehaviorDbContext> options)
             : base(options)
         {
         }
@@ -21,9 +21,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                 .IsRequired();
 
             builder.Entity<Order>()
-                .HasOne(order => order.Delivery)
-                .WithOne()
-                .HasForeignKey<Delivery>()
+                .HasOne(order => order.Shipment)
+                .WithOne(delivery => delivery.Order)
+                .HasForeignKey<Shipment>()
                 .IsRequired();
         }
     }

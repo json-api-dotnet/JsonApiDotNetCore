@@ -12,6 +12,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
         public Customer Customer { get; set; }
 
         [HasOne]
-        public Delivery Delivery { get; set; }
+        public Shipment Shipment { get; set; }
     }
 }

@@ -4,13 +4,13 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 {
-    public sealed class Delivery : Identifiable
+    public sealed class Shipment : Identifiable
     {
         [Attr]
         public string TrackAndTraceCode { get; set; }
         
         [Attr]
-        public DateTime ShippedAt { get; set; } 
+        public DateTimeOffset ShippedAt { get; set; } 
 
         [HasOne]
         public Order Order { get; set; }

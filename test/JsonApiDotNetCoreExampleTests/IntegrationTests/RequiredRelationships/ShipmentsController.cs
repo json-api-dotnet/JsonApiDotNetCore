@@ -5,10 +5,10 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 {
-    public sealed class DeliveriesController : JsonApiController<Delivery>
+    public sealed class ShipmentsController : JsonApiController<Shipment>
     {
-        public DeliveriesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<Delivery> resourceService)
+        public ShipmentsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
+            IResourceService<Shipment> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }
