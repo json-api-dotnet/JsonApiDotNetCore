@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Bogus;
 using FluentAssertions;
 using FluentAssertions.Extensions;
-using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
@@ -33,10 +33,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             {
                 services.AddSingleton<ResourceCaptureStore>();
 
-                services.AddScoped<IResourceRepository<Blog>, ResultCapturingRepository<Blog>>();
-                services.AddScoped<IResourceRepository<Article>, ResultCapturingRepository<Article>>();
-                services.AddScoped<IResourceRepository<Author>, ResultCapturingRepository<Author>>();
-                services.AddScoped<IResourceRepository<TodoItem>, ResultCapturingRepository<TodoItem>>();
+                services.AddResourceRepository<ResultCapturingRepository<Blog>>();
+                services.AddResourceRepository<ResultCapturingRepository<Article>>();
+                services.AddResourceRepository<ResultCapturingRepository<Author>>();
+                services.AddResourceRepository<ResultCapturingRepository<TodoItem>>();
 
                 services.AddScoped<IResourceService<Article>, JsonApiResourceService<Article>>();
             });

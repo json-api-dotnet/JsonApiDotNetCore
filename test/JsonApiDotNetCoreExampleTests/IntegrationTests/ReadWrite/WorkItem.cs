@@ -19,7 +19,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
 
         [NotMapped]
         [Attr(Capabilities = ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
-        public Guid ConcurrencyToken { get; set; } = Guid.NewGuid();
+        public Guid ConcurrencyToken
+        {
+            get => Guid.NewGuid();
+            set { }
+        }
 
         [HasOne]
         public UserAccount Assignee { get; set; }

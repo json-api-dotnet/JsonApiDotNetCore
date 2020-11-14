@@ -115,125 +115,68 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
+        public virtual async Task<IReadOnlyCollection<object>> GetFromJoinTableAsync(Type entityType, QueryLayer layer)
+        {
+            if (entityType == null) throw new ArgumentNullException(nameof(entityType));
+            if (layer == null) throw new ArgumentNullException(nameof(layer));
+
+            IQueryable query = ApplyJoinTableQueryLayer(entityType, layer);
+
+            // We need to prevent these from entering the change tracker, so that when changes are saved
+            // in AddToToManyRelationshipAsync(), only new records are added (without deleting existing ones).
+            var noTrackingQuery = query.Cast<object>().AsNoTracking();
+
+            return await noTrackingQuery.ToListAsync();
+        }
+
+        protected virtual IQueryable ApplyJoinTableQueryLayer(Type entityType, QueryLayer layer)
+        {
+            var source = _dbContext.Set(entityType);
+
+            var nameFactory = new LambdaParameterNameFactory();
+            var builder = new QueryableBuilder(source.Expression, source.ElementType, typeof(Queryable), nameFactory, _resourceFactory, _resourceGraph, _dbContext.Model);
+
+            var expression = builder.ApplyQuery(layer);
+            return source.Provider.CreateQuery(expression);
+        }
+
+        /// <inheritdoc />
         public virtual async Task CreateAsync(TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+
             foreach (var relationship in _targetedFields.Relationships)
             {
                 var rightValue = relationship.GetValue(resource);
-                await UpdateRelationshipAsync(relationship, resource, rightValue);
+                await UpdateRelationshipAsync(relationship, resource, rightValue, collector);
             }
 
-            _dbContext.Set<TResource>().Add(resource);
+            var dbSet = _dbContext.Set<TResource>();
+            dbSet.Add(resource);
+
             await SaveChangesAsync();
-
-            FlushFromCache(resource);
-        }
-
-        protected void FlushFromCache(IIdentifiable resource)
-        {
-            resource = (IIdentifiable) _dbContext.GetTrackedIdentifiable(resource);
-            if (resource != null)
-            {
-                DetachEntities(new[] {resource});
-                DetachRelationships(resource);
-            }
-        }
-
-        private void DetachEntities(IEnumerable<object> entities)
-        {
-            foreach (var entity in entities)
-            {
-                _dbContext.Entry(entity).State = EntityState.Detached;
-            }
-        }
-
-        private void DetachRelationships(IIdentifiable resource)
-        {
-            foreach (var relationship in _targetedFields.Relationships)
-            {
-                var rightValue = relationship.GetValue(resource);
-                var rightResources = TypeHelper.ExtractResources(rightValue);
-
-                DetachEntities(rightResources);
-            }
         }
 
         /// <inheritdoc />
-        public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds,
-            FilterExpression joinTableFilter)
+        public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds)
         {
             _traceWriter.LogMethodStart(new {primaryId, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             var relationship = _targetedFields.Relationships.Single();
 
-            if (relationship is HasManyThroughAttribute hasManyThroughRelationship && joinTableFilter != null)
-            {
-                // In the case of a many-to-many relationship, creating a duplicate entry in the join table results in a unique constraint violation.
-                // We avoid that by excluding already-existing entries from the set in advance.
-                await ExcludeExistingResourcesFromJoinTableAsync(hasManyThroughRelationship, secondaryResourceIds, joinTableFilter);
-            }
-
             if (secondaryResourceIds.Any())
             {
-                var primaryResource = (TResource) _dbContext.GetTrackedOrAttach(CreateResourceWithAssignedId(primaryId));
+                using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+                var primaryResource = collector.CreateForId<TResource, TId>(primaryId);
 
-                await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds);
+                await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector);
+
                 await SaveChangesAsync();
-
-                // TODO: @ThisPR Do we need to flush cache here?
             }
-        }
-
-        private async Task ExcludeExistingResourcesFromJoinTableAsync(HasManyThroughAttribute relationship,
-            ISet<IIdentifiable> secondaryResourceIds, FilterExpression joinTableFilter)
-        {
-            dynamic query = CreateJoinTableQuery(relationship, joinTableFilter);
-            IEnumerable joinTableEntities = await EntityFrameworkQueryableExtensions.ToListAsync(query);
-
-            RemoveEntitiesFromSet(joinTableEntities, secondaryResourceIds, relationship);
-
-            DetachEntities(joinTableEntities.Cast<object>());
-        }
-
-        private IQueryable CreateJoinTableQuery(HasManyThroughAttribute relationship, FilterExpression joinTableFilter)
-        {
-            IQueryable throughEntitySet = _dbContext.Set(relationship.ThroughType);
-
-            var scopeFactory = new LambdaScopeFactory(new LambdaParameterNameFactory());
-            using var scope = scopeFactory.CreateScope(relationship.ThroughType);
-
-            var whereClauseBuilder = new WhereClauseBuilder(throughEntitySet.Expression, scope, typeof(Queryable));
-
-            var query = whereClauseBuilder.ApplyWhere(joinTableFilter);
-            return throughEntitySet.Provider.CreateQuery(query);
-        }
-
-        private void RemoveEntitiesFromSet(IEnumerable joinTableEntities, ISet<IIdentifiable> secondaryResourceIds,
-            HasManyThroughAttribute relationship)
-        {
-            HashSet<IIdentifiable> resourcesToExclude = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
-
-            foreach (var joinTableEntity in joinTableEntities)
-            {
-                var resourceToExclude = _resourceFactory.CreateInstance(relationship.RightType);
-                resourceToExclude.StringId = relationship.RightIdProperty.GetValue(joinTableEntity)?.ToString();
-
-                resourcesToExclude.Add(resourceToExclude);
-            }
-
-            secondaryResourceIds.ExceptWith(resourcesToExclude);
-        }
-
-        private TResource CreateResourceWithAssignedId(TId id)
-        {
-            var resource = _resourceFactory.CreateInstance<TResource>();
-            resource.Id = id;
-
-            return resource;
         }
 
         /// <inheritdoc />
@@ -245,10 +188,10 @@ namespace JsonApiDotNetCore.Repositories
 
             AssertNoRequiredRelationshipIsCleared(relationship, primaryResource, secondaryResourceIds);
 
-            await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds);
-            await SaveChangesAsync();
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+            await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector);
 
-            // TODO: @ThisPR Do we need to flush cache here?
+            await SaveChangesAsync();
         }
 
         /// <inheritdoc />
@@ -258,13 +201,15 @@ namespace JsonApiDotNetCore.Repositories
             if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
             if (resourceFromDatabase == null) throw new ArgumentNullException(nameof(resourceFromDatabase));
 
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+
             foreach (var relationship in _targetedFields.Relationships)
             {
                 var rightResources = relationship.GetValue(resourceFromRequest);
 
                 AssertNoRequiredRelationshipIsCleared(relationship, resourceFromDatabase, rightResources);
 
-                await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightResources);
+                await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightResources, collector);
             }
 
             foreach (var attribute in _targetedFields.Attributes)
@@ -273,8 +218,6 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             await SaveChangesAsync();
-
-            FlushFromCache(resourceFromDatabase);
         }
 
         /// <inheritdoc />
@@ -282,11 +225,12 @@ namespace JsonApiDotNetCore.Repositories
         {
             _traceWriter.LogMethodStart(new {id});
 
-            var resource = (TResource) _dbContext.GetTrackedOrAttach(CreateResourceWithAssignedId(id));
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+            var resource = collector.CreateForId<TResource, TId>(id);
 
             foreach (var relationship in _resourceGraph.GetRelationships<TResource>())
             {
-                // Loads the data of the relationship if in EF Core it is configured in such a way that loading the related
+                // Loads the data of the relationship, if in EF Core it is configured in such a way that loading the related
                 // entities into memory is required for successfully executing the selected deletion behavior. 
                 if (RequiresLoadOfRelationshipForDeletion(relationship))
                 {
@@ -296,9 +240,8 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             _dbContext.Remove(resource);
-            await SaveChangesAsync();
 
-            // TODO: @ThisPR Do we need to flush cache here?
+            await SaveChangesAsync();
         }
 
         private NavigationEntry GetNavigationEntry(TResource resource, RelationshipAttribute relationship)
@@ -351,10 +294,10 @@ namespace JsonApiDotNetCore.Repositories
             var rightResources = ((IEnumerable<IIdentifiable>) rightValue).ToHashSet(IdentifiableComparer.Instance);
             rightResources.ExceptWith(secondaryResourceIds);
 
-            await UpdateRelationshipAsync(relationship, primaryResource, rightResources);
-            await SaveChangesAsync();
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+            await UpdateRelationshipAsync(relationship, primaryResource, rightResources, collector);
 
-            // TODO: @ThisPR Do we need to flush cache here?
+            await SaveChangesAsync();
         }
 
         private void AssertNoRequiredRelationshipIsCleared(RelationshipAttribute relationship, TResource leftResource, object rightValue)
@@ -401,9 +344,10 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        private async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
+        private async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource,
+            object valueToAssign, PlaceholderResourceCollector collector)
         {
-            var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
+            var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType, collector);
 
             if (RequireLoadOfInverseRelationship(relationship, trackedValueToAssign))
             {
@@ -421,7 +365,8 @@ namespace JsonApiDotNetCore.Repositories
             relationship.SetValue(leftResource, trackedValueToAssign);
         }
 
-        private object EnsureRelationshipValueToAssignIsTracked(object rightValue, Type relationshipPropertyType)
+        private object EnsureRelationshipValueToAssignIsTracked(object rightValue, Type relationshipPropertyType,
+            PlaceholderResourceCollector collector)
         {
             if (rightValue == null)
             {
@@ -429,7 +374,7 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             var rightResources = TypeHelper.ExtractResources(rightValue);
-            var rightResourcesTracked = rightResources.Select(resource => _dbContext.GetTrackedOrAttach(resource)).ToArray();
+            var rightResourcesTracked = rightResources.Select(collector.CaptureExisting).ToArray();
 
             return rightValue is IEnumerable
                 ? (object) TypeHelper.CopyToTypedCollection(rightResourcesTracked, relationshipPropertyType)
@@ -474,7 +419,8 @@ namespace JsonApiDotNetCore.Repositories
             // (as done here) is tricking the change tracker into recognizing the null assignment by first
             // assigning a placeholder entity to the navigation property, and then setting it to null.
 
-            var placeholderRightResource = _resourceFactory.CreateInstance(relationship.RightType);
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+            var placeholderRightResource = collector.CreateUntracked(relationship.RightType);
 
             // When assigning a related entity to a navigation property, it will be attached to the change tracker.
             // This fails when that entity has null reference(s) for its primary key.
@@ -482,8 +428,6 @@ namespace JsonApiDotNetCore.Repositories
 
             relationship.SetValue(leftResource, placeholderRightResource);
             _dbContext.Entry(leftResource).DetectChanges();
-
-            DetachEntities(new[] {placeholderRightResource});
         }
 
         private void EnsurePrimaryKeyPropertiesAreNotNull(object entity)
