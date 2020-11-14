@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -16,12 +17,6 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
-// TODO: @ThisPR Tests that cover relationship updates with required relationships. All relationships right now are currently optional.
-//    - Setting a required relationship to null
-//    - Creating resource with resource
-//    - One-to-one required / optional => what is the current behavior?
-// tangent:
-//     - How and where to read EF Core metadata when "required-relationship-error" is triggered?
 namespace JsonApiDotNetCore.Repositories
 {
     /// <summary>
@@ -137,6 +132,31 @@ namespace JsonApiDotNetCore.Repositories
             FlushFromCache(resource);
         }
 
+        private void AssertNoRequiredRelationshipIsCleared(RelationshipAttribute relationship, TResource leftResource, object rightValue)
+        {
+            var relationshipIsRequired = !(relationship is HasManyThroughAttribute) && TryGetNavigationForRelationship(relationship).ForeignKey.IsRequired;
+
+            var relationshipIsCleared = relationship is HasOneAttribute
+                ? rightValue == null
+                : RequiredToManyRelationshipIsCleared(relationship, leftResource, rightValue);
+            
+            if (relationshipIsRequired && relationshipIsCleared)
+            {
+                var resourceType = _resourceGraph.GetResourceContext<TResource>().PublicName;
+                throw new CannotClearRequiredRelationshipException(relationship.PublicName, resourceType);
+            }
+        }
+
+        private static bool RequiredToManyRelationshipIsCleared(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
+        {
+            var newRightResources = ((IEnumerable<IIdentifiable>) valueToAssign).ToHashSet(IdentifiableComparer.Instance);
+            var rightResources = ((IEnumerable<IIdentifiable>) relationship.GetValue(leftResource)).ToHashSet(IdentifiableComparer.Instance);
+            rightResources.ExceptWith(newRightResources);
+
+            var relationshipIsCleared = rightResources.Any();
+            return relationshipIsCleared;
+        }
+
         protected void FlushFromCache(IIdentifiable resource)
         {
             resource = (IIdentifiable) _dbContext.GetTrackedIdentifiable(resource);
@@ -248,6 +268,8 @@ namespace JsonApiDotNetCore.Repositories
 
             var relationship = _targetedFields.Relationships.Single();
 
+            AssertNoRequiredRelationshipIsCleared(relationship, primaryResource, secondaryResourceIds);
+
             await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds);
             await SaveChangesAsync();
 
@@ -264,6 +286,9 @@ namespace JsonApiDotNetCore.Repositories
             foreach (var relationship in _targetedFields.Relationships)
             {
                 var rightResources = relationship.GetValue(resourceFromRequest);
+
+                AssertNoRequiredRelationshipIsCleared(relationship, resourceFromDatabase, rightResources);
+
                 await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightResources);
             }
 
@@ -344,6 +369,8 @@ namespace JsonApiDotNetCore.Repositories
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             var relationship = (HasManyAttribute) _targetedFields.Relationships.Single();
+            
+            AssertNoRequiredRelationshipIsCleared(relationship, primaryResource, secondaryResourceIds);
 
             var rightValue = relationship.GetValue(primaryResource);
             var rightResources = ((IEnumerable<IIdentifiable>) rightValue).ToHashSet(IdentifiableComparer.Instance);
