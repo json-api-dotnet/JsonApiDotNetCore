@@ -132,31 +132,6 @@ namespace JsonApiDotNetCore.Repositories
             FlushFromCache(resource);
         }
 
-        private void AssertNoRequiredRelationshipIsCleared(RelationshipAttribute relationship, TResource leftResource, object rightValue)
-        {
-            var relationshipIsRequired = !(relationship is HasManyThroughAttribute) && TryGetNavigationForRelationship(relationship).ForeignKey.IsRequired;
-
-            var relationshipIsCleared = relationship is HasOneAttribute
-                ? rightValue == null
-                : RequiredToManyRelationshipIsCleared(relationship, leftResource, rightValue);
-            
-            if (relationshipIsRequired && relationshipIsCleared)
-            {
-                var resourceType = _resourceGraph.GetResourceContext<TResource>().PublicName;
-                throw new CannotClearRequiredRelationshipException(relationship.PublicName, resourceType);
-            }
-        }
-
-        private static bool RequiredToManyRelationshipIsCleared(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
-        {
-            var newRightResources = ((IEnumerable<IIdentifiable>) valueToAssign).ToHashSet(IdentifiableComparer.Instance);
-            var rightResources = ((IEnumerable<IIdentifiable>) relationship.GetValue(leftResource)).ToHashSet(IdentifiableComparer.Instance);
-            rightResources.ExceptWith(newRightResources);
-
-            var relationshipIsCleared = rightResources.Any();
-            return relationshipIsCleared;
-        }
-
         protected void FlushFromCache(IIdentifiable resource)
         {
             resource = (IIdentifiable) _dbContext.GetTrackedIdentifiable(resource);
@@ -369,7 +344,7 @@ namespace JsonApiDotNetCore.Repositories
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             var relationship = (HasManyAttribute) _targetedFields.Relationships.Single();
-            
+
             AssertNoRequiredRelationshipIsCleared(relationship, primaryResource, secondaryResourceIds);
 
             var rightValue = relationship.GetValue(primaryResource);
@@ -380,6 +355,31 @@ namespace JsonApiDotNetCore.Repositories
             await SaveChangesAsync();
 
             // TODO: @ThisPR Do we need to flush cache here?
+        }
+
+        private void AssertNoRequiredRelationshipIsCleared(RelationshipAttribute relationship, TResource leftResource, object rightValue)
+        {
+            var relationshipIsRequired = !(relationship is HasManyThroughAttribute) && TryGetNavigationForRelationship(relationship).ForeignKey.IsRequired;
+
+            var relationshipIsCleared = relationship is HasOneAttribute
+                ? rightValue == null
+                : RequiredToManyRelationshipIsCleared(relationship, leftResource, rightValue);
+            
+            if (relationshipIsRequired && relationshipIsCleared)
+            {
+                var resourceType = _resourceGraph.GetResourceContext<TResource>().PublicName;
+                throw new CannotClearRequiredRelationshipException(relationship.PublicName, resourceType);
+            }
+        }
+
+        private static bool RequiredToManyRelationshipIsCleared(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
+        {
+            var newRightResources = ((IEnumerable<IIdentifiable>) valueToAssign).ToHashSet(IdentifiableComparer.Instance);
+            var rightResources = ((IEnumerable<IIdentifiable>) relationship.GetValue(leftResource)).ToHashSet(IdentifiableComparer.Instance);
+            rightResources.ExceptWith(newRightResources);
+
+            var relationshipIsCleared = rightResources.Any();
+            return relationshipIsCleared;
         }
 
         /// <inheritdoc />
