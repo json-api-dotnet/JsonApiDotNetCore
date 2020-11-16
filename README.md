@@ -43,7 +43,7 @@ See [our documentation](https://json-api-dotnet.github.io/JsonApiDotNetCore/) fo
 ```csharp
 public class Article : Identifiable
 {
-    [Attr("name")]
+    [Attr]
     public string Name { get; set; }
 }
 ```
@@ -53,12 +53,11 @@ public class Article : Identifiable
 ```csharp
 public class ArticlesController : JsonApiController<Article>
 {
-        public ArticlesController(
-            IJsonApiOptions options,
-            IResourceService<Article> resourceService,
-            ILoggerFactory loggerFactory)
-            : base(options, resourceService, loggerFactory)
-        { }
+    public ArticlesController(IJsonApiOptions options, IResourceService<Article> resourceService,
+        ILoggerFactory loggerFactory)
+        : base(options, resourceService, loggerFactory)
+    {
+    }
 }
 ```
 
@@ -67,14 +66,16 @@ public class ArticlesController : JsonApiController<Article>
 ```csharp
 public class Startup
 {
-    public IServiceProvider ConfigureServices(IServiceCollection services) {
+    public IServiceProvider ConfigureServices(IServiceCollection services)
+    {
         services.AddJsonApi<AppDbContext>();
-        // ...
     }
 
-    public void Configure(IApplicationBuilder app)  {
-        app.UseJsonApi()
-        // ...
+    public void Configure(IApplicationBuilder app)
+    {
+        app.UseRouting();
+        app.UseJsonApi();
+        app.UseEndpoints(endpoints => endpoints.MapControllers());
     }
 }
 ```
@@ -101,26 +102,19 @@ And then to run the tests:
 dotnet test
 ```
 
-#### Cleaning
-
-Sometimes the compiled files can be dirty / corrupt from other branches / failed builds.
-
-```bash
-dotnet clean
-```
-
 #### Compiler warnings
 
 The `Release` build configuration is set to fail on warnings. That means when submitting a PR there shouldn't be any compiler warnings because the CI build it set to `Release`.
 
 ## Compatibility
 
-A lot of changes were introduced in v4.0.0, the following chart should help you with compatibility issues between .NET Core versions
+A lot of changes were introduced in v4, the following chart should help you with compatibility issues between .NET Core versions.
 
-| .NET Core Version | JADNC Version |
-| ----------------- | ------------- |
-| 2.*               | v3.*          |
-| 3.*               | v4.*          |
+| .NET Core Version | EF Core Version | JADNC Version |
+| ----------------- | --------------- | ------------- |
+| 2.x               | 2.x             | v3.x          |
+| 3.x               | 3.x, 5.x        | v4.x          |
+| 5.x               | 5.x             | v4.x          |
 
 ## Trying out the latest build
 

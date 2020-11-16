@@ -47,7 +47,7 @@ GET /articles/1?include=comments HTTP/1.1
 
 ## Nested Inclusions
 
-_since v3.0.0_
+_since v3_
 
 JsonApiDotNetCore also supports nested inclusions.
 This allows you to include data across relationships by using a period-delimited relationship path, for example:
