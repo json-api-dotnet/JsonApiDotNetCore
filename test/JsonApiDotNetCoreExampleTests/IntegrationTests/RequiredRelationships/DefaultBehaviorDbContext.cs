@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
             builder.Entity<Order>()
                 .HasOne(order => order.Shipment)
-                .WithOne(delivery => delivery.Order)
+                .WithOne(shipment => shipment.Order)
                 .HasForeignKey<Shipment>()
                 .IsRequired();
         }
