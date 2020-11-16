@@ -2,7 +2,7 @@
 <img src ="https://raw.githubusercontent.com/json-api-dotnet/JsonApiDotnetCore/master/logo.png" />
 </p>
 
-# JSON API .Net Core
+# JSON:API .NET Core
 
 [![Build status](https://ci.appveyor.com/api/projects/status/5go47hrm0iik0ls3/branch/master?svg=true)](https://ci.appveyor.com/project/jaredcnance/jsonapidotnetcore/branch/master)
 [![Travis](https://travis-ci.org/json-api-dotnet/JsonApiDotNetCore.svg?branch=master)](https://travis-ci.org/json-api-dotnet/JsonApiDotNetCore)
@@ -21,7 +21,7 @@ These are some steps you can take to help you understand what this project is an
 - [Demo [Video]](https://youtu.be/KAMuo6K7VcE)
 - [Our documentation](https://json-api-dotnet.github.io/JsonApiDotNetCore/)
 - [Check out the example projects](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples)
-- [Embercasts: Full Stack Ember with ASP .NET Core](https://www.embercasts.com/course/full-stack-ember-with-dotnet/watch/whats-in-this-course-cs)
+- [Embercasts: Full Stack Ember with ASP.NET Core](https://www.embercasts.com/course/full-stack-ember-with-dotnet/watch/whats-in-this-course-cs)
 
 ## Related Projects
 
