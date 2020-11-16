@@ -186,7 +186,7 @@ namespace JsonApiDotNetCore.Repositories
 
             var relationship = _targetedFields.Relationships.Single();
 
-            AssertNoRequiredRelationshipIsCleared(relationship, primaryResource, secondaryResourceIds);
+            AssertIsNotClearingRequiredRelationship(relationship, primaryResource, secondaryResourceIds);
 
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
             await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector);
@@ -207,7 +207,7 @@ namespace JsonApiDotNetCore.Repositories
             {
                 var rightResources = relationship.GetValue(resourceFromRequest);
 
-                AssertNoRequiredRelationshipIsCleared(relationship, resourceFromDatabase, rightResources);
+                AssertIsNotClearingRequiredRelationship(relationship, resourceFromDatabase, rightResources);
 
                 await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightResources, collector);
             }
@@ -289,7 +289,7 @@ namespace JsonApiDotNetCore.Repositories
 
             var relationship = (HasManyAttribute) _targetedFields.Relationships.Single();
 
-            AssertNoRequiredRelationshipIsCleared(relationship, primaryResource, secondaryResourceIds);
+            AssertIsNotClearingRequiredRelationship(relationship, primaryResource, secondaryResourceIds);
 
             var rightValue = relationship.GetValue(primaryResource);
 
@@ -302,7 +302,7 @@ namespace JsonApiDotNetCore.Repositories
             await SaveChangesAsync();
         }
 
-        private void AssertNoRequiredRelationshipIsCleared(RelationshipAttribute relationship, TResource leftResource, object rightValue)
+        private void AssertIsNotClearingRequiredRelationship(RelationshipAttribute relationship, TResource leftResource, object rightValue)
         {
             bool relationshipIsRequired = false;
 
@@ -319,7 +319,7 @@ namespace JsonApiDotNetCore.Repositories
             if (relationshipIsRequired && relationshipIsCleared)
             {
                 var resourceType = _resourceGraph.GetResourceContext<TResource>().PublicName;
-                throw new CannotClearRequiredRelationshipException(relationship.PublicName, resourceType);
+                throw new CannotClearRequiredRelationshipException(relationship.PublicName, leftResource.StringId, resourceType);
             }
         }
 

@@ -196,8 +196,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
             responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("A required relationship cannot be cleared.");
-            responseDocument.Errors[0].Detail.Should().Be("The required relationship 'shipment' of resource of type 'orders' cannot be cleared.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
+            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'shipment' of resource type 'orders' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
@@ -242,8 +242,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
             responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("A required relationship cannot be cleared.");
-            responseDocument.Errors[0].Detail.Should().Be("The required relationship 'order' of resource of type 'shipments' cannot be cleared.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
+            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'order' of resource type 'shipments' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
@@ -286,8 +286,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
             responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("A required relationship cannot be cleared.");
-            responseDocument.Errors[0].Detail.Should().Be("The required relationship 'customer' of resource of type 'orders' cannot be cleared.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
+            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'customer' of resource type 'orders' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
@@ -330,8 +330,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
             responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("A required relationship cannot be cleared.");
-            responseDocument.Errors[0].Detail.Should().Be("The required relationship 'orders' of resource of type 'customers' cannot be cleared.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
+            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'orders' of resource type 'customers' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
