@@ -185,7 +185,7 @@ namespace JsonApiDotNetCore.Repositories
 
             var relationship = _targetedFields.Relationships.Single();
 
-            AssertNoRequiredRelationshipIsCleared(relationship, primaryResource, secondaryResourceIds);
+            AssertIsNotClearingRequiredRelationship(relationship, primaryResource, secondaryResourceIds);
 
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
             await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector);
@@ -206,7 +206,7 @@ namespace JsonApiDotNetCore.Repositories
             {
                 var rightResources = relationship.GetValue(resourceFromRequest);
 
-                AssertNoRequiredRelationshipIsCleared(relationship, resourceFromDatabase, rightResources);
+                AssertIsNotClearingRequiredRelationship(relationship, resourceFromDatabase, rightResources);
 
                 await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightResources, collector);
             }
@@ -266,17 +266,18 @@ namespace JsonApiDotNetCore.Repositories
 
         private bool RequiresLoadOfRelationshipForDeletion(RelationshipAttribute relationship)
         {
-            var navigation = TryGetNavigationForRelationship(relationship);
+            var navigation = TryGetNavigation(relationship);
             bool isClearOfForeignKeyRequired = navigation?.ForeignKey.DeleteBehavior == DeleteBehavior.ClientSetNull;
 
             bool hasForeignKeyAtLeftSide = HasForeignKeyAtLeftSide(relationship);
 
-            return hasForeignKeyAtLeftSide && isClearOfForeignKeyRequired;
+            return isClearOfForeignKeyRequired && !hasForeignKeyAtLeftSide;
         }
 
-        private INavigation TryGetNavigationForRelationship(RelationshipAttribute relationship)
+        private INavigation TryGetNavigation(RelationshipAttribute relationship)
         {
-            return _dbContext.Model.FindEntityType(typeof(TResource)).FindNavigation(relationship.Property.Name);
+            var entityType = _dbContext.Model.FindEntityType(typeof(TResource));
+            return entityType?.FindNavigation(relationship.Property.Name);
         }
 
         /// <inheritdoc />
@@ -285,43 +286,52 @@ namespace JsonApiDotNetCore.Repositories
             _traceWriter.LogMethodStart(new {primaryResource, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
-            var relationship = (HasManyAttribute) _targetedFields.Relationships.Single();
-
-            AssertNoRequiredRelationshipIsCleared(relationship, primaryResource, secondaryResourceIds);
+            var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
 
             var rightValue = relationship.GetValue(primaryResource);
-            var rightResources = ((IEnumerable<IIdentifiable>) rightValue).ToHashSet(IdentifiableComparer.Instance);
-            rightResources.ExceptWith(secondaryResourceIds);
+
+            var rightResourceIds= TypeHelper.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
+            rightResourceIds.ExceptWith(secondaryResourceIds);
+
+            AssertIsNotClearingRequiredRelationship(relationship, primaryResource, rightResourceIds);
 
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
-            await UpdateRelationshipAsync(relationship, primaryResource, rightResources, collector);
+            await UpdateRelationshipAsync(relationship, primaryResource, rightResourceIds, collector);
 
             await SaveChangesAsync();
         }
 
-        private void AssertNoRequiredRelationshipIsCleared(RelationshipAttribute relationship, TResource leftResource, object rightValue)
+        private void AssertIsNotClearingRequiredRelationship(RelationshipAttribute relationship, TResource leftResource, object rightValue)
         {
-            var relationshipIsRequired = !(relationship is HasManyThroughAttribute) && TryGetNavigationForRelationship(relationship).ForeignKey.IsRequired;
+            bool relationshipIsRequired = false;
+
+            if (!(relationship is HasManyThroughAttribute))
+            {
+                var navigation = TryGetNavigation(relationship);
+                relationshipIsRequired = navigation?.ForeignKey?.IsRequired ?? false;
+            }
 
             var relationshipIsCleared = relationship is HasOneAttribute
                 ? rightValue == null
-                : RequiredToManyRelationshipIsCleared(relationship, leftResource, rightValue);
+                : IsRequiredToManyRelationshipBeingCleared(relationship, leftResource, rightValue);
             
             if (relationshipIsRequired && relationshipIsCleared)
             {
                 var resourceType = _resourceGraph.GetResourceContext<TResource>().PublicName;
-                throw new CannotClearRequiredRelationshipException(relationship.PublicName, resourceType);
+                throw new CannotClearRequiredRelationshipException(relationship.PublicName, leftResource.StringId, resourceType);
             }
         }
 
-        private static bool RequiredToManyRelationshipIsCleared(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
+        private static bool IsRequiredToManyRelationshipBeingCleared(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
         {
-            var newRightResources = ((IEnumerable<IIdentifiable>) valueToAssign).ToHashSet(IdentifiableComparer.Instance);
-            var rightResources = ((IEnumerable<IIdentifiable>) relationship.GetValue(leftResource)).ToHashSet(IdentifiableComparer.Instance);
-            rightResources.ExceptWith(newRightResources);
+            ICollection<IIdentifiable> newRightResourceIds = TypeHelper.ExtractResources(valueToAssign);
 
-            var relationshipIsCleared = rightResources.Any();
-            return relationshipIsCleared;
+            var existingRightValue = relationship.GetValue(leftResource);
+            var existingRightResourceIds = TypeHelper.ExtractResources(existingRightValue).ToHashSet(IdentifiableComparer.Instance);
+
+            existingRightResourceIds.ExceptWith(newRightResourceIds);
+
+            return existingRightResourceIds.Any();
         }
 
         /// <inheritdoc />
@@ -396,11 +406,11 @@ namespace JsonApiDotNetCore.Repositories
         {
             if (relationship is HasOneAttribute)
             {
-                var navigation = TryGetNavigationForRelationship(relationship);
-                return navigation == null || !navigation.IsDependentToPrincipal();
+                var navigation = TryGetNavigation(relationship);
+                return navigation != null && navigation.IsDependentToPrincipal();
             }
 
-            return true;
+            return false;
         }
     }
 

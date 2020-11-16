@@ -81,39 +81,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
                 await dbContext.SaveChangesAsync();
             });
 
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var userAccPre = await dbContext.UserAccounts.Where(ua => ua.Id == userAccount.Id).Include(ua => ua.AssignedItems).FirstOrDefaultAsync();
-                var assignedItemsPre = userAccPre.AssignedItems;
-
-                await dbContext.ClearTableAsync<WorkItem>();
-
-                var userAccPost = await dbContext.UserAccounts.AsNoTracking().Where(ua => ua.Id == userAccount.Id).Include(ua => ua.AssignedItems).FirstOrDefaultAsync();
-                var assignedItemsPost = userAccPost.AssignedItems;
-
-
-                await dbContext.SaveChangesAsync();
-            });
-
-
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<WorkItem>();
-            });
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var userAcc = await dbContext.UserAccounts.Where(ua => ua.Id == userAccount.Id).Include(ua => ua.AssignedItems).FirstOrDefaultAsync();
-                var assignedItems = userAcc.AssignedItems;
-                
-                // timeout 20
-
-                await dbContext.SaveChangesAsync();
-            });
-
-
             var route = $"/userAccounts/{userAccount.StringId}/relationships/assignedItems";
 
             // Act
