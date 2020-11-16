@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                     type = "orders",
                     attributes = new
                     {
-                        order = order.Value
+                        order = order.Amount
                     }
                 }
             };
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                     type = "orders",
                     attributes = new
                     {
-                        order = order.Value
+                        order = order.Amount
                     },
                     relationships = new
                     {

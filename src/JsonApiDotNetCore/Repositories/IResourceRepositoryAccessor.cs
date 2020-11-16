@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Repositories
 {
+    // TODO: @Bart Consider using <TResource>()
     /// <summary>
     /// Retrieves a <see cref="IResourceRepository{TResource,TId}"/> instance from the D/I container and invokes a callback on it.
     /// </summary>

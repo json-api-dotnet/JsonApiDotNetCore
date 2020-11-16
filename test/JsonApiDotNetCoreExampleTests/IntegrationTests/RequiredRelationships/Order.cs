@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
     public sealed class Order : Identifiable
     {
         [Attr]
-        public decimal Value { get; set; }
+        public decimal Amount { get; set; }
 
         [HasOne]
         public Customer Customer { get; set; }

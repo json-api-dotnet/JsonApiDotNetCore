@@ -25,10 +25,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             options.AllowClientGeneratedIds = true;
         }
 
-        // TODO: Name confused me: we're not creating relationships, but resources with relationships
-        // either replace to Can_create_with_.... or the more verbose Can_create_resource_with_.... 
         [Fact]
-        public async Task Can_create_OneToOne_relationship_from_principal_side()
+        public async Task Can_create_resource_with_OneToOne_relationship_from_principal_side()
         {
             // Arrange
             var existingGroup = _fakers.WorkItemGroup.Generate();

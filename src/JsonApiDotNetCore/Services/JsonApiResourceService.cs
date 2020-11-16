@@ -215,8 +215,7 @@ namespace JsonApiDotNetCore.Services
         {
             var missingResources = new List<MissingResourceInRelationship>();
 
-            foreach (var (queryLayer, relationship) in
-                _queryLayerComposer.ComposeForGetTargetedSecondaryResourceIds(resource))
+            foreach (var (queryLayer, relationship) in _queryLayerComposer.ComposeForGetTargetedSecondaryResourceIds(resource))
             {
                 object rightValue = relationship.GetValue(resource);
                 ICollection<IIdentifiable> rightResourceIds = TypeHelper.ExtractResources(rightValue);
@@ -289,21 +288,22 @@ namespace JsonApiDotNetCore.Services
             var rightTypedIds = secondaryResourceIds.Select(resource => resource.GetTypedId()).ToArray();
             QueryLayer joinTableLayer = _queryLayerComposer.ComposeForJoinTable(primaryId, rightTypedIds, hasManyThrough);
 
-            var joinTableEntities =
+            // TODO: @Bart consider calling GetAsync( QueryLayer { filter on primary id and filter on secondary resources id and include articletags.tags } 
+            var throughEntities =
                 await _repositoryAccessor.GetFromJoinTableAsync(typeof(TResource), hasManyThrough.ThroughType, joinTableLayer);
 
-            RemoveEntitiesFromSet(joinTableEntities, secondaryResourceIds, hasManyThrough);
+            RemoveEntitiesFromSet(throughEntities, secondaryResourceIds, hasManyThrough);
         }
 
-        private void RemoveEntitiesFromSet(IEnumerable joinTableEntities, ISet<IIdentifiable> secondaryResourceIds,
+        private void RemoveEntitiesFromSet(IEnumerable throughEntities, ISet<IIdentifiable> secondaryResourceIds,
             HasManyThroughAttribute relationship)
         {
             HashSet<IIdentifiable> resourcesToExclude = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
 
-            foreach (var joinTableEntity in joinTableEntities)
+            foreach (var throughEntity in throughEntities)
             {
                 var resourceToExclude = _resourceFactory.CreateInstance(relationship.RightType);
-                resourceToExclude.StringId = relationship.RightIdProperty.GetValue(joinTableEntity)?.ToString();
+                resourceToExclude.StringId = relationship.RightIdProperty.GetValue(throughEntity)!.ToString();
 
                 resourcesToExclude.Add(resourceToExclude);
             }

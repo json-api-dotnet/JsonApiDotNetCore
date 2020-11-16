@@ -276,9 +276,11 @@ namespace JsonApiDotNetCore.Queries.Internal
                 filter = new EqualsAnyOfExpression(idChain, constants);
             }
 
-            return filter == null ? existingFilter :
-                existingFilter == null ? filter :
-                new LogicalExpression(LogicalOperator.And, new[] {filter, existingFilter});
+            return filter == null 
+                ? existingFilter 
+                : existingFilter == null 
+                    ? filter 
+                    : new LogicalExpression(LogicalOperator.And, new[] {filter, existingFilter});
         }
 
         /// <inheritdoc />

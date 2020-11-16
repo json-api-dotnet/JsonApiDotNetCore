@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -268,11 +267,11 @@ namespace JsonApiDotNetCore.Repositories
         private bool RequiresLoadOfRelationshipForDeletion(RelationshipAttribute relationship)
         {
             var navigation = TryGetNavigationForRelationship(relationship);
-            bool isClearForeignKeyRequired = navigation?.ForeignKey.DeleteBehavior == DeleteBehavior.ClientSetNull;
+            bool isClearOfForeignKeyRequired = navigation?.ForeignKey.DeleteBehavior == DeleteBehavior.ClientSetNull;
 
-            bool isHasOneWithForeignKeyAtLeftSide = IsHasOneWithForeignKeyAtLeftSide(relationship);
+            bool hasForeignKeyAtLeftSide = HasForeignKeyAtLeftSide(relationship);
 
-            return !isHasOneWithForeignKeyAtLeftSide && isClearForeignKeyRequired;
+            return hasForeignKeyAtLeftSide && isClearOfForeignKeyRequired;
         }
 
         private INavigation TryGetNavigationForRelationship(RelationshipAttribute relationship)
@@ -393,15 +392,15 @@ namespace JsonApiDotNetCore.Repositories
             return false;
         }
 
-        private bool IsHasOneWithForeignKeyAtLeftSide(RelationshipAttribute relationship)
+        private bool HasForeignKeyAtLeftSide(RelationshipAttribute relationship)
         {
             if (relationship is HasOneAttribute)
             {
                 var navigation = TryGetNavigationForRelationship(relationship);
-                return navigation != null && navigation.IsDependentToPrincipal();
+                return navigation == null || !navigation.IsDependentToPrincipal();
             }
 
-            return false;
+            return true;
         }
     }
 
