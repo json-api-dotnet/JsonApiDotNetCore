@@ -268,6 +268,11 @@ namespace JsonApiDotNetCore
 
         public static ICollection<IIdentifiable> ExtractResources(object value)
         {
+            if (value is ICollection<IIdentifiable> resourceCollection)
+            {
+                return resourceCollection;
+            }
+
             if (value is IEnumerable<IIdentifiable> resources)
             {
                 return resources.ToList();

@@ -87,7 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
         }
 
         [Fact]
-        public async Task Cannot_create_dependent_side_of_required_OneToMany_relationship_with_unknown_principal_id()
+        public async Task Cannot_create_dependent_side_of_required_OneToMany_relationship_with_unknown_principal_ID()
         {
             // Arrange
             var order = _fakers.Orders.Generate();
