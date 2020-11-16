@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// }
         /// ]]></code>
         /// </example>
-        internal PropertyInfo InverseNavigationProperty { get; set; }
+        public PropertyInfo InverseNavigationProperty { get; set; }
 
         /// <summary>
         /// The internal navigation property path to the related resource.

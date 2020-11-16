@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 return Array.Empty<AttrAttribute>();
             }
-            
+
             var sparseFieldSetAttributes = _constraintProviders
                 .SelectMany(p => p.GetConstraints())
                 .Where(expressionInScope => relationship == null
