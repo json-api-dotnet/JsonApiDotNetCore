@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
-        public async Task Can_create_resource_with_OneToOne_relationship_from_principal_side()
+        public async Task Can_create_OneToOne_relationship_from_principal_side()
         {
             // Arrange
             var existingGroup = _fakers.WorkItemGroup.Generate();

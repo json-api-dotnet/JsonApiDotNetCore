@@ -311,11 +311,11 @@ namespace JsonApiDotNetCore.Repositories
                 relationshipIsRequired = navigation?.ForeignKey?.IsRequired ?? false;
             }
 
-            var relationshipIsCleared = relationship is HasOneAttribute
+            var relationshipIsBeingCleared = relationship is HasOneAttribute
                 ? rightValue == null
                 : IsRequiredToManyRelationshipBeingCleared(relationship, leftResource, rightValue);
             
-            if (relationshipIsRequired && relationshipIsCleared)
+            if (relationshipIsRequired && relationshipIsBeingCleared)
             {
                 var resourceType = _resourceGraph.GetResourceContext<TResource>().PublicName;
                 throw new CannotClearRequiredRelationshipException(relationship.PublicName, leftResource.StringId, resourceType);

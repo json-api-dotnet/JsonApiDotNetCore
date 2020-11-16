@@ -278,7 +278,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
         }
 
         [Fact]
-        public async Task Cannot_clear_required_OneToMany_relationship_by_replacing_through_relationship_endpoint()
+        public async Task Cannot_clear_required_OneToMany_relationship_by_updating_through_relationship_endpoint()
         {
             // Arrange
             var existingOrder = _fakers.Orders.Generate();

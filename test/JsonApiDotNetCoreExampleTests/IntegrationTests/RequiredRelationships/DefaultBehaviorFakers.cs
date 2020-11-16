@@ -14,7 +14,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
         private readonly Lazy<Faker<Customer>> _customerFaker = new Lazy<Faker<Customer>>(() =>
             new Faker<Customer>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(customer => customer.EmailAddress, f => f.Internet.Email())
+                .RuleFor(customer => customer.EmailAddress, f => f.Person.Email)
         );
 
         private readonly Lazy<Faker<Shipment>> _shipmentFaker = new Lazy<Faker<Shipment>>(() =>
