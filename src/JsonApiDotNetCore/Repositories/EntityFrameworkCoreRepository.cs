@@ -357,11 +357,6 @@ namespace JsonApiDotNetCore.Repositories
                 await entityEntry.Reference(inversePropertyName).LoadAsync();
             }
 
-            if (IsHasOneWithForeignKeyAtLeftSide(relationship) && trackedValueToAssign == null)
-            {
-                PrepareChangeTrackerForNullAssignment(relationship, leftResource);
-            }
-
             relationship.SetValue(leftResource, trackedValueToAssign);
         }
 
@@ -407,79 +402,6 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             return false;
-        }
-
-        private void PrepareChangeTrackerForNullAssignment(RelationshipAttribute relationship, TResource leftResource)
-        {
-            // If a (shadow) foreign key is already loaded on the left resource of a relationship, it is not possible to
-            // set it to null by just assigning null to the navigation property and marking it as modified.
-            // Instead, when marking it as modified, it will mark the pre-existing foreign key value as modified too,
-            // but without setting its value to null.
-            // One way to work around this is by loading the relationship before setting it to null. Another approach
-            // (as done here) is tricking the change tracker into recognizing the null assignment by first
-            // assigning a placeholder entity to the navigation property, and then setting it to null.
-
-            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
-            var placeholderRightResource = collector.CreateUntracked(relationship.RightType);
-
-            // When assigning a related entity to a navigation property, it will be attached to the change tracker.
-            // This fails when that entity has null reference(s) for its primary key.
-            EnsurePrimaryKeyPropertiesAreNotNull(placeholderRightResource);
-
-            relationship.SetValue(leftResource, placeholderRightResource);
-            _dbContext.Entry(leftResource).DetectChanges();
-        }
-
-        private void EnsurePrimaryKeyPropertiesAreNotNull(object entity)
-        {
-            var primaryKey = _dbContext.Entry(entity).Metadata.FindPrimaryKey();
-            if (primaryKey != null)
-            {
-                foreach (var property in primaryKey.Properties)
-                {
-                    var propertyValue = GetNonNullValueForProperty(property.PropertyInfo);
-                    property.PropertyInfo.SetValue(entity, propertyValue);
-                }
-            }
-        }
-
-        private static object GetNonNullValueForProperty(PropertyInfo propertyInfo)
-        {
-            var propertyType = propertyInfo.PropertyType;
-
-            if (propertyType == typeof(string))
-            {
-                return string.Empty;
-            }
-
-            if (Nullable.GetUnderlyingType(propertyType) != null)
-            {
-                propertyType = propertyInfo.PropertyType.GetGenericArguments()[0];
-            }
-
-            if (propertyType == typeof(Guid))
-            {
-                return Guid.NewGuid();
-            }
-
-            if (CanBeNegative(propertyType))
-            {
-                return TypeHelper.ConvertType(-1, propertyType);
-            }
-
-            if (propertyType.IsValueType)
-            {
-                return Activator.CreateInstance(propertyType);
-            }
-
-            throw new NotSupportedException(
-                $"Unsupported reference type '{propertyType.Name}' for primary key property '{propertyInfo.DeclaringType?.Name}.{propertyInfo.Name}'.");
-        }
-
-        private static bool CanBeNegative(Type type)
-        {
-            return type == typeof(int) || type == typeof(long) || type == typeof(short) || type == typeof(byte) ||
-                   type == typeof(decimal) || type == typeof(double) || type == typeof(float);
         }
     }
 
