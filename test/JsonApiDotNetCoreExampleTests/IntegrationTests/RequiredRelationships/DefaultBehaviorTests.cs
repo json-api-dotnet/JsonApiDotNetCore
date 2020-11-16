@@ -23,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
         }
 
         [Fact]
-        public async Task Cannot_create_dependent_side_of_required_OneToMany_relationship_without_providing_principal_side()
+        public async Task Cannot_create_dependent_side_of_required_ManyToOne_relationship_without_providing_principal_side()
         {
             // Arrange
             var order = _fakers.Orders.Generate();
@@ -87,94 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
         }
 
         [Fact]
-        public async Task Cannot_create_dependent_side_of_required_OneToMany_relationship_with_unknown_principal_ID()
-        {
-            // Arrange
-            var order = _fakers.Orders.Generate();
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "orders",
-                    attributes = new
-                    {
-                        order = order.Value
-                    },
-                    relationships = new
-                    {
-                        customer = new
-                        {
-                            data = new
-                            {
-                                id = "999999",
-                                type = "customers"
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/orders";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("A related resource does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Related resource of type 'customers' with ID '999999' in relationship 'customer' does not exist.");
-        }
-
-        [Fact]
-        public async Task Cannot_create_dependent_side_of_required_OneToOne_relationship_with_unknown_principal_id()
-        {
-            // Arrange
-            var shipment = _fakers.Shipments.Generate();
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "shipments",
-                    attributes = new
-                    {
-                        trackAndTraceCode = shipment.TrackAndTraceCode
-                    },
-                    relationships = new
-                    {
-                        order = new
-                        {
-                            data = new
-                            {
-                                id = "999999",
-                                type = "orders"
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/shipments";
-
-            // Act
-            var (httpResponse, responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("A related resource does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Related resource of type 'orders' with ID '999999' in relationship 'order' does not exist.");
-        }
-
-        [Fact]
-        public async Task Deleting_principal_side_of_required_OneToMany_relationship_triggers_cascade_deletion()
+        public async Task Deleting_principal_side_of_required_OneToMany_relationship_triggers_cascading_delete()
         {
             // Arrange
             var existingOrder = _fakers.Orders.Generate();
@@ -207,7 +120,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
         }
 
         [Fact]
-        public async Task Deleting_principal_side_of_required_OneToOne_relationship_triggers_cascade_deletion()
+        public async Task Deleting_principal_side_of_required_OneToOne_relationship_triggers_cascading_delete()
         {
             // Arrange
             var existingOrder = _fakers.Orders.Generate();
@@ -237,6 +150,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
                 var existingShipmentInDatabase = await dbContext.Shipments.FindAsync(existingOrder.Shipment.Id);
                 existingShipmentInDatabase.Should().BeNull();
+
+                var existingCustomerInDatabase = await dbContext.Customers.FindAsync(existingOrder.Customer.Id);
+                existingCustomerInDatabase.Should().NotBeNull();
             });
         }
 
@@ -331,7 +247,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
         }
 
         [Fact]
-        public async Task Cannot_clear_required_OneToMany_relationship_from_dependent_side()
+        public async Task Cannot_clear_required_ManyToOne_relationship()
         {
             // Arrange
             var existingOrder = _fakers.Orders.Generate();
@@ -375,7 +291,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
         }
 
         [Fact]
-        public async Task Cannot_clear_required_OneToMany_relationship_from_principal_side()
+        public async Task Cannot_clear_required_OneToMany_relationship()
         {
             // Arrange
             var existingOrder = _fakers.Orders.Generate();
@@ -468,5 +384,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             responseDocument.Errors[0].Title.Should().Be("An unhandled error occurred while processing this request.");
             responseDocument.Errors[0].Detail.Should().StartWith("The property 'Id' on entity type 'Shipment' is part of a key and so cannot be modified or marked as modified.");
         }
+
+        // TODO: Consider tests for relationship endpoints.
     }
 }
