@@ -39,11 +39,10 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<int> CountAsync(Type resourceType, FilterExpression topFilter)
+        public async Task<int> CountAsync<TResource>(FilterExpression topFilter)
+            where TResource : class, IIdentifiable
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
-
-            dynamic repository = GetReadRepository(resourceType);
+            dynamic repository = GetReadRepository(typeof(TResource));
             return (int) await repository.CountAsync(topFilter);
         }
 
@@ -56,11 +55,10 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task AddToToManyRelationshipAsync<TId>(Type resourceType, TId primaryId, ISet<IIdentifiable> secondaryResourceIds)
+        public async Task AddToToManyRelationshipAsync<TResource, TId>(TId primaryId, ISet<IIdentifiable> secondaryResourceIds)
+            where TResource : class, IIdentifiable<TId>
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
-
-            dynamic repository = GetWriteRepository(resourceType);
+            dynamic repository = GetWriteRepository(typeof(TResource));
             await repository.AddToToManyRelationshipAsync(primaryId, secondaryResourceIds);
         }
 
@@ -81,11 +79,10 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task DeleteAsync<TId>(Type resourceType, TId id)
+        public async Task DeleteAsync<TResource, TId>(TId id)
+            where TResource : class, IIdentifiable<TId>
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
-
-            dynamic repository = GetWriteRepository(resourceType);
+            dynamic repository = GetWriteRepository(typeof(TResource));
             await repository.DeleteAsync(id);
         }
 

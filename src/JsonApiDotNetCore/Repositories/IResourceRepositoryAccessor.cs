@@ -7,7 +7,6 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Repositories
 {
-    // TODO: @Bart Consider using <TResource>()
     /// <summary>
     /// Retrieves a <see cref="IResourceRepository{TResource,TId}"/> instance from the D/I container and invokes a callback on it.
     /// </summary>
@@ -27,7 +26,8 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Invokes <see cref="IResourceReadRepository{TResource,TId}.CountAsync"/> for the specified resource type.
         /// </summary>
-        Task<int> CountAsync(Type resourceType, FilterExpression topFilter);
+        Task<int> CountAsync<TResource>(FilterExpression topFilter)
+            where TResource : class, IIdentifiable;
 
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.CreateAsync"/>.
@@ -38,7 +38,8 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.AddToToManyRelationshipAsync"/> for the specified resource type.
         /// </summary>
-        Task AddToToManyRelationshipAsync<TId>(Type resourceType, TId primaryId, ISet<IIdentifiable> secondaryResourceIds);
+        Task AddToToManyRelationshipAsync<TResource, TId>(TId primaryId, ISet<IIdentifiable> secondaryResourceIds)
+            where TResource : class, IIdentifiable<TId>;
 
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.UpdateAsync"/>.
@@ -55,7 +56,8 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.DeleteAsync"/> for the specified resource type.
         /// </summary>
-        Task DeleteAsync<TId>(Type resourceType, TId id);
+        Task DeleteAsync<TResource, TId>(TId id)
+            where TResource : class, IIdentifiable<TId>;
 
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.RemoveFromToManyRelationshipAsync"/>.

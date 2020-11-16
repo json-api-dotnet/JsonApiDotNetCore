@@ -65,7 +65,7 @@ namespace JsonApiDotNetCore.Services
             if (_options.IncludeTotalResourceCount)
             {
                 var topFilter = _queryLayerComposer.GetTopFilterFromConstraints();
-                _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync(typeof(TResource), topFilter);
+                _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync<TResource>(topFilter);
 
                 if (_paginationContext.TotalResourceCount == 0)
                 {
@@ -269,7 +269,7 @@ namespace JsonApiDotNetCore.Services
 
                 try
                 {
-                    await _repositoryAccessor.AddToToManyRelationshipAsync(typeof(TResource), primaryId, secondaryResourceIds);
+                    await _repositoryAccessor.AddToToManyRelationshipAsync<TResource, TId>(primaryId, secondaryResourceIds);
                 }
                 catch (DataStoreUpdateException)
                 {
@@ -384,7 +384,7 @@ namespace JsonApiDotNetCore.Services
 
             try
             {
-                await _repositoryAccessor.DeleteAsync(typeof(TResource), id);
+                await _repositoryAccessor.DeleteAsync<TResource, TId>(id);
             }
             catch (DataStoreUpdateException)
             {
