@@ -275,7 +275,7 @@ namespace JsonApiDotNetCore.Repositories
             await SaveChangesAsync();
         }
 
-        private void AssertIsNotClearingRequiredRelationship(RelationshipAttribute relationship, TResource leftResource, object rightValue)
+        protected void AssertIsNotClearingRequiredRelationship(RelationshipAttribute relationship, TResource leftResource, object rightValue)
         {
             bool relationshipIsRequired = false;
 
@@ -327,7 +327,7 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        private async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource,
+        protected async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource,
             object valueToAssign, PlaceholderResourceCollector collector)
         {
             var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType, collector);
