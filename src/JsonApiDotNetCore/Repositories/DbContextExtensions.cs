@@ -42,23 +42,5 @@ namespace JsonApiDotNetCore.Repositories
 
             return entityEntry?.Entity;
         }
-        
-        /// <summary>
-        /// Calls <see cref="DbContext.Set{TEntity}"/> for the specified type.
-        /// </summary>
-        public static IQueryable Set(this DbContext dbContext, Type entityType)
-        {
-            if (dbContext == null) throw new ArgumentNullException(nameof(dbContext));
-            if (entityType == null) throw new ArgumentNullException(nameof(entityType));
-
-            var genericSetMethod = typeof(DbContext).GetMethod(nameof(DbContext.Set));
-            if (genericSetMethod == null)
-            {
-                throw new InvalidOperationException($"Method '{nameof(DbContext)}.{nameof(DbContext.Set)}' does not exist.");
-            }
-
-            var constructedSetMethod = genericSetMethod.MakeGenericMethod(entityType);
-            return (IQueryable)constructedSetMethod.Invoke(dbContext, null);
-        }
     }
 }

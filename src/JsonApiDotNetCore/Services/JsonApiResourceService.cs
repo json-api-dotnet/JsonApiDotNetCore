@@ -285,30 +285,16 @@ namespace JsonApiDotNetCore.Services
         private async Task RemoveExistingIdsFromSecondarySet(TId primaryId, ISet<IIdentifiable> secondaryResourceIds,
             HasManyThroughAttribute hasManyThrough)
         {
-            var rightTypedIds = secondaryResourceIds.Select(resource => resource.GetTypedId()).ToArray();
-            QueryLayer joinTableLayer = _queryLayerComposer.ComposeForJoinTable(primaryId, rightTypedIds, hasManyThrough);
+            var queryLayer = _queryLayerComposer.ComposeForHasManyThrough(hasManyThrough, primaryId, secondaryResourceIds);
+            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(queryLayer);
+            
+            var primaryResource = primaryResources.FirstOrDefault();
+            AssertPrimaryResourceExists(primaryResource);
 
-            // TODO: @Bart consider calling GetAsync( QueryLayer { filter on primary id and filter on secondary resources id and include articletags.tags } 
-            var throughEntities =
-                await _repositoryAccessor.GetFromJoinTableAsync(typeof(TResource), hasManyThrough.ThroughType, joinTableLayer);
+            var rightValue = _request.Relationship.GetValue(primaryResource);
+            var existingRightResourceIds = TypeHelper.ExtractResources(rightValue);
 
-            RemoveEntitiesFromSet(throughEntities, secondaryResourceIds, hasManyThrough);
-        }
-
-        private void RemoveEntitiesFromSet(IEnumerable throughEntities, ISet<IIdentifiable> secondaryResourceIds,
-            HasManyThroughAttribute relationship)
-        {
-            HashSet<IIdentifiable> resourcesToExclude = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
-
-            foreach (var throughEntity in throughEntities)
-            {
-                var resourceToExclude = _resourceFactory.CreateInstance(relationship.RightType);
-                resourceToExclude.StringId = relationship.RightIdProperty.GetValue(throughEntity)!.ToString();
-
-                resourcesToExclude.Add(resourceToExclude);
-            }
-
-            secondaryResourceIds.ExceptWith(resourcesToExclude);
+            secondaryResourceIds.ExceptWith(existingRightResourceIds);
         }
 
         private async Task AssertResourcesExistAsync(ICollection<IIdentifiable> secondaryResourceIds)

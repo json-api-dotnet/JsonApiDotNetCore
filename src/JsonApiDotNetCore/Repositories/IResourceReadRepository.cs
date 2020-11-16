@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Repositories
 {
@@ -31,10 +29,5 @@ namespace JsonApiDotNetCore.Repositories
         /// Executes a read query using the specified top-level filter and returns the top-level count of matching resources.
         /// </summary>
         Task<int> CountAsync(FilterExpression topFilter);
-
-        /// <summary>
-        /// Executes a read query using the specified constraints against the join table of a <see cref="HasManyThroughAttribute"/> relationship.
-        /// </summary>
-        Task<IReadOnlyCollection<object>> GetFromJoinTableAsync(Type entityType, QueryLayer layer);
     }
 }

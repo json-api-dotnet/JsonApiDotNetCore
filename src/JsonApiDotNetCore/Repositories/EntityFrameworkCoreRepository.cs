@@ -114,32 +114,6 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task<IReadOnlyCollection<object>> GetFromJoinTableAsync(Type entityType, QueryLayer layer)
-        {
-            if (entityType == null) throw new ArgumentNullException(nameof(entityType));
-            if (layer == null) throw new ArgumentNullException(nameof(layer));
-
-            IQueryable query = ApplyJoinTableQueryLayer(entityType, layer);
-
-            // We need to prevent these from entering the change tracker, so that when changes are saved
-            // in AddToToManyRelationshipAsync(), only new records are added (without deleting existing ones).
-            var noTrackingQuery = query.Cast<object>().AsNoTracking();
-
-            return await noTrackingQuery.ToListAsync();
-        }
-
-        protected virtual IQueryable ApplyJoinTableQueryLayer(Type entityType, QueryLayer layer)
-        {
-            var source = _dbContext.Set(entityType);
-
-            var nameFactory = new LambdaParameterNameFactory();
-            var builder = new QueryableBuilder(source.Expression, source.ElementType, typeof(Queryable), nameFactory, _resourceFactory, _resourceGraph, _dbContext.Model);
-
-            var expression = builder.ApplyQuery(layer);
-            return source.Provider.CreateQuery(expression);
-        }
-
-        /// <inheritdoc />
         public virtual async Task CreateAsync(TResource resource)
         {
             _traceWriter.LogMethodStart(new {resource});

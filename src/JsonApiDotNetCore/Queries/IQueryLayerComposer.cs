@@ -53,8 +53,8 @@ namespace JsonApiDotNetCore.Queries
         QueryLayer ComposeForGetRelationshipRightIds(RelationshipAttribute relationship, ICollection<IIdentifiable> rightResourceIds);
 
         /// <summary>
-        /// Builds a query that retrieves filtered join table entries for a <see cref="HasManyThroughAttribute"/> relationship.
+        /// Builds a query for a many-to-many relationship with a filter to match on its left and right resource IDs.
         /// </summary>
-        QueryLayer ComposeForJoinTable<TLeftId, TRightId>(TLeftId leftId, ICollection<TRightId> rightIds, HasManyThroughAttribute relationship);
+        QueryLayer ComposeForHasManyThrough<TId>(HasManyThroughAttribute hasManyThroughRelationship, TId leftId, ICollection<IIdentifiable> rightResourceIds);
     }
 }

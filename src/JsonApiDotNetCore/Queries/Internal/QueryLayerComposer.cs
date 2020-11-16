@@ -323,56 +323,51 @@ namespace JsonApiDotNetCore.Queries.Internal
         public QueryLayer ComposeForGetRelationshipRightIds(RelationshipAttribute relationship, ICollection<IIdentifiable> rightResourceIds)
         {
             var rightResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
-            return CreateQueryLayerForResourceIds(rightResourceIds, rightResourceContext);
-        }
+            var rightIdAttribute = GetIdAttribute(rightResourceContext);
 
-        /// <inheritdoc />
-        public QueryLayer ComposeForJoinTable<TLeftId, TRightId>(TLeftId leftId, ICollection<TRightId> rightIds,
-            HasManyThroughAttribute relationship)
-        {
-            if (rightIds == null) throw new ArgumentNullException(nameof(rightIds));
-            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
+            var typedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
 
-            var pseudoLeftIdAttribute = new AttrAttribute
-            {
-                Property = relationship.LeftIdProperty,
-                PublicName = relationship.LeftIdProperty.Name
-            };
+            var baseFilter = GetFilter(Array.Empty<QueryExpression>(), rightResourceContext);
+            var filter = CreateFilterByIds(typedIds, rightIdAttribute, baseFilter);
 
-            var pseudoRightIdAttribute = new AttrAttribute
-            {
-                Property = relationship.RightIdProperty,
-                PublicName = relationship.RightIdProperty.Name
-            };
-
-            var pseudoResourceContext = new ResourceContext
-            {
-                PublicName = relationship.ThroughType.Name
-            };
-
-            var leftFilter = CreateFilterByIds(new[] {leftId}, pseudoLeftIdAttribute, null);
-            var rightFilter = CreateFilterByIds(rightIds, pseudoRightIdAttribute, null);
-
-            return new QueryLayer(pseudoResourceContext)
-            {
-                Filter = new LogicalExpression(LogicalOperator.And, new[] {leftFilter, rightFilter})
-            };
-        }
-
-        private QueryLayer CreateQueryLayerForResourceIds(IEnumerable<IIdentifiable> resourceIds, ResourceContext resourceContext)
-        {
-            var idAttribute = GetIdAttribute(resourceContext);
-            var typedIds = resourceIds.Select(resource => resource.GetTypedId()).ToArray();
-
-            var baseFilter = GetFilter(Array.Empty<QueryExpression>(), resourceContext);
-            var filter = CreateFilterByIds(typedIds, idAttribute, baseFilter);
-
-            return new QueryLayer(resourceContext)
+            return new QueryLayer(rightResourceContext)
             {
                 Filter = filter,
                 Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
                 {
-                    [idAttribute] = null
+                    [rightIdAttribute] = null
+                }
+            };
+        }
+
+        /// <inheritdoc />
+        public QueryLayer ComposeForHasManyThrough<TId>(HasManyThroughAttribute hasManyThroughRelationship, TId leftId, ICollection<IIdentifiable> rightResourceIds)
+        {
+            var leftResourceContext = _resourceContextProvider.GetResourceContext(hasManyThroughRelationship.LeftType);
+            var leftIdAttribute = GetIdAttribute(leftResourceContext);
+
+            var rightResourceContext = _resourceContextProvider.GetResourceContext(hasManyThroughRelationship.RightType);
+            var rightIdAttribute = GetIdAttribute(rightResourceContext);
+            var rightTypedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
+
+            var leftFilter = CreateFilterByIds(new[] {leftId}, leftIdAttribute, null);
+            var rightFilter = CreateFilterByIds(rightTypedIds, rightIdAttribute, null);
+
+            return new QueryLayer(leftResourceContext)
+            {
+                Include = new IncludeExpression(new[] {new IncludeElementExpression(hasManyThroughRelationship)}),
+                Filter = leftFilter,
+                Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
+                {
+                    [hasManyThroughRelationship] = new QueryLayer(rightResourceContext)
+                    {
+                        Filter = rightFilter,
+                        Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
+                        {
+                            [rightIdAttribute] = null
+                        }
+                    },
+                    [leftIdAttribute] = null
                 }
             };
         }

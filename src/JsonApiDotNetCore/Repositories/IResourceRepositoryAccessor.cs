@@ -30,11 +30,6 @@ namespace JsonApiDotNetCore.Repositories
         Task<int> CountAsync(Type resourceType, FilterExpression topFilter);
 
         /// <summary>
-        /// Invokes <see cref="IResourceReadRepository{TResource,TId}.GetFromJoinTableAsync"/> for the specified resource type.
-        /// </summary>
-        Task<IReadOnlyCollection<object>> GetFromJoinTableAsync(Type resourceType, Type entityType, QueryLayer layer);
-
-        /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.CreateAsync"/>.
         /// </summary>
         Task CreateAsync<TResource>(TResource resource)

@@ -48,15 +48,6 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<object>> GetFromJoinTableAsync(Type resourceType, Type entityType, QueryLayer layer)
-        {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
-
-            dynamic repository = GetReadRepository(resourceType);
-            return await repository.GetFromJoinTableAsync(entityType, layer);
-        }
-
-        /// <inheritdoc />
         public async Task CreateAsync<TResource>(TResource resource)
             where TResource : class, IIdentifiable
         {

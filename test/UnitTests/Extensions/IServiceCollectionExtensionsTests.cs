@@ -223,7 +223,6 @@ namespace UnitTests.Extensions
         {
             public Task<IReadOnlyCollection<IntResource>> GetAsync(QueryLayer layer) => throw new NotImplementedException();
             public Task<int> CountAsync(FilterExpression topFilter) => throw new NotImplementedException();
-            public Task<IReadOnlyCollection<object>> GetFromJoinTableAsync(Type entityType, QueryLayer layer) => throw new NotImplementedException();
             public Task CreateAsync(IntResource resource) => throw new NotImplementedException();
             public Task AddToToManyRelationshipAsync(int primaryId, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
             public Task UpdateAsync(IntResource resourceFromRequest, IntResource resourceFromDatabase) => throw new NotImplementedException();
@@ -237,7 +236,6 @@ namespace UnitTests.Extensions
         {
             public Task<IReadOnlyCollection<GuidResource>> GetAsync(QueryLayer layer) => throw new NotImplementedException();
             public Task<int> CountAsync(FilterExpression topFilter) => throw new NotImplementedException();
-            public Task<IReadOnlyCollection<object>> GetFromJoinTableAsync(Type entityType, QueryLayer layer) => throw new NotImplementedException();
             public Task CreateAsync(GuidResource resource) => throw new NotImplementedException();
             public Task AddToToManyRelationshipAsync(Guid primaryId, ISet<IIdentifiable> secondaryResourceIds) => throw new NotImplementedException();
             public Task UpdateAsync(GuidResource resourceFromRequest, GuidResource resourceFromDatabase) => throw new NotImplementedException();

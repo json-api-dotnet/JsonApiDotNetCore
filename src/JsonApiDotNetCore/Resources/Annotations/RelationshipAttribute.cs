@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
 
         /// <summary>
         /// The child resource type. This does not necessarily match the navigation property type.
-        /// In the case of a <see cref="HasManyAttribute"/> relationship, this value will be the collection argument type.
+        /// In the case of a <see cref="HasManyAttribute"/> relationship, this value will be the collection element type.
         /// </summary>
         /// <example>
         /// <code><![CDATA[
