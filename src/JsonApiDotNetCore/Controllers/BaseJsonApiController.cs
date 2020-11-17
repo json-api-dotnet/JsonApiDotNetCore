@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -91,12 +92,12 @@ namespace JsonApiDotNetCore.Controllers
         /// Gets a collection of top-level (non-nested) resources.
         /// Example: GET /articles HTTP/1.1
         /// </summary>
-        public virtual async Task<IActionResult> GetAsync()
+        public virtual async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart();
 
             if (_getAll == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
-            var resources = await _getAll.GetAsync();
+            var resources = await _getAll.GetAsync(cancellationToken);
 
             return Ok(resources);
         }
@@ -105,12 +106,12 @@ namespace JsonApiDotNetCore.Controllers
         /// Gets a single top-level (non-nested) resource by ID.
         /// Example: /articles/1
         /// </summary>
-        public virtual async Task<IActionResult> GetAsync(TId id)
+        public virtual async Task<IActionResult> GetAsync(TId id, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id});
 
             if (_getById == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
-            var resource = await _getById.GetAsync(id);
+            var resource = await _getById.GetAsync(id, cancellationToken);
 
             return Ok(resource);
         }
@@ -121,13 +122,13 @@ namespace JsonApiDotNetCore.Controllers
         /// GET /articles/1/author HTTP/1.1
         /// GET /articles/1/revisions HTTP/1.1
         /// </summary>
-        public virtual async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName)
+        public virtual async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_getSecondary == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
-            var relationship = await _getSecondary.GetSecondaryAsync(id, relationshipName);
+            var relationship = await _getSecondary.GetSecondaryAsync(id, relationshipName, cancellationToken);
 
             return Ok(relationship);
         }
@@ -137,13 +138,13 @@ namespace JsonApiDotNetCore.Controllers
         /// Example: GET /articles/1/relationships/author HTTP/1.1
         /// Example: GET /articles/1/relationships/revisions HTTP/1.1
         /// </summary>
-        public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
+        public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_getRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
-            var rightResources = await _getRelationship.GetRelationshipAsync(id, relationshipName);
+            var rightResources = await _getRelationship.GetRelationshipAsync(id, relationshipName, cancellationToken);
 
             return Ok(rightResources);
         }
@@ -152,7 +153,7 @@ namespace JsonApiDotNetCore.Controllers
         /// Creates a new resource with attributes, relationships or both.
         /// Example: POST /articles HTTP/1.1
         /// </summary>
-        public virtual async Task<IActionResult> PostAsync([FromBody] TResource resource)
+        public virtual async Task<IActionResult> PostAsync([FromBody] TResource resource, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -169,7 +170,7 @@ namespace JsonApiDotNetCore.Controllers
                 throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors, namingStrategy);
             }
 
-            var newResource = await _create.CreateAsync(resource);
+            var newResource = await _create.CreateAsync(resource, cancellationToken);
 
             var resourceId = (newResource ?? resource).StringId;
             string locationUrl = $"{HttpContext.Request.Path}/{resourceId}";
@@ -190,14 +191,15 @@ namespace JsonApiDotNetCore.Controllers
         /// <param name="id">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship to add resources to.</param>
         /// <param name="secondaryResourceIds">The set of resources to add to the relationship.</param>
-        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds)
+        /// <param name="cancellationToken">Propagates notification that request handling should be canceled.</param>
+        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             if (_addToRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Post);
-            await _addToRelationship.AddToToManyRelationshipAsync(id, relationshipName, secondaryResourceIds);
+            await _addToRelationship.AddToToManyRelationshipAsync(id, relationshipName, secondaryResourceIds, cancellationToken);
 
             return NoContent();
         }
@@ -207,7 +209,7 @@ namespace JsonApiDotNetCore.Controllers
         /// Only the values of sent attributes are replaced. And only the values of sent relationships are replaced.
         /// Example: PATCH /articles/1 HTTP/1.1
         /// </summary>
-        public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource)
+        public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id, resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -220,7 +222,7 @@ namespace JsonApiDotNetCore.Controllers
                 throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors, namingStrategy);
             }
 
-            var updated = await _update.UpdateAsync(id, resource);
+            var updated = await _update.UpdateAsync(id, resource, cancellationToken);
             return updated == null ? (IActionResult) NoContent() : Ok(updated);
         }
 
@@ -232,13 +234,14 @@ namespace JsonApiDotNetCore.Controllers
         /// <param name="id">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship for which to perform a complete replacement.</param>
         /// <param name="secondaryResourceIds">The resource or set of resources to assign to the relationship.</param>
-        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResourceIds)
+        /// <param name="cancellationToken">Propagates notification that request handling should be canceled.</param>
+        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             if (_setRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
-            await _setRelationship.SetRelationshipAsync(id, relationshipName, secondaryResourceIds);
+            await _setRelationship.SetRelationshipAsync(id, relationshipName, secondaryResourceIds, cancellationToken);
 
             return NoContent();
         }
@@ -247,12 +250,12 @@ namespace JsonApiDotNetCore.Controllers
         /// Deletes an existing resource.
         /// Example: DELETE /articles/1 HTTP/1.1
         /// </summary>
-        public virtual async Task<IActionResult> DeleteAsync(TId id)
+        public virtual async Task<IActionResult> DeleteAsync(TId id, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id});
 
             if (_delete == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
-            await _delete.DeleteAsync(id);
+            await _delete.DeleteAsync(id, cancellationToken);
 
             return NoContent();
         }
@@ -264,14 +267,15 @@ namespace JsonApiDotNetCore.Controllers
         /// <param name="id">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship to remove resources from.</param>
         /// <param name="secondaryResourceIds">The set of resources to remove from the relationship.</param>
-        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds)
+        /// <param name="cancellationToken">Propagates notification that request handling should be canceled.</param>
+        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
 
             if (_removeFromRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
-            await _removeFromRelationship.RemoveFromToManyRelationshipAsync(id, relationshipName, secondaryResourceIds);
+            await _removeFromRelationship.RemoveFromToManyRelationshipAsync(id, relationshipName, secondaryResourceIds, cancellationToken);
 
             return NoContent();
         }

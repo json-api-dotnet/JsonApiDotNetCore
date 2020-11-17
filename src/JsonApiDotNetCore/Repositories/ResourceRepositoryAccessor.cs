@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
@@ -22,84 +23,84 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<TResource>> GetAsync<TResource>(QueryLayer layer)
+        public async Task<IReadOnlyCollection<TResource>> GetAsync<TResource>(QueryLayer layer, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetReadRepository(typeof(TResource));
-            return (IReadOnlyCollection<TResource>) await repository.GetAsync(layer);
+            return (IReadOnlyCollection<TResource>) await repository.GetAsync(layer, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<IIdentifiable>> GetAsync(Type resourceType, QueryLayer layer)
+        public async Task<IReadOnlyCollection<IIdentifiable>> GetAsync(Type resourceType, QueryLayer layer, CancellationToken cancellationToken)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
             dynamic repository = GetReadRepository(resourceType);
-            return (IReadOnlyCollection<IIdentifiable>) await repository.GetAsync(layer);
+            return (IReadOnlyCollection<IIdentifiable>) await repository.GetAsync(layer, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<int> CountAsync<TResource>(FilterExpression topFilter)
+        public async Task<int> CountAsync<TResource>(FilterExpression topFilter, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetReadRepository(typeof(TResource));
-            return (int) await repository.CountAsync(topFilter);
+            return (int) await repository.CountAsync(topFilter, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task CreateAsync<TResource>(TResource resource)
+        public async Task CreateAsync<TResource>(TResource resource, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
-            await repository.CreateAsync(resource);
+            await repository.CreateAsync(resource, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task AddToToManyRelationshipAsync<TResource, TId>(TId primaryId, ISet<IIdentifiable> secondaryResourceIds)
+        public async Task AddToToManyRelationshipAsync<TResource, TId>(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable<TId>
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
-            await repository.AddToToManyRelationshipAsync(primaryId, secondaryResourceIds);
+            await repository.AddToToManyRelationshipAsync(primaryId, secondaryResourceIds, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task UpdateAsync<TResource>(TResource resourceFromRequest, TResource resourceFromDatabase)
+        public async Task UpdateAsync<TResource>(TResource resourceFromRequest, TResource resourceFromDatabase, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
-            await repository.UpdateAsync(resourceFromRequest, resourceFromDatabase);
+            await repository.UpdateAsync(resourceFromRequest, resourceFromDatabase, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task SetRelationshipAsync<TResource>(TResource primaryResource, object secondaryResourceIds)
+        public async Task SetRelationshipAsync<TResource>(TResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
-            await repository.SetRelationshipAsync(primaryResource, secondaryResourceIds);
+            await repository.SetRelationshipAsync(primaryResource, secondaryResourceIds, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task DeleteAsync<TResource, TId>(TId id)
+        public async Task DeleteAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable<TId>
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
-            await repository.DeleteAsync(id);
+            await repository.DeleteAsync(id, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task RemoveFromToManyRelationshipAsync<TResource>(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds)
+        public async Task RemoveFromToManyRelationshipAsync<TResource>(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
-            await repository.RemoveFromToManyRelationshipAsync(primaryResource, secondaryResourceIds);
+            await repository.RemoveFromToManyRelationshipAsync(primaryResource, secondaryResourceIds, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<TResource> GetForUpdateAsync<TResource>(QueryLayer queryLayer)
+        public async Task<TResource> GetForUpdateAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
-            return await repository.GetForUpdateAsync(queryLayer);
+            return await repository.GetForUpdateAsync(queryLayer, cancellationToken);
         }
 
         protected object GetReadRepository(Type resourceType)

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -52,17 +53,17 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer)
+        public virtual async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {layer});
             if (layer == null) throw new ArgumentNullException(nameof(layer));
 
             IQueryable<TResource> query = ApplyQueryLayer(layer);
-            return await query.ToListAsync();
+            return await query.ToListAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        public virtual async Task<int> CountAsync(FilterExpression topFilter)
+        public virtual async Task<int> CountAsync(FilterExpression topFilter, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {topFilter});
 
@@ -73,7 +74,7 @@ namespace JsonApiDotNetCore.Repositories
             };
 
             IQueryable<TResource> query = ApplyQueryLayer(layer);
-            return await query.CountAsync();
+            return await query.CountAsync(cancellationToken);
         }
 
         protected virtual IQueryable<TResource> ApplyQueryLayer(QueryLayer layer)
@@ -114,7 +115,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task CreateAsync(TResource resource)
+        public virtual async Task CreateAsync(TResource resource, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -124,17 +125,17 @@ namespace JsonApiDotNetCore.Repositories
             foreach (var relationship in _targetedFields.Relationships)
             {
                 var rightValue = relationship.GetValue(resource);
-                await UpdateRelationshipAsync(relationship, resource, rightValue, collector);
+                await UpdateRelationshipAsync(relationship, resource, rightValue, collector, cancellationToken);
             }
 
             var dbSet = _dbContext.Set<TResource>();
             dbSet.Add(resource);
 
-            await SaveChangesAsync();
+            await SaveChangesAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds)
+        public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {primaryId, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
@@ -146,14 +147,14 @@ namespace JsonApiDotNetCore.Repositories
                 using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
                 var primaryResource = collector.CreateForId<TResource, TId>(primaryId);
 
-                await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector);
+                await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector, cancellationToken);
 
-                await SaveChangesAsync();
+                await SaveChangesAsync(cancellationToken);
             }
         }
 
         /// <inheritdoc />
-        public virtual async Task SetRelationshipAsync(TResource primaryResource, object secondaryResourceIds)
+        public virtual async Task SetRelationshipAsync(TResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {primaryResource, secondaryResourceIds});
 
@@ -162,13 +163,13 @@ namespace JsonApiDotNetCore.Repositories
             AssertIsNotClearingRequiredRelationship(relationship, primaryResource, secondaryResourceIds);
 
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
-            await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector);
+            await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector, cancellationToken);
 
-            await SaveChangesAsync();
+            await SaveChangesAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        public virtual async Task UpdateAsync(TResource resourceFromRequest, TResource resourceFromDatabase)
+        public virtual async Task UpdateAsync(TResource resourceFromRequest, TResource resourceFromDatabase, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {resourceFromRequest, resourceFromDatabase});
             if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
@@ -182,7 +183,7 @@ namespace JsonApiDotNetCore.Repositories
 
                 AssertIsNotClearingRequiredRelationship(relationship, resourceFromDatabase, rightResources);
 
-                await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightResources, collector);
+                await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightResources, collector, cancellationToken);
             }
 
             foreach (var attribute in _targetedFields.Attributes)
@@ -190,11 +191,11 @@ namespace JsonApiDotNetCore.Repositories
                 attribute.SetValue(resourceFromDatabase, attribute.GetValue(resourceFromRequest));
             }
 
-            await SaveChangesAsync();
+            await SaveChangesAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        public virtual async Task DeleteAsync(TId id)
+        public virtual async Task DeleteAsync(TId id, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id});
 
@@ -208,13 +209,13 @@ namespace JsonApiDotNetCore.Repositories
                 if (RequiresLoadOfRelationshipForDeletion(relationship))
                 {
                     var navigation = GetNavigationEntry(resource, relationship);
-                    await navigation.LoadAsync();
+                    await navigation.LoadAsync(cancellationToken);
                 }
             }
 
             _dbContext.Remove(resource);
 
-            await SaveChangesAsync();
+            await SaveChangesAsync(cancellationToken);
         }
 
         private NavigationEntry GetNavigationEntry(TResource resource, RelationshipAttribute relationship)
@@ -255,7 +256,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task RemoveFromToManyRelationshipAsync(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds)
+        public virtual async Task RemoveFromToManyRelationshipAsync(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {primaryResource, secondaryResourceIds});
             if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
@@ -270,9 +271,9 @@ namespace JsonApiDotNetCore.Repositories
             AssertIsNotClearingRequiredRelationship(relationship, primaryResource, rightResourceIds);
 
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
-            await UpdateRelationshipAsync(relationship, primaryResource, rightResourceIds, collector);
+            await UpdateRelationshipAsync(relationship, primaryResource, rightResourceIds, collector, cancellationToken);
 
-            await SaveChangesAsync();
+            await SaveChangesAsync(cancellationToken);
         }
 
         protected void AssertIsNotClearingRequiredRelationship(RelationshipAttribute relationship, TResource leftResource, object rightValue)
@@ -309,17 +310,17 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResource> GetForUpdateAsync(QueryLayer queryLayer)
+        public virtual async Task<TResource> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
         {
-            var resources = await GetAsync(queryLayer);
+            var resources = await GetAsync(queryLayer, cancellationToken);
             return resources.FirstOrDefault();
         }
 
-        protected virtual async Task SaveChangesAsync()
+        protected virtual async Task SaveChangesAsync(CancellationToken cancellationToken)
         {
             try
             {
-                await _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync(cancellationToken);
             }
             catch (DbUpdateException exception)
             {
@@ -328,7 +329,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         protected async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource,
-            object valueToAssign, PlaceholderResourceCollector collector)
+            object valueToAssign, PlaceholderResourceCollector collector, CancellationToken cancellationToken)
         {
             var trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType, collector);
 
@@ -337,7 +338,7 @@ namespace JsonApiDotNetCore.Repositories
                 var entityEntry = _dbContext.Entry(trackedValueToAssign);
                 var inversePropertyName = relationship.InverseNavigationProperty.Name;
 
-                await entityEntry.Reference(inversePropertyName).LoadAsync();
+                await entityEntry.Reference(inversePropertyName).LoadAsync(cancellationToken);
             }
 
             relationship.SetValue(leftResource, trackedValueToAssign);

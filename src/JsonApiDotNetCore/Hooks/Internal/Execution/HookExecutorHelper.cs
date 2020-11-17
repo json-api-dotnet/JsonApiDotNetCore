@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Queries;
@@ -152,7 +153,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             }
 
             var repository = GetRepository<TResource, TId>();
-            return repository.GetAsync(queryLayer).Result;
+            return repository.GetAsync(queryLayer, CancellationToken.None).Result;
         }
 
         private static FilterExpression CreateFilterByIds<TId>(IReadOnlyCollection<TId> ids, ResourceContext resourceContext)

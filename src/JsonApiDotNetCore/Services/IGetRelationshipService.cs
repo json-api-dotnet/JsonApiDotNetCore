@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Resources;
 
@@ -15,6 +16,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Handles a json:api request to retrieve a single relationship.
         /// </summary>
-        Task<object> GetRelationshipAsync(TId id, string relationshipName);
+        Task<object> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken);
     }
 }

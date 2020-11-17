@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Resources;
 
@@ -15,6 +16,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Handles a json:api request to retrieve a single resource or a collection of resources for a secondary endpoint, such as /articles/1/author or /articles/1/revisions.
         /// </summary>
-        Task<object> GetSecondaryAsync(TId id, string relationshipName);
+        Task<object> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken);
     }
 }

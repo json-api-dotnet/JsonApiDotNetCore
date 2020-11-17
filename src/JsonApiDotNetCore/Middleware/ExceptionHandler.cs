@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Net;
+using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -45,6 +46,11 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
 
+            if (exception is OperationCanceledException)
+            {
+                return LogLevel.None;
+            }
+
             if (exception is JsonApiException || exception is InvalidModelStateException)
             {
                 return LogLevel.Information;
@@ -73,11 +79,16 @@ namespace JsonApiDotNetCore.Middleware
 
             Error error = exception is JsonApiException jsonApiException
                 ? jsonApiException.Error
-                : new Error(HttpStatusCode.InternalServerError)
-                {
-                    Title = "An unhandled error occurred while processing this request.",
-                    Detail = exception.Message
-                };
+                : exception is TaskCanceledException
+                    ? new Error((HttpStatusCode) 499)
+                    {
+                        Title = "Request execution was canceled."
+                    }
+                    : new Error(HttpStatusCode.InternalServerError)
+                    {
+                        Title = "An unhandled error occurred while processing this request.",
+                        Detail = exception.Message
+                    };
 
             ApplyOptions(error, exception);
 

@@ -23,16 +23,6 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <summary>
-        /// Creates a new placeholder resource (without adding it to the change tracker) and registers it for detachment.
-        /// </summary>
-        public IIdentifiable CreateUntracked(Type resourceType)
-        {
-            var placeholderResource = _resourceFactory.CreateInstance(resourceType);
-            _resources.Add(placeholderResource);
-            return placeholderResource;
-        }
-
-        /// <summary>
         /// Creates a new placeholder resource, assigns the specified ID, adds it to the change tracker
         /// in <see cref="EntityState.Unchanged"/> state and registers it for detachment.
         /// </summary>
@@ -59,14 +49,6 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             return resourceTracked;
-        }
-
-        /// <summary>
-        /// Registers the specified resources for detachment.
-        /// </summary>
-        public void Register(IEnumerable<object> resources)
-        {
-            _resources.AddRange(resources);
         }
 
         /// <summary>

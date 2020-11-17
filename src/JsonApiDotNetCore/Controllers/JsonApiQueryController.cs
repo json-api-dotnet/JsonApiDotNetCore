@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -26,21 +27,31 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpGet]
-        public override async Task<IActionResult> GetAsync() => await base.GetAsync();
+        public override async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
+        {
+            return await base.GetAsync(cancellationToken);
+        }
 
         /// <inheritdoc />
         [HttpGet("{id}")]
-        public override async Task<IActionResult> GetAsync(TId id) => await base.GetAsync(id);
+        public override async Task<IActionResult> GetAsync(TId id, CancellationToken cancellationToken)
+        {
+            return await base.GetAsync(id, cancellationToken);
+        }
 
         /// <inheritdoc />
         [HttpGet("{id}/{relationshipName}")]
-        public override async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName)
-            => await base.GetSecondaryAsync(id, relationshipName);
+        public override async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken)
+        {
+            return await base.GetSecondaryAsync(id, relationshipName, cancellationToken);
+        }
 
         /// <inheritdoc />
         [HttpGet("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
-            => await base.GetRelationshipAsync(id, relationshipName);
+        public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)
+        {
+            return await base.GetRelationshipAsync(id, relationshipName, cancellationToken);
+        }
     }
 
     /// <inheritdoc />

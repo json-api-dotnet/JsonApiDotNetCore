@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Resources;
 
@@ -15,6 +16,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Handles a json:api request to retrieve a single resource for a primary endpoint.
         /// </summary>
-        Task<TResource> GetAsync(TId id);
+        Task<TResource> GetAsync(TId id, CancellationToken cancellationToken);
     }
 }

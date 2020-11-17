@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Resources;
 
@@ -18,6 +19,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="primaryId">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship for which to perform a complete replacement.</param>
         /// <param name="secondaryResourceIds">The resource or set of resources to assign to the relationship.</param>
-        Task SetRelationshipAsync(TId primaryId, string relationshipName, object secondaryResourceIds);
+        /// <param name="cancellationToken">Propagates notification that request handling should be canceled.</param>
+        Task SetRelationshipAsync(TId primaryId, string relationshipName, object secondaryResourceIds, CancellationToken cancellationToken);
     }
 }

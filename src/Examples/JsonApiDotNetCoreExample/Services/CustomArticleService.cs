@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal;
@@ -27,9 +28,9 @@ namespace JsonApiDotNetCoreExample.Services
                 resourceChangeTracker, resourceFactory, hookExecutor)
         { }
 
-        public override async Task<Article> GetAsync(int id)
+        public override async Task<Article> GetAsync(int id, CancellationToken cancellationToken)
         {
-            var resource = await base.GetAsync(id);
+            var resource = await base.GetAsync(id, cancellationToken);
             resource.Caption = "None for you Glen Coco";
             return resource;
         }

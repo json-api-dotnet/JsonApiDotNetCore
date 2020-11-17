@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
@@ -19,6 +20,9 @@ namespace ReportsExample.Controllers
         { }
 
         [HttpGet]
-        public override async Task<IActionResult> GetAsync() => await base.GetAsync();
+        public override async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
+        {
+            return await base.GetAsync(cancellationToken);
+        }
     }
 }
