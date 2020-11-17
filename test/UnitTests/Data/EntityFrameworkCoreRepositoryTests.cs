@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
@@ -54,7 +55,7 @@ namespace UnitTests.Data
                 targetedFields.Setup(m => m.Relationships).Returns(new HashSet<RelationshipAttribute>());
 
                 // Act
-                await repository.UpdateAsync(todoItemUpdates, databaseResource);
+                await repository.UpdateAsync(todoItemUpdates, databaseResource, CancellationToken.None);
             }
 
             // Assert - in different context
@@ -70,7 +71,7 @@ namespace UnitTests.Data
                     Filter = new ComparisonExpression(ComparisonOperator.Equals,
                         new ResourceFieldChainExpression(idAttribute),
                         new LiteralConstantExpression(itemId.ToString()))
-                });
+                }, CancellationToken.None);
 
                 var fetchedTodo = resources.First();
                 Assert.NotNull(fetchedTodo);

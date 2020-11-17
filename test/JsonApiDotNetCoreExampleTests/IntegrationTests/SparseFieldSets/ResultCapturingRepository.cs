@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
@@ -29,9 +30,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             _captureStore = captureStore;
         }
 
-        public override async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer)
+        public override async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken)
         {
-            var resources = await base.GetAsync(layer);
+            var resources = await base.GetAsync(layer, cancellationToken);
 
             _captureStore.Add(resources);
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Resources;
 
@@ -19,6 +20,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="primaryId">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship to remove resources from.</param>
         /// <param name="secondaryResourceIds">The set of resources to remove from the relationship.</param>
-        Task RemoveFromToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds);
+        /// <param name="cancellationToken">Propagates notification that request handling should be canceled.</param>
+        Task RemoveFromToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken);
     }
 }

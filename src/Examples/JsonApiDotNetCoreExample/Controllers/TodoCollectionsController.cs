@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
@@ -27,15 +28,16 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpPatch("{id}")]
-        public override async Task<IActionResult> PatchAsync(Guid id, [FromBody] TodoItemCollection resource)
+        public override async Task<IActionResult> PatchAsync(Guid id, [FromBody] TodoItemCollection resource, CancellationToken cancellationToken)
         {
             if (resource.Name == "PRE-ATTACH-TEST")
             {
                 var targetTodoId = resource.TodoItems.First().Id;
                 var todoItemContext = _dbResolver.GetContext().Set<TodoItem>();
-                await todoItemContext.Where(ti => ti.Id == targetTodoId).FirstOrDefaultAsync();
+                await todoItemContext.Where(ti => ti.Id == targetTodoId).FirstOrDefaultAsync(cancellationToken);
             }
-            return await base.PatchAsync(id, resource);
+
+            return await base.PatchAsync(id, resource, cancellationToken);
         }
 
     }

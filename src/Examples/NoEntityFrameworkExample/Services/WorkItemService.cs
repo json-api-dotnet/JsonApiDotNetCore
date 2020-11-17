@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using JsonApiDotNetCore.Resources;
@@ -22,31 +23,31 @@ namespace NoEntityFrameworkExample.Services
             _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
         }
 
-        public async Task<IReadOnlyCollection<WorkItem>> GetAsync()
+        public async Task<IReadOnlyCollection<WorkItem>> GetAsync(CancellationToken cancellationToken)
         {
             return (await QueryAsync(async connection =>
-                await connection.QueryAsync<WorkItem>(@"select * from ""WorkItems"""))).ToList();
+                await connection.QueryAsync<WorkItem>(new CommandDefinition(@"select * from ""WorkItems""", cancellationToken: cancellationToken)))).ToList();
         }
 
-        public async Task<WorkItem> GetAsync(int id)
+        public async Task<WorkItem> GetAsync(int id, CancellationToken cancellationToken)
         {
             var query = await QueryAsync(async connection =>
-                await connection.QueryAsync<WorkItem>(@"select * from ""WorkItems"" where ""Id""=@id", new {id}));
+                await connection.QueryAsync<WorkItem>(new CommandDefinition(@"select * from ""WorkItems"" where ""Id""=@id", new {id}, cancellationToken: cancellationToken)));
 
             return query.Single();
         }
 
-        public Task<object> GetSecondaryAsync(int id, string relationshipName)
+        public Task<object> GetSecondaryAsync(int id, string relationshipName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<object> GetRelationshipAsync(int id, string relationshipName)
+        public Task<object> GetRelationshipAsync(int id, string relationshipName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<WorkItem> CreateAsync(WorkItem resource)
+        public async Task<WorkItem> CreateAsync(WorkItem resource, CancellationToken cancellationToken)
         {
             return (await QueryAsync(async connection =>
             {
@@ -54,35 +55,35 @@ namespace NoEntityFrameworkExample.Services
                     @"insert into ""WorkItems"" (""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId"") values " + 
                     @"(@description, @isLocked, @ordinal, @uniqueId) returning ""Id"", ""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId""";
 
-                return await connection.QueryAsync<WorkItem>(query, new
+                return await connection.QueryAsync<WorkItem>(new CommandDefinition(query, new
                 {
                     description = resource.Title, ordinal = resource.DurationInHours, uniqueId = resource.ProjectId, isLocked = resource.IsBlocked
-                });
+                }, cancellationToken: cancellationToken));
             })).SingleOrDefault();
         }
 
-        public Task AddToToManyRelationshipAsync(int primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
+        public Task AddToToManyRelationshipAsync(int primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<WorkItem> UpdateAsync(int id, WorkItem resource)
+        public Task<WorkItem> UpdateAsync(int id, WorkItem resource, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task SetRelationshipAsync(int primaryId, string relationshipName, object secondaryResourceIds)
+        public Task SetRelationshipAsync(int primaryId, string relationshipName, object secondaryResourceIds, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken)
         {
             await QueryAsync(async connection =>
-                await connection.QueryAsync<WorkItem>(@"delete from ""WorkItems"" where ""Id""=@id", new {id}));
+                await connection.QueryAsync<WorkItem>(new CommandDefinition(@"delete from ""WorkItems"" where ""Id""=@id", new {id}, cancellationToken: cancellationToken)));
         }
 
-        public Task RemoveFromToManyRelationshipAsync(int primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
+        public Task RemoveFromToManyRelationshipAsync(int primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

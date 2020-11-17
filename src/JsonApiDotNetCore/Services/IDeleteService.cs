@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Resources;
 
@@ -15,6 +16,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Handles a json:api request to delete an existing resource.
         /// </summary>
-        Task DeleteAsync(TId id);
+        Task DeleteAsync(TId id, CancellationToken cancellationToken);
     }
 }

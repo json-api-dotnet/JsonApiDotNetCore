@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
@@ -19,74 +20,74 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         }
 
         [HttpGet]
-        public override Task<IActionResult> GetAsync()
+        public override Task<IActionResult> GetAsync(CancellationToken cancellationToken)
         {
-            return base.GetAsync();
+            return base.GetAsync(cancellationToken);
         }
 
         [HttpGet("{id}")]
-        public Task<IActionResult> GetAsync(string id)
+        public Task<IActionResult> GetAsync(string id, CancellationToken cancellationToken)
         {
             int idValue = HexadecimalCodec.Decode(id);
-            return base.GetAsync(idValue);
+            return base.GetAsync(idValue, cancellationToken);
         }
 
         [HttpGet("{id}/{relationshipName}")]
-        public Task<IActionResult> GetSecondaryAsync(string id, string relationshipName)
+        public Task<IActionResult> GetSecondaryAsync(string id, string relationshipName, CancellationToken cancellationToken)
         {
             int idValue = HexadecimalCodec.Decode(id);
-            return base.GetSecondaryAsync(idValue, relationshipName);
+            return base.GetSecondaryAsync(idValue, relationshipName, cancellationToken);
         }
 
         [HttpGet("{id}/relationships/{relationshipName}")]
-        public Task<IActionResult> GetRelationshipAsync(string id, string relationshipName)
+        public Task<IActionResult> GetRelationshipAsync(string id, string relationshipName, CancellationToken cancellationToken)
         {
             int idValue = HexadecimalCodec.Decode(id);
-            return base.GetRelationshipAsync(idValue, relationshipName);
+            return base.GetRelationshipAsync(idValue, relationshipName, cancellationToken);
         }
 
         [HttpPost]
-        public override Task<IActionResult> PostAsync([FromBody] TResource resource)
+        public override Task<IActionResult> PostAsync([FromBody] TResource resource, CancellationToken cancellationToken)
         {
-            return base.PostAsync(resource);
+            return base.PostAsync(resource, cancellationToken);
         }
 
         [HttpPost("{id}/relationships/{relationshipName}")]
         public Task<IActionResult> PostRelationshipAsync(string id, string relationshipName,
-            [FromBody] ISet<IIdentifiable> secondaryResourceIds)
+            [FromBody] ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             int idValue = HexadecimalCodec.Decode(id);
-            return base.PostRelationshipAsync(idValue, relationshipName, secondaryResourceIds);
+            return base.PostRelationshipAsync(idValue, relationshipName, secondaryResourceIds, cancellationToken);
         }
 
         [HttpPatch("{id}")]
-        public Task<IActionResult> PatchAsync(string id, [FromBody] TResource resource)
+        public Task<IActionResult> PatchAsync(string id, [FromBody] TResource resource, CancellationToken cancellationToken)
         {
             int idValue = HexadecimalCodec.Decode(id);
-            return base.PatchAsync(idValue, resource);
+            return base.PatchAsync(idValue, resource, cancellationToken);
         }
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
         public Task<IActionResult> PatchRelationshipAsync(string id, string relationshipName,
-            [FromBody] object secondaryResourceIds)
+            [FromBody] object secondaryResourceIds, CancellationToken cancellationToken)
         {
             int idValue = HexadecimalCodec.Decode(id);
-            return base.PatchRelationshipAsync(idValue, relationshipName, secondaryResourceIds);
+            return base.PatchRelationshipAsync(idValue, relationshipName, secondaryResourceIds, cancellationToken);
         }
 
         [HttpDelete("{id}")]
-        public Task<IActionResult> DeleteAsync(string id)
+        public Task<IActionResult> DeleteAsync(string id, CancellationToken cancellationToken)
         {
             int idValue = HexadecimalCodec.Decode(id);
-            return base.DeleteAsync(idValue);
+            return base.DeleteAsync(idValue, cancellationToken);
         }
 
         [HttpDelete("{id}/relationships/{relationshipName}")]
         public Task<IActionResult> DeleteRelationshipAsync(string id, string relationshipName,
-            [FromBody] ISet<IIdentifiable> secondaryResourceIds)
+            [FromBody] ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             int idValue = HexadecimalCodec.Decode(id);
-            return base.DeleteRelationshipAsync(idValue, relationshipName, secondaryResourceIds);
+            return base.DeleteRelationshipAsync(idValue, relationshipName, secondaryResourceIds, cancellationToken);
         }
     }
 }

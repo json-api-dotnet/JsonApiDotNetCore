@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -56,7 +58,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public virtual async Task<IReadOnlyCollection<TResource>> GetAsync()
+        public virtual async Task<IReadOnlyCollection<TResource>> GetAsync(CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart();
 
@@ -65,7 +67,7 @@ namespace JsonApiDotNetCore.Services
             if (_options.IncludeTotalResourceCount)
             {
                 var topFilter = _queryLayerComposer.GetTopFilterFromConstraints();
-                _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync<TResource>(topFilter);
+                _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync<TResource>(topFilter, cancellationToken);
 
                 if (_paginationContext.TotalResourceCount == 0)
                 {
@@ -74,7 +76,7 @@ namespace JsonApiDotNetCore.Services
             }
 
             var queryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResource);
-            var resources = await _repositoryAccessor.GetAsync<TResource>(queryLayer);
+            var resources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
 
             if (queryLayer.Pagination?.PageSize != null && queryLayer.Pagination.PageSize.Value == resources.Count)
             {
@@ -86,13 +88,13 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResource> GetAsync(TId id)
+        public virtual async Task<TResource> GetAsync(TId id, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id});
 
             _hookExecutor.BeforeReadSingle<TResource, TId>(id, ResourcePipeline.GetSingle);
 
-            var primaryResource = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.PreserveExisting);
+            var primaryResource = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.PreserveExisting, cancellationToken);
             AssertPrimaryResourceExists(primaryResource);
 
             _hookExecutor.AfterReadSingle(primaryResource, ResourcePipeline.GetSingle);
@@ -102,7 +104,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public virtual async Task<object> GetSecondaryAsync(TId id, string relationshipName)
+        public virtual async Task<object> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
             AssertHasRelationship(_request.Relationship, relationshipName);
@@ -120,7 +122,7 @@ namespace JsonApiDotNetCore.Services
                 // And we should call BlogResourceDefinition.OnApplyFilter to filter out soft-deleted blogs and translate from equals('IsDeleted','false') to equals('Blog.IsDeleted','false')
             }
 
-            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer);
+            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
 
             var primaryResource = primaryResources.SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
@@ -139,7 +141,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
+        public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
@@ -151,7 +153,7 @@ namespace JsonApiDotNetCore.Services
             var secondaryLayer = _queryLayerComposer.ComposeSecondaryLayerForRelationship(_request.SecondaryResource);
             var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
 
-            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer);
+            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
 
             var primaryResource = primaryResources.SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
@@ -164,7 +166,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResource> CreateAsync(TResource resource)
+        public virtual async Task<TResource> CreateAsync(TResource resource, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -180,21 +182,21 @@ namespace JsonApiDotNetCore.Services
 
             try
             {
-                await _repositoryAccessor.CreateAsync(resource);
+                await _repositoryAccessor.CreateAsync(resource, cancellationToken);
             }
             catch (DataStoreUpdateException)
             {
-                var existingResource = await TryGetPrimaryResourceByIdAsync(resource.Id, TopFieldSelection.OnlyIdAttribute);
+                var existingResource = await TryGetPrimaryResourceByIdAsync(resource.Id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
                 if (existingResource != null)
                 {
                     throw new ResourceAlreadyExistsException(resource.StringId, _request.PrimaryResource.PublicName);
                 }
 
-                await AssertResourcesToAssignInRelationshipsExistAsync(resource);
+                await AssertResourcesToAssignInRelationshipsExistAsync(resource, cancellationToken);
                 throw;
             }
 
-            var resourceFromDatabase = await TryGetPrimaryResourceByIdAsync(resource.Id, TopFieldSelection.WithAllAttributes);
+            var resourceFromDatabase = await TryGetPrimaryResourceByIdAsync(resource.Id, TopFieldSelection.WithAllAttributes, cancellationToken);
             AssertPrimaryResourceExists(resourceFromDatabase);
 
             _hookExecutor.AfterCreate(resourceFromDatabase);
@@ -211,7 +213,7 @@ namespace JsonApiDotNetCore.Services
             return resourceFromDatabase;
         }
 
-        private async Task AssertResourcesToAssignInRelationshipsExistAsync(TResource resource)
+        private async Task AssertResourcesToAssignInRelationshipsExistAsync(TResource resource, CancellationToken cancellationToken)
         {
             var missingResources = new List<MissingResourceInRelationship>();
 
@@ -220,8 +222,8 @@ namespace JsonApiDotNetCore.Services
                 object rightValue = relationship.GetValue(resource);
                 ICollection<IIdentifiable> rightResourceIds = TypeHelper.ExtractResources(rightValue);
 
-                var missingResourcesInRelationship = GetMissingRightResourcesAsync(queryLayer, relationship, rightResourceIds);
-                await missingResources.AddRangeAsync(missingResourcesInRelationship);
+                var missingResourcesInRelationship = GetMissingRightResourcesAsync(queryLayer, relationship, rightResourceIds, cancellationToken);
+                await missingResources.AddRangeAsync(missingResourcesInRelationship, cancellationToken);
             }
 
             if (missingResources.Any())
@@ -232,10 +234,10 @@ namespace JsonApiDotNetCore.Services
 
         private async IAsyncEnumerable<MissingResourceInRelationship> GetMissingRightResourcesAsync(
             QueryLayer existingRightResourceIdsQueryLayer, RelationshipAttribute relationship,
-            ICollection<IIdentifiable> rightResourceIds)
+            ICollection<IIdentifiable> rightResourceIds, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var existingResources = await _repositoryAccessor.GetAsync(
-                existingRightResourceIdsQueryLayer.ResourceContext.ResourceType, existingRightResourceIdsQueryLayer);
+                existingRightResourceIdsQueryLayer.ResourceContext.ResourceType, existingRightResourceIdsQueryLayer, cancellationToken);
 
             var existingResourceIds = existingResources.Select(resource => resource.StringId).ToArray();
 
@@ -250,7 +252,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public async Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
+        public async Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {primaryId, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
@@ -264,29 +266,29 @@ namespace JsonApiDotNetCore.Services
                 {
                     // In the case of a many-to-many relationship, creating a duplicate entry in the join table results in a
                     // unique constraint violation. We avoid that by excluding already-existing entries from the set in advance.
-                    await RemoveExistingIdsFromSecondarySet(primaryId, secondaryResourceIds, hasManyThrough);
+                    await RemoveExistingIdsFromSecondarySet(primaryId, secondaryResourceIds, hasManyThrough, cancellationToken);
                 }
 
                 try
                 {
-                    await _repositoryAccessor.AddToToManyRelationshipAsync<TResource, TId>(primaryId, secondaryResourceIds);
+                    await _repositoryAccessor.AddToToManyRelationshipAsync<TResource, TId>(primaryId, secondaryResourceIds, cancellationToken);
                 }
                 catch (DataStoreUpdateException)
                 {
-                    var primaryResource = await TryGetPrimaryResourceByIdAsync(primaryId, TopFieldSelection.OnlyIdAttribute);
+                    var primaryResource = await TryGetPrimaryResourceByIdAsync(primaryId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
                     AssertPrimaryResourceExists(primaryResource);
 
-                    await AssertResourcesExistAsync(secondaryResourceIds);
+                    await AssertResourcesExistAsync(secondaryResourceIds, cancellationToken);
                     throw;
                 }
             }
         }
 
         private async Task RemoveExistingIdsFromSecondarySet(TId primaryId, ISet<IIdentifiable> secondaryResourceIds,
-            HasManyThroughAttribute hasManyThrough)
+            HasManyThroughAttribute hasManyThrough, CancellationToken cancellationToken)
         {
             var queryLayer = _queryLayerComposer.ComposeForHasManyThrough(hasManyThrough, primaryId, secondaryResourceIds);
-            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(queryLayer);
+            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
             
             var primaryResource = primaryResources.FirstOrDefault();
             AssertPrimaryResourceExists(primaryResource);
@@ -297,11 +299,11 @@ namespace JsonApiDotNetCore.Services
             secondaryResourceIds.ExceptWith(existingRightResourceIds);
         }
 
-        private async Task AssertResourcesExistAsync(ICollection<IIdentifiable> secondaryResourceIds)
+        private async Task AssertResourcesExistAsync(ICollection<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             var queryLayer = _queryLayerComposer.ComposeForGetRelationshipRightIds(_request.Relationship, secondaryResourceIds);
 
-            var missingResources = await GetMissingRightResourcesAsync(queryLayer, _request.Relationship, secondaryResourceIds).ToListAsync();
+            var missingResources = await GetMissingRightResourcesAsync(queryLayer, _request.Relationship, secondaryResourceIds, cancellationToken).ToListAsync(cancellationToken);
             if (missingResources.Any())
             {
                 throw new ResourcesInRelationshipsNotFoundException(missingResources);
@@ -309,7 +311,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResource> UpdateAsync(TId id, TResource resource)
+        public virtual async Task<TResource> UpdateAsync(TId id, TResource resource, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id, resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -319,21 +321,21 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.BeforeUpdateResource(resourceFromRequest);
 
-            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(id);
+            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(id, cancellationToken);
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
 
             try
             {
-                await _repositoryAccessor.UpdateAsync(resourceFromRequest, resourceFromDatabase);
+                await _repositoryAccessor.UpdateAsync(resourceFromRequest, resourceFromDatabase, cancellationToken);
             }
             catch (DataStoreUpdateException)
             {
-                await AssertResourcesToAssignInRelationshipsExistAsync(resourceFromRequest);
+                await AssertResourcesToAssignInRelationshipsExistAsync(resourceFromRequest, cancellationToken);
                 throw;
             }
 
-            TResource afterResourceFromDatabase = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes);
+            TResource afterResourceFromDatabase = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes, cancellationToken);
             AssertPrimaryResourceExists(afterResourceFromDatabase);
 
             _hookExecutor.AfterUpdateResource(afterResourceFromDatabase);
@@ -351,24 +353,24 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public virtual async Task SetRelationshipAsync(TId primaryId, string relationshipName, object secondaryResourceIds)
+        public virtual async Task SetRelationshipAsync(TId primaryId, string relationshipName, object secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {primaryId, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
-            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId);
+            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId, cancellationToken);
 
             _hookExecutor.BeforeUpdateRelationship(resourceFromDatabase);
 
             try
             {
-                await _repositoryAccessor.SetRelationshipAsync(resourceFromDatabase, secondaryResourceIds);
+                await _repositoryAccessor.SetRelationshipAsync(resourceFromDatabase, secondaryResourceIds, cancellationToken);
             }
             catch (DataStoreUpdateException)
             {
-                await AssertResourcesExistAsync(TypeHelper.ExtractResources(secondaryResourceIds));
+                await AssertResourcesExistAsync(TypeHelper.ExtractResources(secondaryResourceIds), cancellationToken);
                 throw;
             }
 
@@ -376,7 +378,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public virtual async Task DeleteAsync(TId id)
+        public virtual async Task DeleteAsync(TId id, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id});
 
@@ -384,11 +386,11 @@ namespace JsonApiDotNetCore.Services
 
             try
             {
-                await _repositoryAccessor.DeleteAsync<TResource, TId>(id);
+                await _repositoryAccessor.DeleteAsync<TResource, TId>(id, cancellationToken);
             }
             catch (DataStoreUpdateException)
             {
-                var primaryResource = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute);
+                var primaryResource = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
                 AssertPrimaryResourceExists(primaryResource);
                 throw;
             }
@@ -397,7 +399,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public async Task RemoveFromToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
+        public async Task RemoveFromToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {primaryId, relationshipName, secondaryResourceIds});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
@@ -405,27 +407,27 @@ namespace JsonApiDotNetCore.Services
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
-            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId);
-            await AssertResourcesExistAsync(secondaryResourceIds);
+            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId, cancellationToken);
+            await AssertResourcesExistAsync(secondaryResourceIds, cancellationToken);
 
             if (secondaryResourceIds.Any())
             {
-                await _repositoryAccessor.RemoveFromToManyRelationshipAsync(resourceFromDatabase, secondaryResourceIds);
+                await _repositoryAccessor.RemoveFromToManyRelationshipAsync(resourceFromDatabase, secondaryResourceIds, cancellationToken);
             }
         }
 
-        private async Task<TResource> TryGetPrimaryResourceByIdAsync(TId id, TopFieldSelection fieldSelection)
+        private async Task<TResource> TryGetPrimaryResourceByIdAsync(TId id, TopFieldSelection fieldSelection, CancellationToken cancellationToken)
         {
             var primaryLayer = _queryLayerComposer.ComposeForGetById(id, _request.PrimaryResource, fieldSelection);
 
-            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer);
+            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
             return primaryResources.SingleOrDefault();
         }
 
-        private async Task<TResource> GetPrimaryResourceForUpdateAsync(TId id)
+        private async Task<TResource> GetPrimaryResourceForUpdateAsync(TId id, CancellationToken cancellationToken)
         {
             var queryLayer = _queryLayerComposer.ComposeForUpdate(id, _request.PrimaryResource);
-            var resource = await _repositoryAccessor.GetForUpdateAsync<TResource>(queryLayer);
+            var resource = await _repositoryAccessor.GetForUpdateAsync<TResource>(queryLayer, cancellationToken);
 
             AssertPrimaryResourceExists(resource);
             return resource;

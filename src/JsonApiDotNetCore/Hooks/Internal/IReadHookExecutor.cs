@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
@@ -18,7 +19,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// </summary>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <param name="stringId">StringId of the requested resource in the case of
-        /// <see cref="JsonApiResourceService{TResource,TId}.GetAsync(TId)"/>.</param>
+        /// <see cref="JsonApiResourceService{TResource,TId}.GetAsync(TId, CancellationToken)"/>.</param>
         /// <typeparam name="TResource">The type of the request resource</typeparam>
         void BeforeRead<TResource>(ResourcePipeline pipeline, string stringId = null) where TResource : class, IIdentifiable;
         /// <summary>

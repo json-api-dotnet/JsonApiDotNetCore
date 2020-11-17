@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
@@ -16,7 +17,7 @@ namespace ReportsExample.Services
             _logger = loggerFactory.CreateLogger<ReportService>();
         }
 
-        public Task<IReadOnlyCollection<Report>> GetAsync()
+        public Task<IReadOnlyCollection<Report>> GetAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("GetAsync");
 

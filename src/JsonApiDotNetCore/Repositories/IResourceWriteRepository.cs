@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Resources;
@@ -22,36 +23,36 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Creates a new resource in the underlying data store.
         /// </summary>
-        Task CreateAsync(TResource resource);
+        Task CreateAsync(TResource resource, CancellationToken cancellationToken);
 
         /// <summary>
         /// Adds resources to a to-many relationship in the underlying data store.
         /// </summary>
-        Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds);
+        Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken);
 
         /// <summary>
         /// Updates the attributes and relationships of an existing resource in the underlying data store.
         /// </summary>
-        Task UpdateAsync(TResource resourceFromRequest, TResource resourceFromDatabase);
+        Task UpdateAsync(TResource resourceFromRequest, TResource resourceFromDatabase, CancellationToken cancellationToken);
 
         /// <summary>
         /// Performs a complete replacement of the relationship in the underlying data store.
         /// </summary>
-        Task SetRelationshipAsync(TResource primaryResource, object secondaryResourceIds);
+        Task SetRelationshipAsync(TResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken);
     
         /// <summary>
         /// Deletes an existing resource from the underlying data store.
         /// </summary>
-        Task DeleteAsync(TId id);
+        Task DeleteAsync(TId id, CancellationToken cancellationToken);
         
         /// <summary>
         /// Removes resources from a to-many relationship in the underlying data store.
         /// </summary>
-        Task RemoveFromToManyRelationshipAsync(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds);
+        Task RemoveFromToManyRelationshipAsync(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken);
 
         /// <summary>
         /// Retrieves a resource with all of its attributes, including the set of targeted relationships, in preparation for update.
         /// </summary>
-        Task<TResource> GetForUpdateAsync(QueryLayer queryLayer);
+        Task<TResource> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken);
     }
 }
