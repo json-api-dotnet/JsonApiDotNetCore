@@ -183,7 +183,8 @@ namespace JsonApiDotNetCore.Middleware
                 }
             }
 
-            request.IsCollection = request.PrimaryId == null || request.Relationship is HasManyAttribute;
+            var isGetAll = request.PrimaryId == null && request.IsReadOnly;
+            request.IsCollection = isGetAll || request.Relationship is HasManyAttribute;
         }
 
         private static string GetPrimaryRequestId(RouteValueDictionary routeValues)
