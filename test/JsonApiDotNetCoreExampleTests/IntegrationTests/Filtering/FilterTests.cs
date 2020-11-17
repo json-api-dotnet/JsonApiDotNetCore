@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -63,7 +62,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
         }
 
         [Fact]
-        public async Task Cannot_filter_on_blocked_attribute()
+        public async Task Cannot_filter_on_attribute_with_blocked_capability()
         {
             // Arrange
             var route = "/api/v1/todoItems?filter=equals(achievedDate,null)";
@@ -109,88 +108,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(person.StringId);
             responseDocument.ManyData[0].Attributes["firstName"].Should().Be(person.FirstName);
-        }
-
-        [Fact]
-        public async Task Can_filter_on_obfuscated_ID()
-        {
-            // Arrange
-            Passport passport = null;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                passport = new Passport(dbContext)
-                {
-                    SocialSecurityNumber = 123,
-                    BirthCountry = new Country()
-                };
-
-                await dbContext.ClearTableAsync<Passport>();
-                dbContext.Passports.AddRange(passport, new Passport(dbContext));
-
-                await dbContext.SaveChangesAsync();
-            });
-
-            var route = $"/api/v1/passports?filter=equals(id,'{passport.StringId}')";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(passport.StringId);
-            responseDocument.ManyData[0].Attributes["socialSecurityNumber"].Should().Be(passport.SocialSecurityNumber);
-        }
-
-        [Fact]
-        public async Task Can_filter_in_set_on_obfuscated_ID()
-        {
-            // Arrange
-            var passports = new List<Passport>();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                passports.AddRange(new[]
-                {
-                    new Passport(dbContext)
-                    {
-                        SocialSecurityNumber = 123,
-                        BirthCountry = new Country()
-                    },
-                    new Passport(dbContext)
-                    {
-                        SocialSecurityNumber = 456,
-                        BirthCountry = new Country()
-                    },
-                    new Passport(dbContext)
-                    {
-                        BirthCountry = new Country()
-                    }
-                });
-
-                await dbContext.ClearTableAsync<Passport>();
-                dbContext.Passports.AddRange(passports);
-
-                await dbContext.SaveChangesAsync();
-            });
-
-            var route = $"/api/v1/passports?filter=any(id,'{passports[0].StringId}','{passports[1].StringId}')";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.ManyData.Should().HaveCount(2);
-            
-            responseDocument.ManyData[0].Id.Should().Be(passports[0].StringId);
-            responseDocument.ManyData[0].Attributes["socialSecurityNumber"].Should().Be(passports[0].SocialSecurityNumber);
-
-            responseDocument.ManyData[1].Id.Should().Be(passports[1].StringId);
-            responseDocument.ManyData[1].Attributes["socialSecurityNumber"].Should().Be(passports[1].SocialSecurityNumber);
         }
     }
 }

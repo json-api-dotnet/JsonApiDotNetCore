@@ -141,7 +141,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -161,7 +161,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -186,7 +186,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -213,7 +213,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with body: {body}");
             Assert.DoesNotContain(toBeExcluded, body);
         }
 
@@ -254,7 +254,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with body: {body}");
             Assert.DoesNotContain(toBeExcluded, body);
         }
         ///// <summary>
@@ -284,7 +284,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "passport", new
                             {
-                                data = new { type = "passports", id = $"{lockedPerson.Passport.StringId}" }
+                                data = new { type = "passports", id = lockedPerson.Passport.StringId }
                             }
                         }
                     }
@@ -304,7 +304,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -335,7 +335,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "passport", new
                             {
-                                data = new { type = "passports", id = $"{newPassport.StringId}" }
+                                data = new { type = "passports", id = newPassport.StringId }
                             }
                         }
                     }
@@ -355,7 +355,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -406,7 +406,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -435,7 +435,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -464,10 +464,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "stakeHolders", new
                             {
-                                data = new object[]
+                                data = new[]
                                 {
-                                    new { type = "people", id = $"{persons[0].Id}" },
-                                    new { type = "people", id = $"{persons[1].Id}" }
+                                    new { type = "people", id = persons[0].StringId },
+                                    new { type = "people", id = persons[1].StringId }
                                 }
 
                             }
@@ -489,7 +489,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -521,10 +521,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "stakeHolders", new
                             {
-                                data = new object[]
+                                data = new[]
                                 {
-                                    new { type = "people", id = $"{persons[0].Id}" },
-                                    new { type = "people", id = $"{persons[1].Id}" }
+                                    new { type = "people", id = persons[0].StringId },
+                                    new { type = "people", id = persons[1].StringId }
                                 }
 
                             }
@@ -546,7 +546,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
@@ -575,7 +575,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);

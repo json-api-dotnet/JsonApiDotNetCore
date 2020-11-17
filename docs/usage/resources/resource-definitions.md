@@ -193,7 +193,7 @@ public class EmployeeDefinition : JsonApiResourceDefinition<Employee>
 
 ## Custom query string parameters
 
-_since v3.0.0_
+_since v3_
 
 You can define additional query string parameters with the LINQ expression that should be used.
 If the key is present in a query string, the supplied LINQ expression will be added to the database query.

@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Text;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Errors
@@ -9,44 +10,35 @@ namespace JsonApiDotNetCore.Errors
     /// </summary>
     public sealed class InvalidRequestBodyException : JsonApiException
     {
-        private readonly string _details;
-        private string _requestBody;
-
         public InvalidRequestBodyException(string reason, string details, string requestBody, Exception innerException = null)
             : base(new Error(HttpStatusCode.UnprocessableEntity)
             {
                 Title = reason != null
                     ? "Failed to deserialize request body: " + reason
                     : "Failed to deserialize request body.",
+                Detail = FormatErrorDetail(details, requestBody, innerException)
             }, innerException)
         {
-            _details = details;
-            _requestBody = requestBody;
-
-            UpdateErrorDetail();
         }
 
-        private void UpdateErrorDetail()
+        private static string FormatErrorDetail(string details, string requestBody, Exception innerException)
         {
-            string text = _details ?? InnerException?.Message;
+            var builder = new StringBuilder();
+            builder.Append(details ?? innerException?.Message);
 
-            if (_requestBody != null)
+            if (requestBody != null)
             {
-                if (text != null)
+                if (builder.Length > 0)
                 {
-                    text += " - ";
+                    builder.Append(" - ");
                 }
 
-                text += "Request body: <<" + _requestBody + ">>";
+                builder.Append("Request body: <<");
+                builder.Append(requestBody);
+                builder.Append(">>");
             }
 
-            Error.Detail = text;
-        }
-
-        public void SetRequestBody(string requestBody)
-        {
-            _requestBody = requestBody;
-            UpdateErrorDetail();
+            return builder.Length > 0 ? builder.ToString() : null;
         }
     }
 }

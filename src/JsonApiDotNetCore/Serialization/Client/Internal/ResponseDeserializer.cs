@@ -72,13 +72,13 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
             {
                 // add attributes and relationships of a parsed HasOne relationship
                 var rio = data.SingleData;
-                hasOneAttr.SetValue(resource, rio == null ? null : ParseIncludedRelationship(rio), ResourceFactory);
+                hasOneAttr.SetValue(resource, rio == null ? null : ParseIncludedRelationship(rio));
             }
             else if (field is HasManyAttribute hasManyAttr)
             {  // add attributes and relationships of a parsed HasMany relationship
                 var items = data.ManyData.Select(rio => ParseIncludedRelationship(rio));
                 var values = TypeHelper.CopyToTypedCollection(items, hasManyAttr.Property.PropertyType);
-                hasManyAttr.SetValue(resource, values, ResourceFactory);
+                hasManyAttr.SetValue(resource, values);
             }
         }
 
@@ -94,7 +94,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
                 throw new InvalidOperationException($"Included type '{relatedResourceIdentifier.Type}' is not a registered json:api resource.");
             }
             
-            var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(relatedResourceContext.ResourceType);
+            var relatedInstance = ResourceFactory.CreateInstance(relatedResourceContext.ResourceType);
             relatedInstance.StringId = relatedResourceIdentifier.Id;
 
             var includedResource = GetLinkedResource(relatedResourceIdentifier);

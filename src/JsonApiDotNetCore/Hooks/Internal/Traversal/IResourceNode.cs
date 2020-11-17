@@ -1,5 +1,4 @@
 using System.Collections;
-using JsonApiDotNetCore.Resources;
 using RightType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Traversal
@@ -31,7 +30,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// A helper method to assign relationships to the previous layer after firing hooks.
         /// Or, in case of the root node, to update the original source enumerable.
         /// </summary>
-        void Reassign(IResourceFactory resourceFactory, IEnumerable source = null);
+        void Reassign(IEnumerable source = null);
         /// <summary>
         /// A helper method to internally update the unique set of resources as a result of 
         /// a filter action in a hook.

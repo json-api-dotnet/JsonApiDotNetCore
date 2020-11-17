@@ -295,7 +295,9 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private string DeObfuscateStringId(Type resourceType, string stringId)
         {
-            return TypeHelper.ConvertStringIdToTypedId(resourceType, stringId, _resourceFactory).ToString();
+            var tempResource = _resourceFactory.CreateInstance(resourceType);
+            tempResource.StringId = stringId;
+            return tempResource.GetTypedId().ToString();
         }
 
         protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)

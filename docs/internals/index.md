@@ -1,3 +1,3 @@
 # Internals
 
-The section contains overviews for the inner workings of the JsonApiDotNetCore library.
+This section contains overviews for the inner workings of the JsonApiDotNetCore library.

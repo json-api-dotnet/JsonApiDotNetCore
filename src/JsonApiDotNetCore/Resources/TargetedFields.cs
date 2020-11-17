@@ -7,9 +7,9 @@ namespace JsonApiDotNetCore.Resources
     public sealed class TargetedFields : ITargetedFields
     {
         /// <inheritdoc />
-        public IList<AttrAttribute> Attributes { get; set; } = new List<AttrAttribute>();
+        public ISet<AttrAttribute> Attributes { get; set; } = new HashSet<AttrAttribute>();
 
         /// <inheritdoc />
-        public IList<RelationshipAttribute> Relationships { get; set; } = new List<RelationshipAttribute>();
+        public ISet<RelationshipAttribute> Relationships { get; set; } = new HashSet<RelationshipAttribute>();
     }
 }

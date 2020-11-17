@@ -16,31 +16,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         }
 
         [Fact]
-        public async Task GET_RelativeLinks_True_With_Namespace_Returns_RelativeLinks()
-        {
-            // Arrange
-            var person = new Person();
-
-            _dbContext.People.Add(person);
-            await _dbContext.SaveChangesAsync();
-
-            var route = "/api/v1/people/" + person.StringId;
-            var request = new HttpRequestMessage(HttpMethod.Get, route);
-
-            var options = (JsonApiOptions) _factory.GetRequiredService<IJsonApiOptions>();
-            options.UseRelativeLinks = true;
-
-            // Act
-            var response = await _factory.Client.SendAsync(request);
-            var responseString = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(responseString);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("/api/v1/people/" + person.StringId, document.Links.Self);
-        }
-
-        [Fact]
         public async Task GET_RelativeLinks_False_With_Namespace_Returns_AbsoluteLinks()
         {
             // Arrange

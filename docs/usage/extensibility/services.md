@@ -115,7 +115,7 @@ IResourceService
         PATCH /{id}/relationships/{relationship}
 ```
 
-In order to take advantage of these interfaces you first need to inject the service for each implemented interface.
+In order to take advantage of these interfaces you first need to register the service for each implemented interface.
 
 ```c#
 public class ArticleService : ICreateService<Article>, IDeleteService<Article>
@@ -135,6 +135,8 @@ public class Startup
 
 In v3.0 we introduced an extension method that you can use to register a resource service on all of its JsonApiDotNetCore interfaces.
 This is helpful when you implement a subset of the resource interfaces and want to register them all in one go.
+
+Note: If you're using service discovery, this happens automatically.
 
 ```c#
 public class Startup

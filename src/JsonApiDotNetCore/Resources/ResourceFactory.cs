@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using JsonApiDotNetCore.Repositories;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources
@@ -20,7 +18,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public object CreateInstance(Type resourceType)
+        public IIdentifiable CreateInstance(Type resourceType)
         {
             if (resourceType == null)
             {
@@ -32,19 +30,20 @@ namespace JsonApiDotNetCore.Resources
 
         /// <inheritdoc />
         public TResource CreateInstance<TResource>()
+            where TResource : IIdentifiable
         {
             return (TResource) InnerCreateInstance(typeof(TResource), _serviceProvider);
         }
 
-        private static object InnerCreateInstance(Type type, IServiceProvider serviceProvider)
+        private static IIdentifiable InnerCreateInstance(Type type, IServiceProvider serviceProvider)
         {
             bool hasSingleConstructorWithoutParameters = HasSingleConstructorWithoutParameters(type);
 
             try
             {
                 return hasSingleConstructorWithoutParameters
-                    ? Activator.CreateInstance(type)
-                    : ActivatorUtilities.CreateInstance(serviceProvider, type);
+                    ? (IIdentifiable)Activator.CreateInstance(type)
+                    : (IIdentifiable)ActivatorUtilities.CreateInstance(serviceProvider, type);
             }
             catch (Exception exception)
             {
@@ -75,10 +74,8 @@ namespace JsonApiDotNetCore.Resources
                     object constructorArgument =
                         ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, constructorParameter.ParameterType);
 
-                    var argumentExpression = EntityFrameworkCoreSupport.Version.Major >= 5
-                        // Workaround for https://github.com/dotnet/efcore/issues/20502 to not fail on injected DbContext in EF Core 5.
-                        ? CreateTupleAccessExpressionForConstant(constructorArgument, constructorArgument.GetType())
-                        : Expression.Constant(constructorArgument);
+                    var argumentExpression =
+                        CreateTupleAccessExpressionForConstant(constructorArgument, constructorArgument.GetType());
 
                     constructorArguments.Add(argumentExpression);
                 }
@@ -106,7 +103,7 @@ namespace JsonApiDotNetCore.Resources
             return Expression.Property(tupleCreateCall, "Item1");
         }
 
-        private static bool HasSingleConstructorWithoutParameters(Type type)
+        internal static bool HasSingleConstructorWithoutParameters(Type type)
         {
             ConstructorInfo[] constructors = type.GetConstructors().Where(c => !c.IsStatic).ToArray();
 
@@ -121,7 +118,7 @@ namespace JsonApiDotNetCore.Resources
             {
                 throw new InvalidOperationException($"No public constructor was found for '{type.FullName}'.");
             }
-            
+
             ConstructorInfo bestMatch = constructors[0];
             int maxParameterLength = constructors[0].GetParameters().Length;
 

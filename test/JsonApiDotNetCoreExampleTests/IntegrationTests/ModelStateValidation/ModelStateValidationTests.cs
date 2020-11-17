@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
@@ -21,19 +20,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task When_posting_resource_with_omitted_required_attribute_value_it_must_fail()
         {
             // Arrange
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["isCaseSensitive"] = "true"
+                        isCaseSensitive = true
                     }
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories";
 
             // Act
@@ -53,20 +51,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task When_posting_resource_with_null_for_required_attribute_value_it_must_fail()
         {
             // Arrange
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = null,
-                        ["isCaseSensitive"] = "true"
+                        name = (string) null,
+                        isCaseSensitive = true
                     }
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories";
 
             // Act
@@ -86,20 +83,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task When_posting_resource_with_invalid_attribute_value_it_must_fail()
         {
             // Arrange
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "!@#$%^&*().-",
-                        ["isCaseSensitive"] = "true"
+                        name = "!@#$%^&*().-",
+                        isCaseSensitive = true
                     }
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories";
 
             // Act
@@ -119,20 +115,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task When_posting_resource_with_valid_attribute_value_it_must_succeed()
         {
             // Arrange
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Projects",
-                        ["isCaseSensitive"] = "true"
+                        name = "Projects",
+                        isCaseSensitive = true
                     }
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories";
 
             // Act
@@ -150,19 +145,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task When_posting_resource_with_multiple_violations_it_must_fail()
         {
             // Arrange
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["sizeInBytes"] = "-1"
+                        sizeInBytes = -1
                     }
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories";
 
             // Act
@@ -219,19 +213,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Projects",
-                        ["isCaseSensitive"] = "true"
+                        name = "Projects",
+                        isCaseSensitive = true
                     },
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
-                        ["subdirectories"] = new
+                        subdirectories = new
                         {
                             data = new[]
                             {
@@ -242,7 +236,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                                 }
                             }
                         },
-                        ["files"] = new
+                        files = new
                         {
                             data = new[]
                             {
@@ -253,7 +247,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                                 }
                             }
                         },
-                        ["parent"] = new
+                        parent = new
                         {
                             data = new
                             {
@@ -265,7 +259,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories";
 
             // Act
@@ -277,6 +270,51 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Attributes["name"].Should().Be("Projects");
             responseDocument.SingleData.Attributes["isCaseSensitive"].Should().Be(true);
+        }
+
+        [Fact]
+        public async Task When_posting_annotated_to_many_relationship_it_must_succeed()
+        {
+            // Arrange
+            var directory = new SystemDirectory
+            {
+                Name="Projects",
+                IsCaseSensitive = true
+            };
+
+            var file = new SystemFile
+            {
+                FileName = "Main.cs",
+                SizeInBytes = 100
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(directory, file);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "systemFiles",
+                        id = file.StringId
+                    }
+                }
+            };
+
+            string route = $"/systemDirectories/{directory.StringId}/relationships/files";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
         }
 
         [Fact]
@@ -295,29 +333,28 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["sizeInBytes"] = "100"
+                        sizeInBytes = 100
                     }
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories/" + directory.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Should().BeEmpty();
         }
 
         [Fact]
@@ -336,20 +373,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = null
+                        name = (string) null
                     }
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories/" + directory.StringId;
 
             // Act
@@ -381,20 +417,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "!@#$%^&*().-"
+                        name = "!@#$%^&*().-"
                     }
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories/" + directory.StringId;
 
             // Act
@@ -426,19 +461,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
                     id = -1,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Repositories"
+                        name = "Repositories"
                     },
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
-                        ["subdirectories"] = new
+                        subdirectories = new
                         {
                             data = new[]
                             {
@@ -453,7 +488,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories/-1";
 
             // Act
@@ -491,29 +525,28 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Repositories"
+                        name = "Repositories"
                     }
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories/" + directory.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Should().BeEmpty();
         }
 
         [Fact]
@@ -571,19 +604,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Project Files"
+                        name = "Project Files"
                     },
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
-                        ["subdirectories"] = new
+                        subdirectories = new
                         {
                             data = new[]
                             {
@@ -594,7 +627,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                                 }
                             }
                         },
-                        ["files"] = new
+                        files = new
                         {
                             data = new[]
                             {
@@ -605,7 +638,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                                 }
                             }
                         },
-                        ["parent"] = new
+                        parent = new
                         {
                             data = new
                             {
@@ -617,16 +650,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories/" + directory.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Should().BeEmpty();
         }
 
         [Fact]
@@ -645,19 +677,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Project files"
+                        name = "Project files"
                     },
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
-                        ["self"] = new
+                        self = new
                         {
                             data = new
                             {
@@ -665,7 +697,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                                 id = directory.StringId
                             }
                         },
-                        ["alsoSelf"] = new
+                        alsoSelf = new
                         {
                             data = new
                             {
@@ -677,16 +709,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories/" + directory.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Should().BeEmpty();
         }
 
         [Fact]
@@ -705,19 +736,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        ["name"] = "Project files"
+                        name = "Project files"
                     },
-                    relationships = new Dictionary<string, object>
+                    relationships = new
                     {
-                        ["subdirectories"] = new
+                        subdirectories = new
                         {
                             data = new[]
                             {
@@ -732,16 +763,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories/" + directory.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Should().BeEmpty();
         }
 
         [Fact]
@@ -771,7 +801,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var content = new
+            var requestBody = new
             {
                 data = new
                 {
@@ -780,16 +810,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories/" + directory.StringId + "/relationships/parent";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Should().BeEmpty();
         }
 
         [Fact]
@@ -826,7 +855,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var content = new
+            var requestBody = new
             {
                 data = new[]
                 {
@@ -838,16 +867,55 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string requestBody = JsonConvert.SerializeObject(content);
             string route = "/systemDirectories/" + directory.StringId + "/relationships/files";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task When_deleting_annotated_to_many_relationship_it_must_succeed()
+        {
+            // Arrange
+            var directory = new SystemDirectory
+            {
+                Name="Projects",
+                IsCaseSensitive = true,
+                Files = new List<SystemFile>
+                {
+                    new SystemFile
+                    {
+                        FileName = "Main.cs",
+                        SizeInBytes = 100
+                    }
+                }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(directory);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new object[0]
+            };
+
+            string route = $"/systemDirectories/{directory.StringId}/relationships/files";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
         }
     }
 }

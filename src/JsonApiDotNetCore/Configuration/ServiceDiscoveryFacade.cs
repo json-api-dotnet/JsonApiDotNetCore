@@ -24,8 +24,6 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IResourceCommandService<,>),
             typeof(IResourceQueryService<>),
             typeof(IResourceQueryService<,>),
-            typeof(ICreateService<>),
-            typeof(ICreateService<,>),
             typeof(IGetAllService<>),
             typeof(IGetAllService<,>),
             typeof(IGetByIdService<>),
@@ -34,13 +32,21 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IGetSecondaryService<,>),
             typeof(IGetRelationshipService<>),
             typeof(IGetRelationshipService<,>),
+            typeof(ICreateService<>),
+            typeof(ICreateService<,>),
+            typeof(IAddToRelationshipService<>),
+            typeof(IAddToRelationshipService<,>),
             typeof(IUpdateService<>),
             typeof(IUpdateService<,>),
+            typeof(ISetRelationshipService<>),
+            typeof(ISetRelationshipService<,>),
             typeof(IDeleteService<>),
-            typeof(IDeleteService<,>)
+            typeof(IDeleteService<,>),
+            typeof(IRemoveFromRelationshipService<>),
+            typeof(IRemoveFromRelationshipService<,>)
         };
 
-        private static readonly HashSet<Type> _repositoryInterfaces = new HashSet<Type> {
+        internal static readonly HashSet<Type> RepositoryInterfaces = new HashSet<Type> {
             typeof(IResourceRepository<>),
             typeof(IResourceRepository<,>),
             typeof(IResourceWriteRepository<>),
@@ -49,7 +55,7 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IResourceReadRepository<,>)
         };
 
-        private static readonly HashSet<Type> _resourceDefinitionInterfaces = new HashSet<Type> {
+        internal static readonly HashSet<Type> ResourceDefinitionInterfaces = new HashSet<Type> {
             typeof(IResourceDefinition<>),
             typeof(IResourceDefinition<,>)
         };
@@ -168,7 +174,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddRepositories(Assembly assembly, ResourceDescriptor resourceDescriptor)
         {
-            foreach (var repositoryInterface in _repositoryInterfaces)
+            foreach (var repositoryInterface in RepositoryInterfaces)
             {
                 RegisterImplementations(assembly, repositoryInterface, resourceDescriptor);
             }
@@ -176,7 +182,7 @@ namespace JsonApiDotNetCore.Configuration
         
         private void AddResourceDefinitions(Assembly assembly, ResourceDescriptor resourceDescriptor)
         {
-            foreach (var resourceDefinitionInterface in _resourceDefinitionInterfaces)
+            foreach (var resourceDefinitionInterface in ResourceDefinitionInterfaces)
             {
                 RegisterImplementations(assembly, resourceDefinitionInterface, resourceDescriptor);
             }

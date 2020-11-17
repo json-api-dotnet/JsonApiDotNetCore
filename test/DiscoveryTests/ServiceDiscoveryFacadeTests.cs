@@ -18,6 +18,7 @@ namespace DiscoveryTests
 {
     public sealed class ServiceDiscoveryFacadeTests
     {
+        private static readonly NullLoggerFactory _loggerFactory = NullLoggerFactory.Instance;
         private readonly IServiceCollection _services = new ServiceCollection();
         private readonly JsonApiOptions _options = new JsonApiOptions();
         private readonly ResourceGraphBuilder _resourceGraphBuilder;
@@ -29,7 +30,7 @@ namespace DiscoveryTests
             _services.AddScoped(_ => dbResolverMock.Object);
 
             _services.AddSingleton<IJsonApiOptions>(_options);
-            _services.AddSingleton<ILoggerFactory>(new LoggerFactory());
+            _services.AddSingleton<ILoggerFactory>(_loggerFactory);
             _services.AddScoped(_ => new Mock<IJsonApiRequest>().Object);
             _services.AddScoped(_ => new Mock<ITargetedFields>().Object);
             _services.AddScoped(_ => new Mock<IResourceGraph>().Object);
@@ -39,15 +40,17 @@ namespace DiscoveryTests
             _services.AddScoped(_ => new Mock<IResourceFactory>().Object);
             _services.AddScoped(_ => new Mock<IPaginationContext>().Object);
             _services.AddScoped(_ => new Mock<IQueryLayerComposer>().Object);
+            _services.AddScoped(_ => new Mock<IResourceRepositoryAccessor>().Object);
+            _services.AddScoped(_ => new Mock<IResourceHookExecutorFacade>().Object);
 
-            _resourceGraphBuilder = new ResourceGraphBuilder(_options, NullLoggerFactory.Instance);
+            _resourceGraphBuilder = new ResourceGraphBuilder(_options, _loggerFactory);
         }
 
         [Fact]
         public void DiscoverResources_Adds_Resources_From_Added_Assembly_To_Graph()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, NullLoggerFactory.Instance);
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
             facade.AddAssembly(typeof(Person).Assembly);
 
             // Act
@@ -65,7 +68,7 @@ namespace DiscoveryTests
         public void DiscoverResources_Adds_Resources_From_Current_Assembly_To_Graph()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, NullLoggerFactory.Instance);
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
             facade.AddCurrentAssembly();
 
             // Act
@@ -81,7 +84,7 @@ namespace DiscoveryTests
         public void DiscoverInjectables_Adds_Resource_Services_From_Current_Assembly_To_Container()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, NullLoggerFactory.Instance);
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
             facade.AddCurrentAssembly();
             
             // Act
@@ -97,7 +100,7 @@ namespace DiscoveryTests
         public void DiscoverInjectables_Adds_Resource_Repositories_From_Current_Assembly_To_Container()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, NullLoggerFactory.Instance);
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
             facade.AddCurrentAssembly();
 
             // Act
@@ -112,7 +115,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Resource_Definitions_From_Current_Assembly_To_Container()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, NullLoggerFactory.Instance);
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
             facade.AddCurrentAssembly();
 
             // Act
@@ -127,7 +130,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Resource_Hooks_Definitions_From_Current_Assembly_To_Container()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, NullLoggerFactory.Instance);
+            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
             facade.AddCurrentAssembly();
 
             _options.EnableResourceHooks = true;
@@ -145,7 +148,7 @@ namespace DiscoveryTests
         public class TestModelService : JsonApiResourceService<TestModel>
         {
             public TestModelService(
-                IResourceRepository<TestModel> repository,
+                IResourceRepositoryAccessor repositoryAccessor,
                 IQueryLayerComposer queryLayerComposer,
                 IPaginationContext paginationContext,
                 IJsonApiOptions options,
@@ -153,8 +156,8 @@ namespace DiscoveryTests
                 IJsonApiRequest request,
                 IResourceChangeTracker<TestModel> resourceChangeTracker,
                 IResourceFactory resourceFactory,
-                IResourceHookExecutor hookExecutor = null)
-                : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
+                IResourceHookExecutorFacade hookExecutor)
+                : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
                     resourceChangeTracker, resourceFactory, hookExecutor)
             {
             }
@@ -166,11 +169,10 @@ namespace DiscoveryTests
                 ITargetedFields targetedFields,
                 IDbContextResolver contextResolver,
                 IResourceGraph resourceGraph,
-                IGenericServiceFactory genericServiceFactory,
                 IResourceFactory resourceFactory,
                 IEnumerable<IQueryConstraintProvider> constraintProviders,
                 ILoggerFactory loggerFactory)
-                : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory, constraintProviders, loggerFactory)
+                : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory)
             { }
         }
         

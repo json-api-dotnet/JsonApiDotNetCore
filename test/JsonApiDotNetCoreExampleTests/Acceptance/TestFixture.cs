@@ -86,7 +86,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         public void AssertEqualStatusCode(HttpStatusCode expected, HttpResponseMessage response)
         {
-            Assert.True(expected == response.StatusCode, $"Got {response.StatusCode} status code with payload instead of {expected}. Payload: {response.Content.ReadAsStringAsync().Result}");
+            var responseBody = response.Content.ReadAsStringAsync().Result;
+            Assert.True(expected == response.StatusCode, $"Got {response.StatusCode} status code instead of {expected}. Response body: {responseBody}");
         }
 
         private bool disposedValue;

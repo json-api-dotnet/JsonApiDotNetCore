@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -15,21 +16,29 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IResourceGraph _resourceGraph;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
+        private readonly IJsonApiRequest _request;
 
         public FieldsToSerialize(
             IResourceGraph resourceGraph,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IResourceDefinitionAccessor resourceDefinitionAccessor)
+            IResourceDefinitionAccessor resourceDefinitionAccessor,
+            IJsonApiRequest request)
         {
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
             _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
             _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
+            _request = request ?? throw new ArgumentNullException(nameof(request));
         }
 
         /// <inheritdoc />
         public IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType, RelationshipAttribute relationship = null)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+
+            if (_request.Kind == EndpointKind.Relationship)
+            {
+                return Array.Empty<AttrAttribute>();
+            }
 
             var sparseFieldSetAttributes = _constraintProviders
                 .SelectMany(p => p.GetConstraints())
@@ -79,7 +88,9 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            return _resourceGraph.GetRelationships(type);
+            return _request.Kind == EndpointKind.Relationship
+                ? Array.Empty<RelationshipAttribute>()
+                : _resourceGraph.GetRelationships(type);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace UnitTests.Serialization.Server
         [Fact]
         public void BuildIncluded_DeeplyNestedCircularChainOfSingleData_CanBuild()
         {
-            // Arrange 
+            // Arrange
             var (article, author, _, reviewer, _) = GetAuthorChainInstances();
             var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
             var builder = GetBuilder();

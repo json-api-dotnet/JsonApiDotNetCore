@@ -144,9 +144,7 @@ namespace NoEntityFrameworkTests
             AssertStatusCode(HttpStatusCode.NoContent, response);
 
             string responseBody = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(responseBody);
-
-            Assert.Null(document);
+            Assert.Empty(responseBody);
         }
 
         private async Task ExecuteOnDbContextAsync(Func<AppDbContext, Task> asyncAction)
@@ -162,7 +160,7 @@ namespace NoEntityFrameworkTests
             if (expected != response.StatusCode)
             {
                 var responseBody = response.Content.ReadAsStringAsync().Result;
-                Assert.True(false, $"Got {response.StatusCode} status code instead of {expected}. Payload: {responseBody}");
+                Assert.True(expected == response.StatusCode, $"Got {response.StatusCode} status code instead of {expected}. Response body: {responseBody}");
             }
         }
     }

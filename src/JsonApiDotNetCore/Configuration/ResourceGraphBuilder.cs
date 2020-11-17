@@ -107,7 +107,7 @@ namespace JsonApiDotNetCore.Configuration
             IdentityType = idType,
             Attributes = GetAttributes(resourceType),
             Relationships = GetRelationships(resourceType),
-            EagerLoads = GetEagerLoads(resourceType),
+            EagerLoads = GetEagerLoads(resourceType)
         };
 
         private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
@@ -187,22 +187,42 @@ namespace JsonApiDotNetCore.Configuration
                     var throughProperties = throughType.GetProperties();
 
                     // ArticleTag.Article
-                    hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType.IsAssignableFrom(resourceType))
-                        ?? throw new InvalidConfigurationException($"{throughType} does not contain a navigation property to type {resourceType}");
+                    if (hasManyThroughAttribute.LeftPropertyName != null)
+                    {
+                        // In case of a self-referencing many-to-many relationship, the left property name must be specified.
+                        hasManyThroughAttribute.LeftProperty = hasManyThroughAttribute.ThroughType.GetProperty(hasManyThroughAttribute.LeftPropertyName)
+                            ?? throw new InvalidConfigurationException($"'{throughType}' does not contain a navigation property named '{hasManyThroughAttribute.LeftPropertyName}'.");
+                    }
+                    else
+                    {
+                        // In case of a non-self-referencing many-to-many relationship, we just pick the single compatible type.
+                        hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType.IsAssignableFrom(resourceType)) 
+                            ?? throw new InvalidConfigurationException($"'{throughType}' does not contain a navigation property to type '{resourceType}'.");
+                    }
 
                     // ArticleTag.ArticleId
-                    var leftIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.LeftProperty.Name);
+                    var leftIdPropertyName = hasManyThroughAttribute.LeftIdPropertyName ?? hasManyThroughAttribute.LeftProperty.Name + "Id";
                     hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(x => x.Name == leftIdPropertyName)
-                        ?? throw new InvalidConfigurationException($"{throughType} does not contain a relationship ID property to type {resourceType} with name {leftIdPropertyName}");
+                        ?? throw new InvalidConfigurationException($"'{throughType}' does not contain a relationship ID property to type '{resourceType}' with name '{leftIdPropertyName}'.");
 
                     // ArticleTag.Tag
-                    hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.RightType)
-                        ?? throw new InvalidConfigurationException($"{throughType} does not contain a navigation property to type {hasManyThroughAttribute.RightType}");
+                    if (hasManyThroughAttribute.RightPropertyName != null)
+                    {
+                        // In case of a self-referencing many-to-many relationship, the right property name must be specified.
+                        hasManyThroughAttribute.RightProperty = hasManyThroughAttribute.ThroughType.GetProperty(hasManyThroughAttribute.RightPropertyName)
+                            ?? throw new InvalidConfigurationException($"'{throughType}' does not contain a navigation property named '{hasManyThroughAttribute.RightPropertyName}'.");
+                    }
+                    else
+                    {
+                        // In case of a non-self-referencing many-to-many relationship, we just pick the single compatible type.
+                        hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.RightType)
+                            ?? throw new InvalidConfigurationException($"'{throughType}' does not contain a navigation property to type '{hasManyThroughAttribute.RightType}'.");
+                    }
 
                     // ArticleTag.TagId
-                    var rightIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.RightProperty.Name);
+                    var rightIdPropertyName = hasManyThroughAttribute.RightIdPropertyName ?? hasManyThroughAttribute.RightProperty.Name + "Id";
                     hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName)
-                        ?? throw new InvalidConfigurationException($"{throughType} does not contain a relationship ID property to type {hasManyThroughAttribute.RightType} with name {rightIdPropertyName}");
+                        ?? throw new InvalidConfigurationException($"'{throughType}' does not contain a relationship ID property to type '{hasManyThroughAttribute.RightType}' with name '{rightIdPropertyName}'.");
                 }
             }
 

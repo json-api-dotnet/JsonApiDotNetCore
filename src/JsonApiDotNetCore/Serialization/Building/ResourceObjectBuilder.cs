@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
@@ -30,7 +29,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             var resourceContext = ResourceContextProvider.GetResourceContext(resource.GetType());
 
             // populating the top-level "type" and "id" members.
-            var resourceObject = new ResourceObject { Type = resourceContext.PublicName, Id = resource.StringId == string.Empty ? null : resource.StringId };
+            var resourceObject = new ResourceObject { Type = resourceContext.PublicName, Id = resource.StringId };
 
             // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
             if (attributes != null && (attributes = attributes.Where(attr => attr.Property.Name != nameof(Identifiable.Id)).ToArray()).Any())
@@ -77,11 +76,11 @@ namespace JsonApiDotNetCore.Serialization.Building
         private ResourceIdentifierObject GetRelatedResourceLinkageForHasOne(HasOneAttribute relationship, IIdentifiable resource)
         {
             var relatedResource = (IIdentifiable)relationship.GetValue(resource);
-            if (relatedResource == null && IsRequiredToOneRelationship(relationship, resource))
-                throw new NotSupportedException("Cannot serialize a required to one relationship that is not populated but was included in the set of relationships to be serialized.");
 
             if (relatedResource != null)
+            {
                 return GetResourceIdentifier(relatedResource);
+            }
 
             return null;
         }
@@ -91,11 +90,17 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         private List<ResourceIdentifierObject> GetRelatedResourceLinkageForHasMany(HasManyAttribute relationship, IIdentifiable resource)
         {
-            var relatedResources = (IEnumerable)relationship.GetValue(resource);
+            var value = relationship.GetValue(resource);
+            var relatedResources = TypeHelper.ExtractResources(value);
+            
             var manyData = new List<ResourceIdentifierObject>();
             if (relatedResources != null)
-                foreach (IIdentifiable relatedResource in relatedResources)
+            {
+                foreach (var relatedResource in relatedResources)
+                {
                     manyData.Add(GetResourceIdentifier(relatedResource));
+                }
+            }
 
             return manyData;
         }
@@ -111,18 +116,6 @@ namespace JsonApiDotNetCore.Serialization.Building
                 Type = resourceName,
                 Id = resource.StringId
             };
-        }
-
-        /// <summary>
-        /// Checks if the to-one relationship is required by checking if the foreign key is nullable.
-        /// </summary>
-        private bool IsRequiredToOneRelationship(HasOneAttribute attr, IIdentifiable resource)
-        {
-            var foreignKey = resource.GetType().GetProperty(attr.IdentifiablePropertyName);
-            if (foreignKey != null && Nullable.GetUnderlyingType(foreignKey.PropertyType) == null)
-                return true;
-
-            return false;
         }
 
         /// <summary>

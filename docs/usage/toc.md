@@ -3,13 +3,20 @@
 ## [Relationships](resources/relationships.md)
 ## [Resource Definitions](resources/resource-definitions.md)
 
+# Reading data
+## [Filtering](reading/filtering.md)
+## [Sorting](reading/sorting.md)
+## [Pagination](reading/pagination.md)
+## [Sparse Fieldset Selection](reading/sparse-fieldset-selection.md)
+## [Including Relationships](reading/including-relationships.md)
+
+# Writing data
+## [Creating](writing/creating.md)
+## [Updating](writing/updating.md)
+## [Deleting](writing/deleting.md)
+
 # [Resource Graph](resource-graph.md)
 # [Options](options.md)
-# [Filtering](filtering.md)
-# [Sorting](sorting.md)
-# [Pagination](pagination.md)
-# [Sparse Fieldset Selection](sparse-fieldset-selection.md)
-# [Including Relationships](including-relationships.md)
 # [Routing](routing.md)
 # [Errors](errors.md)
 # [Metadata](meta.md)

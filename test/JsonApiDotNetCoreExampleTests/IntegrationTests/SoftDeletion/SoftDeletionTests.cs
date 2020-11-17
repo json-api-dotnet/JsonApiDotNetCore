@@ -372,9 +372,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
                 {
                     type = "companies",
                     id = company.StringId,
-                    attributes = new Dictionary<string, object>
+                    attributes = new
                     {
-                        {"name", "Umbrella Corporation"}
+                        name = "Umbrella Corporation"
                     }
                 }
             };

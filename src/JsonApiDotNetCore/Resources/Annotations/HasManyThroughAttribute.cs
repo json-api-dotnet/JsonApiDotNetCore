@@ -92,6 +92,32 @@ namespace JsonApiDotNetCore.Resources.Annotations
         public override string RelationshipPath => $"{ThroughProperty.Name}.{RightProperty.Name}";
 
         /// <summary>
+        /// Required for a self-referencing many-to-many relationship.
+        /// Contains the name of the property back to the parent resource from the through type.
+        /// </summary>
+        public string LeftPropertyName { get; set; }
+
+        /// <summary>
+        /// Required for a self-referencing many-to-many relationship.
+        /// Contains the name of the property to the related resource from the through type.
+        /// </summary>
+        public string RightPropertyName { get; set; }
+
+        /// <summary>
+        /// Optional. Can be used to indicate a non-default name for the ID property back to the parent resource from the through type.
+        /// Defaults to the name of <see cref="LeftProperty"/> suffixed with "Id".
+        /// In the example described above, this would be "ArticleId".
+        /// </summary>
+        public string LeftIdPropertyName { get; set; }
+
+        /// <summary>
+        /// Optional. Can be used to indicate a non-default name for the ID property to the related resource from the through type.
+        /// Defaults to the name of <see cref="RightProperty"/> suffixed with "Id".
+        /// In the example described above, this would be "TagId".
+        /// </summary>
+        public string RightIdPropertyName { get; set; }
+
+        /// <summary>
         /// Creates a HasMany relationship through a many-to-many join relationship.
         /// </summary>
         /// <param name="throughPropertyName">The name of the navigation property that will be used to access the join relationship.</param>
@@ -108,11 +134,15 @@ namespace JsonApiDotNetCore.Resources.Annotations
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            IEnumerable throughResources = (IEnumerable)ThroughProperty.GetValue(resource) ?? Array.Empty<object>();
+            var throughEntity = ThroughProperty.GetValue(resource);
+            if (throughEntity == null)
+            {
+                return null;
+            }
 
-            IEnumerable<object> rightResources = throughResources
+            IEnumerable<object> rightResources = ((IEnumerable) throughEntity)
                 .Cast<object>()
-                .Select(rightResource =>  RightProperty.GetValue(rightResource));
+                .Select(rightResource => RightProperty.GetValue(rightResource));
 
             return TypeHelper.CopyToTypedCollection(rightResources, Property.PropertyType);
         }
@@ -121,12 +151,11 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// Traverses through the provided resource and sets the value of the relationship on the other side of the through type.
         /// In the example described above, this would be the value of "Articles.ArticleTags.Tag".
         /// </summary>
-        public override void SetValue(object resource, object newValue, IResourceFactory resourceFactory)
+        public override void SetValue(object resource, object newValue)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (resourceFactory == null) throw new ArgumentNullException(nameof(resourceFactory));
 
-            base.SetValue(resource, newValue, resourceFactory);
+            base.SetValue(resource, newValue);
 
             if (newValue == null)
             {
@@ -135,12 +164,13 @@ namespace JsonApiDotNetCore.Resources.Annotations
             else
             {
                 List<object> throughResources = new List<object>();
-                foreach (IIdentifiable identifiable in (IEnumerable)newValue)
+                foreach (IIdentifiable rightResource in (IEnumerable)newValue)
                 {
-                    object throughResource = resourceFactory.CreateInstance(ThroughType);
-                    LeftProperty.SetValue(throughResource, resource);
-                    RightProperty.SetValue(throughResource, identifiable);
-                    throughResources.Add(throughResource);
+                    var throughEntity = TypeHelper.CreateInstance(ThroughType);
+
+                    LeftProperty.SetValue(throughEntity, resource);
+                    RightProperty.SetValue(throughEntity, rightResource);
+                    throughResources.Add(throughEntity);
                 }
 
                 var typedCollection = TypeHelper.CopyToTypedCollection(throughResources, ThroughProperty.PropertyType);

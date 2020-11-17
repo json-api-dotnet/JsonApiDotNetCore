@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Client.Internal;
@@ -21,7 +19,7 @@ namespace JsonApiDotNetCore.Serialization
     public abstract class BaseDeserializer
     {
         protected IResourceContextProvider ResourceContextProvider { get; }
-        protected IResourceFactory ResourceFactory{ get; }
+        protected IResourceFactory ResourceFactory { get; }
         protected Document Document { get; set; }
 
         protected BaseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory)
@@ -50,16 +48,20 @@ namespace JsonApiDotNetCore.Serialization
 
             var bodyJToken = LoadJToken(body);
             Document = bodyJToken.ToObject<Document>();
-            if (Document.IsManyData)
+            if (Document != null)
             {
-                if (Document.ManyData.Count == 0)
-                    return Array.Empty<IIdentifiable>();
+                if (Document.IsManyData)
+                {
+                    return Document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
+                }
 
-                return Document.ManyData.Select(ParseResourceObject).ToArray();
+                if (Document.SingleData != null)
+                {
+                    return ParseResourceObject(Document.SingleData);
+                }
             }
 
-            if (Document.SingleData == null) return null;
-            return ParseResourceObject(Document.SingleData);
+            return null;
         }
 
         /// <summary>
@@ -80,6 +82,11 @@ namespace JsonApiDotNetCore.Serialization
             {
                 if (attributeValues.TryGetValue(attr.PublicName, out object newValue))
                 {
+                    if (attr.Property.SetMethod == null)
+                    {
+                        throw new JsonApiSerializationException("Attribute is read-only.", $"Attribute '{attr.PublicName}' is read-only.");
+                    }
+
                     var convertedValue = ConvertAttrValue(newValue, attr.Property.PropertyType);
                     attr.SetValue(resource, convertedValue);
                     AfterProcessField(resource, attr);
@@ -101,20 +108,28 @@ namespace JsonApiDotNetCore.Serialization
             if (relationshipAttributes == null) throw new ArgumentNullException(nameof(relationshipAttributes));
 
             if (relationshipValues == null || relationshipValues.Count == 0)
+            {
                 return resource;
+            }
 
-            var resourceProperties = resource.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
                 var relationshipIsProvided = relationshipValues.TryGetValue(attr.PublicName, out RelationshipEntry relationshipData);
                 if (!relationshipIsProvided || !relationshipData.IsPopulated)
+                {
                     continue;
+                }
 
                 if (attr is HasOneAttribute hasOneAttribute)
-                    SetHasOneRelationship(resource, resourceProperties, hasOneAttribute, relationshipData);
-                else
-                    SetHasManyRelationship(resource, (HasManyAttribute)attr, relationshipData);
+                {
+                    SetHasOneRelationship(resource, hasOneAttribute, relationshipData);
+                }
+                else if (attr is HasManyAttribute hasManyAttribute)
+                {
+                    SetHasManyRelationship(resource, hasManyAttribute, relationshipData);
+                }
             }
+    
             return resource;
         }
 
@@ -137,16 +152,10 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns>The parsed resource.</returns>
         private IIdentifiable ParseResourceObject(ResourceObject data)
         {
-            var resourceContext = ResourceContextProvider.GetResourceContext(data.Type);
-            if (resourceContext == null)
-            {
-                throw new InvalidRequestBodyException("Payload includes unknown resource type.",
-                    $"The resource '{data.Type}' is not registered on the resource graph. " +
-                    "If you are using Entity Framework Core, make sure the DbSet matches the expected resource name. " +
-                    "If you have manually registered the resource, check that the call to Add correctly sets the public name.", null);
-            }
+            AssertHasType(data, null);
 
-            var resource = (IIdentifiable)ResourceFactory.CreateInstance(resourceContext.ResourceType);
+            var resourceContext = GetExistingResourceContext(data.Type);
+            var resource = ResourceFactory.CreateInstance(resourceContext.ResourceType);
 
             resource = SetAttributes(resource, data.Attributes, resourceContext.Attributes);
             resource = SetRelationships(resource, data.Relationships, resourceContext.Relationships);
@@ -157,74 +166,35 @@ namespace JsonApiDotNetCore.Serialization
             return resource;
         }
 
-        /// <summary>
-        /// Sets a HasOne relationship on a parsed resource. If present, also
-        /// populates the foreign key.
-        /// </summary>
-        private void SetHasOneRelationship(IIdentifiable resource,
-            PropertyInfo[] resourceProperties,
-            HasOneAttribute attr,
-            RelationshipEntry relationshipData)
+        private ResourceContext GetExistingResourceContext(string publicName)
         {
-            var rio = (ResourceIdentifierObject)relationshipData.Data;
-            var relatedId = rio?.Id;
+            var resourceContext = ResourceContextProvider.GetResourceContext(publicName);
+            if (resourceContext == null)
+            {
+                throw new JsonApiSerializationException("Request body includes unknown resource type.",
+                    $"Resource type '{publicName}' does not exist.");
+            }
 
-            var relationshipType = relationshipData.SingleData == null
-                ? attr.RightType
-                : ResourceContextProvider.GetResourceContext(relationshipData.SingleData.Type).ResourceType;
+            return resourceContext;
+        }
 
-            // this does not make sense in the following case: if we're setting the dependent of a one-to-one relationship, IdentifiablePropertyName should be null.
-            var foreignKeyProperty = resourceProperties.FirstOrDefault(p => p.Name == attr.IdentifiablePropertyName);
+        /// <summary>
+        /// Sets a HasOne relationship on a parsed resource.
+        /// </summary>
+        private void SetHasOneRelationship(IIdentifiable resource, HasOneAttribute hasOneRelationship, RelationshipEntry relationshipData)
+        {
+            if (relationshipData.ManyData != null)
+            {
+                throw new JsonApiSerializationException("Expected single data element for to-one relationship.", 
+                    $"Expected single data element for '{hasOneRelationship.PublicName}' relationship.");
+            }
 
-            if (foreignKeyProperty != null)
-                // there is a FK from the current resource pointing to the related object,
-                // i.e. we're populating the relationship from the dependent side.
-                SetForeignKey(resource, foreignKeyProperty, attr, relatedId, relationshipType);
-
-            SetNavigation(resource, attr, relatedId, relationshipType);
+            var rightResource = CreateRightResource(hasOneRelationship, relationshipData.SingleData);
+            hasOneRelationship.SetValue(resource, rightResource);
 
             // depending on if this base parser is used client-side or server-side,
             // different additional processing per field needs to be executed.
-            AfterProcessField(resource, attr, relationshipData);
-        }
-
-        /// <summary>
-        /// Sets the dependent side of a HasOne relationship, which means that a
-        /// foreign key also will be populated.
-        /// </summary>
-        private void SetForeignKey(IIdentifiable resource, PropertyInfo foreignKey, HasOneAttribute attr, string id,
-            Type relationshipType)
-        {
-            bool foreignKeyPropertyIsNullableType = Nullable.GetUnderlyingType(foreignKey.PropertyType) != null
-                || foreignKey.PropertyType == typeof(string);
-            if (id == null && !foreignKeyPropertyIsNullableType)
-            {
-                // this happens when a non-optional relationship is deliberately set to null.
-                // For a server deserializer, it should be mapped to a BadRequest HTTP error code.
-                throw new FormatException($"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
-            }
-
-            var typedId = TypeHelper.ConvertStringIdToTypedId(relationshipType, id, ResourceFactory);
-            foreignKey.SetValue(resource, typedId);
-        }
-
-        /// <summary>
-        /// Sets the principal side of a HasOne relationship, which means no
-        /// foreign key is involved.
-        /// </summary>
-        private void SetNavigation(IIdentifiable resource, HasOneAttribute attr, string relatedId,
-            Type relationshipType)
-        {
-            if (relatedId == null)
-            {
-                attr.SetValue(resource, null, ResourceFactory);
-            }
-            else
-            {
-                var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(relationshipType);
-                relatedInstance.StringId = relatedId;
-                attr.SetValue(resource, relatedInstance, ResourceFactory);
-            }
+            AfterProcessField(resource, hasOneRelationship, relationshipData);
         }
 
         /// <summary>
@@ -232,25 +202,73 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private void SetHasManyRelationship(
             IIdentifiable resource,
-            HasManyAttribute attr,
+            HasManyAttribute hasManyRelationship,
             RelationshipEntry relationshipData)
         {
-            if (relationshipData.Data != null)
-            {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
-                var relatedResources = relationshipData.ManyData.Select(rio =>
-                {
-                    var relationshipType = ResourceContextProvider.GetResourceContext(rio.Type).ResourceType;
-                    var relatedInstance = (IIdentifiable)ResourceFactory.CreateInstance(relationshipType);
-                    relatedInstance.StringId = rio.Id;
-                    
-                    return relatedInstance;
-                });
-
-                var convertedCollection = TypeHelper.CopyToTypedCollection(relatedResources, attr.Property.PropertyType);
-                attr.SetValue(resource, convertedCollection, ResourceFactory);
+            if (relationshipData.ManyData == null)
+            {
+                throw new JsonApiSerializationException("Expected data[] element for to-many relationship.", 
+                    $"Expected data[] element for '{hasManyRelationship.PublicName}' relationship.");
             }
 
-            AfterProcessField(resource, attr, relationshipData);
+            var rightResources = relationshipData.ManyData
+                .Select(rio => CreateRightResource(hasManyRelationship, rio))
+                .ToHashSet(IdentifiableComparer.Instance);
+
+            var convertedCollection = TypeHelper.CopyToTypedCollection(rightResources, hasManyRelationship.Property.PropertyType);
+            hasManyRelationship.SetValue(resource, convertedCollection);
+
+            AfterProcessField(resource, hasManyRelationship, relationshipData);
+        }
+
+        private IIdentifiable CreateRightResource(RelationshipAttribute relationship,
+            ResourceIdentifierObject resourceIdentifierObject)
+        {
+            if (resourceIdentifierObject != null)
+            {
+                AssertHasType(resourceIdentifierObject, relationship);
+                AssertHasId(resourceIdentifierObject, relationship);
+
+                var rightResourceContext = GetExistingResourceContext(resourceIdentifierObject.Type);
+                AssertRightTypeIsCompatible(rightResourceContext, relationship);
+
+                var rightInstance = ResourceFactory.CreateInstance(rightResourceContext.ResourceType);
+                rightInstance.StringId = resourceIdentifierObject.Id;
+
+                return rightInstance;
+            }
+
+            return null;
+        }
+
+        private void AssertHasType(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)
+        {
+            if (resourceIdentifierObject.Type == null)
+            {
+                var details = relationship != null
+                    ? $"Expected 'type' element in '{relationship.PublicName}' relationship."
+                    : "Expected 'type' element in 'data' element.";
+
+                throw new JsonApiSerializationException("Request body must include 'type' element.", details);
+            }
+        }
+
+        private void AssertHasId(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)
+        {
+            if (resourceIdentifierObject.Id == null)
+            {
+                throw new JsonApiSerializationException("Request body must include 'id' element.",
+                    $"Expected 'id' element in '{relationship.PublicName}' relationship.");
+            }
+        }
+
+        private void AssertRightTypeIsCompatible(ResourceContext rightResourceContext, RelationshipAttribute relationship)
+        {
+            if (!relationship.RightType.IsAssignableFrom(rightResourceContext.ResourceType))
+            {
+                throw new JsonApiSerializationException("Relationship contains incompatible resource type.",
+                    $"Relationship '{relationship.PublicName}' contains incompatible resource type '{rightResourceContext.PublicName}'.");
+            }
         }
 
         private object ConvertAttrValue(object newValue, Type targetType)

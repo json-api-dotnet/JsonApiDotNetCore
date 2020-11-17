@@ -9,7 +9,6 @@ using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -22,7 +21,7 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
-        private readonly IResourceRepository<TResource, TId> _repository;
+        private readonly IResourceRepositoryAccessor _repositoryAccessor;
         private readonly IQueryLayerComposer _queryLayerComposer;
         private readonly IPaginationContext _paginationContext;
         private readonly IJsonApiOptions _options;
@@ -30,10 +29,10 @@ namespace JsonApiDotNetCore.Services
         private readonly IJsonApiRequest _request;
         private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
         private readonly IResourceFactory _resourceFactory;
-        private readonly IResourceHookExecutor _hookExecutor;
+        private readonly IResourceHookExecutorFacade _hookExecutor;
 
         public JsonApiResourceService(
-            IResourceRepository<TResource, TId> repository,
+            IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext,
             IJsonApiOptions options,
@@ -41,11 +40,11 @@ namespace JsonApiDotNetCore.Services
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
-            IResourceHookExecutor hookExecutor = null)
+            IResourceHookExecutorFacade hookExecutor)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _repositoryAccessor = repositoryAccessor ?? throw new ArgumentNullException(nameof(repositoryAccessor));
             _queryLayerComposer = queryLayerComposer ?? throw new ArgumentNullException(nameof(queryLayerComposer));
             _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
             _options = options ?? throw new ArgumentNullException(nameof(options));
@@ -53,60 +52,7 @@ namespace JsonApiDotNetCore.Services
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _resourceChangeTracker = resourceChangeTracker ?? throw new ArgumentNullException(nameof(resourceChangeTracker));
             _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
-            _hookExecutor = hookExecutor;
-        }
-
-        /// <inheritdoc />
-        public virtual async Task<TResource> CreateAsync(TResource resource)
-        {
-            _traceWriter.LogMethodStart(new {resource});
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-
-            if (_hookExecutor != null)
-            {
-                resource = _hookExecutor.BeforeCreate(AsList(resource), ResourcePipeline.Post).Single();
-            }
-            
-            await _repository.CreateAsync(resource);
-
-            resource = await GetPrimaryResourceById(resource.Id, true);
-
-            if (_hookExecutor != null)
-            {
-                _hookExecutor.AfterCreate(AsList(resource), ResourcePipeline.Post);
-                resource = _hookExecutor.OnReturn(AsList(resource), ResourcePipeline.Post).Single();
-            }
-
-            return resource;
-        }
-
-        /// <inheritdoc />
-        public virtual async Task DeleteAsync(TId id)
-        {
-            _traceWriter.LogMethodStart(new {id});
-
-            if (_hookExecutor != null)
-            {
-                var resource = _resourceFactory.CreateInstance<TResource>();
-                resource.Id = id;
-
-                _hookExecutor.BeforeDelete(AsList(resource), ResourcePipeline.Delete);
-            }
-
-            var succeeded = await _repository.DeleteAsync(id);
-
-            if (_hookExecutor != null)
-            {
-                var resource = _resourceFactory.CreateInstance<TResource>();
-                resource.Id = id;
-
-                _hookExecutor.AfterDelete(AsList(resource), ResourcePipeline.Delete, succeeded);
-            }
-
-            if (!succeeded)
-            {
-                AssertPrimaryResourceExists(null);
-            }
+            _hookExecutor = hookExecutor ?? throw new ArgumentNullException(nameof(hookExecutor));
         }
 
         /// <inheritdoc />
@@ -114,12 +60,12 @@ namespace JsonApiDotNetCore.Services
         {
             _traceWriter.LogMethodStart();
 
-            _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.Get);
+            _hookExecutor.BeforeReadMany<TResource>();
 
             if (_options.IncludeTotalResourceCount)
             {
-                var topFilter = _queryLayerComposer.GetTopFilter();
-                _paginationContext.TotalResourceCount = await _repository.CountAsync(topFilter);
+                var topFilter = _queryLayerComposer.GetTopFilterFromConstraints();
+                _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync<TResource>(topFilter);
 
                 if (_paginationContext.TotalResourceCount == 0)
                 {
@@ -127,21 +73,16 @@ namespace JsonApiDotNetCore.Services
                 }
             }
 
-            var queryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
-            var resources = await _repository.GetAsync(queryLayer);
-
-            if (_hookExecutor != null)
-            {
-                _hookExecutor.AfterRead(resources, ResourcePipeline.Get);
-                return _hookExecutor.OnReturn(resources, ResourcePipeline.Get).ToArray();
-            }
+            var queryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResource);
+            var resources = await _repositoryAccessor.GetAsync<TResource>(queryLayer);
 
             if (queryLayer.Pagination?.PageSize != null && queryLayer.Pagination.PageSize.Value == resources.Count)
             {
                 _paginationContext.IsPageFull = true;
             }
 
-            return resources;
+            _hookExecutor.AfterReadMany(resources);
+            return _hookExecutor.OnReturnMany(resources);
         }
 
         /// <inheritdoc />
@@ -149,99 +90,26 @@ namespace JsonApiDotNetCore.Services
         {
             _traceWriter.LogMethodStart(new {id});
 
-            _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetSingle, id.ToString());
+            _hookExecutor.BeforeReadSingle<TResource, TId>(id, ResourcePipeline.GetSingle);
 
-            var primaryResource = await GetPrimaryResourceById(id, true);
-
-            if (_hookExecutor != null)
-            {
-                _hookExecutor.AfterRead(AsList(primaryResource), ResourcePipeline.GetSingle);
-                return _hookExecutor.OnReturn(AsList(primaryResource), ResourcePipeline.GetSingle).Single();
-            }
-
-            return primaryResource;
-        }
-
-        private async Task<TResource> GetPrimaryResourceById(TId id, bool allowTopSparseFieldSet)
-        {
-            var primaryLayer = _queryLayerComposer.Compose(_request.PrimaryResource);
-            primaryLayer.Sort = null;
-            primaryLayer.Pagination = null;
-            primaryLayer.Filter = IncludeFilterById(id, primaryLayer.Filter);
-
-            if (!allowTopSparseFieldSet && primaryLayer.Projection != null)
-            {
-                // Discard any ?fields= or attribute exclusions from ResourceDefinition, because we need the full record.
-
-                while (primaryLayer.Projection.Any(p => p.Key is AttrAttribute))
-                {
-                    primaryLayer.Projection.Remove(primaryLayer.Projection.First(p => p.Key is AttrAttribute));
-                }
-            }
-
-            var primaryResources = await _repository.GetAsync(primaryLayer);
-
-            var primaryResource = primaryResources.SingleOrDefault();
+            var primaryResource = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.PreserveExisting);
             AssertPrimaryResourceExists(primaryResource);
 
-            return primaryResource;
-        }
-
-        private FilterExpression IncludeFilterById(TId id, FilterExpression existingFilter)
-        {
-            var primaryIdAttribute = _request.PrimaryResource.Attributes.Single(a => a.Property.Name == nameof(Identifiable.Id));
-
-            FilterExpression filterById = new ComparisonExpression(ComparisonOperator.Equals,
-                new ResourceFieldChainExpression(primaryIdAttribute), new LiteralConstantExpression(id.ToString()));
-
-            return existingFilter == null
-                ? filterById
-                : new LogicalExpression(LogicalOperator.And, new[] {filterById, existingFilter});
-        }
-
-        /// <inheritdoc />
-        // triggered by GET /articles/1/relationships/{relationshipName}
-        public virtual async Task<TResource> GetRelationshipAsync(TId id, string relationshipName)
-        {
-            _traceWriter.LogMethodStart(new {id, relationshipName});
-            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
-
-            AssertRelationshipExists(relationshipName);
-
-            _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
-
-            var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
-            secondaryLayer.Projection = _queryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(_request.SecondaryResource);
-            secondaryLayer.Include = null;
-
-            var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
-
-            var primaryResources = await _repository.GetAsync(primaryLayer);
-
-            var primaryResource = primaryResources.SingleOrDefault();
-            AssertPrimaryResourceExists(primaryResource);
-
-            if (_hookExecutor != null)
-            {
-                _hookExecutor.AfterRead(AsList(primaryResource), ResourcePipeline.GetRelationship);
-                primaryResource = _hookExecutor.OnReturn(AsList(primaryResource), ResourcePipeline.GetRelationship).Single();
-            }
+            _hookExecutor.AfterReadSingle(primaryResource, ResourcePipeline.GetSingle);
+            _hookExecutor.OnReturnSingle(primaryResource, ResourcePipeline.GetSingle);
 
             return primaryResource;
         }
 
         /// <inheritdoc />
-        // triggered by GET /articles/1/{relationshipName}
         public virtual async Task<object> GetSecondaryAsync(TId id, string relationshipName)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
-            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+            AssertHasRelationship(_request.Relationship, relationshipName);
 
-            AssertRelationshipExists(relationshipName);
+            _hookExecutor.BeforeReadSingle<TResource, TId>(id, ResourcePipeline.GetRelationship);
 
-            _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
-
-            var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
+            var secondaryLayer = _queryLayerComposer.ComposeFromConstraints(_request.SecondaryResource);
             var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
 
             if (_request.IsCollection && _options.IncludeTotalResourceCount)
@@ -252,100 +120,315 @@ namespace JsonApiDotNetCore.Services
                 // And we should call BlogResourceDefinition.OnApplyFilter to filter out soft-deleted blogs and translate from equals('IsDeleted','false') to equals('Blog.IsDeleted','false')
             }
 
-            var primaryResources = await _repository.GetAsync(primaryLayer);
-            
+            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer);
+
             var primaryResource = primaryResources.SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
 
-            if (_hookExecutor != null)
-            {   
-                _hookExecutor.AfterRead(AsList(primaryResource), ResourcePipeline.GetRelationship);
-                primaryResource = _hookExecutor.OnReturn(AsList(primaryResource), ResourcePipeline.GetRelationship).Single();
-            }
+            _hookExecutor.AfterReadSingle(primaryResource, ResourcePipeline.GetRelationship);
 
-            var secondaryResource = _request.Relationship.GetValue(primaryResource);
+            var secondaryResourceOrResources = _request.Relationship.GetValue(primaryResource);
 
-            if (secondaryResource is ICollection secondaryResources && 
-                secondaryLayer.Pagination?.PageSize != null && secondaryLayer.Pagination.PageSize.Value == secondaryResources.Count)
+            if (secondaryResourceOrResources is ICollection secondaryResources &&
+                secondaryLayer.Pagination?.PageSize?.Value == secondaryResources.Count)
             {
                 _paginationContext.IsPageFull = true;
             }
 
-            return secondaryResource;
+            return _hookExecutor.OnReturnRelationship(secondaryResourceOrResources);
         }
 
         /// <inheritdoc />
-        public virtual async Task<TResource> UpdateAsync(TId id, TResource requestResource)
+        public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
-            _traceWriter.LogMethodStart(new {id, requestResource});
-            if (requestResource == null) throw new ArgumentNullException(nameof(requestResource));
-
-            TResource databaseResource = await GetPrimaryResourceById(id, false);
-
-            _resourceChangeTracker.SetInitiallyStoredAttributeValues(databaseResource);
-            _resourceChangeTracker.SetRequestedAttributeValues(requestResource);
-
-            if (_hookExecutor != null)
-            {
-                requestResource = _hookExecutor.BeforeUpdate(AsList(requestResource), ResourcePipeline.Patch).Single();
-            }
-
-            await _repository.UpdateAsync(requestResource, databaseResource);
-
-            if (_hookExecutor != null)
-            {
-                _hookExecutor.AfterUpdate(AsList(databaseResource), ResourcePipeline.Patch);
-                _hookExecutor.OnReturn(AsList(databaseResource), ResourcePipeline.Patch);
-            }
-
-            _repository.FlushFromCache(databaseResource);
-            TResource afterResource = await GetPrimaryResourceById(id, false);
-            _resourceChangeTracker.SetFinallyStoredAttributeValues(afterResource);
-
-            bool hasImplicitChanges = _resourceChangeTracker.HasImplicitChanges();
-            return hasImplicitChanges ? afterResource : null;
-        }
-
-        /// <inheritdoc />
-        // triggered by PATCH /articles/1/relationships/{relationshipName}
-        public virtual async Task UpdateRelationshipAsync(TId id, string relationshipName, object relationships)
-        {
-            _traceWriter.LogMethodStart(new {id, relationshipName, relationships});
+            _traceWriter.LogMethodStart(new {id, relationshipName});
             if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
 
-            AssertRelationshipExists(relationshipName);
+            AssertHasRelationship(_request.Relationship, relationshipName);
 
-            var secondaryLayer = _queryLayerComposer.Compose(_request.SecondaryResource);
-            secondaryLayer.Projection = _queryLayerComposer.GetSecondaryProjectionForRelationshipEndpoint(_request.SecondaryResource);
-            secondaryLayer.Include = null;
+            _hookExecutor.BeforeReadSingle<TResource, TId>(id, ResourcePipeline.GetRelationship);
 
+            var secondaryLayer = _queryLayerComposer.ComposeSecondaryLayerForRelationship(_request.SecondaryResource);
             var primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
-            primaryLayer.Projection = null;
 
-            var primaryResources = await _repository.GetAsync(primaryLayer);
+            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer);
 
             var primaryResource = primaryResources.SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
 
-            if (_hookExecutor != null)
+            _hookExecutor.AfterReadSingle(primaryResource, ResourcePipeline.GetRelationship);
+
+            var secondaryResourceOrResources = _request.Relationship.GetValue(primaryResource);
+
+            return _hookExecutor.OnReturnRelationship(secondaryResourceOrResources);
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<TResource> CreateAsync(TResource resource)
+        {
+            _traceWriter.LogMethodStart(new {resource});
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
+            _resourceChangeTracker.SetRequestedAttributeValues(resource);
+
+            var defaultResource = _resourceFactory.CreateInstance<TResource>();
+            defaultResource.Id = resource.Id;
+
+            _resourceChangeTracker.SetInitiallyStoredAttributeValues(defaultResource);
+
+            _hookExecutor.BeforeCreate(resource);
+
+            try
             {
-                primaryResource = _hookExecutor.BeforeUpdate(AsList(primaryResource), ResourcePipeline.PatchRelationship).Single();
+                await _repositoryAccessor.CreateAsync(resource);
+            }
+            catch (DataStoreUpdateException)
+            {
+                var existingResource = await TryGetPrimaryResourceByIdAsync(resource.Id, TopFieldSelection.OnlyIdAttribute);
+                if (existingResource != null)
+                {
+                    throw new ResourceAlreadyExistsException(resource.StringId, _request.PrimaryResource.PublicName);
+                }
+
+                await AssertResourcesToAssignInRelationshipsExistAsync(resource);
+                throw;
             }
 
-            string[] relationshipIds = null;
-            if (relationships != null)
+            var resourceFromDatabase = await TryGetPrimaryResourceByIdAsync(resource.Id, TopFieldSelection.WithAllAttributes);
+            AssertPrimaryResourceExists(resourceFromDatabase);
+
+            _hookExecutor.AfterCreate(resourceFromDatabase);
+
+            _resourceChangeTracker.SetFinallyStoredAttributeValues(resourceFromDatabase);
+
+            bool hasImplicitChanges = _resourceChangeTracker.HasImplicitChanges();
+            if (!hasImplicitChanges)
             {
-                relationshipIds = _request.Relationship is HasOneAttribute
-                    ? new[] {((IIdentifiable) relationships).StringId}
-                    : ((IEnumerable<IIdentifiable>) relationships).Select(e => e.StringId).ToArray();
+                return null;
             }
 
-            await _repository.UpdateRelationshipAsync(primaryResource, _request.Relationship, relationshipIds ?? Array.Empty<string>());
+            _hookExecutor.OnReturnSingle(resourceFromDatabase, ResourcePipeline.Post);
+            return resourceFromDatabase;
+        }
 
-            if (_hookExecutor != null && primaryResource != null)
+        private async Task AssertResourcesToAssignInRelationshipsExistAsync(TResource resource)
+        {
+            var missingResources = new List<MissingResourceInRelationship>();
+
+            foreach (var (queryLayer, relationship) in _queryLayerComposer.ComposeForGetTargetedSecondaryResourceIds(resource))
             {
-                _hookExecutor.AfterUpdate(AsList(primaryResource), ResourcePipeline.PatchRelationship);
+                object rightValue = relationship.GetValue(resource);
+                ICollection<IIdentifiable> rightResourceIds = TypeHelper.ExtractResources(rightValue);
+
+                var missingResourcesInRelationship = GetMissingRightResourcesAsync(queryLayer, relationship, rightResourceIds);
+                await missingResources.AddRangeAsync(missingResourcesInRelationship);
             }
+
+            if (missingResources.Any())
+            {
+                throw new ResourcesInRelationshipsNotFoundException(missingResources);
+            }
+        }
+
+        private async IAsyncEnumerable<MissingResourceInRelationship> GetMissingRightResourcesAsync(
+            QueryLayer existingRightResourceIdsQueryLayer, RelationshipAttribute relationship,
+            ICollection<IIdentifiable> rightResourceIds)
+        {
+            var existingResources = await _repositoryAccessor.GetAsync(
+                existingRightResourceIdsQueryLayer.ResourceContext.ResourceType, existingRightResourceIdsQueryLayer);
+
+            var existingResourceIds = existingResources.Select(resource => resource.StringId).ToArray();
+
+            foreach (var rightResourceId in rightResourceIds)
+            {
+                if (!existingResourceIds.Contains(rightResourceId.StringId))
+                {
+                    yield return new MissingResourceInRelationship(relationship.PublicName,
+                        existingRightResourceIdsQueryLayer.ResourceContext.PublicName, rightResourceId.StringId);
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
+        {
+            _traceWriter.LogMethodStart(new {primaryId, secondaryResourceIds});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
+
+            AssertHasRelationship(_request.Relationship, relationshipName);
+
+            if (secondaryResourceIds.Any())
+            {
+                if (_request.Relationship is HasManyThroughAttribute hasManyThrough)
+                {
+                    // In the case of a many-to-many relationship, creating a duplicate entry in the join table results in a
+                    // unique constraint violation. We avoid that by excluding already-existing entries from the set in advance.
+                    await RemoveExistingIdsFromSecondarySet(primaryId, secondaryResourceIds, hasManyThrough);
+                }
+
+                try
+                {
+                    await _repositoryAccessor.AddToToManyRelationshipAsync<TResource, TId>(primaryId, secondaryResourceIds);
+                }
+                catch (DataStoreUpdateException)
+                {
+                    var primaryResource = await TryGetPrimaryResourceByIdAsync(primaryId, TopFieldSelection.OnlyIdAttribute);
+                    AssertPrimaryResourceExists(primaryResource);
+
+                    await AssertResourcesExistAsync(secondaryResourceIds);
+                    throw;
+                }
+            }
+        }
+
+        private async Task RemoveExistingIdsFromSecondarySet(TId primaryId, ISet<IIdentifiable> secondaryResourceIds,
+            HasManyThroughAttribute hasManyThrough)
+        {
+            var queryLayer = _queryLayerComposer.ComposeForHasManyThrough(hasManyThrough, primaryId, secondaryResourceIds);
+            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(queryLayer);
+            
+            var primaryResource = primaryResources.FirstOrDefault();
+            AssertPrimaryResourceExists(primaryResource);
+
+            var rightValue = _request.Relationship.GetValue(primaryResource);
+            var existingRightResourceIds = TypeHelper.ExtractResources(rightValue);
+
+            secondaryResourceIds.ExceptWith(existingRightResourceIds);
+        }
+
+        private async Task AssertResourcesExistAsync(ICollection<IIdentifiable> secondaryResourceIds)
+        {
+            var queryLayer = _queryLayerComposer.ComposeForGetRelationshipRightIds(_request.Relationship, secondaryResourceIds);
+
+            var missingResources = await GetMissingRightResourcesAsync(queryLayer, _request.Relationship, secondaryResourceIds).ToListAsync();
+            if (missingResources.Any())
+            {
+                throw new ResourcesInRelationshipsNotFoundException(missingResources);
+            }
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<TResource> UpdateAsync(TId id, TResource resource)
+        {
+            _traceWriter.LogMethodStart(new {id, resource});
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
+            var resourceFromRequest = resource;
+            _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
+
+            _hookExecutor.BeforeUpdateResource(resourceFromRequest);
+
+            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(id);
+
+            _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
+
+            try
+            {
+                await _repositoryAccessor.UpdateAsync(resourceFromRequest, resourceFromDatabase);
+            }
+            catch (DataStoreUpdateException)
+            {
+                await AssertResourcesToAssignInRelationshipsExistAsync(resourceFromRequest);
+                throw;
+            }
+
+            TResource afterResourceFromDatabase = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes);
+            AssertPrimaryResourceExists(afterResourceFromDatabase);
+
+            _hookExecutor.AfterUpdateResource(afterResourceFromDatabase);
+
+            _resourceChangeTracker.SetFinallyStoredAttributeValues(afterResourceFromDatabase);
+
+            bool hasImplicitChanges = _resourceChangeTracker.HasImplicitChanges();
+            if (!hasImplicitChanges)
+            {
+                return null;
+            }
+
+            _hookExecutor.OnReturnSingle(afterResourceFromDatabase, ResourcePipeline.Patch);
+            return afterResourceFromDatabase;
+        }
+
+        /// <inheritdoc />
+        public virtual async Task SetRelationshipAsync(TId primaryId, string relationshipName, object secondaryResourceIds)
+        {
+            _traceWriter.LogMethodStart(new {primaryId, relationshipName, secondaryResourceIds});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+
+            AssertHasRelationship(_request.Relationship, relationshipName);
+
+            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId);
+
+            _hookExecutor.BeforeUpdateRelationship(resourceFromDatabase);
+
+            try
+            {
+                await _repositoryAccessor.SetRelationshipAsync(resourceFromDatabase, secondaryResourceIds);
+            }
+            catch (DataStoreUpdateException)
+            {
+                await AssertResourcesExistAsync(TypeHelper.ExtractResources(secondaryResourceIds));
+                throw;
+            }
+
+            _hookExecutor.AfterUpdateRelationship(resourceFromDatabase);
+        }
+
+        /// <inheritdoc />
+        public virtual async Task DeleteAsync(TId id)
+        {
+            _traceWriter.LogMethodStart(new {id});
+
+            _hookExecutor.BeforeDelete<TResource, TId>(id);
+
+            try
+            {
+                await _repositoryAccessor.DeleteAsync<TResource, TId>(id);
+            }
+            catch (DataStoreUpdateException)
+            {
+                var primaryResource = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute);
+                AssertPrimaryResourceExists(primaryResource);
+                throw;
+            }
+
+            _hookExecutor.AfterDelete<TResource, TId>(id);
+        }
+
+        /// <inheritdoc />
+        public async Task RemoveFromToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds)
+        {
+            _traceWriter.LogMethodStart(new {primaryId, relationshipName, secondaryResourceIds});
+            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
+
+            AssertHasRelationship(_request.Relationship, relationshipName);
+
+            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId);
+            await AssertResourcesExistAsync(secondaryResourceIds);
+
+            if (secondaryResourceIds.Any())
+            {
+                await _repositoryAccessor.RemoveFromToManyRelationshipAsync(resourceFromDatabase, secondaryResourceIds);
+            }
+        }
+
+        private async Task<TResource> TryGetPrimaryResourceByIdAsync(TId id, TopFieldSelection fieldSelection)
+        {
+            var primaryLayer = _queryLayerComposer.ComposeForGetById(id, _request.PrimaryResource, fieldSelection);
+
+            var primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer);
+            return primaryResources.SingleOrDefault();
+        }
+
+        private async Task<TResource> GetPrimaryResourceForUpdateAsync(TId id)
+        {
+            var queryLayer = _queryLayerComposer.ComposeForUpdate(id, _request.PrimaryResource);
+            var resource = await _repositoryAccessor.GetForUpdateAsync<TResource>(queryLayer);
+
+            AssertPrimaryResourceExists(resource);
+            return resource;
         }
 
         private void AssertPrimaryResourceExists(TResource resource)
@@ -356,18 +439,12 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private void AssertRelationshipExists(string relationshipName)
+        private void AssertHasRelationship(RelationshipAttribute relationship, string name)
         {
-            var relationship = _request.Relationship;
             if (relationship == null)
             {
-                throw new RelationshipNotFoundException(relationshipName, _request.PrimaryResource.PublicName);
+                throw new RelationshipNotFoundException(name, _request.PrimaryResource.PublicName);
             }
-        }
-
-        private static List<TResource> AsList(TResource resource)
-        {
-            return new List<TResource> { resource };
         }
     }
 
@@ -380,7 +457,7 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<int>
     {
         public JsonApiResourceService(
-            IResourceRepository<TResource> repository,
+            IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext,
             IJsonApiOptions options,
@@ -388,9 +465,10 @@ namespace JsonApiDotNetCore.Services
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceFactory resourceFactory,
-            IResourceHookExecutor hookExecutor = null)
-            : base(repository, queryLayerComposer, paginationContext, options, loggerFactory, request,
+            IResourceHookExecutorFacade hookExecutor)
+            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
                 resourceChangeTracker, resourceFactory, hookExecutor)
-        { }
+        {
+        }
     }
 }

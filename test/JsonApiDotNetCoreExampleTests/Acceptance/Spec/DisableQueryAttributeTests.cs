@@ -19,7 +19,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Cannot_Sort_If_Blocked_By_Controller()
+        public async Task Cannot_Sort_If_Query_String_Parameter_Is_Blocked_By_Controller()
         {
             // Arrange
             var httpMethod = new HttpMethod("GET");
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Cannot_Use_Custom_Query_Parameter_If_Blocked_By_Controller()
+        public async Task Cannot_Use_Custom_Query_String_Parameter_If_Blocked_By_Controller()
         {
             // Arrange
             var httpMethod = new HttpMethod("GET");

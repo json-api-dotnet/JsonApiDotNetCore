@@ -1,6 +1,6 @@
 # The Resource Graph
 
-_NOTE: prior to 3.0.0 this was called the `ContextGraph`_
+_NOTE: prior to v4 this was called the `ContextGraph`_
 
 The `ResourceGraph` is a map of all the json:api resources and their relationships that your API serves.
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Bogus;
 using FluentAssertions;
 using FluentAssertions.Extensions;
-using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
@@ -33,10 +33,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             {
                 services.AddSingleton<ResourceCaptureStore>();
 
-                services.AddScoped<IResourceRepository<Blog>, ResultCapturingRepository<Blog>>();
-                services.AddScoped<IResourceRepository<Article>, ResultCapturingRepository<Article>>();
-                services.AddScoped<IResourceRepository<Author>, ResultCapturingRepository<Author>>();
-                services.AddScoped<IResourceRepository<TodoItem>, ResultCapturingRepository<TodoItem>>();
+                services.AddResourceRepository<ResultCapturingRepository<Blog>>();
+                services.AddResourceRepository<ResultCapturingRepository<Article>>();
+                services.AddResourceRepository<ResultCapturingRepository<Author>>();
+                services.AddResourceRepository<ResultCapturingRepository<TodoItem>>();
 
                 services.AddScoped<IResourceService<Article>, JsonApiResourceService<Article>>();
             });
@@ -86,8 +86,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(article.StringId);
+            responseDocument.ManyData[0].Attributes.Should().HaveCount(1);
             responseDocument.ManyData[0].Attributes["caption"].Should().Be(article.Caption);
-            responseDocument.ManyData[0].Attributes.Should().NotContainKey("url");
 
             var articleCaptured = (Article) store.Resources.Should().ContainSingle(x => x is Article).And.Subject.Single();
             articleCaptured.Caption.Should().Be(article.Caption);
@@ -124,8 +124,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(article.StringId);
+            responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["url"].Should().Be(article.Url);
-            responseDocument.SingleData.Attributes.Should().NotContainKey("caption");
 
             var articleCaptured = (Article) store.Resources.Should().ContainSingle(x => x is Article).And.Subject.Single();
             articleCaptured.Url.Should().Be(article.Url);
@@ -169,8 +169,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(blog.Articles[0].StringId);
+            responseDocument.ManyData[0].Attributes.Should().HaveCount(1);
             responseDocument.ManyData[0].Attributes["caption"].Should().Be(blog.Articles[0].Caption);
-            responseDocument.ManyData[0].Attributes.Should().NotContainKey("url");
 
             var blogCaptured = (Blog)store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
@@ -217,9 +217,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             responseDocument.SingleData.Attributes["caption"].Should().Be(article.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Attributes.Should().HaveCount(2);
             responseDocument.Included[0].Attributes["lastName"].Should().Be(article.Author.LastName);
             responseDocument.Included[0].Attributes["businessEmail"].Should().Be(article.Author.BusinessEmail);
-            responseDocument.Included[0].Attributes.Should().NotContainKey("firstName");
 
             var articleCaptured = (Article) store.Resources.Should().ContainSingle(x => x is Article).And.Subject.Single();
             articleCaptured.Id.Should().Be(article.Id);
@@ -268,8 +268,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             responseDocument.SingleData.Attributes["lastName"].Should().Be(author.LastName);
 
             responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Attributes.Should().HaveCount(1);
             responseDocument.Included[0].Attributes["caption"].Should().Be(author.Articles[0].Caption);
-            responseDocument.Included[0].Attributes.Should().NotContainKey("url");
 
             var authorCaptured = (Author) store.Resources.Should().ContainSingle(x => x is Author).And.Subject.Single();
             authorCaptured.Id.Should().Be(author.Id);
@@ -323,8 +323,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             responseDocument.SingleData.Attributes["lastName"].Should().Be(blog.Owner.LastName);
 
             responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Attributes.Should().HaveCount(1);
             responseDocument.Included[0].Attributes["caption"].Should().Be(blog.Owner.Articles[0].Caption);
-            responseDocument.Included[0].Attributes.Should().NotContainKey("url");
 
             var blogCaptured = (Blog) store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
@@ -376,8 +376,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             responseDocument.SingleData.Attributes["caption"].Should().Be(article.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Attributes.Should().HaveCount(1);
             responseDocument.Included[0].Attributes["color"].Should().Be(article.ArticleTags.Single().Tag.Color.ToString("G"));
-            responseDocument.Included[0].Attributes.Should().NotContainKey("name");
 
             var articleCaptured = (Article) store.Resources.Should().ContainSingle(x => x is Article).And.Subject.Single();
             articleCaptured.Id.Should().Be(article.Id);
@@ -432,19 +432,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(blog.StringId);
+            responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["title"].Should().Be(blog.Title);
-            responseDocument.SingleData.Attributes.Should().NotContainKey("companyName");
 
             responseDocument.Included.Should().HaveCount(2);
 
             responseDocument.Included[0].Id.Should().Be(blog.Owner.StringId);
+            responseDocument.Included[0].Attributes.Should().HaveCount(2);
             responseDocument.Included[0].Attributes["firstName"].Should().Be(blog.Owner.FirstName);
             responseDocument.Included[0].Attributes["lastName"].Should().Be(blog.Owner.LastName);
-            responseDocument.Included[0].Attributes.Should().NotContainKey("dateOfBirth");
 
             responseDocument.Included[1].Id.Should().Be(blog.Owner.Articles[0].StringId);
+            responseDocument.Included[1].Attributes.Should().HaveCount(1);
             responseDocument.Included[1].Attributes["caption"].Should().Be(blog.Owner.Articles[0].Caption);
-            responseDocument.Included[1].Attributes.Should().NotContainKey("url");
 
             var blogCaptured = (Blog) store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
@@ -504,8 +504,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(blog.StringId);
+            responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["title"].Should().Be(blog.Title);
-            responseDocument.SingleData.Attributes.Should().NotContainKey("companyName");
 
             responseDocument.Included.Should().HaveCount(2);
 
@@ -555,8 +555,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(article.StringId);
+            responseDocument.ManyData[0].Attributes.Should().HaveCount(1);
             responseDocument.ManyData[0].Attributes["caption"].Should().Be(article.Caption);
-            responseDocument.ManyData[0].Attributes.Should().NotContainKey("url");
 
             var articleCaptured = (Article) store.Resources.Should().ContainSingle(x => x is Article).And.Subject.Single();
             articleCaptured.Id.Should().Be(article.Id);
@@ -603,7 +603,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
         }
 
         [Fact]
-        public async Task Cannot_select_blocked_attribute()
+        public async Task Cannot_select_attribute_with_blocked_capability()
         {
             // Arrange
             var user = _userFaker.Generate();
@@ -652,8 +652,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(todoItem.StringId);
+            responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["calculatedValue"].Should().Be(todoItem.CalculatedValue);
-            responseDocument.SingleData.Attributes.Should().NotContainKey("description");
 
             var todoItemCaptured = (TodoItem) store.Resources.Should().ContainSingle(x => x is TodoItem).And.Subject.Single();
             todoItemCaptured.CalculatedValue.Should().Be(todoItem.CalculatedValue);

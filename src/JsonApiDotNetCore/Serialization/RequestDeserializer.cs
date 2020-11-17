@@ -1,7 +1,8 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -16,12 +17,19 @@ namespace JsonApiDotNetCore.Serialization
     {
         private readonly ITargetedFields  _targetedFields;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IJsonApiRequest _request;
 
-        public RequestDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory, ITargetedFields targetedFields, IHttpContextAccessor httpContextAccessor) 
+        public RequestDeserializer(
+            IResourceContextProvider resourceContextProvider,
+            IResourceFactory resourceFactory,
+            ITargetedFields targetedFields,
+            IHttpContextAccessor httpContextAccessor,
+            IJsonApiRequest request) 
             : base(resourceContextProvider, resourceFactory)
         {
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            _request = request ?? throw new ArgumentNullException(nameof(request));
         }
 
         /// <inheritdoc />
@@ -29,7 +37,24 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (body == null) throw new ArgumentNullException(nameof(body));
 
-            return DeserializeBody(body);
+            if (_request.Kind == EndpointKind.Relationship)
+            {
+                _targetedFields.Relationships.Add(_request.Relationship);
+            }
+            
+            var instance = DeserializeBody(body);
+
+            AssertResourceIdIsNotTargeted();
+            
+            return instance;
+        }
+
+        private void AssertResourceIdIsNotTargeted()
+        {
+            if (!_request.IsReadOnly && _targetedFields.Attributes.Any(attribute => attribute.Property.Name == nameof(Identifiable.Id)))
+            {
+                throw new JsonApiSerializationException("Resource ID is read-only.", null);
+            }
         }
 
         /// <summary>
@@ -46,17 +71,17 @@ namespace JsonApiDotNetCore.Serialization
                 if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Post.Method &&
                     !attr.Capabilities.HasFlag(AttrCapabilities.AllowCreate))
                 {
-                    throw new InvalidRequestBodyException(
-                        "Assigning to the requested attribute is not allowed.",
-                        $"Assigning to '{attr.PublicName}' is not allowed.", null);
+                    throw new JsonApiSerializationException(
+                        "Setting the initial value of the requested attribute is not allowed.",
+                        $"Setting the initial value of '{attr.PublicName}' is not allowed.");
                 }
 
                 if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Patch.Method &&
                     !attr.Capabilities.HasFlag(AttrCapabilities.AllowChange))
                 {
-                    throw new InvalidRequestBodyException(
+                    throw new JsonApiSerializationException(
                         "Changing the value of the requested attribute is not allowed.",
-                        $"Changing the value of '{attr.PublicName}' is not allowed.", null);
+                        $"Changing the value of '{attr.PublicName}' is not allowed.");
                 }
 
                 _targetedFields.Attributes.Add(attr);

@@ -92,7 +92,7 @@ namespace JsonApiDotNetCore
             return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
         }
 
-        internal static object GetDefaultValue(Type type)
+        public static object GetDefaultValue(Type type)
         {
             return type.IsValueType ? CreateInstance(type) : null;
         }
@@ -266,6 +266,26 @@ namespace JsonApiDotNetCore
             return property.PropertyType;
         }
 
+        public static ICollection<IIdentifiable> ExtractResources(object value)
+        {
+            if (value is ICollection<IIdentifiable> resourceCollection)
+            {
+                return resourceCollection;
+            }
+
+            if (value is IEnumerable<IIdentifiable> resources)
+            {
+                return resources.ToList();
+            }
+
+            if (value is IIdentifiable resource)
+            {
+                return new[] {resource};
+            }
+
+            return Array.Empty<IIdentifiable>();
+        }
+
         public static object CreateInstance(Type type)
         {
             if (type == null)
@@ -282,19 +302,6 @@ namespace JsonApiDotNetCore
                 throw new InvalidOperationException(
                     $"Failed to create an instance of '{type.FullName}' using its default constructor.", exception);
             }
-        }
-
-        public static object ConvertStringIdToTypedId(Type resourceType, string stringId, IResourceFactory resourceFactory)
-        {
-            var tempResource = (IIdentifiable)resourceFactory.CreateInstance(resourceType);
-            tempResource.StringId = stringId;
-            return GetResourceTypedId(tempResource);
-        }
-
-        public static object GetResourceTypedId(IIdentifiable resource)
-        {
-            PropertyInfo property = resource.GetType().GetProperty(nameof(Identifiable.Id));
-            return property.GetValue(resource);
         }
 
         /// <summary>

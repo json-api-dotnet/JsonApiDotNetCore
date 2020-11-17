@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -33,11 +34,13 @@ namespace JsonApiDotNetCore.Controllers
             IGetSecondaryService<TResource, TId> getSecondary = null,
             IGetRelationshipService<TResource, TId> getRelationship = null,
             ICreateService<TResource, TId> create = null,
+            IAddToRelationshipService<TResource, TId> addToRelationship = null,
             IUpdateService<TResource, TId> update = null,
-            IUpdateRelationshipService<TResource, TId> updateRelationships = null,
-            IDeleteService<TResource, TId> delete = null)
-            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
-                updateRelationships, delete)
+            ISetRelationshipService<TResource, TId> setRelationship = null,
+            IDeleteService<TResource, TId> delete = null,
+            IRemoveFromRelationshipService<TResource, TId> removeFromRelationship = null)
+            : base(options, loggerFactory,getAll, getById, getSecondary, getRelationship, create, addToRelationship, update,
+                setRelationship, delete, removeFromRelationship)
         { }
 
         /// <inheritdoc />
@@ -49,19 +52,25 @@ namespace JsonApiDotNetCore.Controllers
         public override async Task<IActionResult> GetAsync(TId id) => await base.GetAsync(id);
 
         /// <inheritdoc />
-        [HttpGet("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
-            => await base.GetRelationshipAsync(id, relationshipName);
-
-        /// <inheritdoc />
         [HttpGet("{id}/{relationshipName}")]
         public override async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName)
             => await base.GetSecondaryAsync(id, relationshipName);
 
         /// <inheritdoc />
+        [HttpGet("{id}/relationships/{relationshipName}")]
+        public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
+            => await base.GetRelationshipAsync(id, relationshipName);
+
+        /// <inheritdoc />
         [HttpPost]
         public override async Task<IActionResult> PostAsync([FromBody] TResource resource)
             => await base.PostAsync(resource);
+
+        /// <inheritdoc />
+        [HttpPost("{id}/relationships/{relationshipName}")]
+        public override async Task<IActionResult> PostRelationshipAsync(
+            TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds)
+            => await base.PostRelationshipAsync(id, relationshipName, secondaryResourceIds);
 
         /// <inheritdoc />
         [HttpPatch("{id}")]
@@ -73,12 +82,17 @@ namespace JsonApiDotNetCore.Controllers
         /// <inheritdoc />
         [HttpPatch("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> PatchRelationshipAsync(
-            TId id, string relationshipName, [FromBody] object relationships)
-            => await base.PatchRelationshipAsync(id, relationshipName, relationships);
+            TId id, string relationshipName, [FromBody] object secondaryResourceIds)
+            => await base.PatchRelationshipAsync(id, relationshipName, secondaryResourceIds);
 
         /// <inheritdoc />
         [HttpDelete("{id}")]
         public override async Task<IActionResult> DeleteAsync(TId id) => await base.DeleteAsync(id);
+
+        /// <inheritdoc />
+        [HttpDelete("{id}/relationships/{relationshipName}")]
+        public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds)
+            => await base.DeleteRelationshipAsync(id, relationshipName, secondaryResourceIds);
     }
 
     /// <inheritdoc />
@@ -101,11 +115,13 @@ namespace JsonApiDotNetCore.Controllers
             IGetSecondaryService<TResource, int> getSecondary = null,
             IGetRelationshipService<TResource, int> getRelationship = null,
             ICreateService<TResource, int> create = null,
+            IAddToRelationshipService<TResource, int> addToRelationship = null,
             IUpdateService<TResource, int> update = null,
-            IUpdateRelationshipService<TResource, int> updateRelationships = null,
-            IDeleteService<TResource, int> delete = null)
-            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, update,
-                updateRelationships, delete)
+            ISetRelationshipService<TResource, int> setRelationship = null,
+            IDeleteService<TResource, int> delete = null,
+            IRemoveFromRelationshipService<TResource, int> removeFromRelationship = null)
+            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship, update,
+                setRelationship, delete, removeFromRelationship)
         { }
     }
 }

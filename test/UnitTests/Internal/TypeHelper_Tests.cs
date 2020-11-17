@@ -95,7 +95,7 @@ namespace UnitTests.Internal
                 { typeof(short), (short)0 },
                 { typeof(long), (long)0 },
                 { typeof(string), "" },
-                { typeof(Guid), Guid.Empty },
+                { typeof(Guid), Guid.Empty }
             };
 
             foreach (var t in data)

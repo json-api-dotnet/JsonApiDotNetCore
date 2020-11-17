@@ -172,8 +172,7 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, _resourceGraph, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var resourceFactory = new Mock<IResourceFactory>().Object;
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph, resourceFactory);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph);
 
             return (constraintsMock, hookExecutor, primaryResource);
         }
@@ -206,8 +205,7 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, _resourceGraph, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var resourceFactory = new Mock<IResourceFactory>().Object;
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph, resourceFactory);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph);
 
             return (constraintsMock, ufMock, hookExecutor, primaryResource, secondaryResource);
         }
@@ -245,8 +243,7 @@ namespace UnitTests.ResourceHooks
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, _resourceGraph, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var resourceFactory = new Mock<IResourceFactory>().Object;
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph, resourceFactory);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph);
 
             return (constraintsMock, hookExecutor, primaryResource, firstSecondaryResource, secondSecondaryResource);
         }
@@ -369,13 +366,14 @@ namespace UnitTests.ResourceHooks
         {
             var serviceProvider = ((IInfrastructure<IServiceProvider>) dbContext).Instance;
             var resourceFactory = new ResourceFactory(serviceProvider);
-            IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
-            var serviceFactory = new Mock<IGenericServiceFactory>().Object;
+            IDbContextResolver resolver = CreateTestDbResolver(dbContext);
             var targetedFields = new TargetedFields();
-            return new EntityFrameworkCoreRepository<TModel, int>(targetedFields, resolver, resourceGraph, serviceFactory, resourceFactory, new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
+
+            return new EntityFrameworkCoreRepository<TModel, int>(targetedFields, resolver, resourceGraph, resourceFactory,
+                new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
         }
 
-        private IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>
+        private IDbContextResolver CreateTestDbResolver(AppDbContext dbContext)
         {
             var mock = new Mock<IDbContextResolver>();
             mock.Setup(r => r.GetContext()).Returns(dbContext);
@@ -385,7 +383,7 @@ namespace UnitTests.ResourceHooks
         private void ResolveInverseRelationships(AppDbContext context)
         {
             var dbContextResolvers = new[] {new DbContextResolver<AppDbContext>(context)};
-            var inverseRelationships = new InverseRelationships(_resourceGraph, dbContextResolvers);
+            var inverseRelationships = new InverseNavigationResolver(_resourceGraph, dbContextResolvers);
             inverseRelationships.Resolve();
         }
 

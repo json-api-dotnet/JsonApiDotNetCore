@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -43,94 +45,151 @@ namespace JsonApiDotNetCore.Serialization
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
-            var request = context.HttpContext.Request;
-            if (request.ContentLength == 0)
-            {
-                return await InputFormatterResult.SuccessAsync(null);
-            }
-
-            string body = await GetRequestBody(context.HttpContext.Request.Body);
+            string body = await GetRequestBodyAsync(context.HttpContext.Request.Body);
 
             string url = context.HttpContext.Request.GetEncodedUrl();
             _traceWriter.LogMessage(() => $"Received request at '{url}' with body: <<{body}>>");
 
-            object model;
-            try
+            object model = null;
+            if (!string.IsNullOrWhiteSpace(body))
             {
-                model = _deserializer.Deserialize(body);
-            }
-            catch (InvalidRequestBodyException exception)
-            {
-                exception.SetRequestBody(body);
-                throw;
-            }
-            catch (Exception exception)
-            {
-                throw new InvalidRequestBodyException(null, null, body, exception);
+                try
+                {
+                    model = _deserializer.Deserialize(body);
+                }
+                catch (JsonApiSerializationException exception)
+                {
+                    throw new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, body, exception);
+                }
+                catch (Exception exception)
+                {
+                    throw new InvalidRequestBodyException(null, null, body, exception);
+                }
             }
 
-            ValidatePatchRequestIncludesId(context, model, body);
+            if (RequiresRequestBody(context.HttpContext.Request.Method))
+            {
+                ValidateRequestBody(model, body, context.HttpContext.Request);
+            }
 
-            ValidateIncomingResourceType(context, model);
-            
             return await InputFormatterResult.SuccessAsync(model);
         }
 
-        private void ValidateIncomingResourceType(InputFormatterContext context, object model)
+        private async Task<string> GetRequestBodyAsync(Stream bodyStream)
         {
-            if (context.HttpContext.IsJsonApiRequest() && IsPatchOrPostRequest(context.HttpContext.Request))
-            {
-                var endpointResourceType = GetEndpointResourceType();
-                if (endpointResourceType == null)
-                {
-                    return;
-                }
-                
-                var bodyResourceTypes = GetBodyResourceTypes(model);
-                foreach (var bodyResourceType in bodyResourceTypes)
-                {
-                    if (!endpointResourceType.IsAssignableFrom(bodyResourceType))
-                    {
-                        var resourceFromEndpoint = _resourceContextProvider.GetResourceContext(endpointResourceType);
-                        var resourceFromBody = _resourceContextProvider.GetResourceContext(bodyResourceType);
+            using var reader = new StreamReader(bodyStream);
+            return await reader.ReadToEndAsync();
+        }
 
-                        throw new ResourceTypeMismatchException(new HttpMethod(context.HttpContext.Request.Method),
-                            context.HttpContext.Request.Path,
-                            resourceFromEndpoint, resourceFromBody);
-                    }
+        private bool RequiresRequestBody(string requestMethod)
+        {
+            if (requestMethod == HttpMethods.Post || requestMethod == HttpMethods.Patch)
+            {
+                return true;
+            }
+
+            return requestMethod == HttpMethods.Delete && _request.Kind == EndpointKind.Relationship;
+        }
+
+        private void ValidateRequestBody(object model, string body, HttpRequest httpRequest)
+        {
+            if (model == null && string.IsNullOrWhiteSpace(body))
+            {
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "Missing request body."
+                });
+            }
+
+            ValidateIncomingResourceType(model, httpRequest);
+
+            if (httpRequest.Method != HttpMethods.Post || _request.Kind == EndpointKind.Relationship)
+            {
+                ValidateRequestIncludesId(model, body);
+                ValidatePrimaryIdValue(model, httpRequest.Path);
+            }
+
+            if (_request.Kind == EndpointKind.Relationship)
+            {
+                ValidateForRelationshipType(httpRequest.Method, model, body);
+            }
+        }
+
+        private void ValidateIncomingResourceType(object model, HttpRequest httpRequest)
+        {
+            var endpointResourceType = GetResourceTypeFromEndpoint();
+            if (endpointResourceType == null)
+            {
+                return;
+            }
+
+            var bodyResourceTypes = GetResourceTypesFromRequestBody(model);
+            foreach (var bodyResourceType in bodyResourceTypes)
+            {
+                if (!endpointResourceType.IsAssignableFrom(bodyResourceType))
+                {
+                    var resourceFromEndpoint = _resourceContextProvider.GetResourceContext(endpointResourceType);
+                    var resourceFromBody = _resourceContextProvider.GetResourceContext(bodyResourceType);
+
+                    throw new ResourceTypeMismatchException(new HttpMethod(httpRequest.Method),
+                        httpRequest.Path, resourceFromEndpoint, resourceFromBody);
                 }
             }
         }
 
-        private void ValidatePatchRequestIncludesId(InputFormatterContext context, object model, string body)
+        private Type GetResourceTypeFromEndpoint()
         {
-            if (context.HttpContext.Request.Method == HttpMethods.Patch)
-            {
-                bool hasMissingId = model is IList list ? HasMissingId(list) : HasMissingId(model);
-                if (hasMissingId)
-                {
-                    throw new InvalidRequestBodyException("Payload must include 'id' element.", null, body);
-                }
+            return _request.Kind == EndpointKind.Primary
+                ? _request.PrimaryResource.ResourceType 
+                : _request.SecondaryResource?.ResourceType;
+        }
 
-                if (_request.Kind == EndpointKind.Primary && TryGetId(model, out var bodyId) && bodyId != _request.PrimaryId)
+        private IEnumerable<Type> GetResourceTypesFromRequestBody(object model)
+        {
+            if (model is IEnumerable<IIdentifiable> resourceCollection)
+            {
+                return resourceCollection.Select(r => r.GetType()).Distinct();
+            }
+
+            return model == null ? Array.Empty<Type>() : new[] { model.GetType() };
+        }
+
+        private void ValidateRequestIncludesId(object model, string body)
+        {
+            bool hasMissingId = model is IEnumerable list ? HasMissingId(list) : HasMissingId(model);
+            if (hasMissingId)
+            {
+                throw new InvalidRequestBodyException("Request body must include 'id' element.", null, body);
+            }
+        }
+
+        private void ValidatePrimaryIdValue(object model, PathString requestPath)
+        {
+            if (_request.Kind == EndpointKind.Primary)
+            {
+                if (TryGetId(model, out var bodyId) && bodyId != _request.PrimaryId)
                 {
-                    throw new ResourceIdMismatchException(bodyId, _request.PrimaryId, context.HttpContext.Request.GetDisplayUrl());
+                    throw new ResourceIdMismatchException(bodyId, _request.PrimaryId, requestPath);
                 }
             }
         }
 
-        /// <summary> Checks if the deserialized payload has an ID included </summary>
+        /// <summary>
+        /// Checks if the deserialized request body has an ID included.
+        /// </summary>
         private bool HasMissingId(object model)
         {
-            return TryGetId(model, out string id) && string.IsNullOrEmpty(id);
+            return TryGetId(model, out string id) && id == null;
         }
 
-        /// <summary> Checks if all elements in the deserialized payload have an ID included </summary>
+        /// <summary>
+        /// Checks if all elements in the deserialized request body have an ID included.
+        /// </summary>
         private bool HasMissingId(IEnumerable models)
         {
             foreach (var model in models)
             {
-                if (TryGetId(model, out string id) && string.IsNullOrEmpty(id))
+                if (TryGetId(model, out string id) && id == null)
                 {
                     return true;
                 }
@@ -141,12 +200,6 @@ namespace JsonApiDotNetCore.Serialization
 
         private static bool TryGetId(object model, out string id)
         {
-            if (model is ResourceObject resourceObject)
-            {
-                id = resourceObject.Id;
-                return true;
-            }
-
             if (model is IIdentifiable identifiable)
             {
                 id = identifiable.StringId;
@@ -157,40 +210,27 @@ namespace JsonApiDotNetCore.Serialization
             return false;
         }
 
-        /// <summary>
-        /// Fetches the request from body asynchronously.
-        /// </summary>
-        /// <param name="body">Input stream for body</param>
-        /// <returns>String content of body sent to server.</returns>
-        private async Task<string> GetRequestBody(Stream body)
+        private void ValidateForRelationshipType(string requestMethod, object model, string body)
         {
-            using var reader = new StreamReader(body);
-            // This needs to be set to async because
-            // Synchronous IO operations are 
-            // https://github.com/aspnet/AspNetCore/issues/7644
-            return await reader.ReadToEndAsync();
-        }
-        
-        private bool IsPatchOrPostRequest(HttpRequest request)
-        {
-            return request.Method == HttpMethods.Patch || request.Method == HttpMethods.Post;
-        }
-
-        private IEnumerable<Type> GetBodyResourceTypes(object model)
-        {
-            if (model is IEnumerable<IIdentifiable> resourceCollection)
+            if (_request.Relationship is HasOneAttribute)
             {
-                return resourceCollection.Select(r => r.GetType()).Distinct();
+                if (requestMethod == HttpMethods.Post || requestMethod == HttpMethods.Delete)
+                {
+                    throw new ToManyRelationshipRequiredException(_request.Relationship.PublicName);
+                }
+
+                if (model != null && !(model is IIdentifiable))
+                {
+                    throw new InvalidRequestBodyException("Expected single data element for to-one relationship.",
+                        $"Expected single data element for '{_request.Relationship.PublicName}' relationship.", body);
+                }
             }
 
-            return model == null ? new Type[0] : new[] { model.GetType() };
-        }
-
-        private Type GetEndpointResourceType()
-        {
-            return _request.Kind == EndpointKind.Primary
-                ? _request.PrimaryResource.ResourceType 
-                : _request.SecondaryResource?.ResourceType;
+            if (_request.Relationship is HasManyAttribute && !(model is IEnumerable<IIdentifiable>))
+            {
+                throw new InvalidRequestBodyException("Expected data[] element for to-many relationship.",
+                    $"Expected data[] element for '{_request.Relationship.PublicName}' relationship.", body);
+            }
         }
     }
 }

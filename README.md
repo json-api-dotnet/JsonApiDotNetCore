@@ -2,7 +2,7 @@
 <img src ="https://raw.githubusercontent.com/json-api-dotnet/JsonApiDotnetCore/master/logo.png" />
 </p>
 
-# JSON API .Net Core
+# JSON:API .NET Core
 
 [![Build status](https://ci.appveyor.com/api/projects/status/5go47hrm0iik0ls3/branch/master?svg=true)](https://ci.appveyor.com/project/jaredcnance/jsonapidotnetcore/branch/master)
 [![Travis](https://travis-ci.org/json-api-dotnet/JsonApiDotNetCore.svg?branch=master)](https://travis-ci.org/json-api-dotnet/JsonApiDotNetCore)
@@ -21,7 +21,7 @@ These are some steps you can take to help you understand what this project is an
 - [Demo [Video]](https://youtu.be/KAMuo6K7VcE)
 - [Our documentation](https://json-api-dotnet.github.io/JsonApiDotNetCore/)
 - [Check out the example projects](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples)
-- [Embercasts: Full Stack Ember with ASP .NET Core](https://www.embercasts.com/course/full-stack-ember-with-dotnet/watch/whats-in-this-course-cs)
+- [Embercasts: Full Stack Ember with ASP.NET Core](https://www.embercasts.com/course/full-stack-ember-with-dotnet/watch/whats-in-this-course-cs)
 
 ## Related Projects
 
@@ -43,7 +43,7 @@ See [our documentation](https://json-api-dotnet.github.io/JsonApiDotNetCore/) fo
 ```csharp
 public class Article : Identifiable
 {
-    [Attr("name")]
+    [Attr]
     public string Name { get; set; }
 }
 ```
@@ -53,12 +53,11 @@ public class Article : Identifiable
 ```csharp
 public class ArticlesController : JsonApiController<Article>
 {
-        public ArticlesController(
-            IJsonApiOptions options,
-            IResourceService<Article> resourceService,
-            ILoggerFactory loggerFactory)
-            : base(options, resourceService, loggerFactory)
-        { }
+    public ArticlesController(IJsonApiOptions options, IResourceService<Article> resourceService,
+        ILoggerFactory loggerFactory)
+        : base(options, resourceService, loggerFactory)
+    {
+    }
 }
 ```
 
@@ -67,14 +66,16 @@ public class ArticlesController : JsonApiController<Article>
 ```csharp
 public class Startup
 {
-    public IServiceProvider ConfigureServices(IServiceCollection services) {
+    public IServiceProvider ConfigureServices(IServiceCollection services)
+    {
         services.AddJsonApi<AppDbContext>();
-        // ...
     }
 
-    public void Configure(IApplicationBuilder app)  {
-        app.UseJsonApi()
-        // ...
+    public void Configure(IApplicationBuilder app)
+    {
+        app.UseRouting();
+        app.UseJsonApi();
+        app.UseEndpoints(endpoints => endpoints.MapControllers());
     }
 }
 ```
@@ -101,26 +102,19 @@ And then to run the tests:
 dotnet test
 ```
 
-#### Cleaning
-
-Sometimes the compiled files can be dirty / corrupt from other branches / failed builds.
-
-```bash
-dotnet clean
-```
-
 #### Compiler warnings
 
 The `Release` build configuration is set to fail on warnings. That means when submitting a PR there shouldn't be any compiler warnings because the CI build it set to `Release`.
 
 ## Compatibility
 
-A lot of changes were introduced in v4.0.0, the following chart should help you with compatibility issues between .NET Core versions
+A lot of changes were introduced in v4, the following chart should help you with compatibility issues between .NET Core versions.
 
-| .NET Core Version | JADNC Version |
-| ----------------- | ------------- |
-| 2.*               | v3.*          |
-| 3.*               | v4.*          |
+| .NET Core Version | EF Core Version | JADNC Version |
+| ----------------- | --------------- | ------------- |
+| 2.x               | 2.x             | v3.x          |
+| 3.x               | 3.x, 5.x        | v4.x          |
+| 5.x               | 5.x             | v4.x          |
 
 ## Trying out the latest build
 

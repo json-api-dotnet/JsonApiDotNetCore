@@ -1,11 +1,9 @@
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -133,9 +131,10 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] List<ResourceObject> relationships)
+        public async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResourceIds)
         {
-            await _resourceService.UpdateRelationshipAsync(id, relationshipName, relationships);
+            await _resourceService.SetRelationshipAsync(id, relationshipName, secondaryResourceIds);
+
             return Ok();
         }
 

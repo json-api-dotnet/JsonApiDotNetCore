@@ -21,17 +21,14 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <summary>
-        /// Initializes the server serializer using the <see cref="ResourceContext"/>
-        /// associated with the current request.
+        /// Initializes the server serializer using the <see cref="ResourceContext"/> associated with the current request.
         /// </summary>
         public IJsonApiSerializer GetSerializer()
         {
             var targetType = GetDocumentType();
 
             var serializerType = typeof(ResponseSerializer<>).MakeGenericType(targetType);
-            var serializer = (IResponseSerializer)_provider.GetRequiredService(serializerType);
-            if (_request.Kind == EndpointKind.Relationship && _request.Relationship != null)
-                serializer.RequestRelationship = _request.Relationship;
+            var serializer = _provider.GetRequiredService(serializerType);
 
             return (IJsonApiSerializer)serializer;
         }

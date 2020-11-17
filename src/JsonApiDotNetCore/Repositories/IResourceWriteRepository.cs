@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Repositories
 {
     /// <inheritdoc />
-    public interface IResourceWriteRepository<in TResource>
+    public interface IResourceWriteRepository<TResource>
         : IResourceWriteRepository<TResource, int>
         where TResource : class, IIdentifiable<int>
     { }
@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Repositories
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
     /// <typeparam name="TId">The resource identifier type.</typeparam>
-    public interface IResourceWriteRepository<in TResource, in TId>
+    public interface IResourceWriteRepository<TResource, in TId>
         where TResource : class, IIdentifiable<TId>
     {
         /// <summary>
@@ -25,27 +25,33 @@ namespace JsonApiDotNetCore.Repositories
         Task CreateAsync(TResource resource);
 
         /// <summary>
-        /// Updates an existing resource in the underlying data store.
+        /// Adds resources to a to-many relationship in the underlying data store.
         /// </summary>
-        /// <param name="requestResource">The (partial) resource coming from the request body.</param>
-        /// <param name="databaseResource">The resource as stored in the database before the update.</param>
-        Task UpdateAsync(TResource requestResource, TResource databaseResource);
+        Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds);
 
         /// <summary>
-        /// Updates a relationship in the underlying data store.
+        /// Updates the attributes and relationships of an existing resource in the underlying data store.
         /// </summary>
-        Task UpdateRelationshipAsync(object parent, RelationshipAttribute relationship, IReadOnlyCollection<string> relationshipIds);
+        Task UpdateAsync(TResource resourceFromRequest, TResource resourceFromDatabase);
 
         /// <summary>
-        /// Deletes a resource from the underlying data store.
+        /// Performs a complete replacement of the relationship in the underlying data store.
         /// </summary>
-        /// <param name="id">Identifier for the resource to delete.</param>
-        /// <returns><c>true</c> if the resource was deleted; <c>false</c> is the resource did not exist.</returns>
-        Task<bool> DeleteAsync(TId id);
+        Task SetRelationshipAsync(TResource primaryResource, object secondaryResourceIds);
+    
+        /// <summary>
+        /// Deletes an existing resource from the underlying data store.
+        /// </summary>
+        Task DeleteAsync(TId id);
+        
+        /// <summary>
+        /// Removes resources from a to-many relationship in the underlying data store.
+        /// </summary>
+        Task RemoveFromToManyRelationshipAsync(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds);
 
         /// <summary>
-        /// Ensures that the next time this resource is requested, it is re-fetched from the underlying data store.
+        /// Retrieves a resource with all of its attributes, including the set of targeted relationships, in preparation for update.
         /// </summary>
-        void FlushFromCache(TResource resource);
+        Task<TResource> GetForUpdateAsync(QueryLayer queryLayer);
     }
 }

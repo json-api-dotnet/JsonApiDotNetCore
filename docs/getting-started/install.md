@@ -16,6 +16,6 @@ Install-Package JsonApiDotnetCore
 ```xml
 <ItemGroup>
   <!-- Be sure to check NuGet for the latest version # -->
-  <PackageReference Include="JsonApiDotNetCore" Version="3.0.0" />
+  <PackageReference Include="JsonApiDotNetCore" Version="4.0.0" />
 </ItemGroup>
 ```

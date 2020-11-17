@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Errors
     /// <summary>
     /// The error that is thrown when model state validation fails.
     /// </summary>
-    public class InvalidModelStateException : Exception
+    public class InvalidModelStateException : Exception, IHasMultipleErrors
     {
         public IReadOnlyCollection<Error> Errors { get; }
 

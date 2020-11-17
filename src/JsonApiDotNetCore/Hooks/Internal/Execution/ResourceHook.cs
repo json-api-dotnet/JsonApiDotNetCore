@@ -1,4 +1,4 @@
-﻿namespace JsonApiDotNetCore.Hooks.Internal.Execution
+namespace JsonApiDotNetCore.Hooks.Internal.Execution
 {
 
     /// <summary>
@@ -18,7 +18,7 @@
         AfterRead,
         AfterUpdate,
         AfterDelete,
-        AfterUpdateRelationship,
+        AfterUpdateRelationship
     }
 
 }
