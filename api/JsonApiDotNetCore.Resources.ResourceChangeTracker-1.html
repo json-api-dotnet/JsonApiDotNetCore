@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Resources_ResourceChangeTracker_1" data-uid="JsonApiDotNetCore.Resources.ResourceChangeTracker`1" class="text-break">Class ResourceChangeTracker&lt;TResource&gt;
   </h1>
-  <div class="markdown level0 summary"><p>Used to determine whether additional changes to a resource, not specified in a PATCH request, have been applied.</p>
+  <div class="markdown level0 summary"><p>Used to determine whether additional changes to a resource (side effects), not specified in a POST or PATCH request, have been applied.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -145,7 +145,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceChangeTracker(IJsonApiOptions options, IResourceContextProvider contextProvider, ITargetedFields targetedFields)</code></pre>
+    <pre><code class="lang-csharp hljs">public ResourceChangeTracker(IJsonApiOptions options, IResourceContextProvider resourceContextProvider, ITargetedFields targetedFields)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -164,7 +164,7 @@
       </tr>
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceContextProvider.html">IResourceContextProvider</a></td>
-        <td><span class="parametername">contextProvider</span></td>
+        <td><span class="parametername">resourceContextProvider</span></td>
         <td></td>
       </tr>
       <tr>
@@ -185,8 +185,8 @@
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceChangeTracker_1_HasImplicitChanges_" data-uid="JsonApiDotNetCore.Resources.ResourceChangeTracker`1.HasImplicitChanges*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceChangeTracker_1_HasImplicitChanges" data-uid="JsonApiDotNetCore.Resources.ResourceChangeTracker`1.HasImplicitChanges">HasImplicitChanges()</h4>
-  <div class="markdown level1 summary"><p>Validates if any exposed resource attributes that were not in the PATCH request have been changed.
-And validates if the values from the PATCH request are stored without modification.</p>
+  <div class="markdown level1 summary"><p>Validates if any exposed resource attributes that were not in the POST or PATCH request have been changed.
+And validates if the values from the request are stored without modification.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -204,7 +204,7 @@ And validates if the values from the PATCH request are stored without modificati
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><p><code>true</code> if the attribute values from the PATCH request were the only changes; <code>false</code>, otherwise.</p>
+        <td><p><code>true</code> if the attribute values from the POST or PATCH request were the only changes; <code>false</code>, otherwise.</p>
 </td>
       </tr>
     </tbody>
@@ -218,7 +218,7 @@ And validates if the values from the PATCH request are stored without modificati
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceChangeTracker_1_SetFinallyStoredAttributeValues_" data-uid="JsonApiDotNetCore.Resources.ResourceChangeTracker`1.SetFinallyStoredAttributeValues*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceChangeTracker_1_SetFinallyStoredAttributeValues__0_" data-uid="JsonApiDotNetCore.Resources.ResourceChangeTracker`1.SetFinallyStoredAttributeValues(`0)">SetFinallyStoredAttributeValues(TResource)</h4>
-  <div class="markdown level1 summary"><p>Sets the exposed resource attributes as stored in database, after applying changes.</p>
+  <div class="markdown level1 summary"><p>Sets the exposed resource attributes as stored in database, after applying the POST or PATCH operation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -251,7 +251,8 @@ And validates if the values from the PATCH request are stored without modificati
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceChangeTracker_1_SetInitiallyStoredAttributeValues_" data-uid="JsonApiDotNetCore.Resources.ResourceChangeTracker`1.SetInitiallyStoredAttributeValues*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceChangeTracker_1_SetInitiallyStoredAttributeValues__0_" data-uid="JsonApiDotNetCore.Resources.ResourceChangeTracker`1.SetInitiallyStoredAttributeValues(`0)">SetInitiallyStoredAttributeValues(TResource)</h4>
-  <div class="markdown level1 summary"><p>Sets the exposed resource attributes as stored in database, before applying changes.</p>
+  <div class="markdown level1 summary"><p>Sets the exposed resource attributes as stored in database, before applying the PATCH operation.
+For POST operations, this sets exposed resource attributes to their default value.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -284,7 +285,7 @@ And validates if the values from the PATCH request are stored without modificati
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceChangeTracker_1_SetRequestedAttributeValues_" data-uid="JsonApiDotNetCore.Resources.ResourceChangeTracker`1.SetRequestedAttributeValues*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceChangeTracker_1_SetRequestedAttributeValues__0_" data-uid="JsonApiDotNetCore.Resources.ResourceChangeTracker`1.SetRequestedAttributeValues(`0)">SetRequestedAttributeValues(TResource)</h4>
-  <div class="markdown level1 summary"><p>Sets the subset of exposed attributes from the PATCH request.</p>
+  <div class="markdown level1 summary"><p>Sets the (subset of) exposed resource attributes from the POST or PATCH request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

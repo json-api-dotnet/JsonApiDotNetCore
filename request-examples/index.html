@@ -508,7 +508,7 @@
   ]
 }
 </code></pre><h1 id="writing-data">Writing data</h1>
-<h3 id="create">Create</h3>
+<h3 id="create-resource">Create resource</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/people        `
     -H &quot;Content-Type: application/vnd.api+json&quot;     `
     -d &#39;{
@@ -543,7 +543,7 @@
     }
   }
 }
-</code></pre><h3 id="create-with-relationship">Create with relationship</h3>
+</code></pre><h3 id="create-resource-with-relationship">Create resource with relationship</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books         `
     -H &quot;Content-Type: application/vnd.api+json&quot;     `
     -d &#39;{
@@ -588,7 +588,7 @@
     }
   }
 }
-</code></pre><h3 id="update">Update</h3>
+</code></pre><h3 id="update-resource">Update resource</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books/1       `
     -H &quot;Content-Type: application/vnd.api+json&quot;     `
     -X PATCH                                        `
@@ -601,13 +601,7 @@
                 }
             }
         }&#39;
-</code></pre><pre><code class="lang-json" name="RESPONSE">{
-  &quot;links&quot;: {
-    &quot;self&quot;: &quot;/api/books/1&quot;
-  },
-  &quot;data&quot;: null
-}
-</code></pre><h3 id="delete">Delete</h3>
+</code></pre><pre><code class="lang-json" name="RESPONSE"></code></pre><h3 id="delete-resource">Delete resource</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books/1       `
     -X DELETE
 </code></pre><pre><code class="lang-json" name="RESPONSE"></code></pre></article>

@@ -77,6 +77,9 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Errors.CannotClearRequiredRelationshipException.html">CannotClearRequiredRelationshipException</a></h4>
+      <section><p>The error that is thrown when a required relationship is cleared.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.InvalidConfigurationException.html">InvalidConfigurationException</a></h4>
       <section><p>The error that is thrown when configured usage of this library is invalid.</p>
 </section>
@@ -95,11 +98,16 @@
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.JsonApiException.html">JsonApiException</a></h4>
       <section><p>The base class for an <span class="xref">System.Exception</span> that represents a json:api error object in an unsuccessful response.</p>
 </section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Errors.MissingResourceInRelationship.html">MissingResourceInRelationship</a></h4>
+      <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.RelationshipNotFoundException.html">RelationshipNotFoundException</a></h4>
       <section><p>The error that is thrown when a relationship does not exist.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.html">RequestMethodNotAllowedException</a></h4>
       <section><p>The error that is thrown when a request is received that contains an unsupported HTTP verb.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Errors.ResourceAlreadyExistsException.html">ResourceAlreadyExistsException</a></h4>
+      <section><p>The error that is thrown when creating a resource with an ID that already exists.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException.html">ResourceIdInPostRequestNotAllowedException</a></h4>
       <section><p>The error that is thrown when a POST request is received that contains a client-generated ID.</p>
@@ -110,12 +118,22 @@
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.ResourceNotFoundException.html">ResourceNotFoundException</a></h4>
       <section><p>The error that is thrown when a resource does not exist.</p>
 </section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.html">ResourcesInRelationshipsNotFoundException</a></h4>
+      <section><p>The error that is thrown when referencing one or more non-existing resources in one or more relationships.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.ResourceTypeMismatchException.html">ResourceTypeMismatchException</a></h4>
       <section><p>The error that is thrown when the resource type in the request body does not match the type expected at the current endpoint URL.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Errors.ToManyRelationshipRequiredException.html">ToManyRelationshipRequiredException</a></h4>
+      <section><p>The error that is thrown when an attempt is made to update a to-one relationship from a to-many relationship endpoint.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.UnsuccessfulActionResultException.html">UnsuccessfulActionResultException</a></h4>
       <section><p>The error that is thrown when an <span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span> with non-success status is returned from a controller method.</p>
 </section>
+    <h3 id="interfaces">Interfaces
+  </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Errors.IHasMultipleErrors.html">IHasMultipleErrors</a></h4>
+      <section></section>
 </article>
           </div>
           

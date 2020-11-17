@@ -83,6 +83,9 @@
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html">Identifiable&lt;TId&gt;</a></h4>
       <section><p>A convenient basic implementation of <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a> that provides conversion between <a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_Id">Id</a> and <a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_StringId">StringId</a>.</p>
 </section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IdentifiableComparer.html">IdentifiableComparer</a></h4>
+      <section><p>Compares <code>IIdentifiable</code> instances with each other based on their type and <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_StringId">StringId</a>.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-1.html">JsonApiResourceDefinition&lt;TResource&gt;</a></h4>
       <section><p>Provides a resource-centric extensibility point for executing custom code when something happens with a resource.
 The goal here is to reduce the need for overriding the service and repository layers.</p>
@@ -100,7 +103,7 @@ See <a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-
 See <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnRegisterQueryableHandlersForQueryStringParameters">OnRegisterQueryableHandlersForQueryStringParameters()</a> for usage details.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.ResourceChangeTracker-1.html">ResourceChangeTracker&lt;TResource&gt;</a></h4>
-      <section><p>Used to determine whether additional changes to a resource, not specified in a PATCH request, have been applied.</p>
+      <section><p>Used to determine whether additional changes to a resource (side effects), not specified in a POST or PATCH request, have been applied.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html">ResourceDefinitionAccessor</a></h4>
       <section><p>Retrieves a <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html">IResourceDefinition&lt;TResource, TId&gt;</a> instance from the D/I container and invokes a callback on it.</p>
@@ -123,7 +126,7 @@ Note that JsonApiDotNetCore also assumes that a property named &apos;Id&apos; ex
       <section><p>When implemented by a class, indicates to JsonApiDotNetCore that the class represents a json:api resource.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceChangeTracker-1.html">IResourceChangeTracker&lt;TResource&gt;</a></h4>
-      <section><p>Used to determine whether additional changes to a resource, not specified in a PATCH request, have been applied.</p>
+      <section><p>Used to determine whether additional changes to a resource (side effects), not specified in a POST or PATCH request, have been applied.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-1.html">IResourceDefinition&lt;TResource&gt;</a></h4>
       <section><p>Provides a resource-centric extensibility point for executing custom code when something happens with a resource.

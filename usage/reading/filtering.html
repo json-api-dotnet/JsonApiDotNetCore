@@ -10,12 +10,12 @@
     <meta name="title" content="Filtering ">
     <meta name="generator" content="docfx 2.56.5.0">
     
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
     
     
     
@@ -34,8 +34,8 @@
                 <span class="icon-bar"></span>
               </button>
               
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -260,8 +260,8 @@ If you want to use the new filter notation in that case, prefix the parameter va
 </code></pre><h2 id="custom-filters">Custom Filters</h2>
 <p>There are multiple ways you can add custom filters:</p>
 <ol>
-<li>Implementing <code>IResourceDefinition.OnApplyFilter</code> (see <a href="resources/resource-definitions.html#exclude-soft-deleted-resources">here</a>) and inject <code>IRequestQueryStringAccessor</code>, which works at all depths, but filter operations are constrained to what <code>FilterExpression</code> provides</li>
-<li>Implementing <code>IResourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters</code> as <a href="resources/resource-definitions.html#custom-query-string-parameters">described previously</a>, which enables the full range of <code>IQueryable&lt;T&gt;</code> functionality, but only works on primary endpoints</li>
+<li>Implementing <code>IResourceDefinition.OnApplyFilter</code> (see <a href="../resources/resource-definitions.html#exclude-soft-deleted-resources">here</a>) and inject <code>IRequestQueryStringAccessor</code>, which works at all depths, but filter operations are constrained to what <code>FilterExpression</code> provides</li>
+<li>Implementing <code>IResourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters</code> as <a href="../resources/resource-definitions.html#custom-query-string-parameters">described previously</a>, which enables the full range of <code>IQueryable&lt;T&gt;</code> functionality, but only works on primary endpoints</li>
 <li>Add an implementation of <code>IQueryConstraintProvider</code> to supply additional <code>FilterExpression</code>s, which are combined with existing filters using AND operator</li>
 <li>Override <code>EntityFrameworkCoreRepository.ApplyQueryLayer</code> to adapt the <code>IQueryable&lt;T&gt;</code> expression just before execution</li>
 <li>Take a deep dive and plug into reader/parser/tokenizer/visitor/builder for adding additional general-purpose filter operators</li>
@@ -274,7 +274,7 @@ If you want to use the new filter notation in that case, prefix the parameter va
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/filtering.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/reading/filtering.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
@@ -301,8 +301,8 @@ If you want to use the new filter notation in that case, prefix the parameter va
       </footer>
     </div>
     
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
   </body>
 </html>

@@ -96,13 +96,16 @@ If you want to provide routing templates yourself, you should derive from BaseJs
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetAsync__1_">BaseJsonApiController&lt;TResource, TId&gt;.GetAsync(TId)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetRelationshipAsync__1_System_String_">BaseJsonApiController&lt;TResource, TId&gt;.GetRelationshipAsync(TId, String)</a>
-    </div>
-    <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetSecondaryAsync__1_System_String_">BaseJsonApiController&lt;TResource, TId&gt;.GetSecondaryAsync(TId, String)</a>
     </div>
     <div>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetRelationshipAsync__1_System_String_">BaseJsonApiController&lt;TResource, TId&gt;.GetRelationshipAsync(TId, String)</a>
+    </div>
+    <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PostAsync__0_">BaseJsonApiController&lt;TResource, TId&gt;.PostAsync(TResource)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PostRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__">BaseJsonApiController&lt;TResource, TId&gt;.PostRelationshipAsync(TId, String, ISet&lt;IIdentifiable&gt;)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PatchAsync__1__0_">BaseJsonApiController&lt;TResource, TId&gt;.PatchAsync(TId, TResource)</a>
@@ -112,6 +115,9 @@ If you want to provide routing templates yourself, you should derive from BaseJs
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_DeleteAsync__1_">BaseJsonApiController&lt;TResource, TId&gt;.DeleteAsync(TId)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_DeleteRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__">BaseJsonApiController&lt;TResource, TId&gt;.DeleteRelationshipAsync(TId, String, ISet&lt;IIdentifiable&gt;)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html#JsonApiDotNetCore_Controllers_CoreJsonApiController_Error_JsonApiDotNetCore_Serialization_Objects_Error_">CoreJsonApiController.Error(Error)</a>
@@ -673,18 +679,18 @@ If you want to provide routing templates yourself, you should derive from BaseJs
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IGetAllService__0__1__JsonApiDotNetCore_Services_IGetByIdService__0__1__JsonApiDotNetCore_Services_IGetSecondaryService__0__1__JsonApiDotNetCore_Services_IGetRelationshipService__0__1__JsonApiDotNetCore_Services_ICreateService__0__1__JsonApiDotNetCore_Services_IUpdateService__0__1__JsonApiDotNetCore_Services_IUpdateRelationshipService__0__1__JsonApiDotNetCore_Services_IDeleteService__0__1__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CMicrosoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.Services.IGetAllService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IGetByIdService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IGetSecondaryService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IGetRelationshipService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.ICreateService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IUpdateService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IUpdateRelationshipService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IDeleteService%7B%600%2C%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IGetAllService__0__1__JsonApiDotNetCore_Services_IGetByIdService__0__1__JsonApiDotNetCore_Services_IGetSecondaryService__0__1__JsonApiDotNetCore_Services_IGetRelationshipService__0__1__JsonApiDotNetCore_Services_ICreateService__0__1__JsonApiDotNetCore_Services_IAddToRelationshipService__0__1__JsonApiDotNetCore_Services_IUpdateService__0__1__JsonApiDotNetCore_Services_ISetRelationshipService__0__1__JsonApiDotNetCore_Services_IDeleteService__0__1__JsonApiDotNetCore_Services_IRemoveFromRelationshipService__0__1__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CMicrosoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.Services.IGetAllService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IGetByIdService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IGetSecondaryService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IGetRelationshipService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.ICreateService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IAddToRelationshipService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IUpdateService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.ISetRelationshipService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IDeleteService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IRemoveFromRelationshipService%7B%600%2C%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L28">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L29">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IGetAllService__0__1__JsonApiDotNetCore_Services_IGetByIdService__0__1__JsonApiDotNetCore_Services_IGetSecondaryService__0__1__JsonApiDotNetCore_Services_IGetRelationshipService__0__1__JsonApiDotNetCore_Services_ICreateService__0__1__JsonApiDotNetCore_Services_IUpdateService__0__1__JsonApiDotNetCore_Services_IUpdateRelationshipService__0__1__JsonApiDotNetCore_Services_IDeleteService__0__1__" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IGetAllService{`0,`1},JsonApiDotNetCore.Services.IGetByIdService{`0,`1},JsonApiDotNetCore.Services.IGetSecondaryService{`0,`1},JsonApiDotNetCore.Services.IGetRelationshipService{`0,`1},JsonApiDotNetCore.Services.ICreateService{`0,`1},JsonApiDotNetCore.Services.IUpdateService{`0,`1},JsonApiDotNetCore.Services.IUpdateRelationshipService{`0,`1},JsonApiDotNetCore.Services.IDeleteService{`0,`1})">JsonApiController(IJsonApiOptions, ILoggerFactory, IGetAllService&lt;TResource, TId&gt;, IGetByIdService&lt;TResource, TId&gt;, IGetSecondaryService&lt;TResource, TId&gt;, IGetRelationshipService&lt;TResource, TId&gt;, ICreateService&lt;TResource, TId&gt;, IUpdateService&lt;TResource, TId&gt;, IUpdateRelationshipService&lt;TResource, TId&gt;, IDeleteService&lt;TResource, TId&gt;)</h4>
+  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IGetAllService__0__1__JsonApiDotNetCore_Services_IGetByIdService__0__1__JsonApiDotNetCore_Services_IGetSecondaryService__0__1__JsonApiDotNetCore_Services_IGetRelationshipService__0__1__JsonApiDotNetCore_Services_ICreateService__0__1__JsonApiDotNetCore_Services_IAddToRelationshipService__0__1__JsonApiDotNetCore_Services_IUpdateService__0__1__JsonApiDotNetCore_Services_ISetRelationshipService__0__1__JsonApiDotNetCore_Services_IDeleteService__0__1__JsonApiDotNetCore_Services_IRemoveFromRelationshipService__0__1__" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IGetAllService{`0,`1},JsonApiDotNetCore.Services.IGetByIdService{`0,`1},JsonApiDotNetCore.Services.IGetSecondaryService{`0,`1},JsonApiDotNetCore.Services.IGetRelationshipService{`0,`1},JsonApiDotNetCore.Services.ICreateService{`0,`1},JsonApiDotNetCore.Services.IAddToRelationshipService{`0,`1},JsonApiDotNetCore.Services.IUpdateService{`0,`1},JsonApiDotNetCore.Services.ISetRelationshipService{`0,`1},JsonApiDotNetCore.Services.IDeleteService{`0,`1},JsonApiDotNetCore.Services.IRemoveFromRelationshipService{`0,`1})">JsonApiController(IJsonApiOptions, ILoggerFactory, IGetAllService&lt;TResource, TId&gt;, IGetByIdService&lt;TResource, TId&gt;, IGetSecondaryService&lt;TResource, TId&gt;, IGetRelationshipService&lt;TResource, TId&gt;, ICreateService&lt;TResource, TId&gt;, IAddToRelationshipService&lt;TResource, TId&gt;, IUpdateService&lt;TResource, TId&gt;, ISetRelationshipService&lt;TResource, TId&gt;, IDeleteService&lt;TResource, TId&gt;, IRemoveFromRelationshipService&lt;TResource, TId&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService&lt;TResource, TId&gt; getAll = null, IGetByIdService&lt;TResource, TId&gt; getById = null, IGetSecondaryService&lt;TResource, TId&gt; getSecondary = null, IGetRelationshipService&lt;TResource, TId&gt; getRelationship = null, ICreateService&lt;TResource, TId&gt; create = null, IUpdateService&lt;TResource, TId&gt; update = null, IUpdateRelationshipService&lt;TResource, TId&gt; updateRelationships = null, IDeleteService&lt;TResource, TId&gt; delete = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService&lt;TResource, TId&gt; getAll = null, IGetByIdService&lt;TResource, TId&gt; getById = null, IGetSecondaryService&lt;TResource, TId&gt; getSecondary = null, IGetRelationshipService&lt;TResource, TId&gt; getRelationship = null, ICreateService&lt;TResource, TId&gt; create = null, IAddToRelationshipService&lt;TResource, TId&gt; addToRelationship = null, IUpdateService&lt;TResource, TId&gt; update = null, ISetRelationshipService&lt;TResource, TId&gt; setRelationship = null, IDeleteService&lt;TResource, TId&gt; delete = null, IRemoveFromRelationshipService&lt;TResource, TId&gt; removeFromRelationship = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -732,18 +738,28 @@ If you want to provide routing templates yourself, you should derive from BaseJs
         <td></td>
       </tr>
       <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IAddToRelationshipService-2.html">IAddToRelationshipService</a>&lt;TResource, TId&gt;</td>
+        <td><span class="parametername">addToRelationship</span></td>
+        <td></td>
+      </tr>
+      <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-2.html">IUpdateService</a>&lt;TResource, TId&gt;</td>
         <td><span class="parametername">update</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-2.html">IUpdateRelationshipService</a>&lt;TResource, TId&gt;</td>
-        <td><span class="parametername">updateRelationships</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.ISetRelationshipService-2.html">ISetRelationshipService</a>&lt;TResource, TId&gt;</td>
+        <td><span class="parametername">setRelationship</span></td>
         <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-2.html">IDeleteService</a>&lt;TResource, TId&gt;</td>
         <td><span class="parametername">delete</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IRemoveFromRelationshipService-2.html">IRemoveFromRelationshipService</a>&lt;TResource, TId&gt;</td>
+        <td><span class="parametername">removeFromRelationship</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -753,7 +769,7 @@ If you want to provide routing templates yourself, you should derive from BaseJs
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IResourceService__0__1__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CMicrosoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.Services.IResourceService%7B%600%2C%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L20">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L21">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IResourceService__0__1__" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceService{`0,`1})">JsonApiController(IJsonApiOptions, ILoggerFactory, IResourceService&lt;TResource, TId&gt;)</h4>
@@ -797,11 +813,12 @@ If you want to provide routing templates yourself, you should derive from BaseJs
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteAsync__1_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.DeleteAsync(%601)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L80">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L89">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteAsync__1_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteAsync(`1)">DeleteAsync(TId)</h4>
-  <div class="markdown level1 summary"><p>Deletes a resource.</p>
+  <div class="markdown level1 summary"><p>Deletes an existing resource.
+Example: DELETE /articles/1 HTTP/1.1</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -845,10 +862,75 @@ public override Task&lt;IActionResult&gt; DeleteAsync(TId id)</code></pre>
   <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.DeleteAsync(TId)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.DeleteRelationshipAsync(%601%2CSystem.String%2CSystem.Collections.Generic.ISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L93">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteRelationshipAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable})">DeleteRelationshipAsync(TId, String, ISet&lt;IIdentifiable&gt;)</h4>
+  <div class="markdown level1 summary"><p>Removes resources from a to-many relationship.
+Example: DELETE /articles/1/relationships/revisions HTTP/1.1</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[HttpDelete(&quot;{id}/relationships/{relationshipName}&quot;)]
+public override Task&lt;IActionResult&gt; DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet&lt;IIdentifiable&gt; secondaryResourceIds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The identifier of the primary resource.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">relationshipName</span></td>
+        <td><p>The relationship to remove resources from.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
+        <td><span class="parametername">secondaryResourceIds</span></td>
+        <td><p>The set of resources to remove from the relationship.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.DeleteRelationshipAsync(TId, System.String, System.Collections.Generic.ISet&lt;JsonApiDotNetCore.Resources.IIdentifiable&gt;)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.GetAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L44">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L47">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync">GetAsync()</h4>
@@ -883,7 +965,7 @@ public override Task&lt;IActionResult&gt; GetAsync()</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync__1_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.GetAsync(%601)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L48">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L51">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync__1_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync(`1)">GetAsync(TId)</h4>
@@ -935,12 +1017,13 @@ public override Task&lt;IActionResult&gt; GetAsync(TId id)</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_GetRelationshipAsync__1_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.GetRelationshipAsync(%601%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L52">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L60">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetRelationshipAsync__1_System_String_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetRelationshipAsync(`1,System.String)">GetRelationshipAsync(TId, String)</h4>
   <div class="markdown level1 summary"><p>Gets a single resource relationship.
-Example: GET /articles/1/relationships/author HTTP/1.1</p>
+Example: GET /articles/1/relationships/author HTTP/1.1
+Example: GET /articles/1/relationships/revisions HTTP/1.1</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -992,7 +1075,7 @@ public override Task&lt;IActionResult&gt; GetRelationshipAsync(TId id, string re
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_GetSecondaryAsync__1_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.GetSecondaryAsync(%601%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L57">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L55">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetSecondaryAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetSecondaryAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetSecondaryAsync__1_System_String_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetSecondaryAsync(`1,System.String)">GetSecondaryAsync(TId, String)</h4>
@@ -1051,11 +1134,13 @@ public override Task&lt;IActionResult&gt; GetSecondaryAsync(TId id, string relat
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_PatchAsync__1__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.PatchAsync(%601%2C%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L67">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L76">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchAsync__1__0_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchAsync(`1,`0)">PatchAsync(TId, TResource)</h4>
-  <div class="markdown level1 summary"><p>Updates an existing resource. May contain a partial set of attributes.</p>
+  <div class="markdown level1 summary"><p>Updates the attributes and/or relationships of an existing resource.
+Only the values of sent attributes are replaced. And only the values of sent relationships are replaced.
+Example: PATCH /articles/1 HTTP/1.1</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1107,17 +1192,19 @@ public override Task&lt;IActionResult&gt; PatchAsync(TId id, [FromBody] TResourc
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_PatchRelationshipAsync__1_System_String_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.PatchRelationshipAsync(%601%2CSystem.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L74">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L83">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchRelationshipAsync__1_System_String_System_Object_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchRelationshipAsync(`1,System.String,System.Object)">PatchRelationshipAsync(TId, String, Object)</h4>
-  <div class="markdown level1 summary"><p>Updates a relationship.</p>
+  <div class="markdown level1 summary"><p>Performs a complete replacement of a relationship on an existing resource.
+Example: PATCH /articles/1/relationships/author HTTP/1.1
+Example: PATCH /articles/1/relationships/revisions HTTP/1.1</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[HttpPatch(&quot;{id}/relationships/{relationshipName}&quot;)]
-public override Task&lt;IActionResult&gt; PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object relationships)</code></pre>
+public override Task&lt;IActionResult&gt; PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResourceIds)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1132,17 +1219,20 @@ public override Task&lt;IActionResult&gt; PatchRelationshipAsync(TId id, string 
       <tr>
         <td><span class="xref">TId</span></td>
         <td><span class="parametername">id</span></td>
-        <td></td>
+        <td><p>The identifier of the primary resource.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">relationshipName</span></td>
-        <td></td>
+        <td><p>The relationship for which to perform a complete replacement.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">relationships</span></td>
-        <td></td>
+        <td><span class="parametername">secondaryResourceIds</span></td>
+        <td><p>The resource or set of resources to assign to the relationship.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -1168,11 +1258,12 @@ public override Task&lt;IActionResult&gt; PatchRelationshipAsync(TId id, string 
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_PostAsync__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.PostAsync(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L62">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L65">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostAsync__0_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostAsync(`0)">PostAsync(TResource)</h4>
-  <div class="markdown level1 summary"><p>Creates a new resource.</p>
+  <div class="markdown level1 summary"><p>Creates a new resource with attributes, relationships or both.
+Example: POST /articles HTTP/1.1</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1214,6 +1305,71 @@ public override Task&lt;IActionResult&gt; PostAsync([FromBody] TResource resourc
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.PostAsync(TResource)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_PostRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.PostRelationshipAsync(%601%2CSystem.String%2CSystem.Collections.Generic.ISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L70">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostRelationshipAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable})">PostRelationshipAsync(TId, String, ISet&lt;IIdentifiable&gt;)</h4>
+  <div class="markdown level1 summary"><p>Adds resources to a to-many relationship.
+Example: POST /articles/1/revisions HTTP/1.1</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[HttpPost(&quot;{id}/relationships/{relationshipName}&quot;)]
+public override Task&lt;IActionResult&gt; PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet&lt;IIdentifiable&gt; secondaryResourceIds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The identifier of the primary resource.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">relationshipName</span></td>
+        <td><p>The relationship to add resources to.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
+        <td><span class="parametername">secondaryResourceIds</span></td>
+        <td><p>The set of resources to add to the relationship.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.PostRelationshipAsync(TId, System.String, System.Collections.Generic.ISet&lt;JsonApiDotNetCore.Resources.IIdentifiable&gt;)</span></div>
 </article>
           </div>
           
@@ -1225,7 +1381,7 @@ public override Task&lt;IActionResult&gt; PostAsync([FromBody] TResource resourc
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L17" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L18" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

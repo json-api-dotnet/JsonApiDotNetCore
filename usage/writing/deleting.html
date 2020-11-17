@@ -5,17 +5,17 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Including Relationships </title>
+    <title>Deleting resources </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Including Relationships ">
+    <meta name="title" content="Deleting resources ">
     <meta name="generator" content="docfx 2.56.5.0">
     
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
     
     
     
@@ -34,8 +34,8 @@
                 <span class="icon-bar"></span>
               </button>
               
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -67,59 +67,12 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="including-relationships">Including Relationships</h1>
+<h1 id="deleting-resources">Deleting resources</h1>
 
-<p>JsonApiDotNetCore supports <a href="http://jsonapi.org/format/#fetching-includes">request include params</a> out of the box,
-for side-loading related resources.</p>
-<pre><code class="lang-http">GET /articles/1?include=comments HTTP/1.1
-
-{
-  &quot;data&quot;: {
-    &quot;type&quot;: &quot;articles&quot;,
-    &quot;id&quot;: &quot;1&quot;,
-    &quot;attributes&quot;: {
-      &quot;title&quot;: &quot;JSON API paints my bikeshed!&quot;
-    },
-    &quot;relationships&quot;: {
-      &quot;comments&quot;: {
-        &quot;links&quot;: {
-          &quot;self&quot;: &quot;http://example.com/articles/1/relationships/comments&quot;,
-          &quot;related&quot;: &quot;http://example.com/articles/1/comments&quot;
-        },
-        &quot;data&quot;: [
-          { &quot;type&quot;: &quot;comments&quot;, &quot;id&quot;: &quot;5&quot; },
-          { &quot;type&quot;: &quot;comments&quot;, &quot;id&quot;: &quot;12&quot; }
-        ]
-      }
-    }
-  },
-  &quot;included&quot;: [
-    {
-      &quot;type&quot;: &quot;comments&quot;,
-      &quot;id&quot;: &quot;5&quot;,
-      &quot;attributes&quot;: {
-        &quot;body&quot;: &quot;First!&quot;
-      }
-    },
-    {
-      &quot;type&quot;: &quot;comments&quot;,
-      &quot;id&quot;: &quot;12&quot;,
-      &quot;attributes&quot;: {
-        &quot;body&quot;: &quot;I like XML better&quot;
-      }
-    }
-  ]
-}
-</code></pre><h2 id="nested-inclusions">Nested Inclusions</h2>
-<p><em>since v3.0.0</em></p>
-<p>JsonApiDotNetCore also supports nested inclusions.
-This allows you to include data across relationships by using a period-delimited relationship path, for example:</p>
-<pre><code class="lang-http">GET /api/articles?include=author.livingAddress.country
-</code></pre><p>which is equivalent to:</p>
-<pre><code class="lang-http">GET /api/articles?include=author&amp;include=author.livingAddress&amp;include=author.livingAddress.country
-</code></pre><p>This can be used on nested endpoints too:</p>
-<pre><code class="lang-http">GET /api/blogs/1/articles?include=author.livingAddress.country
-</code></pre></article>
+<p>A single resource can be deleted using a DELETE request. The next example deletes an article:</p>
+<pre><code class="lang-http">DELETE /articles/1 HTTP/1.1
+</code></pre><p>This returns <code>204 No Content</code> if the resource was successfully deleted. Alternatively, if the resource does not exist, <code>404 Not Found</code> is returned.</p>
+</article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
@@ -127,7 +80,7 @@ This allows you to include data across relationships by using a period-delimited
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/including-relationships.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/writing/deleting.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
@@ -154,8 +107,8 @@ This allows you to include data across relationships by using a period-delimited
       </footer>
     </div>
     
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
   </body>
 </html>

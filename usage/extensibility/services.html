@@ -166,7 +166,7 @@ public class ProductService : IResourceService&lt;Product&gt;
     |
     +-- IUpdateRelationshipService
         PATCH /{id}/relationships/{relationship}
-</code></pre><p>In order to take advantage of these interfaces you first need to inject the service for each implemented interface.</p>
+</code></pre><p>In order to take advantage of these interfaces you first need to register the service for each implemented interface.</p>
 <pre><code class="lang-c#">public class ArticleService : ICreateService&lt;Article&gt;, IDeleteService&lt;Article&gt;
 {
     // ...
@@ -182,6 +182,7 @@ public class Startup
 }
 </code></pre><p>In v3.0 we introduced an extension method that you can use to register a resource service on all of its JsonApiDotNetCore interfaces.
 This is helpful when you implement a subset of the resource interfaces and want to register them all in one go.</p>
+<p>Note: If you&#39;re using service discovery, this happens automatically.</p>
 <pre><code class="lang-c#">public class Startup
 {
     public void ConfigureServices(IServiceCollection services)

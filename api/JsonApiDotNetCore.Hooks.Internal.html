@@ -75,6 +75,11 @@
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
+    <h3 id="classes">Classes
+  </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.NeverResourceHookExecutorFacade.html">NeverResourceHookExecutorFacade</a></h4>
+      <section><p>Facade for hooks that never executes any callbacks, which is used when <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_EnableResourceHooks">EnableResourceHooks</a> is false.</p>
+</section>
     <h3 id="interfaces">Interfaces
   </h3>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.ICreateHookContainer-1.html">ICreateHookContainer&lt;TResource&gt;</a></h4>
@@ -107,12 +112,15 @@
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutor.html">IResourceHookExecutor</a></h4>
       <section><p>Transient service responsible for executing Resource Hooks as defined 
-in <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html">ResourceHooksDefinition&lt;TResource&gt;</a>. see methods in 
+in <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html">ResourceHooksDefinition&lt;TResource&gt;</a>. See methods in 
 <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IReadHookExecutor.html">IReadHookExecutor</a>, <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IUpdateHookExecutor.html">IUpdateHookExecutor</a> and 
 <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IOnReturnHookExecutor.html">IOnReturnHookExecutor</a> for more information.</p>
 <p>Uses <span class="xref">JsonApiDotNetCore.Hooks.Internal.Traversal.TraversalHelper</span> for traversal of nested resource data structures.
 Uses <span class="xref">JsonApiDotNetCore.Hooks.Internal.Execution.HookExecutorHelper</span> for retrieving meta data about hooks, 
 fetching database values and performing other recurring internal operations.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html">IResourceHookExecutorFacade</a></h4>
+      <section><p>Facade for execution of resource hooks.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IUpdateHookContainer-1.html">IUpdateHookContainer&lt;TResource&gt;</a></h4>
       <section><p>update hooks container</p>

@@ -83,9 +83,7 @@ For example, a TodoItem may have an Owner and so the Id attribute should be Owne
     public Person Owner { get; set; }
     public int OwnerId { get; set; }
 }
-</code></pre><p>The convention used to locate the foreign key property (e.g. <code>OwnerId</code>) can be changed on
-the <a class="xref" href="../../api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_RelatedIdMapper">JsonApiOptions</a></p>
-<h2 id="hasmany">HasMany</h2>
+</code></pre><h2 id="hasmany">HasMany</h2>
 <pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
     [Attr(PublicName = &quot;first-name&quot;)]

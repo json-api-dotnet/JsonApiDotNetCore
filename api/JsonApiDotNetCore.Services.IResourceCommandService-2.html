@@ -82,20 +82,26 @@
       <a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html#JsonApiDotNetCore_Services_ICreateService_2_CreateAsync__0_">ICreateService&lt;TResource, TId&gt;.CreateAsync(TResource)</a>
     </div>
     <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.IAddToRelationshipService-2.html#JsonApiDotNetCore_Services_IAddToRelationshipService_2_AddToToManyRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__">IAddToRelationshipService&lt;TResource, TId&gt;.AddToToManyRelationshipAsync(TId, String, ISet&lt;IIdentifiable&gt;)</a>
+    </div>
+    <div>
       <a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-2.html#JsonApiDotNetCore_Services_IUpdateService_2_UpdateAsync__1__0_">IUpdateService&lt;TResource, TId&gt;.UpdateAsync(TId, TResource)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-2.html#JsonApiDotNetCore_Services_IUpdateRelationshipService_2_UpdateRelationshipAsync__1_System_String_System_Object_">IUpdateRelationshipService&lt;TResource, TId&gt;.UpdateRelationshipAsync(TId, String, Object)</a>
+      <a class="xref" href="JsonApiDotNetCore.Services.ISetRelationshipService-2.html#JsonApiDotNetCore_Services_ISetRelationshipService_2_SetRelationshipAsync__1_System_String_System_Object_">ISetRelationshipService&lt;TResource, TId&gt;.SetRelationshipAsync(TId, String, Object)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-2.html#JsonApiDotNetCore_Services_IDeleteService_2_DeleteAsync__1_">IDeleteService&lt;TResource, TId&gt;.DeleteAsync(TId)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.IRemoveFromRelationshipService-2.html#JsonApiDotNetCore_Services_IRemoveFromRelationshipService_2_RemoveFromToManyRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__">IRemoveFromRelationshipService&lt;TResource, TId&gt;.RemoveFromToManyRelationshipAsync(TId, String, ISet&lt;IIdentifiable&gt;)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Services.html">JsonApiDotNetCore.Services</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Services_IResourceCommandService_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IResourceCommandService&lt;TResource, in TId&gt; : ICreateService&lt;TResource, TId&gt;, IUpdateService&lt;TResource, TId&gt;, IUpdateRelationshipService&lt;TResource, TId&gt;, IDeleteService&lt;TResource, TId&gt; where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IResourceCommandService&lt;TResource, in TId&gt; : ICreateService&lt;TResource, TId&gt;, IAddToRelationshipService&lt;TResource, TId&gt;, IUpdateService&lt;TResource, TId&gt;, ISetRelationshipService&lt;TResource, TId&gt;, IDeleteService&lt;TResource, TId&gt;, IRemoveFromRelationshipService&lt;TResource, TId&gt; where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -129,7 +135,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_IResourceCommandService_2.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.IResourceCommandService%602%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/IResourceCommandService.cs/#L23" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/IResourceCommandService.cs/#L25" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

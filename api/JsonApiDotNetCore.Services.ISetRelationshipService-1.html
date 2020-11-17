@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IInverseRelationships
+    <title>Interface ISetRelationshipService&lt;TResource&gt;
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IInverseRelationships
+    <meta name="title" content="Interface ISetRelationshipService&lt;TResource&gt;
    ">
     <meta name="generator" content="docfx 2.56.5.0">
     
@@ -68,44 +68,40 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Configuration.IInverseRelationships">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Services.ISetRelationshipService`1">
   
   
-  <h1 id="JsonApiDotNetCore_Configuration_IInverseRelationships" data-uid="JsonApiDotNetCore.Configuration.IInverseRelationships" class="text-break">Interface IInverseRelationships
+  <h1 id="JsonApiDotNetCore_Services_ISetRelationshipService_1" data-uid="JsonApiDotNetCore.Services.ISetRelationshipService`1" class="text-break">Interface ISetRelationshipService&lt;TResource&gt;
   </h1>
-  <div class="markdown level0 summary"><p>Responsible for populating the <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigation">InverseNavigation</a> property.</p>
-<p>This service is instantiated in the configure phase of the application.</p>
-<p>When using a data access layer different from EF Core, and when using ResourceHooks
-that depend on the inverse navigation property (BeforeImplicitUpdateRelationship),
-you will need to override this service, or pass along the inverseNavigationProperty in
-the RelationshipAttribute.</p>
-</div>
+  <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Configuration.html">JsonApiDotNetCore.Configuration</a></h6>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.ISetRelationshipService-2.html#JsonApiDotNetCore_Services_ISetRelationshipService_2_SetRelationshipAsync__1_System_String_System_Object_">ISetRelationshipService&lt;TResource, Int32&gt;.SetRelationshipAsync(Int32, String, Object)</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Services.html">JsonApiDotNetCore.Services</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Configuration_IInverseRelationships_syntax">Syntax</h5>
+  <h5 id="JsonApiDotNetCore_Services_ISetRelationshipService_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IInverseRelationships</code></pre>
+    <pre><code class="lang-csharp hljs">public interface ISetRelationshipService&lt;TResource&gt; : ISetRelationshipService&lt;TResource, int&gt; where TResource : class, IIdentifiable&lt;int&gt;</code></pre>
   </div>
-  <h3 id="methods">Methods
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IInverseRelationships_Resolve.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IInverseRelationships.Resolve%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IInverseRelationships.cs/#L21">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Configuration_IInverseRelationships_Resolve_" data-uid="JsonApiDotNetCore.Configuration.IInverseRelationships.Resolve*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_IInverseRelationships_Resolve" data-uid="JsonApiDotNetCore.Configuration.IInverseRelationships.Resolve">Resolve()</h4>
-  <div class="markdown level1 summary"><p>This method is called upon startup by JsonApiDotNetCore. It should 
-deal with resolving the inverse relationships. </p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void Resolve()</code></pre>
-  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TResource</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 </article>
           </div>
           
@@ -114,10 +110,10 @@ deal with resolving the inverse relationships. </p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IInverseRelationships.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IInverseRelationships%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_ISetRelationshipService_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.ISetRelationshipService%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IInverseRelationships.cs/#L15" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/ISetRelationshipService.cs/#L7" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

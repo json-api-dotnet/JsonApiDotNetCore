@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Updating resources </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Updating resources ">
+    <meta name="generator" content="docfx 2.56.5.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="updating-resources">Updating resources</h1>
+
+<h2 id="updating-resource-attributes">Updating resource attributes</h2>
+<p>To modify the attributes of a single resource, send a PATCH request. The next example changes the article caption:</p>
+<pre><code class="lang-http">POST /articles HTTP/1.1
+
+{
+  &quot;data&quot;: {
+    &quot;type&quot;: &quot;articles&quot;,
+    &quot;id&quot;: &quot;1&quot;,
+    &quot;attributes&quot;: {
+      &quot;caption&quot;: &quot;This has changed&quot;
+    }
+  }
+}
+</code></pre><p>This preserves the values of all other unsent attributes and is called a <em>partial patch</em>.</p>
+<p>When only the attributes that were sent in the request have changed, the server returns <code>204 No Content</code>.
+But if additional attributes have changed (for example, by a database trigger that refreshes the last-modified date) the server returns <code>200 OK</code>, along with all attributes of the updated resource.</p>
+<h2 id="updating-resource-relationships">Updating resource relationships</h2>
+<p>Besides its attributes, the relationships of a resource can be changed using a PATCH request too.
+Note that all resources being assigned in a relationship must already exist.</p>
+<p>When updating a HasMany relationship, the existing set is replaced by the new set. See below on how to add/remove resources.</p>
+<p>The next example replaces both the owner and tags of an article.</p>
+<pre><code class="lang-http">PATCH /articles/1 HTTP/1.1
+
+{
+  &quot;data&quot;: {
+    &quot;type&quot;: &quot;articles&quot;,
+    &quot;id&quot;: &quot;1&quot;,
+    &quot;relationships&quot;: {
+      &quot;author&quot;: {
+        &quot;data&quot;: {
+          &quot;type&quot;: &quot;person&quot;,
+          &quot;id&quot;: &quot;101&quot;
+        }
+      },
+      &quot;tags&quot;: {
+        &quot;data&quot;: [
+          {
+            &quot;type&quot;: &quot;tag&quot;,
+            &quot;id&quot;: &quot;123&quot;
+          },
+          {
+            &quot;type&quot;: &quot;tag&quot;,
+            &quot;id&quot;: &quot;456&quot;
+          }
+        ]
+      }
+    }
+  }
+}
+</code></pre><p>A HasOne relationship can be cleared by setting <code>data</code> to <code>null</code>, while a HasMany relationship can be cleared by setting it to an empty array.</p>
+<p>By combining the examples above, both attributes and relationships can be updated using a single PATCH request.</p>
+<h2 id="response-body">Response body</h2>
+<p>PATCH requests can be combined with query string parameters that are normally used for reading data, such as <code>include</code> and <code>fields</code>. For example:</p>
+<pre><code class="lang-http">PATCH /articles/1?include=owner&amp;fields[owner]=firstName HTTP/1.1
+
+{
+  ...
+}
+</code></pre><p>After the resource has been updated on the server, it is re-fetched from the database using the specified query string parameters and returned to the client.
+Note this only has an effect when <code>200 OK</code> is returned.</p>
+<h1 id="updating-relationships">Updating relationships</h1>
+<p>Although relationships can be modified along with resources (as described above), it is also possible to change a single relationship using a relationship URL.
+The same rules for clearing the relationship apply. And similar to PATCH on a resource URL, updating a HasMany relationship replaces the existing set.</p>
+<p>The next example changes just the owner of an article, by sending a PATCH request to its relationship URL.</p>
+<pre><code class="lang-http">PATCH /articles/1/relationships/owner HTTP/1.1
+
+{
+  &quot;data&quot;: {
+    &quot;type&quot;: &quot;person&quot;,
+    &quot;id&quot;: &quot;101&quot;
+  }
+}
+</code></pre><p>The server returns <code>204 No Content</code> when the update is successful.</p>
+<h2 id="changing-hasmany-relationships">Changing HasMany relationships</h2>
+<p>The POST and DELETE verbs can be used on HasMany relationship URLs to add or remove resources to/from an existing set without replacing it.</p>
+<p>The next example adds another tag to the existing set of tags of an article:</p>
+<pre><code class="lang-http">POST /articles/1/relationships/tags HTTP/1.1
+
+{
+  &quot;data&quot;: [
+    {
+      &quot;type&quot;: &quot;tag&quot;,
+      &quot;id&quot;: &quot;789&quot;
+    }
+  ]
+}
+</code></pre><p>Likewise, the next example removes a single tag from the set of tags of an article:</p>
+<pre><code class="lang-http">DELETE /articles/1/relationships/tags HTTP/1.1
+
+{
+  &quot;data&quot;: [
+    {
+      &quot;type&quot;: &quot;tag&quot;,
+      &quot;id&quot;: &quot;789&quot;
+    }
+  ]
+}
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/writing/updating.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

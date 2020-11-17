@@ -96,13 +96,16 @@ If you want to provide routing templates yourself, you should derive from BaseJs
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetAsync__1_">BaseJsonApiController&lt;TResource, TId&gt;.GetAsync(TId)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetRelationshipAsync__1_System_String_">BaseJsonApiController&lt;TResource, TId&gt;.GetRelationshipAsync(TId, String)</a>
-    </div>
-    <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetSecondaryAsync__1_System_String_">BaseJsonApiController&lt;TResource, TId&gt;.GetSecondaryAsync(TId, String)</a>
     </div>
     <div>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetRelationshipAsync__1_System_String_">BaseJsonApiController&lt;TResource, TId&gt;.GetRelationshipAsync(TId, String)</a>
+    </div>
+    <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PostAsync__0_">BaseJsonApiController&lt;TResource, TId&gt;.PostAsync(TResource)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PostRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__">BaseJsonApiController&lt;TResource, TId&gt;.PostRelationshipAsync(TId, String, ISet&lt;IIdentifiable&gt;)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_PatchAsync__1__0_">BaseJsonApiController&lt;TResource, TId&gt;.PatchAsync(TId, TResource)</a>
@@ -112,6 +115,9 @@ If you want to provide routing templates yourself, you should derive from BaseJs
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_DeleteAsync__1_">BaseJsonApiController&lt;TResource, TId&gt;.DeleteAsync(TId)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_DeleteRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__">BaseJsonApiController&lt;TResource, TId&gt;.DeleteRelationshipAsync(TId, String, ISet&lt;IIdentifiable&gt;)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html#JsonApiDotNetCore_Controllers_CoreJsonApiController_Error_JsonApiDotNetCore_Serialization_Objects_Error_">CoreJsonApiController.Error(Error)</a>
@@ -807,12 +813,13 @@ public override Task&lt;IActionResult&gt; GetAsync(TId id)</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiQueryController_2_GetRelationshipAsync__1_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiQueryController%602.GetRelationshipAsync(%601%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiQueryController.cs/#L36">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiQueryController.cs/#L41">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiQueryController_2_GetRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiQueryController_2_GetRelationshipAsync__1_System_String_" data-uid="JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetRelationshipAsync(`1,System.String)">GetRelationshipAsync(TId, String)</h4>
   <div class="markdown level1 summary"><p>Gets a single resource relationship.
-Example: GET /articles/1/relationships/author HTTP/1.1</p>
+Example: GET /articles/1/relationships/author HTTP/1.1
+Example: GET /articles/1/relationships/revisions HTTP/1.1</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -864,7 +871,7 @@ public override Task&lt;IActionResult&gt; GetRelationshipAsync(TId id, string re
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiQueryController_2_GetSecondaryAsync__1_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiQueryController%602.GetSecondaryAsync(%601%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiQueryController.cs/#L41">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiQueryController.cs/#L36">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiQueryController_2_GetSecondaryAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetSecondaryAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiQueryController_2_GetSecondaryAsync__1_System_String_" data-uid="JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetSecondaryAsync(`1,System.String)">GetSecondaryAsync(TId, String)</h4>

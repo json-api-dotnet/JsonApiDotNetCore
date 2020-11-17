@@ -5,17 +5,17 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Sorting </title>
+    <title>Including Relationships </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Sorting ">
+    <meta name="title" content="Including Relationships ">
     <meta name="generator" content="docfx 2.56.5.0">
     
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
     
     
     
@@ -34,8 +34,8 @@
                 <span class="icon-bar"></span>
               </button>
               
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -67,31 +67,59 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="sorting">Sorting</h1>
+<h1 id="including-relationships">Including Relationships</h1>
 
-<p>Resources can be sorted by one or more attributes in ascending or descending order. The default is ascending by ID.</p>
-<h2 id="ascending">Ascending</h2>
-<pre><code class="lang-http">GET /api/articles?sort=author HTTP/1.1
-</code></pre><h2 id="descending">Descending</h2>
-<p>To sort descending, prepend the attribute with a minus (-) sign.</p>
-<pre><code class="lang-http">GET /api/articles?sort=-author HTTP/1.1
-</code></pre><h2 id="multiple-attributes">Multiple attributes</h2>
-<p>Multiple attributes are separated by a comma.</p>
-<pre><code class="lang-http">GET /api/articles?sort=author,-pageCount HTTP/1.1
-</code></pre><h2 id="count">Count</h2>
-<p>To sort on the number of nested resources, use the <code>count</code> function.</p>
-<pre><code class="lang-http">GET /api/blogs?sort=count(articles) HTTP/1.1
-</code></pre><p>This sorts the list of blogs by their number of articles.</p>
-<h2 id="nesting">Nesting</h2>
-<p>Sorting can be used on nested endpoints, such as:</p>
-<pre><code class="lang-http">GET /api/blogs/1/articles?sort=caption HTTP/1.1
-</code></pre><p>and on included resources, for example:</p>
-<pre><code class="lang-http">GET /api/blogs/1/articles?include=revisions&amp;sort=caption&amp;sort[revisions]=publishTime HTTP/1.1
-</code></pre><p>This sorts the list of blogs by their captions and included revisions by their publication time.</p>
-<h2 id="default-sort">Default Sort</h2>
-<p>See the topic on <a href="resources/resource-definitions.html">Resource Definitions</a>
-for overriding the default sort behavior.</p>
-</article>
+<p>JsonApiDotNetCore supports <a href="http://jsonapi.org/format/#fetching-includes">request include params</a> out of the box,
+for side-loading related resources.</p>
+<pre><code class="lang-http">GET /articles/1?include=comments HTTP/1.1
+
+{
+  &quot;data&quot;: {
+    &quot;type&quot;: &quot;articles&quot;,
+    &quot;id&quot;: &quot;1&quot;,
+    &quot;attributes&quot;: {
+      &quot;title&quot;: &quot;JSON API paints my bikeshed!&quot;
+    },
+    &quot;relationships&quot;: {
+      &quot;comments&quot;: {
+        &quot;links&quot;: {
+          &quot;self&quot;: &quot;http://example.com/articles/1/relationships/comments&quot;,
+          &quot;related&quot;: &quot;http://example.com/articles/1/comments&quot;
+        },
+        &quot;data&quot;: [
+          { &quot;type&quot;: &quot;comments&quot;, &quot;id&quot;: &quot;5&quot; },
+          { &quot;type&quot;: &quot;comments&quot;, &quot;id&quot;: &quot;12&quot; }
+        ]
+      }
+    }
+  },
+  &quot;included&quot;: [
+    {
+      &quot;type&quot;: &quot;comments&quot;,
+      &quot;id&quot;: &quot;5&quot;,
+      &quot;attributes&quot;: {
+        &quot;body&quot;: &quot;First!&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;comments&quot;,
+      &quot;id&quot;: &quot;12&quot;,
+      &quot;attributes&quot;: {
+        &quot;body&quot;: &quot;I like XML better&quot;
+      }
+    }
+  ]
+}
+</code></pre><h2 id="nested-inclusions">Nested Inclusions</h2>
+<p><em>since v3</em></p>
+<p>JsonApiDotNetCore also supports nested inclusions.
+This allows you to include data across relationships by using a period-delimited relationship path, for example:</p>
+<pre><code class="lang-http">GET /api/articles?include=author.livingAddress.country
+</code></pre><p>which is equivalent to:</p>
+<pre><code class="lang-http">GET /api/articles?include=author&amp;include=author.livingAddress&amp;include=author.livingAddress.country
+</code></pre><p>This can be used on nested endpoints too:</p>
+<pre><code class="lang-http">GET /api/blogs/1/articles?include=author.livingAddress.country
+</code></pre></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
@@ -99,7 +127,7 @@ for overriding the default sort behavior.</p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/sorting.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/reading/including-relationships.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
@@ -126,8 +154,8 @@ for overriding the default sort behavior.</p>
       </footer>
     </div>
     
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
   </body>
 </html>

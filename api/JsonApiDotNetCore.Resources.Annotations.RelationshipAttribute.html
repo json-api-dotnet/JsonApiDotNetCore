@@ -227,7 +227,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_CanInclude.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.CanInclude%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L67">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L87">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_CanInclude_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.CanInclude*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_CanInclude" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.CanInclude">CanInclude</h4>
@@ -256,18 +256,20 @@ This is <code>true</code> by default.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigation.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigationProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L14">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L34">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigation_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigation*"></a>
-  <h4 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigation" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigation">InverseNavigation</h4>
-  <div class="markdown level1 summary"></div>
+  <a id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigationProperty*"></a>
+  <h4 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.InverseNavigationProperty">InverseNavigationProperty</h4>
+  <div class="markdown level1 summary"><p>The property name of the EF Core inverse navigation, which may or may not exist.
+Even if it exists, it may not be exposed as a json:api relationship.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string InverseNavigation { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public PropertyInfo InverseNavigationProperty { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -279,17 +281,30 @@ This is <code>true</code> by default.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Reflection.PropertyInfo</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <h5 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty_examples">Examples</h5>
+  <pre><code>public class Article : Identifiable
+{
+    [HasOne] // InverseNavigationProperty = Person.Articles
+    public Person Owner { get; set; }
+}
+
+public class Person : Identifiable
+{
+    [HasMany] // InverseNavigationProperty = Article.Owner
+    public ICollection&lt;Article> Articles { get; set; }
+}</code></pre>
+
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_LeftType.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.LeftType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L38">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L58">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_LeftType_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.LeftType*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_LeftType" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.LeftType">LeftType</h4>
@@ -320,7 +335,7 @@ This is <code>true</code> by default.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Links.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.Links%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L49">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L69">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Links_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.Links*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Links" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.Links">Links</h4>
@@ -357,7 +372,7 @@ the configuration in <a class="xref" href="JsonApiDotNetCore.Configuration.IJson
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_RelationshipPath.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RelationshipPath%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L22">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L42">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_RelationshipPath_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RelationshipPath*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_RelationshipPath" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RelationshipPath">RelationshipPath</h4>
@@ -391,12 +406,12 @@ the configuration in <a class="xref" href="JsonApiDotNetCore.Configuration.IJson
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_RightType.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RightType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L33">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L53">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_RightType_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RightType*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_RightType" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RightType">RightType</h4>
   <div class="markdown level1 summary"><p>The child resource type. This does not necessarily match the navigation property type.
-In the case of a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a> relationship, this value will be the collection argument type.</p>
+In the case of a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a> relationship, this value will be the collection element type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -428,7 +443,7 @@ In the case of a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.H
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Equals_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L90">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L109">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Equals_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.Equals*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Equals_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.Equals(System.Object)">Equals(Object)</h4>
@@ -477,7 +492,7 @@ In the case of a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.H
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_GetHashCode.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L108">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L127">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_GetHashCode_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.GetHashCode*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_GetHashCode" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.GetHashCode">GetHashCode()</h4>
@@ -509,11 +524,11 @@ In the case of a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.H
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_GetValue_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.GetValue(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L72">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L92">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_GetValue_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.GetValue*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_GetValue_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.GetValue(System.Object)">GetValue(Object)</h4>
-  <div class="markdown level1 summary"><p>Gets the value of the resource property this attributes was declared on.</p>
+  <div class="markdown level1 summary"><p>Gets the value of the resource property this attribute was declared on.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -554,19 +569,19 @@ In the case of a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.H
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_SetValue_System_Object_System_Object_JsonApiDotNetCore_Resources_IResourceFactory_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.SetValue(System.Object%2CSystem.Object%2CJsonApiDotNetCore.Resources.IResourceFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_SetValue_System_Object_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.SetValue(System.Object%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L82">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L102">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_SetValue_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.SetValue*"></a>
-  <h4 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_SetValue_System_Object_System_Object_JsonApiDotNetCore_Resources_IResourceFactory_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.SetValue(System.Object,System.Object,JsonApiDotNetCore.Resources.IResourceFactory)">SetValue(Object, Object, IResourceFactory)</h4>
-  <div class="markdown level1 summary"><p>Sets the value of the resource property this attributes was declared on.</p>
+  <h4 id="JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_SetValue_System_Object_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.SetValue(System.Object,System.Object)">SetValue(Object, Object)</h4>
+  <div class="markdown level1 summary"><p>Sets the value of the resource property this attribute was declared on.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual void SetValue(object resource, object newValue, IResourceFactory resourceFactory)</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual void SetValue(object resource, object newValue)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -588,11 +603,6 @@ In the case of a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.H
         <td><span class="parametername">newValue</span></td>
         <td></td>
       </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Resources.IResourceFactory.html">IResourceFactory</a></td>
-        <td><span class="parametername">resourceFactory</span></td>
-        <td></td>
-      </tr>
     </tbody>
   </table>
 </article>
@@ -606,7 +616,7 @@ In the case of a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.H
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/RelationshipAttribute.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
