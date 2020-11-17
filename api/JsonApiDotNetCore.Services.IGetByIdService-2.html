@@ -105,19 +105,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_IGetByIdService_2_GetAsync__1_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.IGetByIdService%602.GetAsync(%601)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_IGetByIdService_2_GetAsync__1_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.IGetByIdService%602.GetAsync(%601%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/IGetByIdService.cs/#L18">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/IGetByIdService.cs/#L19">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_IGetByIdService_2_GetAsync_" data-uid="JsonApiDotNetCore.Services.IGetByIdService`2.GetAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Services_IGetByIdService_2_GetAsync__1_" data-uid="JsonApiDotNetCore.Services.IGetByIdService`2.GetAsync(`1)">GetAsync(TId)</h4>
+  <h4 id="JsonApiDotNetCore_Services_IGetByIdService_2_GetAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.IGetByIdService`2.GetAsync(`1,System.Threading.CancellationToken)">GetAsync(TId, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Handles a json:api request to retrieve a single resource for a primary endpoint.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;TResource&gt; GetAsync(TId id)</code></pre>
+    <pre><code class="lang-csharp hljs">Task&lt;TResource&gt; GetAsync(TId id, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -132,6 +132,11 @@
       <tr>
         <td><span class="xref">TId</span></td>
         <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Threading.CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -162,7 +167,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_IGetByIdService_2.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.IGetByIdService%602%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/IGetByIdService.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/IGetByIdService.cs/#L13" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
