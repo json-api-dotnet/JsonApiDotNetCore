@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>3.1.0</VersionPrefix>
+    <VersionPrefix>3.1.1</VersionPrefix>
     <TargetFrameworks>$(NetStandardVersion)</TargetFrameworks>
     <AssemblyName>JsonApiDotNetCore</AssemblyName>
     <PackageId>JsonApiDotNetCore</PackageId>
@@ -9,12 +9,12 @@
 
   <PropertyGroup>
     <PackageTags>jsonapi;dotnet core;emberjs;ember</PackageTags>
-    <PackageProjectUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/n2retail/JsonApiDotNetCore</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/n2retail/JsonApiDotNetCore/master/LICENSE</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore</RepositoryUrl>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RepositoryUrl>https://github.com/n2retail/JsonApiDotNetCore</RepositoryUrl>
+    <PublishRepositoryUrl>false</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
