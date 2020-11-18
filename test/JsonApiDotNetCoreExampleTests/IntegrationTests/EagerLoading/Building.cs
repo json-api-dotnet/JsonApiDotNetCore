@@ -17,10 +17,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         {
             get
             {
-                // Must ensure that an instance exists for this required relationship, so that POST succeeds.
-                PrimaryDoor ??= new Door();
-
+                EnsureHasPrimaryDoor();
                 return PrimaryDoor.Color;
+            }
+            set
+            {
+                EnsureHasPrimaryDoor();
+                PrimaryDoor.Color = value;
             }
         }
 
@@ -35,5 +38,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         
         [EagerLoad]
         public Door SecondaryDoor { get; set; }
+
+        private void EnsureHasPrimaryDoor()
+        {
+            // Must ensure that an instance exists for this required relationship, so that POST succeeds.
+            PrimaryDoor ??= new Door();
+        }
     }
 }

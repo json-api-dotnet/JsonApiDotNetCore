@@ -256,6 +256,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
             existingBuilding.Windows = _fakers.Window.Generate(2);
 
             var newBuildingNumber = _fakers.Building.Generate().Number;
+            var newPrimaryDoorColor = _fakers.Door.Generate().Color;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -271,7 +272,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                     id = existingBuilding.StringId,
                     attributes = new
                     {
-                        number = newBuildingNumber
+                        number = newBuildingNumber,
+                        primaryDoorColor = newPrimaryDoorColor
                     }
                 }
             };
@@ -297,6 +299,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 buildingInDatabase.Should().NotBeNull();
                 buildingInDatabase.Number.Should().Be(newBuildingNumber);
                 buildingInDatabase.PrimaryDoor.Should().NotBeNull();
+                buildingInDatabase.PrimaryDoor.Color.Should().Be(newPrimaryDoorColor);
                 buildingInDatabase.SecondaryDoor.Should().NotBeNull();
                 buildingInDatabase.Windows.Should().HaveCount(2);
             });
