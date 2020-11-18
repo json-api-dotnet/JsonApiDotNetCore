@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.CreateAsync"/>.
         /// </summary>
-        Task CreateAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+        Task CreateAsync<TResource>(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>

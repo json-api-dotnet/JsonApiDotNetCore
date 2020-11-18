@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Creates a new resource in the underlying data store.
         /// </summary>
-        Task CreateAsync(TResource resource, CancellationToken cancellationToken);
+        Task CreateAsync(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken);
 
         /// <summary>
         /// Adds resources to a to-many relationship in the underlying data store.

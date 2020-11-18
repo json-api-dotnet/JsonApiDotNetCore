@@ -176,6 +176,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var carInDatabase = await dbContext.Cars
+                    .FirstOrDefaultAsync(car => car.RegionId == 123 && car.LicensePlate == "AA-BB-11");
+
+                carInDatabase.Should().NotBeNull();
+                carInDatabase.Id.Should().Be("123:AA-BB-11");
+            });
         }
 
         [Fact]

@@ -224,7 +224,7 @@ namespace UnitTests.Extensions
         {
             public Task<IReadOnlyCollection<IntResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task<int> CountAsync(FilterExpression topFilter, CancellationToken cancellationToken) => throw new NotImplementedException();
-            public Task CreateAsync(IntResource resource, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task CreateAsync(IntResource resourceFromRequest, IntResource resourceForDatabase, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task AddToToManyRelationshipAsync(int primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task UpdateAsync(IntResource resourceFromRequest, IntResource resourceFromDatabase, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task SetRelationshipAsync(IntResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
@@ -237,7 +237,7 @@ namespace UnitTests.Extensions
         {
             public Task<IReadOnlyCollection<GuidResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task<int> CountAsync(FilterExpression topFilter, CancellationToken cancellationToken) => throw new NotImplementedException();
-            public Task CreateAsync(GuidResource resource, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task CreateAsync(GuidResource resourceFromRequest, GuidResource resourceForDatabase, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task AddToToManyRelationshipAsync(Guid primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task UpdateAsync(GuidResource resourceFromRequest, GuidResource resourceFromDatabase, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task SetRelationshipAsync(GuidResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();

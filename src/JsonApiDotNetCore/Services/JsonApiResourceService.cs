@@ -171,32 +171,33 @@ namespace JsonApiDotNetCore.Services
             _traceWriter.LogMethodStart(new {resource});
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
-            _resourceChangeTracker.SetRequestedAttributeValues(resource);
+            var resourceFromRequest = resource;
+            _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
 
-            var defaultResource = _resourceFactory.CreateInstance<TResource>();
-            defaultResource.Id = resource.Id;
+            _hookExecutor.BeforeCreate(resourceFromRequest);
 
-            _resourceChangeTracker.SetInitiallyStoredAttributeValues(defaultResource);
+            var resourceForDatabase = _resourceFactory.CreateInstance<TResource>();
+            resourceForDatabase.Id = resourceFromRequest.Id;
 
-            _hookExecutor.BeforeCreate(resource);
+            _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceForDatabase);
 
             try
             {
-                await _repositoryAccessor.CreateAsync(resource, cancellationToken);
+                await _repositoryAccessor.CreateAsync(resourceFromRequest, resourceForDatabase, cancellationToken);
             }
             catch (DataStoreUpdateException)
             {
-                var existingResource = await TryGetPrimaryResourceByIdAsync(resource.Id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
+                var existingResource = await TryGetPrimaryResourceByIdAsync(resourceFromRequest.Id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
                 if (existingResource != null)
                 {
-                    throw new ResourceAlreadyExistsException(resource.StringId, _request.PrimaryResource.PublicName);
+                    throw new ResourceAlreadyExistsException(resourceFromRequest.StringId, _request.PrimaryResource.PublicName);
                 }
 
-                await AssertResourcesToAssignInRelationshipsExistAsync(resource, cancellationToken);
+                await AssertResourcesToAssignInRelationshipsExistAsync(resourceFromRequest, cancellationToken);
                 throw;
             }
 
-            var resourceFromDatabase = await TryGetPrimaryResourceByIdAsync(resource.Id, TopFieldSelection.WithAllAttributes, cancellationToken);
+            var resourceFromDatabase = await TryGetPrimaryResourceByIdAsync(resourceForDatabase.Id, TopFieldSelection.WithAllAttributes, cancellationToken);
             AssertPrimaryResourceExists(resourceFromDatabase);
 
             _hookExecutor.AfterCreate(resourceFromDatabase);

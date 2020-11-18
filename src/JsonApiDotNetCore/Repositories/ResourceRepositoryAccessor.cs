@@ -48,11 +48,11 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task CreateAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+        public async Task CreateAsync<TResource>(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
-            await repository.CreateAsync(resource, cancellationToken);
+            await repository.CreateAsync(resourceFromRequest, resourceForDatabase, cancellationToken);
         }
 
         /// <inheritdoc />

@@ -115,21 +115,27 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task CreateAsync(TResource resource, CancellationToken cancellationToken)
+        public virtual async Task CreateAsync(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new {resource});
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            _traceWriter.LogMethodStart(new {resourceFromRequest, resourceForDatabase});
+            if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
+            if (resourceForDatabase == null) throw new ArgumentNullException(nameof(resourceForDatabase));
 
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
 
             foreach (var relationship in _targetedFields.Relationships)
             {
-                var rightValue = relationship.GetValue(resource);
-                await UpdateRelationshipAsync(relationship, resource, rightValue, collector, cancellationToken);
+                var rightResources = relationship.GetValue(resourceFromRequest);
+                await UpdateRelationshipAsync(relationship, resourceForDatabase, rightResources, collector, cancellationToken);
+            }
+
+            foreach (var attribute in _targetedFields.Attributes)
+            {
+                attribute.SetValue(resourceForDatabase, attribute.GetValue(resourceFromRequest));
             }
 
             var dbSet = _dbContext.Set<TResource>();
-            dbSet.Add(resource);
+            dbSet.Add(resourceForDatabase);
 
             await SaveChangesAsync(cancellationToken);
         }

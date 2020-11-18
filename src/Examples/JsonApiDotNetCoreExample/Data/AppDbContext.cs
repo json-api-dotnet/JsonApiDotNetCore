@@ -11,7 +11,6 @@ namespace JsonApiDotNetCoreExample.Data
 
         public DbSet<TodoItem> TodoItems { get; set; }
         public DbSet<Passport> Passports { get; set; }
-        public DbSet<Visa> Visas { get; set; }
         public DbSet<Person> People { get; set; }
         public DbSet<TodoItemCollection> TodoItemCollections { get; set; }
         public DbSet<KebabCasedModel> KebabCasedModels { get; set; }
@@ -68,11 +67,6 @@ namespace JsonApiDotNetCoreExample.Data
                 .WithOne(p => p.Passport)
                 .HasForeignKey<Person>("PassportKey")
                 .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<Passport>()
-                .HasMany(passport => passport.GrantedVisas)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<TodoItem>()
                 .HasOne(p => p.OneToOnePerson)
