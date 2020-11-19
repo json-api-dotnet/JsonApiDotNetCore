@@ -11753,14 +11753,14 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).CountAsync
   nameWithType: EntityFrameworkCoreRepository<TResource, TId>.CountAsync
   nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).CountAsync
-- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.CreateAsync(`0,System.Threading.CancellationToken)
-  name: CreateAsync(TResource, CancellationToken)
-  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_CreateAsync__0_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.CreateAsync(`0,System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.CreateAsync(TResource, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).CreateAsync(TResource, System.Threading.CancellationToken)
-  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.CreateAsync(TResource, CancellationToken)
-  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).CreateAsync(TResource, CancellationToken)
+- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.CreateAsync(`0,`0,System.Threading.CancellationToken)
+  name: CreateAsync(TResource, TResource, CancellationToken)
+  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_CreateAsync__0__0_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.CreateAsync(`0,`0,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.CreateAsync(TResource, TResource, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).CreateAsync(TResource, TResource, System.Threading.CancellationToken)
+  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.CreateAsync(TResource, TResource, CancellationToken)
+  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).CreateAsync(TResource, TResource, CancellationToken)
 - uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.CreateAsync*
   name: CreateAsync
   href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_CreateAsync_
@@ -11821,6 +11821,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).GetAsync
   nameWithType: EntityFrameworkCoreRepository<TResource, TId>.GetAsync
   nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).GetAsync
+- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetForCreateAsync(`1,System.Threading.CancellationToken)
+  name: GetForCreateAsync(TId, CancellationToken)
+  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetForCreateAsync__1_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetForCreateAsync(`1,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.GetForCreateAsync(TId, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).GetForCreateAsync(TId, System.Threading.CancellationToken)
+  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.GetForCreateAsync(TId, CancellationToken)
+  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).GetForCreateAsync(TId, CancellationToken)
+- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetForCreateAsync*
+  name: GetForCreateAsync
+  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetForCreateAsync_
+  commentId: Overload:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetForCreateAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.GetForCreateAsync
+  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).GetForCreateAsync
+  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.GetForCreateAsync
+  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).GetForCreateAsync
 - uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetForUpdateAsync(JsonApiDotNetCore.Queries.QueryLayer,System.Threading.CancellationToken)
   name: GetForUpdateAsync(QueryLayer, CancellationToken)
   href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetForUpdateAsync_JsonApiDotNetCore_Queries_QueryLayer_System_Threading_CancellationToken_
@@ -12058,15 +12075,15 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CreateAsync
   nameWithType: IResourceRepositoryAccessor.CreateAsync
-- uid: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CreateAsync``1(``0,System.Threading.CancellationToken)
-  name: CreateAsync<TResource>(TResource, CancellationToken)
-  href: api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_CreateAsync__1___0_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CreateAsync``1(``0,System.Threading.CancellationToken)
-  name.vb: CreateAsync(Of TResource)(TResource, CancellationToken)
-  fullName: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CreateAsync<TResource>(TResource, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CreateAsync(Of TResource)(TResource, System.Threading.CancellationToken)
-  nameWithType: IResourceRepositoryAccessor.CreateAsync<TResource>(TResource, CancellationToken)
-  nameWithType.vb: IResourceRepositoryAccessor.CreateAsync(Of TResource)(TResource, CancellationToken)
+- uid: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CreateAsync``1(``0,``0,System.Threading.CancellationToken)
+  name: CreateAsync<TResource>(TResource, TResource, CancellationToken)
+  href: api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_CreateAsync__1___0___0_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CreateAsync``1(``0,``0,System.Threading.CancellationToken)
+  name.vb: CreateAsync(Of TResource)(TResource, TResource, CancellationToken)
+  fullName: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CreateAsync<TResource>(TResource, TResource, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CreateAsync(Of TResource)(TResource, TResource, System.Threading.CancellationToken)
+  nameWithType: IResourceRepositoryAccessor.CreateAsync<TResource>(TResource, TResource, CancellationToken)
+  nameWithType.vb: IResourceRepositoryAccessor.CreateAsync(Of TResource)(TResource, TResource, CancellationToken)
 - uid: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.DeleteAsync*
   name: DeleteAsync
   href: api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_DeleteAsync_
@@ -12105,6 +12122,22 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.GetAsync(Of TResource)(JsonApiDotNetCore.Queries.QueryLayer, System.Threading.CancellationToken)
   nameWithType: IResourceRepositoryAccessor.GetAsync<TResource>(QueryLayer, CancellationToken)
   nameWithType.vb: IResourceRepositoryAccessor.GetAsync(Of TResource)(QueryLayer, CancellationToken)
+- uid: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.GetForCreateAsync*
+  name: GetForCreateAsync
+  href: api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_GetForCreateAsync_
+  commentId: Overload:JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.GetForCreateAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.GetForCreateAsync
+  nameWithType: IResourceRepositoryAccessor.GetForCreateAsync
+- uid: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.GetForCreateAsync``2(``1,System.Threading.CancellationToken)
+  name: GetForCreateAsync<TResource, TId>(TId, CancellationToken)
+  href: api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_GetForCreateAsync__2___1_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.GetForCreateAsync``2(``1,System.Threading.CancellationToken)
+  name.vb: GetForCreateAsync(Of TResource, TId)(TId, CancellationToken)
+  fullName: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.GetForCreateAsync<TResource, TId>(TId, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.GetForCreateAsync(Of TResource, TId)(TId, System.Threading.CancellationToken)
+  nameWithType: IResourceRepositoryAccessor.GetForCreateAsync<TResource, TId>(TId, CancellationToken)
+  nameWithType.vb: IResourceRepositoryAccessor.GetForCreateAsync(Of TResource, TId)(TId, CancellationToken)
 - uid: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.GetForUpdateAsync*
   name: GetForUpdateAsync
   href: api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_GetForUpdateAsync_
@@ -12205,14 +12238,14 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.IResourceWriteRepository(Of TResource, TId).AddToToManyRelationshipAsync
   nameWithType: IResourceWriteRepository<TResource, TId>.AddToToManyRelationshipAsync
   nameWithType.vb: IResourceWriteRepository(Of TResource, TId).AddToToManyRelationshipAsync
-- uid: JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.CreateAsync(`0,System.Threading.CancellationToken)
-  name: CreateAsync(TResource, CancellationToken)
-  href: api/JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_CreateAsync__0_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.CreateAsync(`0,System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.Repositories.IResourceWriteRepository<TResource, TId>.CreateAsync(TResource, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Repositories.IResourceWriteRepository(Of TResource, TId).CreateAsync(TResource, System.Threading.CancellationToken)
-  nameWithType: IResourceWriteRepository<TResource, TId>.CreateAsync(TResource, CancellationToken)
-  nameWithType.vb: IResourceWriteRepository(Of TResource, TId).CreateAsync(TResource, CancellationToken)
+- uid: JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.CreateAsync(`0,`0,System.Threading.CancellationToken)
+  name: CreateAsync(TResource, TResource, CancellationToken)
+  href: api/JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_CreateAsync__0__0_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.CreateAsync(`0,`0,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.Repositories.IResourceWriteRepository<TResource, TId>.CreateAsync(TResource, TResource, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.Repositories.IResourceWriteRepository(Of TResource, TId).CreateAsync(TResource, TResource, System.Threading.CancellationToken)
+  nameWithType: IResourceWriteRepository<TResource, TId>.CreateAsync(TResource, TResource, CancellationToken)
+  nameWithType.vb: IResourceWriteRepository(Of TResource, TId).CreateAsync(TResource, TResource, CancellationToken)
 - uid: JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.CreateAsync*
   name: CreateAsync
   href: api/JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_CreateAsync_
@@ -12239,6 +12272,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.IResourceWriteRepository(Of TResource, TId).DeleteAsync
   nameWithType: IResourceWriteRepository<TResource, TId>.DeleteAsync
   nameWithType.vb: IResourceWriteRepository(Of TResource, TId).DeleteAsync
+- uid: JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.GetForCreateAsync(`1,System.Threading.CancellationToken)
+  name: GetForCreateAsync(TId, CancellationToken)
+  href: api/JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_GetForCreateAsync__1_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.GetForCreateAsync(`1,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.Repositories.IResourceWriteRepository<TResource, TId>.GetForCreateAsync(TId, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.Repositories.IResourceWriteRepository(Of TResource, TId).GetForCreateAsync(TId, System.Threading.CancellationToken)
+  nameWithType: IResourceWriteRepository<TResource, TId>.GetForCreateAsync(TId, CancellationToken)
+  nameWithType.vb: IResourceWriteRepository(Of TResource, TId).GetForCreateAsync(TId, CancellationToken)
+- uid: JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.GetForCreateAsync*
+  name: GetForCreateAsync
+  href: api/JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_GetForCreateAsync_
+  commentId: Overload:JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.GetForCreateAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.IResourceWriteRepository<TResource, TId>.GetForCreateAsync
+  fullName.vb: JsonApiDotNetCore.Repositories.IResourceWriteRepository(Of TResource, TId).GetForCreateAsync
+  nameWithType: IResourceWriteRepository<TResource, TId>.GetForCreateAsync
+  nameWithType.vb: IResourceWriteRepository(Of TResource, TId).GetForCreateAsync
 - uid: JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.GetForUpdateAsync(JsonApiDotNetCore.Queries.QueryLayer,System.Threading.CancellationToken)
   name: GetForUpdateAsync(QueryLayer, CancellationToken)
   href: api/JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_GetForUpdateAsync_JsonApiDotNetCore_Queries_QueryLayer_System_Threading_CancellationToken_
@@ -12449,15 +12499,15 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync
   nameWithType: ResourceRepositoryAccessor.CreateAsync
-- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync``1(``0,System.Threading.CancellationToken)
-  name: CreateAsync<TResource>(TResource, CancellationToken)
-  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CreateAsync__1___0_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync``1(``0,System.Threading.CancellationToken)
-  name.vb: CreateAsync(Of TResource)(TResource, CancellationToken)
-  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync<TResource>(TResource, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync(Of TResource)(TResource, System.Threading.CancellationToken)
-  nameWithType: ResourceRepositoryAccessor.CreateAsync<TResource>(TResource, CancellationToken)
-  nameWithType.vb: ResourceRepositoryAccessor.CreateAsync(Of TResource)(TResource, CancellationToken)
+- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync``1(``0,``0,System.Threading.CancellationToken)
+  name: CreateAsync<TResource>(TResource, TResource, CancellationToken)
+  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CreateAsync__1___0___0_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync``1(``0,``0,System.Threading.CancellationToken)
+  name.vb: CreateAsync(Of TResource)(TResource, TResource, CancellationToken)
+  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync<TResource>(TResource, TResource, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync(Of TResource)(TResource, TResource, System.Threading.CancellationToken)
+  nameWithType: ResourceRepositoryAccessor.CreateAsync<TResource>(TResource, TResource, CancellationToken)
+  nameWithType.vb: ResourceRepositoryAccessor.CreateAsync(Of TResource)(TResource, TResource, CancellationToken)
 - uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.DeleteAsync*
   name: DeleteAsync
   href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_DeleteAsync_
@@ -12496,6 +12546,22 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetAsync(Of TResource)(JsonApiDotNetCore.Queries.QueryLayer, System.Threading.CancellationToken)
   nameWithType: ResourceRepositoryAccessor.GetAsync<TResource>(QueryLayer, CancellationToken)
   nameWithType.vb: ResourceRepositoryAccessor.GetAsync(Of TResource)(QueryLayer, CancellationToken)
+- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForCreateAsync*
+  name: GetForCreateAsync
+  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetForCreateAsync_
+  commentId: Overload:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForCreateAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForCreateAsync
+  nameWithType: ResourceRepositoryAccessor.GetForCreateAsync
+- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForCreateAsync``2(``1,System.Threading.CancellationToken)
+  name: GetForCreateAsync<TResource, TId>(TId, CancellationToken)
+  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetForCreateAsync__2___1_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForCreateAsync``2(``1,System.Threading.CancellationToken)
+  name.vb: GetForCreateAsync(Of TResource, TId)(TId, CancellationToken)
+  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForCreateAsync<TResource, TId>(TId, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForCreateAsync(Of TResource, TId)(TId, System.Threading.CancellationToken)
+  nameWithType: ResourceRepositoryAccessor.GetForCreateAsync<TResource, TId>(TId, CancellationToken)
+  nameWithType.vb: ResourceRepositoryAccessor.GetForCreateAsync(Of TResource, TId)(TId, CancellationToken)
 - uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForUpdateAsync*
   name: GetForUpdateAsync
   href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetForUpdateAsync_
