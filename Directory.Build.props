@@ -17,6 +17,6 @@
     <XUnitVersion>2.4.1</XUnitVersion>
     <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
     <BogusVersion>31.0.3</BogusVersion>
-    <MoqVersion>4.14.6</MoqVersion>
+    <MoqVersion>4.15.1</MoqVersion>
   </PropertyGroup>
 </Project>
