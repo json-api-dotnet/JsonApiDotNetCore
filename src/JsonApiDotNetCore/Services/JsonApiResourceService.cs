@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
-using JsonApiDotNetCore.Hooks.Internal;
+using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
