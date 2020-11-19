@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
@@ -17,6 +18,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         public EagerLoadingTests(IntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.ConfigureServicesAfterStartup(services =>
+            {
+                services.AddResourceRepository<BuildingRepository>();
+            });
         }
 
         [Fact]

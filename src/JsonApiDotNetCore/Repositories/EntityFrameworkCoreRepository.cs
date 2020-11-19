@@ -115,6 +115,15 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
+        public virtual Task<TResource> GetForCreateAsync(TId id, CancellationToken cancellationToken)
+        {
+            var resource = _resourceFactory.CreateInstance<TResource>();
+            resource.Id = id;
+
+            return Task.FromResult(resource);
+        }
+
+        /// <inheritdoc />
         public virtual async Task CreateAsync(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {resourceFromRequest, resourceForDatabase});
@@ -141,37 +150,10 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+        public virtual async Task<TResource> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new {primaryId, secondaryResourceIds});
-            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
-
-            var relationship = _targetedFields.Relationships.Single();
-
-            if (secondaryResourceIds.Any())
-            {
-                using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
-                var primaryResource = collector.CreateForId<TResource, TId>(primaryId);
-
-                await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector, cancellationToken);
-
-                await SaveChangesAsync(cancellationToken);
-            }
-        }
-
-        /// <inheritdoc />
-        public virtual async Task SetRelationshipAsync(TResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
-        {
-            _traceWriter.LogMethodStart(new {primaryResource, secondaryResourceIds});
-
-            var relationship = _targetedFields.Relationships.Single();
-
-            AssertIsNotClearingRequiredRelationship(relationship, primaryResource, secondaryResourceIds);
-
-            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
-            await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector, cancellationToken);
-
-            await SaveChangesAsync(cancellationToken);
+            var resources = await GetAsync(queryLayer, cancellationToken);
+            return resources.FirstOrDefault();
         }
 
         /// <inheritdoc />
@@ -198,6 +180,39 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             await SaveChangesAsync(cancellationToken);
+        }
+
+        protected void AssertIsNotClearingRequiredRelationship(RelationshipAttribute relationship, TResource leftResource, object rightValue)
+        {
+            bool relationshipIsRequired = false;
+
+            if (!(relationship is HasManyThroughAttribute))
+            {
+                var navigation = TryGetNavigation(relationship);
+                relationshipIsRequired = navigation?.ForeignKey?.IsRequired ?? false;
+            }
+
+            var relationshipIsBeingCleared = relationship is HasOneAttribute
+                ? rightValue == null
+                : IsRequiredToManyRelationshipBeingCleared(relationship, leftResource, rightValue);
+            
+            if (relationshipIsRequired && relationshipIsBeingCleared)
+            {
+                var resourceType = _resourceGraph.GetResourceContext<TResource>().PublicName;
+                throw new CannotClearRequiredRelationshipException(relationship.PublicName, leftResource.StringId, resourceType);
+            }
+        }
+
+        private static bool IsRequiredToManyRelationshipBeingCleared(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
+        {
+            ICollection<IIdentifiable> newRightResourceIds = TypeHelper.ExtractResources(valueToAssign);
+
+            var existingRightValue = relationship.GetValue(leftResource);
+            var existingRightResourceIds = TypeHelper.ExtractResources(existingRightValue).ToHashSet(IdentifiableComparer.Instance);
+
+            existingRightResourceIds.ExceptWith(newRightResourceIds);
+
+            return existingRightResourceIds.Any();
         }
 
         /// <inheritdoc />
@@ -261,6 +276,51 @@ namespace JsonApiDotNetCore.Repositories
             return entityType?.FindNavigation(relationship.Property.Name);
         }
 
+        private bool HasForeignKeyAtLeftSide(RelationshipAttribute relationship)
+        {
+            if (relationship is HasOneAttribute)
+            {
+                var navigation = TryGetNavigation(relationship);
+                return navigation?.IsDependentToPrincipal() ?? false;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
+        public virtual async Task SetRelationshipAsync(TResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
+        {
+            _traceWriter.LogMethodStart(new {primaryResource, secondaryResourceIds});
+
+            var relationship = _targetedFields.Relationships.Single();
+
+            AssertIsNotClearingRequiredRelationship(relationship, primaryResource, secondaryResourceIds);
+
+            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+            await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector, cancellationToken);
+
+            await SaveChangesAsync(cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+        {
+            _traceWriter.LogMethodStart(new {primaryId, secondaryResourceIds});
+            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
+
+            var relationship = _targetedFields.Relationships.Single();
+
+            if (secondaryResourceIds.Any())
+            {
+                using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
+                var primaryResource = collector.CreateForId<TResource, TId>(primaryId);
+
+                await UpdateRelationshipAsync(relationship, primaryResource, secondaryResourceIds, collector, cancellationToken);
+
+                await SaveChangesAsync(cancellationToken);
+            }
+        }
+
         /// <inheritdoc />
         public virtual async Task RemoveFromToManyRelationshipAsync(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
@@ -280,58 +340,6 @@ namespace JsonApiDotNetCore.Repositories
             await UpdateRelationshipAsync(relationship, primaryResource, rightResourceIds, collector, cancellationToken);
 
             await SaveChangesAsync(cancellationToken);
-        }
-
-        protected void AssertIsNotClearingRequiredRelationship(RelationshipAttribute relationship, TResource leftResource, object rightValue)
-        {
-            bool relationshipIsRequired = false;
-
-            if (!(relationship is HasManyThroughAttribute))
-            {
-                var navigation = TryGetNavigation(relationship);
-                relationshipIsRequired = navigation?.ForeignKey?.IsRequired ?? false;
-            }
-
-            var relationshipIsBeingCleared = relationship is HasOneAttribute
-                ? rightValue == null
-                : IsRequiredToManyRelationshipBeingCleared(relationship, leftResource, rightValue);
-            
-            if (relationshipIsRequired && relationshipIsBeingCleared)
-            {
-                var resourceType = _resourceGraph.GetResourceContext<TResource>().PublicName;
-                throw new CannotClearRequiredRelationshipException(relationship.PublicName, leftResource.StringId, resourceType);
-            }
-        }
-
-        private static bool IsRequiredToManyRelationshipBeingCleared(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
-        {
-            ICollection<IIdentifiable> newRightResourceIds = TypeHelper.ExtractResources(valueToAssign);
-
-            var existingRightValue = relationship.GetValue(leftResource);
-            var existingRightResourceIds = TypeHelper.ExtractResources(existingRightValue).ToHashSet(IdentifiableComparer.Instance);
-
-            existingRightResourceIds.ExceptWith(newRightResourceIds);
-
-            return existingRightResourceIds.Any();
-        }
-
-        /// <inheritdoc />
-        public virtual async Task<TResource> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
-        {
-            var resources = await GetAsync(queryLayer, cancellationToken);
-            return resources.FirstOrDefault();
-        }
-
-        protected virtual async Task SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            try
-            {
-                await _dbContext.SaveChangesAsync(cancellationToken);
-            }
-            catch (DbUpdateException exception)
-            {
-                throw new DataStoreUpdateException(exception);
-            }
         }
 
         protected async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource,
@@ -383,15 +391,16 @@ namespace JsonApiDotNetCore.Repositories
             return false;
         }
 
-        private bool HasForeignKeyAtLeftSide(RelationshipAttribute relationship)
+        protected virtual async Task SaveChangesAsync(CancellationToken cancellationToken)
         {
-            if (relationship is HasOneAttribute)
+            try
             {
-                var navigation = TryGetNavigation(relationship);
-                return navigation?.IsDependentToPrincipal() ?? false;
+                await _dbContext.SaveChangesAsync(cancellationToken);
             }
-
-            return false;
+            catch (DbUpdateException exception)
+            {
+                throw new DataStoreUpdateException(exception);
+            }
         }
     }
 

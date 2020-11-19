@@ -176,8 +176,7 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.BeforeCreate(resourceFromRequest);
 
-            var resourceForDatabase = _resourceFactory.CreateInstance<TResource>();
-            resourceForDatabase.Id = resourceFromRequest.Id;
+            TResource resourceForDatabase = await _repositoryAccessor.GetForCreateAsync<TResource, TId>(resource.Id, cancellationToken);
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceForDatabase);
 

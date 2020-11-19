@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -6,28 +7,37 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
 {
     public sealed class Building : Identifiable
     {
+        private string _tempPrimaryDoorColor;
+
         [Attr]
         public string Number { get; set; }
 
+        [NotMapped]
         [Attr]
         public int WindowCount => Windows?.Count ?? 0;
 
-        [Attr]
+        [NotMapped]
+        [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
         public string PrimaryDoorColor
         {
-            get
-            {
-                EnsureHasPrimaryDoor();
-                return PrimaryDoor.Color;
-            }
+            get => _tempPrimaryDoorColor ?? PrimaryDoor.Color;
             set
             {
-                EnsureHasPrimaryDoor();
-                PrimaryDoor.Color = value;
+                if (PrimaryDoor == null)
+                {
+                    // A request body is being deserialized. At this time, related entities have not been loaded.
+                    // We cache the assigned value in a private field, so it can be used later.
+                    _tempPrimaryDoorColor = value;
+                }
+                else
+                {
+                    PrimaryDoor.Color = value;
+                }
             }
         }
 
-        [Attr]
+        [NotMapped]
+        [Attr(Capabilities = AttrCapabilities.AllowView)]
         public string SecondaryDoorColor => SecondaryDoor?.Color;
 
         [EagerLoad]
@@ -38,11 +48,5 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         
         [EagerLoad]
         public Door SecondaryDoor { get; set; }
-
-        private void EnsureHasPrimaryDoor()
-        {
-            // Must ensure that an instance exists for this required relationship, so that POST succeeds.
-            PrimaryDoor ??= new Door();
-        }
     }
 }

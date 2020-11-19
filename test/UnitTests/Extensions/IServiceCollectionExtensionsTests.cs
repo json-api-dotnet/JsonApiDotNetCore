@@ -224,26 +224,28 @@ namespace UnitTests.Extensions
         {
             public Task<IReadOnlyCollection<IntResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task<int> CountAsync(FilterExpression topFilter, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task<IntResource> GetForCreateAsync(int id, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task CreateAsync(IntResource resourceFromRequest, IntResource resourceForDatabase, CancellationToken cancellationToken) => throw new NotImplementedException();
-            public Task AddToToManyRelationshipAsync(int primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
-            public Task UpdateAsync(IntResource resourceFromRequest, IntResource resourceFromDatabase, CancellationToken cancellationToken) => throw new NotImplementedException();
-            public Task SetRelationshipAsync(IntResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
-            public Task DeleteAsync(int id, CancellationToken cancellationToken) => throw new NotImplementedException();
-            public Task RemoveFromToManyRelationshipAsync(IntResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task<IntResource> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task UpdateAsync(IntResource resourceFromRequest, IntResource resourceFromDatabase, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task DeleteAsync(int id, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task SetRelationshipAsync(IntResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task AddToToManyRelationshipAsync(int primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task RemoveFromToManyRelationshipAsync(IntResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
         }
 
         private sealed class GuidResourceRepository : IResourceRepository<GuidResource, Guid>
         {
             public Task<IReadOnlyCollection<GuidResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task<int> CountAsync(FilterExpression topFilter, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task<GuidResource> GetForCreateAsync(Guid id, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task CreateAsync(GuidResource resourceFromRequest, GuidResource resourceForDatabase, CancellationToken cancellationToken) => throw new NotImplementedException();
-            public Task AddToToManyRelationshipAsync(Guid primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
-            public Task UpdateAsync(GuidResource resourceFromRequest, GuidResource resourceFromDatabase, CancellationToken cancellationToken) => throw new NotImplementedException();
-            public Task SetRelationshipAsync(GuidResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
-            public Task DeleteAsync(Guid id, CancellationToken cancellationToken) => throw new NotImplementedException();
-            public Task RemoveFromToManyRelationshipAsync(GuidResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
             public Task<GuidResource> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task UpdateAsync(GuidResource resourceFromRequest, GuidResource resourceFromDatabase, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task DeleteAsync(Guid id, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task SetRelationshipAsync(GuidResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task AddToToManyRelationshipAsync(Guid primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
+            public Task RemoveFromToManyRelationshipAsync(GuidResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
         }
 
         public class TestContext : DbContext
