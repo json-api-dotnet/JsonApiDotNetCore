@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         public QueryLayerComposer(
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             IResourceContextProvider resourceContextProvider,
-            IResourceDefinitionAccessor resourceDefinitionAccessor, 
+            IResourceDefinitionAccessor resourceDefinitionAccessor,
             IJsonApiOptions options,
             IPaginationContext paginationContext,
             ITargetedFields targetedFields)
@@ -93,7 +93,8 @@ namespace JsonApiDotNetCore.Queries.Internal
         {
             var include = constraints
                 .Where(constraint => constraint.Scope == null)
-                .Select(constraint => constraint.Expression).OfType<IncludeExpression>()
+                .Select(constraint => constraint.Expression)
+                .OfType<IncludeExpression>()
                 .FirstOrDefault() ?? IncludeExpression.Empty;
 
             var includeElements =
@@ -104,7 +105,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                 : include;
         }
 
-        private IReadOnlyCollection<IncludeElementExpression> ProcessIncludeSet(IReadOnlyCollection<IncludeElementExpression> includeElements, 
+        private IReadOnlyCollection<IncludeElementExpression> ProcessIncludeSet(IReadOnlyCollection<IncludeElementExpression> includeElements,
             QueryLayer parentLayer, ICollection<RelationshipAttribute> parentRelationshipChain, ICollection<ExpressionInScope> constraints)
         {
             includeElements = GetIncludeElements(includeElements, parentLayer.ResourceContext) ?? Array.Empty<IncludeElementExpression>();
@@ -135,7 +136,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                     {
                         Filter = GetFilter(expressionsInCurrentScope, resourceContext),
                         Sort = GetSort(expressionsInCurrentScope, resourceContext),
-                        Pagination = ((JsonApiOptions) _options).DisableChildrenPagination
+                        Pagination = ((JsonApiOptions)_options).DisableChildrenPagination
                             ? null
                             : GetPagination(expressionsInCurrentScope, resourceContext),
                         Projection = GetSparseFieldSetProjection(expressionsInCurrentScope, resourceContext)
@@ -186,7 +187,10 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
             {
-                queryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> {{idAttribute, null}};
+                queryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
+                {
+                    [idAttribute] = null
+                };
             }
             else if (fieldSelection == TopFieldSelection.WithAllAttributes && queryLayer.Projection != null)
             {
@@ -234,9 +238,9 @@ namespace JsonApiDotNetCore.Queries.Internal
             secondaryLayer.Include = null;
 
             var primaryIdAttribute = GetIdAttribute(primaryResourceContext);
-            var sparseFieldSet = new SparseFieldSetExpression(new[] { primaryIdAttribute });
+            var sparseFieldSet = new SparseFieldSetExpression(new[] {primaryIdAttribute});
 
-            var primaryProjection = GetSparseFieldSetProjection(new[] { sparseFieldSet }, primaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
+            var primaryProjection = GetSparseFieldSetProjection(new[] {sparseFieldSet}, primaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
             primaryProjection[secondaryRelationship] = secondaryLayer;
             primaryProjection[primaryIdAttribute] = null;
 
@@ -276,10 +280,10 @@ namespace JsonApiDotNetCore.Queries.Internal
                 filter = new EqualsAnyOfExpression(idChain, constants);
             }
 
-            return filter == null 
-                ? existingFilter 
-                : existingFilter == null 
-                    ? filter 
+            return filter == null
+                ? existingFilter
+                : existingFilter == null
+                    ? filter
                     : new LogicalExpression(LogicalOperator.And, new[] {filter, existingFilter});
         }
 
@@ -294,7 +298,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             var primaryIdAttribute = GetIdAttribute(primaryResource);
 
             var primaryLayer = ComposeTopLayer(Array.Empty<ExpressionInScope>(), primaryResource);
-            primaryLayer.Include = includeElements.Any() ? new IncludeExpression(includeElements) : null;
+            primaryLayer.Include = includeElements.Any() ? new IncludeExpression(includeElements) : IncludeExpression.Empty;
             primaryLayer.Sort = null;
             primaryLayer.Pagination = null;
             primaryLayer.Filter = CreateFilterByIds(new[] {id}, primaryIdAttribute, primaryLayer.Filter);
@@ -332,6 +336,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             return new QueryLayer(rightResourceContext)
             {
+                Include = IncludeExpression.Empty,
                 Filter = filter,
                 Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
                 {
@@ -386,10 +391,12 @@ namespace JsonApiDotNetCore.Queries.Internal
             if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
 
             var filters = expressionsInScope.OfType<FilterExpression>().ToArray();
-            var filter = filters.Length > 1 ? new LogicalExpression(LogicalOperator.And, filters) : filters.FirstOrDefault();
 
-            filter = _resourceDefinitionAccessor.OnApplyFilter(resourceContext.ResourceType, filter);
-            return filter;
+            var filter = filters.Length > 1
+                ? new LogicalExpression(LogicalOperator.And, filters)
+                : filters.FirstOrDefault();
+
+            return _resourceDefinitionAccessor.OnApplyFilter(resourceContext.ResourceType, filter);
         }
 
         protected virtual SortExpression GetSort(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
@@ -398,7 +405,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
 
             var sort = expressionsInScope.OfType<SortExpression>().FirstOrDefault();
-            
+
             sort = _resourceDefinitionAccessor.OnApplySort(resourceContext.ResourceType, sort);
 
             if (sort == null)
@@ -416,7 +423,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
 
             var pagination = expressionsInScope.OfType<PaginationExpression>().FirstOrDefault();
-            
+
             pagination = _resourceDefinitionAccessor.OnApplyPagination(resourceContext.ResourceType, pagination);
 
             pagination ??= new PaginationExpression(PageNumber.ValueOne, _options.DefaultPageSize);
@@ -444,7 +451,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             var idAttribute = GetIdAttribute(resourceContext);
             attributes.Add(idAttribute);
 
-            return attributes.Cast<ResourceFieldAttribute>().ToDictionary(key => key, value => (QueryLayer) null);
+            return attributes.Cast<ResourceFieldAttribute>().ToDictionary(key => key, value => (QueryLayer)null);
         }
 
         private static AttrAttribute GetIdAttribute(ResourceContext resourceContext)

@@ -52,15 +52,6 @@ namespace JsonApiDotNetCoreExample.Models
         [EagerLoad]
         public Country BirthCountry { get; set; }
 
-        [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
-        [NotMapped]
-        public string GrantedVisaCountries => GrantedVisas == null || !GrantedVisas.Any()
-            ? null
-            : string.Join(", ", GrantedVisas.Select(v => v.TargetCountry.Name));
-
-        [EagerLoad]
-        public ICollection<Visa> GrantedVisas { get; set; }
-
         public Passport(AppDbContext appDbContext)
         {
             _systemClock = appDbContext.SystemClock;

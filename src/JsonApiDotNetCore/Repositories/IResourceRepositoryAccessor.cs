@@ -31,27 +31,27 @@ namespace JsonApiDotNetCore.Repositories
             where TResource : class, IIdentifiable;
 
         /// <summary>
+        /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.GetForCreateAsync"/>.
+        /// </summary>
+        Task<TResource> GetForCreateAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable<TId>;
+
+        /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.CreateAsync"/>.
         /// </summary>
-        Task CreateAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+        Task CreateAsync<TResource>(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
-        /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.AddToToManyRelationshipAsync"/> for the specified resource type.
+        /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.GetForUpdateAsync"/>.
         /// </summary>
-        Task AddToToManyRelationshipAsync<TResource, TId>(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable<TId>;
+        Task<TResource> GetForUpdateAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable;
 
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.UpdateAsync"/>.
         /// </summary>
         Task UpdateAsync<TResource>(TResource resourceFromRequest, TResource resourceFromDatabase, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable;
-
-        /// <summary>
-        /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.SetRelationshipAsync"/>.
-        /// </summary>
-        Task SetRelationshipAsync<TResource>(TResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
@@ -61,15 +61,21 @@ namespace JsonApiDotNetCore.Repositories
             where TResource : class, IIdentifiable<TId>;
 
         /// <summary>
-        /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.RemoveFromToManyRelationshipAsync"/>.
+        /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.SetRelationshipAsync"/>.
         /// </summary>
-        Task RemoveFromToManyRelationshipAsync<TResource>(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+        Task SetRelationshipAsync<TResource>(TResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
-        /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.GetForUpdateAsync"/>.
+        /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.AddToToManyRelationshipAsync"/> for the specified resource type.
         /// </summary>
-        Task<TResource> GetForUpdateAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
+        Task AddToToManyRelationshipAsync<TResource, TId>(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable<TId>;
+
+        /// <summary>
+        /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.RemoveFromToManyRelationshipAsync"/>.
+        /// </summary>
+        Task RemoveFromToManyRelationshipAsync<TResource>(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
     }
 }
