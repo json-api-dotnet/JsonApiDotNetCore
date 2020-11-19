@@ -701,6 +701,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html",
+          "hash": "0jpWdU/IJa/V+qe6JAdzuQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Hooks.Internal.Discovery.HooksDiscovery-1.yml",
       "output": {
         ".html": {
@@ -1049,18 +1061,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html",
-          "hash": "DFyiuu9xa8TH2iyzwdxM/Q=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Hooks.Internal.IUpdateHookContainer-1.yml",
       "output": {
         ".html": {
@@ -1089,7 +1089,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Hooks.Internal.NeverResourceHookExecutorFacade.html",
-          "hash": "Ixo4ydAAThMIyR9hhiEVZA=="
+          "hash": "fCXhNZkA80NcfWJgE8AqqQ=="
         }
       },
       "is_incremental": false,
@@ -1101,7 +1101,19 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Hooks.Internal.html",
-          "hash": "NhGQ4OFGWDzbkvjEwMpvzg=="
+          "hash": "yVxQrvyV01e91oWLqX7Qtw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.html",
+          "hash": "NW+gffm4+c0DNfQtfW7CxQ=="
         }
       },
       "is_incremental": false,
@@ -4017,7 +4029,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Services.JsonApiResourceService-1.html",
-          "hash": "yEp3mSS1IeVH+j+N2IMvYw=="
+          "hash": "7+7En/MdsGYcRVTEU7gBLg=="
         }
       },
       "is_incremental": false,
@@ -4029,7 +4041,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Services.JsonApiResourceService-2.html",
-          "hash": "u5XzesluM0HgKcDfMfDzSA=="
+          "hash": "sthIezMbo4Qn3OtFgAcrlA=="
         }
       },
       "is_incremental": false,
@@ -4065,7 +4077,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "sa+Gj76cAPJ99AtlKTJ5WQ=="
+          "hash": "F6nD/ibdQaEULy+xx8DPDg=="
         }
       },
       "is_incremental": false,
@@ -4524,7 +4536,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 336,
+          "total_file_count": 337,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

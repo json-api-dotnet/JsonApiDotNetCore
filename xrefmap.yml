@@ -2981,6 +2981,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Errors.UnsuccessfulActionResultException.UnsuccessfulActionResultException
   nameWithType: UnsuccessfulActionResultException.UnsuccessfulActionResultException
+- uid: JsonApiDotNetCore.Hooks
+  name: JsonApiDotNetCore.Hooks
+  href: api/JsonApiDotNetCore.Hooks.html
+  commentId: N:JsonApiDotNetCore.Hooks
+  fullName: JsonApiDotNetCore.Hooks
+  nameWithType: JsonApiDotNetCore.Hooks
 - uid: JsonApiDotNetCore.Hooks.Internal
   name: JsonApiDotNetCore.Hooks.Internal
   href: api/JsonApiDotNetCore.Hooks.Internal.html
@@ -4021,249 +4027,6 @@ references:
   commentId: T:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutor
   fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutor
   nameWithType: IResourceHookExecutor
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade
-  name: IResourceHookExecutorFacade
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html
-  commentId: T:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade
-  nameWithType: IResourceHookExecutorFacade
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterCreate*
-  name: AfterCreate
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_AfterCreate_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterCreate
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterCreate
-  nameWithType: IResourceHookExecutorFacade.AfterCreate
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterCreate``1(``0)
-  name: AfterCreate<TResource>(TResource)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_AfterCreate__1___0_
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterCreate``1(``0)
-  name.vb: AfterCreate(Of TResource)(TResource)
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterCreate<TResource>(TResource)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterCreate(Of TResource)(TResource)
-  nameWithType: IResourceHookExecutorFacade.AfterCreate<TResource>(TResource)
-  nameWithType.vb: IResourceHookExecutorFacade.AfterCreate(Of TResource)(TResource)
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterDelete*
-  name: AfterDelete
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_AfterDelete_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterDelete
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterDelete
-  nameWithType: IResourceHookExecutorFacade.AfterDelete
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterDelete``2(``1)
-  name: AfterDelete<TResource, TId>(TId)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_AfterDelete__2___1_
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterDelete``2(``1)
-  name.vb: AfterDelete(Of TResource, TId)(TId)
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterDelete<TResource, TId>(TId)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterDelete(Of TResource, TId)(TId)
-  nameWithType: IResourceHookExecutorFacade.AfterDelete<TResource, TId>(TId)
-  nameWithType.vb: IResourceHookExecutorFacade.AfterDelete(Of TResource, TId)(TId)
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadMany*
-  name: AfterReadMany
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_AfterReadMany_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadMany
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadMany
-  nameWithType: IResourceHookExecutorFacade.AfterReadMany
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadMany``1(System.Collections.Generic.IReadOnlyCollection{``0})
-  name: AfterReadMany<TResource>(IReadOnlyCollection<TResource>)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_AfterReadMany__1_System_Collections_Generic_IReadOnlyCollection___0__
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadMany``1(System.Collections.Generic.IReadOnlyCollection{``0})
-  name.vb: AfterReadMany(Of TResource)(IReadOnlyCollection(Of TResource))
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadMany<TResource>(System.Collections.Generic.IReadOnlyCollection<TResource>)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadMany(Of TResource)(System.Collections.Generic.IReadOnlyCollection(Of TResource))
-  nameWithType: IResourceHookExecutorFacade.AfterReadMany<TResource>(IReadOnlyCollection<TResource>)
-  nameWithType.vb: IResourceHookExecutorFacade.AfterReadMany(Of TResource)(IReadOnlyCollection(Of TResource))
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadSingle*
-  name: AfterReadSingle
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_AfterReadSingle_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadSingle
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadSingle
-  nameWithType: IResourceHookExecutorFacade.AfterReadSingle
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadSingle``1(``0,JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name: AfterReadSingle<TResource>(TResource, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_AfterReadSingle__1___0_JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadSingle``1(``0,JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name.vb: AfterReadSingle(Of TResource)(TResource, ResourcePipeline)
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadSingle<TResource>(TResource, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterReadSingle(Of TResource)(TResource, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  nameWithType: IResourceHookExecutorFacade.AfterReadSingle<TResource>(TResource, ResourcePipeline)
-  nameWithType.vb: IResourceHookExecutorFacade.AfterReadSingle(Of TResource)(TResource, ResourcePipeline)
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateRelationship*
-  name: AfterUpdateRelationship
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_AfterUpdateRelationship_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateRelationship
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateRelationship
-  nameWithType: IResourceHookExecutorFacade.AfterUpdateRelationship
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateRelationship``1(``0)
-  name: AfterUpdateRelationship<TResource>(TResource)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_AfterUpdateRelationship__1___0_
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateRelationship``1(``0)
-  name.vb: AfterUpdateRelationship(Of TResource)(TResource)
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateRelationship<TResource>(TResource)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateRelationship(Of TResource)(TResource)
-  nameWithType: IResourceHookExecutorFacade.AfterUpdateRelationship<TResource>(TResource)
-  nameWithType.vb: IResourceHookExecutorFacade.AfterUpdateRelationship(Of TResource)(TResource)
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateResource*
-  name: AfterUpdateResource
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_AfterUpdateResource_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateResource
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateResource
-  nameWithType: IResourceHookExecutorFacade.AfterUpdateResource
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateResource``1(``0)
-  name: AfterUpdateResource<TResource>(TResource)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_AfterUpdateResource__1___0_
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateResource``1(``0)
-  name.vb: AfterUpdateResource(Of TResource)(TResource)
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateResource<TResource>(TResource)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.AfterUpdateResource(Of TResource)(TResource)
-  nameWithType: IResourceHookExecutorFacade.AfterUpdateResource<TResource>(TResource)
-  nameWithType.vb: IResourceHookExecutorFacade.AfterUpdateResource(Of TResource)(TResource)
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeCreate*
-  name: BeforeCreate
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_BeforeCreate_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeCreate
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeCreate
-  nameWithType: IResourceHookExecutorFacade.BeforeCreate
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeCreate``1(``0)
-  name: BeforeCreate<TResource>(TResource)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_BeforeCreate__1___0_
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeCreate``1(``0)
-  name.vb: BeforeCreate(Of TResource)(TResource)
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeCreate<TResource>(TResource)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeCreate(Of TResource)(TResource)
-  nameWithType: IResourceHookExecutorFacade.BeforeCreate<TResource>(TResource)
-  nameWithType.vb: IResourceHookExecutorFacade.BeforeCreate(Of TResource)(TResource)
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeDelete*
-  name: BeforeDelete
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_BeforeDelete_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeDelete
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeDelete
-  nameWithType: IResourceHookExecutorFacade.BeforeDelete
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeDelete``2(``1)
-  name: BeforeDelete<TResource, TId>(TId)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_BeforeDelete__2___1_
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeDelete``2(``1)
-  name.vb: BeforeDelete(Of TResource, TId)(TId)
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeDelete<TResource, TId>(TId)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeDelete(Of TResource, TId)(TId)
-  nameWithType: IResourceHookExecutorFacade.BeforeDelete<TResource, TId>(TId)
-  nameWithType.vb: IResourceHookExecutorFacade.BeforeDelete(Of TResource, TId)(TId)
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadMany*
-  name: BeforeReadMany
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_BeforeReadMany_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadMany
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadMany
-  nameWithType: IResourceHookExecutorFacade.BeforeReadMany
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadMany``1
-  name: BeforeReadMany<TResource>()
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_BeforeReadMany__1
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadMany``1
-  name.vb: BeforeReadMany(Of TResource)()
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadMany<TResource>()
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadMany(Of TResource)()
-  nameWithType: IResourceHookExecutorFacade.BeforeReadMany<TResource>()
-  nameWithType.vb: IResourceHookExecutorFacade.BeforeReadMany(Of TResource)()
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadSingle*
-  name: BeforeReadSingle
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_BeforeReadSingle_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadSingle
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadSingle
-  nameWithType: IResourceHookExecutorFacade.BeforeReadSingle
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadSingle``2(``1,JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name: BeforeReadSingle<TResource, TId>(TId, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_BeforeReadSingle__2___1_JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadSingle``2(``1,JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name.vb: BeforeReadSingle(Of TResource, TId)(TId, ResourcePipeline)
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadSingle<TResource, TId>(TId, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeReadSingle(Of TResource, TId)(TId, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  nameWithType: IResourceHookExecutorFacade.BeforeReadSingle<TResource, TId>(TId, ResourcePipeline)
-  nameWithType.vb: IResourceHookExecutorFacade.BeforeReadSingle(Of TResource, TId)(TId, ResourcePipeline)
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateRelationship*
-  name: BeforeUpdateRelationship
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_BeforeUpdateRelationship_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateRelationship
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateRelationship
-  nameWithType: IResourceHookExecutorFacade.BeforeUpdateRelationship
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateRelationship``1(``0)
-  name: BeforeUpdateRelationship<TResource>(TResource)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_BeforeUpdateRelationship__1___0_
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateRelationship``1(``0)
-  name.vb: BeforeUpdateRelationship(Of TResource)(TResource)
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateRelationship<TResource>(TResource)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateRelationship(Of TResource)(TResource)
-  nameWithType: IResourceHookExecutorFacade.BeforeUpdateRelationship<TResource>(TResource)
-  nameWithType.vb: IResourceHookExecutorFacade.BeforeUpdateRelationship(Of TResource)(TResource)
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateResource*
-  name: BeforeUpdateResource
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_BeforeUpdateResource_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateResource
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateResource
-  nameWithType: IResourceHookExecutorFacade.BeforeUpdateResource
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateResource``1(``0)
-  name: BeforeUpdateResource<TResource>(TResource)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_BeforeUpdateResource__1___0_
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateResource``1(``0)
-  name.vb: BeforeUpdateResource(Of TResource)(TResource)
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateResource<TResource>(TResource)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.BeforeUpdateResource(Of TResource)(TResource)
-  nameWithType: IResourceHookExecutorFacade.BeforeUpdateResource<TResource>(TResource)
-  nameWithType.vb: IResourceHookExecutorFacade.BeforeUpdateResource(Of TResource)(TResource)
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnMany*
-  name: OnReturnMany
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_OnReturnMany_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnMany
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnMany
-  nameWithType: IResourceHookExecutorFacade.OnReturnMany
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnMany``1(System.Collections.Generic.IReadOnlyCollection{``0})
-  name: OnReturnMany<TResource>(IReadOnlyCollection<TResource>)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_OnReturnMany__1_System_Collections_Generic_IReadOnlyCollection___0__
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnMany``1(System.Collections.Generic.IReadOnlyCollection{``0})
-  name.vb: OnReturnMany(Of TResource)(IReadOnlyCollection(Of TResource))
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnMany<TResource>(System.Collections.Generic.IReadOnlyCollection<TResource>)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnMany(Of TResource)(System.Collections.Generic.IReadOnlyCollection(Of TResource))
-  nameWithType: IResourceHookExecutorFacade.OnReturnMany<TResource>(IReadOnlyCollection<TResource>)
-  nameWithType.vb: IResourceHookExecutorFacade.OnReturnMany(Of TResource)(IReadOnlyCollection(Of TResource))
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnRelationship(System.Object)
-  name: OnReturnRelationship(Object)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_OnReturnRelationship_System_Object_
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnRelationship(System.Object)
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnRelationship(System.Object)
-  nameWithType: IResourceHookExecutorFacade.OnReturnRelationship(Object)
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnRelationship*
-  name: OnReturnRelationship
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_OnReturnRelationship_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnRelationship
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnRelationship
-  nameWithType: IResourceHookExecutorFacade.OnReturnRelationship
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnSingle*
-  name: OnReturnSingle
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_OnReturnSingle_
-  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnSingle
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnSingle
-  nameWithType: IResourceHookExecutorFacade.OnReturnSingle
-- uid: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnSingle``1(``0,JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name: OnReturnSingle<TResource>(TResource, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_OnReturnSingle__1___0_JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnSingle``1(``0,JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  name.vb: OnReturnSingle(Of TResource)(TResource, ResourcePipeline)
-  fullName: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnSingle<TResource>(TResource, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade.OnReturnSingle(Of TResource)(TResource, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
-  nameWithType: IResourceHookExecutorFacade.OnReturnSingle<TResource>(TResource, ResourcePipeline)
-  nameWithType.vb: IResourceHookExecutorFacade.OnReturnSingle(Of TResource)(TResource, ResourcePipeline)
 - uid: JsonApiDotNetCore.Hooks.Internal.IUpdateHookContainer`1
   name: IUpdateHookContainer<TResource>
   href: api/JsonApiDotNetCore.Hooks.Internal.IUpdateHookContainer-1.html
@@ -4644,6 +4407,249 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.Internal.NeverResourceHookExecutorFacade.OnReturnSingle(Of TResource)(TResource, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
   nameWithType: NeverResourceHookExecutorFacade.OnReturnSingle<TResource>(TResource, ResourcePipeline)
   nameWithType.vb: NeverResourceHookExecutorFacade.OnReturnSingle(Of TResource)(TResource, ResourcePipeline)
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade
+  name: IResourceHookExecutorFacade
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html
+  commentId: T:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade
+  nameWithType: IResourceHookExecutorFacade
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterCreate*
+  name: AfterCreate
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_AfterCreate_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterCreate
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterCreate
+  nameWithType: IResourceHookExecutorFacade.AfterCreate
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterCreate``1(``0)
+  name: AfterCreate<TResource>(TResource)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_AfterCreate__1___0_
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterCreate``1(``0)
+  name.vb: AfterCreate(Of TResource)(TResource)
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterCreate<TResource>(TResource)
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterCreate(Of TResource)(TResource)
+  nameWithType: IResourceHookExecutorFacade.AfterCreate<TResource>(TResource)
+  nameWithType.vb: IResourceHookExecutorFacade.AfterCreate(Of TResource)(TResource)
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterDelete*
+  name: AfterDelete
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_AfterDelete_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterDelete
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterDelete
+  nameWithType: IResourceHookExecutorFacade.AfterDelete
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterDelete``2(``1)
+  name: AfterDelete<TResource, TId>(TId)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_AfterDelete__2___1_
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterDelete``2(``1)
+  name.vb: AfterDelete(Of TResource, TId)(TId)
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterDelete<TResource, TId>(TId)
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterDelete(Of TResource, TId)(TId)
+  nameWithType: IResourceHookExecutorFacade.AfterDelete<TResource, TId>(TId)
+  nameWithType.vb: IResourceHookExecutorFacade.AfterDelete(Of TResource, TId)(TId)
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadMany*
+  name: AfterReadMany
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_AfterReadMany_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadMany
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadMany
+  nameWithType: IResourceHookExecutorFacade.AfterReadMany
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadMany``1(System.Collections.Generic.IReadOnlyCollection{``0})
+  name: AfterReadMany<TResource>(IReadOnlyCollection<TResource>)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_AfterReadMany__1_System_Collections_Generic_IReadOnlyCollection___0__
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadMany``1(System.Collections.Generic.IReadOnlyCollection{``0})
+  name.vb: AfterReadMany(Of TResource)(IReadOnlyCollection(Of TResource))
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadMany<TResource>(System.Collections.Generic.IReadOnlyCollection<TResource>)
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadMany(Of TResource)(System.Collections.Generic.IReadOnlyCollection(Of TResource))
+  nameWithType: IResourceHookExecutorFacade.AfterReadMany<TResource>(IReadOnlyCollection<TResource>)
+  nameWithType.vb: IResourceHookExecutorFacade.AfterReadMany(Of TResource)(IReadOnlyCollection(Of TResource))
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadSingle*
+  name: AfterReadSingle
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_AfterReadSingle_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadSingle
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadSingle
+  nameWithType: IResourceHookExecutorFacade.AfterReadSingle
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadSingle``1(``0,JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name: AfterReadSingle<TResource>(TResource, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_AfterReadSingle__1___0_JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadSingle``1(``0,JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name.vb: AfterReadSingle(Of TResource)(TResource, ResourcePipeline)
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadSingle<TResource>(TResource, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterReadSingle(Of TResource)(TResource, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  nameWithType: IResourceHookExecutorFacade.AfterReadSingle<TResource>(TResource, ResourcePipeline)
+  nameWithType.vb: IResourceHookExecutorFacade.AfterReadSingle(Of TResource)(TResource, ResourcePipeline)
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateRelationship*
+  name: AfterUpdateRelationship
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_AfterUpdateRelationship_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateRelationship
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateRelationship
+  nameWithType: IResourceHookExecutorFacade.AfterUpdateRelationship
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateRelationship``1(``0)
+  name: AfterUpdateRelationship<TResource>(TResource)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_AfterUpdateRelationship__1___0_
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateRelationship``1(``0)
+  name.vb: AfterUpdateRelationship(Of TResource)(TResource)
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateRelationship<TResource>(TResource)
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateRelationship(Of TResource)(TResource)
+  nameWithType: IResourceHookExecutorFacade.AfterUpdateRelationship<TResource>(TResource)
+  nameWithType.vb: IResourceHookExecutorFacade.AfterUpdateRelationship(Of TResource)(TResource)
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateResource*
+  name: AfterUpdateResource
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_AfterUpdateResource_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateResource
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateResource
+  nameWithType: IResourceHookExecutorFacade.AfterUpdateResource
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateResource``1(``0)
+  name: AfterUpdateResource<TResource>(TResource)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_AfterUpdateResource__1___0_
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateResource``1(``0)
+  name.vb: AfterUpdateResource(Of TResource)(TResource)
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateResource<TResource>(TResource)
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.AfterUpdateResource(Of TResource)(TResource)
+  nameWithType: IResourceHookExecutorFacade.AfterUpdateResource<TResource>(TResource)
+  nameWithType.vb: IResourceHookExecutorFacade.AfterUpdateResource(Of TResource)(TResource)
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeCreate*
+  name: BeforeCreate
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_BeforeCreate_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeCreate
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeCreate
+  nameWithType: IResourceHookExecutorFacade.BeforeCreate
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeCreate``1(``0)
+  name: BeforeCreate<TResource>(TResource)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_BeforeCreate__1___0_
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeCreate``1(``0)
+  name.vb: BeforeCreate(Of TResource)(TResource)
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeCreate<TResource>(TResource)
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeCreate(Of TResource)(TResource)
+  nameWithType: IResourceHookExecutorFacade.BeforeCreate<TResource>(TResource)
+  nameWithType.vb: IResourceHookExecutorFacade.BeforeCreate(Of TResource)(TResource)
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeDelete*
+  name: BeforeDelete
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_BeforeDelete_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeDelete
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeDelete
+  nameWithType: IResourceHookExecutorFacade.BeforeDelete
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeDelete``2(``1)
+  name: BeforeDelete<TResource, TId>(TId)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_BeforeDelete__2___1_
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeDelete``2(``1)
+  name.vb: BeforeDelete(Of TResource, TId)(TId)
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeDelete<TResource, TId>(TId)
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeDelete(Of TResource, TId)(TId)
+  nameWithType: IResourceHookExecutorFacade.BeforeDelete<TResource, TId>(TId)
+  nameWithType.vb: IResourceHookExecutorFacade.BeforeDelete(Of TResource, TId)(TId)
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadMany*
+  name: BeforeReadMany
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_BeforeReadMany_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadMany
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadMany
+  nameWithType: IResourceHookExecutorFacade.BeforeReadMany
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadMany``1
+  name: BeforeReadMany<TResource>()
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_BeforeReadMany__1
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadMany``1
+  name.vb: BeforeReadMany(Of TResource)()
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadMany<TResource>()
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadMany(Of TResource)()
+  nameWithType: IResourceHookExecutorFacade.BeforeReadMany<TResource>()
+  nameWithType.vb: IResourceHookExecutorFacade.BeforeReadMany(Of TResource)()
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadSingle*
+  name: BeforeReadSingle
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_BeforeReadSingle_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadSingle
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadSingle
+  nameWithType: IResourceHookExecutorFacade.BeforeReadSingle
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadSingle``2(``1,JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name: BeforeReadSingle<TResource, TId>(TId, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_BeforeReadSingle__2___1_JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadSingle``2(``1,JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name.vb: BeforeReadSingle(Of TResource, TId)(TId, ResourcePipeline)
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadSingle<TResource, TId>(TId, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeReadSingle(Of TResource, TId)(TId, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  nameWithType: IResourceHookExecutorFacade.BeforeReadSingle<TResource, TId>(TId, ResourcePipeline)
+  nameWithType.vb: IResourceHookExecutorFacade.BeforeReadSingle(Of TResource, TId)(TId, ResourcePipeline)
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateRelationship*
+  name: BeforeUpdateRelationship
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_BeforeUpdateRelationship_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateRelationship
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateRelationship
+  nameWithType: IResourceHookExecutorFacade.BeforeUpdateRelationship
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateRelationship``1(``0)
+  name: BeforeUpdateRelationship<TResource>(TResource)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_BeforeUpdateRelationship__1___0_
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateRelationship``1(``0)
+  name.vb: BeforeUpdateRelationship(Of TResource)(TResource)
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateRelationship<TResource>(TResource)
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateRelationship(Of TResource)(TResource)
+  nameWithType: IResourceHookExecutorFacade.BeforeUpdateRelationship<TResource>(TResource)
+  nameWithType.vb: IResourceHookExecutorFacade.BeforeUpdateRelationship(Of TResource)(TResource)
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateResource*
+  name: BeforeUpdateResource
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_BeforeUpdateResource_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateResource
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateResource
+  nameWithType: IResourceHookExecutorFacade.BeforeUpdateResource
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateResource``1(``0)
+  name: BeforeUpdateResource<TResource>(TResource)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_BeforeUpdateResource__1___0_
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateResource``1(``0)
+  name.vb: BeforeUpdateResource(Of TResource)(TResource)
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateResource<TResource>(TResource)
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.BeforeUpdateResource(Of TResource)(TResource)
+  nameWithType: IResourceHookExecutorFacade.BeforeUpdateResource<TResource>(TResource)
+  nameWithType.vb: IResourceHookExecutorFacade.BeforeUpdateResource(Of TResource)(TResource)
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnMany*
+  name: OnReturnMany
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_OnReturnMany_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnMany
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnMany
+  nameWithType: IResourceHookExecutorFacade.OnReturnMany
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnMany``1(System.Collections.Generic.IReadOnlyCollection{``0})
+  name: OnReturnMany<TResource>(IReadOnlyCollection<TResource>)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_OnReturnMany__1_System_Collections_Generic_IReadOnlyCollection___0__
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnMany``1(System.Collections.Generic.IReadOnlyCollection{``0})
+  name.vb: OnReturnMany(Of TResource)(IReadOnlyCollection(Of TResource))
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnMany<TResource>(System.Collections.Generic.IReadOnlyCollection<TResource>)
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnMany(Of TResource)(System.Collections.Generic.IReadOnlyCollection(Of TResource))
+  nameWithType: IResourceHookExecutorFacade.OnReturnMany<TResource>(IReadOnlyCollection<TResource>)
+  nameWithType.vb: IResourceHookExecutorFacade.OnReturnMany(Of TResource)(IReadOnlyCollection(Of TResource))
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnRelationship(System.Object)
+  name: OnReturnRelationship(Object)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_OnReturnRelationship_System_Object_
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnRelationship(System.Object)
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnRelationship(System.Object)
+  nameWithType: IResourceHookExecutorFacade.OnReturnRelationship(Object)
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnRelationship*
+  name: OnReturnRelationship
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_OnReturnRelationship_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnRelationship
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnRelationship
+  nameWithType: IResourceHookExecutorFacade.OnReturnRelationship
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnSingle*
+  name: OnReturnSingle
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_OnReturnSingle_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnSingle
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnSingle
+  nameWithType: IResourceHookExecutorFacade.OnReturnSingle
+- uid: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnSingle``1(``0,JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name: OnReturnSingle<TResource>(TResource, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html#JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_OnReturnSingle__1___0_JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnSingle``1(``0,JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  name.vb: OnReturnSingle(Of TResource)(TResource, ResourcePipeline)
+  fullName: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnSingle<TResource>(TResource, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.OnReturnSingle(Of TResource)(TResource, JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)
+  nameWithType: IResourceHookExecutorFacade.OnReturnSingle<TResource>(TResource, ResourcePipeline)
+  nameWithType.vb: IResourceHookExecutorFacade.OnReturnSingle(Of TResource)(TResource, ResourcePipeline)
 - uid: JsonApiDotNetCore.Middleware
   name: JsonApiDotNetCore.Middleware
   href: api/JsonApiDotNetCore.Middleware.html
@@ -17527,13 +17533,13 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource)
   nameWithType: JsonApiResourceService<TResource>
   nameWithType.vb: JsonApiResourceService(Of TResource)
-- uid: JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor,JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade)
+- uid: JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor,JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade)
   name: JsonApiResourceService(IResourceRepositoryAccessor, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker<TResource>, IResourceFactory, IResourceHookExecutorFacade)
-  href: api/JsonApiDotNetCore.Services.JsonApiResourceService-1.html#JsonApiDotNetCore_Services_JsonApiResourceService_1__ctor_JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_JsonApiDotNetCore_Queries_IQueryLayerComposer_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_IResourceChangeTracker__0__JsonApiDotNetCore_Resources_IResourceFactory_JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_
-  commentId: M:JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor,JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade)
+  href: api/JsonApiDotNetCore.Services.JsonApiResourceService-1.html#JsonApiDotNetCore_Services_JsonApiResourceService_1__ctor_JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_JsonApiDotNetCore_Queries_IQueryLayerComposer_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_IResourceChangeTracker__0__JsonApiDotNetCore_Resources_IResourceFactory_JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_
+  commentId: M:JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor,JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade)
   name.vb: JsonApiResourceService(IResourceRepositoryAccessor, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker(Of TResource), IResourceFactory, IResourceHookExecutorFacade)
-  fullName: JsonApiDotNetCore.Services.JsonApiResourceService<TResource>.JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor, JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker<TResource>, JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade)
-  fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource).JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor, JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker(Of TResource), JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade)
+  fullName: JsonApiDotNetCore.Services.JsonApiResourceService<TResource>.JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor, JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker<TResource>, JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade)
+  fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource).JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor, JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker(Of TResource), JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade)
   nameWithType: JsonApiResourceService<TResource>.JsonApiResourceService(IResourceRepositoryAccessor, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker<TResource>, IResourceFactory, IResourceHookExecutorFacade)
   nameWithType.vb: JsonApiResourceService(Of TResource).JsonApiResourceService(IResourceRepositoryAccessor, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker(Of TResource), IResourceFactory, IResourceHookExecutorFacade)
 - uid: JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor*
@@ -17554,13 +17560,13 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource, TId)
   nameWithType: JsonApiResourceService<TResource, TId>
   nameWithType.vb: JsonApiResourceService(Of TResource, TId)
-- uid: JsonApiDotNetCore.Services.JsonApiResourceService`2.#ctor(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor,JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade)
+- uid: JsonApiDotNetCore.Services.JsonApiResourceService`2.#ctor(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor,JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade)
   name: JsonApiResourceService(IResourceRepositoryAccessor, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker<TResource>, IResourceFactory, IResourceHookExecutorFacade)
-  href: api/JsonApiDotNetCore.Services.JsonApiResourceService-2.html#JsonApiDotNetCore_Services_JsonApiResourceService_2__ctor_JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_JsonApiDotNetCore_Queries_IQueryLayerComposer_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_IResourceChangeTracker__0__JsonApiDotNetCore_Resources_IResourceFactory_JsonApiDotNetCore_Hooks_Internal_IResourceHookExecutorFacade_
-  commentId: M:JsonApiDotNetCore.Services.JsonApiResourceService`2.#ctor(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor,JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade)
+  href: api/JsonApiDotNetCore.Services.JsonApiResourceService-2.html#JsonApiDotNetCore_Services_JsonApiResourceService_2__ctor_JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_JsonApiDotNetCore_Queries_IQueryLayerComposer_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_IResourceChangeTracker__0__JsonApiDotNetCore_Resources_IResourceFactory_JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_
+  commentId: M:JsonApiDotNetCore.Services.JsonApiResourceService`2.#ctor(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor,JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade)
   name.vb: JsonApiResourceService(IResourceRepositoryAccessor, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker(Of TResource), IResourceFactory, IResourceHookExecutorFacade)
-  fullName: JsonApiDotNetCore.Services.JsonApiResourceService<TResource, TId>.JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor, JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker<TResource>, JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade)
-  fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource, TId).JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor, JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker(Of TResource), JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutorFacade)
+  fullName: JsonApiDotNetCore.Services.JsonApiResourceService<TResource, TId>.JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor, JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker<TResource>, JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade)
+  fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource, TId).JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor, JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker(Of TResource), JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade)
   nameWithType: JsonApiResourceService<TResource, TId>.JsonApiResourceService(IResourceRepositoryAccessor, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker<TResource>, IResourceFactory, IResourceHookExecutorFacade)
   nameWithType.vb: JsonApiResourceService(Of TResource, TId).JsonApiResourceService(IResourceRepositoryAccessor, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker(Of TResource), IResourceFactory, IResourceHookExecutorFacade)
 - uid: JsonApiDotNetCore.Services.JsonApiResourceService`2.#ctor*
