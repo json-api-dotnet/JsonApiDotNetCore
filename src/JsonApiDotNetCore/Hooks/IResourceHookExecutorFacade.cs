@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCore.Hooks.Internal
+namespace JsonApiDotNetCore.Hooks
 {
     /// <summary>
     /// Facade for execution of resource hooks.
