@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using GettingStarted.Data;
 using GettingStarted.Models;
 using JsonApiDotNetCore.Configuration;
@@ -14,22 +17,32 @@ namespace GettingStarted
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<SampleDbContext>(
-                options => options.UseSqlite("Data Source=sample.db"));
+                options =>
+                {
+                    options.EnableSensitiveDataLogging();
+                    options.UseNpgsql(
+                        "Host=localhost;Port=5432;Database=JsonApiDotNetCoreExample;User ID=postgres;Password=postgres",
+                        innerOptions => innerOptions.SetPostgresVersion(new Version(9, 6)));
+                });
 
             services.AddJsonApi<SampleDbContext>(
                 options =>
                 {
-                    options.Namespace = "api";
+                    options.Namespace = "api/v1";
                     options.UseRelativeLinks = true;
                     options.IncludeTotalResourceCount = true;
                     options.SerializerSettings.Formatting = Formatting.Indented;
+
+                    // Bug workaround for https://github.com/dotnet/efcore/issues/21026
+                    options.DefaultPageSize = null;
+
                 });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, SampleDbContext context)
         {
-            context.Database.EnsureDeleted();
+            //context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             CreateSampleData(context);
 
@@ -67,6 +80,34 @@ namespace GettingStarted
                     Name = "Jonathan Swift"
                 }
             });
+
+            if (!context.UserProfiles.Any())
+            {
+                context.UserProfiles.AddRange(new UserProfile
+                {
+                    SubjectId = "S1",
+                    FirstName = "F1",
+                    LastName = "L1",
+                    Email = "@1",
+                    UserRoles = new List<UserRole>
+                    {
+                        new UserRole
+                        {
+                            Role = new Role
+                            {
+                                Name = "R1"
+                            }
+                        },
+                        new UserRole
+                        {
+                            Role = new Role
+                            {
+                                Name = "R2"
+                            }
+                        },
+                    }
+                });
+            }
 
             context.SaveChanges();
         }
