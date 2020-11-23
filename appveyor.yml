@@ -92,7 +92,7 @@ deploy:
   name: production
   skip_symbols: false
   api_key:
-    secure: /fsEOgG4EdtNd6DPmko9h3NxQwx1IGDcFreGTKd2KA56U2KEkpX/L/pCGpCIEf2s
+    secure: SirU21S2S6F1OswSl8oiB4lYLLPchyyCIqtd2sWkTgHluelYfTa4PRaAfxlZP4fg
   on:
     branch: master
     appveyor_repo_tag: true
@@ -100,7 +100,7 @@ deploy:
 - provider: NuGet
   skip_symbols: false
   api_key:
-    secure: /fsEOgG4EdtNd6DPmko9h3NxQwx1IGDcFreGTKd2KA56U2KEkpX/L/pCGpCIEf2s
+    secure: SirU21S2S6F1OswSl8oiB4lYLLPchyyCIqtd2sWkTgHluelYfTa4PRaAfxlZP4fg
   on:
     branch: /release\/.+/
     appveyor_repo_tag: true
