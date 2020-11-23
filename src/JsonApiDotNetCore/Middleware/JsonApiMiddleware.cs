@@ -55,12 +55,20 @@ namespace JsonApiDotNetCore.Middleware
                     return;
                 }
 
+                _currentRequest.IsBulkRequest = PathIsBulk();
+
                 SetupRequest((JsonApiRequest)request, primaryResourceContext, routeValues, options, resourceContextProvider, httpContext.Request);
 
                 httpContext.RegisterJsonApiRequest();
             }
 
             await _next(httpContext);
+        }
+
+        private bool PathIsBulk()
+        {
+            var actionName = (string)_httpContext.GetRouteData().Values["action"];
+            return actionName.ToLower().Contains("bulk");
         }
 
         private static ResourceContext CreatePrimaryResourceContext(RouteValueDictionary routeValues,

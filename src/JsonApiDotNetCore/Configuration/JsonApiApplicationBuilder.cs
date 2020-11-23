@@ -132,6 +132,11 @@ namespace JsonApiDotNetCore.Configuration
                 }
             }
 
+            if (jsonApiOptions.EnableOperations)
+            {
+                AddOperationServices(services);
+            }
+
             AddResourceLayer();
             AddRepositoryLayer();
             AddServiceLayer();
@@ -265,6 +270,26 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped(typeof(ResponseSerializer<>));
             _services.AddScoped(sp => sp.GetRequiredService<IJsonApiSerializerFactory>().GetSerializer());
             _services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
+            services.AddScoped<IOperationsDeserializer, OperationsDeserializer>();
+        }
+
+        private static void AddOperationServices(IServiceCollection services)
+        {
+            services.AddScoped<IOperationsProcessor, OperationsProcessor>();
+
+            services.AddScoped(typeof(ICreateOpProcessor<>), typeof(CreateOpProcessor<>));
+            services.AddScoped(typeof(ICreateOpProcessor<,>), typeof(CreateOpProcessor<,>));
+
+            services.AddScoped(typeof(IGetOpProcessor<>), typeof(GetOpProcessor<>));
+            services.AddScoped(typeof(IGetOpProcessor<,>), typeof(GetOpProcessor<,>));
+
+            services.AddScoped(typeof(IRemoveOpProcessor<>), typeof(RemoveOpProcessor<>));
+            services.AddScoped(typeof(IRemoveOpProcessor<,>), typeof(RemoveOpProcessor<,>));
+
+            services.AddScoped(typeof(IUpdateOpProcessor<>), typeof(UpdateOpProcessor<>));
+            services.AddScoped(typeof(IUpdateOpProcessor<,>), typeof(UpdateOpProcessor<,>));
+
+            services.AddScoped<IOperationProcessorResolver, OperationProcessorResolver>();
         }
 
         private void AddResourcesFromDbContext(DbContext dbContext, ResourceGraphBuilder builder)

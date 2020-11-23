@@ -22,12 +22,14 @@ namespace JsonApiDotNetCore.Serialization
     /// <inheritdoc />
     public class JsonApiReader : IJsonApiReader
     {
+        private readonly IOperationsDeserializer _operationsDeserializer;
         private readonly IJsonApiDeserializer _deserializer;
         private readonly IJsonApiRequest _request;
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly TraceLogWriter<JsonApiReader> _traceWriter;
 
         public JsonApiReader(IJsonApiDeserializer deserializer,
+            IOperationsDeserializer operationsDeserializer,
             IJsonApiRequest request,
             IResourceContextProvider resourceContextProvider,
             ILoggerFactory loggerFactory)
@@ -35,6 +37,7 @@ namespace JsonApiDotNetCore.Serialization
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 
             _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
+            _operationsDeserializer = operationsDeserializer ?? throw new ArgumentNullException(nameof(operationsDeserializer));
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _resourceContextProvider = resourceContextProvider ??  throw new ArgumentNullException(nameof(resourceContextProvider));
             _traceWriter = new TraceLogWriter<JsonApiReader>(loggerFactory);
@@ -46,6 +49,12 @@ namespace JsonApiDotNetCore.Serialization
                 throw new ArgumentNullException(nameof(context));
 
             string body = await GetRequestBodyAsync(context.HttpContext.Request.Body);
+
+            if (_currentRequest.IsBulkRequest)
+            {
+                var operations = _operationsDeserializer.Deserialize(body);
+                return InputFormatterResult.SuccessAsync(operations);
+            }
 
             string url = context.HttpContext.Request.GetEncodedUrl();
             _traceWriter.LogMessage(() => $"Received request at '{url}' with body: <<{body}>>");

@@ -29,5 +29,8 @@ namespace JsonApiDotNetCore.Middleware
         
         /// <inheritdoc />
         public bool IsReadOnly { get; set; }
+
+        /// <inheritdoc />
+        public bool IsBulkRequest { get; set; }
     }
 }
