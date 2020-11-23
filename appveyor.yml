@@ -12,13 +12,13 @@ before_build:
   - pwsh: |
         if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
             # https://dotnet.github.io/docfx/tutorial/docfx_getting_started.html
-            git checkout $env:APPVEYOR_REPO_BRANCH -q
+            # git checkout $env:APPVEYOR_REPO_BRANCH -q
             choco install docfx -y
         }
 
 after_build:
   - pwsh: |
-        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
+       # if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
             CD ./docs
             & ./generate-examples.ps1
             & docfx docfx.json
@@ -36,10 +36,10 @@ after_build:
             Copy-Item origin_site/.git _site -recurse
             CD _site
             git add -A 2>&1
-            git commit -m "CI Updates" -q
+           # git commit -m "CI Updates" -q
             git push origin gh-pages -q
             echo "Documentation updated successfully."
-        }
+        # }
 
 pull_requests:
   do_not_increment_build_number: true
