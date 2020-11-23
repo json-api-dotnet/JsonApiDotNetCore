@@ -1,10 +1,13 @@
+using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Models.Operations;
-using JsonApiDotNetCore.Serialization.Deserializer;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Building;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
@@ -21,10 +24,10 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
     {
         public UpdateOpProcessor(
             IUpdateService<T, int> service,
-            IOperationsDeserializer deserializer,
-            IBaseDocumentBuilder documentBuilder,
+            IJsonApiDeserializer deserializer,
+            IResourceObjectBuilder resourceObjectBuilder,
             IResourceGraph resourceGraph
-        ) : base(service, deserializer, documentBuilder, resourceGraph)
+        ) : base(service, deserializer, resourceObjectBuilder, resourceGraph)
         { }
     }
 
@@ -32,42 +35,49 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
          where T : class, IIdentifiable<TId>
     {
         private readonly IUpdateService<T, TId> _service;
-        private readonly IOperationsDeserializer _deserializer;
-        private readonly IBaseDocumentBuilder _documentBuilder;
+        private readonly IJsonApiDeserializer _deserializer;
+        private readonly IResourceObjectBuilder _resourceObjectBuilder;
         private readonly IResourceGraph _resourceGraph;
 
         public UpdateOpProcessor(
             IUpdateService<T, TId> service,
-            IOperationsDeserializer deserializer,
-            IBaseDocumentBuilder documentBuilder,
+            IJsonApiDeserializer deserializer,
+            IResourceObjectBuilder resourceObjectBuilder,
             IResourceGraph resourceGraph)
         {
             _service = service;
             _deserializer = deserializer;
-            _documentBuilder = documentBuilder;
+            _resourceObjectBuilder = resourceObjectBuilder;
             _resourceGraph = resourceGraph;
         }
 
-        public async Task<Operation> ProcessAsync(Operation operation)
+        public async Task<Operation> ProcessAsync(Operation operation, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(operation?.DataObject?.Id?.ToString()))
-                throw new JsonApiException(400, "The data.id parameter is required for replace operations");
-
-            //var model = (T)_deserializer.DocumentToObject(operation.DataObject);
-            T model = null; // TODO
-
-            var result = await _service.UpdateAsync(model.Id, model);
-            if (result == null)
-                throw new JsonApiException(404, $"Could not find an instance of '{operation.DataObject.Type}' with id {operation.DataObject.Id}");
-
-            var operationResult = new Operation
+            if (string.IsNullOrWhiteSpace(operation?.DataObject?.Id))
             {
-                Op = OperationCode.update
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "The data.id element is required for replace operations."
+                });
+            }
+
+            var model = (T)_deserializer.CreateResourceFromObject(operation.DataObject);
+
+            var result = await _service.UpdateAsync(model.Id, model, cancellationToken);
+
+            ResourceObject data = null;
+
+            if (result != null)
+            {
+                ResourceContext resourceContext = _resourceGraph.GetResourceContext(operation.DataObject.Type);
+                data = _resourceObjectBuilder.Build(result, resourceContext.Attributes, resourceContext.Relationships);
+            }
+
+            return new Operation
+            {
+                Op = OperationCode.update,
+                Data = data
             };
-
-            operationResult.Data = _documentBuilder.GetData(_resourceGraph.GetContextEntity(operation.GetResourceTypeName()), result);
-
-            return operationResult;
         }
     }
 }

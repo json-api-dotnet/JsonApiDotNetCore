@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services.Operations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +9,7 @@ namespace OperationsExample.Controllers
     {
         public OperationsController(IOperationsProcessor processor)
             : base(processor)
-        { }
+        {
+        }
     }
 }

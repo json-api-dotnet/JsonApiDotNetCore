@@ -58,6 +58,6 @@ namespace JsonApiDotNetCore.Middleware
         /// </summary>
         bool IsReadOnly { get; }
 
-        bool IsBulkRequest { get; set; }
+        bool IsBulkRequest { get; }
     }
 }

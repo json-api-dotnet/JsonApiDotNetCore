@@ -4,24 +4,30 @@ using System.Net;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models.Operations;
-using JsonApiDotNetCoreExample.Data;
+using OperationsExample;
 using OperationsExampleTests.Factories;
 using Xunit;
 
-namespace OperationsExampleTests
+namespace OperationsExampleTests.Remove
 {
-    public class RemoveTests : Fixture
+    [Collection("WebHostCollection")]
+    public class RemoveTests
     {
+        private readonly TestFixture<TestStartup> _fixture;
         private readonly Faker _faker = new Faker();
+
+        public RemoveTests(TestFixture<TestStartup> fixture)
+        {
+            _fixture = fixture;
+        }
 
         [Fact]
         public async Task Can_Remove_Author()
         {
             // arrange
-            var context = GetService<AppDbContext>();
             var author = AuthorFactory.Get();
-            context.Authors.Add(author);
-            context.SaveChanges();
+            _fixture.Context.AuthorDifferentDbContextName.Add(author);
+            _fixture.Context.SaveChanges();
 
             var content = new
             {
@@ -34,14 +40,14 @@ namespace OperationsExampleTests
             };
 
             // act
-            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
             Assert.NotNull(response);
             Assert.NotNull(data);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
             Assert.Empty(data.Operations);
-            Assert.Null(context.Authors.SingleOrDefault(a => a.Id == author.Id));
+            Assert.Null(_fixture.Context.AuthorDifferentDbContextName.SingleOrDefault(a => a.Id == author.Id));
         }
 
         [Fact]
@@ -49,12 +55,10 @@ namespace OperationsExampleTests
         {
             // arrange
             var count = _faker.Random.Int(1, 10);
-            var context = GetService<AppDbContext>();
-
             var authors = AuthorFactory.Get(count);
 
-            context.Authors.AddRange(authors);
-            context.SaveChanges();
+            _fixture.Context.AuthorDifferentDbContextName.AddRange(authors);
+            _fixture.Context.SaveChanges();
 
             var content = new
             {
@@ -70,16 +74,16 @@ namespace OperationsExampleTests
                 );
 
             // act
-            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
             Assert.NotNull(response);
             Assert.NotNull(data);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
             Assert.Empty(data.Operations);
 
             for (int i = 0; i < count; i++)
-                Assert.Null(context.Authors.SingleOrDefault(a => a.Id == authors[i].Id));
+                Assert.Null(_fixture.Context.AuthorDifferentDbContextName.SingleOrDefault(a => a.Id == authors[i].Id));
         }
     }
 }

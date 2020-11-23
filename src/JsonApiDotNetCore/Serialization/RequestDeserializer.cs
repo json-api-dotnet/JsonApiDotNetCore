@@ -1,12 +1,16 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -47,6 +51,27 @@ namespace JsonApiDotNetCore.Serialization
             AssertResourceIdIsNotTargeted();
             
             return instance;
+        }
+
+        public object DeserializeOperationsRequestDocument(string body)
+        {
+            JToken bodyToken = LoadJToken(body);
+            var document = bodyToken.ToObject<OperationsDocument>();
+
+            if (document?.Operations == null || !document.Operations.Any())
+            {
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "Failed to deserialize operations request."
+                });
+            }
+
+            return document;
+        }
+
+        public IIdentifiable CreateResourceFromObject(ResourceObject data)
+        {
+            return ParseResourceObject(data);
         }
 
         private void AssertResourceIdIsNotTargeted()

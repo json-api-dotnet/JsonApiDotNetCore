@@ -1,28 +1,34 @@
 using Bogus;
 using JsonApiDotNetCore.Models.Operations;
-using JsonApiDotNetCoreExample.Data;
 using OperationsExampleTests.Factories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using OperationsExample;
 using Xunit;
 
 namespace OperationsExampleTests.Update
 {
-    public class UpdateTests : Fixture
+    [Collection("WebHostCollection")]
+    public class UpdateTests
     {
+        private readonly TestFixture<TestStartup> _fixture;
         private readonly Faker _faker = new Faker();
+
+        public UpdateTests(TestFixture<TestStartup> fixture)
+        {
+            _fixture = fixture;
+        }
 
         [Fact]
         public async Task Can_Update_Author()
         {
             // arrange
-            var context = GetService<AppDbContext>();
             var author = AuthorFactory.Get();
             var updates = AuthorFactory.Get();
-            context.Authors.Add(author);
-            context.SaveChanges();
+            _fixture.Context.AuthorDifferentDbContextName.Add(author);
+            _fixture.Context.SaveChanges();
 
             var content = new
             {
@@ -38,7 +44,7 @@ namespace OperationsExampleTests.Update
                             id = author.Id,
                             attributes = new
                             {
-                                name = updates.Name
+                                firstName = updates.FirstName
                             }
                         } },
                     }
@@ -46,16 +52,16 @@ namespace OperationsExampleTests.Update
             };
 
             // act
-            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
             Assert.NotNull(response);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
             Assert.NotNull(data);
             Assert.Single(data.Operations);
 
-            var attrs = data.Operations.Single().DataObject.Attributes;
-            Assert.Equal(updates.Name, attrs["name"]);
+            Assert.Equal(OperationCode.update, data.Operations.Single().Op);
+            Assert.Null(data.Operations.Single().DataObject);
         }
 
         [Fact]
@@ -63,13 +69,12 @@ namespace OperationsExampleTests.Update
         {
             // arrange
             var count = _faker.Random.Int(1, 10);
-            var context = GetService<AppDbContext>();
 
             var authors = AuthorFactory.Get(count);
             var updates = AuthorFactory.Get(count);
 
-            context.Authors.AddRange(authors);
-            context.SaveChanges();
+            _fixture.Context.AuthorDifferentDbContextName.AddRange(authors);
+            _fixture.Context.SaveChanges();
 
             var content = new
             {
@@ -88,24 +93,24 @@ namespace OperationsExampleTests.Update
                         id = authors[i].Id,
                         attributes = new
                         {
-                            name = updates[i].Name
+                            firstName = updates[i].FirstName
                         }
                     } },
                 });
 
             // act
-            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
             Assert.NotNull(response);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
             Assert.NotNull(data);
             Assert.Equal(count, data.Operations.Count);
 
             for (int i = 0; i < count; i++)
             {
-                var attrs = data.Operations[i].DataObject.Attributes;
-                Assert.Equal(updates[i].Name, attrs["name"]);
+                Assert.Equal(OperationCode.update, data.Operations[i].Op);
+                Assert.Null(data.Operations[i].DataObject);
             }
         }
     }

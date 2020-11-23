@@ -1,10 +1,10 @@
+using System.Threading;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models.Operations;
-using JsonApiDotNetCore.Serialization.Deserializer;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Building;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
@@ -22,59 +22,52 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
     {
         public CreateOpProcessor(
             ICreateService<T, int> service,
-            IOperationsDeserializer deserializer,
-            IBaseDocumentBuilder documentBuilder,
+            IJsonApiDeserializer deserializer,
+            IResourceObjectBuilder resourceObjectBuilder,
             IResourceGraph resourceGraph
-        ) : base(service, deserializer, documentBuilder, resourceGraph)
+        ) : base(service, deserializer, resourceObjectBuilder, resourceGraph)
         { }
-    }
-
-    public interface IBaseDocumentBuilder
-    {
-        ResourceObject GetData(ContextEntity contextEntity, IIdentifiable singleResource);
     }
 
     public class CreateOpProcessor<T, TId> : ICreateOpProcessor<T, TId>
          where T : class, IIdentifiable<TId>
     {
         private readonly ICreateService<T, TId> _service;
-        private readonly IOperationsDeserializer _deserializer;
-        private readonly IBaseDocumentBuilder _documentBuilder;
+        private readonly IJsonApiDeserializer _deserializer;
+        private readonly IResourceObjectBuilder _resourceObjectBuilder;
         private readonly IResourceGraph _resourceGraph;
 
         public CreateOpProcessor(
             ICreateService<T, TId> service,
-            IOperationsDeserializer deserializer,
-            IBaseDocumentBuilder documentBuilder,
+            IJsonApiDeserializer deserializer,
+            IResourceObjectBuilder resourceObjectBuilder,
             IResourceGraph resourceGraph)
         {
             _service = service;
             _deserializer = deserializer;
-            _documentBuilder = documentBuilder;
+            _resourceObjectBuilder = resourceObjectBuilder;
             _resourceGraph = resourceGraph;
         }
 
-        public async Task<Operation> ProcessAsync(Operation operation)
+        public async Task<Operation> ProcessAsync(Operation operation, CancellationToken cancellationToken)
         {
-
-            var model = (T)_deserializer.DocumentToObject(operation.DataObject);
-            var result = await _service.CreateAsync(model);
+            var model = (T)_deserializer.CreateResourceFromObject(operation.DataObject);
+            var result = await _service.CreateAsync(model, cancellationToken);
 
             var operationResult = new Operation
             {
                 Op = OperationCode.add
             };
 
-            operationResult.Data = _documentBuilder.GetData(
-                _resourceGraph.GetContextEntity(operation.GetResourceTypeName()),
-                result);
+            ResourceContext resourceContext = _resourceGraph.GetResourceContext(operation.DataObject.Type);
+
+            operationResult.Data = _resourceObjectBuilder.Build(result, resourceContext.Attributes, resourceContext.Relationships);
 
             // we need to persist the original request localId so that subsequent operations
             // can locate the result of this operation by its localId
             operationResult.DataObject.LocalId = operation.DataObject.LocalId;
 
-            return null;
-            //return operationResult;
+            return operationResult;
         }
     }
 }

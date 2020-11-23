@@ -1,55 +1,49 @@
 using System;
-using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace OperationsExample
 {
     public class Startup
     {
-        public readonly IConfiguration Config;
+        private readonly string _connectionString;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables();
-
-            Config = builder.Build();
+            string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
+            _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
         }
 
-        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public virtual void ConfigureServices(IServiceCollection services)
         {
-            var loggerFactory = new LoggerFactory();
-            loggerFactory.AddConsole(LogLevel.Warning);
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseNpgsql(_connectionString,
+                    postgresOptions => postgresOptions.SetPostgresVersion(new Version(9, 6)));
+            });
 
-            services.AddSingleton<ILoggerFactory>(loggerFactory);
-
-            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Scoped);
-
-            services.AddJsonApi<AppDbContext>(opt => opt.EnableOperations = true);
-
-            return services.BuildServiceProvider();
+            services.AddJsonApi<AppDbContext>(options =>
+            {
+                options.IncludeExceptionStackTraceInErrors = true;
+                options.EnableOperations = true;
+                options.SerializerSettings.Formatting = Formatting.Indented;
+            });
         }
 
-        public virtual void Configure(
-            IApplicationBuilder app,
-            IHostingEnvironment env,
-            ILoggerFactory loggerFactory,
-            AppDbContext context)
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, AppDbContext context)
         {
             context.Database.EnsureCreated();
 
-            loggerFactory.AddConsole(Config.GetSection("Logging"));
+            app.UseRouting();
             app.UseJsonApi();
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
-
-        public string GetDbConnectionString() => Config["Data:DefaultConnection"];
     }
 }

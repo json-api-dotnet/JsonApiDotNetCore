@@ -16,6 +16,8 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Services.Operations;
+using JsonApiDotNetCore.Services.Operations.Processors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -132,9 +134,9 @@ namespace JsonApiDotNetCore.Configuration
                 }
             }
 
-            if (jsonApiOptions.EnableOperations)
+            if (_options.EnableOperations)
             {
-                AddOperationServices(services);
+                AddOperationServices();
             }
 
             AddResourceLayer();
@@ -270,26 +272,22 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped(typeof(ResponseSerializer<>));
             _services.AddScoped(sp => sp.GetRequiredService<IJsonApiSerializerFactory>().GetSerializer());
             _services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
-            services.AddScoped<IOperationsDeserializer, OperationsDeserializer>();
         }
 
-        private static void AddOperationServices(IServiceCollection services)
+        private void AddOperationServices()
         {
-            services.AddScoped<IOperationsProcessor, OperationsProcessor>();
+            _services.AddScoped<IOperationsProcessor, OperationsProcessor>();
 
-            services.AddScoped(typeof(ICreateOpProcessor<>), typeof(CreateOpProcessor<>));
-            services.AddScoped(typeof(ICreateOpProcessor<,>), typeof(CreateOpProcessor<,>));
+            _services.AddScoped(typeof(ICreateOpProcessor<>), typeof(CreateOpProcessor<>));
+            _services.AddScoped(typeof(ICreateOpProcessor<,>), typeof(CreateOpProcessor<,>));
 
-            services.AddScoped(typeof(IGetOpProcessor<>), typeof(GetOpProcessor<>));
-            services.AddScoped(typeof(IGetOpProcessor<,>), typeof(GetOpProcessor<,>));
+            _services.AddScoped(typeof(IRemoveOpProcessor<>), typeof(RemoveOpProcessor<>));
+            _services.AddScoped(typeof(IRemoveOpProcessor<,>), typeof(RemoveOpProcessor<,>));
 
-            services.AddScoped(typeof(IRemoveOpProcessor<>), typeof(RemoveOpProcessor<>));
-            services.AddScoped(typeof(IRemoveOpProcessor<,>), typeof(RemoveOpProcessor<,>));
+            _services.AddScoped(typeof(IUpdateOpProcessor<>), typeof(UpdateOpProcessor<>));
+            _services.AddScoped(typeof(IUpdateOpProcessor<,>), typeof(UpdateOpProcessor<,>));
 
-            services.AddScoped(typeof(IUpdateOpProcessor<>), typeof(UpdateOpProcessor<>));
-            services.AddScoped(typeof(IUpdateOpProcessor<,>), typeof(UpdateOpProcessor<,>));
-
-            services.AddScoped<IOperationProcessorResolver, OperationProcessorResolver>();
+            _services.AddScoped<IOperationProcessorResolver, OperationProcessorResolver>();
         }
 
         private void AddResourcesFromDbContext(DbContext dbContext, ResourceGraphBuilder builder)

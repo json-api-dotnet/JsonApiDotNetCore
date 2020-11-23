@@ -9,7 +9,7 @@ namespace OperationsExampleTests.Factories
         public static Article Get()
         {
             var faker = new Faker<Article>();
-            faker.RuleFor(m => m.Name, f => f.Lorem.Sentence());
+            faker.RuleFor(m => m.Caption, f => f.Lorem.Sentence());
             return faker.Generate();
         }
 

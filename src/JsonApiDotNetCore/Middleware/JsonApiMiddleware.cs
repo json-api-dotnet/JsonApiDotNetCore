@@ -55,9 +55,13 @@ namespace JsonApiDotNetCore.Middleware
                     return;
                 }
 
-                _currentRequest.IsBulkRequest = PathIsBulk();
-
                 SetupRequest((JsonApiRequest)request, primaryResourceContext, routeValues, options, resourceContextProvider, httpContext.Request);
+
+                httpContext.RegisterJsonApiRequest();
+            }
+            else if (PathIsBulk(routeValues))
+            {
+                ((JsonApiRequest)request).IsBulkRequest = true;
 
                 httpContext.RegisterJsonApiRequest();
             }
@@ -65,10 +69,10 @@ namespace JsonApiDotNetCore.Middleware
             await _next(httpContext);
         }
 
-        private bool PathIsBulk()
+        private static bool PathIsBulk(RouteValueDictionary routeValues)
         {
-            var actionName = (string)_httpContext.GetRouteData().Values["action"];
-            return actionName.ToLower().Contains("bulk");
+            var actionName = (string)routeValues["action"];
+            return actionName == "PatchOperations";
         }
 
         private static ResourceContext CreatePrimaryResourceContext(RouteValueDictionary routeValues,

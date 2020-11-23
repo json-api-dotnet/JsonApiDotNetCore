@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models.Operations

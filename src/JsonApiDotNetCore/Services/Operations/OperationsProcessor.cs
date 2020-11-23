@@ -1,77 +1,89 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models.Operations;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Services.Operations
 {
     public interface IOperationsProcessor
     {
-        Task<List<Operation>> ProcessAsync(List<Operation> inputOps);
+        Task<List<Operation>> ProcessAsync(List<Operation> inputOps, CancellationToken cancellationToken);
     }
 
     public class OperationsProcessor : IOperationsProcessor
     {
         private readonly IOperationProcessorResolver _processorResolver;
         private readonly DbContext _dbContext;
-        private readonly ICurrentRequest _currentRequest;
+        private readonly IJsonApiRequest _request;
+        private readonly ITargetedFields _targetedFields;
         private readonly IResourceGraph _resourceGraph;
 
         public OperationsProcessor(
             IOperationProcessorResolver processorResolver,
             IDbContextResolver dbContextResolver,
-            ICurrentRequest currentRequest,
+            IJsonApiRequest request,
+            ITargetedFields targetedFields,
             IResourceGraph resourceGraph)
         {
             _processorResolver = processorResolver;
             _dbContext = dbContextResolver.GetContext();
-            _currentRequest = currentRequest;
+            _request = request;
+            _targetedFields = targetedFields;
             _resourceGraph = resourceGraph;
         }
 
-        public async Task<List<Operation>> ProcessAsync(List<Operation> inputOps)
+        public async Task<List<Operation>> ProcessAsync(List<Operation> inputOps, CancellationToken cancellationToken)
         {
             var outputOps = new List<Operation>();
             var opIndex = 0;
             OperationCode? lastAttemptedOperation = null; // used for error messages only
 
-            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken))
             {
                 try
                 {
                     foreach (var op in inputOps)
                     {
-                        //_jsonApiContext.BeginOperation();
-
                         lastAttemptedOperation = op.Op;
-                        await ProcessOperation(op, outputOps);
+                        await ProcessOperation(op, outputOps, cancellationToken);
                         opIndex++;
                     }
 
-                    transaction.Commit();
+                    await transaction.CommitAsync(cancellationToken);
                     return outputOps;
                 }
                 catch (JsonApiException e)
                 {
-                    transaction.Rollback();
-                    throw new JsonApiException(e.GetStatusCode(), $"Transaction failed on operation[{opIndex}] ({lastAttemptedOperation}).", e);
+                    await transaction.RollbackAsync(cancellationToken);
+                    throw new JsonApiException(new Error(e.Error.StatusCode)
+                    {
+                        Title = "Transaction failed on operation.",
+                        Detail = $"Transaction failed on operation[{opIndex}] ({lastAttemptedOperation})."
+                    }, e);
                 }
                 catch (Exception e)
                 {
-                    transaction.Rollback();
-                    throw new JsonApiException(500, $"Transaction failed on operation[{opIndex}] ({lastAttemptedOperation}) for an unexpected reason.", e);
+                    await transaction.RollbackAsync(cancellationToken);
+                    throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
+                    {
+                        Title = "Transaction failed on operation.",
+                        Detail = $"Transaction failed on operation[{opIndex}] ({lastAttemptedOperation}) for an unexpected reason."
+                    }, e);
                 }
             }
         }
 
-        private async Task ProcessOperation(Operation op, List<Operation> outputOps)
+        private async Task ProcessOperation(Operation op, List<Operation> outputOps, CancellationToken cancellationToken)
         {
             ReplaceLocalIdsInResourceObject(op.DataObject, outputOps);
             ReplaceLocalIdsInRef(op.Ref, outputOps);
@@ -81,14 +93,18 @@ namespace JsonApiDotNetCore.Services.Operations
             {
                 type = op.DataObject.Type;
             }
-            else if (op.Op == OperationCode.get || op.Op == OperationCode.remove)
+            else if (op.Op == OperationCode.remove)
             {
                 type = op.Ref.Type;
             }
-            _currentRequest.SetRequestResource(_resourceGraph.GetEntityFromControllerName(type));
+
+            ((JsonApiRequest)_request).PrimaryResource = _resourceGraph.GetResourceContext(type);
+            
+            _targetedFields.Attributes.Clear();
+            _targetedFields.Relationships.Clear();
 
             var processor = GetOperationsProcessor(op);
-            var resultOp = await processor.ProcessAsync(op);
+            var resultOp = await processor.ProcessAsync(op, cancellationToken);
 
             if (resultOp != null)
                 outputOps.Add(resultOp);
@@ -141,7 +157,15 @@ namespace JsonApiDotNetCore.Services.Operations
         private string GetIdFromLocalId(List<Operation> outputOps, string localId)
         {
             var referencedOp = outputOps.FirstOrDefault(o => o.DataObject.LocalId == localId);
-            if (referencedOp == null) throw new JsonApiException(400, $"Could not locate lid '{localId}' in document.");
+            if (referencedOp == null)
+            {
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "Could not locate lid in document.",
+                    Detail = $"Could not locate lid '{localId}' in document."
+                });
+            }
+
             return referencedOp.DataObject.Id;
         }
 
@@ -151,14 +175,16 @@ namespace JsonApiDotNetCore.Services.Operations
             {
                 case OperationCode.add:
                     return _processorResolver.LocateCreateService(op);
-                case OperationCode.get:
-                    return _processorResolver.LocateGetService(op);
                 case OperationCode.remove:
                     return _processorResolver.LocateRemoveService(op);
                 case OperationCode.update:
                     return _processorResolver.LocateUpdateService(op);
                 default:
-                    throw new JsonApiException(400, $"'{op.Op}' is not a valid operation code");
+                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = "Invalid operation code.",
+                        Detail = $"'{op.Op}' is not a valid operation code."
+                    });
             }
         }
     }

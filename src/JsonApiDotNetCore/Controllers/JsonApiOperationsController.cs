@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Services.Operations;
@@ -26,6 +27,7 @@ namespace JsonApiDotNetCore.Controllers
         /// <param name="doc">
         /// A json:api operations request document
         /// </param>
+        /// <param name="cancellationToken">Propagates notification that request handling should be canceled.</param>
         /// <example>
         /// <code>
         /// PATCH /api/bulk HTTP/1.1
@@ -48,11 +50,11 @@ namespace JsonApiDotNetCore.Controllers
         /// </code>
         /// </example>
         [HttpPatch]
-        public virtual async Task<IActionResult> PatchAsync([FromBody] OperationsDocument doc)
+        public virtual async Task<IActionResult> PatchOperationsAsync([FromBody] OperationsDocument doc, CancellationToken cancellationToken)
         {
             if (doc == null) return new StatusCodeResult(422);
 
-            var results = await _operationsProcessor.ProcessAsync(doc.Operations);
+            var results = await _operationsProcessor.ProcessAsync(doc.Operations, cancellationToken);
 
             return Ok(new OperationsDocument(results));
         }

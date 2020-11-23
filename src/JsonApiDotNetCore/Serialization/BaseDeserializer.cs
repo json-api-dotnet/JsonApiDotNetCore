@@ -133,7 +133,7 @@ namespace JsonApiDotNetCore.Serialization
             return resource;
         }
 
-        private JToken LoadJToken(string body)
+        protected JToken LoadJToken(string body)
         {
             JToken jToken;
             using (JsonReader jsonReader = new JsonTextReader(new StringReader(body)))
@@ -150,7 +150,7 @@ namespace JsonApiDotNetCore.Serialization
         /// and sets its attributes and relationships.
         /// </summary>
         /// <returns>The parsed resource.</returns>
-        private IIdentifiable ParseResourceObject(ResourceObject data)
+        protected IIdentifiable ParseResourceObject(ResourceObject data)
         {
             AssertHasType(data, null);
 

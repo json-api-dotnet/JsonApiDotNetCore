@@ -1,10 +1,13 @@
+using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Models.Operations;
-using JsonApiDotNetCore.Serialization.Deserializer;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Building;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
@@ -21,10 +24,10 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
     {
         public RemoveOpProcessor(
             IDeleteService<T, int> service,
-            IOperationsDeserializer deserializer,
-            IBaseDocumentBuilder documentBuilder,
+            IJsonApiDeserializer deserializer,
+            IResourceObjectBuilder resourceObjectBuilder,
             IResourceGraph resourceGraph
-        ) : base(service, deserializer, documentBuilder, resourceGraph)
+        ) : base(service, deserializer, resourceObjectBuilder, resourceGraph)
         { }
     }
 
@@ -32,30 +35,35 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
          where T : class, IIdentifiable<TId>
     {
         private readonly IDeleteService<T, TId> _service;
-        private readonly IOperationsDeserializer _deserializer;
-        private readonly IBaseDocumentBuilder _documentBuilder;
+        private readonly IJsonApiDeserializer _deserializer;
+        private readonly IResourceObjectBuilder _resourceObjectBuilder;
         private readonly IResourceGraph _resourceGraph;
 
         public RemoveOpProcessor(
             IDeleteService<T, TId> service,
-            IOperationsDeserializer deserializer,
-            IBaseDocumentBuilder documentBuilder,
+            IJsonApiDeserializer deserializer,
+            IResourceObjectBuilder resourceObjectBuilder,
             IResourceGraph resourceGraph)
         {
             _service = service;
             _deserializer = deserializer;
-            _documentBuilder = documentBuilder;
+            _resourceObjectBuilder = resourceObjectBuilder;
             _resourceGraph = resourceGraph;
         }
 
-        public async Task<Operation> ProcessAsync(Operation operation)
+        public async Task<Operation> ProcessAsync(Operation operation, CancellationToken cancellationToken)
         {
             var stringId = operation.Ref?.Id?.ToString();
             if (string.IsNullOrWhiteSpace(stringId))
-                throw new JsonApiException(400, "The ref.id parameter is required for remove operations");
+            {
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "The ref.id element is required for remove operations."
+                });
+            }
 
-            var id = TypeHelper.ConvertType<TId>(stringId);
-            var result = await _service.DeleteAsync(id);
+            var id = (TId)TypeHelper.ConvertType(stringId, typeof(TId));
+            await _service.DeleteAsync(id, cancellationToken);
 
             return null;
         }

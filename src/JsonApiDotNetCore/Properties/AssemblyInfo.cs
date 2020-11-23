@@ -4,3 +4,4 @@ using System.Runtime.CompilerServices;
 [assembly:InternalsVisibleTo("JsonApiDotNetCoreExampleTests")]
 [assembly:InternalsVisibleTo("UnitTests")]
 [assembly:InternalsVisibleTo("DiscoveryTests")]
+[assembly:InternalsVisibleTo("OperationsExampleTests")]

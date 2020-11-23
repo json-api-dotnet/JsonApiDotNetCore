@@ -9,7 +9,7 @@ namespace OperationsExampleTests.Factories
         public static Author Get()
         {
             var faker = new Faker<Author>();
-            faker.RuleFor(m => m.Name, f => f.Person.UserName);
+            faker.RuleFor(m => m.FirstName, f => f.Person.FirstName);
             return faker.Generate();
         }
 

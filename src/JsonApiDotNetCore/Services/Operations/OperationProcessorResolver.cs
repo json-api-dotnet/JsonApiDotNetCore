@@ -1,7 +1,8 @@
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Generics;
+using System.Net;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Models.Operations;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services.Operations.Processors;
 
 namespace JsonApiDotNetCore.Services.Operations
@@ -17,11 +18,6 @@ namespace JsonApiDotNetCore.Services.Operations
         IOpProcessor LocateCreateService(Operation operation);
 
         /// <summary>
-        /// Locates the correct <see cref="GetOpProcessor{T, TId}"/>
-        /// </summary>
-        IOpProcessor LocateGetService(Operation operation);
-
-        /// <summary>
         /// Locates the correct <see cref="RemoveOpProcessor{T, TId}"/>
         /// </summary>
         IOpProcessor LocateRemoveService(Operation operation);
@@ -35,16 +31,16 @@ namespace JsonApiDotNetCore.Services.Operations
     /// <inheritdoc />
     public class OperationProcessorResolver : IOperationProcessorResolver
     {
-        private readonly IGenericProcessorFactory _processorFactory;
-        private readonly IContextEntityProvider _provider;
+        private readonly IGenericServiceFactory _genericServiceFactory;
+        private readonly IResourceContextProvider _resourceContextProvider;
 
         /// <nodoc />
         public OperationProcessorResolver(
-            IGenericProcessorFactory processorFactory,
-            IContextEntityProvider provider)
+            IGenericServiceFactory genericServiceFactory,
+            IResourceContextProvider resourceContextProvider)
         {
-            _processorFactory = processorFactory;
-            _provider = provider;
+            _genericServiceFactory = genericServiceFactory;
+            _resourceContextProvider = resourceContextProvider;
         }
 
         /// <inheritdoc />
@@ -54,22 +50,8 @@ namespace JsonApiDotNetCore.Services.Operations
 
             var contextEntity = GetResourceMetadata(resource);
 
-            var processor = _processorFactory.GetProcessor<IOpProcessor>(
-                typeof(ICreateOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
-            );
-
-            return processor;
-        }
-
-        /// <inheritdoc />
-        public IOpProcessor LocateGetService(Operation operation)
-        {
-            var resource = operation.GetResourceTypeName();
-
-            var contextEntity = GetResourceMetadata(resource);
-
-            var processor = _processorFactory.GetProcessor<IOpProcessor>(
-                typeof(IGetOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
+            var processor = _genericServiceFactory.Get<IOpProcessor>(
+                typeof(ICreateOpProcessor<,>), contextEntity.ResourceType, contextEntity.IdentityType
             );
 
             return processor;
@@ -82,8 +64,8 @@ namespace JsonApiDotNetCore.Services.Operations
 
             var contextEntity = GetResourceMetadata(resource);
 
-            var processor = _processorFactory.GetProcessor<IOpProcessor>(
-                typeof(IRemoveOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
+            var processor = _genericServiceFactory.Get<IOpProcessor>(
+                typeof(IRemoveOpProcessor<,>), contextEntity.ResourceType, contextEntity.IdentityType
             );
 
             return processor;
@@ -96,18 +78,22 @@ namespace JsonApiDotNetCore.Services.Operations
 
             var contextEntity = GetResourceMetadata(resource);
 
-            var processor = _processorFactory.GetProcessor<IOpProcessor>(
-                typeof(IUpdateOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
+            var processor = _genericServiceFactory.Get<IOpProcessor>(
+                typeof(IUpdateOpProcessor<,>), contextEntity.ResourceType, contextEntity.IdentityType
             );
 
             return processor;
         }
 
-        private ContextEntity GetResourceMetadata(string resourceName)
+        private ResourceContext GetResourceMetadata(string resourceName)
         {
-            var contextEntity = _provider.GetContextEntity(resourceName);
-            if(contextEntity == null)
-                throw new JsonApiException(400, $"This API does not expose a resource of type '{resourceName}'.");
+            var contextEntity = _resourceContextProvider.GetResourceContext(resourceName);
+            if (contextEntity == null)
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "Unsupported resource type.",
+                    Detail = $"This API does not expose a resource of type '{resourceName}'."
+                });
 
             return contextEntity;
         }

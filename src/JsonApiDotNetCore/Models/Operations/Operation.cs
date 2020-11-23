@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -71,12 +71,12 @@ namespace JsonApiDotNetCore.Models.Operations
         public string GetResourceTypeName()
         {
             if (Ref != null)
-                return Ref.Type?.ToString();
+                return Ref.Type;
 
             if (DataIsList)
-                return DataList[0].Type?.ToString();
+                return DataList[0].Type;
 
-            return DataObject.Type?.ToString();
+            return DataObject.Type;
         }
     }
 }
