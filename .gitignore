@@ -367,6 +367,3 @@ FodyWeavers.xsd
 
 # Sqlite example databases
 *.db
-
-# VS Code cache/options directory
-.vscode
