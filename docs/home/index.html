@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta content="width=device-width, initial-scale=1.0" name="viewport">
+      <title>JsonApiDotNetCore</title>
+      <meta content="" name="descriptison">
+      <meta content="" name="keywords">
+      <link href="favicon.ico" rel="icon">
+      <link href="favicon.ico" rel="apple-touch-icon">
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
+      <link href="styles/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="styles/vendor/icofont/icofont.min.css" rel="stylesheet">
+      <link href="styles/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+      <link href="styles/vendor/aos/aos.css" rel="stylesheet">
+      <link href="styles/home.css" rel="stylesheet">
+   </head>
+   <body>
+      <section id="hero" class="d-flex align-items-center">
+         <div class="container">
+            <div class="row">
+               <div class="col-lg-6 pt-5 pt-lg-0 order-2 order-lg-1">
+                  <h1>JSON:API .NET Core</h1>
+                  <h2>A <a href="https://jsonapi.org/">json:api</a> complaint web application framework for .NET Core</h2>
+                  <a href="#about" class="btn-get-started scrollto">Read more</a>
+                  <a href="../../getting-started/install.html" class="btn-get-started scrollto">Go to the docs</a>
+               </div>
+               <div class="col-lg-6 order-1 order-lg-2 hero-img">
+                  <img src="styles/img/hero-img.svg" class="img-fluid animated" alt="">
+               </div>
+            </div>
+         </div>
+      </section>
+      <main id="main">
+         <section id="about" class="about">
+            <div class="container">
+               <div class="row justify-content-between">
+                  <div class="col-lg-5 d-flex align-items-center justify-content-center about-img">
+                     <img src="styles/img/about-img.svg" class="img-fluid" alt="" data-aos="zoom-in">
+                  </div>
+                  <div class="col-lg-6 pt-5 pt-lg-0">
+                     <h3 data-aos="fade-up">Objectives</h3>
+                     <p data-aos="fade-up" data-aos-delay="100">
+                        The goal of this package is to facilitate the development of APIs that leverage the full range of features provided by the json:api specification.
+                     </p>
+                     <div class="row">
+                        <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
+                           <i class="bx bx-receipt"></i>
+                           <h4>Eliminate boilerplate</h4>
+                           <p>Typical CRUD boilerplate code is eliminated and a wide range of features across your resources endpoints are provided.</p>
+                        </div>
+                        <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+                           <i class="bx bx-cube-alt"></i>
+                           <h4>Extensibility</h4>
+                           <p>This library relies heavily on an open-generic-based dependency injection model, which allows for easy per-resource customization.</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+         <section id="services" class="services section-bg">
+            <div class="container">
+            <div class="section-title" data-aos="fade-up">
+               <h2>Features</h2>
+               <p>The following features are supported, from HTTP all the way down to the database</p>
+            </div>
+            <div class="row">
+            <div class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
+               <div class="icon-box">
+                  <div class="icon"><i class="bx bxs-filter-alt"></i></div>
+                  <h4 class="title"><a href="usage/reading/filtering.html">Filtering</a></h4>
+                  <p class="description">Perform complex filtering using the <code>filter</code> parameter with our flexible client-side query syntax</p>
+               </div>
+            </div>
+            <div class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="200">
+               <div class="icon-box">
+                  <div class="icon"><i class="bx bx-sort-z-a"></i></div>
+                  <h4 class="title"><a href="usage/reading/sorting.html">Sorting</a></h4>
+                  <p class="description">Order resources on one or multiple attributes using the <code>sort</code> parameter</p>
+               </div>
+            </div>
+            <div class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="300">
+               <div class="icon-box">
+                  <div class="icon"><i class="bx bx-note"></i></div>
+                  <h4 class="title"><a href="usage/reading/pagination.html">Pagination</a></h4>
+                  <p class="description">Leverage the benefits of paginated resources with the <code>page</code> parameter</p>
+               </div>
+            </div>
+            <div class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="400">
+               <div class="icon-box">
+                  <div class="icon"><i class="bx bxs-select-multiple"></i></div>
+                  <h4 class="title"><a href="usage/reading/sparse-fieldset-selection.html">Sparse fieldset selection</a></h4>
+                  <p class="description">Get just the data that you need using the <code>fields</code> parameter</p>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
+                  <div class="icon-box">
+                     <div class="icon"><i class="bx bxs-vector"></i></div>
+                     <h4 class="title"><a href="usage/reading/including-relationships.html">Relationship inclusion</a></h4>
+                     <p class="description">Side-load related resources of nested relationships using the <code>include</code>parameter</p>
+                  </div>
+               </div>
+               <div class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="200">
+                  <div class="icon-box">
+                     <div class="icon"><i class="bx bxs-grid"></i></div>
+                     <h4 class="title"><a href="usage/resources/resource-definitions.html">Extensibility</a></h4>
+                     <p class="description">Override and extend a broad range of elements of the framework to customize it for your own needs</p>
+                  </div>
+               </div>
+            </div>
+         </section>
+      </main>
+      <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+      <script src="styles/vendor/jquery/jquery.min.js"></script>
+      <script src="styles/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+      <script src="styles/vendor/jquery.easing/jquery.easing.min.js"></script>
+      <script src="styles/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+      <script src="styles/vendor/aos/aos.js"></script>
+      <script src="styles/home.js"></script>
+   </body>
+</html>
