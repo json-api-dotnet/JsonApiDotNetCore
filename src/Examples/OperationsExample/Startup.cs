@@ -31,7 +31,6 @@ namespace OperationsExample
             services.AddJsonApi<AppDbContext>(options =>
             {
                 options.IncludeExceptionStackTraceInErrors = true;
-                options.EnableOperations = true;
                 options.SerializerSettings.Formatting = Formatting.Indented;
             });
         }

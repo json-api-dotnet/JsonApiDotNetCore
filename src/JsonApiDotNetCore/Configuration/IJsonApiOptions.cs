@@ -172,8 +172,6 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         int? MaximumIncludeDepth { get; }
 
-        bool EnableOperations { get; set; }
-
         /// <summary>
         /// Specifies the settings that are used by the <see cref="JsonSerializer"/>.
         /// Note that at some places a few settings are ignored, to ensure JSON:API spec compliance.

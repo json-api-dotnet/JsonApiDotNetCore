@@ -134,17 +134,13 @@ namespace JsonApiDotNetCore.Configuration
                 }
             }
 
-            if (_options.EnableOperations)
-            {
-                AddOperationServices();
-            }
-
             AddResourceLayer();
             AddRepositoryLayer();
             AddServiceLayer();
             AddMiddlewareLayer();
             AddSerializationLayer();
             AddQueryStringLayer();
+            AddAtomicOperationsLayer();
 
             AddResourceHooks();
 
@@ -274,9 +270,10 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
         }
 
-        private void AddOperationServices()
+        private void AddAtomicOperationsLayer()
         {
             _services.AddScoped<IOperationsProcessor, OperationsProcessor>();
+            _services.AddScoped<IOperationProcessorResolver, OperationProcessorResolver>();
 
             _services.AddScoped(typeof(ICreateOpProcessor<>), typeof(CreateOpProcessor<>));
             _services.AddScoped(typeof(ICreateOpProcessor<,>), typeof(CreateOpProcessor<,>));
@@ -286,8 +283,6 @@ namespace JsonApiDotNetCore.Configuration
 
             _services.AddScoped(typeof(IUpdateOpProcessor<>), typeof(UpdateOpProcessor<>));
             _services.AddScoped(typeof(IUpdateOpProcessor<,>), typeof(UpdateOpProcessor<,>));
-
-            _services.AddScoped<IOperationProcessorResolver, OperationProcessorResolver>();
         }
 
         private void AddResourcesFromDbContext(DbContext dbContext, ResourceGraphBuilder builder)

@@ -30,13 +30,19 @@ namespace JsonApiDotNetCore.Services.Operations
 
         public OperationsProcessor(
             IOperationProcessorResolver processorResolver,
-            IDbContextResolver dbContextResolver,
             IJsonApiRequest request,
             ITargetedFields targetedFields,
-            IResourceGraph resourceGraph)
+            IResourceGraph resourceGraph,
+            IEnumerable<IDbContextResolver> dbContextResolvers)
         {
+            var resolvers = dbContextResolvers.ToArray();
+            if (resolvers.Length != 1)
+            {
+                throw new InvalidOperationException("TODO: At least one DbContext is required for atomic operations. Multiple DbContexts are currently not supported.");
+            }
+
             _processorResolver = processorResolver;
-            _dbContext = dbContextResolver.GetContext();
+            _dbContext = resolvers[0].GetContext();
             _request = request;
             _targetedFields = targetedFields;
             _resourceGraph = resourceGraph;
