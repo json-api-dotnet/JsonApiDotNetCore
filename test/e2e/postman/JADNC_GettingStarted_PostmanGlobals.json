@@ -1,0 +1,13 @@
+{
+    "id": "683ad527-9279-f62f-ff8d-663df9026ca8",
+    "name": "Postman Globals",
+    "values": [
+        {
+            "key": "host",
+            "value": "http://localhost:14141",
+            "enabled": true,
+            "type": "text"
+        }
+    ],
+    "_postman_variable_scope": "globals"
+}

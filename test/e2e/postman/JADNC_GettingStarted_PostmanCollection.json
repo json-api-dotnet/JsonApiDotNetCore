@@ -1,0 +1,597 @@
+{
+	"info": {
+		"_postman_id": "f44d0703-d5b8-4bcf-8c8b-f5d23baa7ce7",
+		"name": "JsonApiDotNetCoreGettingStarted",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get books",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "346f319b-c87c-4fd3-81ff-874f695d7206",
+						"exec": [
+							"pm.test(\"Correct response is returned\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/vnd.api+json');\r",
+							"\r",
+							"    var responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.meta.totalResources).to.eq(3);\r",
+							"    pm.expect(responseBody.data.length).to.eq(3);\r",
+							"\r",
+							"    responseBody.data.forEach(element => {\r",
+							"        pm.expect(element.type).to.eq('books');\r",
+							"        pm.expect(element.attributes).to.have.all.keys('title', 'publishYear');\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/books",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get missing book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "35583730-4fc2-420a-bb58-baaa38993567",
+						"exec": [
+							"pm.test(\"Correct response is returned\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/vnd.api+json');\r",
+							"\r",
+							"    var responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.errors.length).to.eq(1);\r",
+							"\r",
+							"    pm.expect(responseBody.errors[0].status).to.eq(\"404\");\r",
+							"    pm.expect(responseBody.errors[0].title).to.eq(\"The requested resource does not exist.\");\r",
+							"    pm.expect(responseBody.errors[0].detail).to.eq(\"Resource of type 'books' with ID '99999999' does not exist.\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/books/99999999",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books",
+						"99999999"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get book titles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c7db941a-26f5-4650-bb22-cc2bcea0b1fb",
+						"exec": [
+							"pm.test(\"Correct response is returned\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/vnd.api+json');\r",
+							"\r",
+							"    var responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.meta.totalResources).to.eq(3);\r",
+							"    pm.expect(responseBody.data.length).to.eq(3);\r",
+							"\r",
+							"    responseBody.data.forEach(element => {\r",
+							"        pm.expect(element.type).to.eq('books');\r",
+							"        pm.expect(element.attributes).to.have.all.keys('title');\r",
+							"        pm.expect(element.attributes).to.not.have.any.keys('publishYear');\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/books?fields=title",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books"
+					],
+					"query": [
+						{
+							"key": "fields",
+							"value": "title"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get book titles with authors",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c3d53ca9-5b59-4a9e-871e-cca1d02b4334",
+						"exec": [
+							"pm.test(\"Correct response is returned\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/vnd.api+json');\r",
+							"\r",
+							"    var responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.meta.totalResources).to.eq(3);\r",
+							"    pm.expect(responseBody.data.length).to.eq(3);\r",
+							"\r",
+							"    responseBody.data.forEach(element => {\r",
+							"        pm.expect(element.type).to.eq('books');\r",
+							"        pm.expect(element.attributes).to.have.all.keys('title');\r",
+							"        pm.expect(element.attributes).to.not.have.any.keys('publishYear');\r",
+							"    });\r",
+							"\r",
+							"    pm.expect(responseBody.included.length).to.eq(3);\r",
+							"\r",
+							"    responseBody.included.forEach(element => {\r",
+							"        pm.expect(element.type).to.eq('people');\r",
+							"        pm.expect(element.attributes).to.have.all.keys('name');\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/books?fields=title&include=author",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books"
+					],
+					"query": [
+						{
+							"key": "fields",
+							"value": "title"
+						},
+						{
+							"key": "include",
+							"value": "author"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get paged books",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "595ed506-f24c-453a-aaea-99f4b82e6a87",
+						"exec": [
+							"pm.test(\"Correct response is returned\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/vnd.api+json');\r",
+							"\r",
+							"    var responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.meta.totalResources).to.eq(3);\r",
+							"    pm.expect(responseBody.data.length).to.eq(1);\r",
+							"\r",
+							"    pm.expect(responseBody.data[0].type).to.eq('books');\r",
+							"    pm.expect(responseBody.data[0].attributes.title).to.eq('Gulliver\\'s Travels');\r",
+							"    pm.expect(responseBody.data[0].attributes.publishYear).to.eq(1726);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/books?page[size]=1&page[number]=2&sort=title",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books"
+					],
+					"query": [
+						{
+							"key": "page[size]",
+							"value": "1"
+						},
+						{
+							"key": "page[number]",
+							"value": "2"
+						},
+						{
+							"key": "sort",
+							"value": "title"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get books published after 1720",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0a5476d6-5c52-4b7c-8ef5-fee6e8f5856b",
+						"exec": [
+							"pm.test(\"Correct response is returned\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/vnd.api+json');\r",
+							"\r",
+							"    var responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.meta.totalResources).to.eq(2);\r",
+							"    pm.expect(responseBody.data.length).to.eq(2);\r",
+							"\r",
+							"    pm.expect(responseBody.data[0].type).to.eq('books');\r",
+							"    pm.expect(responseBody.data[0].attributes.title).to.eq('Frankenstein');\r",
+							"    pm.expect(responseBody.data[0].attributes.publishYear).to.eq(1818);\r",
+							"\r",
+							"    pm.expect(responseBody.data[1].type).to.eq('books');\r",
+							"    pm.expect(responseBody.data[1].attributes.title).to.eq('Gulliver\\'s Travels');\r",
+							"    pm.expect(responseBody.data[1].attributes.publishYear).to.eq(1726);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/books?filter=greaterThan(publishYear,'1720')&sort=-publishYear",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "greaterThan(publishYear,'1720')"
+						},
+						{
+							"key": "sort",
+							"value": "-publishYear"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get book author",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "406d83df-1b2c-4bce-a2a6-d04bcb5756e3",
+						"exec": [
+							"pm.test(\"Correct response is returned\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/vnd.api+json');\r",
+							"\r",
+							"    var responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.meta.totalResources).to.eq(3);\r",
+							"    pm.expect(responseBody.data.length).to.eq(3);\r",
+							"\r",
+							"    responseBody.data.forEach(element => {\r",
+							"        pm.expect(element.type).to.eq('people');\r",
+							"        pm.expect(element.attributes).to.have.all.keys('name');\r",
+							"    });\r",
+							"\r",
+							"    pm.expect(responseBody.included.length).to.eq(3);\r",
+							"\r",
+							"    responseBody.included.forEach(element => {\r",
+							"        pm.expect(element.type).to.eq('books');\r",
+							"        pm.expect(element.attributes).to.have.all.keys('title', 'publishYear');\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/people?include=books&page[size]=0,books:0",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"people"
+					],
+					"query": [
+						{
+							"key": "include",
+							"value": "books"
+						},
+						{
+							"key": "page[size]",
+							"value": "0,books:0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get people",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eed97da8-1407-416f-838e-4aaa9191edd0",
+						"exec": [
+							"pm.test(\"Correct response is returned\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/vnd.api+json');\r",
+							"\r",
+							"    var responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.meta.totalResources).to.eq(3);\r",
+							"    pm.expect(responseBody.data.length).to.eq(3);\r",
+							"\r",
+							"    responseBody.data.forEach(element => {\r",
+							"        pm.expect(element.type).to.eq('people');\r",
+							"        pm.expect(element.attributes).to.have.all.keys('name');\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/people",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"people"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get people with books",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e6d4ef48-4706-47fa-9a82-1b312753b303",
+						"exec": [
+							"pm.test(\"Correct response is returned\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/vnd.api+json');\r",
+							"\r",
+							"    var responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.meta.totalResources).to.eq(3);\r",
+							"    pm.expect(responseBody.data.length).to.eq(3);\r",
+							"\r",
+							"    responseBody.data.forEach(element => {\r",
+							"        pm.expect(element.type).to.eq('people');\r",
+							"        pm.expect(element.attributes).to.have.all.keys('name');\r",
+							"    });\r",
+							"\r",
+							"    pm.expect(responseBody.included.length).to.eq(3);\r",
+							"\r",
+							"    responseBody.included.forEach(element => {\r",
+							"        pm.expect(element.type).to.eq('books');\r",
+							"        pm.expect(element.attributes).to.have.all.keys('title', 'publishYear');\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/people?include=books&page[size]=0,books:0",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"people"
+					],
+					"query": [
+						{
+							"key": "include",
+							"value": "books"
+						},
+						{
+							"key": "page[size]",
+							"value": "0,books:0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get person with books",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ef34f885-48d2-4fed-ab5b-fc55b02598f3",
+						"exec": [
+							"pm.test(\"Correct response is returned\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/vnd.api+json');\r",
+							"\r",
+							"    var responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.data.type).to.eq('people');\r",
+							"    pm.expect(responseBody.data.attributes.name).to.eq('Mary Shelley');\r",
+							"\r",
+							"    pm.expect(responseBody.included.length).to.eq(1);\r",
+							"    pm.expect(responseBody.included[0].type).to.eq('books');\r",
+							"    pm.expect(responseBody.included[0].attributes.title).to.eq('Frankenstein');\r",
+							"    pm.expect(responseBody.included[0].attributes.publishYear).to.eq(1818);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/people/1?include=books&page[size]=books:0",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"people",
+						"1"
+					],
+					"query": [
+						{
+							"key": "include",
+							"value": "books"
+						},
+						{
+							"key": "page[size]",
+							"value": "books:0"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
