@@ -14,7 +14,7 @@ parallelCollectionRun = function (done) {
     newman.run(parametersForTestRun, done);
 };
 
-let commands = []
+const commands = []
 for (let index = 0; index < PARALLEL_RUN_COUNT; index++) {
     commands.push(parallelCollectionRun);
 }
@@ -25,7 +25,7 @@ async.parallel(
         err && console.error(err);
 
         results.forEach(function (result) {
-            var failures = result.run.failures;
+            const failures = result.run.failures;
 
             console.info(failures.length ? JSON.stringify(failures.failures, null, 2) :
                 `${result.collection.name} ran successfully.`);
