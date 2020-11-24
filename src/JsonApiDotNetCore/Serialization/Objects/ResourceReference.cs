@@ -1,7 +1,6 @@
-using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 
-namespace JsonApiDotNetCore.Models.Operations
+namespace JsonApiDotNetCore.Serialization.Objects
 {
     public class ResourceReference : ResourceIdentifierObject
     {

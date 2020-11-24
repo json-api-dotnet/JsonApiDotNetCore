@@ -1,10 +1,10 @@
 using Bogus;
-using JsonApiDotNetCore.Models.Operations;
 using OperationsExampleTests.Factories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Serialization.Objects;
 using OperationsExample;
 using Xunit;
 
@@ -52,7 +52,7 @@ namespace OperationsExampleTests.Update
             };
 
             // act
-            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<AtomicOperationsDocument>("api/v1/operations", content);
 
             // assert
             Assert.NotNull(response);
@@ -60,8 +60,8 @@ namespace OperationsExampleTests.Update
             Assert.NotNull(data);
             Assert.Single(data.Operations);
 
-            Assert.Equal(OperationCode.update, data.Operations.Single().Op);
-            Assert.Null(data.Operations.Single().DataObject);
+            Assert.Equal(AtomicOperationCode.Update, data.Operations.Single().Code);
+            Assert.Null(data.Operations.Single().SingleData);
         }
 
         [Fact]
@@ -99,7 +99,7 @@ namespace OperationsExampleTests.Update
                 });
 
             // act
-            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<AtomicOperationsDocument>("api/v1/operations", content);
 
             // assert
             Assert.NotNull(response);
@@ -109,8 +109,8 @@ namespace OperationsExampleTests.Update
 
             for (int i = 0; i < count; i++)
             {
-                Assert.Equal(OperationCode.update, data.Operations[i].Op);
-                Assert.Null(data.Operations[i].DataObject);
+                Assert.Equal(AtomicOperationCode.Update, data.Operations[i].Code);
+                Assert.Null(data.Operations[i].SingleData);
             }
         }
     }

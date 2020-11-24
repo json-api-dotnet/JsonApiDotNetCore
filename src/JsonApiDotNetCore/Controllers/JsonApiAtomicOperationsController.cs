@@ -1,7 +1,8 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Models.Operations;
-using JsonApiDotNetCore.Services.Operations;
+using JsonApiDotNetCore.AtomicOperations;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Controllers
@@ -9,16 +10,16 @@ namespace JsonApiDotNetCore.Controllers
     /// <summary>
     /// A controller to be used for bulk operations as defined in the json:api 1.1 specification
     /// </summary>
-    public class JsonApiOperationsController : ControllerBase
+    public class JsonApiAtomicOperationsController : ControllerBase
     {
-        private readonly IOperationsProcessor _operationsProcessor;
+        private readonly IAtomicOperationsProcessor _atomicOperationsProcessor;
 
-        /// <param name="operationsProcessor">
+        /// <param name="atomicOperationsProcessor">
         /// The processor to handle bulk operations.
         /// </param>
-        public JsonApiOperationsController(IOperationsProcessor operationsProcessor)
+        public JsonApiAtomicOperationsController(IAtomicOperationsProcessor atomicOperationsProcessor)
         {
-            _operationsProcessor = operationsProcessor;
+            _atomicOperationsProcessor = atomicOperationsProcessor ?? throw new ArgumentNullException(nameof(atomicOperationsProcessor));
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace JsonApiDotNetCore.Controllers
         /// <param name="cancellationToken">Propagates notification that request handling should be canceled.</param>
         /// <example>
         /// <code>
-        /// PATCH /api/bulk HTTP/1.1
+        /// PATCH /api/v1/operations HTTP/1.1
         /// Content-Type: application/vnd.api+json
         /// 
         /// {
@@ -50,13 +51,16 @@ namespace JsonApiDotNetCore.Controllers
         /// </code>
         /// </example>
         [HttpPatch]
-        public virtual async Task<IActionResult> PatchOperationsAsync([FromBody] OperationsDocument doc, CancellationToken cancellationToken)
+        public virtual async Task<IActionResult> PatchOperationsAsync([FromBody] AtomicOperationsDocument doc, CancellationToken cancellationToken)
         {
             if (doc == null) return new StatusCodeResult(422);
 
-            var results = await _operationsProcessor.ProcessAsync(doc.Operations, cancellationToken);
+            var results = await _atomicOperationsProcessor.ProcessAsync(doc.Operations, cancellationToken);
 
-            return Ok(new OperationsDocument(results));
+            return Ok(new AtomicOperationsDocument
+            {
+                Operations = results
+            });
         }
     }
 }

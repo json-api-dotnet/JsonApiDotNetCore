@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Models.Operations;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using OperationsExample;
 using OperationsExampleTests.Factories;
@@ -43,13 +43,13 @@ namespace OperationsExampleTests.Add
             };
 
             // act
-            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<AtomicOperationsDocument>("api/v1/operations", content);
 
             // assert
             Assert.NotNull(response);
             _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
 
-            var id = int.Parse(data.Operations.Single().DataObject.Id);
+            var id = int.Parse(data.Operations.Single().SingleData.Id);
             var lastAuthor = await _fixture.Context.AuthorDifferentDbContextName.SingleAsync(a => a.Id == id);
             Assert.Equal(author.FirstName, lastAuthor.FirstName);
         }
@@ -84,7 +84,7 @@ namespace OperationsExampleTests.Add
             }
 
             // act
-            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<AtomicOperationsDocument>("api/v1/operations", content);
 
             // assert
             Assert.NotNull(response);
@@ -93,7 +93,7 @@ namespace OperationsExampleTests.Add
 
             for (int i = 0; i < expectedCount; i++)
             {
-                var dataObject = data.Operations[i].DataObject;
+                var dataObject = data.Operations[i].SingleData;
                 var author = _fixture.Context.AuthorDifferentDbContextName.Single(a => a.Id == int.Parse(dataObject.Id));
                 Assert.Equal(authors[i].FirstName, author.FirstName);
             }
@@ -137,7 +137,7 @@ namespace OperationsExampleTests.Add
             };
 
             // act
-            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<AtomicOperationsDocument>("api/v1/operations", content);
 
             // assert
             Assert.NotNull(response);
@@ -157,7 +157,7 @@ namespace OperationsExampleTests.Add
             //// article validation
             Assert.Single(lastAuthor.Articles);
             Assert.Equal(article.Caption, lastAuthor.Articles[0].Caption);
-            Assert.Equal(articleOperationResult.DataObject.Id, lastAuthor.Articles[0].StringId);
+            Assert.Equal(articleOperationResult.SingleData.Id, lastAuthor.Articles[0].StringId);
         }
 
         [Fact]
@@ -205,7 +205,7 @@ namespace OperationsExampleTests.Add
             }
 
             // act
-            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<AtomicOperationsDocument>("api/v1/operations", content);
 
             // assert
             Assert.NotNull(response);
@@ -268,7 +268,7 @@ namespace OperationsExampleTests.Add
             };
 
             // act
-            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<AtomicOperationsDocument>("api/v1/operations", content);
 
             // assert
             Assert.NotNull(response);
@@ -276,20 +276,20 @@ namespace OperationsExampleTests.Add
             Assert.Equal(2, data.Operations.Count);
 
             var authorOperationResult = data.Operations[0];
-            var id = int.Parse(authorOperationResult.DataObject.Id);
+            var id = int.Parse(authorOperationResult.SingleData.Id);
             var lastAuthor = await _fixture.Context.AuthorDifferentDbContextName
                 .Include(a => a.Articles)
                 .SingleAsync(a => a.Id == id);
             var articleOperationResult = data.Operations[1];
 
             // author validation
-            Assert.Equal(authorLocalId, authorOperationResult.DataObject.LocalId);
+            Assert.Equal(authorLocalId, authorOperationResult.SingleData.LocalId);
             Assert.Equal(author.FirstName, lastAuthor.FirstName);
 
             // article validation
             Assert.Single(lastAuthor.Articles);
             Assert.Equal(article.Caption, lastAuthor.Articles[0].Caption);
-            Assert.Equal(articleOperationResult.DataObject.Id, lastAuthor.Articles[0].StringId);
+            Assert.Equal(articleOperationResult.SingleData.Id, lastAuthor.Articles[0].StringId);
         }
     }
 }

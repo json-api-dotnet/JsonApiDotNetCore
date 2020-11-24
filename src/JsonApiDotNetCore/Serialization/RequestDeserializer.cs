@@ -5,7 +5,6 @@ using System.Net.Http;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -53,10 +52,10 @@ namespace JsonApiDotNetCore.Serialization
             return instance;
         }
 
-        public object DeserializeOperationsRequestDocument(string body)
+        public object DeserializeOperationsDocument(string body)
         {
             JToken bodyToken = LoadJToken(body);
-            var document = bodyToken.ToObject<OperationsDocument>();
+            var document = bodyToken.ToObject<AtomicOperationsDocument>();
 
             if (document?.Operations == null || !document.Operations.Any())
             {

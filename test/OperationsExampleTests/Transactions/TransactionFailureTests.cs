@@ -66,7 +66,7 @@ namespace OperationsExampleTests.Transactions
             };
 
             // act
-            var (response, data) = await _fixture.PatchAsync<ErrorDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<ErrorDocument>("api/v1/operations", content);
 
             // assert
             Assert.NotNull(response);
@@ -74,7 +74,7 @@ namespace OperationsExampleTests.Transactions
             // provide the proper HTTP response code
             _fixture.AssertEqualStatusCode(HttpStatusCode.InternalServerError, response);
             Assert.Single(data.Errors);
-            Assert.Contains("operation[1] (add)", data.Errors[0].Detail);
+            Assert.Contains("operation[1] (Add)", data.Errors[0].Detail);
 
             var dbAuthors = await _fixture.Context.AuthorDifferentDbContextName.Where(a => a.FirstName == author.FirstName).ToListAsync();
             var dbArticles = await _fixture.Context.Articles.Where(a => a.Caption == article.Caption).ToListAsync();

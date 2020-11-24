@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Serialization
 
             if (_request.IsBulkRequest)
             {
-                var operations = _deserializer.DeserializeOperationsRequestDocument(body);
+                var operations = _deserializer.DeserializeOperationsDocument(body);
                 return await InputFormatterResult.SuccessAsync(operations);
             }
 

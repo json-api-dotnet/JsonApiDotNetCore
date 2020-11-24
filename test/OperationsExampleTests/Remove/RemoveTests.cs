@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Models.Operations;
+using JsonApiDotNetCore.Serialization.Objects;
 using OperationsExample;
 using OperationsExampleTests.Factories;
 using Xunit;
@@ -40,7 +40,7 @@ namespace OperationsExampleTests.Remove
             };
 
             // act
-            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<AtomicOperationsDocument>("api/v1/operations", content);
 
             // assert
             Assert.NotNull(response);
@@ -74,7 +74,7 @@ namespace OperationsExampleTests.Remove
                 );
 
             // act
-            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await _fixture.PatchAsync<AtomicOperationsDocument>("api/v1/operations", content);
 
             // assert
             Assert.NotNull(response);

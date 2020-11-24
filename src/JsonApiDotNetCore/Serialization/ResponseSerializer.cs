@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
@@ -67,7 +66,7 @@ namespace JsonApiDotNetCore.Serialization
                 return SerializeErrorDocument(errorDocument);
             }
 
-            if (data is OperationsDocument operationsDocument)
+            if (data is AtomicOperationsDocument operationsDocument)
             {
                 return SerializeOperationsDocument(operationsDocument);
             }
@@ -75,9 +74,9 @@ namespace JsonApiDotNetCore.Serialization
             throw new InvalidOperationException("Data being returned must be errors or resources.");
         }
 
-        private string SerializeOperationsDocument(OperationsDocument operationsDocument)
+        private string SerializeOperationsDocument(AtomicOperationsDocument atomicOperationsDocument)
         {
-            return SerializeObject(operationsDocument, _options.SerializerSettings);
+            return SerializeObject(atomicOperationsDocument, _options.SerializerSettings);
         }
 
         private string SerializeErrorDocument(ErrorDocument errorDocument)
