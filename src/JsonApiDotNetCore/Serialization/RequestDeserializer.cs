@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <inheritdoc />
-        public object Deserialize(string body)
+        public object DeserializeDocument(string body)
         {
             if (body == null) throw new ArgumentNullException(nameof(body));
 

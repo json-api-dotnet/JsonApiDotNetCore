@@ -43,6 +43,6 @@ namespace Benchmarks.Serialization
         }
 
         [Benchmark]
-        public object DeserializeSimpleObject() => _jsonApiDeserializer.Deserialize(Content);
+        public object DeserializeSimpleObject() => _jsonApiDeserializer.DeserializeDocument(Content);
     }
 }

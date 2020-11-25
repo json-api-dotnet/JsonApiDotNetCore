@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         /// <param name="body">The JSON to be deserialized.</param>
         /// <returns>The resources constructed from the content.</returns>
-        object Deserialize(string body);
+        object DeserializeDocument(string body);
 
         /// <summary>
         /// Deserializes JSON into a <see cref="AtomicOperationsDocument"/> and constructs entities

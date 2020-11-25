@@ -47,21 +47,21 @@ namespace JsonApiDotNetCore.Serialization
 
             string body = await GetRequestBodyAsync(context.HttpContext.Request.Body);
 
-            if (_request.IsBulkRequest)
+            string url = context.HttpContext.Request.GetEncodedUrl();
+            _traceWriter.LogMessage(() => $"Received request at '{url}' with body: <<{body}>>");
+
+            if (_request.Kind == EndpointKind.AtomicOperations)
             {
                 var operations = _deserializer.DeserializeOperationsDocument(body);
                 return await InputFormatterResult.SuccessAsync(operations);
             }
-
-            string url = context.HttpContext.Request.GetEncodedUrl();
-            _traceWriter.LogMessage(() => $"Received request at '{url}' with body: <<{body}>>");
 
             object model = null;
             if (!string.IsNullOrWhiteSpace(body))
             {
                 try
                 {
-                    model = _deserializer.Deserialize(body);
+                    model = _deserializer.DeserializeDocument(body);
                 }
                 catch (JsonApiSerializationException exception)
                 {

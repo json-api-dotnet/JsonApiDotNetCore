@@ -1,66 +1,38 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.AtomicOperations;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
     /// <summary>
-    /// A controller to be used for bulk operations as defined in the json:api 1.1 specification
+    /// The base class to derive atomic:operations controllers from.
+    /// This class delegates all work to <see cref="BaseJsonApiAtomicOperationsController"/> but adds attributes for routing templates.
+    /// If you want to provide routing templates yourself, you should derive from BaseJsonApiAtomicOperationsController directly.
     /// </summary>
-    public class JsonApiAtomicOperationsController : ControllerBase
+    /// <remarks>
+    /// Your project-specific controller should be decorated with the next attributes:
+    /// <example><code><![CDATA[
+    /// [DisableRoutingConvention, Route("api/v1/operations")]
+    /// ]]></code></example>
+    /// </remarks>
+    public abstract class JsonApiAtomicOperationsController : BaseJsonApiAtomicOperationsController
     {
-        private readonly IAtomicOperationsProcessor _atomicOperationsProcessor;
-
-        /// <param name="atomicOperationsProcessor">
-        /// The processor to handle bulk operations.
-        /// </param>
-        public JsonApiAtomicOperationsController(IAtomicOperationsProcessor atomicOperationsProcessor)
+        protected JsonApiAtomicOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
+            IAtomicOperationsProcessor processor)
+            : base(options, loggerFactory, processor)
         {
-            _atomicOperationsProcessor = atomicOperationsProcessor ?? throw new ArgumentNullException(nameof(atomicOperationsProcessor));
         }
 
-        /// <summary>
-        /// Bulk endpoint for json:api operations
-        /// </summary>
-        /// <param name="doc">
-        /// A json:api operations request document
-        /// </param>
-        /// <param name="cancellationToken">Propagates notification that request handling should be canceled.</param>
-        /// <example>
-        /// <code>
-        /// POST /api/v1/operations HTTP/1.1
-        /// Content-Type: application/vnd.api+json
-        /// 
-        /// {
-        ///   "operations": [{
-        ///     "op": "add",
-        ///     "ref": {
-        ///       "type": "authors"
-        ///     },
-        ///     "data": {
-        ///       "type": "authors",
-        ///       "attributes": {
-        ///         "name": "jaredcnance"
-        ///       }
-        ///     }
-        ///   }]
-        /// }
-        /// </code>
-        /// </example>
+        /// <inheritdoc />
         [HttpPost]
-        public virtual async Task<IActionResult> PostOperationsAsync([FromBody] AtomicOperationsDocument doc, CancellationToken cancellationToken)
+        public override async Task<IActionResult> PostOperationsAsync([FromBody] AtomicOperationsDocument document,
+            CancellationToken cancellationToken)
         {
-            if (doc == null) return new StatusCodeResult(422);
-
-            var results = await _atomicOperationsProcessor.ProcessAsync(doc.Operations, cancellationToken);
-
-            return Ok(new AtomicOperationsDocument
-            {
-                Operations = results
-            });
+            return await base.PostOperationsAsync(document, cancellationToken);
         }
     }
 }

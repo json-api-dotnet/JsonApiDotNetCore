@@ -59,20 +59,14 @@ namespace JsonApiDotNetCore.Middleware
 
                 httpContext.RegisterJsonApiRequest();
             }
-            else if (PathIsBulk(routeValues))
+            else if (IsAtomicOperationsRequest(routeValues))
             {
-                ((JsonApiRequest)request).IsBulkRequest = true;
+                SetupAtomicOperationsRequest((JsonApiRequest)request);
 
                 httpContext.RegisterJsonApiRequest();
             }
 
             await _next(httpContext);
-        }
-
-        private static bool PathIsBulk(RouteValueDictionary routeValues)
-        {
-            var actionName = (string)routeValues["action"];
-            return actionName == "PostOperations";
         }
 
         private static ResourceContext CreatePrimaryResourceContext(RouteValueDictionary routeValues,
@@ -260,6 +254,21 @@ namespace JsonApiDotNetCore.Middleware
         {
             var actionName = (string)routeValues["action"];
             return actionName.EndsWith("Relationship", StringComparison.Ordinal);
+        }
+
+        private static bool IsAtomicOperationsRequest(RouteValueDictionary routeValues)
+        {
+            var actionName = (string)routeValues["action"];
+            return actionName == "PostOperations";
+        }
+
+        private static void SetupAtomicOperationsRequest(JsonApiRequest request)
+        {
+            request.IsReadOnly = false;
+            request.Kind = EndpointKind.AtomicOperations;
+            
+            // TODO: @OPS: How should we set BasePath to make link rendering work?
+            request.BasePath = null;
         }
     }
 }

@@ -15,6 +15,11 @@ namespace JsonApiDotNetCore.Middleware
         /// <summary>
         /// A relationship request, for example: "/blogs/123/relationships/author" or "/author/123/relationships/articles"
         /// </summary>
-        Relationship
+        Relationship,
+
+        /// <summary>
+        /// A request to an atomic:operations endpoint.
+        /// </summary>
+        AtomicOperations
     }
 }

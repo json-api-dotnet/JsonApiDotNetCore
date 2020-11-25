@@ -49,7 +49,7 @@ namespace UnitTests.Models
             string content = JsonConvert.SerializeObject(body);
 
             // Act
-            object result = serializer.Deserialize(content);
+            object result = serializer.DeserializeDocument(content);
 
             // Assert
             Assert.NotNull(result);
@@ -78,7 +78,7 @@ namespace UnitTests.Models
             string content = JsonConvert.SerializeObject(body);
 
             // Act
-            Action action = () => serializer.Deserialize(content);
+            Action action = () => serializer.DeserializeDocument(content);
 
             // Assert
             var exception = Assert.Throws<InvalidOperationException>(action);
@@ -114,7 +114,7 @@ namespace UnitTests.Models
             string content = JsonConvert.SerializeObject(body);
 
             // Act
-            object result = serializer.Deserialize(content);
+            object result = serializer.DeserializeDocument(content);
 
             // Assert
             Assert.NotNull(result);
@@ -144,7 +144,7 @@ namespace UnitTests.Models
             string content = JsonConvert.SerializeObject(body);
 
             // Act
-            Action action = () => serializer.Deserialize(content);
+            Action action = () => serializer.DeserializeDocument(content);
 
             // Assert
             var exception = Assert.Throws<InvalidOperationException>(action);

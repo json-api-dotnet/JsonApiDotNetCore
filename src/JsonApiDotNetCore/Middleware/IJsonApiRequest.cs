@@ -57,7 +57,5 @@ namespace JsonApiDotNetCore.Middleware
         /// Indicates whether this request targets only fetching of data (such as resources and relationships).
         /// </summary>
         bool IsReadOnly { get; }
-
-        bool IsBulkRequest { get; }
     }
 }
