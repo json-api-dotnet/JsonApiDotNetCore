@@ -24,8 +24,8 @@
                   <h1>JSON:API .NET Core</h1>
                   <h2>A framework for building <a href="https://jsonapi.org/" target="_blank">json:api</a> compliant REST APIs using .NET Core and Entity Framework Core</h2>
                   <a href="#about" class="btn-get-started scrollto">Read more</a>
-                  <a href="../../getting-started/install.html" class="btn-get-started scrollto">Getting started</a>
-                  <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/" target="_blank" class="btn-get-started scrollto">Contribute on GitHub</a>
+                  <a href="../../getting-started/install.html" class="btn-get-started">Getting started</a>
+                  <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/" target="_blank" class="btn-get-started">Contribute on GitHub</a>
                </div>
                <div class="col-lg-5 order-1 order-lg-2 hero-img">
                   <img src="styles/img/logo.png" class="img-fluid animated" alt="">
@@ -43,18 +43,19 @@
                   <div class="col-lg-6 pt-5 pt-lg-0">
                      <h3 data-aos="fade-up">Objectives</h3>
                      <p data-aos="fade-up" data-aos-delay="100">
-                        The goal of this package is to facilitate the development of APIs that leverage the full range of features provided by the json:api specification.
+                        The goal of this library is to simplify the development of APIs that leverage the full range of features provided by the <a href="https://jsonapi.org/" target="_blank">json:api</a> specification.
+                        You just need to focus on defining the resources and implementing your custom business logic.
                      </p>
                      <div class="row">
                         <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
                            <i class='bx bxs-package'></i>
                            <h4>Eliminate boilerplate</h4>
-                           <p>Boilerplate code is eliminated with out-of-the-box-features, allowing you to focus only on defining resources and implementing custom business logic </p>
+                           <p>We strive to eliminate as much boilerplate as possible by offering out-of-the-box features such as sorting, filtering and pagination.</p>
                         </div>
                         <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
                            <i class="bx bx-category-alt"></i>
                            <h4>Extensibility</h4>
-                           <p>This library has been designed around dependency injection, making per-resource customization incredibly easy.</p>
+                           <p>This library has been designed around dependency injection, making extensibility incredibly easy.</p>
                         </div>
                      </div>
                   </div>
@@ -72,28 +73,28 @@
                   <div class="icon-box">
                      <div class="icon"><i class="bx bxs-filter-alt"></i></div>
                      <h4 class="title">Filtering</h4>
-                     <p class="description">Perform complex filtering using the <code>filter</code> parameter with our flexible client-side query syntax</p>
+                     <p class="description">Perform compound filtering using the <code>filter</code> query string parameter</p>
                   </div>
                </div>
                <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="200" id='sort'>
                   <div class="icon-box">
                      <div class="icon"><i class="bx bx-sort-z-a"></i></div>
                      <h4 class="title">Sorting</h4>
-                     <p class="description">Order resources on one or multiple attributes using the <code>sort</code> parameter</p>
+                     <p class="description">Order resources on one or multiple attributes using the <code>sort</code> query string parameter</p>
                   </div>
                </div>
                <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="300" id='pagination'>
                   <div class="icon-box">
                      <div class="icon"><i class="bx bx-note"></i></div>
                      <h4 class="title">Pagination</h4>
-                     <p class="description">Leverage the benefits of paginated resources with the <code>page</code> parameter</p>
+                     <p class="description">Leverage the benefits of paginated resources with the <code>page</code> query string parameter</p>
                   </div>
                </div>
                <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="400" id='selection'>
                   <div class="icon-box">
                      <div class="icon"><i class="bx bxs-select-multiple"></i></div>
                      <h4 class="title">Sparse fieldset selection</h4>
-                     <p class="description">Get just the data that you need using the <code>fields</code> parameter</p>
+                     <p class="description">Get just the data that you need using the <code>fields</code> query string parameter</p>
                   </div>
                </div>
             </div>
@@ -102,28 +103,28 @@
                   <div class="icon-box">
                      <div class="icon"><i class="bx bxs-vector"></i></div>
                      <h4 class="title">Relationship inclusion</h4>
-                     <p class="description">Side-load related resources of nested relationships using the <code>include</code> parameter</p>
+                     <p class="description">Side-load related resources of nested relationships using the <code>include</code> query string parameter</p>
                   </div>
                </div>
                <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100" id='security'>
                   <div class="icon-box">
                      <div class="icon"><i class='bx bxs-lock'></i></div>
                      <h4 class="title">Security</h4>
-                     <p class="description">Configure viewability, creatability and changeability of attributes and relationships</p>
+                     <p class="description">Configure permissions, such as view/create/change/sort/filter of attributes and relationships</p>
                   </div>
                </div>               
                <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100" id='validation'>
                   <div class="icon-box">
                      <div class="icon"><i class='bx bx-check-double'></i></div>
                      <h4 class="title">Validation</h4>
-                     <p class="description">Validate client request data leveraging built-in .NET Core <code>ModelState</code> validation, which works seamlessly with partial patching</p>
+                     <p class="description">Validate incoming requests using built-in ASP.NET Core <code>ModelState</code> validation, which works seamlessly with partial updates</p>
                   </div>
                </div>
-               <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="200" id='extensibility'>
+               <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="200" id='customizable'>
                   <div class="icon-box">
                      <div class="icon"><i class='bx bxs-category-alt'></i></div>
-                     <h4 class="title">Extensibility</h4>
-                     <p class="description">Override and extend a broad range of elements of the framework to customize it for your own needs</p>
+                     <h4 class="title">Customizable</h4>
+                     <p class="description">Aside from declarative syntax, various extensibility points enable to intercept and run your custom code</p>
                   </div>
                </div>
             </div>
@@ -132,69 +133,116 @@
             <div class="container">
             <div class="section-title" data-aos="fade-up">
                <h2>Example usage</h2>
-               <p>Exposing a resource is as simple as this</p>
+               <p>Expose resources using <a href="../../usage/resources/index.html">declarative syntax</a></p>
             </div>
             <div class="row">
-               <div code-example class="col-md-12 col-lg-12 d-flex d-flex justify-content-center" data-aos="zoom-in" data-aos-delay="100" id='resource'>
+               <div code-example class="col-md-12 col-lg-12 d-flex d-flex justify-content-center" data-aos="zoom-in" data-aos-delay="100">
                   <div class="icon-box code-example">
-                     <div class="icon"><i class='bx bx-detail' ></i></div>
+                     <div class="icon"><i class='bx bx-detail'></i></div>
                      <h4 class="title">Resource</h4>
-                     <pre>                  
-<code>using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Resources.Annotations;
-
-namespace JsonApiDotNetCoreExample.Models
+                     <pre>
+<code>public class Article : Identifiable
 {
-    public sealed class Article : Identifiable
-    {
-        [Attr]
-        public string Caption { get; set; }
+    [Attr]
+    [Required, MaxLength(30)]
+    public string Title { get; set; }
 
-        [Attr]
-        public string Url { get; set; }
+    [Attr(Capabilities = AttrCapabilities.AllowFilter)]
+    public string Summary { get; set; }
 
-        [HasOne]
-        public Author Author { get; set; }
+    [Attr(PublicName = "websiteUrl")]
+    public string Url { get; set; }
 
-        [HasMany]
-        public ICollection&ltRevision&gt Revisions { get; set; }  
+    [Attr(Capabilities = AttrCapabilities.AllowView)]
+    public DateTimeOffset LastModifiedAt {get; set; }
 
-        [HasManyThrough(nameof(ArticleTags))]
-        [NotMapped]
-        public ISet&ltTag&gt Tags { get; set; }
-        
-        public ISet&ltArticleTag&gt ArticleTags { get; set; }
-    }
+    [HasOne]
+    public Person Author { get; set; }
+
+    [HasMany]
+    public ICollection&ltRevision&gt Revisions { get; set; }  
+
+    [HasManyThrough(nameof(ArticleTags))]
+    [NotMapped]
+    public ICollection&ltTag&gt Tags { get; set; }
+    public ICollection&ltArticleTag&gt ArticleTags { get; set; }
 }</code>
                      </pre>
                   </div>
                </div>
             </div>
             <div class="row">
-               <div code-example class="col-md-12 col-lg-12 d-flex d-flex justify-content-center" data-aos="zoom-in" data-aos-delay="100" id='controller'>
+               <div code-example class="col-md-12 col-lg-12 d-flex d-flex justify-content-center" data-aos="zoom-in" data-aos-delay="100">
                   <div class="icon-box code-example">
-                     <div class="icon"><i class='bx bx-detail' ></i></div>
-                     <h4 class="title">Controller</h4>
+                     <div class="icon"><i class='bx bx-detail'></i></div>
+                     <h4 class="title">Request</h4>
                      <pre>
-<code>using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample.Models;
-using Microsoft.Extensions.Logging;
-
-namespace JsonApiDotNetCoreExample.Controllers
+<code>
+GET /articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields=title,summary&include=author HTTP/1.1
+</code>
+                     </pre>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div code-example class="col-md-12 col-lg-12 d-flex d-flex justify-content-center" data-aos="zoom-in" data-aos-delay="100">
+                  <div class="icon-box code-example">
+                     <div class="icon"><i class='bx bx-detail'></i></div>
+                     <h4 class="title">Response</h4>
+                     <pre>
+<code>
 {
-    public sealed class ArticlesController : JsonApiController&ltArticle&gt   
+  "meta": {
+    "totalResources": 1
+  },
+  "links": {
+    "self": "/articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields=title,summary&include=author",
+    "first": "/articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields=title,summary&include=author",
+    "last": "/articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields=title,summary&include=author"
+  },
+  "data": [
     {
-        public ArticlesController(
-            IJsonApiOptions options,
-            ILoggerFactory loggerFactory,
-            IResourceService&ltArticle&gt resourceService)
-            : base(options, loggerFactory, resourceService) { }
+      "type": "articles",
+      "id": "1",
+      "attributes": {
+        "title": "JsonApiDotNetCore rocks!",
+        "summary": "Using JsonApiDotNetCore makes the web a better accessible place."
+      },
+      "relationships": {
+        "author": {
+          "links": {
+            "self": "/articles/1/relationships/author",
+            "related": "/articles/1/author"
+          }
+        }
+      },
+      "links": {
+        "self": "/articles/1"
+      }
     }
-}</code>
+  ],
+  "included": [
+    {
+      "type": "people",
+      "id": "1",
+      "attributes": {
+        "name": "John Doe"
+      },
+      "relationships": {
+        "articles": {
+          "links": {
+            "self": "/people/1/relationships/articles",
+            "related": "/people/1/articles"
+          }
+        }
+      },
+      "links": {
+        "self": "/people/1"
+      }
+    }
+  ]
+}
+</code>
                      </pre>
                   </div>
                </div>
@@ -207,7 +255,7 @@ namespace JsonApiDotNetCoreExample.Controllers
               <div class="row justify-content-center">
                 <div class="col-lg-8">
                   <h4>Contact us</h4>
-                  <p>If you find any bugs or have a feature request, please create an issue in the <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore">GitHub repository</a>. For questions, please refer to <a href="https://stackoverflow.com/">Stack Overflow</a> using the <code>json-api</code> and <code>asp.net-core</code> tags. Lastly, everyone is welcome to socialize in our <a href="https://gitter.im/json-api-dotnet-core/Lobby">Gitter channel</a>!</p>
+                  <p>If you find any bugs or have a feature request, please create an issue in the <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore" target="_blank">GitHub repository</a>. For questions or just to socialize, everyone is welcome in our <a href="https://gitter.im/json-api-dotnet-core/Lobby" target="_blank">Gitter channel</a>!</p>
                 </div>
               </div>
             </div>

@@ -89,7 +89,7 @@ options.SerializerSettings.Converters.Add(new StringEnumConverter());
 options.SerializerSettings.Formatting = Formatting.Indented;
 ```
 
-The default naming convention (as used in the routes and public resources names) is also determined here, and can be changed (default is camel-case):
+The default naming convention (as used in the routes and resource/attribute/relationship names) is also determined here, and can be changed (default is camel-case):
 ```c#
 options.SerializerSettings.ContractResolver = new DefaultContractResolver
 {

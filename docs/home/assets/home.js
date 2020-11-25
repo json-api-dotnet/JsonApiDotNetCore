@@ -47,9 +47,7 @@
   $('div[feature]#include').on('click', () => window.location = 'usage/reading/including-relationships.html')
   $('div[feature]#security').on('click', () => window.location = 'usage/resources/attributes.html#capabilities')
   $('div[feature]#validation').on('click', () => window.location = 'usage/options.html#enable-modelstate-validation')
-  $('div[feature]#extensibility').on('click', () => window.location = 'usage/resources/resource-definitions.html')
-  $('div[code-example]#resource').on('click', () => window.location = 'usage/resources/index.html')
-  $('div[code-example]#controller').on('click', () => window.location = 'usage/extensibility/controllers.html')
+  $('div[feature]#customizable').on('click', () => window.location = 'usage/resources/resource-definitions.html')
 
 
   hljs.initHighlightingOnLoad()
