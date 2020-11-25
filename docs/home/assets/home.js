@@ -1,9 +1,3 @@
-/**
-* Template Name: Ninestars - v2.2.0
-* Template URL: https://bootstrapmade.com/ninestars-free-bootstrap-3-theme-for-creative/
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
 !(function($) {
   "use strict";
 
@@ -15,7 +9,7 @@
       if (target.length) {
 
         var scrollto = target.offset().top;
-        scrollto = scrollto - scrollto * 0.15
+        scrollto = scrollto
 
         if ($(this).attr("href") == '#header') {
           scrollto = 0;
@@ -36,13 +30,29 @@
       var initial_nav = window.location.hash;
       if ($(initial_nav).length) {
         var scrollto = $(initial_nav).offset().top;
-        scrollto = scrollto - scrollto * 0.15
+        scrollto = scrollto
         $('html, body').animate({
           scrollTop: scrollto
         }, 1500, 'easeInOutExpo');
       }
     }
   });
+
+
+  // Feature panels linking
+  $('div[feature]#filter').on('click', () => window.location = 'usage/reading/filtering.html')
+  $('div[feature]#sort').on('click', () => window.location = 'usage/reading/sorting.html')
+  $('div[feature]#pagination').on('click', () => window.location = 'usage/reading/pagination.html')
+  $('div[feature]#selection').on('click', () => window.location = 'usage/reading/sparse-fieldset-selection.html')
+  $('div[feature]#include').on('click', () => window.location = 'usage/reading/including-relationships.html')
+  $('div[feature]#security').on('click', () => window.location = 'usage/resources/attributes.html#capabilities')
+  $('div[feature]#validation').on('click', () => window.location = 'usage/options.html#enable-modelstate-validation')
+  $('div[feature]#extensibility').on('click', () => window.location = 'usage/resources/resource-definitions.html')
+  $('div[code-example]#resource').on('click', () => window.location = 'usage/resources/index.html')
+  $('div[code-example]#controller').on('click', () => window.location = 'usage/extensibility/controllers.html')
+
+
+  hljs.initHighlightingOnLoad()
 
   // Back to top button
   $(window).scroll(function() {
@@ -59,7 +69,6 @@
     }, 1500, 'easeInOutExpo');
     return false;
   });
-
   // Init AOS
   function aos_init() {
     AOS.init({
@@ -71,5 +80,8 @@
   $(window).on('load', function() {
     aos_init();
   });
+
+
+
 
 })(jQuery);
