@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Controllers
         /// <param name="cancellationToken">Propagates notification that request handling should be canceled.</param>
         /// <example>
         /// <code>
-        /// PATCH /api/v1/operations HTTP/1.1
+        /// POST /api/v1/operations HTTP/1.1
         /// Content-Type: application/vnd.api+json
         /// 
         /// {
@@ -50,8 +50,8 @@ namespace JsonApiDotNetCore.Controllers
         /// }
         /// </code>
         /// </example>
-        [HttpPatch]
-        public virtual async Task<IActionResult> PatchOperationsAsync([FromBody] AtomicOperationsDocument doc, CancellationToken cancellationToken)
+        [HttpPost]
+        public virtual async Task<IActionResult> PostOperationsAsync([FromBody] AtomicOperationsDocument doc, CancellationToken cancellationToken)
         {
             if (doc == null) return new StatusCodeResult(422);
 

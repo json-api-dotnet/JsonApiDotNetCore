@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Middleware
         private static bool PathIsBulk(RouteValueDictionary routeValues)
         {
             var actionName = (string)routeValues["action"];
-            return actionName == "PatchOperations";
+            return actionName == "PostOperations";
         }
 
         private static ResourceContext CreatePrimaryResourceContext(RouteValueDictionary routeValues,

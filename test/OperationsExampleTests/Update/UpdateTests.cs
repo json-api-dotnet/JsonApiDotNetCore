@@ -52,7 +52,7 @@ namespace OperationsExampleTests.Update
             };
 
             // act
-            var (response, data) = await _fixture.PatchAsync<AtomicOperationsDocument>("api/v1/operations", content);
+            var (response, data) = await _fixture.PostAsync<AtomicOperationsDocument>("api/v1/operations", content);
 
             // assert
             Assert.NotNull(response);
@@ -99,7 +99,7 @@ namespace OperationsExampleTests.Update
                 });
 
             // act
-            var (response, data) = await _fixture.PatchAsync<AtomicOperationsDocument>("api/v1/operations", content);
+            var (response, data) = await _fixture.PostAsync<AtomicOperationsDocument>("api/v1/operations", content);
 
             // assert
             Assert.NotNull(response);

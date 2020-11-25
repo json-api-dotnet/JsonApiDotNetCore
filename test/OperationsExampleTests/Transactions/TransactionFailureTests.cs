@@ -66,7 +66,7 @@ namespace OperationsExampleTests.Transactions
             };
 
             // act
-            var (response, data) = await _fixture.PatchAsync<ErrorDocument>("api/v1/operations", content);
+            var (response, data) = await _fixture.PostAsync<ErrorDocument>("api/v1/operations", content);
 
             // assert
             Assert.NotNull(response);

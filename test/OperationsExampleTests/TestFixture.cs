@@ -52,17 +52,17 @@ namespace OperationsExampleTests
             }
         }
 
-        public async Task<(HttpResponseMessage response, T data)> PatchAsync<T>(string route, object data)
+        public async Task<(HttpResponseMessage response, T data)> PostAsync<T>(string route, object data)
         {
-            var response = await PatchAsync(route, data);
+            var response = await PostAsync(route, data);
             var json = await response.Content.ReadAsStringAsync();
             var obj = JsonConvert.DeserializeObject<T>(json);
             return (response, obj);
         }
 
-        private async Task<HttpResponseMessage> PatchAsync(string route, object data)
+        private async Task<HttpResponseMessage> PostAsync(string route, object data)
         {
-            var httpMethod = new HttpMethod("PATCH");
+            var httpMethod = HttpMethod.Post;
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(data));
             request.Content.Headers.ContentLength = 1;
