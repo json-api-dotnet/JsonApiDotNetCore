@@ -28,20 +28,17 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
         }
 
-        public async Task<AtomicOperation> ProcessAsync(AtomicOperation operation, CancellationToken cancellationToken)
+        public async Task<AtomicResultObject> ProcessAsync(AtomicOperationObject operation, CancellationToken cancellationToken)
         {
             var model = (TResource) _deserializer.CreateResourceFromObject(operation.SingleData);
-            var result = await _service.CreateAsync(model, cancellationToken);
-
-            var operationResult = new AtomicOperation
-            {
-                Code = AtomicOperationCode.Add
-            };
+            var newResource = await _service.CreateAsync(model, cancellationToken);
 
             ResourceContext resourceContext = _resourceGraph.GetResourceContext(operation.SingleData.Type);
 
-            operationResult.Data =
-                _resourceObjectBuilder.Build(result, resourceContext.Attributes, resourceContext.Relationships);
+            var operationResult = new AtomicResultObject
+            {
+                Data = _resourceObjectBuilder.Build(newResource, resourceContext.Attributes, resourceContext.Relationships)
+            };
 
             // we need to persist the original request localId so that subsequent operations
             // can locate the result of this operation by its localId

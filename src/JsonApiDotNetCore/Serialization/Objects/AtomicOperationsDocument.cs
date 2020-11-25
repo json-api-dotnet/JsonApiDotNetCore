@@ -6,9 +6,12 @@ namespace JsonApiDotNetCore.Serialization.Objects
     /// <summary>
     /// https://jsonapi.org/ext/atomic/#document-structure
     /// </summary>
-    public class AtomicOperationsDocument
+    public sealed class AtomicOperationsDocument
     {
-        [JsonProperty("operations")]
-        public IList<AtomicOperation> Operations { get; set; }
+        [JsonProperty("atomic:operations", NullValueHandling = NullValueHandling.Ignore)]
+        public IList<AtomicOperationObject> Operations { get; set; }
+
+        [JsonProperty("atomic:results", NullValueHandling = NullValueHandling.Ignore)]
+        public IList<AtomicResultObject> Results { get; set; }
     }
 }

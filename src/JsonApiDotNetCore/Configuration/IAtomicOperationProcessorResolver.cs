@@ -11,16 +11,16 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Resolves a compatible <see cref="ICreateOperationProcessor{TResource}"/>.
         /// </summary>
-        IAtomicOperationProcessor ResolveCreateProcessor(AtomicOperation operation);
+        IAtomicOperationProcessor ResolveCreateProcessor(AtomicOperationObject operation);
 
         /// <summary>
         /// Resolves a compatible <see cref="IRemoveOperationProcessor{TResource, TId}"/>.
         /// </summary>
-        IAtomicOperationProcessor ResolveRemoveProcessor(AtomicOperation operation);
+        IAtomicOperationProcessor ResolveRemoveProcessor(AtomicOperationObject operation);
 
         /// <summary>
         /// Resolves a compatible <see cref="IUpdateOperationProcessor{TResource, TId}"/>.
         /// </summary>
-        IAtomicOperationProcessor ResolveUpdateProcessor(AtomicOperation operation);
+        IAtomicOperationProcessor ResolveUpdateProcessor(AtomicOperationObject operation);
     }
 }

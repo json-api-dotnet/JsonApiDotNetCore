@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
         }
 
-        public async Task<AtomicOperation> ProcessAsync(AtomicOperation operation, CancellationToken cancellationToken)
+        public async Task<AtomicResultObject> ProcessAsync(AtomicOperationObject operation, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(operation?.SingleData?.Id))
             {
@@ -52,9 +52,8 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
                 data = _resourceObjectBuilder.Build(result, resourceContext.Attributes, resourceContext.Relationships);
             }
 
-            return new AtomicOperation
+            return new AtomicResultObject
             {
-                Code = AtomicOperationCode.Update,
                 Data = data
             };
         }

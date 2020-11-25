@@ -31,10 +31,12 @@ namespace OperationsExampleTests.Remove
 
             var content = new
             {
-                operations = new[] {
-                    new Dictionary<string, object> {
-                        { "op", "remove"},
-                        { "ref",  new { type = "authors", id = author.StringId } }
+                atomic__operations = new[]
+                {
+                    new Dictionary<string, object>
+                    {
+                        {"op", "remove"},
+                        {"ref", new {type = "authors", id = author.StringId}}
                     }
                 }
             };
@@ -46,7 +48,7 @@ namespace OperationsExampleTests.Remove
             Assert.NotNull(response);
             Assert.NotNull(data);
             _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
-            Assert.Empty(data.Operations);
+            Assert.Single(data.Results);
             Assert.Null(_fixture.Context.AuthorDifferentDbContextName.SingleOrDefault(a => a.Id == author.Id));
         }
 
@@ -62,16 +64,19 @@ namespace OperationsExampleTests.Remove
 
             var content = new
             {
-                operations = new List<object>()
+                atomic__operations = new List<object>()
             };
 
             for (int i = 0; i < count; i++)
-                content.operations.Add(
-                    new Dictionary<string, object> {
-                        { "op", "remove"},
-                        { "ref",  new { type = "authors", id = authors[i].StringId } }
+            {
+                content.atomic__operations.Add(
+                    new Dictionary<string, object>
+                    {
+                        {"op", "remove"},
+                        {"ref", new {type = "authors", id = authors[i].StringId}}
                     }
                 );
+            }
 
             // act
             var (response, data) = await _fixture.PostAsync<AtomicOperationsDocument>("api/v1/operations", content);
@@ -80,10 +85,13 @@ namespace OperationsExampleTests.Remove
             Assert.NotNull(response);
             Assert.NotNull(data);
             _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
-            Assert.Empty(data.Operations);
+            Assert.Equal(count, data.Results.Count);
 
             for (int i = 0; i < count; i++)
+            {
+                Assert.Null(data.Results[i].Data);
                 Assert.Null(_fixture.Context.AuthorDifferentDbContextName.SingleOrDefault(a => a.Id == authors[i].Id));
+            }
         }
     }
 }

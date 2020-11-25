@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore;
@@ -62,11 +63,17 @@ namespace OperationsExampleTests
 
         private async Task<HttpResponseMessage> PostAsync(string route, object data)
         {
-            var httpMethod = HttpMethod.Post;
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(data));
-            request.Content.Headers.ContentLength = 1;
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            var request = new HttpRequestMessage(HttpMethod.Post, route);
+
+            if (data != null)
+            {
+                var requestBody = JsonConvert.SerializeObject(data);
+                requestBody = requestBody.Replace("__", ":");
+
+                request.Content = new StringContent(requestBody);
+                request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
+            }
+
             return await _client.SendAsync(request);
         }
     }

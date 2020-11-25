@@ -28,12 +28,12 @@ namespace JsonApiDotNetCore.AtomicOperations
             ITargetedFields targetedFields, IResourceGraph resourceGraph,
             IEnumerable<IDbContextResolver> dbContextResolvers)
         {
+            if (dbContextResolvers == null) throw new ArgumentNullException(nameof(dbContextResolvers));
+
             _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
-
-            if (dbContextResolvers == null) throw new ArgumentNullException(nameof(dbContextResolvers));
 
             var resolvers = dbContextResolvers.ToArray();
             if (resolvers.Length != 1)
@@ -45,64 +45,64 @@ namespace JsonApiDotNetCore.AtomicOperations
             _dbContext = resolvers[0].GetContext();
         }
 
-        public async Task<IList<AtomicOperation>> ProcessAsync(IList<AtomicOperation> operations, CancellationToken cancellationToken)
+        public async Task<IList<AtomicResultObject>> ProcessAsync(IList<AtomicOperationObject> operations, CancellationToken cancellationToken)
         {
             if (operations == null) throw new ArgumentNullException(nameof(operations));
 
-            var outputOps = new List<AtomicOperation>();
-            var opIndex = 0;
+            var results = new List<AtomicResultObject>();
+            var operationIndex = 0;
             AtomicOperationCode? lastAttemptedOperation = null; // used for error messages only
 
-            using (var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken))
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+            try
             {
-                try
+                foreach (var operation in operations)
                 {
-                    foreach (var operation in operations)
-                    {
-                        lastAttemptedOperation = operation.Code;
-                        await ProcessOperation(operation, outputOps, cancellationToken);
-                        opIndex++;
-                    }
+                    lastAttemptedOperation = operation.Code;
+                    await ProcessOperation(operation, results, cancellationToken);
+                    operationIndex++;
+                }
 
-                    await transaction.CommitAsync(cancellationToken);
-                    return outputOps;
-                }
-                catch (JsonApiException exception)
+                await transaction.CommitAsync(cancellationToken);
+                return results;
+            }
+            catch (JsonApiException exception)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+
+                throw new JsonApiException(new Error(exception.Error.StatusCode)
                 {
-                    await transaction.RollbackAsync(cancellationToken);
-                    throw new JsonApiException(new Error(exception.Error.StatusCode)
-                    {
-                        Title = "Transaction failed on operation.",
-                        Detail = $"Transaction failed on operation[{opIndex}] ({lastAttemptedOperation})."
-                    }, exception);
-                }
-                catch (Exception exception)
+                    Title = "Transaction failed on operation.",
+                    Detail = $"Transaction failed on operation[{operationIndex}] ({lastAttemptedOperation})."
+                }, exception);
+            }
+            catch (Exception exception)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+
+                throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
                 {
-                    await transaction.RollbackAsync(cancellationToken);
-                    throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
-                    {
-                        Title = "Transaction failed on operation.",
-                        Detail = $"Transaction failed on operation[{opIndex}] ({lastAttemptedOperation}) for an unexpected reason."
-                    }, exception);
-                }
+                    Title = "Transaction failed on operation.",
+                    Detail = $"Transaction failed on operation[{operationIndex}] ({lastAttemptedOperation}) for an unexpected reason."
+                }, exception);
             }
         }
 
-        private async Task ProcessOperation(AtomicOperation inputOperation, List<AtomicOperation> outputOperations, CancellationToken cancellationToken)
+        private async Task ProcessOperation(AtomicOperationObject operation, List<AtomicResultObject> results, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            ReplaceLocalIdsInResourceObject(inputOperation.SingleData, outputOperations);
-            ReplaceLocalIdsInRef(inputOperation.Ref, outputOperations);
+            ReplaceLocalIdsInResourceObject(operation.SingleData, results);
+            ReplaceLocalIdsInRef(operation.Ref, results);
 
             string type = null;
-            if (inputOperation.Code == AtomicOperationCode.Add || inputOperation.Code == AtomicOperationCode.Update)
+            if (operation.Code == AtomicOperationCode.Add || operation.Code == AtomicOperationCode.Update)
             {
-                type = inputOperation.SingleData.Type;
+                type = operation.SingleData.Type;
             }
-            else if (inputOperation.Code == AtomicOperationCode.Remove)
+            else if (operation.Code == AtomicOperationCode.Remove)
             {
-                type = inputOperation.Ref.Type;
+                type = operation.Ref.Type;
             }
 
             ((JsonApiRequest)_request).PrimaryResource = _resourceGraph.GetResourceContext(type);
@@ -110,27 +110,25 @@ namespace JsonApiDotNetCore.AtomicOperations
             _targetedFields.Attributes.Clear();
             _targetedFields.Relationships.Clear();
 
-            var processor = GetOperationsProcessor(inputOperation);
-            var resultOp = await processor.ProcessAsync(inputOperation, cancellationToken);
-
-            if (resultOp != null)
-                outputOperations.Add(resultOp);
+            var processor = GetOperationsProcessor(operation);
+            var result = await processor.ProcessAsync(operation, cancellationToken);
+            results.Add(result);
         }
 
-        private void ReplaceLocalIdsInResourceObject(ResourceObject resourceObject, List<AtomicOperation> outputOperations)
+        private void ReplaceLocalIdsInResourceObject(ResourceObject resourceObject, List<AtomicResultObject> results)
         {
             if (resourceObject == null)
                 return;
 
             // it is strange to me that a top level resource object might use a lid.
             // by not replacing it, we avoid a case where the first operation is an 'add' with an 'lid'
-            // and we would be unable to locate the matching 'lid' in 'outputOperations'
+            // and we would be unable to locate the matching 'lid' in 'results'
             //
             // we also create a scenario where I might try to update a resource I just created
-            // in this case, the 'data.id' will be null, but the 'ref.id' will be replaced by the correct 'id' from 'outputOperations'
+            // in this case, the 'data.id' will be null, but the 'ref.id' will be replaced by the correct 'id' from 'results'
             // 
             // if(HasLocalId(resourceObject))
-            //     resourceObject.Id = GetIdFromLocalId(outputOperations, resourceObject.LocalId);
+            //     resourceObject.Id = GetIdFromLocalId(results, resourceObject.LocalId);
 
             if (resourceObject.Relationships != null)
             {
@@ -140,30 +138,30 @@ namespace JsonApiDotNetCore.AtomicOperations
                     {
                         foreach (var relationship in relationshipDictionary.Value.ManyData)
                             if (HasLocalId(relationship))
-                                relationship.Id = GetIdFromLocalId(outputOperations, relationship.LocalId);
+                                relationship.Id = GetIdFromLocalId(results, relationship.LocalId);
                     }
                     else
                     {
                         var relationship = relationshipDictionary.Value.SingleData;
                         if (HasLocalId(relationship))
-                            relationship.Id = GetIdFromLocalId(outputOperations, relationship.LocalId);
+                            relationship.Id = GetIdFromLocalId(results, relationship.LocalId);
                     }
                 }
             }
         }
 
-        private void ReplaceLocalIdsInRef(ResourceReference resourceReference, List<AtomicOperation> outputOperations)
+        private void ReplaceLocalIdsInRef(AtomicResourceReference reference, List<AtomicResultObject> results)
         {
-            if (resourceReference == null) return;
-            if (HasLocalId(resourceReference))
-                resourceReference.Id = GetIdFromLocalId(outputOperations, resourceReference.LocalId);
+            if (reference == null) return;
+            if (HasLocalId(reference))
+                reference.Id = GetIdFromLocalId(results, reference.LocalId);
         }
 
         private bool HasLocalId(ResourceIdentifierObject rio) => string.IsNullOrEmpty(rio.LocalId) == false;
 
-        private string GetIdFromLocalId(List<AtomicOperation> outputOps, string localId)
+        private string GetIdFromLocalId(List<AtomicResultObject> results, string localId)
         {
-            var referencedOp = outputOps.FirstOrDefault(o => o.SingleData.LocalId == localId);
+            var referencedOp = results.FirstOrDefault(o => o.SingleData.LocalId == localId);
             if (referencedOp == null)
             {
                 throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
@@ -176,7 +174,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             return referencedOp.SingleData.Id;
         }
 
-        private IAtomicOperationProcessor GetOperationsProcessor(AtomicOperation operation)
+        private IAtomicOperationProcessor GetOperationsProcessor(AtomicOperationObject operation)
         {
             switch (operation.Code)
             {

@@ -35,31 +35,41 @@ namespace OperationsExampleTests.Transactions
 
             var content = new
             {
-                operations = new object[] {
-                    new {
+                atomic__operations = new object[]
+                {
+                    new
+                    {
                         op = "add",
-                        data = new {
+                        data = new
+                        {
                             type = "authors",
-                            attributes = new {
+                            attributes = new
+                            {
                                 firstName = author.FirstName
                             }
                         }
                     },
-                    new {
+                    new
+                    {
                         op = "add",
-                        data = new {
+                        data = new
+                        {
                             type = "articles",
-                            attributes = new {
+                            attributes = new
+                            {
                                 caption = article.Caption
                             },
-                            relationships = new {
-                                author = new {
-                                    data = new {
+                            relationships = new
+                            {
+                                author = new
+                                {
+                                    data = new
+                                    {
                                         type = "authors",
                                         id = 99999999
                                     }
                                 }
-                             }
+                            }
                         }
                     }
                 }

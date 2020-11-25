@@ -32,21 +32,29 @@ namespace OperationsExampleTests.Update
 
             var content = new
             {
-                operations = new[] {
-                    new Dictionary<string, object> {
-                        { "op", "update" },
-                        { "ref", new {
-                            type = "authors",
-                            id = author.Id,
-                        } },
-                        { "data", new {
-                            type = "authors",
-                            id = author.Id,
-                            attributes = new
+                atomic__operations = new[]
+                {
+                    new Dictionary<string, object>
+                    {
+                        {"op", "update"},
+                        {
+                            "ref", new
                             {
-                                firstName = updates.FirstName
+                                type = "authors",
+                                id = author.Id,
                             }
-                        } },
+                        },
+                        {
+                            "data", new
+                            {
+                                type = "authors",
+                                id = author.Id,
+                                attributes = new
+                                {
+                                    firstName = updates.FirstName
+                                }
+                            }
+                        },
                     }
                 }
             };
@@ -58,10 +66,10 @@ namespace OperationsExampleTests.Update
             Assert.NotNull(response);
             _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
             Assert.NotNull(data);
-            Assert.Single(data.Operations);
+            Assert.Single(data.Results);
+            Assert.Null(data.Results[0].Data);
 
-            Assert.Equal(AtomicOperationCode.Update, data.Operations.Single().Code);
-            Assert.Null(data.Operations.Single().SingleData);
+            Assert.Null(data.Results.Single().SingleData);
         }
 
         [Fact]
@@ -78,25 +86,34 @@ namespace OperationsExampleTests.Update
 
             var content = new
             {
-                operations = new List<object>()
+                atomic__operations = new List<object>()
             };
 
             for (int i = 0; i < count; i++)
-                content.operations.Add(new Dictionary<string, object> {
-                    { "op", "update" },
-                    { "ref", new {
-                        type = "authors",
-                        id = authors[i].Id,
-                    } },
-                    { "data", new {
-                        type = "authors",
-                        id = authors[i].Id,
-                        attributes = new
+            {
+                content.atomic__operations.Add(new Dictionary<string, object>
+                {
+                    {"op", "update"},
+                    {
+                        "ref", new
                         {
-                            firstName = updates[i].FirstName
+                            type = "authors",
+                            id = authors[i].Id,
                         }
-                    } },
+                    },
+                    {
+                        "data", new
+                        {
+                            type = "authors",
+                            id = authors[i].Id,
+                            attributes = new
+                            {
+                                firstName = updates[i].FirstName
+                            }
+                        }
+                    },
                 });
+            }
 
             // act
             var (response, data) = await _fixture.PostAsync<AtomicOperationsDocument>("api/v1/operations", content);
@@ -105,12 +122,11 @@ namespace OperationsExampleTests.Update
             Assert.NotNull(response);
             _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
             Assert.NotNull(data);
-            Assert.Equal(count, data.Operations.Count);
+            Assert.Equal(count, data.Results.Count);
 
             for (int i = 0; i < count; i++)
             {
-                Assert.Equal(AtomicOperationCode.Update, data.Operations[i].Code);
-                Assert.Null(data.Operations[i].SingleData);
+                Assert.Null(data.Results[i].SingleData);
             }
         }
     }

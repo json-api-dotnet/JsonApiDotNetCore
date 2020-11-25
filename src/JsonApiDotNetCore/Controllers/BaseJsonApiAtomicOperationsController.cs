@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Controllers
 
             return Ok(new AtomicOperationsDocument
             {
-                Operations = results
+                Results = results
             });
         }
     }

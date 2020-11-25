@@ -10,6 +10,6 @@ namespace JsonApiDotNetCore.AtomicOperations
     /// </summary>
     public interface IAtomicOperationsProcessor
     {
-        Task<IList<AtomicOperation>> ProcessAsync(IList<AtomicOperation> operations, CancellationToken cancellationToken);
+        Task<IList<AtomicResultObject>> ProcessAsync(IList<AtomicOperationObject> operations, CancellationToken cancellationToken);
     }
 }

@@ -13,6 +13,9 @@ namespace JsonApiDotNetCore.Serialization.Objects
         [JsonProperty("lid", NullValueHandling = NullValueHandling.Ignore, Order = -2)]
         public string LocalId { get; set; }
 
-        public override string ToString() => $"(type: {Type}, id: {Id}, lid: {LocalId})";
+        public override string ToString()
+        {
+            return $"(type: {Type}, id: {Id}, lid: {LocalId})";
+        }
     }
 }

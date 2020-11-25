@@ -29,12 +29,16 @@ namespace OperationsExampleTests.Add
             var author = AuthorFactory.Get();
             var content = new
             {
-                operations = new[] {
-                    new {
+                atomic__operations = new[]
+                {
+                    new
+                    {
                         op = "add",
-                        data = new {
+                        data = new
+                        {
                             type = "authors",
-                            attributes = new {
+                            attributes = new
+                            {
                                 firstName = author.FirstName
                             }
                         }
@@ -49,7 +53,7 @@ namespace OperationsExampleTests.Add
             Assert.NotNull(response);
             _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
 
-            var id = int.Parse(data.Operations.Single().SingleData.Id);
+            var id = int.Parse(data.Results.Single().SingleData.Id);
             var lastAuthor = await _fixture.Context.AuthorDifferentDbContextName.SingleAsync(a => a.Id == id);
             Assert.Equal(author.FirstName, lastAuthor.FirstName);
         }
@@ -62,24 +66,24 @@ namespace OperationsExampleTests.Add
             var authors = AuthorFactory.Get(expectedCount);
             var content = new
             {
-                operations = new List<object>()
+                atomic__operations = new List<object>()
             };
 
             for (int i = 0; i < expectedCount; i++)
             {
-                content.operations.Add(
-                     new
-                     {
-                         op = "add",
-                         data = new
-                         {
-                             type = "authors",
-                             attributes = new
-                             {
-                                 firstName = authors[i].FirstName
-                             }
-                         }
-                     }
+                content.atomic__operations.Add(
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "authors",
+                            attributes = new
+                            {
+                                firstName = authors[i].FirstName
+                            }
+                        }
+                    }
                 );
             }
 
@@ -89,11 +93,11 @@ namespace OperationsExampleTests.Add
             // assert
             Assert.NotNull(response);
             _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
-            Assert.Equal(expectedCount, data.Operations.Count);
+            Assert.Equal(expectedCount, data.Results.Count);
 
             for (int i = 0; i < expectedCount; i++)
             {
-                var dataObject = data.Operations[i].SingleData;
+                var dataObject = data.Results[i].SingleData;
                 var author = _fixture.Context.AuthorDifferentDbContextName.Single(a => a.Id == int.Parse(dataObject.Id));
                 Assert.Equal(authors[i].FirstName, author.FirstName);
             }
@@ -110,22 +114,26 @@ namespace OperationsExampleTests.Add
             context.AuthorDifferentDbContextName.Add(author);
             await context.SaveChangesAsync();
 
-
-            //const string authorLocalId = "author-1";
-
             var content = new
             {
-                operations = new object[] {
-                    new {
+                atomic__operations = new object[]
+                {
+                    new
+                    {
                         op = "add",
-                        data = new {
+                        data = new
+                        {
                             type = "articles",
-                            attributes = new {
+                            attributes = new
+                            {
                                 caption = article.Caption
                             },
-                            relationships = new {
-                                author = new {
-                                    data = new {
+                            relationships = new
+                            {
+                                author = new
+                                {
+                                    data = new
+                                    {
                                         type = "authors",
                                         id = author.Id
                                     }
@@ -142,13 +150,13 @@ namespace OperationsExampleTests.Add
             // assert
             Assert.NotNull(response);
             _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
-            Assert.Single(data.Operations);
+            Assert.Single(data.Results);
 
 
             var lastAuthor = await context.AuthorDifferentDbContextName
                 .Include(a => a.Articles)
                 .SingleAsync(a => a.Id == author.Id);
-            var articleOperationResult = data.Operations[0];
+            var articleOperationResult = data.Results[0];
 
             // author validation: sanity checks
             Assert.NotNull(lastAuthor);
@@ -172,35 +180,35 @@ namespace OperationsExampleTests.Add
 
             var content = new
             {
-                operations = new List<object>()
+                atomic__operations = new List<object>()
             };
 
             for (int i = 0; i < expectedCount; i++)
             {
-                content.operations.Add(
-                     new
-                     {
-                         op = "add",
-                         data = new
-                         {
-                             type = "articles",
-                             attributes = new
-                             {
-                                 caption = articles[i].Caption
-                             },
-                             relationships = new
-                             {
-                                 author = new
-                                 {
-                                     data = new
-                                     {
-                                         type = "authors",
-                                         id = author.Id
-                                     }
-                                 }
-                             }
-                         }
-                     }
+                content.atomic__operations.Add(
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "articles",
+                            attributes = new
+                            {
+                                caption = articles[i].Caption
+                            },
+                            relationships = new
+                            {
+                                author = new
+                                {
+                                    data = new
+                                    {
+                                        type = "authors",
+                                        id = author.Id
+                                    }
+                                }
+                            }
+                        }
+                    }
                 );
             }
 
@@ -210,7 +218,7 @@ namespace OperationsExampleTests.Add
             // assert
             Assert.NotNull(response);
             _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
-            Assert.Equal(expectedCount, data.Operations.Count);
+            Assert.Equal(expectedCount, data.Results.Count);
 
             // author validation: sanity checks
             var lastAuthor = _fixture.Context.AuthorDifferentDbContextName.Include(a => a.Articles).Single(a => a.Id == author.Id);
@@ -236,27 +244,37 @@ namespace OperationsExampleTests.Add
 
             var content = new
             {
-                operations = new object[] {
-                    new {
+                atomic__operations = new object[]
+                {
+                    new
+                    {
                         op = "add",
-                        data = new {
+                        data = new
+                        {
                             lid = authorLocalId,
                             type = "authors",
-                            attributes = new {
+                            attributes = new
+                            {
                                 firstName = author.FirstName
                             },
                         }
                     },
-                    new {
+                    new
+                    {
                         op = "add",
-                        data = new {
+                        data = new
+                        {
                             type = "articles",
-                            attributes = new {
+                            attributes = new
+                            {
                                 caption = article.Caption
                             },
-                            relationships = new {
-                                author = new {
-                                    data = new {
+                            relationships = new
+                            {
+                                author = new
+                                {
+                                    data = new
+                                    {
                                         type = "authors",
                                         lid = authorLocalId
                                     }
@@ -273,14 +291,14 @@ namespace OperationsExampleTests.Add
             // assert
             Assert.NotNull(response);
             _fixture.AssertEqualStatusCode(HttpStatusCode.OK, response);
-            Assert.Equal(2, data.Operations.Count);
+            Assert.Equal(2, data.Results.Count);
 
-            var authorOperationResult = data.Operations[0];
+            var authorOperationResult = data.Results[0];
             var id = int.Parse(authorOperationResult.SingleData.Id);
             var lastAuthor = await _fixture.Context.AuthorDifferentDbContextName
                 .Include(a => a.Articles)
                 .SingleAsync(a => a.Id == id);
-            var articleOperationResult = data.Operations[1];
+            var articleOperationResult = data.Results[1];
 
             // author validation
             Assert.Equal(authorLocalId, authorOperationResult.SingleData.LocalId);

@@ -21,26 +21,26 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public IAtomicOperationProcessor ResolveCreateProcessor(AtomicOperation operation)
+        public IAtomicOperationProcessor ResolveCreateProcessor(AtomicOperationObject operation)
         {
             return Resolve(operation, typeof(ICreateOperationProcessor<,>));
         }
 
         /// <inheritdoc />
-        public IAtomicOperationProcessor ResolveRemoveProcessor(AtomicOperation operation)
+        public IAtomicOperationProcessor ResolveRemoveProcessor(AtomicOperationObject operation)
         {
             return Resolve(operation, typeof(IRemoveOperationProcessor<,>));
         }
 
         /// <inheritdoc />
-        public IAtomicOperationProcessor ResolveUpdateProcessor(AtomicOperation operation)
+        public IAtomicOperationProcessor ResolveUpdateProcessor(AtomicOperationObject operation)
         {
             return Resolve(operation, typeof(IUpdateOperationProcessor<,>));
         }
 
-        private IAtomicOperationProcessor Resolve(AtomicOperation atomicOperation, Type processorInterface)
+        private IAtomicOperationProcessor Resolve(AtomicOperationObject atomicOperationObject, Type processorInterface)
         {
-            var resourceName = atomicOperation.GetResourceTypeName();
+            var resourceName = atomicOperationObject.GetResourceTypeName();
             var resourceContext = GetResourceContext(resourceName);
 
             return _genericServiceFactory.Get<IAtomicOperationProcessor>(processorInterface,

@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<AtomicOperation> ProcessAsync(AtomicOperation operation, CancellationToken cancellationToken)
+        public async Task<AtomicResultObject> ProcessAsync(AtomicOperationObject operation, CancellationToken cancellationToken)
         {
             var stringId = operation.Ref?.Id;
             if (string.IsNullOrWhiteSpace(stringId))
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             var id = (TId) TypeHelper.ConvertType(stringId, typeof(TId));
             await _service.DeleteAsync(id, cancellationToken);
 
-            return null;
+            return new AtomicResultObject();
         }
     }
 

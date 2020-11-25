@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
-    public class AtomicOperation : ExposableData<ResourceObject>
+    /// <summary>
+    /// https://jsonapi.org/ext/atomic/#operation-objects
+    /// </summary>
+    public sealed class AtomicOperationObject : ExposableData<ResourceObject>
     {
         [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> Meta { get; set; }
@@ -15,7 +17,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         public AtomicOperationCode Code { get; set; }
 
         [JsonProperty("ref", NullValueHandling = NullValueHandling.Ignore)]
-        public ResourceReference Ref { get; set; }
+        public AtomicResourceReference Ref { get; set; }
 
         [JsonProperty("href", NullValueHandling = NullValueHandling.Ignore)]
         public string Href { get; set; }
