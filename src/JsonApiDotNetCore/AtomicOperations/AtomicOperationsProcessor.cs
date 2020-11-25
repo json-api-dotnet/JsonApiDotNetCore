@@ -110,7 +110,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             _targetedFields.Attributes.Clear();
             _targetedFields.Relationships.Clear();
 
-            var processor = GetOperationsProcessor(operation);
+            var processor = _resolver.ResolveProcessor(operation);
             var result = await processor.ProcessAsync(operation, cancellationToken);
             results.Add(result);
         }
@@ -172,25 +172,6 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
 
             return referencedOp.SingleData.Id;
-        }
-
-        private IAtomicOperationProcessor GetOperationsProcessor(AtomicOperationObject operation)
-        {
-            switch (operation.Code)
-            {
-                case AtomicOperationCode.Add:
-                    return _resolver.ResolveCreateProcessor(operation);
-                case AtomicOperationCode.Remove:
-                    return _resolver.ResolveRemoveProcessor(operation);
-                case AtomicOperationCode.Update:
-                    return _resolver.ResolveUpdateProcessor(operation);
-                default:
-                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                    {
-                        Title = "Invalid operation code.",
-                        Detail = $"'{operation.Code}' is not a valid operation code."
-                    });
-            }
         }
     }
 }

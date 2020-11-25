@@ -12,7 +12,6 @@ namespace JsonApiDotNetCore.Configuration
         private readonly IGenericServiceFactory _genericServiceFactory;
         private readonly IResourceContextProvider _resourceContextProvider;
 
-        /// <nodoc />
         public AtomicOperationProcessorResolver(IGenericServiceFactory genericServiceFactory,
             IResourceContextProvider resourceContextProvider)
         {
@@ -21,19 +20,34 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public IAtomicOperationProcessor ResolveCreateProcessor(AtomicOperationObject operation)
+        public IAtomicOperationProcessor ResolveProcessor(AtomicOperationObject operation)
+        {
+            if (operation == null) throw new ArgumentNullException(nameof(operation));
+
+            switch (operation.Code)
+            {
+             case AtomicOperationCode.Add:
+                 return ResolveCreateProcessor(operation);
+             case AtomicOperationCode.Remove:
+                 return ResolveRemoveProcessor(operation);
+             case AtomicOperationCode.Update:
+                 return ResolveUpdateProcessor(operation);
+            }
+
+            throw new InvalidOperationException($"Atomic operation code '{operation.Code}' is invalid.");
+        }
+
+        private IAtomicOperationProcessor ResolveCreateProcessor(AtomicOperationObject operation)
         {
             return Resolve(operation, typeof(ICreateOperationProcessor<,>));
         }
 
-        /// <inheritdoc />
-        public IAtomicOperationProcessor ResolveRemoveProcessor(AtomicOperationObject operation)
+        private IAtomicOperationProcessor ResolveRemoveProcessor(AtomicOperationObject operation)
         {
             return Resolve(operation, typeof(IRemoveOperationProcessor<,>));
         }
 
-        /// <inheritdoc />
-        public IAtomicOperationProcessor ResolveUpdateProcessor(AtomicOperationObject operation)
+        private IAtomicOperationProcessor ResolveUpdateProcessor(AtomicOperationObject operation)
         {
             return Resolve(operation, typeof(IUpdateOperationProcessor<,>));
         }
@@ -53,6 +67,8 @@ namespace JsonApiDotNetCore.Configuration
             var resourceContext = _resourceContextProvider.GetResourceContext(resourceName);
             if (resourceContext == null)
             {
+                // TODO: @OPS: Should have validated this earlier in the call stack.
+
                 throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
                 {
                     Title = "Unsupported resource type.",
