@@ -5,8 +5,8 @@
 
 Remove-Item _site -Recurse -ErrorAction Ignore
 
-# dotnet build .. --configuration Release
-# Invoke-Expression ./generate-examples.ps1
+dotnet build .. --configuration Release
+Invoke-Expression ./generate-examples.ps1
 
 docfx ./docfx.json
 Copy-Item home/index.html _site/index.html
