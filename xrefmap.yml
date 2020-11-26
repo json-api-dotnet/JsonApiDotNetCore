@@ -2513,25 +2513,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Errors.CannotClearRequiredRelationshipException.CannotClearRequiredRelationshipException
   nameWithType: CannotClearRequiredRelationshipException.CannotClearRequiredRelationshipException
-- uid: JsonApiDotNetCore.Errors.IHasMultipleErrors
-  name: IHasMultipleErrors
-  href: api/JsonApiDotNetCore.Errors.IHasMultipleErrors.html
-  commentId: T:JsonApiDotNetCore.Errors.IHasMultipleErrors
-  fullName: JsonApiDotNetCore.Errors.IHasMultipleErrors
-  nameWithType: IHasMultipleErrors
-- uid: JsonApiDotNetCore.Errors.IHasMultipleErrors.Errors
-  name: Errors
-  href: api/JsonApiDotNetCore.Errors.IHasMultipleErrors.html#JsonApiDotNetCore_Errors_IHasMultipleErrors_Errors
-  commentId: P:JsonApiDotNetCore.Errors.IHasMultipleErrors.Errors
-  fullName: JsonApiDotNetCore.Errors.IHasMultipleErrors.Errors
-  nameWithType: IHasMultipleErrors.Errors
-- uid: JsonApiDotNetCore.Errors.IHasMultipleErrors.Errors*
-  name: Errors
-  href: api/JsonApiDotNetCore.Errors.IHasMultipleErrors.html#JsonApiDotNetCore_Errors_IHasMultipleErrors_Errors_
-  commentId: Overload:JsonApiDotNetCore.Errors.IHasMultipleErrors.Errors
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Errors.IHasMultipleErrors.Errors
-  nameWithType: IHasMultipleErrors.Errors
 - uid: JsonApiDotNetCore.Errors.InvalidConfigurationException
   name: InvalidConfigurationException
   href: api/JsonApiDotNetCore.Errors.InvalidConfigurationException.html
@@ -2570,19 +2551,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Errors.InvalidModelStateException.InvalidModelStateException
   nameWithType: InvalidModelStateException.InvalidModelStateException
-- uid: JsonApiDotNetCore.Errors.InvalidModelStateException.Errors
-  name: Errors
-  href: api/JsonApiDotNetCore.Errors.InvalidModelStateException.html#JsonApiDotNetCore_Errors_InvalidModelStateException_Errors
-  commentId: P:JsonApiDotNetCore.Errors.InvalidModelStateException.Errors
-  fullName: JsonApiDotNetCore.Errors.InvalidModelStateException.Errors
-  nameWithType: InvalidModelStateException.Errors
-- uid: JsonApiDotNetCore.Errors.InvalidModelStateException.Errors*
-  name: Errors
-  href: api/JsonApiDotNetCore.Errors.InvalidModelStateException.html#JsonApiDotNetCore_Errors_InvalidModelStateException_Errors_
-  commentId: Overload:JsonApiDotNetCore.Errors.InvalidModelStateException.Errors
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Errors.InvalidModelStateException.Errors
-  nameWithType: InvalidModelStateException.Errors
 - uid: JsonApiDotNetCore.Errors.InvalidQueryException
   name: InvalidQueryException
   href: api/JsonApiDotNetCore.Errors.InvalidQueryException.html
@@ -2665,6 +2633,15 @@ references:
   commentId: M:JsonApiDotNetCore.Errors.JsonApiException.#ctor(JsonApiDotNetCore.Serialization.Objects.Error,System.Exception)
   fullName: JsonApiDotNetCore.Errors.JsonApiException.JsonApiException(JsonApiDotNetCore.Serialization.Objects.Error, System.Exception)
   nameWithType: JsonApiException.JsonApiException(Error, Exception)
+- uid: JsonApiDotNetCore.Errors.JsonApiException.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Serialization.Objects.Error},System.Exception)
+  name: JsonApiException(IEnumerable<Error>, Exception)
+  href: api/JsonApiDotNetCore.Errors.JsonApiException.html#JsonApiDotNetCore_Errors_JsonApiException__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Serialization_Objects_Error__System_Exception_
+  commentId: M:JsonApiDotNetCore.Errors.JsonApiException.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Serialization.Objects.Error},System.Exception)
+  name.vb: JsonApiException(IEnumerable(Of Error), Exception)
+  fullName: JsonApiDotNetCore.Errors.JsonApiException.JsonApiException(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Serialization.Objects.Error>, System.Exception)
+  fullName.vb: JsonApiDotNetCore.Errors.JsonApiException.JsonApiException(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Serialization.Objects.Error), System.Exception)
+  nameWithType: JsonApiException.JsonApiException(IEnumerable<Error>, Exception)
+  nameWithType.vb: JsonApiException.JsonApiException(IEnumerable(Of Error), Exception)
 - uid: JsonApiDotNetCore.Errors.JsonApiException.#ctor*
   name: JsonApiException
   href: api/JsonApiDotNetCore.Errors.JsonApiException.html#JsonApiDotNetCore_Errors_JsonApiException__ctor_
@@ -2672,19 +2649,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Errors.JsonApiException.JsonApiException
   nameWithType: JsonApiException.JsonApiException
-- uid: JsonApiDotNetCore.Errors.JsonApiException.Error
-  name: Error
-  href: api/JsonApiDotNetCore.Errors.JsonApiException.html#JsonApiDotNetCore_Errors_JsonApiException_Error
-  commentId: P:JsonApiDotNetCore.Errors.JsonApiException.Error
-  fullName: JsonApiDotNetCore.Errors.JsonApiException.Error
-  nameWithType: JsonApiException.Error
-- uid: JsonApiDotNetCore.Errors.JsonApiException.Error*
-  name: Error
-  href: api/JsonApiDotNetCore.Errors.JsonApiException.html#JsonApiDotNetCore_Errors_JsonApiException_Error_
-  commentId: Overload:JsonApiDotNetCore.Errors.JsonApiException.Error
+- uid: JsonApiDotNetCore.Errors.JsonApiException.Errors
+  name: Errors
+  href: api/JsonApiDotNetCore.Errors.JsonApiException.html#JsonApiDotNetCore_Errors_JsonApiException_Errors
+  commentId: P:JsonApiDotNetCore.Errors.JsonApiException.Errors
+  fullName: JsonApiDotNetCore.Errors.JsonApiException.Errors
+  nameWithType: JsonApiException.Errors
+- uid: JsonApiDotNetCore.Errors.JsonApiException.Errors*
+  name: Errors
+  href: api/JsonApiDotNetCore.Errors.JsonApiException.html#JsonApiDotNetCore_Errors_JsonApiException_Errors_
+  commentId: Overload:JsonApiDotNetCore.Errors.JsonApiException.Errors
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Errors.JsonApiException.Error
-  nameWithType: JsonApiException.Error
+  fullName: JsonApiDotNetCore.Errors.JsonApiException.Errors
+  nameWithType: JsonApiException.Errors
 - uid: JsonApiDotNetCore.Errors.JsonApiException.Message
   name: Message
   href: api/JsonApiDotNetCore.Errors.JsonApiException.html#JsonApiDotNetCore_Errors_JsonApiException_Message
@@ -2905,19 +2882,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.ResourcesInRelationshipsNotFoundException
   nameWithType: ResourcesInRelationshipsNotFoundException.ResourcesInRelationshipsNotFoundException
-- uid: JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.Errors
-  name: Errors
-  href: api/JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.html#JsonApiDotNetCore_Errors_ResourcesInRelationshipsNotFoundException_Errors
-  commentId: P:JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.Errors
-  fullName: JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.Errors
-  nameWithType: ResourcesInRelationshipsNotFoundException.Errors
-- uid: JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.Errors*
-  name: Errors
-  href: api/JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.html#JsonApiDotNetCore_Errors_ResourcesInRelationshipsNotFoundException_Errors_
-  commentId: Overload:JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.Errors
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.Errors
-  nameWithType: ResourcesInRelationshipsNotFoundException.Errors
 - uid: JsonApiDotNetCore.Errors.ResourceTypeMismatchException
   name: ResourceTypeMismatchException
   href: api/JsonApiDotNetCore.Errors.ResourceTypeMismatchException.html

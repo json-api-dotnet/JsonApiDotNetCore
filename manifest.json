@@ -465,19 +465,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.CannotClearRequiredRelationshipException.html",
-          "hash": "ryCQ6FKcOwlYSuqycUcNYg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Errors.IHasMultipleErrors.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Errors.IHasMultipleErrors.html",
-          "hash": "IY81UGaks3Y8BkmNkMj+Ew=="
+          "hash": "Wz4Wy57kpf7QpuyOrUURQg=="
         }
       },
       "is_incremental": false,
@@ -501,7 +489,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.InvalidModelStateException.html",
-          "hash": "lalD8XFaDliJVz0GRBiX1A=="
+          "hash": "5XMHdQUOG9UR/OIY1DosAA=="
         }
       },
       "is_incremental": false,
@@ -513,7 +501,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.InvalidQueryException.html",
-          "hash": "7MBXCnX5TmAmVg8W2pILwQ=="
+          "hash": "4zGzIj7NrTsk17zwle/b9Q=="
         }
       },
       "is_incremental": false,
@@ -525,7 +513,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.InvalidQueryStringParameterException.html",
-          "hash": "RE/9IOTl6uIIl1zaJZfP4Q=="
+          "hash": "Xyuk2WkJyas6s25wY86e4w=="
         }
       },
       "is_incremental": false,
@@ -537,7 +525,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.InvalidRequestBodyException.html",
-          "hash": "Emxm/+m1G/6hhUq/Egz8uw=="
+          "hash": "fx0uAbFKXP704coFERXcrw=="
         }
       },
       "is_incremental": false,
@@ -549,7 +537,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.JsonApiException.html",
-          "hash": "YvbHVEXawHoK5ih6HfVuzg=="
+          "hash": "Cwc/bb6CAkr5I1lPbfigEA=="
         }
       },
       "is_incremental": false,
@@ -573,7 +561,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.RelationshipNotFoundException.html",
-          "hash": "rHU/xEN+lrpbhiGjxGg2AQ=="
+          "hash": "cXKHQukj82cBqkkftVYo2A=="
         }
       },
       "is_incremental": false,
@@ -585,7 +573,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.html",
-          "hash": "mdRGwlkfTgLRRD9HkuA76A=="
+          "hash": "1wr9HosHy2bftQdroaKS5g=="
         }
       },
       "is_incremental": false,
@@ -597,7 +585,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.ResourceAlreadyExistsException.html",
-          "hash": "NcZ1SNDLLR9ohETF/4ljZw=="
+          "hash": "6sajg+8ooVDaWLecEgWoUg=="
         }
       },
       "is_incremental": false,
@@ -609,7 +597,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException.html",
-          "hash": "VGeAH0h4IbFlvky8ls1ebA=="
+          "hash": "ELjWDPLHEAlSyq10rmrKJw=="
         }
       },
       "is_incremental": false,
@@ -621,7 +609,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.ResourceIdMismatchException.html",
-          "hash": "rqafQ/Dc8GkC/JsIKBfY4g=="
+          "hash": "euEOOujPbdCIWIf1WwFt4w=="
         }
       },
       "is_incremental": false,
@@ -633,7 +621,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.ResourceNotFoundException.html",
-          "hash": "D05oGxcdr+XvgAMtUEbYLg=="
+          "hash": "tUxOxEXwG+rVV46jUnaHHQ=="
         }
       },
       "is_incremental": false,
@@ -645,7 +633,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.ResourceTypeMismatchException.html",
-          "hash": "4FV5YD4Og6D+k6Tz6imnDg=="
+          "hash": "zKOpwPN68vuCtp5tQ5OhEA=="
         }
       },
       "is_incremental": false,
@@ -657,7 +645,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.html",
-          "hash": "d8I74fpxTHMeKKHfGoYm3Q=="
+          "hash": "ibrIt8z3zt65T5LtVsJWiQ=="
         }
       },
       "is_incremental": false,
@@ -669,7 +657,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.ToManyRelationshipRequiredException.html",
-          "hash": "AgcO/hrylath/3PMAH0eng=="
+          "hash": "lBgmr6J3lapvqVmWY4TiUg=="
         }
       },
       "is_incremental": false,
@@ -681,7 +669,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.UnsuccessfulActionResultException.html",
-          "hash": "t9ZeKLzoYPxVSVAeaSA3tw=="
+          "hash": "G7MOnIkgRWXqIn7sokNo9Q=="
         }
       },
       "is_incremental": false,
@@ -693,7 +681,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.html",
-          "hash": "MDls0JnTTEO2/rUoFm0mLg=="
+          "hash": "PnTFkUQBPqgps69BMfVJpQ=="
         }
       },
       "is_incremental": false,
@@ -1173,7 +1161,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.ExceptionHandler.html",
-          "hash": "/LODC+n8GJPSceHf5pEvUQ=="
+          "hash": "WM8F+hq97XnxPu1PxDNBpQ=="
         }
       },
       "is_incremental": false,
@@ -4077,7 +4065,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "F6nD/ibdQaEULy+xx8DPDg=="
+          "hash": "LDSzbLLLMHF9sTRBAS+7/w=="
         }
       },
       "is_incremental": false,
@@ -4536,7 +4524,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 337,
+          "total_file_count": 336,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
