@@ -10,14 +10,13 @@ public class Person : Identifiable
 }
 ```
 
-## Public name
+## Name
 
-There are two ways the public attribute name is determined:
+There are two ways the exposed attribute name is determined:
 
 1. Using the configured [naming convention](~/usage/options.md#custom-serializer-settings).
 
-
-2. Individually using the attribute's constructor
+2. Individually using the attribute's constructor.
 ```c#
 public class Person : Identifiable
 {
@@ -43,7 +42,7 @@ This can be overridden per attribute.
 Attributes can be marked to allow returning their value in responses. When not allowed and requested using `?fields=`, it results in an HTTP 400 response.
 
 ```c#
-public class User : Identifiable<int>
+public class User : Identifiable
 {
     [Attr(Capabilities = ~AttrCapabilities.AllowView)]
     public string Password { get; set; }
@@ -55,7 +54,7 @@ public class User : Identifiable<int>
 Attributes can be marked as creatable, which will allow `POST` requests to assign a value to them. When sent but not allowed, an HTTP 422 response is returned.
 
 ```c#
-public class Person : Identifiable<int>
+public class Person : Identifiable
 {
     [Attr(Capabilities = AttrCapabilities.AllowCreate)]
     public string CreatorName { get; set; }
@@ -67,7 +66,7 @@ public class Person : Identifiable<int>
 Attributes can be marked as changeable, which will allow `PATCH` requests to update them. When sent but not allowed, an HTTP 422 response is returned.
 
 ```c#
-public class Person : Identifiable<int>
+public class Person : Identifiable
 {
     [Attr(Capabilities = AttrCapabilities.AllowChange)]
     public string FirstName { get; set; }
@@ -79,7 +78,7 @@ public class Person : Identifiable<int>
 Attributes can be marked to allow filtering and/or sorting. When not allowed, it results in an HTTP 400 response.
 
 ```c#
-public class Person : Identifiable<int>
+public class Person : Identifiable
 {
     [Attr(Capabilities = AttrCapabilities.AllowSort | AttrCapabilities.AllowFilter)]
     public string FirstName { get; set; }

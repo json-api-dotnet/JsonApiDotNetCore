@@ -5,30 +5,24 @@ they should be labeled with the appropriate attribute (either `HasOne`, `HasMany
 
 ## HasOne
 
-Dependent relationships should contain a property in the form `{RelationshipName}Id`.
-For example, a TodoItem may have an Owner and so the Id attribute should be OwnerId.
+This exposes a to-one relationship.
 
 ```c#
-public class TodoItem : Identifiable<int>
+public class TodoItem : Identifiable
 {
-    [Attr]
-    public string Description { get; set; }
-
     [HasOne]
     public Person Owner { get; set; }
-    public int OwnerId { get; set; }
 }
 ```
 
 ## HasMany
 
-```c#
-public class Person : Identifiable<int>
-{
-    [Attr(PublicName = "first-name")]
-    public string FirstName { get; set; }
+This exposes a to-many relationship.
 
-    [HasMany(PublicName = "todo-items")]
+```c#
+public class Person : Identifiable
+{
+    [HasMany]
     public ICollection<TodoItem> TodoItems { get; set; }
 }
 ```
@@ -44,11 +38,38 @@ However, under the covers it will use the join type and Entity Framework Core's 
 public class Article : Identifiable
 {
     [NotMapped] // tells Entity Framework Core to ignore this property
-    [HasManyThrough(nameof(ArticleTags))] // tells JsonApiDotNetCore to use this as an alias to ArticleTags.Tags
+    [HasManyThrough(nameof(ArticleTags))] // tells JsonApiDotNetCore to use the join table below
     public ICollection<Tag> Tags { get; set; }
 
-    // this is the Entity Framework Core join relationship
+    // this is the Entity Framework Core navigation to the join table
     public ICollection<ArticleTag> ArticleTags { get; set; }
+}
+```
+
+## Name
+
+There are two ways the exposed relationship name is determined:
+
+1. Using the configured [naming convention](~/usage/options.md#custom-serializer-settings).
+
+2. Individually using the attribute's constructor.
+```c#
+public class TodoItem : Identifiable
+{
+    [HasOne(PublicName = "item-owner")]
+    public Person Owner { get; set; }
+}
+```
+
+## Includibility
+
+Relationships can be marked to disallow including them using the `?include=` query string parameter. When not allowed, it results in an HTTP 400 response.
+
+```c#
+public class TodoItem : Identifiable
+{
+    [HasOne(CanInclude: false)]
+    public Person Owner { get; set; }
 }
 ```
 

@@ -71,7 +71,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-## Public Resource Name
+## Resource Name
 
 The public resource name is exposed through the `type` member in the json:api payload. This can be configured by the following approaches (in order of priority):
 
