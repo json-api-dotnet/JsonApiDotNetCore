@@ -13,23 +13,21 @@ namespace JsonApiDotNetCore.Errors
     /// <summary>
     /// The error that is thrown when model state validation fails.
     /// </summary>
-    public class InvalidModelStateException : Exception, IHasMultipleErrors
+    public class InvalidModelStateException : JsonApiException
     {
-        public IReadOnlyCollection<Error> Errors { get; }
-
         public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType,
             bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
+            : base(FromModelState(modelState, resourceType, includeExceptionStackTraceInErrors, namingStrategy))
         {
-            if (modelState == null) throw new ArgumentNullException(nameof(modelState));
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
-            if (namingStrategy == null) throw new ArgumentNullException(nameof(namingStrategy));
-            
-            Errors = FromModelState(modelState, resourceType, includeExceptionStackTraceInErrors, namingStrategy);
         }
 
         private static IReadOnlyCollection<Error> FromModelState(ModelStateDictionary modelState, Type resourceType,
             bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
         {
+            if (modelState == null) throw new ArgumentNullException(nameof(modelState));
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            if (namingStrategy == null) throw new ArgumentNullException(nameof(namingStrategy));
+
             List<Error> errors = new List<Error>();
 
             foreach (var (propertyName, entry) in modelState.Where(x => x.Value.Errors.Any()))
@@ -40,7 +38,7 @@ namespace JsonApiDotNetCore.Errors
                 {
                     if (modelError.Exception is JsonApiException jsonApiException)
                     {
-                        errors.Add(jsonApiException.Error);
+                        errors.AddRange(jsonApiException.Errors);
                     }
                     else
                     {
