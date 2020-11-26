@@ -11,15 +11,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creating
 {
-    public sealed class AtomicAddResourceWithToOneRelationshipTests
+    public sealed class AtomicCreateResourceWithToOneRelationshipTests
         : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicAddResourceWithToOneRelationshipTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicCreateResourceWithToOneRelationshipTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
         }
 
         [Fact]
-        public async Task Can_add_resource_with_ToOne_relationship()
+        public async Task Can_create_resource_with_ToOne_relationship()
         {
             // Arrange
             var existingCompany = _fakers.RecordCompany.Generate();
@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
                 }
             };
             
-            var route = "/operations";
+            var route = "/api/v1/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<AtomicOperationsDocument>(route, requestBody);
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
         }
 
         [Fact]
-        public async Task Can_add_resources_with_ToOne_relationship()
+        public async Task Can_create_resources_with_ToOne_relationship()
         {
             // Arrange
             const int elementCount = 5;
@@ -151,7 +151,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
                 atomic__operations = operationElements
             };
 
-            var route = "/operations";
+            var route = "/api/v1/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<AtomicOperationsDocument>(route, requestBody);
@@ -193,7 +193,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
         }
 
         [Fact]
-        public async Task Can_add_resource_with_ToOne_relationship_using_local_ID()
+        public async Task Can_create_resource_with_ToOne_relationship_using_local_ID()
         {
             // Arrange
             var newCompany = _fakers.RecordCompany.Generate();
@@ -245,7 +245,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
                 }
             };
             
-            var route = "/operations";
+            var route = "/api/v1/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<AtomicOperationsDocument>(route, requestBody);

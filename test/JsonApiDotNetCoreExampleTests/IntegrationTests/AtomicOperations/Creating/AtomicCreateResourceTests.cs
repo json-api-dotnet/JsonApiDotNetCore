@@ -11,15 +11,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creating
 {
-    public sealed class AtomicAddResourceTests
+    public sealed class AtomicCreateResourceTests
         : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicAddResourceTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicCreateResourceTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
         }
 
         [Fact]
-        public async Task Can_add_resource()
+        public async Task Can_create_resource()
         {
             // Arrange
             var newArtistName = _fakers.Performer.Generate().ArtistName;
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
                 }
             };
             
-            var route = "/operations";
+            var route = "/api/v1/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<AtomicOperationsDocument>(route, requestBody);
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
         }
 
         [Fact]
-        public async Task Can_add_resource_without_attributes_or_relationships()
+        public async Task Can_create_resource_without_attributes_or_relationships()
         {
             // Arrange
             var requestBody = new
@@ -108,7 +108,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
                 }
             };
             
-            var route = "/operations";
+            var route = "/api/v1/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<AtomicOperationsDocument>(route, requestBody);
@@ -135,7 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
         }
 
         [Fact]
-        public async Task Can_add_resources()
+        public async Task Can_create_resources()
         {
             // Arrange
             const int elementCount = 5;
@@ -167,7 +167,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Add
                 atomic__operations = operationElements
             };
             
-            var route = "/operations";
+            var route = "/api/v1/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<AtomicOperationsDocument>(route, requestBody);

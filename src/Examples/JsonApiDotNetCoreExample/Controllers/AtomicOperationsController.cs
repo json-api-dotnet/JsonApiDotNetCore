@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    [DisableRoutingConvention, Route("/operations")]
+    [DisableRoutingConvention, Route("/api/v1/operations")]
     public class AtomicOperationsController : JsonApiAtomicOperationsController
     {
         public AtomicOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
