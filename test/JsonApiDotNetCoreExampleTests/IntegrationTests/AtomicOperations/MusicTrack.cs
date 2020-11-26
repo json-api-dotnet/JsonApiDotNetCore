@@ -25,6 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
         [HasOne]
         public RecordCompany OwnedBy { get; set; }
 
+        [HasMany]
         public IList<Performer> Performers { get; set; }
     }
 }

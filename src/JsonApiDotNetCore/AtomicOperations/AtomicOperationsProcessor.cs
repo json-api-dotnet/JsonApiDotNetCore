@@ -65,15 +65,20 @@ namespace JsonApiDotNetCore.AtomicOperations
                 await transaction.CommitAsync(cancellationToken);
                 return results;
             }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
             catch (JsonApiException exception)
             {
                 await transaction.RollbackAsync(cancellationToken);
 
-                throw new JsonApiException(new Error(exception.Error.StatusCode)
+                foreach (var error in exception.Errors)
                 {
-                    Title = "Transaction failed on operation.",
-                    Detail = $"Transaction failed on operation[{operationIndex}] ({lastAttemptedOperation})."
-                }, exception);
+                    error.Source.Pointer = $"/atomic:operations[{operationIndex}]";
+                }
+
+                throw;
             }
             catch (Exception exception)
             {
@@ -81,8 +86,13 @@ namespace JsonApiDotNetCore.AtomicOperations
 
                 throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
                 {
-                    Title = "Transaction failed on operation.",
-                    Detail = $"Transaction failed on operation[{operationIndex}] ({lastAttemptedOperation}) for an unexpected reason."
+                    Title = "An unhandled error occurred while processing an atomic operation in this request.",
+                    Detail = exception.Message,
+                    Source =
+                    {
+                        Pointer = $"/atomic:operations[{operationIndex}]"
+                    }
+
                 }, exception);
             }
         }
