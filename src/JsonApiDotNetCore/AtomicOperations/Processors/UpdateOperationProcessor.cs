@@ -19,15 +19,15 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         private readonly IUpdateService<TResource, TId> _service;
         private readonly IJsonApiDeserializer _deserializer;
         private readonly IResourceObjectBuilder _resourceObjectBuilder;
-        private readonly IResourceGraph _resourceGraph;
+        private readonly IResourceContextProvider _resourceContextProvider;
 
         public UpdateOperationProcessor(IUpdateService<TResource, TId> service, IJsonApiDeserializer deserializer,
-            IResourceObjectBuilder resourceObjectBuilder, IResourceGraph resourceGraph)
+            IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider resourceContextProvider)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
             _resourceObjectBuilder = resourceObjectBuilder ?? throw new ArgumentNullException(nameof(resourceObjectBuilder));
-            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
         }
 
         public async Task<AtomicResultObject> ProcessAsync(AtomicOperationObject operation, CancellationToken cancellationToken)
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
 
             if (result != null)
             {
-                ResourceContext resourceContext = _resourceGraph.GetResourceContext(operation.SingleData.Type);
+                ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(operation.SingleData.Type);
                 data = _resourceObjectBuilder.Build(result, resourceContext.Attributes, resourceContext.Relationships);
             }
 
@@ -67,8 +67,8 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         where TResource : class, IIdentifiable<int>
     {
         public UpdateOperationProcessor(IUpdateService<TResource, int> service, IJsonApiDeserializer deserializer,
-            IResourceObjectBuilder resourceObjectBuilder, IResourceGraph resourceGraph)
-            : base(service, deserializer, resourceObjectBuilder, resourceGraph)
+            IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider resourceContextProvider)
+            : base(service, deserializer, resourceObjectBuilder, resourceContextProvider)
         {
         }
     }

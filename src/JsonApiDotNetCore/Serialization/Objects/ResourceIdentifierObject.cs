@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         public string Id { get; set; }
 
         [JsonProperty("lid", NullValueHandling = NullValueHandling.Ignore, Order = -2)]
-        public string LocalId { get; set; }
+        public string Lid { get; set; }
 
         public override string ToString()
         {
@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         {
             WriteMember(builder, "type", Type);
             WriteMember(builder, "id", Id);
-            WriteMember(builder, "lid", LocalId);
+            WriteMember(builder, "lid", Lid);
         }
 
         protected static void WriteMember(StringBuilder builder, string memberName, string memberValue)

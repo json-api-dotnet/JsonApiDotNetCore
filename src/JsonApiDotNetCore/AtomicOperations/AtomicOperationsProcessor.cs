@@ -9,6 +9,7 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,21 +19,23 @@ namespace JsonApiDotNetCore.AtomicOperations
     public class AtomicOperationsProcessor : IAtomicOperationsProcessor
     {
         private readonly IAtomicOperationProcessorResolver _resolver;
+        private readonly ILocalIdTracker _localIdTracker;
         private readonly DbContext _dbContext;
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
-        private readonly IResourceGraph _resourceGraph;
+        private readonly IResourceContextProvider _resourceContextProvider;
 
-        public AtomicOperationsProcessor(IAtomicOperationProcessorResolver resolver, IJsonApiRequest request,
-            ITargetedFields targetedFields, IResourceGraph resourceGraph,
+        public AtomicOperationsProcessor(IAtomicOperationProcessorResolver resolver, ILocalIdTracker localIdTracker,
+            IJsonApiRequest request, ITargetedFields targetedFields, IResourceContextProvider resourceContextProvider,
             IEnumerable<IDbContextResolver> dbContextResolvers)
         {
             if (dbContextResolvers == null) throw new ArgumentNullException(nameof(dbContextResolvers));
 
             _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
+            _localIdTracker = localIdTracker ?? throw new ArgumentNullException(nameof(localIdTracker));
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
-            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
 
             var resolvers = dbContextResolvers.ToArray();
             if (resolvers.Length != 1)
@@ -49,17 +52,14 @@ namespace JsonApiDotNetCore.AtomicOperations
             if (operations == null) throw new ArgumentNullException(nameof(operations));
 
             var results = new List<AtomicResultObject>();
-            var operationIndex = 0;
-            AtomicOperationCode? lastAttemptedOperation = null; // used for error messages only
 
             await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
             try
             {
                 foreach (var operation in operations)
                 {
-                    lastAttemptedOperation = operation.Code;
-                    await ProcessOperation(operation, results, cancellationToken);
-                    operationIndex++;
+                    var result = await ProcessOperation(operation, cancellationToken);
+                    results.Add(result);
                 }
 
                 await transaction.CommitAsync(cancellationToken);
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
                 foreach (var error in exception.Errors)
                 {
-                    error.Source.Pointer = $"/atomic:operations[{operationIndex}]";
+                    error.Source.Pointer = $"/atomic:operations[{results.Count}]";
                 }
 
                 throw;
@@ -90,97 +90,102 @@ namespace JsonApiDotNetCore.AtomicOperations
                     Detail = exception.Message,
                     Source =
                     {
-                        Pointer = $"/atomic:operations[{operationIndex}]"
+                        Pointer = $"/atomic:operations[{results.Count}]"
                     }
 
                 }, exception);
             }
         }
 
-        private async Task ProcessOperation(AtomicOperationObject operation, List<AtomicResultObject> results, CancellationToken cancellationToken)
+        private async Task<AtomicResultObject> ProcessOperation(AtomicOperationObject operation, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            ReplaceLocalIdsInResourceObject(operation.SingleData, results);
-            ReplaceLocalIdsInRef(operation.Ref, results);
+            ReplaceLocalIdsInResourceObject(operation.SingleData);
+            ReplaceLocalIdInResourceIdentifierObject(operation.Ref);
 
-            string type = null;
+            string resourceName = null;
             if (operation.Code == AtomicOperationCode.Add || operation.Code == AtomicOperationCode.Update)
             {
-                type = operation.SingleData.Type;
-            }
-            else if (operation.Code == AtomicOperationCode.Remove)
-            {
-                type = operation.Ref.Type;
+                resourceName = operation.SingleData?.Type;
+                if (resourceName == null)
+                {
+                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = "The data.type element is required."
+                    });
+                }
             }
 
-            ((JsonApiRequest)_request).PrimaryResource = _resourceGraph.GetResourceContext(type);
-            
+            if (operation.Code == AtomicOperationCode.Remove)
+            {
+                resourceName = operation.Ref?.Type;
+                if (resourceName == null)
+                {
+                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = "The ref.type element is required."
+                    });
+                }
+            }
+
+            var resourceContext = _resourceContextProvider.GetResourceContext(resourceName);
+            if (resourceContext == null)
+            {
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "Request body includes unknown resource type.",
+                    Detail = $"Resource type '{resourceName}' does not exist."
+                });
+            }
+
+            ((JsonApiRequest)_request).PrimaryResource = resourceContext;
+
             _targetedFields.Attributes.Clear();
             _targetedFields.Relationships.Clear();
 
             var processor = _resolver.ResolveProcessor(operation);
-            var result = await processor.ProcessAsync(operation, cancellationToken);
-            results.Add(result);
+            return await processor.ProcessAsync(operation, cancellationToken);
         }
 
-        private void ReplaceLocalIdsInResourceObject(ResourceObject resourceObject, List<AtomicResultObject> results)
+        private void ReplaceLocalIdsInResourceObject(ResourceObject resourceObject)
         {
-            if (resourceObject == null)
-                return;
-
-            // it is strange to me that a top level resource object might use a lid.
-            // by not replacing it, we avoid a case where the first operation is an 'add' with an 'lid'
-            // and we would be unable to locate the matching 'lid' in 'results'
-            //
-            // we also create a scenario where I might try to update a resource I just created
-            // in this case, the 'data.id' will be null, but the 'ref.id' will be replaced by the correct 'id' from 'results'
-            // 
-            // if(HasLocalId(resourceObject))
-            //     resourceObject.Id = GetIdFromLocalId(results, resourceObject.LocalId);
-
-            if (resourceObject.Relationships != null)
+            if (resourceObject?.Relationships != null)
             {
-                foreach (var relationshipDictionary in resourceObject.Relationships)
+                foreach (var relationshipEntry in resourceObject.Relationships.Values)
                 {
-                    if (relationshipDictionary.Value.IsManyData)
+                    if (relationshipEntry.IsManyData)
                     {
-                        foreach (var relationship in relationshipDictionary.Value.ManyData)
-                            if (HasLocalId(relationship))
-                                relationship.Id = GetIdFromLocalId(results, relationship.LocalId);
+                        foreach (var relationship in relationshipEntry.ManyData)
+                        {
+                            ReplaceLocalIdInResourceIdentifierObject(relationship);
+                        }
                     }
                     else
                     {
-                        var relationship = relationshipDictionary.Value.SingleData;
-                        if (HasLocalId(relationship))
-                            relationship.Id = GetIdFromLocalId(results, relationship.LocalId);
+                        var relationship = relationshipEntry.SingleData;
+
+                        ReplaceLocalIdInResourceIdentifierObject(relationship);
                     }
                 }
             }
         }
 
-        private void ReplaceLocalIdsInRef(AtomicReference reference, List<AtomicResultObject> results)
+        private void ReplaceLocalIdInResourceIdentifierObject(ResourceIdentifierObject resourceIdentifierObject)
         {
-            if (reference == null) return;
-            if (HasLocalId(reference))
-                reference.Id = GetIdFromLocalId(results, reference.LocalId);
-        }
-
-        private bool HasLocalId(ResourceIdentifierObject rio) => string.IsNullOrEmpty(rio.LocalId) == false;
-
-        private string GetIdFromLocalId(List<AtomicResultObject> results, string localId)
-        {
-            var referencedOp = results.FirstOrDefault(o => o.SingleData.LocalId == localId);
-            if (referencedOp == null)
+            if (resourceIdentifierObject?.Lid != null)
             {
-                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                if (!_localIdTracker.IsAssigned(resourceIdentifierObject.Lid))
                 {
-                    Title = "Could not locate lid in document.",
-                    Detail = $"Could not locate lid '{localId}' in document."
-                });
-            }
+                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = "Server-generated value for local ID is not available at this point.",
+                        Detail = $"Server-generated value for local ID '{resourceIdentifierObject.Lid}' is not available at this point."
+                    });
+                }
 
-            return referencedOp.SingleData.Id;
+                resourceIdentifierObject.Id = _localIdTracker.GetAssignedValue(resourceIdentifierObject.Lid);
+            }
         }
     }
 }

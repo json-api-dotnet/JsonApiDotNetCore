@@ -274,6 +274,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             _services.AddScoped<IAtomicOperationsProcessor, AtomicOperationsProcessor>();
             _services.AddScoped<IAtomicOperationProcessorResolver, AtomicOperationProcessorResolver>();
+            _services.AddScoped<ILocalIdTracker, LocalIdTracker>();
 
             _services.AddScoped(typeof(ICreateOperationProcessor<>), typeof(CreateOperationProcessor<>));
             _services.AddScoped(typeof(ICreateOperationProcessor<,>), typeof(CreateOperationProcessor<,>));
