@@ -36,7 +36,7 @@ after_build:
             Copy-Item origin_site/.git _site -recurse
             Copy-Item CNAME _site/CNAME
             Copy-Item home/index.html _site/index.html
-            Copy-Item home/favicon.icon _site/favicon.icon
+            Copy-Item home/favicon.ico _site/favicon.ico
             Copy-Item home/assets/* _site/styles/ -Recurse
             CD _site
             git add -A 2>&1
