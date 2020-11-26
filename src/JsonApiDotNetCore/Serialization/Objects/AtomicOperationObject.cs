@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         public AtomicOperationCode Code { get; set; }
 
         [JsonProperty("ref", NullValueHandling = NullValueHandling.Ignore)]
-        public AtomicResourceReference Ref { get; set; }
+        public AtomicReference Ref { get; set; }
 
         [JsonProperty("href", NullValueHandling = NullValueHandling.Ignore)]
         public string Href { get; set; }

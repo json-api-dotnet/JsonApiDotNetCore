@@ -159,7 +159,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
         }
 
-        private void ReplaceLocalIdsInRef(AtomicResourceReference reference, List<AtomicResultObject> results)
+        private void ReplaceLocalIdsInRef(AtomicReference reference, List<AtomicResultObject> results)
         {
             if (reference == null) return;
             if (HasLocalId(reference))

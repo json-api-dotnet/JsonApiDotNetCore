@@ -1,3 +1,4 @@
+using System.Text;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Objects
@@ -15,7 +16,35 @@ namespace JsonApiDotNetCore.Serialization.Objects
 
         public override string ToString()
         {
-            return $"(type: {Type}, id: {Id}, lid: {LocalId})";
+            var builder = new StringBuilder();
+
+            WriteMembers(builder);
+            builder.Insert(0, GetType().Name + ": ");
+
+            return builder.ToString();
+        }
+
+        protected virtual void WriteMembers(StringBuilder builder)
+        {
+            WriteMember(builder, "type", Type);
+            WriteMember(builder, "id", Id);
+            WriteMember(builder, "lid", LocalId);
+        }
+
+        protected static void WriteMember(StringBuilder builder, string memberName, string memberValue)
+        {
+            if (memberValue != null)
+            {
+                if (builder.Length > 0)
+                {
+                    builder.Append(", ");
+                }
+
+                builder.Append(memberName);
+                builder.Append("=\"");
+                builder.Append(memberValue);
+                builder.Append("\"");
+            }
         }
     }
 }
