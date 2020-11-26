@@ -90,7 +90,7 @@ public class OrderLineController : JsonApiController&lt;OrderLine&gt;
     }
 }
 </code></pre><pre><code class="lang-http">GET /orderLines HTTP/1.1
-</code></pre><p>The public name of the resource (<a href="resource-graph.html#public-resource-name">which can be customized</a>) is used for the route, instead of the controller name.</p>
+</code></pre><p>The exposed name of the resource (<a href="resource-graph.html#resource-name">which can be customized</a>) is used for the route, instead of the controller name.</p>
 <h3 id="non-jsonapi-controllers">Non-json:api controllers</h3>
 <p>If a controller does not inherit from <code>JsonApiController&lt;TResource&gt;</code>, the <a href="options.html#custom-serializer-settings">configured naming convention</a> is applied to the name of the controller.</p>
 <pre><code class="lang-c#">public class OrderLineController : ControllerBase { }
@@ -106,7 +106,7 @@ public class OrderLineController : JsonApiController&lt;OrderLine&gt;
     {
     }
 }
-</code></pre><p>It is required to match your custom url with the public name of the associated resource.</p>
+</code></pre><p>It is required to match your custom url with the exposed name of the associated resource.</p>
 <h2 id="advanced-usage-custom-routing-convention">Advanced Usage: Custom Routing Convention</h2>
 <p>It is possible to replace the built-in routing convention with a <a href="https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-3.1#sample-custom-routing-convention">custom routing convention</a> by registering an implementation of <code>IJsonApiRoutingConvention</code>.</p>
 <pre><code class="lang-c#">public void ConfigureServices(IServiceCollection services)

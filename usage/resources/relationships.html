@@ -72,24 +72,17 @@
 <p>In order for navigation properties to be identified in the model,
 they should be labeled with the appropriate attribute (either <code>HasOne</code>, <code>HasMany</code> or <code>HasManyThrough</code>).</p>
 <h2 id="hasone">HasOne</h2>
-<p>Dependent relationships should contain a property in the form <code>{RelationshipName}Id</code>.
-For example, a TodoItem may have an Owner and so the Id attribute should be OwnerId.</p>
-<pre><code class="lang-c#">public class TodoItem : Identifiable&lt;int&gt;
+<p>This exposes a to-one relationship.</p>
+<pre><code class="lang-c#">public class TodoItem : Identifiable
 {
-    [Attr]
-    public string Description { get; set; }
-
     [HasOne]
     public Person Owner { get; set; }
-    public int OwnerId { get; set; }
 }
 </code></pre><h2 id="hasmany">HasMany</h2>
-<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
+<p>This exposes a to-many relationship.</p>
+<pre><code class="lang-c#">public class Person : Identifiable
 {
-    [Attr(PublicName = &quot;first-name&quot;)]
-    public string FirstName { get; set; }
-
-    [HasMany(PublicName = &quot;todo-items&quot;)]
+    [HasMany]
     public ICollection&lt;TodoItem&gt; TodoItems { get; set; }
 }
 </code></pre><h2 id="hasmanythrough">HasManyThrough</h2>
@@ -100,11 +93,31 @@ However, under the covers it will use the join type and Entity Framework Core&#3
 <pre><code class="lang-c#">public class Article : Identifiable
 {
     [NotMapped] // tells Entity Framework Core to ignore this property
-    [HasManyThrough(nameof(ArticleTags))] // tells JsonApiDotNetCore to use this as an alias to ArticleTags.Tags
+    [HasManyThrough(nameof(ArticleTags))] // tells JsonApiDotNetCore to use the join table below
     public ICollection&lt;Tag&gt; Tags { get; set; }
 
-    // this is the Entity Framework Core join relationship
+    // this is the Entity Framework Core navigation to the join table
     public ICollection&lt;ArticleTag&gt; ArticleTags { get; set; }
+}
+</code></pre><h2 id="name">Name</h2>
+<p>There are two ways the exposed relationship name is determined:</p>
+<ol>
+<li><p>Using the configured <a href="../options.html#custom-serializer-settings">naming convention</a>.</p>
+</li>
+<li><p>Individually using the attribute&#39;s constructor.</p>
+<pre><code class="lang-c#">public class TodoItem : Identifiable
+{
+ [HasOne(PublicName = &quot;item-owner&quot;)]
+ public Person Owner { get; set; }
+}
+</code></pre></li>
+</ol>
+<h2 id="includibility">Includibility</h2>
+<p>Relationships can be marked to disallow including them using the <code>?include=</code> query string parameter. When not allowed, it results in an HTTP 400 response.</p>
+<pre><code class="lang-c#">public class TodoItem : Identifiable
+{
+    [HasOne(CanInclude: false)]
+    public Person Owner { get; set; }
 }
 </code></pre><h1 id="eager-loading">Eager loading</h1>
 <p><em>since v4.0</em></p>
