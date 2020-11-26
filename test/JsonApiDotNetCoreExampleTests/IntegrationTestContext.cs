@@ -145,6 +145,8 @@ namespace JsonApiDotNetCoreExampleTests
 
             if (!string.IsNullOrEmpty(requestText))
             {
+                requestText = requestText.Replace("atomic__", "atomic:");
+
                 request.Content = new StringContent(requestText);
 
                 if (contentType != null)
