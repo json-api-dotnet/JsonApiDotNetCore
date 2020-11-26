@@ -55,7 +55,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             {
                 if (exception is NoPermissionException noPermissionException)
                 {
-                    noPermissionException.Error.Meta.Data.Add("support",
+                    noPermissionException.Errors[0].Meta.Data.Add("support",
                         "For support, email to: support@company.com?subject=" + noPermissionException.CustomerCode);
                 }
 

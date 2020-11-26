@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Middleware
                 return LogLevel.None;
             }
 
-            if (exception is JsonApiException || exception is InvalidModelStateException)
+            if (exception is JsonApiException)
             {
                 return LogLevel.Information;
             }
@@ -63,36 +63,38 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
 
-            return exception is JsonApiException jsonApiException
-                ? jsonApiException.Error.Title
-                : exception.Message;
+            return exception.Message;
         }
 
         protected virtual ErrorDocument CreateErrorDocument(Exception exception)
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
 
-            if (exception is IHasMultipleErrors exceptionWithMultipleErrors)
-            {
-                return new ErrorDocument(exceptionWithMultipleErrors.Errors);
-            }
-
-            Error error = exception is JsonApiException jsonApiException
-                ? jsonApiException.Error
+            var errors = exception is JsonApiException jsonApiException
+                ? jsonApiException.Errors
                 : exception is TaskCanceledException
-                    ? new Error((HttpStatusCode) 499)
+                    ? new[]
                     {
-                        Title = "Request execution was canceled."
+                        new Error((HttpStatusCode) 499)
+                        {
+                            Title = "Request execution was canceled."
+                        }
                     }
-                    : new Error(HttpStatusCode.InternalServerError)
+                    : new[]
                     {
-                        Title = "An unhandled error occurred while processing this request.",
-                        Detail = exception.Message
+                        new Error(HttpStatusCode.InternalServerError)
+                        {
+                            Title = "An unhandled error occurred while processing this request.",
+                            Detail = exception.Message
+                        }
                     };
 
-            ApplyOptions(error, exception);
+            foreach (var error in errors)
+            {
+                ApplyOptions(error, exception);
+            }
 
-            return new ErrorDocument(error);
+            return new ErrorDocument(errors);
         }
 
         private void ApplyOptions(Error error, Exception exception)

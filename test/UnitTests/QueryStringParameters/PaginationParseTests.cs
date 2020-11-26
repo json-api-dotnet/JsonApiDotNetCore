@@ -76,10 +76,11 @@ namespace UnitTests.QueryStringParameters
             var exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
             exception.QueryParameterName.Should().Be("page[number]");
-            exception.Error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Error.Title.Should().Be("The specified paging is invalid.");
-            exception.Error.Detail.Should().Be(errorMessage);
-            exception.Error.Source.Parameter.Should().Be("page[number]");
+            exception.Errors.Should().HaveCount(1);
+            exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            exception.Errors[0].Title.Should().Be("The specified paging is invalid.");
+            exception.Errors[0].Detail.Should().Be(errorMessage);
+            exception.Errors[0].Source.Parameter.Should().Be("page[number]");
         }
 
         [Theory]
@@ -108,10 +109,11 @@ namespace UnitTests.QueryStringParameters
             var exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
             exception.QueryParameterName.Should().Be("page[size]");
-            exception.Error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Error.Title.Should().Be("The specified paging is invalid.");
-            exception.Error.Detail.Should().Be(errorMessage);
-            exception.Error.Source.Parameter.Should().Be("page[size]");
+            exception.Errors.Should().HaveCount(1);
+            exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            exception.Errors[0].Title.Should().Be("The specified paging is invalid.");
+            exception.Errors[0].Detail.Should().Be(errorMessage);
+            exception.Errors[0].Source.Parameter.Should().Be("page[size]");
         }
 
         [Theory]

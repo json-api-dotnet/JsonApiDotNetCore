@@ -75,10 +75,11 @@ namespace UnitTests.QueryStringParameters
             var exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
             exception.QueryParameterName.Should().Be(parameterName);
-            exception.Error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Error.Title.Should().Be("The specified defaults is invalid.");
-            exception.Error.Detail.Should().Be(errorMessage);
-            exception.Error.Source.Parameter.Should().Be(parameterName);
+            exception.Errors.Should().HaveCount(1);
+            exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            exception.Errors[0].Title.Should().Be("The specified defaults is invalid.");
+            exception.Errors[0].Detail.Should().Be(errorMessage);
+            exception.Errors[0].Source.Parameter.Should().Be(parameterName);
         }
 
         [Theory]
