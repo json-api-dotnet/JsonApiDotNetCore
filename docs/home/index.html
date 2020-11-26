@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta content="width=device-width, initial-scale=1.0" name="viewport">
-      <title>JsonApiDotNetCore</title>
+      <title>JSON:API .NET Core</title>
       <meta content="" name="descriptison">
       <meta content="" name="keywords">
       <link href="favicon.ico" rel="icon">
@@ -213,7 +213,8 @@ GET /articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields=title,s
           "links": {
             "self": "/articles/1/relationships/author",
             "related": "/articles/1/author"
-          }
+          },
+          "data": { "type": "people", "id": "1" }
         }
       },
       "links": {
