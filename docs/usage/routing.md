@@ -33,7 +33,7 @@ public class OrderLineController : JsonApiController<OrderLine>
 GET /orderLines HTTP/1.1
 ```
 
-The exposed name of the resource ([which can be customized](~/usage/resource-graph.md#public-resource-name)) is used for the route, instead of the controller name.
+The exposed name of the resource ([which can be customized](~/usage/resource-graph.md#resource-name)) is used for the route, instead of the controller name.
 
 ### Non-json:api controllers
 

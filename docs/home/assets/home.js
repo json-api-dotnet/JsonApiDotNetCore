@@ -40,14 +40,21 @@
 
 
   // Feature panels linking
-  $('div[feature]#filter').on('click', () => window.location = 'usage/reading/filtering.html')
-  $('div[feature]#sort').on('click', () => window.location = 'usage/reading/sorting.html')
-  $('div[feature]#pagination').on('click', () => window.location = 'usage/reading/pagination.html')
-  $('div[feature]#selection').on('click', () => window.location = 'usage/reading/sparse-fieldset-selection.html')
-  $('div[feature]#include').on('click', () => window.location = 'usage/reading/including-relationships.html')
-  $('div[feature]#security').on('click', () => window.location = 'usage/resources/attributes.html#capabilities')
-  $('div[feature]#validation').on('click', () => window.location = 'usage/options.html#enable-modelstate-validation')
-  $('div[feature]#customizable').on('click', () => window.location = 'usage/resources/resource-definitions.html')
+  $('div[feature]#filter').on('click', () => navigateTo('usage/reading/filtering.html'));
+  $('div[feature]#sort').on('click', () => navigateTo('usage/reading/sorting.html'));
+  $('div[feature]#pagination').on('click', () => navigateTo('usage/reading/pagination.html'));
+  $('div[feature]#selection').on('click', () => navigateTo('usage/reading/sparse-fieldset-selection.html'));
+  $('div[feature]#include').on('click', () => navigateTo('usage/reading/including-relationships.html'));
+  $('div[feature]#security').on('click', () => navigateTo('usage/resources/attributes.html#capabilities'));
+  $('div[feature]#validation').on('click', () => navigateTo('usage/options.html#enable-modelstate-validation'));
+  $('div[feature]#customizable').on('click', () => navigateTo('usage/resources/resource-definitions.html'));
+
+
+  const navigateTo = (url) => {
+    if (!window.getSelection().toString()){
+      window.location = url;
+    }
+  }
 
 
   hljs.initHighlightingOnLoad()
@@ -78,8 +85,5 @@
   $(window).on('load', function() {
     aos_init();
   });
-
-
-
 
 })(jQuery);

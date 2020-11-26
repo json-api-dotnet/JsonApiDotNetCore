@@ -94,7 +94,7 @@
                   <div class="icon-box">
                      <div class="icon"><i class="bx bxs-select-multiple"></i></div>
                      <h4 class="title">Sparse fieldset selection</h4>
-                     <p class="description">Get just the data that you need using the <code>fields</code> query string parameter</p>
+                     <p class="description">Get only the data that you need using the <code>fields</code> query string parameter</p>
                   </div>
                </div>
             </div>
@@ -124,7 +124,7 @@
                   <div class="icon-box">
                      <div class="icon"><i class='bx bxs-category-alt'></i></div>
                      <h4 class="title">Customizable</h4>
-                     <p class="description">Aside from declarative syntax, various extensibility points enable to intercept and run your custom code</p>
+                     <p class="description">Use various extensibility points to intercept and run custom code, besides just model annotations</p>
                   </div>
                </div>
             </div>
@@ -133,7 +133,7 @@
             <div class="container">
             <div class="section-title" data-aos="fade-up">
                <h2>Example usage</h2>
-               <p>Expose resources using <a href="../../usage/resources/index.html">declarative syntax</a></p>
+               <p>Expose <a href="../../usage/resources/index.html">resources</a> with attributes and relationships</p>
             </div>
             <div class="row">
                <div code-example class="col-md-12 col-lg-12 d-flex d-flex justify-content-center" data-aos="zoom-in" data-aos-delay="100">
@@ -154,7 +154,7 @@
     public string Url { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.AllowView)]
-    public DateTimeOffset LastModifiedAt {get; set; }
+    public DateTimeOffset LastModifiedAt { get; set; }
 
     [HasOne]
     public Person Author { get; set; }
@@ -174,7 +174,7 @@
             <div class="row">
                <div code-example class="col-md-12 col-lg-12 d-flex d-flex justify-content-center" data-aos="zoom-in" data-aos-delay="100">
                   <div class="icon-box code-example">
-                     <div class="icon"><i class='bx bx-detail'></i></div>
+                     <div class="icon"><i class='bx bx-message-rounded-detail'></i></div>
                      <h4 class="title">Request</h4>
                      <pre>
 <code>
@@ -187,7 +187,7 @@ GET /articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields=title,s
             <div class="row">
                <div code-example class="col-md-12 col-lg-12 d-flex d-flex justify-content-center" data-aos="zoom-in" data-aos-delay="100">
                   <div class="icon-box code-example">
-                     <div class="icon"><i class='bx bx-detail'></i></div>
+                     <div class="icon"><i class='bx bx-message-rounded-detail bx-flip-horizontal'></i></div>
                      <h4 class="title">Response</h4>
                      <pre>
 <code>
