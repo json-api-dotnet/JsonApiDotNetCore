@@ -4,9 +4,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
@@ -86,7 +83,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"),
                 MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; ext=other"),
                 MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"),
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType)
+                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; q=0.3")
             };
 
             // Act

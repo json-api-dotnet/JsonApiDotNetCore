@@ -23,6 +23,8 @@ namespace JsonApiDotNetCore.Middleware
     /// </summary>
     public sealed class JsonApiMiddleware
     {
+        private static readonly MediaTypeHeaderValue _mediaType = MediaTypeHeaderValue.Parse(HeaderConstants.MediaType);
+
         private readonly RequestDelegate _next;
 
         public JsonApiMiddleware(RequestDelegate next)
@@ -96,7 +98,7 @@ namespace JsonApiDotNetCore.Middleware
         private static async Task<bool> ValidateAcceptHeaderAsync(HttpContext httpContext, JsonSerializerSettings serializerSettings)
         {
             StringValues acceptHeaders = httpContext.Request.Headers["Accept"];
-            if (!acceptHeaders.Any() || acceptHeaders == HeaderConstants.MediaType)
+            if (!acceptHeaders.Any())
             {
                 return true;
             }
@@ -105,15 +107,17 @@ namespace JsonApiDotNetCore.Middleware
 
             foreach (var acceptHeader in acceptHeaders)
             {
-                if (MediaTypeHeaderValue.TryParse(acceptHeader, out var headerValue))
+                if (MediaTypeWithQualityHeaderValue.TryParse(acceptHeader, out var headerValue))
                 {
+                    headerValue.Quality = null;
+
                     if (headerValue.MediaType == "*/*" || headerValue.MediaType == "application/*")
                     {
                         seenCompatibleMediaType = true;
                         break;
                     }
 
-                    if (headerValue.MediaType == HeaderConstants.MediaType && !headerValue.Parameters.Any())
+                    if (_mediaType.Equals(headerValue))
                     {
                         seenCompatibleMediaType = true;
                         break;
@@ -126,7 +130,7 @@ namespace JsonApiDotNetCore.Middleware
                 await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.NotAcceptable)
                 {
                     Title = "The specified Accept header value does not contain any supported media types.",
-                    Detail = $"Please include '{HeaderConstants.MediaType}' in the Accept header values."
+                    Detail = $"Please include '{_mediaType}' in the Accept header values."
                 });
                 return false;
             }
