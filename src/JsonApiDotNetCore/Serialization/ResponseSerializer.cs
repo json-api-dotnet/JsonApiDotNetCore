@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
-    /// Server serializer implementation of <see cref="BaseSerializer"/>
+    /// Server serializer implementation of <see cref="BaseSerializer"/> for resources of a specific type.
     /// </summary>
     /// <remarks>
     /// Because in JsonApiDotNetCore every JSON:API request is associated with exactly one
@@ -31,6 +31,8 @@ namespace JsonApiDotNetCore.Serialization
         private readonly Type _primaryResourceType;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
+
+        public string ContentType { get; } = HeaderConstants.MediaType;
 
         public ResponseSerializer(IMetaBuilder metaBuilder,
             ILinkBuilder linkBuilder,
@@ -66,17 +68,7 @@ namespace JsonApiDotNetCore.Serialization
                 return SerializeErrorDocument(errorDocument);
             }
 
-            if (data is AtomicOperationsDocument operationsDocument)
-            {
-                return SerializeOperationsDocument(operationsDocument);
-            }
-
             throw new InvalidOperationException("Data being returned must be errors or resources.");
-        }
-
-        private string SerializeOperationsDocument(AtomicOperationsDocument atomicOperationsDocument)
-        {
-            return SerializeObject(atomicOperationsDocument, _options.SerializerSettings);
         }
 
         private string SerializeErrorDocument(ErrorDocument errorDocument)

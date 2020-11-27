@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Middleware
             var primaryResourceContext = CreatePrimaryResourceContext(routeValues, controllerResourceMapping, resourceContextProvider);
             if (primaryResourceContext != null)
             {
-                if (!await ValidateContentTypeHeaderAsync(httpContext, options.SerializerSettings) || 
+                if (!await ValidateContentTypeHeaderAsync(HeaderConstants.MediaType, httpContext, options.SerializerSettings) || 
                     !await ValidateAcceptHeaderAsync(httpContext, options.SerializerSettings))
                 {
                     return;
@@ -61,6 +61,11 @@ namespace JsonApiDotNetCore.Middleware
             }
             else if (IsAtomicOperationsRequest(routeValues))
             {
+                if (!await ValidateContentTypeHeaderAsync(HeaderConstants.AtomicOperationsMediaType, httpContext, options.SerializerSettings))
+                {
+                    return;
+                }
+
                 SetupAtomicOperationsRequest((JsonApiRequest)request);
 
                 httpContext.RegisterJsonApiRequest();
@@ -85,15 +90,15 @@ namespace JsonApiDotNetCore.Middleware
             return null;
         }
 
-        private static async Task<bool> ValidateContentTypeHeaderAsync(HttpContext httpContext, JsonSerializerSettings serializerSettings)
+        private static async Task<bool> ValidateContentTypeHeaderAsync(string allowedContentType, HttpContext httpContext, JsonSerializerSettings serializerSettings)
         {
             var contentType = httpContext.Request.ContentType;
-            if (contentType != null && contentType != HeaderConstants.MediaType)
+            if (contentType != null && contentType != allowedContentType)
             {
                 await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.UnsupportedMediaType)
                 {
                     Title = "The specified Content-Type header value is not supported.",
-                    Detail = $"Please specify '{HeaderConstants.MediaType}' instead of '{contentType}' for the Content-Type header value."
+                    Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' for the Content-Type header value."
                 });
                 return false;
             }

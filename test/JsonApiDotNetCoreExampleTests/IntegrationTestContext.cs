@@ -119,6 +119,15 @@ namespace JsonApiDotNetCoreExampleTests
         }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)>
+            ExecutePostAtomicAsync<TResponseDocument>(string requestUrl, object requestBody,
+                string contentType = HeaderConstants.AtomicOperationsMediaType,
+                IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaders = null)
+        {
+            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, contentType,
+                acceptHeaders);
+        }
+
+        public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)>
             ExecutePatchAsync<TResponseDocument>(string requestUrl, object requestBody,
                 string contentType = HeaderConstants.MediaType,
                 IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaders = null)
@@ -146,7 +155,6 @@ namespace JsonApiDotNetCoreExampleTests
             if (!string.IsNullOrEmpty(requestText))
             {
                 requestText = requestText.Replace("atomic__", "atomic:");
-
                 request.Content = new StringContent(requestText);
 
                 if (contentType != null)

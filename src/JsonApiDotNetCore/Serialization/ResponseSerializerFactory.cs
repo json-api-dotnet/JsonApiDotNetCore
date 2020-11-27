@@ -1,7 +1,7 @@
 using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCore.Serialization.Building;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
@@ -27,9 +27,9 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         public IJsonApiSerializer GetSerializer()
         {
-            if (_request.Kind == EndpointKind.AtomicOperations && _request.PrimaryResource == null)
+            if (_request.Kind == EndpointKind.AtomicOperations)
             {
-                return new SimpleJsonApiSerializer();
+                return (IJsonApiSerializer)_provider.GetRequiredService(typeof(AtomicOperationsResponseSerializer));
             }
 
             var targetType = GetDocumentType();
@@ -44,16 +44,6 @@ namespace JsonApiDotNetCore.Serialization
         {
             var resourceContext = _request.SecondaryResource ?? _request.PrimaryResource;
             return resourceContext.ResourceType;
-        }
-    }
-
-    public sealed class SimpleJsonApiSerializer : IJsonApiSerializer
-    {
-        // TODO: @OPS Choose something better to use, in case of error (before _request.PrimaryResource has been assigned).
-        // This is to workaround a crash when trying to resolve serializer after unhandled exception (hiding the original problem).
-        public string Serialize(object content)
-        {
-            return JsonConvert.SerializeObject(content);
         }
     }
 }
