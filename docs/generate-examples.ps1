@@ -3,17 +3,17 @@
 # This script generates response documents for ./request-examples
 
 function Kill-WebServer {
-    $tcpConnections = $null
+    $processId = $null
     if ($IsMacOs || $IsLinux) {
-        $tcpConnections = $(lsof -ti:8080)
+        $processId = $(lsof -ti:8080)
     }
     elseif ($IsWindows) {
-        $tcpConnections = $(Get-NetTCPConnection -LocalPort 14141 -ErrorAction SilentlyContinue).OwningProcess
+        $processId = $(Get-NetTCPConnection -LocalPort 14141 -ErrorAction SilentlyContinue).OwningProcess
     }
 
-    if ($tcpConnections -ne $null) {
+    if ($processId -ne $null) {
         Write-Output "Stopping web server"
-        Get-Process -Id $tcpConnections | Stop-Process
+        Get-Process -Id $processId | Stop-Process
     }
 
 }
