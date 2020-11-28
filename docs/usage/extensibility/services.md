@@ -16,7 +16,7 @@ public class TodoItemService : JsonApiResourceService<TodoItem>
     private readonly INotificationService _notificationService;
 
     public TodoItemService(
-        IResourceRepository<TodoItem> repository,
+        IResourceRepositoryAccessor repositoryAccessor,
         IQueryLayerComposer queryLayerComposer,
         IPaginationContext paginationContext,
         IJsonApiOptions options,
@@ -24,17 +24,17 @@ public class TodoItemService : JsonApiResourceService<TodoItem>
         IJsonApiRequest request,
         IResourceChangeTracker<TodoItem> resourceChangeTracker,
         IResourceFactory resourceFactory,
-        IResourceHookExecutor hookExecutor = null)
-        : base(repository, queryLayerComposer, paginationContext, options, loggerFactory,
+        IResourceHookExecutorFacade hookExecutor)
+        : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory,
             request, resourceChangeTracker, resourceFactory, hookExecutor)
     {
         _notificationService = notificationService;
     }
 
-    public override async Task<TodoItem> CreateAsync(TodoItem resource)
+    public override async Task<TodoItem> CreateAsync(TodoItem resource, CancellationToken cancellationToken)
     {
         // Call the base implementation
-        var newResource = await base.CreateAsync(resource);
+        var newResource = await base.CreateAsync(resource, cancellationToken);
 
         // Custom code
         _notificationService.Notify($"Resource created: {newResource.StringId}");
