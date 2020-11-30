@@ -16,7 +16,7 @@ public class TodoItemService : JsonApiResourceService<TodoItem>
     private readonly INotificationService _notificationService;
 
     public TodoItemService(
-        IResourceRepository<TodoItem> repository,
+        IResourceRepositoryAccessor repositoryAccessor,
         IQueryLayerComposer queryLayerComposer,
         IPaginationContext paginationContext,
         IJsonApiOptions options,
@@ -24,20 +24,20 @@ public class TodoItemService : JsonApiResourceService<TodoItem>
         IJsonApiRequest request,
         IResourceChangeTracker<TodoItem> resourceChangeTracker,
         IResourceFactory resourceFactory,
-        IResourceHookExecutor hookExecutor = null)
-        : base(repository, queryLayerComposer, paginationContext, options, loggerFactory,
+        IResourceHookExecutorFacade hookExecutor)
+        : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory,
             request, resourceChangeTracker, resourceFactory, hookExecutor)
     {
         _notificationService = notificationService;
     }
 
-    public override async Task<TodoItem> CreateAsync(TodoItem resource)
+    public override async Task<TodoItem> CreateAsync(TodoItem resource, CancellationToken cancellationToken)
     {
         // Call the base implementation
-        var newResource = await base.CreateAsync(resource);
+        var newResource = await base.CreateAsync(resource, cancellationToken);
 
         // Custom code
-        _notificationService.Notify($"Resource created: {newResource.StringId}");
+        await _notificationService.NotifyAsync($"Resource created: {newResource.StringId}");
 
         return newResource;
     }
@@ -70,9 +70,9 @@ public class ProductService : IResourceService<Product>
         _dao = dao;
     }
 
-    public Task<IEnumerable<Product>> GetAsync()
+    public async Task<IReadOnlyCollection<Product>> GetAsync(CancellationToken cancellationToken)
     {
-        return await _dao.GetProductsAsync();
+        return await _dao.GetProductsAsync(cancellationToken);
     }
 }
 ```
@@ -162,15 +162,15 @@ public class ArticlesController : BaseJsonApiController<Article>
     { }
 
     [HttpPost]
-    public override async Task<IActionResult> PostAsync([FromBody] Article resource)
+    public override async Task<IActionResult> PostAsync([FromBody] Article resource, CancellationToken cancellationToken)
     {
-        return await base.PostAsync(resource);
+        return await base.PostAsync(resource, cancellationToken);
     }
 
     [HttpDelete("{id}")]
-    public override async Task<IActionResult>DeleteAsync(int id)
+    public override async Task<IActionResult>DeleteAsync(int id, CancellationToken cancellationToken)
     {
-        return await base.DeleteAsync(id);
+        return await base.DeleteAsync(id, cancellationToken);
     }
 }
 ```
