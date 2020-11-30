@@ -51,9 +51,10 @@ public class ArticleRepository : EntityFrameworkCoreRepository<Article>
         _authenticationService = authenticationService;
     }
 
-    public override IQueryable<Article> GetAll()
+    public override IQueryable<Article> GetAll(CancellationToken cancellationToken)
     {
-        return base.Get().Where(article => article.UserId == _authenticationService.UserId);
+        return base.GetAll(cancellationToken)
+            .Where(article => article.UserId == _authenticationService.UserId);
     }
 }
 ```

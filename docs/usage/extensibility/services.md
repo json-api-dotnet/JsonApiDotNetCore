@@ -37,7 +37,7 @@ public class TodoItemService : JsonApiResourceService<TodoItem>
         var newResource = await base.CreateAsync(resource, cancellationToken);
 
         // Custom code
-        _notificationService.Notify($"Resource created: {newResource.StringId}");
+        await _notificationService.NotifyAsync($"Resource created: {newResource.StringId}");
 
         return newResource;
     }
@@ -70,9 +70,9 @@ public class ProductService : IResourceService<Product>
         _dao = dao;
     }
 
-    public Task<IEnumerable<Product>> GetAsync()
+    public async Task<IReadOnlyCollection<Product>> GetAsync(CancellationToken cancellationToken)
     {
-        return await _dao.GetProductsAsync();
+        return await _dao.GetProductsAsync(cancellationToken);
     }
 }
 ```
@@ -162,15 +162,15 @@ public class ArticlesController : BaseJsonApiController<Article>
     { }
 
     [HttpPost]
-    public override async Task<IActionResult> PostAsync([FromBody] Article resource)
+    public override async Task<IActionResult> PostAsync([FromBody] Article resource, CancellationToken cancellationToken)
     {
-        return await base.PostAsync(resource);
+        return await base.PostAsync(resource, cancellationToken);
     }
 
     [HttpDelete("{id}")]
-    public override async Task<IActionResult>DeleteAsync(int id)
+    public override async Task<IActionResult>DeleteAsync(int id, CancellationToken cancellationToken)
     {
-        return await base.DeleteAsync(id);
+        return await base.DeleteAsync(id, cancellationToken);
     }
 }
 ```
