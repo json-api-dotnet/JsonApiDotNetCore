@@ -13,7 +13,7 @@ using JsonApiDotNetCore.Services;
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
     /// <inheritdoc />
-    public class UpdateOperationProcessor<TResource, TId> : IUpdateOperationProcessor<TResource, TId>
+    public class UpdateProcessor<TResource, TId> : IUpdateProcessor<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
         private readonly IUpdateService<TResource, TId> _service;
@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         private readonly IResourceObjectBuilder _resourceObjectBuilder;
         private readonly IResourceContextProvider _resourceContextProvider;
 
-        public UpdateOperationProcessor(IUpdateService<TResource, TId> service, IJsonApiDeserializer deserializer,
+        public UpdateProcessor(IUpdateService<TResource, TId> service, IJsonApiDeserializer deserializer,
             IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider resourceContextProvider)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
@@ -30,9 +30,18 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
         }
 
-        public async Task<AtomicResultObject> ProcessAsync(AtomicOperationObject operation, CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public async Task<AtomicResultObject> ProcessAsync(AtomicOperationObject operation,
+            CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(operation?.SingleData?.Id))
+            if (operation == null) throw new ArgumentNullException(nameof(operation));
+
+            if (operation.SingleData == null)
+            {
+                throw new InvalidOperationException("TODO: Expected data element. Can we ever get here?");
+            }
+
+            if (operation.SingleData.Id == null)
             {
                 throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
                 {
@@ -41,7 +50,6 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             }
 
             var model = (TResource) _deserializer.CreateResourceFromObject(operation.SingleData);
-
             var result = await _service.UpdateAsync(model.Id, model, cancellationToken);
 
             ResourceObject data = null;
@@ -60,15 +68,18 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     }
 
     /// <summary>
-    /// Processes a single operation with code <see cref="AtomicOperationCode.Update"/> in a list of atomic operations.
+    /// Processes a single operation to update the attributes and/or relationships of an existing resource.
+    /// Only the values of sent attributes are replaced. And only the values of sent relationships are replaced.
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
-    public class UpdateOperationProcessor<TResource> : UpdateOperationProcessor<TResource, int>, IUpdateOperationProcessor<TResource>
+    public class UpdateProcessor<TResource>
+        : UpdateProcessor<TResource, int>, IUpdateProcessor<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public UpdateOperationProcessor(IUpdateService<TResource, int> service, IJsonApiDeserializer deserializer,
+        public UpdateProcessor(IUpdateService<TResource, int> service, IJsonApiDeserializer deserializer,
             IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider resourceContextProvider)
-            : base(service, deserializer, resourceObjectBuilder, resourceContextProvider)
+            : base(service, deserializer, resourceObjectBuilder,
+                resourceContextProvider)
         {
         }
     }

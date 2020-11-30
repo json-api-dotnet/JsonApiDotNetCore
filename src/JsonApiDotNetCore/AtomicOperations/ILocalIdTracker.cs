@@ -6,18 +6,18 @@ namespace JsonApiDotNetCore.AtomicOperations
     public interface ILocalIdTracker
     {
         /// <summary>
-        /// Assigns a server-generated value to a local ID.
+        /// Declares a local ID without assigning a server-generated value.
         /// </summary>
-        void AssignValue(string lid, string id);
+        void Declare(string lid, string type);
+
+        /// <summary>
+        /// Assigns a server-generated ID value to a previously declared local ID.
+        /// </summary>
+        void Assign(string lid, string type, string id);
 
         /// <summary>
         /// Gets the server-assigned ID for the specified local ID.
         /// </summary>
-        string GetAssignedValue(string lid);
-
-        /// <summary>
-        /// Indicates whether a server-generated value is available for the specified local ID.
-        /// </summary>
-        bool IsAssigned(string lid);
+        string GetValue(string lid, string type);
     }
 }

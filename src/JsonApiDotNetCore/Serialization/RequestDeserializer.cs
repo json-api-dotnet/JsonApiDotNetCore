@@ -70,6 +70,8 @@ namespace JsonApiDotNetCore.Serialization
 
         public IIdentifiable CreateResourceFromObject(ResourceObject data)
         {
+            if (data == null) throw new ArgumentNullException(nameof(data));
+
             return ParseResourceObject(data);
         }
 

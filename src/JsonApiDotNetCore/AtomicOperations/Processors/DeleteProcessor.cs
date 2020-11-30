@@ -10,20 +10,23 @@ using JsonApiDotNetCore.Services;
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
     /// <inheritdoc />
-    public class RemoveOperationProcessor<TResource, TId> : IRemoveOperationProcessor<TResource, TId>
+    public class DeleteProcessor<TResource, TId> : IDeleteProcessor<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
         private readonly IDeleteService<TResource, TId> _service;
 
-        public RemoveOperationProcessor(IDeleteService<TResource, TId> service)
+        public DeleteProcessor(IDeleteService<TResource, TId> service)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
+        /// <inheritdoc />
         public async Task<AtomicResultObject> ProcessAsync(AtomicOperationObject operation, CancellationToken cancellationToken)
         {
-            var stringId = operation.Ref?.Id;
-            if (string.IsNullOrWhiteSpace(stringId))
+            if (operation == null) throw new ArgumentNullException(nameof(operation));
+
+            var stringId = operation.Ref.Id;
+            if (stringId == null)
             {
                 throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
                 {
@@ -39,13 +42,13 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     }
 
     /// <summary>
-    /// Processes a single operation with code <see cref="AtomicOperationCode.Remove"/> in a list of atomic operations.
+    /// Processes a single operation to delete an existing resource.
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
-    public class RemoveOperationProcessor<TResource> : RemoveOperationProcessor<TResource, int>, IRemoveOperationProcessor<TResource>
+    public class DeleteProcessor<TResource> : DeleteProcessor<TResource, int>, IDeleteProcessor<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public RemoveOperationProcessor(IDeleteService<TResource, int> service)
+        public DeleteProcessor(IDeleteService<TResource, int> service)
             : base(service)
         {
         }

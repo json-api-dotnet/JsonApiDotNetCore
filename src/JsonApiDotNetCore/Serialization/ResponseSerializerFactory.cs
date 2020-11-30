@@ -1,9 +1,7 @@
 using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Serialization.Building;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization
 {

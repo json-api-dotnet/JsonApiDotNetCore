@@ -24,32 +24,44 @@ namespace JsonApiDotNetCore.Configuration
         {
             if (operation == null) throw new ArgumentNullException(nameof(operation));
 
+            // TODO: @OPS: How about processors with a single type argument?
+
+            if (operation.Ref?.Relationship != null)
+            {
+                switch (operation.Code)
+                {
+                    case AtomicOperationCode.Add:
+                    {
+                        return Resolve(operation, typeof(IAddToRelationshipProcessor<,>));
+                    }
+                    case AtomicOperationCode.Update:
+                    {
+                        return Resolve(operation, typeof(ISetRelationshipProcessor<,>));
+                    }
+                    case AtomicOperationCode.Remove:
+                    {
+                        return Resolve(operation, typeof(IRemoveFromRelationshipProcessor<,>));
+                    }
+                }
+            }
+
             switch (operation.Code)
             {
-             case AtomicOperationCode.Add:
-                 return ResolveCreateProcessor(operation);
-             case AtomicOperationCode.Remove:
-                 return ResolveRemoveProcessor(operation);
-             case AtomicOperationCode.Update:
-                 return ResolveUpdateProcessor(operation);
+                case AtomicOperationCode.Add:
+                {
+                    return Resolve(operation, typeof(ICreateProcessor<,>));
+                }
+                case AtomicOperationCode.Update:
+                {
+                    return Resolve(operation, typeof(IUpdateProcessor<,>));
+                }
+                case AtomicOperationCode.Remove:
+                {
+                    return Resolve(operation, typeof(IDeleteProcessor<,>));
+                }
             }
 
             throw new InvalidOperationException($"Atomic operation code '{operation.Code}' is invalid.");
-        }
-
-        private IAtomicOperationProcessor ResolveCreateProcessor(AtomicOperationObject operation)
-        {
-            return Resolve(operation, typeof(ICreateOperationProcessor<,>));
-        }
-
-        private IAtomicOperationProcessor ResolveRemoveProcessor(AtomicOperationObject operation)
-        {
-            return Resolve(operation, typeof(IRemoveOperationProcessor<,>));
-        }
-
-        private IAtomicOperationProcessor ResolveUpdateProcessor(AtomicOperationObject operation)
-        {
-            return Resolve(operation, typeof(IUpdateOperationProcessor<,>));
         }
 
         private IAtomicOperationProcessor Resolve(AtomicOperationObject atomicOperationObject, Type processorInterface)

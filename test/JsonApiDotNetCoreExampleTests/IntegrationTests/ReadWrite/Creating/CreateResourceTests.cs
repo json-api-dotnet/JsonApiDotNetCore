@@ -27,6 +27,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             options.AllowClientGeneratedIds = false;
         }
 
+        // TODO: @OPS: Create test that declares and uses a local ID (in to-one / to-many relationship), which fails.
+
         [Fact]
         public async Task Sets_location_header_for_created_resource()
         {

@@ -14,5 +14,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
 
         [HasMany]
         public IList<MusicTrack> Tracks { get; set; }
+
+        [HasOne]
+        public RecordCompany Parent { get; set; }
     }
 }

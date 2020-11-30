@@ -277,14 +277,23 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IAtomicOperationProcessorResolver, AtomicOperationProcessorResolver>();
             _services.AddScoped<ILocalIdTracker, LocalIdTracker>();
 
-            _services.AddScoped(typeof(ICreateOperationProcessor<>), typeof(CreateOperationProcessor<>));
-            _services.AddScoped(typeof(ICreateOperationProcessor<,>), typeof(CreateOperationProcessor<,>));
+            _services.AddScoped(typeof(ICreateProcessor<>), typeof(CreateProcessor<>));
+            _services.AddScoped(typeof(ICreateProcessor<,>), typeof(CreateProcessor<,>));
 
-            _services.AddScoped(typeof(IRemoveOperationProcessor<>), typeof(RemoveOperationProcessor<>));
-            _services.AddScoped(typeof(IRemoveOperationProcessor<,>), typeof(RemoveOperationProcessor<,>));
+            _services.AddScoped(typeof(IUpdateProcessor<>), typeof(UpdateProcessor<>));
+            _services.AddScoped(typeof(IUpdateProcessor<,>), typeof(UpdateProcessor<,>));
 
-            _services.AddScoped(typeof(IUpdateOperationProcessor<>), typeof(UpdateOperationProcessor<>));
-            _services.AddScoped(typeof(IUpdateOperationProcessor<,>), typeof(UpdateOperationProcessor<,>));
+            _services.AddScoped(typeof(IDeleteProcessor<>), typeof(DeleteProcessor<>));
+            _services.AddScoped(typeof(IDeleteProcessor<,>), typeof(DeleteProcessor<,>));
+
+            _services.AddScoped(typeof(IAddToRelationshipProcessor<>), typeof(AddToRelationshipProcessor<>));
+            _services.AddScoped(typeof(IAddToRelationshipProcessor<,>), typeof(AddToRelationshipProcessor<,>));
+
+            _services.AddScoped(typeof(ISetRelationshipProcessor<>), typeof(SetRelationshipProcessor<>));
+            _services.AddScoped(typeof(ISetRelationshipProcessor<,>), typeof(SetRelationshipProcessor<,>));
+
+            _services.AddScoped(typeof(IRemoveFromRelationshipProcessor<>), typeof(RemoveFromRelationshipProcessor<>));
+            _services.AddScoped(typeof(IRemoveFromRelationshipProcessor<,>), typeof(RemoveFromRelationshipProcessor<,>));
         }
 
         private void AddResourcesFromDbContext(DbContext dbContext, ResourceGraphBuilder builder)

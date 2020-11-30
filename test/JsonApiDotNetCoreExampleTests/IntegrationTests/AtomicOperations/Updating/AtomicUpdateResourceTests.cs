@@ -73,7 +73,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Should().BeNull();
+            responseDocument.Results[0].Data.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -133,7 +133,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Should().BeNull();
+            responseDocument.Results[0].Data.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -200,7 +200,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             for (int index = 0; index < elementCount; index++)
             {
-                responseDocument.Results[index].SingleData.Should().BeNull();
+                responseDocument.Results[index].Data.Should().BeNull();
             }
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

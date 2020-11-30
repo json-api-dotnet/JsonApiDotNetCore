@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Resources;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -47,24 +49,22 @@ namespace JsonApiDotNetCore.Repositories
             return entityEntry?.Entity;
         }
 
+        // TODO: @OPS: Should we keep this?
         /// <summary>
-        /// Gets the current transaction or creates a new one.
-        /// If a transaction already exists, commit, rollback and dispose
-        /// will not be called. It is assumed the creator of the original
-        /// transaction should be responsible for disposal.
+        /// Detaches all entities from the change tracker.
         /// </summary>
-        ///
-        /// <example>
-        /// <code>
-        /// using(var transaction = _context.GetCurrentOrCreateTransaction())
-        /// {
-        ///     // perform multiple operations on the context and then save...
-        ///     _context.SaveChanges();
-        /// }
-        /// </code>
-        /// </example>
-        public static async Task<IDbContextTransaction> GetCurrentOrCreateTransactionAsync(this DbContext context) 
-            => await SafeTransactionProxy.GetOrCreateAsync(context.Database);
+        public static void ResetChangeTracker(this DbContext dbContext)
+        {
+            if (dbContext == null) throw new ArgumentNullException(nameof(dbContext));
+
+            List<EntityEntry> entriesWithChanges = dbContext.ChangeTracker.Entries().Where(entry =>
+                entry.State != EntityState.Detached).ToList();
+
+            foreach (EntityEntry entry in entriesWithChanges)
+            {
+                entry.State = EntityState.Detached;
+            }
+        }
     }
 
     /// <summary>

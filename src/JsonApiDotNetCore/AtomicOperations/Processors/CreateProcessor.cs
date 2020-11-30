@@ -13,7 +13,7 @@ using JsonApiDotNetCore.Services;
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
     /// <inheritdoc />
-    public class CreateOperationProcessor<TResource, TId> : ICreateOperationProcessor<TResource, TId>
+    public class CreateProcessor<TResource, TId> : ICreateProcessor<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
         private readonly ICreateService<TResource, TId> _service;
@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         private readonly IResourceObjectBuilder _resourceObjectBuilder;
         private readonly IResourceContextProvider _resourceContextProvider;
 
-        public CreateOperationProcessor(ICreateService<TResource, TId> service, ILocalIdTracker localIdTracker, IJsonApiDeserializer deserializer,
+        public CreateProcessor(ICreateService<TResource, TId> service, ILocalIdTracker localIdTracker, IJsonApiDeserializer deserializer,
             IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider resourceContextProvider)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
@@ -32,25 +32,19 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
         }
 
+        /// <inheritdoc />
         public async Task<AtomicResultObject> ProcessAsync(AtomicOperationObject operation,
             CancellationToken cancellationToken)
         {
+            if (operation == null) throw new ArgumentNullException(nameof(operation));
+
             var model = (TResource) _deserializer.CreateResourceFromObject(operation.SingleData);
             var newResource = await _service.CreateAsync(model, cancellationToken);
 
             if (operation.SingleData.Lid != null)
             {
-                if (_localIdTracker.IsAssigned(operation.SingleData.Lid))
-                {
-                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                    {
-                        Title = "Another local ID with the same name is already in use at this point.",
-                        Detail = $"Another local ID with name '{operation.SingleData.Lid}' is already in use at this point."
-                    });
-                }
-
                 var serverId = newResource == null ? operation.SingleData.Id : newResource.StringId;
-                _localIdTracker.AssignValue(operation.SingleData.Lid, serverId);
+                _localIdTracker.Assign(operation.SingleData.Lid, operation.SingleData.Type, serverId);
             }
 
             if (newResource != null)
@@ -70,14 +64,14 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     }
 
     /// <summary>
-    /// Processes a single operation with code <see cref="AtomicOperationCode.Add"/> in a list of atomic operations.
+    /// Processes a single operation to create a new resource with attributes, relationships or both.
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
-    public class CreateOperationProcessor<TResource> : CreateOperationProcessor<TResource, int>,
-        ICreateOperationProcessor<TResource>
+    public class CreateProcessor<TResource>
+        : CreateProcessor<TResource, int>, ICreateProcessor<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public CreateOperationProcessor(ICreateService<TResource, int> service, ILocalIdTracker localIdTracker,
+        public CreateProcessor(ICreateService<TResource, int> service, ILocalIdTracker localIdTracker,
             IJsonApiDeserializer deserializer, IResourceObjectBuilder resourceObjectBuilder,
             IResourceContextProvider resourceContextProvider)
             : base(service, localIdTracker, deserializer, resourceObjectBuilder, resourceContextProvider)

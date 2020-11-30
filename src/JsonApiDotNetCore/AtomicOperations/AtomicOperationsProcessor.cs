@@ -57,6 +57,9 @@ namespace JsonApiDotNetCore.AtomicOperations
             {
                 foreach (var operation in operations)
                 {
+                    // TODO: @OPS: Do we need to keep this in?
+                    // _dbContext.ResetChangeTracker();
+
                     var result = await ProcessOperation(operation, cancellationToken);
                     results.Add(result);
                 }
@@ -100,19 +103,37 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            ReplaceLocalIdsInResourceObject(operation.SingleData);
-            ReplaceLocalIdInResourceIdentifierObject(operation.Ref);
-
             string resourceName = null;
             if (operation.Code == AtomicOperationCode.Add || operation.Code == AtomicOperationCode.Update)
             {
-                resourceName = operation.SingleData?.Type;
-                if (resourceName == null)
+                if (operation.SingleData != null)
                 {
-                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    resourceName = operation.SingleData.Type;
+                    if (resourceName == null)
                     {
-                        Title = "The data.type element is required."
-                    });
+                        throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                        {
+                            Title = "The data.type element is required."
+                        });
+                    }
+                }
+                else if (operation.ManyData != null)
+                {
+                    foreach (var resourceObject in operation.ManyData)
+                    {
+                        resourceName = resourceObject.Type;
+                        if (resourceName == null)
+                        {
+                            throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                            {
+                                Title = "The data.type element is required."
+                            });
+                        }
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException("TODO: Data is missing.");
                 }
             }
 
@@ -128,6 +149,15 @@ namespace JsonApiDotNetCore.AtomicOperations
                 }
             }
 
+            bool isResourceAdd = operation.Code == AtomicOperationCode.Add && operation.Ref == null;
+
+            if (isResourceAdd && operation.SingleData?.Lid != null)
+            {
+                _localIdTracker.Declare(operation.SingleData.Lid, operation.SingleData.Type);
+            }
+
+            ReplaceLocalIdsInOperationObject(operation, isResourceAdd);
+
             var resourceContext = _resourceContextProvider.GetResourceContext(resourceName);
             if (resourceContext == null)
             {
@@ -138,18 +168,67 @@ namespace JsonApiDotNetCore.AtomicOperations
                 });
             }
 
-            ((JsonApiRequest)_request).PrimaryResource = resourceContext;
-
             _targetedFields.Attributes.Clear();
             _targetedFields.Relationships.Clear();
+
+            if (operation.Ref?.Relationship != null)
+            {
+                var primaryResourceContext = _resourceContextProvider.GetResourceContext(operation.Ref.Type);
+                var requestRelationship = primaryResourceContext.Relationships.SingleOrDefault(relationship => relationship.PublicName == operation.Ref.Relationship);
+
+                if (requestRelationship == null)
+                {
+                    throw new InvalidOperationException("TODO: Relationship does not exist.");
+                }
+
+                ((JsonApiRequest)_request).PrimaryResource = primaryResourceContext;
+                ((JsonApiRequest)_request).PrimaryId = operation.Ref.Id;
+                ((JsonApiRequest)_request).Relationship = requestRelationship;
+                ((JsonApiRequest)_request).SecondaryResource = _resourceContextProvider.GetResourceContext(requestRelationship.RightType);
+
+                _targetedFields.Relationships.Add(_request.Relationship);
+            }
+            else
+            {
+                ((JsonApiRequest)_request).PrimaryResource = resourceContext;
+                ((JsonApiRequest)_request).PrimaryId = null;
+                ((JsonApiRequest)_request).Relationship = null;
+                ((JsonApiRequest)_request).SecondaryResource = null;
+            }
 
             var processor = _resolver.ResolveProcessor(operation);
             return await processor.ProcessAsync(operation, cancellationToken);
         }
 
-        private void ReplaceLocalIdsInResourceObject(ResourceObject resourceObject)
+        private void ReplaceLocalIdsInOperationObject(AtomicOperationObject operation, bool isResourceAdd)
         {
-            if (resourceObject?.Relationships != null)
+            if (operation.Ref != null)
+            {
+                ReplaceLocalIdInResourceIdentifierObject(operation.Ref);
+            }
+
+            if (operation.SingleData != null)
+            {
+                ReplaceLocalIdsInResourceObject(operation.SingleData, isResourceAdd);
+            }
+
+            if (operation.ManyData != null)
+            {
+                foreach (var resourceObject in operation.ManyData)
+                {
+                    ReplaceLocalIdsInResourceObject(resourceObject, isResourceAdd);
+                }
+            }
+        }
+
+        private void ReplaceLocalIdsInResourceObject(ResourceObject resourceObject, bool isResourceAdd)
+        {
+            if (!isResourceAdd)
+            {
+                ReplaceLocalIdInResourceIdentifierObject(resourceObject);
+            }
+
+            if (resourceObject.Relationships != null)
             {
                 foreach (var relationshipEntry in resourceObject.Relationships.Values)
                 {
@@ -164,7 +243,10 @@ namespace JsonApiDotNetCore.AtomicOperations
                     {
                         var relationship = relationshipEntry.SingleData;
 
-                        ReplaceLocalIdInResourceIdentifierObject(relationship);
+                        if (relationship != null)
+                        {
+                            ReplaceLocalIdInResourceIdentifierObject(relationship);
+                        }
                     }
                 }
             }
@@ -172,18 +254,10 @@ namespace JsonApiDotNetCore.AtomicOperations
 
         private void ReplaceLocalIdInResourceIdentifierObject(ResourceIdentifierObject resourceIdentifierObject)
         {
-            if (resourceIdentifierObject?.Lid != null)
+            if (resourceIdentifierObject.Lid != null)
             {
-                if (!_localIdTracker.IsAssigned(resourceIdentifierObject.Lid))
-                {
-                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                    {
-                        Title = "Server-generated value for local ID is not available at this point.",
-                        Detail = $"Server-generated value for local ID '{resourceIdentifierObject.Lid}' is not available at this point."
-                    });
-                }
-
-                resourceIdentifierObject.Id = _localIdTracker.GetAssignedValue(resourceIdentifierObject.Lid);
+                resourceIdentifierObject.Id =
+                    _localIdTracker.GetValue(resourceIdentifierObject.Lid, resourceIdentifierObject.Type);
             }
         }
     }
