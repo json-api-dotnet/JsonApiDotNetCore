@@ -107,9 +107,10 @@ This is helpful when you implement a subset of the resource interfaces and want 
         _authenticationService = authenticationService;
     }
 
-    public override IQueryable&lt;Article&gt; GetAll()
+    public override IQueryable&lt;Article&gt; GetAll(CancellationToken cancellationToken)
     {
-        return base.Get().Where(article =&gt; article.UserId == _authenticationService.UserId);
+        return base.GetAll(cancellationToken)
+            .Where(article =&gt; article.UserId == _authenticationService.UserId);
     }
 }
 </code></pre><h2 id="multiple-dbcontexts">Multiple DbContexts</h2>

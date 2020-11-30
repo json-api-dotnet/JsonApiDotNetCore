@@ -106,15 +106,15 @@
     { }
 
     [HttpGet]
-    public override async Task&lt;IActionResult&gt; GetAsync()
+    public override async Task&lt;IActionResult&gt; GetAsync(CancellationToken cancellationToken)
     {
-        return await base.GetAsync();
+        return await base.GetAsync(cancellationToken);
     }
 
     [HttpGet(&quot;{id}&quot;)]
-    public override async Task&lt;IActionResult&gt; GetAsync(int id)
+    public override async Task&lt;IActionResult&gt; GetAsync(int id, CancellationToken cancellationToken)
     {
-        return await base.GetAsync(id);
+        return await base.GetAsync(id, cancellationToken);
     }
 }
 </code></pre><h2 id="using-actionfilterattributes">Using ActionFilterAttributes</h2>
@@ -151,9 +151,9 @@ public class ArticlesController : BaseJsonApiController&lt;Article&gt;
     { }
 
     [HttpGet]
-    public override async Task&lt;IActionResult&gt; GetAsync()
+    public override async Task&lt;IActionResult&gt; GetAsync(CancellationToken cancellationToken)
     {
-        return await base.GetAsync();
+        return await base.GetAsync(cancellationToken);
     }
 }
 </code></pre></article>
