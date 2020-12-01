@@ -182,7 +182,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                 responseDocument.Results[index].SingleData.Should().NotBeNull();
                 responseDocument.Results[index].SingleData.Type.Should().Be("musicTracks");
                 responseDocument.Results[index].SingleData.Attributes["title"].Should().Be(newTracks[index].Title);
-                responseDocument.Results[index].SingleData.Attributes["lengthInSeconds"].Should().BeApproximately(newTracks[index].LengthInSeconds, 0.00000000001M);
+                responseDocument.Results[index].SingleData.Attributes["lengthInSeconds"].Should().BeApproximately(newTracks[index].LengthInSeconds);
                 responseDocument.Results[index].SingleData.Attributes["genre"].Should().Be(newTracks[index].Genre);
                 responseDocument.Results[index].SingleData.Attributes["releasedAt"].Should().BeCloseTo(newTracks[index].ReleasedAt);
             }

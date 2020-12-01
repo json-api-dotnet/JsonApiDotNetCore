@@ -14,6 +14,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly bool _isCollectionRequest;
 
         protected ResourceContext RequestResource { get; }
+        protected bool IsAtomicOperationsRequest { get; }
 
         protected QueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider)
         {
@@ -25,6 +26,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _isCollectionRequest = request.IsCollection;
             RequestResource = request.SecondaryResource ?? request.PrimaryResource;
+            IsAtomicOperationsRequest = request.Kind == EndpointKind.AtomicOperations;
         }
 
         protected ResourceContext GetResourceContextForScope(ResourceFieldChainExpression scope)

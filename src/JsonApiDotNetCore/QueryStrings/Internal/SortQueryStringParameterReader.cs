@@ -40,7 +40,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
 
-            return !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Sort);
+            return !IsAtomicOperationsRequest &&
+                !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Sort);
         }
 
         /// <inheritdoc />
