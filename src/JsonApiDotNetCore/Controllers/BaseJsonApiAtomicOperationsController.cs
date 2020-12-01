@@ -33,22 +33,57 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <summary>
         /// Processes a document with atomic operations and returns their results.
+        /// If none of the operations contain data, HTTP 201 is returned instead 200.
         /// </summary>
-        /// <example><code><![CDATA[
+        /// <example>
+        /// The next example creates a new resource.
+        /// <code><![CDATA[
         /// POST /api/v1/operations HTTP/1.1
-        /// Content-Type: application/vnd.api+json
+        /// Content-Type: application/vnd.api+json;ext="https://jsonapi.org/ext/atomic"
         /// 
         /// {
-        ///   "operations": [{
+        ///   "atomic:operations": [{
         ///     "op": "add",
-        ///     "ref": {
-        ///       "type": "authors"
-        ///     },
         ///     "data": {
         ///       "type": "authors",
         ///       "attributes": {
         ///         "name": "John Doe"
         ///       }
+        ///     }
+        ///   }]
+        /// }
+        /// ]]></code></example>
+        /// <example>
+        /// The next example updates an existing resource.
+        /// <code><![CDATA[
+        /// POST /api/v1/operations HTTP/1.1
+        /// Content-Type: application/vnd.api+json;ext="https://jsonapi.org/ext/atomic"
+        /// 
+        /// {
+        ///   "atomic:operations": [{
+        ///     "op": "update",
+        ///     "data": {
+        ///       "type": "authors",
+        ///       "id": 1,
+        ///       "attributes": {
+        ///         "name": "Jane Doe"
+        ///       }
+        ///     }
+        ///   }]
+        /// }
+        /// ]]></code></example>
+        /// <example>
+        /// The next example deletes an existing resource.
+        /// <code><![CDATA[
+        /// POST /api/v1/operations HTTP/1.1
+        /// Content-Type: application/vnd.api+json;ext="https://jsonapi.org/ext/atomic"
+        /// 
+        /// {
+        ///   "atomic:operations": [{
+        ///     "op": "remove",
+        ///     "ref": {
+        ///       "type": "authors",
+        ///       "id": 1
         ///     }
         ///   }]
         /// }
