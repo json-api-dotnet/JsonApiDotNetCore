@@ -1290,7 +1290,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             });
         }
 
-        [Fact(Skip = "TODO: Make this test work.")]
+        [Fact]
         public async Task Can_add_to_ManyToMany_relationship_using_local_ID()
         {
             // Arrange
@@ -1408,8 +1408,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
                 playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(2);
-                playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Id.Should().Be(existingTrack.Id);
-                playlistInDatabase.PlaylistMusicTracks[1].MusicTrack.Id.Should().Be(newTrackId);
+                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTrack.Id);
+                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == newTrackId);
             });
         }
 
@@ -1534,13 +1534,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
                 trackInDatabase.Performers.Should().HaveCount(1);
-
                 trackInDatabase.Performers[0].Id.Should().Be(existingPerformer.Id);
                 trackInDatabase.Performers[0].ArtistName.Should().Be(existingPerformer.ArtistName);
             });
         }
 
-        [Fact(Skip = "TODO: Make this test work.")]
+        [Fact]
         public async Task Can_remove_from_ManyToMany_relationship_using_local_ID()
         {
             // Arrange
