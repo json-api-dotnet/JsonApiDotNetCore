@@ -664,5 +664,48 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected data[] element for 'tags' relationship. - Request body: <<");
         }
+
+        [Fact]
+        public async Task Cannot_create_resource_with_local_ID()
+        {
+            // Arrange
+            const string workItemLocalId = "wo-1";
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    lid = workItemLocalId,
+                    relationships = new
+                    {
+                        children = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "workItems",
+                                    lid = workItemLocalId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Local IDs cannot be used at this endpoint.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Local IDs cannot be used at this endpoint. - Request body: <<");
+        }
     }
 }

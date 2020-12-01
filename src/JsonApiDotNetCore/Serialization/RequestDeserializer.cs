@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
 
-            return ParseResourceObject(data);
+            return ParseResourceObject(data, true);
         }
 
         private void AssertResourceIdIsNotTargeted()

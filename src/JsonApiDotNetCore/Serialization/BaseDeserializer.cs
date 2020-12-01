@@ -52,12 +52,14 @@ namespace JsonApiDotNetCore.Serialization
             {
                 if (Document.IsManyData)
                 {
-                    return Document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
+                    return Document.ManyData
+                        .Select(data => ParseResourceObject(data, false))
+                        .ToHashSet(IdentifiableComparer.Instance);
                 }
 
                 if (Document.SingleData != null)
                 {
-                    return ParseResourceObject(Document.SingleData);
+                    return ParseResourceObject(Document.SingleData, false);
                 }
             }
 
@@ -150,9 +152,14 @@ namespace JsonApiDotNetCore.Serialization
         /// and sets its attributes and relationships.
         /// </summary>
         /// <returns>The parsed resource.</returns>
-        protected IIdentifiable ParseResourceObject(ResourceObject data)
+        protected IIdentifiable ParseResourceObject(ResourceObject data, bool allowLocalIds)
         {
             AssertHasType(data, null);
+
+            if (!allowLocalIds)
+            {
+                AssertHasNoLocalId(data);
+            }
 
             var resourceContext = GetExistingResourceContext(data.Type);
             var resource = ResourceFactory.CreateInstance(resourceContext.ResourceType);
@@ -250,6 +257,14 @@ namespace JsonApiDotNetCore.Serialization
                     : "Expected 'type' element in 'data' element.";
 
                 throw new JsonApiSerializationException("Request body must include 'type' element.", details);
+            }
+        }
+
+        private void AssertHasNoLocalId(ResourceIdentifierObject resourceIdentifierObject)
+        {
+            if (resourceIdentifierObject.Lid != null)
+            {
+                throw new JsonApiSerializationException("Local IDs cannot be used at this endpoint.", null);
             }
         }
 
