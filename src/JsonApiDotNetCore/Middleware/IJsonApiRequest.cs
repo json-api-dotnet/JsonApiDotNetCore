@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Middleware
 {
@@ -57,5 +58,10 @@ namespace JsonApiDotNetCore.Middleware
         /// Indicates whether this request targets only fetching of data (such as resources and relationships).
         /// </summary>
         bool IsReadOnly { get; }
+
+        /// <summary>
+        /// In case of an atomic:operations request, this indicates the operation currently being processed.
+        /// </summary>
+        AtomicOperationCode? OperationCode { get; }
     }
 }

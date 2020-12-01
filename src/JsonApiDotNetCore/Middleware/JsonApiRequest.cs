@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Middleware
 {
@@ -29,5 +30,8 @@ namespace JsonApiDotNetCore.Middleware
         
         /// <inheritdoc />
         public bool IsReadOnly { get; set; }
+
+        /// <inheritdoc />
+        public AtomicOperationCode? OperationCode { get; set; }
     }
 }

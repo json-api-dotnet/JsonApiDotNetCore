@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         : SetRelationshipProcessor<TResource, int>, IUpdateProcessor<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public SetRelationshipProcessor(ISetRelationshipService<TResource, int> service,
+        public SetRelationshipProcessor(ISetRelationshipService<TResource> service,
             IResourceFactory resourceFactory, IJsonApiRequest request, IJsonApiDeserializer deserializer)
             : base(service, resourceFactory, request, deserializer)
         {

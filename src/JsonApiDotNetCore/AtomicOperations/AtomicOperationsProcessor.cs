@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
                 foreach (var error in exception.Errors)
                 {
-                    error.Source.Pointer = $"/atomic:operations[{results.Count}]";
+                    error.Source.Pointer = $"/atomic:operations[{results.Count}]" + error.Source.Pointer;
                 }
 
                 throw;
@@ -195,6 +195,8 @@ namespace JsonApiDotNetCore.AtomicOperations
                 ((JsonApiRequest)_request).Relationship = null;
                 ((JsonApiRequest)_request).SecondaryResource = null;
             }
+
+            ((JsonApiRequest) _request).OperationCode = operation.Code;
 
             var processor = _resolver.ResolveProcessor(operation);
             return await processor.ProcessAsync(operation, cancellationToken);

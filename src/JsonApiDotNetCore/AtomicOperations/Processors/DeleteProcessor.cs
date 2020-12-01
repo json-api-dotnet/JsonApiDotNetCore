@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     public class DeleteProcessor<TResource> : DeleteProcessor<TResource, int>, IDeleteProcessor<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public DeleteProcessor(IDeleteService<TResource, int> service)
+        public DeleteProcessor(IDeleteService<TResource> service)
             : base(service)
         {
         }

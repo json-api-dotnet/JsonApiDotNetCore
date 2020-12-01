@@ -9,11 +9,17 @@ using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
-    /// <inheritdoc />
-    public class UpdateProcessor<TResource, TId> : IUpdateProcessor<TResource, TId>
+    /// <summary>
+    /// Processes a single operation to update the attributes and/or relationships of an existing resource.
+    /// Only the values of sent attributes are replaced. And only the values of sent relationships are replaced.
+    /// </summary>
+    /// <typeparam name="TResource">The resource type.</typeparam>
+    /// <typeparam name="TId">The resource identifier type.</typeparam>
+    public class UpdateProcessor<TResource, TId> : BaseAtomicOperationProcessor, IUpdateProcessor<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
         private readonly IUpdateService<TResource, TId> _service;
@@ -21,8 +27,10 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         private readonly IResourceObjectBuilder _resourceObjectBuilder;
         private readonly IResourceContextProvider _resourceContextProvider;
 
-        public UpdateProcessor(IUpdateService<TResource, TId> service, IJsonApiDeserializer deserializer,
+        public UpdateProcessor(IUpdateService<TResource, TId> service, IJsonApiOptions options,
+            IObjectModelValidator validator, IJsonApiDeserializer deserializer,
             IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider resourceContextProvider)
+            : base(options, validator)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
@@ -31,8 +39,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         }
 
         /// <inheritdoc />
-        public async Task<AtomicResultObject> ProcessAsync(AtomicOperationObject operation,
-            CancellationToken cancellationToken)
+        public async Task<AtomicResultObject> ProcessAsync(AtomicOperationObject operation, CancellationToken cancellationToken)
         {
             if (operation == null) throw new ArgumentNullException(nameof(operation));
 
@@ -50,6 +57,8 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             }
 
             var model = (TResource) _deserializer.CreateResourceFromObject(operation.SingleData);
+            ValidateModelState(model);
+
             var result = await _service.UpdateAsync(model.Id, model, cancellationToken);
 
             ResourceObject data = null;
@@ -76,10 +85,10 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         : UpdateProcessor<TResource, int>, IUpdateProcessor<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public UpdateProcessor(IUpdateService<TResource, int> service, IJsonApiDeserializer deserializer,
+        public UpdateProcessor(IUpdateService<TResource> service, IJsonApiOptions options,
+            IObjectModelValidator validator, IJsonApiDeserializer deserializer,
             IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider resourceContextProvider)
-            : base(service, deserializer, resourceObjectBuilder,
-                resourceContextProvider)
+            : base(service, options, validator, deserializer, resourceObjectBuilder, resourceContextProvider)
         {
         }
     }

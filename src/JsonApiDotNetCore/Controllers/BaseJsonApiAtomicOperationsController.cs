@@ -99,11 +99,6 @@ namespace JsonApiDotNetCore.Controllers
                 return new StatusCodeResult(422);
             }
 
-            if (_options.ValidateModelState)
-            {
-                // TODO: @OPS: Add ModelState validation.
-            }
-
             var results = await _processor.ProcessAsync(document.Operations, cancellationToken);
 
             if (results.Any(result => result.Data != null))

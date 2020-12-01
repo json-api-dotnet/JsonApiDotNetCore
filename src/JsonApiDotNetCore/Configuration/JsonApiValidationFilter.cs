@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,14 +31,14 @@ namespace JsonApiDotNetCore.Configuration
                 return true;
             }
 
-            var isTopResourceInPrimaryRequest = string.IsNullOrEmpty(parentEntry.Key) && request.Kind == EndpointKind.Primary;
+            var isTopResourceInPrimaryRequest = string.IsNullOrEmpty(parentEntry.Key) && IsAtPrimaryEndpoint(request);
             if (!isTopResourceInPrimaryRequest)
             {
                 return false;
             }
 
             var httpContextAccessor = _serviceProvider.GetRequiredService<IHttpContextAccessor>();
-            if (httpContextAccessor.HttpContext.Request.Method == HttpMethods.Patch)
+            if (httpContextAccessor.HttpContext.Request.Method == HttpMethods.Patch || request.OperationCode == AtomicOperationCode.Update)
             {
                 var targetedFields = _serviceProvider.GetRequiredService<ITargetedFields>();
                 return IsFieldTargeted(entry, targetedFields);
@@ -49,6 +50,11 @@ namespace JsonApiDotNetCore.Configuration
         private static bool IsId(string key)
         {
             return key == nameof(Identifiable.Id) || key.EndsWith("." + nameof(Identifiable.Id), StringComparison.Ordinal);
+        }
+
+        private static bool IsAtPrimaryEndpoint(IJsonApiRequest request)
+        {
+            return request.Kind == EndpointKind.Primary || request.Kind == EndpointKind.AtomicOperations;
         }
 
         private static bool IsFieldTargeted(ValidationEntry entry, ITargetedFields targetedFields)

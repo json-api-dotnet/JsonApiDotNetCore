@@ -28,12 +28,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
         /// <summary>
         /// Used to assert on a <see cref="decimal"/> column, whose value is returned as <see cref="double"/> in json:api response body.
         /// </summary>
-        public static void BeApproximately(this ObjectAssertions source, decimal expected, decimal precision = 0.00000000001M, string because = "",
+        public static void BeApproximately(this ObjectAssertions source, decimal? expected, decimal precision = 0.00000000001M, string because = "",
             params object[] becauseArgs)
         {
             // We lose a little bit of precision on roundtrip through PostgreSQL database.
 
-            var value = (decimal) (double) source.Subject;
+            var value = (decimal?) (double) source.Subject;
             value.Should().BeApproximately(expected, precision, because, becauseArgs);
         }
     }
