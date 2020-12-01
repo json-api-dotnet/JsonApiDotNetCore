@@ -92,6 +92,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public void ConfigureMvc()
         {
+            
             _mvcBuilder.AddMvcOptions(options =>
             {
                 options.EnableEndpointRouting = true;
@@ -100,6 +101,8 @@ namespace JsonApiDotNetCore.Configuration
                 options.Filters.AddService<IAsyncConvertEmptyActionResultFilter>();
                 ConfigureMvcOptions?.Invoke(options);
             });
+
+            _mvcBuilder.ConfigureApplicationPartManager(manager => manager.FeatureProviders.Add(new JsonApiControllerFeatureProvider()));
 
             if (_options.ValidateModelState)
             {
