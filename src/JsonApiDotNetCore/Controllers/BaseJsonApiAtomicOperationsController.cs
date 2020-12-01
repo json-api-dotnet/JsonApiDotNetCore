@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.AtomicOperations;
@@ -70,10 +71,15 @@ namespace JsonApiDotNetCore.Controllers
 
             var results = await _processor.ProcessAsync(document.Operations, cancellationToken);
 
-            return Ok(new AtomicOperationsDocument
+            if (results.Any(result => result.Data != null))
             {
-                Results = results
-            });
+                return Ok(new AtomicOperationsDocument
+                {
+                    Results = results
+                });
+            }
+
+            return NoContent();
         }
     }
 }
