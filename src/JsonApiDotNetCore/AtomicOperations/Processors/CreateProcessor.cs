@@ -7,7 +7,6 @@ using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
@@ -16,7 +15,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
     /// <typeparam name="TId">The resource identifier type.</typeparam>
-    public class CreateProcessor<TResource, TId> : BaseAtomicOperationProcessor, ICreateProcessor<TResource, TId>
+    public class CreateProcessor<TResource, TId> : ICreateProcessor<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
         private readonly ICreateService<TResource, TId> _service;
@@ -25,10 +24,9 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         private readonly IResourceObjectBuilder _resourceObjectBuilder;
         private readonly IResourceContextProvider _resourceContextProvider;
 
-        public CreateProcessor(ICreateService<TResource, TId> service, IJsonApiOptions options,
-            IObjectModelValidator validator, ILocalIdTracker localIdTracker, IJsonApiDeserializer deserializer,
-            IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider resourceContextProvider)
-            : base(options, validator)
+        public CreateProcessor(ICreateService<TResource, TId> service, ILocalIdTracker localIdTracker,
+            IJsonApiDeserializer deserializer, IResourceObjectBuilder resourceObjectBuilder,
+            IResourceContextProvider resourceContextProvider)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _localIdTracker = localIdTracker ?? throw new ArgumentNullException(nameof(localIdTracker));
@@ -44,7 +42,6 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             if (operation == null) throw new ArgumentNullException(nameof(operation));
 
             var model = (TResource) _deserializer.CreateResourceFromObject(operation.SingleData);
-            ValidateModelState(model);
 
             var newResource = await _service.CreateAsync(model, cancellationToken);
 
@@ -78,11 +75,10 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         : CreateProcessor<TResource, int>, ICreateProcessor<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public CreateProcessor(ICreateService<TResource> service, IJsonApiOptions options,
-            IObjectModelValidator validator, ILocalIdTracker localIdTracker, IJsonApiDeserializer deserializer,
-            IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider resourceContextProvider)
-            : base(service, options, validator, localIdTracker, deserializer, resourceObjectBuilder,
-                resourceContextProvider)
+        public CreateProcessor(ICreateService<TResource> service, ILocalIdTracker localIdTracker,
+            IJsonApiDeserializer deserializer, IResourceObjectBuilder resourceObjectBuilder,
+            IResourceContextProvider resourceContextProvider)
+            : base(service, localIdTracker, deserializer, resourceObjectBuilder, resourceContextProvider)
         {
         }
     }

@@ -5,11 +5,15 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.AtomicOperations
@@ -18,23 +22,30 @@ namespace JsonApiDotNetCore.AtomicOperations
     public class AtomicOperationsProcessor : IAtomicOperationsProcessor
     {
         private readonly IAtomicOperationProcessorResolver _resolver;
+        private readonly IJsonApiOptions _options;
         private readonly ILocalIdTracker _localIdTracker;
         private readonly DbContext _dbContext;
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IObjectModelValidator _validator;
+        private readonly IJsonApiDeserializer _deserializer;
 
-        public AtomicOperationsProcessor(IAtomicOperationProcessorResolver resolver, ILocalIdTracker localIdTracker,
-            IJsonApiRequest request, ITargetedFields targetedFields, IResourceContextProvider resourceContextProvider,
-            IEnumerable<IDbContextResolver> dbContextResolvers)
+        public AtomicOperationsProcessor(IAtomicOperationProcessorResolver resolver, IJsonApiOptions options,
+            ILocalIdTracker localIdTracker, IJsonApiRequest request, ITargetedFields targetedFields,
+            IResourceContextProvider resourceContextProvider, IEnumerable<IDbContextResolver> dbContextResolvers,
+            IObjectModelValidator validator, IJsonApiDeserializer deserializer)
         {
             if (dbContextResolvers == null) throw new ArgumentNullException(nameof(dbContextResolvers));
 
             _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _localIdTracker = localIdTracker ?? throw new ArgumentNullException(nameof(localIdTracker));
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+            _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
 
             var resolvers = dbContextResolvers.ToArray();
             if (resolvers.Length != 1)
@@ -49,6 +60,11 @@ namespace JsonApiDotNetCore.AtomicOperations
         public async Task<IList<AtomicResultObject>> ProcessAsync(IList<AtomicOperationObject> operations, CancellationToken cancellationToken)
         {
             if (operations == null) throw new ArgumentNullException(nameof(operations));
+
+            if (_options.ValidateModelState)
+            {
+                ValidateModelState(operations);
+            }
 
             var results = new List<AtomicResultObject>();
 
@@ -95,6 +111,45 @@ namespace JsonApiDotNetCore.AtomicOperations
                     }
 
                 }, exception);
+            }
+        }
+
+        private void ValidateModelState(IEnumerable<AtomicOperationObject> operations)
+        {
+            var violations = new List<ModelStateViolation>();
+
+            int index = 0;
+            foreach (var operation in operations)
+            {
+                if (operation.Ref?.Relationship == null && operation.SingleData != null)
+                {
+                    PrepareForOperation(operation);
+
+                    var validationContext = new ActionContext();
+
+                    var model = _deserializer.CreateResourceFromObject(operation.SingleData);
+                    _validator.Validate(validationContext, null, string.Empty, model);
+
+                    if (!validationContext.ModelState.IsValid)
+                    {
+                        foreach (var (key, entry) in validationContext.ModelState)
+                        {
+                            foreach (var error in entry.Errors)
+                            {
+                                var violation = new ModelStateViolation($"/atomic:operations[{index}]/data/attributes/", key, model.GetType(), error);
+                                violations.Add(violation);
+                            }
+                        }
+                    }
+                }
+
+                index++;
+            }
+
+            if (violations.Any())
+            {
+                var namingStrategy = _options.SerializerContractResolver.NamingStrategy;
+                throw new InvalidModelStateException(violations, _options.IncludeExceptionStackTraceInErrors, namingStrategy);
             }
         }
 
@@ -167,38 +222,49 @@ namespace JsonApiDotNetCore.AtomicOperations
                 });
             }
 
+            PrepareForOperation(operation);
+
+            var processor = _resolver.ResolveProcessor(operation);
+            return await processor.ProcessAsync(operation, cancellationToken);
+        }
+
+        private void PrepareForOperation(AtomicOperationObject operation)
+        {
             _targetedFields.Attributes.Clear();
             _targetedFields.Relationships.Clear();
 
+            var resourceName = operation.GetResourceTypeName();
+            var primaryResourceContext = _resourceContextProvider.GetResourceContext(resourceName);
+
+            ((JsonApiRequest) _request).OperationCode = operation.Code;
+            ((JsonApiRequest)_request).PrimaryResource = primaryResourceContext;
+
             if (operation.Ref?.Relationship != null)
             {
-                var primaryResourceContext = _resourceContextProvider.GetResourceContext(operation.Ref.Type);
-                var requestRelationship = primaryResourceContext.Relationships.SingleOrDefault(relationship => relationship.PublicName == operation.Ref.Relationship);
-
-                if (requestRelationship == null)
+                var relationship = primaryResourceContext.Relationships.SingleOrDefault(relationship => relationship.PublicName == operation.Ref.Relationship);
+                if (relationship == null)
                 {
                     throw new InvalidOperationException("TODO: Relationship does not exist.");
                 }
 
-                ((JsonApiRequest)_request).PrimaryResource = primaryResourceContext;
-                ((JsonApiRequest)_request).PrimaryId = operation.Ref.Id;
-                ((JsonApiRequest)_request).Relationship = requestRelationship;
-                ((JsonApiRequest)_request).SecondaryResource = _resourceContextProvider.GetResourceContext(requestRelationship.RightType);
+                var secondaryResource = _resourceContextProvider.GetResourceContext(relationship.RightType);
+                if (secondaryResource == null)
+                {
+                    throw new InvalidOperationException("TODO: Secondary resource does not exist.");
+                }
 
-                _targetedFields.Relationships.Add(_request.Relationship);
+                ((JsonApiRequest)_request).PrimaryId = operation.Ref.Id;
+                ((JsonApiRequest)_request).Relationship = relationship;
+                ((JsonApiRequest)_request).SecondaryResource = secondaryResource;
+
+                _targetedFields.Relationships.Add(relationship);
             }
             else
             {
-                ((JsonApiRequest)_request).PrimaryResource = resourceContext;
                 ((JsonApiRequest)_request).PrimaryId = null;
                 ((JsonApiRequest)_request).Relationship = null;
                 ((JsonApiRequest)_request).SecondaryResource = null;
             }
-
-            ((JsonApiRequest) _request).OperationCode = operation.Code;
-
-            var processor = _resolver.ResolveProcessor(operation);
-            return await processor.ProcessAsync(operation, cancellationToken);
         }
 
         private void ReplaceLocalIdsInOperationObject(AtomicOperationObject operation, bool isResourceAdd)

@@ -429,5 +429,67 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                 playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Id.Should().Be(existingTrack.Id);
             });
         }
+
+        [Fact]
+        public async Task Validates_all_operations_before_execution_starts()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new object[]
+                {
+                    new
+                    {
+                        op = "update",
+                        data = new
+                        {
+                            type = "playlists",
+                            id = 99999999,
+                            attributes = new
+                            {
+                                name = (string) null
+                            }
+                        }
+                    },
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "musicTracks",
+                            attributes = new
+                            {
+                                lengthInSeconds = -1
+                            }
+                        }
+                    }
+                }
+            };
+            
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(3);
+
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
+            responseDocument.Errors[0].Detail.Should().Be("The Name field is required.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/name");
+
+            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[1].Title.Should().Be("Input validation failed.");
+            responseDocument.Errors[1].Detail.Should().Be("The Title field is required.");
+            responseDocument.Errors[1].Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/title");
+
+            responseDocument.Errors[2].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[2].Title.Should().Be("Input validation failed.");
+            responseDocument.Errors[2].Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
+            responseDocument.Errors[2].Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/lengthInSeconds");
+        }
     }
 }
