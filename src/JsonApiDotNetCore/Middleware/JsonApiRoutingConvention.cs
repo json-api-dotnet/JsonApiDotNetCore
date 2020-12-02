@@ -60,11 +60,11 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (application == null) throw new ArgumentNullException(nameof(application));
 
-            RegisterResourcesByEndpoint(application.Controllers);
-            RegisterRoutesForEndpoints(application.Controllers);
+            RegisterResources(application.Controllers);
+            RegisterRoutes(application.Controllers);
         }
 
-        private void RegisterRoutesForEndpoints(IEnumerable<ControllerModel> controllers)
+        private void RegisterRoutes(IEnumerable<ControllerModel> controllers)
         {
             foreach (var model in controllers)
             {
@@ -90,7 +90,8 @@ namespace JsonApiDotNetCore.Middleware
 
             if (template == null)
             {
-                throw new InvalidConfigurationException($"Failed to create a template for {controllerModel.ControllerType.FullName}. ");
+                throw new InvalidConfigurationException($"Failed to create a template for {controllerModel.ControllerType.FullName} " +
+                                                        $"based on the controller and resource name");
             }
 
             if (_endpointsByRoutes.ContainsKey(template))
@@ -104,21 +105,17 @@ namespace JsonApiDotNetCore.Middleware
             return template;
         }
 
-        private void RegisterResourcesByEndpoint(IEnumerable<ControllerModel> controllers)
+        private void RegisterResources(IEnumerable<ControllerModel> controllers)
         {
             foreach (var model in controllers)
             {
-                var resourceType = ExtractResourceTypeForEndpoint(model.ControllerType);
+                var resourceType = ExtractResourceTypeFromEndpoint(model.ControllerType);
                 if (resourceType != null)
                 {
                     var resourceContext = _resourceGraph.GetResourceContext(resourceType);
                     if (resourceContext != null)
                     {
-                        if (resourceContext.ResourceType.Name.Contains("Address"))
-                        {
-
-                        }
-                        _resourcesByEndpoint.Add(model.ControllerType.FullName, resourceContext);
+                        _resourcesByEndpoint.Add(model.ControllerType.FullName!, resourceContext);
                     }
                 }
             }
@@ -162,7 +159,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <summary>
         /// Determines the resource associated to a controller by inspecting generic arguments in its inheritance tree.
         /// </summary>
-        private Type ExtractResourceTypeForEndpoint(Type type)
+        private Type ExtractResourceTypeFromEndpoint(Type type)
         {
             var aspNetControllerType = typeof(ControllerBase);
             var coreControllerType = typeof(CoreJsonApiController);

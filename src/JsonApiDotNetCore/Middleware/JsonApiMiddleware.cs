@@ -46,18 +46,23 @@ namespace JsonApiDotNetCore.Middleware
             if (resourceContextProvider == null) throw new ArgumentNullException(nameof(resourceContextProvider));
 
             // TODO: endpoint is null when route is not found. Instead of doing half work here, we should consider just throwing a 404 here already.
-            var primaryResourceContext = GetPrimaryResourceContext(httpContext.GetEndpoint(), controllerResourceMapping, resourceContextProvider);
-            if (primaryResourceContext != null)
+            var endpoint = httpContext.GetEndpoint();
+            if (endpoint != null)
             {
-                if (!await ValidateContentTypeHeaderAsync(httpContext, options.SerializerSettings) || 
-                    !await ValidateAcceptHeaderAsync(httpContext, options.SerializerSettings))
+                var primaryResourceContext = GetPrimaryResourceContext(endpoint, controllerResourceMapping, resourceContextProvider);
+                if (primaryResourceContext != null)
                 {
-                    return;
+                    if (!await ValidateContentTypeHeaderAsync(httpContext, options.SerializerSettings) || 
+                        !await ValidateAcceptHeaderAsync(httpContext, options.SerializerSettings))
+                    {
+                        return;
+                    }
+    
+                    var routeValues = httpContext.GetRouteData().Values;
+                    SetupRequest((JsonApiRequest)request, primaryResourceContext, routeValues, options, resourceContextProvider, httpContext.Request);
+    
+                    httpContext.RegisterJsonApiRequest();
                 }
-
-                SetupRequest((JsonApiRequest)request, primaryResourceContext, httpContext.GetRouteData().Values, options, resourceContextProvider, httpContext.Request);
-
-                httpContext.RegisterJsonApiRequest();
             }
 
             await _next(httpContext);
@@ -65,8 +70,8 @@ namespace JsonApiDotNetCore.Middleware
 
         private static ResourceContext GetPrimaryResourceContext(Endpoint endpoint, IControllerResourceMapping controllerResourceMapping, IResourceContextProvider resourceContextProvider)
         {
-            var controllerDescriptor = (ControllerActionDescriptor)endpoint?.Metadata.Single(meta => meta is ControllerActionDescriptor);
-            var controllerName = controllerDescriptor?.ControllerTypeInfo.FullName;
+            var controllerDescriptor = (ControllerActionDescriptor)endpoint.Metadata.Single(meta => meta is ControllerActionDescriptor);
+            var controllerName = controllerDescriptor.ControllerTypeInfo.FullName;
 
             if (controllerName != null)
             {

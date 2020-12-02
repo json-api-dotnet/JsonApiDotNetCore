@@ -117,10 +117,7 @@ namespace JsonApiDotNetCore.Configuration
         private void RegisterControllerFeatureProvider()
         {
             IJsonApiControllerGenerator controllerFeatureProvider;
-            if (_services.Any(descriptor =>
-            {
-                return descriptor.ServiceType == typeof(IJsonApiControllerGenerator);
-            }))
+            if (_services.Any(descriptor => descriptor.ServiceType == typeof(IJsonApiControllerGenerator)))
             {
                 using (var provider = _services.BuildServiceProvider())
                 {

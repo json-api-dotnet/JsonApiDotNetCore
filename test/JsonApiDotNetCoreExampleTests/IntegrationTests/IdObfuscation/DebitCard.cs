@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
