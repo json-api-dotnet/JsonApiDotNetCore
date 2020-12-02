@@ -49,7 +49,6 @@ namespace JsonApiDotNetCore.Repositories
             return entityEntry?.Entity;
         }
 
-        // TODO: @OPS: Should we keep this?
         /// <summary>
         /// Detaches all entities from the change tracker.
         /// </summary>
@@ -57,8 +56,7 @@ namespace JsonApiDotNetCore.Repositories
         {
             if (dbContext == null) throw new ArgumentNullException(nameof(dbContext));
 
-            List<EntityEntry> entriesWithChanges = dbContext.ChangeTracker.Entries().Where(entry =>
-                entry.State != EntityState.Detached).ToList();
+            List<EntityEntry> entriesWithChanges = dbContext.ChangeTracker.Entries().ToList();
 
             foreach (EntityEntry entry in entriesWithChanges)
             {

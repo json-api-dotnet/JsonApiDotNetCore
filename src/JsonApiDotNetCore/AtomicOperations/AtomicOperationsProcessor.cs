@@ -57,8 +57,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             {
                 foreach (var operation in operations)
                 {
-                    // TODO: @OPS: Do we need to keep this in?
-                    // _dbContext.ResetChangeTracker();
+                    _dbContext.ResetChangeTracker();
 
                     var result = await ProcessOperation(operation, cancellationToken);
                     results.Add(result);

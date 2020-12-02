@@ -1294,7 +1294,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
         public async Task Can_add_to_ManyToMany_relationship_using_local_ID()
         {
             // Arrange
-            var existingTrack = _fakers.MusicTrack.Generate();
+            var existingTracks = _fakers.MusicTrack.Generate(2);
 
             var newPlaylistName = _fakers.Playlist.Generate().Name;
             var newTrackTitle = _fakers.MusicTrack.Generate().Title;
@@ -1304,7 +1304,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.MusicTracks.Add(existingTrack);
+                dbContext.MusicTracks.AddRange(existingTracks);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -1332,7 +1332,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
                                         new
                                         {
                                             type = "musicTracks",
-                                            id = existingTrack.StringId
+                                            id = existingTracks[0].StringId
                                         }
                                     }
                                 }
@@ -1369,6 +1369,24 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
                                 lid = trackLocalId
                             }
                         }
+                    },
+                    new
+                    {
+                        op = "add",
+                        @ref = new
+                        {
+                            type = "playlists",
+                            lid = playlistLocalId,
+                            relationship = "tracks"
+                        },
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "musicTracks",
+                                id = existingTracks[1].StringId
+                            }
+                        }
                     }
                 }
             };
@@ -1381,7 +1399,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(3);
+            responseDocument.Results.Should().HaveCount(4);
 
             responseDocument.Results[0].SingleData.Should().NotBeNull();
             responseDocument.Results[0].SingleData.Type.Should().Be("playlists");
@@ -1395,6 +1413,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
 
             responseDocument.Results[2].Data.Should().BeNull();
 
+            responseDocument.Results[3].Data.Should().BeNull();
+
             var newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
             var newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
 
@@ -1407,8 +1427,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
 
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
-                playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(2);
-                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTrack.Id);
+                playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(3);
+                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTracks[0].Id);
+                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTracks[1].Id);
                 playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == newTrackId);
             });
         }
@@ -1543,17 +1564,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
         public async Task Can_remove_from_ManyToMany_relationship_using_local_ID()
         {
             // Arrange
-            var existingTrack = _fakers.MusicTrack.Generate();
+            var existingPlaylist = _fakers.Playlist.Generate();
+            existingPlaylist.PlaylistMusicTracks = new[]
+            {
+                new PlaylistMusicTrack
+                {
+                    MusicTrack = _fakers.MusicTrack.Generate()
+                },
+                new PlaylistMusicTrack
+                {
+                    MusicTrack = _fakers.MusicTrack.Generate()
+                }
+            };
 
-            var newPlaylistName = _fakers.Playlist.Generate().Name;
             var newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
-            const string playlistLocalId = "playlist-1";
             const string trackLocalId = "track-1";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.MusicTracks.Add(existingTrack);
+                dbContext.Playlists.Add(existingPlaylist);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -1577,32 +1607,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
                     new
                     {
                         op = "add",
-                        data = new
+                        @ref = new
                         {
                             type = "playlists",
-                            lid = playlistLocalId,
-                            attributes = new
+                            id = existingPlaylist.StringId,
+                            relationship = "tracks"
+                        },
+                        data = new[]
+                        {
+                            new
                             {
-                                name = newPlaylistName
-                            },
-                            relationships = new
-                            {
-                                tracks = new
-                                {
-                                    data = new object[]
-                                    {
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            id = existingTrack.StringId
-                                        },
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            lid = trackLocalId
-                                        }
-                                    }
-                                }
+                                type = "musicTracks",
+                                lid = trackLocalId
                             }
                         }
                     },
@@ -1612,7 +1628,25 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
                         @ref = new
                         {
                             type = "playlists",
-                            lid = playlistLocalId,
+                            id = existingPlaylist.StringId,
+                            relationship = "tracks"
+                        },
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "musicTracks",
+                                id = existingPlaylist.PlaylistMusicTracks[1].MusicTrack.StringId
+                            }
+                        }
+                    },
+                    new
+                    {
+                        op = "remove",
+                        @ref = new
+                        {
+                            type = "playlists",
+                            id = existingPlaylist.StringId,
                             relationship = "tracks"
                         },
                         data = new[]
@@ -1635,33 +1669,28 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(3);
+            responseDocument.Results.Should().HaveCount(4);
 
             responseDocument.Results[0].SingleData.Should().NotBeNull();
             responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
             responseDocument.Results[0].SingleData.Lid.Should().BeNull();
             responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("playlists");
-            responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["name"].Should().Be(newPlaylistName);
+            responseDocument.Results[1].Data.Should().BeNull();
 
             responseDocument.Results[2].Data.Should().BeNull();
 
-            var newPlaylistId = long.Parse(responseDocument.Results[1].SingleData.Id);
+            responseDocument.Results[3].Data.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstAsync(playlist => playlist.Id == newPlaylistId);
-
-                playlistInDatabase.Name.Should().Be(newPlaylistName);
+                    .FirstAsync(playlist => playlist.Id == existingPlaylist.Id);
 
                 playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(1);
-                playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Id.Should().Be(existingTrack.Id);
+                playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Id.Should().Be(existingPlaylist.PlaylistMusicTracks[0].MusicTrack.Id);
             });
         }
 
