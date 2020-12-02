@@ -125,7 +125,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbUser = dbContext.Users.Single(u => u.Id == user.Id);
+                var dbUser = await dbContext.Users.SingleAsync(u => u.Id == user.Id);
                 Assert.Equal(user.Password, dbUser.Password);
             });
         }
