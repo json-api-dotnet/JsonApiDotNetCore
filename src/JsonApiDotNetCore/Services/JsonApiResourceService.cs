@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Services
 
             if (_options.IncludeTotalResourceCount)
             {
-                var topFilter = _queryLayerComposer.GetTopFilterFromConstraints();
+                var topFilter = _queryLayerComposer.GetTopFilterFromConstraints(_request.PrimaryResource);
                 _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync<TResource>(topFilter, cancellationToken);
 
                 if (_paginationContext.TotalResourceCount == 0)
