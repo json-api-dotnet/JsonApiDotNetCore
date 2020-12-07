@@ -10079,12 +10079,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSparseFieldSetProjection
   nameWithType: QueryLayerComposer.GetSparseFieldSetProjection
-- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints
-  name: GetTopFilterFromConstraints()
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetTopFilterFromConstraints
-  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints()
-  nameWithType: QueryLayerComposer.GetTopFilterFromConstraints()
+- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceContext)
+  name: GetTopFilterFromConstraints(ResourceContext)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetTopFilterFromConstraints_JsonApiDotNetCore_Configuration_ResourceContext_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceContext)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceContext)
+  nameWithType: QueryLayerComposer.GetTopFilterFromConstraints(ResourceContext)
 - uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints*
   name: GetTopFilterFromConstraints
   href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetTopFilterFromConstraints_
@@ -10307,12 +10307,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryLayerForRelationship
   nameWithType: IQueryLayerComposer.ComposeSecondaryLayerForRelationship
-- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints
-  name: GetTopFilterFromConstraints()
-  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetTopFilterFromConstraints
-  commentId: M:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints
-  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints()
-  nameWithType: IQueryLayerComposer.GetTopFilterFromConstraints()
+- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceContext)
+  name: GetTopFilterFromConstraints(ResourceContext)
+  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetTopFilterFromConstraints_JsonApiDotNetCore_Configuration_ResourceContext_
+  commentId: M:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceContext)
+  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceContext)
+  nameWithType: IQueryLayerComposer.GetTopFilterFromConstraints(ResourceContext)
 - uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints*
   name: GetTopFilterFromConstraints
   href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetTopFilterFromConstraints_
