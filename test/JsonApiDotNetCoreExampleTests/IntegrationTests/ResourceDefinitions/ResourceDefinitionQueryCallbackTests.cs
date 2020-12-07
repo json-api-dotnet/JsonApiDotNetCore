@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 services.AddScoped<IResourceDefinition<CallableResource>, CallableResourceDefinition>();
                 services.AddSingleton<IUserRolesService, FakeUserRolesService>();
             });
+
+            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.IncludeTotalResourceCount = true;
         }
 
         [Fact]
@@ -32,9 +36,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             var userRolesService = (FakeUserRolesService) _testContext.Factory.Services.GetRequiredService<IUserRolesService>();
             userRolesService.AllowIncludeOwner = false;
 
+            var resource = new CallableResource
+            {
+                Label = "A",
+                IsDeleted = false
+            };
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.RemoveRange(dbContext.CallableResources);
+                await dbContext.ClearTableAsync<CallableResource>();
+                dbContext.CallableResources.Add(resource);
 
                 await dbContext.SaveChangesAsync();
             });
@@ -99,6 +110,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             responseDocument.ManyData.Should().HaveCount(2);
             responseDocument.ManyData[0].Id.Should().Be(resources[1].StringId);
             responseDocument.ManyData[1].Id.Should().Be(resources[3].StringId);
+
+            responseDocument.Meta["totalResources"].Should().Be(2);
         }
 
         [Fact]
@@ -147,6 +160,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(resources[3].StringId);
+
+            responseDocument.Meta["totalResources"].Should().Be(1);
         }
 
         [Fact]

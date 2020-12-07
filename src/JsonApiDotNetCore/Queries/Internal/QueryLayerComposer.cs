@@ -35,22 +35,17 @@ namespace JsonApiDotNetCore.Queries.Internal
         }
 
         /// <inheritdoc />
-        public FilterExpression GetTopFilterFromConstraints()
+        public FilterExpression GetTopFilterFromConstraints(ResourceContext resourceContext)
         {
             var constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
 
-            var topFilters = constraints
+            var filtersInTopScope = constraints
                 .Where(constraint => constraint.Scope == null)
                 .Select(constraint => constraint.Expression)
                 .OfType<FilterExpression>()
                 .ToArray();
 
-            if (topFilters.Length > 1)
-            {
-                return new LogicalExpression(LogicalOperator.And, topFilters);
-            }
-
-            return topFilters.Length == 1 ? topFilters[0] : null;
+            return GetFilter(filtersInTopScope, resourceContext);
         }
 
         /// <inheritdoc />
