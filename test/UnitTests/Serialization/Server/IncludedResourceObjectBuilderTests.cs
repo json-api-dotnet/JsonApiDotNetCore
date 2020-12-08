@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
@@ -171,7 +172,7 @@ namespace UnitTests.Serialization.Server
             var links = GetLinkBuilder();
 
             var accessor = new Mock<IResourceDefinitionAccessor>().Object;
-            return new IncludedResourceObjectBuilder(fields, links, _resourceGraph, accessor, GetSerializerSettingsProvider());
+            return new IncludedResourceObjectBuilder(fields, links, _resourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), accessor, GetSerializerSettingsProvider());
         }
     }
 }

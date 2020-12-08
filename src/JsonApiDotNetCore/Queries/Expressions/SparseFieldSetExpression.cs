@@ -6,19 +6,19 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
-    /// Represents a sparse fieldset, resulting from text such as: firstName,lastName
+    /// Represents a sparse fieldset, resulting from text such as: firstName,lastName,articles
     /// </summary>
     public class SparseFieldSetExpression : QueryExpression
     {
-        public IReadOnlyCollection<AttrAttribute> Attributes { get; }
+        public IReadOnlyCollection<ResourceFieldAttribute> Fields { get; }
 
-        public SparseFieldSetExpression(IReadOnlyCollection<AttrAttribute> attributes)
+        public SparseFieldSetExpression(IReadOnlyCollection<ResourceFieldAttribute> fields)
         {
-            Attributes = attributes ?? throw new ArgumentNullException(nameof(attributes));
+            Fields = fields ?? throw new ArgumentNullException(nameof(fields));
 
-            if (!attributes.Any())
+            if (!fields.Any())
             {
-                throw new ArgumentException("Must have one or more attributes.", nameof(attributes));
+                throw new ArgumentException("Must have one or more fields.", nameof(fields));
             }
         }
 
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public override string ToString()
         {
-            return string.Join(",", Attributes.Select(child => child.PublicName));
+            return string.Join(",", Fields.Select(child => child.PublicName));
         }
 
         public override bool Equals(object obj)
@@ -46,16 +46,16 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             var other = (SparseFieldSetExpression) obj;
 
-            return Attributes.SequenceEqual(other.Attributes);
+            return Fields.SequenceEqual(other.Fields);
         }
 
         public override int GetHashCode()
         {
             var hashCode = new HashCode();
 
-            foreach (var attribute in Attributes)
+            foreach (var field in Fields)
             {
-                hashCode.Add(attribute);
+                hashCode.Add(field);
             }
 
             return hashCode.ToHashCode();

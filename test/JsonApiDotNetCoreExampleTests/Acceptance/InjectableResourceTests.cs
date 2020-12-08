@@ -153,7 +153,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.Passports.AddRange(passports);
             await _context.SaveChangesAsync();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/passports?include=person&fields=socialSecurityNumber&fields[person]=firstName");
+            var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/passports?include=person&fields[passports]=socialSecurityNumber&fields[people]=firstName");
 
             // Act
             var response = await _fixture.Client.SendAsync(request);

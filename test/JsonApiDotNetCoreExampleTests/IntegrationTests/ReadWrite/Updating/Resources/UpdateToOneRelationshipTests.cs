@@ -352,6 +352,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
             responseDocument.Included[0].Attributes["firstName"].Should().Be(existingUserAccount.FirstName);
             responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccount.LastName);
+            responseDocument.Included[0].Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -399,7 +400,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}?fields=description&include=assignee&fields[assignee]=lastName";
+            var route = $"/workItems/{existingWorkItem.StringId}?fields[workItems]=description,assignee&include=assignee&fields[userAccounts]=lastName";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -412,13 +413,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["description"].Should().Be(existingWorkItem.Description);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.SingleData.Relationships.Should().HaveCount(1);
+            responseDocument.SingleData.Relationships["assignee"].SingleData.Id.Should().Be(existingUserAccount.StringId);
             
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("userAccounts");
             responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
             responseDocument.Included[0].Attributes.Should().HaveCount(1);
             responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccount.LastName);
+            responseDocument.Included[0].Relationships.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

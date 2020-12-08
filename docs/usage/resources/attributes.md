@@ -39,7 +39,7 @@ This can be overridden per attribute.
 
 ### Viewability
 
-Attributes can be marked to allow returning their value in responses. When not allowed and requested using `?fields=`, it results in an HTTP 400 response.
+Attributes can be marked to allow returning their value in responses. When not allowed and requested using `?fields[]=`, it results in an HTTP 400 response.
 
 ```c#
 public class User : Identifiable

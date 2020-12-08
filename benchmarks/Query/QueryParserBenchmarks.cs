@@ -31,7 +31,8 @@ namespace Benchmarks.Query
 
             var request = new JsonApiRequest
             {
-                PrimaryResource = resourceGraph.GetResourceContext(typeof(BenchmarkResource))
+                PrimaryResource = resourceGraph.GetResourceContext(typeof(BenchmarkResource)),
+                IsCollection = true
             };
 
             _queryStringReaderForSort = CreateQueryParameterDiscoveryForSort(resourceGraph, request, options, _queryStringAccessor);
@@ -56,6 +57,7 @@ namespace Benchmarks.Query
         {
             var resourceFactory = new ResourceFactory(new ServiceContainer());
 
+            var includeReader = new IncludeQueryStringParameterReader(request, resourceGraph, options);
             var filterReader = new FilterQueryStringParameterReader(request, resourceGraph, resourceFactory, options);
             var sortReader = new SortQueryStringParameterReader(request, resourceGraph);
             var sparseFieldSetReader = new SparseFieldSetQueryStringParameterReader(request, resourceGraph);
@@ -65,7 +67,7 @@ namespace Benchmarks.Query
 
             var readers = new List<IQueryStringParameterReader>
             {
-                filterReader, sortReader, sparseFieldSetReader, paginationReader, defaultsReader, nullsReader
+                includeReader, filterReader, sortReader, sparseFieldSetReader, paginationReader, defaultsReader, nullsReader
             };
 
             return new QueryStringReader(options, queryStringAccessor, readers, NullLoggerFactory.Instance);
@@ -92,7 +94,7 @@ namespace Benchmarks.Query
         [Benchmark]
         public void ComplexQuery() => Run(100, () =>
         {
-            var queryString = $"?filter[{BenchmarkResourcePublicNames.NameAttr}]=abc,eq:abc&sort=-{BenchmarkResourcePublicNames.NameAttr}&include=child&page[size]=1&fields={BenchmarkResourcePublicNames.NameAttr}";
+            var queryString = $"?filter[{BenchmarkResourcePublicNames.NameAttr}]=abc,eq:abc&sort=-{BenchmarkResourcePublicNames.NameAttr}&include=child&page[size]=1&fields[{BenchmarkResourcePublicNames.Type}]={BenchmarkResourcePublicNames.NameAttr}";
 
             _queryStringAccessor.SetQueryString(queryString);
             _queryStringReaderForAll.ReadAll(null);

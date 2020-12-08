@@ -34,13 +34,13 @@ To get a sense of what this all looks like, let's look at an example query strin
   filter=has(articles)&
   sort=count(articles)&
   page[number]=3&
-  fields=title&
+  fields[blogs]=title&
     filter[articles]=and(not(equals(author.firstName,null)),has(revisions))&
     sort[articles]=author.lastName&
     fields[articles]=url&
       filter[articles.revisions]=and(greaterThan(publishTime,'2001-01-01'),startsWith(author.firstName,'J'))&
       sort[articles.revisions]=-publishTime,author.lastName&
-      fields[articles.revisions]=publishTime
+      fields[revisions]=publishTime
 ```
 
 After parsing, the set of scoped expressions is transformed into the following tree by `QueryLayerComposer`:

@@ -17,6 +17,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         private readonly IJsonApiOptions _options;
         private readonly IPaginationContext _paginationContext;
         private readonly ITargetedFields _targetedFields;
+        private readonly SparseFieldSetCache _sparseFieldSetCache;
 
         public QueryLayerComposer(
             IEnumerable<IQueryConstraintProvider> constraintProviders,
@@ -32,6 +33,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
+            _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
         }
 
         /// <inheritdoc />
@@ -80,7 +82,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                 Filter = GetFilter(expressionsInTopScope, resourceContext),
                 Sort = GetSort(expressionsInTopScope, resourceContext),
                 Pagination = ((JsonApiOptions)_options).DisableTopPagination ? null : topPagination,
-                Projection = GetSparseFieldSetProjection(expressionsInTopScope, resourceContext)
+                Projection = GetProjectionForSparseAttributeSet(resourceContext)
             };
         }
 
@@ -134,7 +136,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                         Pagination = ((JsonApiOptions)_options).DisableChildrenPagination
                             ? null
                             : GetPagination(expressionsInCurrentScope, resourceContext),
-                        Projection = GetSparseFieldSetProjection(expressionsInCurrentScope, resourceContext)
+                        Projection = GetProjectionForSparseAttributeSet(resourceContext)
                     };
 
                     parentLayer.Projection.Add(includeElement.Relationship, child);
@@ -189,7 +191,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             }
             else if (fieldSelection == TopFieldSelection.WithAllAttributes && queryLayer.Projection != null)
             {
-                // Discard any top-level ?fields= or attribute exclusions from resource definition, because we need the full database row.
+                // Discard any top-level ?fields[]= or attribute exclusions from resource definition, because we need the full database row.
                 while (queryLayer.Projection.Any(pair => pair.Key is AttrAttribute))
                 {
                     queryLayer.Projection.Remove(queryLayer.Projection.First(pair => pair.Key is AttrAttribute));
@@ -214,9 +216,8 @@ namespace JsonApiDotNetCore.Queries.Internal
         private IDictionary<ResourceFieldAttribute, QueryLayer> GetProjectionForRelationship(ResourceContext secondaryResourceContext)
         {
             var secondaryIdAttribute = GetIdAttribute(secondaryResourceContext);
-            var sparseFieldSet = new SparseFieldSetExpression(new[] {secondaryIdAttribute});
 
-            var secondaryProjection = GetSparseFieldSetProjection(new[] {sparseFieldSet}, secondaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
+            var secondaryProjection = GetProjectionForSparseAttributeSet(secondaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
             secondaryProjection[secondaryIdAttribute] = null;
 
             return secondaryProjection;
@@ -233,9 +234,8 @@ namespace JsonApiDotNetCore.Queries.Internal
             secondaryLayer.Include = null;
 
             var primaryIdAttribute = GetIdAttribute(primaryResourceContext);
-            var sparseFieldSet = new SparseFieldSetExpression(new[] {primaryIdAttribute});
 
-            var primaryProjection = GetSparseFieldSetProjection(new[] {sparseFieldSet}, primaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
+            var primaryProjection = GetProjectionForSparseAttributeSet(primaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
             primaryProjection[secondaryRelationship] = secondaryLayer;
             primaryProjection[primaryIdAttribute] = null;
 
@@ -426,27 +426,21 @@ namespace JsonApiDotNetCore.Queries.Internal
             return pagination;
         }
 
-        protected virtual IDictionary<ResourceFieldAttribute, QueryLayer> GetSparseFieldSetProjection(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
+        protected virtual IDictionary<ResourceFieldAttribute, QueryLayer> GetProjectionForSparseAttributeSet(ResourceContext resourceContext)
         {
-            if (expressionsInScope == null) throw new ArgumentNullException(nameof(expressionsInScope));
             if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
 
-            var attributes = expressionsInScope.OfType<SparseFieldSetExpression>().SelectMany(sparseFieldSet => sparseFieldSet.Attributes).ToHashSet();
-
-            var tempExpression = attributes.Any() ? new SparseFieldSetExpression(attributes) : null;
-            tempExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceContext.ResourceType, tempExpression);
-
-            attributes = tempExpression == null ? new HashSet<AttrAttribute>() : tempExpression.Attributes.ToHashSet();
-
-            if (!attributes.Any())
+            var fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(resourceContext);
+            if (!fieldSet.Any())
             {
                 return null;
             }
 
+            var attributeSet = fieldSet.OfType<AttrAttribute>().ToHashSet();
             var idAttribute = GetIdAttribute(resourceContext);
-            attributes.Add(idAttribute);
+            attributeSet.Add(idAttribute);
 
-            return attributes.Cast<ResourceFieldAttribute>().ToDictionary(key => key, value => (QueryLayer)null);
+            return attributeSet.ToDictionary(key => (ResourceFieldAttribute)key, value => (QueryLayer)null);
         }
 
         private static AttrAttribute GetIdAttribute(ResourceContext resourceContext)

@@ -69,10 +69,10 @@ By combining the examples above, both attributes and relationships can be update
 
 ## Response body
 
-PATCH requests can be combined with query string parameters that are normally used for reading data, such as `include` and `fields`. For example:
+PATCH requests can be combined with query string parameters that are normally used for reading data, such as `include` and `fields[]`. For example:
 
 ```http
-PATCH /articles/1?include=owner&fields[owner]=firstName HTTP/1.1
+PATCH /articles/1?include=owner&fields[people]=firstName HTTP/1.1
 
 {
   ...

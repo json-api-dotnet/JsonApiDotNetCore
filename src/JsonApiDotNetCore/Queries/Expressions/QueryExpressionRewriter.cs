@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
@@ -186,6 +187,30 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
                 var newExpression = new EqualsAnyOfExpression(newTargetAttribute, newConstants);
                 return newExpression.Equals(expression) ? expression : newExpression;
+            }
+
+            return null;
+        }
+
+        public override QueryExpression VisitSparseFieldTable(SparseFieldTableExpression expression, TArgument argument)
+        {
+            if (expression != null)
+            {
+                var newTable = new Dictionary<ResourceContext, SparseFieldSetExpression>();
+
+                foreach (var (resourceContext, sparseFieldSet) in expression.Table)
+                {
+                    if (Visit(sparseFieldSet, argument) is SparseFieldSetExpression newSparseFieldSet)
+                    {
+                        newTable[resourceContext] = newSparseFieldSet;
+                    }
+                }
+
+                if (newTable.Count > 0)
+                {
+                    var newExpression = new SparseFieldTableExpression(newTable);
+                    return newExpression.Equals(expression) ? expression : newExpression;
+                }
             }
 
             return null;

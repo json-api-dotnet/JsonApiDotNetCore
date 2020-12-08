@@ -730,7 +730,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
             });
 
             var routePrefix = "/api/v1/todoItems?filter=equals(owner.lastName,'" + WebUtility.UrlEncode(person.LastName) + "')" +
-                        $"&fields[owner]=firstName&include=owner&sort=ordinal&foo=bar,baz";
+                        "&fields[people]=firstName&include=owner&sort=ordinal&foo=bar,baz";
             var route = routePrefix + $"&page[number]={pageNumber}";
 
             // Act

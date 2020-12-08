@@ -328,6 +328,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
             responseDocument.Included[0].Attributes["firstName"].Should().Be(existingUserAccount.FirstName);
             responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccount.LastName);
+            responseDocument.Included[0].Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -376,7 +377,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}?fields=priority&include=tags&fields[tags]=text";
+            var route = $"/workItems/{existingWorkItem.StringId}?fields[workItems]=priority,tags&include=tags&fields[workTags]=text";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -389,13 +390,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority.ToString("G"));
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.SingleData.Relationships.Should().HaveCount(1);
+            responseDocument.SingleData.Relationships["tags"].ManyData.Should().HaveCount(1);
+            responseDocument.SingleData.Relationships["tags"].ManyData[0].Id.Should().Be(existingTag.StringId);
             
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("workTags");
             responseDocument.Included[0].Id.Should().Be(existingTag.StringId);
             responseDocument.Included[0].Attributes.Should().HaveCount(1);
             responseDocument.Included[0].Attributes["text"].Should().Be(existingTag.Text);
+            responseDocument.Included[0].Relationships.Should().BeNull();
 
             var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 

@@ -232,7 +232,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return relationship;
         }
 
-        public AttrAttribute GetAttribute(string publicName, ResourceContext resourceContext, string path)
+        private AttrAttribute GetAttribute(string publicName, ResourceContext resourceContext, string path)
         {
             var attribute = resourceContext.Attributes.FirstOrDefault(a => a.PublicName == publicName);
 
