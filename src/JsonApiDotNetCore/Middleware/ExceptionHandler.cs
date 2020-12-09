@@ -99,7 +99,9 @@ namespace JsonApiDotNetCore.Middleware
 
         private void ApplyOptions(Error error, Exception exception)
         {
-            error.Meta.IncludeExceptionStackTrace(_options.IncludeExceptionStackTraceInErrors ? exception : null);
+            Exception resultException = exception is InvalidModelStateException ? null : exception;
+
+            error.Meta.IncludeExceptionStackTrace(_options.IncludeExceptionStackTraceInErrors ? resultException : null);
         }
     }
 }
