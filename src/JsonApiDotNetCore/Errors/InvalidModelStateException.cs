@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -80,7 +81,7 @@ namespace JsonApiDotNetCore.Errors
 
             if (includeExceptionStackTraceInErrors && modelError.Exception != null)
             {
-                error.Meta.IncludeExceptionStackTrace(modelError.Exception);
+                error.Meta.IncludeExceptionStackTrace(modelError.Exception.Demystify());
             }
 
             return error;

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Objects
@@ -21,7 +20,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
             }
             else
             {
-                Data["StackTrace"] = exception.Demystify().ToString()
+                Data["StackTrace"] = exception.ToString()
                     .Split("\n", int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
             }
         }
