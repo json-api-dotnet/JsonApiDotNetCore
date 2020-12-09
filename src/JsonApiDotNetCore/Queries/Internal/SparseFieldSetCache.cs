@@ -59,6 +59,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         public IReadOnlyCollection<ResourceFieldAttribute> GetSparseFieldSetForQuery(ResourceContext resourceContext)
         {
+            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+
             if (!_visitedTable.ContainsKey(resourceContext))
             {
                 var inputExpression = _lazySourceTable.Value.ContainsKey(resourceContext)
@@ -75,6 +77,24 @@ namespace JsonApiDotNetCore.Queries.Internal
             }
 
             return _visitedTable[resourceContext];
+        }
+
+        public IReadOnlyCollection<AttrAttribute> GetIdAttributeSetForRelationshipQuery(ResourceContext resourceContext)
+        {
+            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+
+            var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
+            var inputExpression = new SparseFieldSetExpression(new []{idAttribute});
+
+            // Intentionally not cached, as we are fetching ID only (ignoring any sparse fieldset that came from query string).
+            var outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceContext.ResourceType, inputExpression);
+
+            var outputAttributes = outputExpression == null
+                ? new HashSet<AttrAttribute>()
+                : outputExpression.Fields.OfType<AttrAttribute>().ToHashSet();
+
+            outputAttributes.Add(idAttribute);
+            return outputAttributes;
         }
 
         public IReadOnlyCollection<ResourceFieldAttribute> GetSparseFieldSetForSerializer(ResourceContext resourceContext)
@@ -107,6 +127,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private HashSet<ResourceFieldAttribute> GetResourceFields(ResourceContext resourceContext)
         {
+            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+
             var fieldSet = new HashSet<ResourceFieldAttribute>();
 
             foreach (var attribute in resourceContext.Attributes.Where(attr => attr.Capabilities.HasFlag(AttrCapabilities.AllowView)))

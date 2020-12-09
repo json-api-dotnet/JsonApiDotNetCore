@@ -215,12 +215,9 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private IDictionary<ResourceFieldAttribute, QueryLayer> GetProjectionForRelationship(ResourceContext secondaryResourceContext)
         {
-            var secondaryIdAttribute = GetIdAttribute(secondaryResourceContext);
+            var secondaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(secondaryResourceContext);
 
-            var secondaryProjection = GetProjectionForSparseAttributeSet(secondaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
-            secondaryProjection[secondaryIdAttribute] = null;
-
-            return secondaryProjection;
+            return secondaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, value => (QueryLayer)null);
         }
 
         /// <inheritdoc />
@@ -233,13 +230,12 @@ namespace JsonApiDotNetCore.Queries.Internal
             var innerInclude = secondaryLayer.Include;
             secondaryLayer.Include = null;
 
-            var primaryIdAttribute = GetIdAttribute(primaryResourceContext);
-
-            var primaryProjection = GetProjectionForSparseAttributeSet(primaryResourceContext) ?? new Dictionary<ResourceFieldAttribute, QueryLayer>();
+            var primaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(primaryResourceContext);
+            var primaryProjection = primaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, value => (QueryLayer)null);
             primaryProjection[secondaryRelationship] = secondaryLayer;
-            primaryProjection[primaryIdAttribute] = null;
 
             var primaryFilter = GetFilter(Array.Empty<QueryExpression>(), primaryResourceContext);
+            var primaryIdAttribute = GetIdAttribute(primaryResourceContext);
 
             return new QueryLayer(primaryResourceContext)
             {
