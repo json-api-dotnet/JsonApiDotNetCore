@@ -140,6 +140,7 @@ namespace JsonApiDotNetCore.Middleware
 
         private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerSettings serializerSettings, Error error)
         {
+            httpResponse.ContentType = HeaderConstants.MediaType;
             httpResponse.StatusCode = (int) error.StatusCode;
 
             JsonSerializer serializer = JsonSerializer.CreateDefault(serializerSettings);
