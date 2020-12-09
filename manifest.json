@@ -489,7 +489,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.InvalidModelStateException.html",
-          "hash": "5XMHdQUOG9UR/OIY1DosAA=="
+          "hash": "/6nPXE6csHKDRB+iNwHsDA=="
         }
       },
       "is_incremental": false,
@@ -3525,7 +3525,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Objects.ErrorMeta.html",
-          "hash": "k3oBOZ3jNwODOy7d3JVY9w=="
+          "hash": "40UPYtOgTP0ee82yHziV1w=="
         }
       },
       "is_incremental": false,
