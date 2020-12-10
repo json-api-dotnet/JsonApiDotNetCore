@@ -290,7 +290,7 @@ namespace JsonApiDotNetCore.Services
         private async Task RemoveExistingIdsFromSecondarySet(TId primaryId, ISet<IIdentifiable> secondaryResourceIds,
             HasManyThroughAttribute hasManyThrough, CancellationToken cancellationToken)
         {
-            var queryLayer = _queryLayerComposer.ComposeForHasManyThrough(hasManyThrough, primaryId, secondaryResourceIds);
+            var queryLayer = _queryLayerComposer.ComposeForHasMany(hasManyThrough, primaryId, secondaryResourceIds);
             var primaryResources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
             
             var primaryResource = primaryResources.FirstOrDefault();
