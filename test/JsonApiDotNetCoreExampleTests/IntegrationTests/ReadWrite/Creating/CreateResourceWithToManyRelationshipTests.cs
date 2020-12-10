@@ -240,7 +240,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public async Task Can_create_HasManyThrough_relationship_with_include_and_fieldsets()
         {
             // Arrange
-            var existingTags = _fakers.WorkTags.Generate(3);
+            var existingTags = _fakers.WorkTag.Generate(3);
             var workItemToCreate = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

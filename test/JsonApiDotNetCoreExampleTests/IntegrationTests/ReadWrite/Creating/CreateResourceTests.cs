@@ -614,7 +614,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         {
             // Arrange
             var existingUserAccounts = _fakers.UserAccount.Generate(2);
-            var existingTag = _fakers.WorkTags.Generate();
+            var existingTag = _fakers.WorkTag.Generate();
 
             var newDescription = _fakers.WorkItem.Generate().Description;
 
