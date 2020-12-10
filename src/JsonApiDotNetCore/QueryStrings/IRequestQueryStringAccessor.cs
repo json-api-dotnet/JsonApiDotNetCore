@@ -7,7 +7,6 @@ namespace JsonApiDotNetCore.QueryStrings
     /// </summary>
     public interface IRequestQueryStringAccessor
     {
-        QueryString QueryString { get; }
         IQueryCollection Query { get; }
     }
 }

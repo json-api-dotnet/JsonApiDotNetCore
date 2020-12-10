@@ -107,12 +107,10 @@ namespace Benchmarks.Query
 
         private sealed class FakeRequestQueryStringAccessor : IRequestQueryStringAccessor
         {
-            public QueryString QueryString { get; private set; }
             public IQueryCollection Query { get; private set; }
 
             public void SetQueryString(string queryString)
             {
-                QueryString = new QueryString(queryString);
                 Query = new QueryCollection(QueryHelpers.ParseQuery(queryString));
             }
         }
