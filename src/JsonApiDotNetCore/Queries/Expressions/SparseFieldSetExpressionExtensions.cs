@@ -10,12 +10,12 @@ namespace JsonApiDotNetCore.Queries.Expressions
     public static class SparseFieldSetExpressionExtensions
     {
         public static SparseFieldSetExpression Including<TResource>(this SparseFieldSetExpression sparseFieldSet,
-            Expression<Func<TResource, dynamic>> attributeSelector, IResourceGraph resourceGraph)
+            Expression<Func<TResource, dynamic>> fieldSelector, IResourceGraph resourceGraph)
             where TResource : class, IIdentifiable
         {
-            if (attributeSelector == null)
+            if (fieldSelector == null)
             {
-                throw new ArgumentNullException(nameof(attributeSelector));
+                throw new ArgumentNullException(nameof(fieldSelector));
             }
 
             if (resourceGraph == null)
@@ -23,33 +23,33 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 throw new ArgumentNullException(nameof(resourceGraph));
             }
 
-            foreach (var attribute in resourceGraph.GetAttributes(attributeSelector))
+            foreach (var field in resourceGraph.GetFields(fieldSelector))
             {
-                sparseFieldSet = IncludeAttribute(sparseFieldSet, attribute);
+                sparseFieldSet = IncludeField(sparseFieldSet, field);
             }
 
             return sparseFieldSet;
         }
 
-        private static SparseFieldSetExpression IncludeAttribute(SparseFieldSetExpression sparseFieldSet, AttrAttribute attributeToInclude)
+        private static SparseFieldSetExpression IncludeField(SparseFieldSetExpression sparseFieldSet, ResourceFieldAttribute fieldToInclude)
         {
-            if (sparseFieldSet == null || sparseFieldSet.Attributes.Contains(attributeToInclude))
+            if (sparseFieldSet == null || sparseFieldSet.Fields.Contains(fieldToInclude))
             {
                 return sparseFieldSet;
             }
 
-            var attributeSet = sparseFieldSet.Attributes.ToHashSet();
-            attributeSet.Add(attributeToInclude);
-            return new SparseFieldSetExpression(attributeSet);
+            var fieldSet = sparseFieldSet.Fields.ToHashSet();
+            fieldSet.Add(fieldToInclude);
+            return new SparseFieldSetExpression(fieldSet);
         }
 
         public static SparseFieldSetExpression Excluding<TResource>(this SparseFieldSetExpression sparseFieldSet,
-            Expression<Func<TResource, dynamic>> attributeSelector, IResourceGraph resourceGraph)
+            Expression<Func<TResource, dynamic>> fieldSelector, IResourceGraph resourceGraph)
             where TResource : class, IIdentifiable
         {
-            if (attributeSelector == null)
+            if (fieldSelector == null)
             {
-                throw new ArgumentNullException(nameof(attributeSelector));
+                throw new ArgumentNullException(nameof(fieldSelector));
             }
 
             if (resourceGraph == null)
@@ -57,29 +57,29 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 throw new ArgumentNullException(nameof(resourceGraph));
             }
 
-            foreach (var attribute in resourceGraph.GetAttributes(attributeSelector))
+            foreach (var field in resourceGraph.GetFields(fieldSelector))
             {
-                sparseFieldSet = ExcludeAttribute(sparseFieldSet, attribute);
+                sparseFieldSet = ExcludeField(sparseFieldSet, field);
             }
 
             return sparseFieldSet;
         }
 
-        private static SparseFieldSetExpression ExcludeAttribute(SparseFieldSetExpression sparseFieldSet, AttrAttribute attributeToExclude)
+        private static SparseFieldSetExpression ExcludeField(SparseFieldSetExpression sparseFieldSet, ResourceFieldAttribute fieldToExclude)
         {
-            // Design tradeoff: When the sparse fieldset is empty, it means all attributes will be selected.
-            // Adding an exclusion in that case is a no-op, which results in still retrieving the excluded attribute from data store.
-            // But later, when serializing the response, the sparse fieldset is first populated with all attributes,
-            // so then the exclusion will actually be applied and the excluded attribute is not returned to the client.
+            // Design tradeoff: When the sparse fieldset is empty, it means all fields will be selected.
+            // Adding an exclusion in that case is a no-op, which results in still retrieving the excluded field from data store.
+            // But later, when serializing the response, the sparse fieldset is first populated with all fields,
+            // so then the exclusion will actually be applied and the excluded field is not returned to the client.
 
-            if (sparseFieldSet == null || !sparseFieldSet.Attributes.Contains(attributeToExclude))
+            if (sparseFieldSet == null || !sparseFieldSet.Fields.Contains(fieldToExclude))
             {
                 return sparseFieldSet;
             }
 
-            var attributeSet = sparseFieldSet.Attributes.ToHashSet();
-            attributeSet.Remove(attributeToExclude);
-            return new SparseFieldSetExpression(attributeSet);
+            var fieldSet = sparseFieldSet.Fields.ToHashSet();
+            fieldSet.Remove(fieldToExclude);
+            return new SparseFieldSetExpression(fieldSet);
         }
     }
 }

@@ -152,7 +152,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/bankAccounts/{bankAccount.StringId}?include=cards&fields[cards]=ownerName";
+            var route = $"/bankAccounts/{bankAccount.StringId}?include=cards&fields[debitCards]=ownerName";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -166,6 +166,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Id.Should().Be(bankAccount.Cards[0].StringId);
             responseDocument.Included[0].Attributes.Should().HaveCount(1);
+            responseDocument.Included[0].Relationships.Should().BeNull();
         }
 
         [Fact]

@@ -9,18 +9,18 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 {
     public class SparseFieldSetParser : QueryExpressionParser
     {
-        private readonly Action<AttrAttribute, ResourceContext, string> _validateSingleAttributeCallback;
-        private ResourceContext _resourceContextInScope;
+        private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
+        private ResourceContext _resourceContext;
 
-        public SparseFieldSetParser(IResourceContextProvider resourceContextProvider, Action<AttrAttribute, ResourceContext, string> validateSingleAttributeCallback = null)
+        public SparseFieldSetParser(IResourceContextProvider resourceContextProvider, Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
             : base(resourceContextProvider)
         {
-            _validateSingleAttributeCallback = validateSingleAttributeCallback;
+            _validateSingleFieldCallback = validateSingleFieldCallback;
         }
 
-        public SparseFieldSetExpression Parse(string source, ResourceContext resourceContextInScope)
+        public SparseFieldSetExpression Parse(string source, ResourceContext resourceContext)
         {
-            _resourceContextInScope = resourceContextInScope ?? throw new ArgumentNullException(nameof(resourceContextInScope));
+            _resourceContext = resourceContext ?? throw new ArgumentNullException(nameof(resourceContext));
             Tokenize(source);
 
             var expression = ParseSparseFieldSet();
@@ -32,31 +32,31 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected SparseFieldSetExpression ParseSparseFieldSet()
         {
-            var attributes = new Dictionary<string, AttrAttribute>();
+            var fields = new Dictionary<string, ResourceFieldAttribute>();
 
-            ResourceFieldChainExpression nextChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, "Attribute name expected.");
-            AttrAttribute nextAttribute = nextChain.Fields.Cast<AttrAttribute>().Single();
-            attributes[nextAttribute.PublicName] = nextAttribute;
+            ResourceFieldChainExpression nextChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, "Field name expected.");
+            ResourceFieldAttribute nextField = nextChain.Fields.Single();
+            fields[nextField.PublicName] = nextField;
 
             while (TokenStack.Any())
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
-                nextChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, "Attribute name expected.");
-                nextAttribute = nextChain.Fields.Cast<AttrAttribute>().Single();
-                attributes[nextAttribute.PublicName] = nextAttribute;
+                nextChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, "Field name expected.");
+                nextField = nextChain.Fields.Single();
+                fields[nextField.PublicName] = nextField;
             }
 
-            return new SparseFieldSetExpression(attributes.Values);
+            return new SparseFieldSetExpression(fields.Values);
         }
 
         protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
-            var attribute = ChainResolver.GetAttribute(path, _resourceContextInScope, path);
+            var field = ChainResolver.GetField(path, _resourceContext, path);
 
-            _validateSingleAttributeCallback?.Invoke(attribute, _resourceContextInScope, path);
+            _validateSingleFieldCallback?.Invoke(field, _resourceContext, path);
 
-            return new[] {attribute};
+            return new[] {field};
         }
     }
 }

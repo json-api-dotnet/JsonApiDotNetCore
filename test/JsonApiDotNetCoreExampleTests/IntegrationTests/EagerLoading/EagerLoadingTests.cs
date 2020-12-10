@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -107,7 +106,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/streets/{street.StringId}?fields=windowTotalCount";
+            var route = $"/streets/{street.StringId}?fields[streets]=windowTotalCount";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -119,6 +118,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
             responseDocument.SingleData.Id.Should().Be(street.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["windowTotalCount"].Should().Be(3);
+            responseDocument.SingleData.Relationships.Should().BeNull();
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/states/{state.StringId}/cities?include=streets&fields=name&fields[streets]=doorTotalCount,windowTotalCount";
+            var route = $"/states/{state.StringId}/cities?include=streets&fields[cities]=name&fields[streets]=doorTotalCount,windowTotalCount";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -193,6 +193,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
             responseDocument.ManyData[0].Id.Should().Be(state.Cities[0].StringId);
             responseDocument.ManyData[0].Attributes.Should().HaveCount(1);
             responseDocument.ManyData[0].Attributes["name"].Should().Be(state.Cities[0].Name);
+            responseDocument.ManyData[0].Relationships.Should().BeNull();
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("streets");
@@ -200,6 +201,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
             responseDocument.Included[0].Attributes.Should().HaveCount(2);
             responseDocument.Included[0].Attributes["doorTotalCount"].Should().Be(2);
             responseDocument.Included[0].Attributes["windowTotalCount"].Should().Be(1);
+            responseDocument.Included[0].Relationships.Should().BeNull();
         }
 
         [Fact]

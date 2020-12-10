@@ -142,7 +142,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{host}}/api/books?fields=title",
+					"raw": "{{host}}/api/books?fields[books]=title",
 					"host": [
 						"{{host}}"
 					],
@@ -152,7 +152,7 @@
 					],
 					"query": [
 						{
-							"key": "fields",
+							"key": "fields[books]",
 							"value": "title"
 						}
 					]

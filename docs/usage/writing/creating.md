@@ -61,10 +61,10 @@ POST /articles HTTP/1.1
 
 # Response body
 
-POST requests can be combined with query string parameters that are normally used for reading data, such as `include` and `fields`. For example:
+POST requests can be combined with query string parameters that are normally used for reading data, such as `include` and `fields[]`. For example:
 
 ```http
-POST /articles?include=owner&fields[owner]=firstName HTTP/1.1
+POST /articles?include=owner&fields[people]=firstName HTTP/1.1
 
 {
   ...

@@ -66,6 +66,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
             var newGroupId = responseDocument.SingleData.Id;
@@ -187,6 +188,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
             responseDocument.Included.Should().HaveCount(1);
@@ -194,6 +196,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
             responseDocument.Included[0].Attributes["firstName"].Should().Be(existingUserAccount.FirstName);
             responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccount.LastName);
+            responseDocument.Included[0].Relationships.Should().NotBeEmpty();
 
             var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
@@ -245,7 +248,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems?fields=description&include=assignee";
+            var route = "/workItems?fields[workItems]=description,assignee&include=assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -256,14 +259,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["description"].Should().Be(newWorkItem.Description);
-
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.SingleData.Relationships.Should().HaveCount(1);
+            responseDocument.SingleData.Relationships["assignee"].SingleData.Id.Should().Be(existingUserAccount.StringId);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("userAccounts");
             responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
             responseDocument.Included[0].Attributes["firstName"].Should().Be(existingUserAccount.FirstName);
             responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccount.LastName);
+            responseDocument.Included[0].Relationships.Should().NotBeEmpty();
 
             var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
@@ -513,6 +517,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
             responseDocument.Included.Should().HaveCount(1);
@@ -520,6 +525,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             responseDocument.Included[0].Id.Should().Be(existingUserAccounts[1].StringId);
             responseDocument.Included[0].Attributes["firstName"].Should().Be(existingUserAccounts[1].FirstName);
             responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccounts[1].LastName);
+            responseDocument.Included[0].Relationships.Should().NotBeEmpty();
 
             var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 

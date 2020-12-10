@@ -18,11 +18,11 @@ namespace UnitTests.QueryStringParameters
         {
             _reader = new SparseFieldSetQueryStringParameterReader(Request, ResourceGraph);
         }
-        
+
         [Theory]
-        [InlineData("fields", true)]
+        [InlineData("fields", false)]
         [InlineData("fields[articles]", true)]
-        [InlineData("fields[articles.revisions]", true)]
+        [InlineData("fields[]", true)]
         [InlineData("fieldset", false)]
         [InlineData("fields[", false)]
         [InlineData("fields]", false)]
@@ -50,17 +50,20 @@ namespace UnitTests.QueryStringParameters
         }
 
         [Theory]
-        [InlineData("fields[", "id", "Field name expected.")]
-        [InlineData("fields[id]", "id", "Relationship 'id' does not exist on resource 'blogs'.")]
-        [InlineData("fields[articles.id]", "id", "Relationship 'id' in 'articles.id' does not exist on resource 'articles'.")]
-        [InlineData("fields", "", "Attribute name expected.")]
-        [InlineData("fields", " ", "Unexpected whitespace.")]
-        [InlineData("fields", "id,articles", "Attribute 'articles' does not exist on resource 'blogs'.")]
-        [InlineData("fields", "id,articles.name", "Attribute 'articles.name' does not exist on resource 'blogs'.")]
-        [InlineData("fields[articles]", "id,tags", "Attribute 'tags' does not exist on resource 'articles'.")]
-        [InlineData("fields[articles.author.livingAddress]", "street,some", "Attribute 'some' does not exist on resource 'addresses'.")]
-        [InlineData("fields", "id(", ", expected.")]
-        [InlineData("fields", "id,", "Attribute name expected.")]
+        [InlineData("fields", "", "[ expected.")]
+        [InlineData("fields]", "", "[ expected.")]
+        [InlineData("fields[", "", "Resource type expected.")]
+        [InlineData("fields[]", "", "Resource type expected.")]
+        [InlineData("fields[ ]", "", "Unexpected whitespace.")]
+        [InlineData("fields[owner]", "", "Resource type 'owner' does not exist.")]
+        [InlineData("fields[owner.articles]", "id", "Resource type 'owner.articles' does not exist.")]
+        [InlineData("fields[articles]", "", "Field name expected.")]
+        [InlineData("fields[articles]", " ", "Unexpected whitespace.")]
+        [InlineData("fields[articles]", "some", "Field 'some' does not exist on resource 'articles'.")]
+        [InlineData("fields[articles]", "id,owner.name", "Field 'owner.name' does not exist on resource 'articles'.")]
+        [InlineData("fields[articles]", "id(", ", expected.")]
+        [InlineData("fields[articles]", "id,", "Field name expected.")]
+        [InlineData("fields[articles]", "author.id,", "Field 'author.id' does not exist on resource 'articles'.")]
         public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
         {
             // Act
@@ -78,13 +81,10 @@ namespace UnitTests.QueryStringParameters
         }
 
         [Theory]
-        [InlineData("fields", "id", null, "id")]
-        [InlineData("fields[articles]", "caption,url", "articles", "caption,url")]
-        [InlineData("fields[owner.articles]", "caption", "owner.articles", "caption")]
-        [InlineData("fields[articles.author]", "firstName,id", "articles.author", "firstName,id")]
-        [InlineData("fields[articles.author.livingAddress]", "street,zipCode", "articles.author.livingAddress", "street,zipCode")]
-        [InlineData("fields[articles.tags]", "name,id", "articles.tags", "name,id")]
-        public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected, string valueExpected)
+        [InlineData("fields[articles]", "caption,url,author", "articles(caption,url,author)")]
+        [InlineData("fields[articles]", "author,revisions,tags", "articles(author,revisions,tags)")]
+        [InlineData("fields[countries]", "id", "countries(id)")]
+        public void Reader_Read_Succeeds(string parameterName, string parameterValue, string valueExpected)
         {
             // Act
             _reader.Read(parameterName, parameterValue);
@@ -93,7 +93,7 @@ namespace UnitTests.QueryStringParameters
 
             // Assert
             var scope = constraints.Select(x => x.Scope).Single();
-            scope?.ToString().Should().Be(scopeExpected);
+            scope.Should().BeNull();
 
             var value = constraints.Select(x => x.Expression).Single();
             value.ToString().Should().Be(valueExpected);

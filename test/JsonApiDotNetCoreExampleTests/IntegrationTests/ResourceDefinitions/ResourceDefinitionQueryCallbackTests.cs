@@ -338,7 +338,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/callableResources/{resource.StringId}?fields=label,status";
+            var route = $"/callableResources/{resource.StringId}?fields[callableResources]=label,status";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -351,6 +351,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             responseDocument.SingleData.Attributes.Should().HaveCount(2);
             responseDocument.SingleData.Attributes["label"].Should().Be(resource.Label);
             responseDocument.SingleData.Attributes["status"].Should().Be("5% completed.");
+            responseDocument.SingleData.Relationships.Should().BeNull();
         }
         
         [Fact]
@@ -401,7 +402,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/callableResources/{resource.StringId}?fields=label,riskLevel";
+            var route = $"/callableResources/{resource.StringId}?fields[callableResources]=label,riskLevel";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -413,6 +414,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             responseDocument.SingleData.Id.Should().Be(resource.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["label"].Should().Be(resource.Label);
+            responseDocument.SingleData.Relationships.Should().BeNull();
         }
 
         [Fact]

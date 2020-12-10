@@ -72,6 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
             responseDocument.Included.Should().BeNull();
 
@@ -137,6 +138,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
             
             responseDocument.Included.Should().HaveCount(2);
@@ -145,6 +147,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[1].StringId);
             responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["firstName"] != null);
             responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["lastName"] != null);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Relationships.Count > 0);
 
             var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
@@ -199,7 +202,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems?include=subscribers&fields[subscribers]=firstName";
+            var route = "/workItems?include=subscribers&fields[userAccounts]=firstName";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -208,6 +211,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
             
             responseDocument.Included.Should().HaveCount(2);
@@ -216,6 +220,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[1].StringId);
             responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.Count == 1);
             responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["firstName"] != null);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Relationships == null);
 
             var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
@@ -281,7 +286,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems?fields=priority&include=tags&fields[tags]=text";
+            var route = "/workItems?fields[workItems]=priority,tags&include=tags&fields[workTags]=text";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -292,8 +297,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["priority"].Should().Be(workItemToCreate.Priority.ToString("G"));
-
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.SingleData.Relationships.Should().HaveCount(1);
+            responseDocument.SingleData.Relationships["tags"].ManyData.Should().HaveCount(3);
+            responseDocument.SingleData.Relationships["tags"].ManyData[0].Id.Should().Be(existingTags[0].StringId);
+            responseDocument.SingleData.Relationships["tags"].ManyData[1].Id.Should().Be(existingTags[1].StringId);
+            responseDocument.SingleData.Relationships["tags"].ManyData[2].Id.Should().Be(existingTags[2].StringId);
             
             responseDocument.Included.Should().HaveCount(3);
             responseDocument.Included.Should().OnlyContain(resource => resource.Type == "workTags");
@@ -302,6 +310,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingTags[2].StringId);
             responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.Count == 1);
             responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["text"] != null);
+            responseDocument.Included.Should().OnlyContain(resource => resource.Relationships == null);
 
             var newWorkItemId = int.Parse(responseDocument.SingleData.Id);
 
@@ -575,6 +584,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
             
             responseDocument.Included.Should().HaveCount(1);

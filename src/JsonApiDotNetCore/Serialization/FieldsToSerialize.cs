@@ -4,7 +4,7 @@ using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -13,25 +13,23 @@ namespace JsonApiDotNetCore.Serialization
     /// <inheritdoc />
     public class FieldsToSerialize : IFieldsToSerialize
     {
-        private readonly IResourceGraph _resourceGraph;
-        private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
-        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
+        private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IJsonApiRequest _request;
+        private readonly SparseFieldSetCache _sparseFieldSetCache;
 
         public FieldsToSerialize(
-            IResourceGraph resourceGraph,
+            IResourceContextProvider resourceContextProvider,
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             IResourceDefinitionAccessor resourceDefinitionAccessor,
             IJsonApiRequest request)
         {
-            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
-            _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
-            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _request = request ?? throw new ArgumentNullException(nameof(request));
+            _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType, RelationshipAttribute relationship = null)
+        public IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
@@ -40,41 +38,10 @@ namespace JsonApiDotNetCore.Serialization
                 return Array.Empty<AttrAttribute>();
             }
 
-            var sparseFieldSetAttributes = _constraintProviders
-                .SelectMany(p => p.GetConstraints())
-                .Where(expressionInScope => relationship == null
-                    ? expressionInScope.Scope == null
-                    : expressionInScope.Scope != null && expressionInScope.Scope.Fields.Last().Equals(relationship))
-                .Select(expressionInScope => expressionInScope.Expression)
-                .OfType<SparseFieldSetExpression>()
-                .SelectMany(sparseFieldSet => sparseFieldSet.Attributes)
-                .ToHashSet();
+            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            var fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
 
-            if (!sparseFieldSetAttributes.Any())
-            {
-                sparseFieldSetAttributes = GetViewableAttributes(resourceType);
-            }
-
-            var inputExpression = sparseFieldSetAttributes.Any() ? new SparseFieldSetExpression(sparseFieldSetAttributes) : null;
-            var outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
-
-            if (outputExpression == null)
-            {
-                sparseFieldSetAttributes = GetViewableAttributes(resourceType);
-            }
-            else
-            {
-                sparseFieldSetAttributes.IntersectWith(outputExpression.Attributes);
-            }
-
-            return sparseFieldSetAttributes;
-        }
-
-        private HashSet<AttrAttribute> GetViewableAttributes(Type resourceType)
-        {
-            return _resourceGraph.GetAttributes(resourceType)
-                .Where(attr => attr.Capabilities.HasFlag(AttrCapabilities.AllowView))
-                .ToHashSet();
+            return fieldSet.OfType<AttrAttribute>().ToArray();
         }
 
         /// <inheritdoc />
@@ -84,13 +51,17 @@ namespace JsonApiDotNetCore.Serialization
         /// is not the same as not including. In the case of the latter,
         /// we may still want to add the relationship to expose the navigation link to the client.
         /// </remarks>
-        public IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type)
+        public IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
-            return _request.Kind == EndpointKind.Relationship
-                ? Array.Empty<RelationshipAttribute>()
-                : _resourceGraph.GetRelationships(type);
+            if (_request.Kind == EndpointKind.Relationship)
+            {
+                return Array.Empty<RelationshipAttribute>();
+            }
+
+            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            return resourceContext.Relationships;
         }
     }
 }

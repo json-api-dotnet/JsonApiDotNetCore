@@ -80,6 +80,11 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return DefaultVisit(expression, argument);
         }
 
+        public virtual TResult VisitSparseFieldTable(SparseFieldTableExpression expression, TArgument argument)
+        {
+            return DefaultVisit(expression, argument);
+        }
+
         public virtual TResult VisitSparseFieldSet(SparseFieldSetExpression expression, TArgument argument)
         {
             return DefaultVisit(expression, argument);

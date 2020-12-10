@@ -133,7 +133,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/cars?fields=id";
+            var route = "/cars?fields[cars]=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

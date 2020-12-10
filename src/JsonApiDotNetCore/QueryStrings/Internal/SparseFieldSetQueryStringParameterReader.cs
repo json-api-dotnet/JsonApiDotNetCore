@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -14,21 +15,21 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 {
     public class SparseFieldSetQueryStringParameterReader : QueryStringParameterReader, ISparseFieldSetQueryStringParameterReader
     {
-        private readonly QueryStringParameterScopeParser _scopeParser;
+        private readonly SparseFieldTypeParser _sparseFieldTypeParser;
         private readonly SparseFieldSetParser _sparseFieldSetParser;
-        private readonly List<ExpressionInScope> _constraints = new List<ExpressionInScope>();
+        private readonly Dictionary<ResourceContext, SparseFieldSetExpression> _sparseFieldTable = new Dictionary<ResourceContext, SparseFieldSetExpression>();
         private string _lastParameterName;
 
         public SparseFieldSetQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider)
             : base(request, resourceContextProvider)
         {
-            _sparseFieldSetParser = new SparseFieldSetParser(resourceContextProvider, ValidateSingleAttribute);
-            _scopeParser = new QueryStringParameterScopeParser(resourceContextProvider, FieldChainRequirements.IsRelationship);
+            _sparseFieldTypeParser = new SparseFieldTypeParser(resourceContextProvider);
+            _sparseFieldSetParser = new SparseFieldSetParser(resourceContextProvider, ValidateSingleField);
         }
 
-        protected void ValidateSingleAttribute(AttrAttribute attribute, ResourceContext resourceContext, string path)
+        protected void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)
         {
-            if (!attribute.Capabilities.HasFlag(AttrCapabilities.AllowView))
+            if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowView))
             {
                 throw new InvalidQueryStringParameterException(_lastParameterName, "Retrieving the requested attribute is not allowed.",
                     $"Retrieving the attribute '{attribute.PublicName}' is not allowed.");
@@ -46,8 +47,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool CanRead(string parameterName)
         {
-            var isNested = parameterName.StartsWith("fields[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
-            return parameterName == "fields" || isNested;
+            return parameterName.StartsWith("fields[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
         }
 
         /// <inheritdoc />
@@ -57,11 +57,10 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             try
             {
-                ResourceFieldChainExpression scope = GetScope(parameterName);
-                SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue, scope);
+                var targetResource = GetSparseFieldType(parameterName);
+                var sparseFieldSet = GetSparseFieldSet(parameterValue, targetResource);
 
-                var expressionInScope = new ExpressionInScope(scope, sparseFieldSet);
-                _constraints.Add(expressionInScope);
+                _sparseFieldTable[targetResource] = sparseFieldSet;
             }
             catch (QueryParseException exception)
             {
@@ -70,22 +69,25 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             }
         }
 
-        private ResourceFieldChainExpression GetScope(string parameterName)
+        private ResourceContext GetSparseFieldType(string parameterName)
         {
-            var parameterScope = _scopeParser.Parse(parameterName, RequestResource);
-            return parameterScope.Scope;
+            return _sparseFieldTypeParser.Parse(parameterName);
         }
 
-        private SparseFieldSetExpression GetSparseFieldSet(string parameterValue, ResourceFieldChainExpression scope)
+        private SparseFieldSetExpression GetSparseFieldSet(string parameterValue, ResourceContext resourceContext)
         {
-            ResourceContext resourceContextInScope = GetResourceContextForScope(scope);
-            return _sparseFieldSetParser.Parse(parameterValue, resourceContextInScope);
+            return _sparseFieldSetParser.Parse(parameterValue, resourceContext);
         }
 
         /// <inheritdoc />
         public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
-            return _constraints;
+            return _sparseFieldTable.Any()
+                ? new[]
+                {
+                    new ExpressionInScope(null, new SparseFieldTableExpression(_sparseFieldTable))
+                }
+                : Array.Empty<ExpressionInScope>();
         }
     }
 }

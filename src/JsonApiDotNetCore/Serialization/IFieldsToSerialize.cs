@@ -13,14 +13,12 @@ namespace JsonApiDotNetCore.Serialization
     {
         /// <summary>
         /// Gets the collection of attributes that are to be serialized for resources of type <paramref name="resourceType"/>.
-        /// If <paramref name="relationship"/> is non-null, it will consider the allowed collection of attributes
-        /// as an included relationship.
         /// </summary>
-        IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType, RelationshipAttribute relationship = null);
+        IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType);
 
         /// <summary>
-        /// Gets the collection of relationships that are to be serialized for resources of type <paramref name="type"/>.
+        /// Gets the collection of relationships that are to be serialized for resources of type <paramref name="resourceType"/>.
         /// </summary>
-        IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type);
+        IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType);
     }
 }

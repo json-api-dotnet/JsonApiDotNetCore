@@ -43,6 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
             responseDocument.SingleData.Type.Should().Be("userAccounts");
             responseDocument.SingleData.Id.Should().Be(workItem.Assignee.StringId);
             responseDocument.SingleData.Attributes.Should().BeNull();
+            responseDocument.SingleData.Relationships.Should().BeNull();
         }
 
         [Fact]
@@ -93,10 +94,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
             var item1 = responseDocument.ManyData.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
             item1.Type.Should().Be("workItems");
             item1.Attributes.Should().BeNull();
+            item1.Relationships.Should().BeNull();
 
             var item2 = responseDocument.ManyData.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(1).StringId);
             item2.Type.Should().Be("workItems");
             item2.Attributes.Should().BeNull();
+            item2.Relationships.Should().BeNull();
         }
 
         [Fact]
@@ -158,10 +161,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
             var item1 = responseDocument.ManyData.Single(resource => resource.Id == workItem.WorkItemTags.ElementAt(0).Tag.StringId);
             item1.Type.Should().Be("workTags");
             item1.Attributes.Should().BeNull();
+            item1.Relationships.Should().BeNull();
             
             var item2 = responseDocument.ManyData.Single(resource => resource.Id == workItem.WorkItemTags.ElementAt(1).Tag.StringId);
             item2.Type.Should().Be("workTags");
             item2.Attributes.Should().BeNull();
+            item2.Relationships.Should().BeNull();
         }
 
         [Fact]

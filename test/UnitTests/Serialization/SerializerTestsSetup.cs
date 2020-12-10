@@ -60,7 +60,7 @@ namespace UnitTests.Serialization
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder()
         {
-            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, GetResourceDefinitionAccessor(), GetSerializerSettingsProvider());
+            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), GetResourceDefinitionAccessor(), GetSerializerSettingsProvider());
         }
 
         protected IResourceObjectBuilderSettingsProvider GetSerializerSettingsProvider()
@@ -95,7 +95,7 @@ namespace UnitTests.Serialization
         protected IFieldsToSerialize GetSerializableFields()
         {
             var mock = new Mock<IFieldsToSerialize>();
-            mock.Setup(m => m.GetAttributes(It.IsAny<Type>(), It.IsAny<RelationshipAttribute>())).Returns<Type, RelationshipAttribute>((t, r) => _resourceGraph.GetResourceContext(t).Attributes);
+            mock.Setup(m => m.GetAttributes(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetResourceContext(t).Attributes);
             mock.Setup(m => m.GetRelationships(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetResourceContext(t).Relationships);
             return mock.Object;
         }
