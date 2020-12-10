@@ -13,6 +13,9 @@ namespace JsonApiDotNetCore.Serialization.Objects
         [JsonProperty("related")]
         public string Related { get; set; }
 
+        [JsonProperty("describedby")]
+        public string DescribedBy { get; set; }
+
         [JsonProperty("first")]
         public string First { get; set; }
 
@@ -28,6 +31,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         // http://www.newtonsoft.com/json/help/html/ConditionalProperties.htm
         public bool ShouldSerializeSelf() => !string.IsNullOrEmpty(Self);
         public bool ShouldSerializeRelated() => !string.IsNullOrEmpty(Related);
+        public bool ShouldSerializeDescribedBy() => !string.IsNullOrEmpty(DescribedBy);
         public bool ShouldSerializeFirst() => !string.IsNullOrEmpty(First);
         public bool ShouldSerializeLast() => !string.IsNullOrEmpty(Last);
         public bool ShouldSerializePrev() => !string.IsNullOrEmpty(Prev);
