@@ -186,10 +186,13 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                var existingResource = await TryGetPrimaryResourceByIdAsync(resourceFromRequest.Id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
-                if (existingResource != null)
+                if (!Equals(resourceFromRequest.Id, default(TId)))
                 {
-                    throw new ResourceAlreadyExistsException(resourceFromRequest.StringId, _request.PrimaryResource.PublicName);
+                    var existingResource = await TryGetPrimaryResourceByIdAsync(resourceFromRequest.Id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
+                    if (existingResource != null)
+                    {
+                        throw new ResourceAlreadyExistsException(resourceFromRequest.StringId, _request.PrimaryResource.PublicName);
+                    }
                 }
 
                 await AssertResourcesToAssignInRelationshipsExistAsync(resourceFromRequest, cancellationToken);
