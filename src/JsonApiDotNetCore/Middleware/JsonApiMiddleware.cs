@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.Middleware
             var controllerName = (string) routeValues["controller"];
             if (controllerName != null)
             {
-                var resourceType = controllerResourceMapping.GetAssociatedResource(controllerName);
+                var resourceType = controllerResourceMapping.GetResourceTypeForController(controllerName);
                 if (resourceType != null)
                 {
                     return resourceContextProvider.GetResourceContext(resourceType);

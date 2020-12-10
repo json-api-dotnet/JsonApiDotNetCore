@@ -47,7 +47,7 @@ namespace UnitTests.Middleware
             var controllerResourceMappingMock = new Mock<IControllerResourceMapping>();
 
             controllerResourceMappingMock
-                .Setup(x => x.GetAssociatedResource(It.IsAny<string>()))
+                .Setup(x => x.GetResourceTypeForController(It.IsAny<string>()))
                 .Returns(typeof(Article));
 
             var httpContext = new DefaultHttpContext();

@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         /// <inheritdoc />
-        public Type GetAssociatedResource(string controllerName)
+        public Type GetResourceTypeForController(string controllerName)
         {
             if (controllerName == null) throw new ArgumentNullException(nameof(controllerName));
             
