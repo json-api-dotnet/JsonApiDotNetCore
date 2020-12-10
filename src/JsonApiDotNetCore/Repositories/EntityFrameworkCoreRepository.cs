@@ -194,7 +194,7 @@ namespace JsonApiDotNetCore.Repositories
 
             var relationshipIsBeingCleared = relationship is HasOneAttribute
                 ? rightValue == null
-                : IsRequiredToManyRelationshipBeingCleared(relationship, leftResource, rightValue);
+                : IsToManyRelationshipBeingCleared(relationship, leftResource, rightValue);
             
             if (relationshipIsRequired && relationshipIsBeingCleared)
             {
@@ -203,7 +203,7 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        private static bool IsRequiredToManyRelationshipBeingCleared(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
+        private static bool IsToManyRelationshipBeingCleared(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
         {
             ICollection<IIdentifiable> newRightResourceIds = TypeHelper.ExtractResources(valueToAssign);
 
