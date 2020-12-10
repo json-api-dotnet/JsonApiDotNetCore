@@ -80,7 +80,7 @@ The value returned by you determines what will be used to execute the query.</p>
 <p>An intermediate format (<code>QueryExpression</code> and derived types) is used, which enables us to separate json:api implementation 
 from Entity Framework Core <code>IQueryable</code> execution.</p>
 <h3 id="excluding-fields">Excluding fields</h3>
-<p>There are some cases where you want attributes conditionally excluded from your resource response.
+<p>There are some cases where you want attributes (or relationships) conditionally excluded from your resource response.
 For example, you may accept some sensitive data that should only be exposed to administrators after creation.</p>
 <p>Note: to exclude attributes unconditionally, use <code>[Attr(Capabilities = ~AttrCapabilities.AllowView)]</code>.</p>
 <pre><code class="lang-c#">public class UserDefinition : JsonApiResourceDefinition&lt;User&gt;

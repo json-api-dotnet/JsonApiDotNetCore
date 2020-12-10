@@ -101,13 +101,13 @@
   filter=has(articles)&amp;
   sort=count(articles)&amp;
   page[number]=3&amp;
-  fields=title&amp;
+  fields[blogs]=title&amp;
     filter[articles]=and(not(equals(author.firstName,null)),has(revisions))&amp;
     sort[articles]=author.lastName&amp;
     fields[articles]=url&amp;
       filter[articles.revisions]=and(greaterThan(publishTime,&#39;2001-01-01&#39;),startsWith(author.firstName,&#39;J&#39;))&amp;
       sort[articles.revisions]=-publishTime,author.lastName&amp;
-      fields[articles.revisions]=publishTime
+      fields[revisions]=publishTime
 </code></pre><p>After parsing, the set of scoped expressions is transformed into the following tree by <code>QueryLayerComposer</code>:</p>
 <pre><code>QueryLayer&lt;Blog&gt;
 {

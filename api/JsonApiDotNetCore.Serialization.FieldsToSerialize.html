@@ -121,18 +121,18 @@ of information, like application-wide and request-wide sparse fieldsets.</p>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_FieldsToSerialize__ctor_JsonApiDotNetCore_Configuration_IResourceGraph_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.FieldsToSerialize.%23ctor(JsonApiDotNetCore.Configuration.IResourceGraph%2CSystem.Collections.Generic.IEnumerable%7BJsonApiDotNetCore.Queries.IQueryConstraintProvider%7D%2CJsonApiDotNetCore.Resources.IResourceDefinitionAccessor%2CJsonApiDotNetCore.Middleware.IJsonApiRequest)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_FieldsToSerialize__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.FieldsToSerialize.%23ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider%2CSystem.Collections.Generic.IEnumerable%7BJsonApiDotNetCore.Queries.IQueryConstraintProvider%7D%2CJsonApiDotNetCore.Resources.IResourceDefinitionAccessor%2CJsonApiDotNetCore.Middleware.IJsonApiRequest)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/FieldsToSerialize.cs/#L21">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/FieldsToSerialize.cs/#L20">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_FieldsToSerialize__ctor_" data-uid="JsonApiDotNetCore.Serialization.FieldsToSerialize.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_FieldsToSerialize__ctor_JsonApiDotNetCore_Configuration_IResourceGraph_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_" data-uid="JsonApiDotNetCore.Serialization.FieldsToSerialize.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Middleware.IJsonApiRequest)">FieldsToSerialize(IResourceGraph, IEnumerable&lt;IQueryConstraintProvider&gt;, IResourceDefinitionAccessor, IJsonApiRequest)</h4>
+  <h4 id="JsonApiDotNetCore_Serialization_FieldsToSerialize__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_" data-uid="JsonApiDotNetCore.Serialization.FieldsToSerialize.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Middleware.IJsonApiRequest)">FieldsToSerialize(IResourceContextProvider, IEnumerable&lt;IQueryConstraintProvider&gt;, IResourceDefinitionAccessor, IJsonApiRequest)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FieldsToSerialize(IResourceGraph resourceGraph, IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiRequest request)</code></pre>
+    <pre><code class="lang-csharp hljs">public FieldsToSerialize(IResourceContextProvider resourceContextProvider, IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiRequest request)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -145,8 +145,8 @@ of information, like application-wide and request-wide sparse fieldsets.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraph.html">IResourceGraph</a></td>
-        <td><span class="parametername">resourceGraph</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceContextProvider.html">IResourceContextProvider</a></td>
+        <td><span class="parametername">resourceContextProvider</span></td>
         <td></td>
       </tr>
       <tr>
@@ -170,21 +170,19 @@ of information, like application-wide and request-wide sparse fieldsets.</p>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_FieldsToSerialize_GetAttributes_System_Type_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.FieldsToSerialize.GetAttributes(System.Type%2CJsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_FieldsToSerialize_GetAttributes_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.FieldsToSerialize.GetAttributes(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/FieldsToSerialize.cs/#L34">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/FieldsToSerialize.cs/#L32">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_FieldsToSerialize_GetAttributes_" data-uid="JsonApiDotNetCore.Serialization.FieldsToSerialize.GetAttributes*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_FieldsToSerialize_GetAttributes_System_Type_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_" data-uid="JsonApiDotNetCore.Serialization.FieldsToSerialize.GetAttributes(System.Type,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)">GetAttributes(Type, RelationshipAttribute)</h4>
-  <div class="markdown level1 summary"><p>Gets the collection of attributes that are to be serialized for resources of type <code data-dev-comment-type="paramref" class="paramref">resourceType</code>.
-If <code data-dev-comment-type="paramref" class="paramref">relationship</code> is non-null, it will consider the allowed collection of attributes
-as an included relationship.</p>
+  <h4 id="JsonApiDotNetCore_Serialization_FieldsToSerialize_GetAttributes_System_Type_" data-uid="JsonApiDotNetCore.Serialization.FieldsToSerialize.GetAttributes(System.Type)">GetAttributes(Type)</h4>
+  <div class="markdown level1 summary"><p>Gets the collection of attributes that are to be serialized for resources of type <code data-dev-comment-type="paramref" class="paramref">resourceType</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IReadOnlyCollection&lt;AttrAttribute&gt; GetAttributes(Type resourceType, RelationshipAttribute relationship = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlyCollection&lt;AttrAttribute&gt; GetAttributes(Type resourceType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -199,11 +197,6 @@ as an included relationship.</p>
       <tr>
         <td><span class="xref">System.Type</span></td>
         <td><span class="parametername">resourceType</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a></td>
-        <td><span class="parametername">relationship</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -228,16 +221,16 @@ as an included relationship.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_FieldsToSerialize_GetRelationships_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.FieldsToSerialize.GetRelationships(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/FieldsToSerialize.cs/#L87">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/FieldsToSerialize.cs/#L54">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_FieldsToSerialize_GetRelationships_" data-uid="JsonApiDotNetCore.Serialization.FieldsToSerialize.GetRelationships*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_FieldsToSerialize_GetRelationships_System_Type_" data-uid="JsonApiDotNetCore.Serialization.FieldsToSerialize.GetRelationships(System.Type)">GetRelationships(Type)</h4>
-  <div class="markdown level1 summary"><p>Gets the collection of relationships that are to be serialized for resources of type <code data-dev-comment-type="paramref" class="paramref">type</code>.</p>
+  <div class="markdown level1 summary"><p>Gets the collection of relationships that are to be serialized for resources of type <code data-dev-comment-type="paramref" class="paramref">resourceType</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IReadOnlyCollection&lt;RelationshipAttribute&gt; GetRelationships(Type type)</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlyCollection&lt;RelationshipAttribute&gt; GetRelationships(Type resourceType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -251,7 +244,7 @@ as an included relationship.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Type</span></td>
-        <td><span class="parametername">type</span></td>
+        <td><span class="parametername">resourceType</span></td>
         <td></td>
       </tr>
     </tbody>

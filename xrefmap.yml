@@ -7255,6 +7255,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitSparseFieldSet
   nameWithType: QueryExpressionRewriter<TArgument>.VisitSparseFieldSet
   nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitSparseFieldSet
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSparseFieldTable(JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression,`0)
+  name: VisitSparseFieldTable(SparseFieldTableExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitSparseFieldTable_JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSparseFieldTable(JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitSparseFieldTable(JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitSparseFieldTable(JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitSparseFieldTable(SparseFieldTableExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitSparseFieldTable(SparseFieldTableExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSparseFieldTable*
+  name: VisitSparseFieldTable
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitSparseFieldTable_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitSparseFieldTable
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitSparseFieldTable
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitSparseFieldTable
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitSparseFieldTable
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitSparseFieldTable
 - uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2
   name: QueryExpressionVisitor<TArgument, TResult>
   href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html
@@ -7638,6 +7655,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult).VisitSparseFieldSet
   nameWithType: QueryExpressionVisitor<TArgument, TResult>.VisitSparseFieldSet
   nameWithType.vb: QueryExpressionVisitor(Of TArgument, TResult).VisitSparseFieldSet
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.VisitSparseFieldTable(JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression,`0)
+  name: VisitSparseFieldTable(SparseFieldTableExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitSparseFieldTable_JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.VisitSparseFieldTable(JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor<TArgument, TResult>.VisitSparseFieldTable(JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult).VisitSparseFieldTable(JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression, TArgument)
+  nameWithType: QueryExpressionVisitor<TArgument, TResult>.VisitSparseFieldTable(SparseFieldTableExpression, TArgument)
+  nameWithType.vb: QueryExpressionVisitor(Of TArgument, TResult).VisitSparseFieldTable(SparseFieldTableExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.VisitSparseFieldTable*
+  name: VisitSparseFieldTable
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitSparseFieldTable_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.VisitSparseFieldTable
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor<TArgument, TResult>.VisitSparseFieldTable
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult).VisitSparseFieldTable
+  nameWithType: QueryExpressionVisitor<TArgument, TResult>.VisitSparseFieldTable
+  nameWithType.vb: QueryExpressionVisitor(Of TArgument, TResult).VisitSparseFieldTable
 - uid: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression
   name: QueryStringParameterScopeExpression
   href: api/JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.html
@@ -8052,15 +8086,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression
   fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression
   nameWithType: SparseFieldSetExpression
-- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.#ctor(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.AttrAttribute})
-  name: SparseFieldSetExpression(IReadOnlyCollection<AttrAttribute>)
-  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression__ctor_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_AttrAttribute__
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.#ctor(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.AttrAttribute})
-  name.vb: SparseFieldSetExpression(IReadOnlyCollection(Of AttrAttribute))
-  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.SparseFieldSetExpression(System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Resources.Annotations.AttrAttribute>)
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.SparseFieldSetExpression(System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Resources.Annotations.AttrAttribute))
-  nameWithType: SparseFieldSetExpression.SparseFieldSetExpression(IReadOnlyCollection<AttrAttribute>)
-  nameWithType.vb: SparseFieldSetExpression.SparseFieldSetExpression(IReadOnlyCollection(Of AttrAttribute))
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.#ctor(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute})
+  name: SparseFieldSetExpression(IReadOnlyCollection<ResourceFieldAttribute>)
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression__ctor_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute__
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.#ctor(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute})
+  name.vb: SparseFieldSetExpression(IReadOnlyCollection(Of ResourceFieldAttribute))
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.SparseFieldSetExpression(System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute>)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.SparseFieldSetExpression(System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute))
+  nameWithType: SparseFieldSetExpression.SparseFieldSetExpression(IReadOnlyCollection<ResourceFieldAttribute>)
+  nameWithType.vb: SparseFieldSetExpression.SparseFieldSetExpression(IReadOnlyCollection(Of ResourceFieldAttribute))
 - uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.#ctor*
   name: SparseFieldSetExpression
   href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression__ctor_
@@ -8084,19 +8118,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: SparseFieldSetExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: SparseFieldSetExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
-- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Attributes
-  name: Attributes
-  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_Attributes
-  commentId: P:JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Attributes
-  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Attributes
-  nameWithType: SparseFieldSetExpression.Attributes
-- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Attributes*
-  name: Attributes
-  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_Attributes_
-  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Attributes
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Attributes
-  nameWithType: SparseFieldSetExpression.Attributes
 - uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Equals(System.Object)
   name: Equals(Object)
   href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_Equals_System_Object_
@@ -8110,6 +8131,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Equals
   nameWithType: SparseFieldSetExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Fields
+  name: Fields
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_Fields
+  commentId: P:JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Fields
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Fields
+  nameWithType: SparseFieldSetExpression.Fields
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Fields*
+  name: Fields
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_Fields_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Fields
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Fields
+  nameWithType: SparseFieldSetExpression.Fields
 - uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.GetHashCode
   name: GetHashCode()
   href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_GetHashCode
@@ -8174,6 +8208,96 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpressionExtensions.Including(Of TResource)(JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression, System.Linq.Expressions.Expression(Of System.Func(Of TResource, System.Object)), JsonApiDotNetCore.Configuration.IResourceGraph)
   nameWithType: SparseFieldSetExpressionExtensions.Including<TResource>(SparseFieldSetExpression, Expression<Func<TResource, Object>>, IResourceGraph)
   nameWithType.vb: SparseFieldSetExpressionExtensions.Including(Of TResource)(SparseFieldSetExpression, Expression(Of Func(Of TResource, Object)), IResourceGraph)
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression
+  name: SparseFieldTableExpression
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.html
+  commentId: T:JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression
+  nameWithType: SparseFieldTableExpression
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.#ctor(System.Collections.Generic.IReadOnlyDictionary{JsonApiDotNetCore.Configuration.ResourceContext,JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression})
+  name: SparseFieldTableExpression(IReadOnlyDictionary<ResourceContext, SparseFieldSetExpression>)
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression__ctor_System_Collections_Generic_IReadOnlyDictionary_JsonApiDotNetCore_Configuration_ResourceContext_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression__
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.#ctor(System.Collections.Generic.IReadOnlyDictionary{JsonApiDotNetCore.Configuration.ResourceContext,JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression})
+  name.vb: SparseFieldTableExpression(IReadOnlyDictionary(Of ResourceContext, SparseFieldSetExpression))
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.SparseFieldTableExpression(System.Collections.Generic.IReadOnlyDictionary<JsonApiDotNetCore.Configuration.ResourceContext, JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression>)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.SparseFieldTableExpression(System.Collections.Generic.IReadOnlyDictionary(Of JsonApiDotNetCore.Configuration.ResourceContext, JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression))
+  nameWithType: SparseFieldTableExpression.SparseFieldTableExpression(IReadOnlyDictionary<ResourceContext, SparseFieldSetExpression>)
+  nameWithType.vb: SparseFieldTableExpression.SparseFieldTableExpression(IReadOnlyDictionary(Of ResourceContext, SparseFieldSetExpression))
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.#ctor*
+  name: SparseFieldTableExpression
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression__ctor_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.SparseFieldTableExpression
+  nameWithType: SparseFieldTableExpression.SparseFieldTableExpression
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Accept*
+  name: Accept
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression_Accept_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Accept
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Accept
+  nameWithType: SparseFieldTableExpression.Accept
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)
+  name: Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)
+  name.vb: Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Accept<TArgument, TResult>(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor<TArgument, TResult>, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+  nameWithType: SparseFieldTableExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
+  nameWithType.vb: SparseFieldTableExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Equals(System.Object)
+  nameWithType: SparseFieldTableExpression.Equals(Object)
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression_Equals_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Equals
+  nameWithType: SparseFieldTableExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression_GetHashCode
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.GetHashCode
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.GetHashCode()
+  nameWithType: SparseFieldTableExpression.GetHashCode()
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.GetHashCode
+  nameWithType: SparseFieldTableExpression.GetHashCode
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Table
+  name: Table
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression_Table
+  commentId: P:JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Table
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Table
+  nameWithType: SparseFieldTableExpression.Table
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Table*
+  name: Table
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression_Table_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Table
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.Table
+  nameWithType: SparseFieldTableExpression.Table
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.ToString
+  name: ToString()
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression_ToString
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.ToString
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.ToString()
+  nameWithType: SparseFieldTableExpression.ToString()
+- uid: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.ToString*
+  name: ToString
+  href: api/JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.html#JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression_ToString_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.ToString
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.SparseFieldTableExpression.ToString
+  nameWithType: SparseFieldTableExpression.ToString
 - uid: JsonApiDotNetCore.Queries.Expressions.TextMatchKind
   name: TextMatchKind
   href: api/JsonApiDotNetCore.Queries.Expressions.TextMatchKind.html
@@ -9002,15 +9126,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser
   fullName: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser
   nameWithType: SparseFieldSetParser
-- uid: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,System.Action{JsonApiDotNetCore.Resources.Annotations.AttrAttribute,JsonApiDotNetCore.Configuration.ResourceContext,System.String})
-  name: SparseFieldSetParser(IResourceContextProvider, Action<AttrAttribute, ResourceContext, String>)
-  href: api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.html#JsonApiDotNetCore_Queries_Internal_Parsing_SparseFieldSetParser__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_System_Action_JsonApiDotNetCore_Resources_Annotations_AttrAttribute_JsonApiDotNetCore_Configuration_ResourceContext_System_String__
-  commentId: M:JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,System.Action{JsonApiDotNetCore.Resources.Annotations.AttrAttribute,JsonApiDotNetCore.Configuration.ResourceContext,System.String})
-  name.vb: SparseFieldSetParser(IResourceContextProvider, Action(Of AttrAttribute, ResourceContext, String))
-  fullName: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.SparseFieldSetParser(JsonApiDotNetCore.Configuration.IResourceContextProvider, System.Action<JsonApiDotNetCore.Resources.Annotations.AttrAttribute, JsonApiDotNetCore.Configuration.ResourceContext, System.String>)
-  fullName.vb: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.SparseFieldSetParser(JsonApiDotNetCore.Configuration.IResourceContextProvider, System.Action(Of JsonApiDotNetCore.Resources.Annotations.AttrAttribute, JsonApiDotNetCore.Configuration.ResourceContext, System.String))
-  nameWithType: SparseFieldSetParser.SparseFieldSetParser(IResourceContextProvider, Action<AttrAttribute, ResourceContext, String>)
-  nameWithType.vb: SparseFieldSetParser.SparseFieldSetParser(IResourceContextProvider, Action(Of AttrAttribute, ResourceContext, String))
+- uid: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,System.Action{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute,JsonApiDotNetCore.Configuration.ResourceContext,System.String})
+  name: SparseFieldSetParser(IResourceContextProvider, Action<ResourceFieldAttribute, ResourceContext, String>)
+  href: api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.html#JsonApiDotNetCore_Queries_Internal_Parsing_SparseFieldSetParser__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_System_Action_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_JsonApiDotNetCore_Configuration_ResourceContext_System_String__
+  commentId: M:JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,System.Action{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute,JsonApiDotNetCore.Configuration.ResourceContext,System.String})
+  name.vb: SparseFieldSetParser(IResourceContextProvider, Action(Of ResourceFieldAttribute, ResourceContext, String))
+  fullName: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.SparseFieldSetParser(JsonApiDotNetCore.Configuration.IResourceContextProvider, System.Action<JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute, JsonApiDotNetCore.Configuration.ResourceContext, System.String>)
+  fullName.vb: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.SparseFieldSetParser(JsonApiDotNetCore.Configuration.IResourceContextProvider, System.Action(Of JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute, JsonApiDotNetCore.Configuration.ResourceContext, System.String))
+  nameWithType: SparseFieldSetParser.SparseFieldSetParser(IResourceContextProvider, Action<ResourceFieldAttribute, ResourceContext, String>)
+  nameWithType.vb: SparseFieldSetParser.SparseFieldSetParser(IResourceContextProvider, Action(Of ResourceFieldAttribute, ResourceContext, String))
 - uid: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.#ctor*
   name: SparseFieldSetParser
   href: api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.html#JsonApiDotNetCore_Queries_Internal_Parsing_SparseFieldSetParser__ctor_
@@ -9057,6 +9181,51 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.ParseSparseFieldSet
   nameWithType: SparseFieldSetParser.ParseSparseFieldSet
+- uid: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser
+  name: SparseFieldTypeParser
+  href: api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.html
+  commentId: T:JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser
+  fullName: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser
+  nameWithType: SparseFieldTypeParser
+- uid: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  name: SparseFieldTypeParser(IResourceContextProvider)
+  href: api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.html#JsonApiDotNetCore_Queries_Internal_Parsing_SparseFieldTypeParser__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  fullName: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.SparseFieldTypeParser(JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  nameWithType: SparseFieldTypeParser.SparseFieldTypeParser(IResourceContextProvider)
+- uid: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.#ctor*
+  name: SparseFieldTypeParser
+  href: api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.html#JsonApiDotNetCore_Queries_Internal_Parsing_SparseFieldTypeParser__ctor_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.SparseFieldTypeParser
+  nameWithType: SparseFieldTypeParser.SparseFieldTypeParser
+- uid: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.OnResolveFieldChain(System.String,JsonApiDotNetCore.Queries.Internal.Parsing.FieldChainRequirements)
+  name: OnResolveFieldChain(String, FieldChainRequirements)
+  href: api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.html#JsonApiDotNetCore_Queries_Internal_Parsing_SparseFieldTypeParser_OnResolveFieldChain_System_String_JsonApiDotNetCore_Queries_Internal_Parsing_FieldChainRequirements_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.OnResolveFieldChain(System.String,JsonApiDotNetCore.Queries.Internal.Parsing.FieldChainRequirements)
+  fullName: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.OnResolveFieldChain(System.String, JsonApiDotNetCore.Queries.Internal.Parsing.FieldChainRequirements)
+  nameWithType: SparseFieldTypeParser.OnResolveFieldChain(String, FieldChainRequirements)
+- uid: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.OnResolveFieldChain*
+  name: OnResolveFieldChain
+  href: api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.html#JsonApiDotNetCore_Queries_Internal_Parsing_SparseFieldTypeParser_OnResolveFieldChain_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.OnResolveFieldChain
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.OnResolveFieldChain
+  nameWithType: SparseFieldTypeParser.OnResolveFieldChain
+- uid: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.Parse(System.String)
+  name: Parse(String)
+  href: api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.html#JsonApiDotNetCore_Queries_Internal_Parsing_SparseFieldTypeParser_Parse_System_String_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.Parse(System.String)
+  fullName: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.Parse(System.String)
+  nameWithType: SparseFieldTypeParser.Parse(String)
+- uid: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.Parse*
+  name: Parse
+  href: api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.html#JsonApiDotNetCore_Queries_Internal_Parsing_SparseFieldTypeParser_Parse_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.Parse
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.Parse
+  nameWithType: SparseFieldTypeParser.Parse
 - uid: JsonApiDotNetCore.Queries.Internal.Parsing.Token
   name: Token
   href: api/JsonApiDotNetCore.Queries.Internal.Parsing.Token.html
@@ -10047,6 +10216,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetPagination
   nameWithType: QueryLayerComposer.GetPagination
+- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetProjectionForSparseAttributeSet(JsonApiDotNetCore.Configuration.ResourceContext)
+  name: GetProjectionForSparseAttributeSet(ResourceContext)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetProjectionForSparseAttributeSet_JsonApiDotNetCore_Configuration_ResourceContext_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetProjectionForSparseAttributeSet(JsonApiDotNetCore.Configuration.ResourceContext)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetProjectionForSparseAttributeSet(JsonApiDotNetCore.Configuration.ResourceContext)
+  nameWithType: QueryLayerComposer.GetProjectionForSparseAttributeSet(ResourceContext)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetProjectionForSparseAttributeSet*
+  name: GetProjectionForSparseAttributeSet
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetProjectionForSparseAttributeSet_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetProjectionForSparseAttributeSet
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetProjectionForSparseAttributeSet
+  nameWithType: QueryLayerComposer.GetProjectionForSparseAttributeSet
 - uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSort(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.QueryExpression},JsonApiDotNetCore.Configuration.ResourceContext)
   name: GetSort(IReadOnlyCollection<QueryExpression>, ResourceContext)
   href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSort_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_QueryExpression__JsonApiDotNetCore_Configuration_ResourceContext_
@@ -10063,22 +10245,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSort
   nameWithType: QueryLayerComposer.GetSort
-- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSparseFieldSetProjection(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.QueryExpression},JsonApiDotNetCore.Configuration.ResourceContext)
-  name: GetSparseFieldSetProjection(IReadOnlyCollection<QueryExpression>, ResourceContext)
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSparseFieldSetProjection_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_QueryExpression__JsonApiDotNetCore_Configuration_ResourceContext_
-  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSparseFieldSetProjection(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.QueryExpression},JsonApiDotNetCore.Configuration.ResourceContext)
-  name.vb: GetSparseFieldSetProjection(IReadOnlyCollection(Of QueryExpression), ResourceContext)
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSparseFieldSetProjection(System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Queries.Expressions.QueryExpression>, JsonApiDotNetCore.Configuration.ResourceContext)
-  fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSparseFieldSetProjection(System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Queries.Expressions.QueryExpression), JsonApiDotNetCore.Configuration.ResourceContext)
-  nameWithType: QueryLayerComposer.GetSparseFieldSetProjection(IReadOnlyCollection<QueryExpression>, ResourceContext)
-  nameWithType.vb: QueryLayerComposer.GetSparseFieldSetProjection(IReadOnlyCollection(Of QueryExpression), ResourceContext)
-- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSparseFieldSetProjection*
-  name: GetSparseFieldSetProjection
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSparseFieldSetProjection_
-  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSparseFieldSetProjection
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSparseFieldSetProjection
-  nameWithType: QueryLayerComposer.GetSparseFieldSetProjection
 - uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceContext)
   name: GetTopFilterFromConstraints(ResourceContext)
   href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetTopFilterFromConstraints_JsonApiDotNetCore_Configuration_ResourceContext_
@@ -10108,6 +10274,67 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.WrapLayerForSecondaryEndpoint(Of TId)(JsonApiDotNetCore.Queries.QueryLayer, JsonApiDotNetCore.Configuration.ResourceContext, TId, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
   nameWithType: QueryLayerComposer.WrapLayerForSecondaryEndpoint<TId>(QueryLayer, ResourceContext, TId, RelationshipAttribute)
   nameWithType.vb: QueryLayerComposer.WrapLayerForSecondaryEndpoint(Of TId)(QueryLayer, ResourceContext, TId, RelationshipAttribute)
+- uid: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache
+  name: SparseFieldSetCache
+  href: api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.html
+  commentId: T:JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache
+  fullName: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache
+  nameWithType: SparseFieldSetCache
+- uid: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  name: SparseFieldSetCache(IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor)
+  href: api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  name.vb: SparseFieldSetCache(IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor)
+  fullName: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.SparseFieldSetCache(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  fullName.vb: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.SparseFieldSetCache(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
+  nameWithType: SparseFieldSetCache.SparseFieldSetCache(IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor)
+  nameWithType.vb: SparseFieldSetCache.SparseFieldSetCache(IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor)
+- uid: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.#ctor*
+  name: SparseFieldSetCache
+  href: api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache__ctor_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.SparseFieldSetCache
+  nameWithType: SparseFieldSetCache.SparseFieldSetCache
+- uid: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceContext)
+  name: GetIdAttributeSetForRelationshipQuery(ResourceContext)
+  href: api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetIdAttributeSetForRelationshipQuery_JsonApiDotNetCore_Configuration_ResourceContext_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceContext)
+  fullName: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceContext)
+  nameWithType: SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(ResourceContext)
+- uid: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery*
+  name: GetIdAttributeSetForRelationshipQuery
+  href: api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetIdAttributeSetForRelationshipQuery_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery
+  nameWithType: SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery
+- uid: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceContext)
+  name: GetSparseFieldSetForQuery(ResourceContext)
+  href: api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForQuery_JsonApiDotNetCore_Configuration_ResourceContext_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceContext)
+  fullName: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceContext)
+  nameWithType: SparseFieldSetCache.GetSparseFieldSetForQuery(ResourceContext)
+- uid: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForQuery*
+  name: GetSparseFieldSetForQuery
+  href: api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForQuery_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForQuery
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForQuery
+  nameWithType: SparseFieldSetCache.GetSparseFieldSetForQuery
+- uid: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceContext)
+  name: GetSparseFieldSetForSerializer(ResourceContext)
+  href: api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForSerializer_JsonApiDotNetCore_Configuration_ResourceContext_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceContext)
+  fullName: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceContext)
+  nameWithType: SparseFieldSetCache.GetSparseFieldSetForSerializer(ResourceContext)
+- uid: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForSerializer*
+  name: GetSparseFieldSetForSerializer
+  href: api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForSerializer_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForSerializer
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForSerializer
+  nameWithType: SparseFieldSetCache.GetSparseFieldSetForSerializer
 - uid: JsonApiDotNetCore.Queries.IPaginationContext
   name: IPaginationContext
   href: api/JsonApiDotNetCore.Queries.IPaginationContext.html
@@ -11271,19 +11498,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.Read
   nameWithType: SparseFieldSetQueryStringParameterReader.Read
-- uid: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.ValidateSingleAttribute(JsonApiDotNetCore.Resources.Annotations.AttrAttribute,JsonApiDotNetCore.Configuration.ResourceContext,System.String)
-  name: ValidateSingleAttribute(AttrAttribute, ResourceContext, String)
-  href: api/JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_SparseFieldSetQueryStringParameterReader_ValidateSingleAttribute_JsonApiDotNetCore_Resources_Annotations_AttrAttribute_JsonApiDotNetCore_Configuration_ResourceContext_System_String_
-  commentId: M:JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.ValidateSingleAttribute(JsonApiDotNetCore.Resources.Annotations.AttrAttribute,JsonApiDotNetCore.Configuration.ResourceContext,System.String)
-  fullName: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.ValidateSingleAttribute(JsonApiDotNetCore.Resources.Annotations.AttrAttribute, JsonApiDotNetCore.Configuration.ResourceContext, System.String)
-  nameWithType: SparseFieldSetQueryStringParameterReader.ValidateSingleAttribute(AttrAttribute, ResourceContext, String)
-- uid: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.ValidateSingleAttribute*
-  name: ValidateSingleAttribute
-  href: api/JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_SparseFieldSetQueryStringParameterReader_ValidateSingleAttribute_
-  commentId: Overload:JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.ValidateSingleAttribute
+- uid: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.ValidateSingleField(JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute,JsonApiDotNetCore.Configuration.ResourceContext,System.String)
+  name: ValidateSingleField(ResourceFieldAttribute, ResourceContext, String)
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_SparseFieldSetQueryStringParameterReader_ValidateSingleField_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_JsonApiDotNetCore_Configuration_ResourceContext_System_String_
+  commentId: M:JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.ValidateSingleField(JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute,JsonApiDotNetCore.Configuration.ResourceContext,System.String)
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.ValidateSingleField(JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute, JsonApiDotNetCore.Configuration.ResourceContext, System.String)
+  nameWithType: SparseFieldSetQueryStringParameterReader.ValidateSingleField(ResourceFieldAttribute, ResourceContext, String)
+- uid: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.ValidateSingleField*
+  name: ValidateSingleField
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_SparseFieldSetQueryStringParameterReader_ValidateSingleField_
+  commentId: Overload:JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.ValidateSingleField
   isSpec: "True"
-  fullName: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.ValidateSingleAttribute
-  nameWithType: SparseFieldSetQueryStringParameterReader.ValidateSingleAttribute
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.ValidateSingleField
+  nameWithType: SparseFieldSetQueryStringParameterReader.ValidateSingleField
 - uid: JsonApiDotNetCore.QueryStrings.INullsQueryStringParameterReader
   name: INullsQueryStringParameterReader
   href: api/JsonApiDotNetCore.QueryStrings.INullsQueryStringParameterReader.html
@@ -14987,12 +15214,15 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Building.IncludedResourceObjectBuilder
   fullName: JsonApiDotNetCore.Serialization.Building.IncludedResourceObjectBuilder
   nameWithType: IncludedResourceObjectBuilder
-- uid: JsonApiDotNetCore.Serialization.Building.IncludedResourceObjectBuilder.#ctor(JsonApiDotNetCore.Serialization.IFieldsToSerialize,JsonApiDotNetCore.Serialization.Building.ILinkBuilder,JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilderSettingsProvider)
-  name: IncludedResourceObjectBuilder(IFieldsToSerialize, ILinkBuilder, IResourceContextProvider, IResourceDefinitionAccessor, IResourceObjectBuilderSettingsProvider)
-  href: api/JsonApiDotNetCore.Serialization.Building.IncludedResourceObjectBuilder.html#JsonApiDotNetCore_Serialization_Building_IncludedResourceObjectBuilder__ctor_JsonApiDotNetCore_Serialization_IFieldsToSerialize_JsonApiDotNetCore_Serialization_Building_ILinkBuilder_JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Serialization_Building_IResourceObjectBuilderSettingsProvider_
-  commentId: M:JsonApiDotNetCore.Serialization.Building.IncludedResourceObjectBuilder.#ctor(JsonApiDotNetCore.Serialization.IFieldsToSerialize,JsonApiDotNetCore.Serialization.Building.ILinkBuilder,JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilderSettingsProvider)
-  fullName: JsonApiDotNetCore.Serialization.Building.IncludedResourceObjectBuilder.IncludedResourceObjectBuilder(JsonApiDotNetCore.Serialization.IFieldsToSerialize, JsonApiDotNetCore.Serialization.Building.ILinkBuilder, JsonApiDotNetCore.Configuration.IResourceContextProvider, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilderSettingsProvider)
-  nameWithType: IncludedResourceObjectBuilder.IncludedResourceObjectBuilder(IFieldsToSerialize, ILinkBuilder, IResourceContextProvider, IResourceDefinitionAccessor, IResourceObjectBuilderSettingsProvider)
+- uid: JsonApiDotNetCore.Serialization.Building.IncludedResourceObjectBuilder.#ctor(JsonApiDotNetCore.Serialization.IFieldsToSerialize,JsonApiDotNetCore.Serialization.Building.ILinkBuilder,JsonApiDotNetCore.Configuration.IResourceContextProvider,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilderSettingsProvider)
+  name: IncludedResourceObjectBuilder(IFieldsToSerialize, ILinkBuilder, IResourceContextProvider, IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor, IResourceObjectBuilderSettingsProvider)
+  href: api/JsonApiDotNetCore.Serialization.Building.IncludedResourceObjectBuilder.html#JsonApiDotNetCore_Serialization_Building_IncludedResourceObjectBuilder__ctor_JsonApiDotNetCore_Serialization_IFieldsToSerialize_JsonApiDotNetCore_Serialization_Building_ILinkBuilder_JsonApiDotNetCore_Configuration_IResourceContextProvider_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Serialization_Building_IResourceObjectBuilderSettingsProvider_
+  commentId: M:JsonApiDotNetCore.Serialization.Building.IncludedResourceObjectBuilder.#ctor(JsonApiDotNetCore.Serialization.IFieldsToSerialize,JsonApiDotNetCore.Serialization.Building.ILinkBuilder,JsonApiDotNetCore.Configuration.IResourceContextProvider,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilderSettingsProvider)
+  name.vb: IncludedResourceObjectBuilder(IFieldsToSerialize, ILinkBuilder, IResourceContextProvider, IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor, IResourceObjectBuilderSettingsProvider)
+  fullName: JsonApiDotNetCore.Serialization.Building.IncludedResourceObjectBuilder.IncludedResourceObjectBuilder(JsonApiDotNetCore.Serialization.IFieldsToSerialize, JsonApiDotNetCore.Serialization.Building.ILinkBuilder, JsonApiDotNetCore.Configuration.IResourceContextProvider, System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilderSettingsProvider)
+  fullName.vb: JsonApiDotNetCore.Serialization.Building.IncludedResourceObjectBuilder.IncludedResourceObjectBuilder(JsonApiDotNetCore.Serialization.IFieldsToSerialize, JsonApiDotNetCore.Serialization.Building.ILinkBuilder, JsonApiDotNetCore.Configuration.IResourceContextProvider, System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilderSettingsProvider)
+  nameWithType: IncludedResourceObjectBuilder.IncludedResourceObjectBuilder(IFieldsToSerialize, ILinkBuilder, IResourceContextProvider, IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor, IResourceObjectBuilderSettingsProvider)
+  nameWithType.vb: IncludedResourceObjectBuilder.IncludedResourceObjectBuilder(IFieldsToSerialize, ILinkBuilder, IResourceContextProvider, IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor, IResourceObjectBuilderSettingsProvider)
 - uid: JsonApiDotNetCore.Serialization.Building.IncludedResourceObjectBuilder.#ctor*
   name: IncludedResourceObjectBuilder
   href: api/JsonApiDotNetCore.Serialization.Building.IncludedResourceObjectBuilder.html#JsonApiDotNetCore_Serialization_Building_IncludedResourceObjectBuilder__ctor_
@@ -15770,15 +16000,15 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.FieldsToSerialize
   fullName: JsonApiDotNetCore.Serialization.FieldsToSerialize
   nameWithType: FieldsToSerialize
-- uid: JsonApiDotNetCore.Serialization.FieldsToSerialize.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Middleware.IJsonApiRequest)
-  name: FieldsToSerialize(IResourceGraph, IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor, IJsonApiRequest)
-  href: api/JsonApiDotNetCore.Serialization.FieldsToSerialize.html#JsonApiDotNetCore_Serialization_FieldsToSerialize__ctor_JsonApiDotNetCore_Configuration_IResourceGraph_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_
-  commentId: M:JsonApiDotNetCore.Serialization.FieldsToSerialize.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Middleware.IJsonApiRequest)
-  name.vb: FieldsToSerialize(IResourceGraph, IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor, IJsonApiRequest)
-  fullName: JsonApiDotNetCore.Serialization.FieldsToSerialize.FieldsToSerialize(JsonApiDotNetCore.Configuration.IResourceGraph, System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Middleware.IJsonApiRequest)
-  fullName.vb: JsonApiDotNetCore.Serialization.FieldsToSerialize.FieldsToSerialize(JsonApiDotNetCore.Configuration.IResourceGraph, System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Middleware.IJsonApiRequest)
-  nameWithType: FieldsToSerialize.FieldsToSerialize(IResourceGraph, IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor, IJsonApiRequest)
-  nameWithType.vb: FieldsToSerialize.FieldsToSerialize(IResourceGraph, IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor, IJsonApiRequest)
+- uid: JsonApiDotNetCore.Serialization.FieldsToSerialize.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  name: FieldsToSerialize(IResourceContextProvider, IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor, IJsonApiRequest)
+  href: api/JsonApiDotNetCore.Serialization.FieldsToSerialize.html#JsonApiDotNetCore_Serialization_FieldsToSerialize__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_
+  commentId: M:JsonApiDotNetCore.Serialization.FieldsToSerialize.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor,JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  name.vb: FieldsToSerialize(IResourceContextProvider, IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor, IJsonApiRequest)
+  fullName: JsonApiDotNetCore.Serialization.FieldsToSerialize.FieldsToSerialize(JsonApiDotNetCore.Configuration.IResourceContextProvider, System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  fullName.vb: JsonApiDotNetCore.Serialization.FieldsToSerialize.FieldsToSerialize(JsonApiDotNetCore.Configuration.IResourceContextProvider, System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), JsonApiDotNetCore.Resources.IResourceDefinitionAccessor, JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  nameWithType: FieldsToSerialize.FieldsToSerialize(IResourceContextProvider, IEnumerable<IQueryConstraintProvider>, IResourceDefinitionAccessor, IJsonApiRequest)
+  nameWithType.vb: FieldsToSerialize.FieldsToSerialize(IResourceContextProvider, IEnumerable(Of IQueryConstraintProvider), IResourceDefinitionAccessor, IJsonApiRequest)
 - uid: JsonApiDotNetCore.Serialization.FieldsToSerialize.#ctor*
   name: FieldsToSerialize
   href: api/JsonApiDotNetCore.Serialization.FieldsToSerialize.html#JsonApiDotNetCore_Serialization_FieldsToSerialize__ctor_
@@ -15786,12 +16016,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.FieldsToSerialize.FieldsToSerialize
   nameWithType: FieldsToSerialize.FieldsToSerialize
-- uid: JsonApiDotNetCore.Serialization.FieldsToSerialize.GetAttributes(System.Type,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
-  name: GetAttributes(Type, RelationshipAttribute)
-  href: api/JsonApiDotNetCore.Serialization.FieldsToSerialize.html#JsonApiDotNetCore_Serialization_FieldsToSerialize_GetAttributes_System_Type_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_
-  commentId: M:JsonApiDotNetCore.Serialization.FieldsToSerialize.GetAttributes(System.Type,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
-  fullName: JsonApiDotNetCore.Serialization.FieldsToSerialize.GetAttributes(System.Type, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
-  nameWithType: FieldsToSerialize.GetAttributes(Type, RelationshipAttribute)
+- uid: JsonApiDotNetCore.Serialization.FieldsToSerialize.GetAttributes(System.Type)
+  name: GetAttributes(Type)
+  href: api/JsonApiDotNetCore.Serialization.FieldsToSerialize.html#JsonApiDotNetCore_Serialization_FieldsToSerialize_GetAttributes_System_Type_
+  commentId: M:JsonApiDotNetCore.Serialization.FieldsToSerialize.GetAttributes(System.Type)
+  fullName: JsonApiDotNetCore.Serialization.FieldsToSerialize.GetAttributes(System.Type)
+  nameWithType: FieldsToSerialize.GetAttributes(Type)
 - uid: JsonApiDotNetCore.Serialization.FieldsToSerialize.GetAttributes*
   name: GetAttributes
   href: api/JsonApiDotNetCore.Serialization.FieldsToSerialize.html#JsonApiDotNetCore_Serialization_FieldsToSerialize_GetAttributes_
@@ -15818,12 +16048,12 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.IFieldsToSerialize
   fullName: JsonApiDotNetCore.Serialization.IFieldsToSerialize
   nameWithType: IFieldsToSerialize
-- uid: JsonApiDotNetCore.Serialization.IFieldsToSerialize.GetAttributes(System.Type,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
-  name: GetAttributes(Type, RelationshipAttribute)
-  href: api/JsonApiDotNetCore.Serialization.IFieldsToSerialize.html#JsonApiDotNetCore_Serialization_IFieldsToSerialize_GetAttributes_System_Type_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_
-  commentId: M:JsonApiDotNetCore.Serialization.IFieldsToSerialize.GetAttributes(System.Type,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
-  fullName: JsonApiDotNetCore.Serialization.IFieldsToSerialize.GetAttributes(System.Type, JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
-  nameWithType: IFieldsToSerialize.GetAttributes(Type, RelationshipAttribute)
+- uid: JsonApiDotNetCore.Serialization.IFieldsToSerialize.GetAttributes(System.Type)
+  name: GetAttributes(Type)
+  href: api/JsonApiDotNetCore.Serialization.IFieldsToSerialize.html#JsonApiDotNetCore_Serialization_IFieldsToSerialize_GetAttributes_System_Type_
+  commentId: M:JsonApiDotNetCore.Serialization.IFieldsToSerialize.GetAttributes(System.Type)
+  fullName: JsonApiDotNetCore.Serialization.IFieldsToSerialize.GetAttributes(System.Type)
+  nameWithType: IFieldsToSerialize.GetAttributes(Type)
 - uid: JsonApiDotNetCore.Serialization.IFieldsToSerialize.GetAttributes*
   name: GetAttributes
   href: api/JsonApiDotNetCore.Serialization.IFieldsToSerialize.html#JsonApiDotNetCore_Serialization_IFieldsToSerialize_GetAttributes_

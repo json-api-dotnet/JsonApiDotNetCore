@@ -118,8 +118,8 @@ The example below creates an article and sets both its owner and tags.</p>
   }
 }
 </code></pre><h1 id="response-body">Response body</h1>
-<p>POST requests can be combined with query string parameters that are normally used for reading data, such as <code>include</code> and <code>fields</code>. For example:</p>
-<pre><code class="lang-http">POST /articles?include=owner&amp;fields[owner]=firstName HTTP/1.1
+<p>POST requests can be combined with query string parameters that are normally used for reading data, such as <code>include</code> and <code>fields[]</code>. For example:</p>
+<pre><code class="lang-http">POST /articles?include=owner&amp;fields[people]=firstName HTTP/1.1
 
 {
   ...

@@ -121,8 +121,8 @@ Note that all resources being assigned in a relationship must already exist.</p>
 </code></pre><p>A HasOne relationship can be cleared by setting <code>data</code> to <code>null</code>, while a HasMany relationship can be cleared by setting it to an empty array.</p>
 <p>By combining the examples above, both attributes and relationships can be updated using a single PATCH request.</p>
 <h2 id="response-body">Response body</h2>
-<p>PATCH requests can be combined with query string parameters that are normally used for reading data, such as <code>include</code> and <code>fields</code>. For example:</p>
-<pre><code class="lang-http">PATCH /articles/1?include=owner&amp;fields[owner]=firstName HTTP/1.1
+<p>PATCH requests can be combined with query string parameters that are normally used for reading data, such as <code>include</code> and <code>fields[]</code>. For example:</p>
+<pre><code class="lang-http">PATCH /articles/1?include=owner&amp;fields[people]=firstName HTTP/1.1
 
 {
   ...

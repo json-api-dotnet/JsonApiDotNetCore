@@ -302,15 +302,15 @@
   ]
 }
 </code></pre><h3 id="get-sparse-fieldset">Get sparse fieldset</h3>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?fields=publishYear
+<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?fields%5Bbooks%5D=publishYear
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
   &quot;meta&quot;: {
     &quot;totalResources&quot;: 3
   },
   &quot;links&quot;: {
-    &quot;self&quot;: &quot;/api/books?fields=publishYear&quot;,
-    &quot;first&quot;: &quot;/api/books?fields=publishYear&quot;,
-    &quot;last&quot;: &quot;/api/books?fields=publishYear&quot;
+    &quot;self&quot;: &quot;/api/books?fields[books]=publishYear&quot;,
+    &quot;first&quot;: &quot;/api/books?fields[books]=publishYear&quot;,
+    &quot;last&quot;: &quot;/api/books?fields[books]=publishYear&quot;
   },
   &quot;data&quot;: [
     {
@@ -318,14 +318,6 @@
       &quot;id&quot;: &quot;1&quot;,
       &quot;attributes&quot;: {
         &quot;publishYear&quot;: 1818
-      },
-      &quot;relationships&quot;: {
-        &quot;author&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;/api/books/1/relationships/author&quot;,
-            &quot;related&quot;: &quot;/api/books/1/author&quot;
-          }
-        }
       },
       &quot;links&quot;: {
         &quot;self&quot;: &quot;/api/books/1&quot;
@@ -337,14 +329,6 @@
       &quot;attributes&quot;: {
         &quot;publishYear&quot;: 1719
       },
-      &quot;relationships&quot;: {
-        &quot;author&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;/api/books/2/relationships/author&quot;,
-            &quot;related&quot;: &quot;/api/books/2/author&quot;
-          }
-        }
-      },
       &quot;links&quot;: {
         &quot;self&quot;: &quot;/api/books/2&quot;
       }
@@ -354,14 +338,6 @@
       &quot;id&quot;: &quot;3&quot;,
       &quot;attributes&quot;: {
         &quot;publishYear&quot;: 1726
-      },
-      &quot;relationships&quot;: {
-        &quot;author&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;/api/books/3/relationships/author&quot;,
-            &quot;related&quot;: &quot;/api/books/3/author&quot;
-          }
-        }
       },
       &quot;links&quot;: {
         &quot;self&quot;: &quot;/api/books/3&quot;

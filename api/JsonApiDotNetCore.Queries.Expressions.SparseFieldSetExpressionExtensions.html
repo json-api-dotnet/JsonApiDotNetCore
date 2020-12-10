@@ -125,7 +125,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static SparseFieldSetExpression Excluding&lt;TResource&gt;(this SparseFieldSetExpression sparseFieldSet, Expression&lt;Func&lt;TResource, dynamic&gt;&gt; attributeSelector, IResourceGraph resourceGraph)
+    <pre><code class="lang-csharp hljs">public static SparseFieldSetExpression Excluding&lt;TResource&gt;(this SparseFieldSetExpression sparseFieldSet, Expression&lt;Func&lt;TResource, dynamic&gt;&gt; fieldSelector, IResourceGraph resourceGraph)
     where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -145,7 +145,7 @@
       </tr>
       <tr>
         <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TResource, <span class="xref">System.Object</span>&gt;&gt;</td>
-        <td><span class="parametername">attributeSelector</span></td>
+        <td><span class="parametername">fieldSelector</span></td>
         <td></td>
       </tr>
       <tr>
@@ -198,7 +198,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static SparseFieldSetExpression Including&lt;TResource&gt;(this SparseFieldSetExpression sparseFieldSet, Expression&lt;Func&lt;TResource, dynamic&gt;&gt; attributeSelector, IResourceGraph resourceGraph)
+    <pre><code class="lang-csharp hljs">public static SparseFieldSetExpression Including&lt;TResource&gt;(this SparseFieldSetExpression sparseFieldSet, Expression&lt;Func&lt;TResource, dynamic&gt;&gt; fieldSelector, IResourceGraph resourceGraph)
     where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -218,7 +218,7 @@
       </tr>
       <tr>
         <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TResource, <span class="xref">System.Object</span>&gt;&gt;</td>
-        <td><span class="parametername">attributeSelector</span></td>
+        <td><span class="parametername">fieldSelector</span></td>
         <td></td>
       </tr>
       <tr>
