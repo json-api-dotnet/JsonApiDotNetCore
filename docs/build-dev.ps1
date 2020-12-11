@@ -9,7 +9,9 @@ dotnet build .. --configuration Release
 Invoke-Expression ./generate-examples.ps1
 
 docfx ./docfx.json
-Get-ChildItem -Path home/* -Recurse | Copy-Item -Destination _site
+Copy-Item home/*.html _site/
+Copy-Item home/*.ico _site/
+Copy-Item -Recurse home/assets/* _site/styles/
 
 cd _site
 httpserver &

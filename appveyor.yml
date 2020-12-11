@@ -35,7 +35,9 @@ after_build:
             git clone https://github.com/json-api-dotnet/JsonApiDotNetCore.git -b gh-pages origin_site -q
             Copy-Item origin_site/.git _site -recurse
             Copy-Item CNAME _site/CNAME
-            Get-ChildItem -Path home/* -Recurse | Copy-Item -Destination _site
+            Copy-Item home/*.html _site/
+            Copy-Item home/*.ico _site/
+            Copy-Item -Recurse home/assets/* _site/styles/
             CD _site
             git add -A 2>&1
             git commit -m "CI Updates" -q
