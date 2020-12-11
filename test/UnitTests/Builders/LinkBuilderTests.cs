@@ -224,12 +224,10 @@ namespace UnitTests
 
         private sealed class FakeRequestQueryStringAccessor : IRequestQueryStringAccessor
         {
-            public QueryString QueryString { get; }
             public IQueryCollection Query { get; }
 
             public FakeRequestQueryStringAccessor(string queryString)
             {
-                QueryString = new QueryString(queryString);
                 Query = new QueryCollection(QueryHelpers.ParseQuery(queryString));
             }
         }

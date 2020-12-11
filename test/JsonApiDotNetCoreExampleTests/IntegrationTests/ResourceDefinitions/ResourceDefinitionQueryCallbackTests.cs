@@ -93,7 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.RemoveRange(dbContext.CallableResources);
+                await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
 
                 await dbContext.SaveChangesAsync();
@@ -144,7 +144,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.RemoveRange(dbContext.CallableResources);
+                await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
 
                 await dbContext.SaveChangesAsync();
@@ -192,7 +192,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.RemoveRange(dbContext.CallableResources);
+                await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
 
                 await dbContext.SaveChangesAsync();
@@ -240,7 +240,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.RemoveRange(dbContext.CallableResources);
+                await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
 
                 await dbContext.SaveChangesAsync();
@@ -273,7 +273,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.RemoveRange(dbContext.CallableResources);
+                await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
 
                 await dbContext.SaveChangesAsync();
@@ -447,7 +447,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.RemoveRange(dbContext.CallableResources);
+                await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
 
                 await dbContext.SaveChangesAsync();
@@ -496,7 +496,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.RemoveRange(dbContext.CallableResources);
+                await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
 
                 await dbContext.SaveChangesAsync();

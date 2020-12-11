@@ -12,7 +12,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
                 .RuleFor(workItem => workItem.DueAt, f => f.Date.Future())
                 .RuleFor(workItem => workItem.Priority, f => f.PickRandom<WorkItemPriority>()));
 
-        private readonly Lazy<Faker<WorkTag>> _lazyWorkTagsFaker = new Lazy<Faker<WorkTag>>(() =>
+        private readonly Lazy<Faker<WorkTag>> _lazyWorkTagFaker = new Lazy<Faker<WorkTag>>(() =>
             new Faker<WorkTag>()
                 .UseSeed(GetFakerSeed())
                 .RuleFor(workTag => workTag.Text, f => f.Lorem.Word())
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
                 .RuleFor(color => color.DisplayName, f => f.Lorem.Word()));
 
         public Faker<WorkItem> WorkItem => _lazyWorkItemFaker.Value;
-        public Faker<WorkTag> WorkTags => _lazyWorkTagsFaker.Value;
+        public Faker<WorkTag> WorkTag => _lazyWorkTagFaker.Value;
         public Faker<UserAccount> UserAccount => _lazyUserAccountFaker.Value;
         public Faker<WorkItemGroup> WorkItemGroup => _lazyWorkItemGroupFaker.Value;
         public Faker<RgbColor> RgbColor => _lazyRgbColorFaker.Value;

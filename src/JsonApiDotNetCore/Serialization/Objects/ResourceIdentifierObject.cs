@@ -4,14 +4,6 @@ namespace JsonApiDotNetCore.Serialization.Objects
 {
     public class ResourceIdentifierObject
     {
-        public ResourceIdentifierObject() { }
-
-        public ResourceIdentifierObject(string type, string id)
-        {
-            Type = type;
-            Id = id;
-        }
-
         [JsonProperty("type", Order = -3)]
         public string Type { get; set; }
 

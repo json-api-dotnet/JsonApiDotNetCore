@@ -31,20 +31,20 @@ namespace JsonApiDotNetCore.Middleware
     public class JsonApiRoutingConvention : IJsonApiRoutingConvention
     {
         private readonly IJsonApiOptions _options;
-        private readonly IResourceGraph _resourceGraph;
+        private readonly IResourceContextProvider _resourceContextProvider;
         private readonly HashSet<string> _registeredTemplates = new HashSet<string>();
 
         private readonly Dictionary<string, ResourceContext> _registeredResources =
             new Dictionary<string, ResourceContext>();
 
-        public JsonApiRoutingConvention(IJsonApiOptions options, IResourceGraph resourceGraph)
+        public JsonApiRoutingConvention(IJsonApiOptions options, IResourceContextProvider resourceContextProvider)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
-            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
         }
 
         /// <inheritdoc />
-        public Type GetAssociatedResource(string controllerName)
+        public Type GetResourceTypeForController(string controllerName)
         {
             if (controllerName == null) throw new ArgumentNullException(nameof(controllerName));
             
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Middleware
 
                 if (resourceType != null)
                 {
-                    var resourceContext = _resourceGraph.GetResourceContext(resourceType);
+                    var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
     
                     if (resourceContext != null)
                     {

@@ -337,12 +337,12 @@ namespace JsonApiDotNetCore.Queries.Internal
         }
 
         /// <inheritdoc />
-        public QueryLayer ComposeForHasManyThrough<TId>(HasManyThroughAttribute hasManyThroughRelationship, TId leftId, ICollection<IIdentifiable> rightResourceIds)
+        public QueryLayer ComposeForHasMany<TId>(HasManyAttribute hasManyRelationship, TId leftId, ICollection<IIdentifiable> rightResourceIds)
         {
-            var leftResourceContext = _resourceContextProvider.GetResourceContext(hasManyThroughRelationship.LeftType);
+            var leftResourceContext = _resourceContextProvider.GetResourceContext(hasManyRelationship.LeftType);
             var leftIdAttribute = GetIdAttribute(leftResourceContext);
 
-            var rightResourceContext = _resourceContextProvider.GetResourceContext(hasManyThroughRelationship.RightType);
+            var rightResourceContext = _resourceContextProvider.GetResourceContext(hasManyRelationship.RightType);
             var rightIdAttribute = GetIdAttribute(rightResourceContext);
             var rightTypedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
 
@@ -351,11 +351,11 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             return new QueryLayer(leftResourceContext)
             {
-                Include = new IncludeExpression(new[] {new IncludeElementExpression(hasManyThroughRelationship)}),
+                Include = new IncludeExpression(new[] {new IncludeElementExpression(hasManyRelationship)}),
                 Filter = leftFilter,
                 Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
                 {
-                    [hasManyThroughRelationship] = new QueryLayer(rightResourceContext)
+                    [hasManyRelationship] = new QueryLayer(rightResourceContext)
                     {
                         Filter = rightFilter,
                         Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>

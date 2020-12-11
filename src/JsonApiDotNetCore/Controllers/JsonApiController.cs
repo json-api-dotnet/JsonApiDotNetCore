@@ -16,10 +16,10 @@ namespace JsonApiDotNetCore.Controllers
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
     /// <typeparam name="TId">The resource identifier type.</typeparam>
-    public class JsonApiController<TResource, TId> : BaseJsonApiController<TResource, TId> where TResource : class, IIdentifiable<TId>
+    public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<TResource, TId> where TResource : class, IIdentifiable<TId>
     {
         /// <inheritdoc />
-        public JsonApiController(
+        protected JsonApiController(
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<TResource, TId> resourceService)
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Controllers
         { }
 
         /// <inheritdoc />
-        public JsonApiController(
+        protected JsonApiController(
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IGetAllService<TResource, TId> getAll = null,
@@ -118,10 +118,10 @@ namespace JsonApiDotNetCore.Controllers
     }
 
     /// <inheritdoc />
-    public class JsonApiController<TResource> : JsonApiController<TResource, int> where TResource : class, IIdentifiable<int>
+    public abstract class JsonApiController<TResource> : JsonApiController<TResource, int> where TResource : class, IIdentifiable<int>
     {
         /// <inheritdoc />
-        public JsonApiController(
+        protected JsonApiController(
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IResourceService<TResource, int> resourceService)
@@ -129,7 +129,7 @@ namespace JsonApiDotNetCore.Controllers
         { }
 
         /// <inheritdoc />
-        public JsonApiController(
+        protected JsonApiController(
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
             IGetAllService<TResource, int> getAll = null,

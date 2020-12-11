@@ -187,7 +187,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
            var existingWorkItemTag = new WorkItemTag
             {
                 Item = _fakers.WorkItem.Generate(),
-                Tag = _fakers.WorkTags.Generate()
+                Tag = _fakers.WorkTag.Generate()
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

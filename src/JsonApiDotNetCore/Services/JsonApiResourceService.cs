@@ -186,10 +186,13 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                var existingResource = await TryGetPrimaryResourceByIdAsync(resourceFromRequest.Id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
-                if (existingResource != null)
+                if (!Equals(resourceFromRequest.Id, default(TId)))
                 {
-                    throw new ResourceAlreadyExistsException(resourceFromRequest.StringId, _request.PrimaryResource.PublicName);
+                    var existingResource = await TryGetPrimaryResourceByIdAsync(resourceFromRequest.Id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
+                    if (existingResource != null)
+                    {
+                        throw new ResourceAlreadyExistsException(resourceFromRequest.StringId, _request.PrimaryResource.PublicName);
+                    }
                 }
 
                 await AssertResourcesToAssignInRelationshipsExistAsync(resourceFromRequest, cancellationToken);
@@ -287,7 +290,7 @@ namespace JsonApiDotNetCore.Services
         private async Task RemoveExistingIdsFromSecondarySet(TId primaryId, ISet<IIdentifiable> secondaryResourceIds,
             HasManyThroughAttribute hasManyThrough, CancellationToken cancellationToken)
         {
-            var queryLayer = _queryLayerComposer.ComposeForHasManyThrough(hasManyThrough, primaryId, secondaryResourceIds);
+            var queryLayer = _queryLayerComposer.ComposeForHasMany(hasManyThrough, primaryId, secondaryResourceIds);
             var primaryResources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
             
             var primaryResource = primaryResources.FirstOrDefault();

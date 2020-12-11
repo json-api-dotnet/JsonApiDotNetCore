@@ -121,14 +121,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             {
                 new WorkItemTag
                 {
-                    Tag = _fakers.WorkTags.Generate()
+                    Tag = _fakers.WorkTag.Generate()
                 },
                 new WorkItemTag
                 {
-                    Tag = _fakers.WorkTags.Generate()
+                    Tag = _fakers.WorkTag.Generate()
                 }
             };
-            var existingTag = _fakers.WorkTags.Generate();
+            var existingTag = _fakers.WorkTag.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
