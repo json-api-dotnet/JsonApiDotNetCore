@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class JsonApiController&lt;TResource, TId&gt;
    ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -652,7 +652,7 @@ If you want to provide routing templates yourself, you should derive from BaseJs
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Controllers_JsonApiController_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class JsonApiController&lt;TResource, TId&gt; : BaseJsonApiController&lt;TResource, TId&gt; where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class JsonApiController&lt;TResource, TId&gt; : BaseJsonApiController&lt;TResource, TId&gt; where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -690,7 +690,7 @@ If you want to provide routing templates yourself, you should derive from BaseJs
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService&lt;TResource, TId&gt; getAll = null, IGetByIdService&lt;TResource, TId&gt; getById = null, IGetSecondaryService&lt;TResource, TId&gt; getSecondary = null, IGetRelationshipService&lt;TResource, TId&gt; getRelationship = null, ICreateService&lt;TResource, TId&gt; create = null, IAddToRelationshipService&lt;TResource, TId&gt; addToRelationship = null, IUpdateService&lt;TResource, TId&gt; update = null, ISetRelationshipService&lt;TResource, TId&gt; setRelationship = null, IDeleteService&lt;TResource, TId&gt; delete = null, IRemoveFromRelationshipService&lt;TResource, TId&gt; removeFromRelationship = null)</code></pre>
+    <pre><code class="lang-csharp hljs">protected JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService&lt;TResource, TId&gt; getAll = null, IGetByIdService&lt;TResource, TId&gt; getById = null, IGetSecondaryService&lt;TResource, TId&gt; getSecondary = null, IGetRelationshipService&lt;TResource, TId&gt; getRelationship = null, ICreateService&lt;TResource, TId&gt; create = null, IAddToRelationshipService&lt;TResource, TId&gt; addToRelationship = null, IUpdateService&lt;TResource, TId&gt; update = null, ISetRelationshipService&lt;TResource, TId&gt; setRelationship = null, IDeleteService&lt;TResource, TId&gt; delete = null, IRemoveFromRelationshipService&lt;TResource, TId&gt; removeFromRelationship = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -777,7 +777,7 @@ If you want to provide routing templates yourself, you should derive from BaseJs
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService&lt;TResource, TId&gt; resourceService)</code></pre>
+    <pre><code class="lang-csharp hljs">protected JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService&lt;TResource, TId&gt; resourceService)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">

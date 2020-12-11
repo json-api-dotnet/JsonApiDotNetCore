@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class QueryLayerComposer
    ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -352,19 +352,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_ComposeForHasManyThrough__1_JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute___0_System_Collections_Generic_ICollection_JsonApiDotNetCore_Resources_IIdentifiable__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.ComposeForHasManyThrough%60%601(JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute%2C%60%600%2CSystem.Collections.Generic.ICollection%7BJsonApiDotNetCore.Resources.IIdentifiable%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_ComposeForHasMany__1_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute___0_System_Collections_Generic_ICollection_JsonApiDotNetCore_Resources_IIdentifiable__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.ComposeForHasMany%60%601(JsonApiDotNetCore.Resources.Annotations.HasManyAttribute%2C%60%600%2CSystem.Collections.Generic.ICollection%7BJsonApiDotNetCore.Resources.IIdentifiable%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryLayerComposer.cs/#L340">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_ComposeForHasManyThrough_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.ComposeForHasManyThrough*"></a>
-  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_ComposeForHasManyThrough__1_JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute___0_System_Collections_Generic_ICollection_JsonApiDotNetCore_Resources_IIdentifiable__" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.ComposeForHasManyThrough``1(JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute,``0,System.Collections.Generic.ICollection{JsonApiDotNetCore.Resources.IIdentifiable})">ComposeForHasManyThrough&lt;TId&gt;(HasManyThroughAttribute, TId, ICollection&lt;IIdentifiable&gt;)</h4>
-  <div class="markdown level1 summary"><p>Builds a query for a many-to-many relationship with a filter to match on its left and right resource IDs.</p>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_ComposeForHasMany_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.ComposeForHasMany*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_ComposeForHasMany__1_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute___0_System_Collections_Generic_ICollection_JsonApiDotNetCore_Resources_IIdentifiable__" data-uid="JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.ComposeForHasMany``1(JsonApiDotNetCore.Resources.Annotations.HasManyAttribute,``0,System.Collections.Generic.ICollection{JsonApiDotNetCore.Resources.IIdentifiable})">ComposeForHasMany&lt;TId&gt;(HasManyAttribute, TId, ICollection&lt;IIdentifiable&gt;)</h4>
+  <div class="markdown level1 summary"><p>Builds a query for a to-many relationship with a filter to match on its left and right resource IDs.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public QueryLayer ComposeForHasManyThrough&lt;TId&gt;(HasManyThroughAttribute hasManyThroughRelationship, TId leftId, ICollection&lt;IIdentifiable&gt; rightResourceIds)</code></pre>
+    <pre><code class="lang-csharp hljs">public QueryLayer ComposeForHasMany&lt;TId&gt;(HasManyAttribute hasManyRelationship, TId leftId, ICollection&lt;IIdentifiable&gt; rightResourceIds)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -377,8 +377,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html">HasManyThroughAttribute</a></td>
-        <td><span class="parametername">hasManyThroughRelationship</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></td>
+        <td><span class="parametername">hasManyRelationship</span></td>
         <td></td>
       </tr>
       <tr>
