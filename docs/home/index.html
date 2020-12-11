@@ -161,12 +161,12 @@
     public Person Author { get; set; }
 
     [HasMany]
-    public ICollection&ltRevision&gt Revisions { get; set; }  
+    public ICollection&lt;Revision&gt; Revisions { get; set; }  
 
     [HasManyThrough(nameof(ArticleTags))]
     [NotMapped]
-    public ICollection&ltTag&gt Tags { get; set; }
-    public ICollection&ltArticleTag&gt ArticleTags { get; set; }
+    public ICollection&lt;Tag&gt; Tags { get; set; }
+    public ICollection&lt;ArticleTag&gt; ArticleTags { get; set; }
 }</code>
                      </pre>
                   </div>
