@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Configuration
         public IReadOnlyCollection<ResourceFieldAttribute> Fields => _fields ??= Attributes.Cast<ResourceFieldAttribute>().Concat(Relationships).ToArray();
 
         /// <summary>
-        /// Configures which links to show in the <see cref="TopLevelLinks"/>
+        /// Configures which links to show in the <see cref="Serialization.Objects.TopLevelLinks"/>
         /// object for this resource. If set to <see cref="LinkTypes.NotConfigured"/>,
         /// the configuration will be read from <see cref="IJsonApiOptions"/>.
         /// Defaults to <see cref="LinkTypes.NotConfigured"/>.
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Configuration
         public LinkTypes TopLevelLinks { get; internal set; } = LinkTypes.NotConfigured;
 
         /// <summary>
-        /// Configures which links to show in the <see cref="ResourceLinks"/>
+        /// Configures which links to show in the <see cref="Serialization.Objects.ResourceLinks"/>
         /// object for this resource. If set to <see cref="LinkTypes.NotConfigured"/>,
         /// the configuration will be read from <see cref="IJsonApiOptions"/>.
         /// Defaults to <see cref="LinkTypes.NotConfigured"/>.
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Configuration
         public LinkTypes ResourceLinks { get; internal set; } = LinkTypes.NotConfigured;
 
         /// <summary>
-        /// Configures which links to show in the <see cref="RelationshipLinks"/>
+        /// Configures which links to show in the <see cref="Serialization.Objects.RelationshipLinks"/>
         /// for all relationships of the resource for which this attribute was instantiated.
         /// If set to <see cref="LinkTypes.NotConfigured"/>, the configuration will
         /// be read from <see cref="RelationshipAttribute.Links"/>  or

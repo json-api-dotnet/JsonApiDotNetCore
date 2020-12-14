@@ -56,21 +56,21 @@ namespace JsonApiDotNetCore.Configuration
         bool UseRelativeLinks { get; }
 
         /// <summary>
-        /// Configures globally which links to show in the <see cref="TopLevelLinks"/>
+        /// Configures globally which links to show in the <see cref="Serialization.Objects.TopLevelLinks"/>
         /// object for a requested resource. Setting can be overridden per resource by
         /// adding a <see cref="ResourceLinksAttribute"/> to the class definition of that resource.
         /// </summary>
         LinkTypes TopLevelLinks { get; }
 
         /// <summary>
-        /// Configures globally which links to show in the <see cref="ResourceLinks"/>
+        /// Configures globally which links to show in the <see cref="Serialization.Objects.ResourceLinks"/>
         /// object for a requested resource. Setting can be overridden per resource by
         /// adding a <see cref="ResourceLinksAttribute"/> to the class definition of that resource.
         /// </summary>
         LinkTypes ResourceLinks { get; }
 
         /// <summary>
-        /// Configures globally which links to show in the <see cref="RelationshipLinks"/>
+        /// Configures globally which links to show in the <see cref="Serialization.Objects.RelationshipLinks"/>
         /// object for a requested resource. Setting can be overridden per resource by
         /// adding a <see cref="ResourceLinksAttribute"/> to the class definition of that resource.
         /// This option can also be specified per relationship by using the associated links argument
