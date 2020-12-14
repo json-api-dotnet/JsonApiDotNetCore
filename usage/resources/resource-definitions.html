@@ -77,7 +77,7 @@ common modifications to the default API behavior easier. Resource definitions we
 <p>For various reasons (see examples below) you may need to change parts of the query, depending on resource type.
 <code>JsonApiResourceDefinition&lt;TResource&gt;</code> (which is an empty implementation of <code>IResourceDefinition&lt;TResource&gt;</code>) provides overridable methods that pass you the result of query string parameter parsing.
 The value returned by you determines what will be used to execute the query.</p>
-<p>An intermediate format (<code>QueryExpression</code> and derived types) is used, which enables us to separate json:api implementation 
+<p>An intermediate format (<code>QueryExpression</code> and derived types) is used, which enables us to separate JSON:API implementation 
 from Entity Framework Core <code>IQueryable</code> execution.</p>
 <h3 id="excluding-fields">Excluding fields</h3>
 <p>There are some cases where you want attributes (or relationships) conditionally excluded from your resource response.

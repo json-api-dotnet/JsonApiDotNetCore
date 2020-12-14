@@ -109,7 +109,7 @@ options.IncludeTotalResourceCount = true;
   }
 }
 </code></pre><h2 id="unknown-query-string-parameters">Unknown Query String Parameters</h2>
-<p>If you would like to allow unknown query string parameters (parameters not reserved by the json:api specification or registered using resource definitions), you can set <code>AllowUnknownQueryStringParameters = true</code>. When set to <code>false</code> (the default), an HTTP 400 Bad Request is returned for unknown query string parameters.</p>
+<p>If you would like to allow unknown query string parameters (parameters not reserved by the JSON:API specification or registered using resource definitions), you can set <code>AllowUnknownQueryStringParameters = true</code>. When set to <code>false</code> (the default), an HTTP 400 Bad Request is returned for unknown query string parameters.</p>
 <pre><code class="lang-c#">options.AllowUnknownQueryStringParameters = true;
 </code></pre><h2 id="maximum-include-depth">Maximum include depth</h2>
 <p>To limit the maximum depth of nested includes, use <code>MaximumIncludeDepth</code>. This is null by default, which means unconstrained. If set and a request exceeds the limit, an HTTP 400 Bad Request is returned.</p>

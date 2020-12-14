@@ -222,7 +222,7 @@ False by default.</p>
   </span>
   <a id="JsonApiDotNetCore_Configuration_IJsonApiOptions_DefaultAttrCapabilities_" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultAttrCapabilities*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_DefaultAttrCapabilities" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultAttrCapabilities">DefaultAttrCapabilities</h4>
-  <div class="markdown level1 summary"><p>Specifies the default query string capabilities that can be used on exposed json:api attributes.
+  <div class="markdown level1 summary"><p>Specifies the default query string capabilities that can be used on exposed JSON:API attributes.
 Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.AttrCapabilities.html#JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_All">All</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -576,7 +576,7 @@ For example, MaximumIncludeDepth=1 would allow ?include=articles but not ?includ
   </span>
   <a id="JsonApiDotNetCore_Configuration_IJsonApiOptions_RelationshipLinks_" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.RelationshipLinks*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_RelationshipLinks" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.RelationshipLinks">RelationshipLinks</h4>
-  <div class="markdown level1 summary"><p>Configures globally which links to show in the <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_RelationshipLinks">RelationshipLinks</a>
+  <div class="markdown level1 summary"><p>Configures globally which links to show in the <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.RelationshipLinks.html">RelationshipLinks</a>
 object for a requested resource. Setting can be overridden per resource by
 adding a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceLinksAttribute.html">ResourceLinksAttribute</a> to the class definition of that resource.
 This option can also be specified per relationship by using the associated links argument
@@ -622,7 +622,7 @@ in the constructor of <a class="xref" href="JsonApiDotNetCore.Resources.Annotati
   </span>
   <a id="JsonApiDotNetCore_Configuration_IJsonApiOptions_ResourceLinks_" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.ResourceLinks*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_ResourceLinks" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.ResourceLinks">ResourceLinks</h4>
-  <div class="markdown level1 summary"><p>Configures globally which links to show in the <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_ResourceLinks">ResourceLinks</a>
+  <div class="markdown level1 summary"><p>Configures globally which links to show in the <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceLinks.html">ResourceLinks</a>
 object for a requested resource. Setting can be overridden per resource by
 adding a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceLinksAttribute.html">ResourceLinksAttribute</a> to the class definition of that resource.</p>
 </div>
@@ -656,7 +656,7 @@ adding a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceL
   <a id="JsonApiDotNetCore_Configuration_IJsonApiOptions_SerializerSettings_" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.SerializerSettings*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_SerializerSettings" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.SerializerSettings">SerializerSettings</h4>
   <div class="markdown level1 summary"><p>Specifies the settings that are used by the <span class="xref">Newtonsoft.Json.JsonSerializer</span>.
-Note that at some places a few settings are ignored, to ensure json:api spec compliance.
+Note that at some places a few settings are ignored, to ensure JSON:API spec compliance.
 <example>
 The next example changes the naming convention to kebab casing.<p>
 <pre><code>options.SerializerSettings.ContractResolver = new DefaultContractResolver
@@ -694,7 +694,7 @@ The next example changes the naming convention to kebab casing.<p>
   </span>
   <a id="JsonApiDotNetCore_Configuration_IJsonApiOptions_TopLevelLinks_" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.TopLevelLinks*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_TopLevelLinks" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.TopLevelLinks">TopLevelLinks</h4>
-  <div class="markdown level1 summary"><p>Configures globally which links to show in the <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_TopLevelLinks">TopLevelLinks</a>
+  <div class="markdown level1 summary"><p>Configures globally which links to show in the <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.TopLevelLinks.html">TopLevelLinks</a>
 object for a requested resource. Setting can be overridden per resource by
 adding a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceLinksAttribute.html">ResourceLinksAttribute</a> to the class definition of that resource.</p>
 </div>

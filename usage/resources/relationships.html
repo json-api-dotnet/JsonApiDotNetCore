@@ -121,7 +121,7 @@ However, under the covers it will use the join type and Entity Framework Core&#3
 }
 </code></pre><h1 id="eager-loading">Eager loading</h1>
 <p><em>since v4.0</em></p>
-<p>Your resource may expose a calculated property, whose value depends on a related entity that is not exposed as a json:api resource.
+<p>Your resource may expose a calculated property, whose value depends on a related entity that is not exposed as a JSON:API resource.
 So for the calculated property to be evaluated correctly, the related entity must always be retrieved. You can achieve that using <code>EagerLoad</code>, for example:</p>
 <pre><code class="lang-c#">public class ShippingAddress : Identifiable
 {
