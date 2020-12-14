@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Configuration
         string Namespace { get; }
 
         /// <summary>
-        /// Specifies the default query string capabilities that can be used on exposed json:api attributes.
+        /// Specifies the default query string capabilities that can be used on exposed JSON:API attributes.
         /// Defaults to <see cref="AttrCapabilities.All"/>.
         /// </summary>
         AttrCapabilities DefaultAttrCapabilities { get; }
@@ -174,7 +174,7 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <summary>
         /// Specifies the settings that are used by the <see cref="JsonSerializer"/>.
-        /// Note that at some places a few settings are ignored, to ensure json:api spec compliance.
+        /// Note that at some places a few settings are ignored, to ensure JSON:API spec compliance.
         /// <example>
         /// The next example changes the naming convention to kebab casing.
         /// <code><![CDATA[

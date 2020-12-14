@@ -7,7 +7,7 @@ using System.Reflection;
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     /// <summary>
-    /// Used to expose a property on a resource class as a json:api to-many relationship (https://jsonapi.org/format/#document-resource-object-relationships)
+    /// Used to expose a property on a resource class as a JSON:API to-many relationship (https://jsonapi.org/format/#document-resource-object-relationships)
     /// through a many-to-many join relationship.
     /// </summary>
     /// <example>

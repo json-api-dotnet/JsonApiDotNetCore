@@ -64,7 +64,7 @@ options.UseRelativeLinks = true;
 
 ## Unknown Query String Parameters
 
-If you would like to allow unknown query string parameters (parameters not reserved by the json:api specification or registered using resource definitions), you can set `AllowUnknownQueryStringParameters = true`. When set to `false` (the default), an HTTP 400 Bad Request is returned for unknown query string parameters.
+If you would like to allow unknown query string parameters (parameters not reserved by the JSON:API specification or registered using resource definitions), you can set `AllowUnknownQueryStringParameters = true`. When set to `false` (the default), an HTTP 400 Bad Request is returned for unknown query string parameters.
 
 ```c#
 options.AllowUnknownQueryStringParameters = true;

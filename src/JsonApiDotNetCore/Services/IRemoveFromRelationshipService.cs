@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<TId>
     {
         /// <summary>
-        /// Handles a json:api request to remove resources from a to-many relationship.
+        /// Handles a JSON:API request to remove resources from a to-many relationship.
         /// </summary>
         /// <param name="primaryId">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship to remove resources from.</param>

@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 {
     /// <summary>
     /// Options used to configure how fields of a model get serialized into
-    /// a json:api <see cref="Document"/>.
+    /// a JSON:API <see cref="Document"/>.
     /// </summary>
     public sealed class ResourceObjectBuilderSettings
     {

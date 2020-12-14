@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<TId>
     {
         /// <summary>
-        /// Handles a json:api request to perform a complete replacement of a relationship on an existing resource.
+        /// Handles a JSON:API request to perform a complete replacement of a relationship on an existing resource.
         /// </summary>
         /// <param name="primaryId">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship for which to perform a complete replacement.</param>

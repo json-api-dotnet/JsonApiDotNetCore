@@ -2,7 +2,7 @@
 
 _NOTE: prior to v4 this was called the `ContextGraph`_
 
-The `ResourceGraph` is a map of all the json:api resources and their relationships that your API serves.
+The `ResourceGraph` is a map of all the JSON:API resources and their relationships that your API serves.
 
 It is built at app startup and available as a singleton through Dependency Injection.
 
@@ -21,7 +21,7 @@ is prioritized by the list above in descending order.
 ### Auto-discovery
 
 Auto-discovery refers to the process of reflecting on an assembly and
-detecting all of the json:api resources, resource definitions, resource services and repositories.
+detecting all of the JSON:API resources, resource definitions, resource services and repositories.
 
 The following command builds the resource graph using all `IIdentifiable` implementations and registers the services mentioned.
 You can enable auto-discovery for the current assembly by adding the following to your `Startup` class.
@@ -73,7 +73,7 @@ public void ConfigureServices(IServiceCollection services)
 
 ## Resource Name
 
-The public resource name is exposed through the `type` member in the json:api payload. This can be configured by the following approaches (in order of priority):
+The public resource name is exposed through the `type` member in the JSON:API payload. This can be configured by the following approaches (in order of priority):
 
 1. The `publicName` parameter when manually adding a resource to the graph
 ```c#

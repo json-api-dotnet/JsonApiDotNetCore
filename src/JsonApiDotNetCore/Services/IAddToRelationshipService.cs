@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<TId>
     {
         /// <summary>
-        /// Handles a json:api request to add resources to a to-many relationship.
+        /// Handles a JSON:API request to add resources to a to-many relationship.
         /// </summary>
         /// <param name="primaryId">The identifier of the primary resource.</param>
         /// <param name="relationshipName">The relationship to add resources to.</param>

@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Errors
 {
     /// <summary>
-    /// The base class for an <see cref="Exception"/> that represents one or more json:api error objects in an unsuccessful response.
+    /// The base class for an <see cref="Exception"/> that represents one or more JSON:API error objects in an unsuccessful response.
     /// </summary>
     public class JsonApiException : Exception
     {

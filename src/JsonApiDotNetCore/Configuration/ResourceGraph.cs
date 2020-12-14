@@ -169,7 +169,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private void ThrowNotExposedError(string memberName, FieldFilterType type)
         {
-            throw new ArgumentException($"{memberName} is not an json:api exposed {type:g}.");
+            throw new ArgumentException($"{memberName} is not a JSON:API exposed {type:g}.");
         }
 
         private enum FieldFilterType

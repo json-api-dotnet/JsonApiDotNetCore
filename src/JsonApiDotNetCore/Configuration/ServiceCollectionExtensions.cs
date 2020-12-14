@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.Configuration
         
         /// <summary>
         /// Enables client serializers for sending requests and receiving responses
-        /// in json:api format. Internally only used for testing.
+        /// in JSON:API format. Internally only used for testing.
         /// Will be extended in the future to be part of a JsonApiClientDotNetCore package.
         /// </summary>
         public static IServiceCollection AddClientSerialization(this IServiceCollection services)

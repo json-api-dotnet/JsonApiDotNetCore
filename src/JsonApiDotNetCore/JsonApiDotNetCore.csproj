@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageTags>jsonapi;json:api;dotnet;core</PackageTags>
-    <Description>A framework for building json:api compliant web APIs. The ultimate goal of this library is to eliminate as much boilerplate as possible by offering out-of-the-box features such as sorting, filtering and pagination. You just need to focus on defining the resources and implementing your custom business logic. This library has been designed around dependency injection making extensibility incredibly easy.</Description>
+    <PackageTags>jsonapidotnetcore;jsonapi;json:api;dotnet;asp.net</PackageTags>
+    <Description>A framework for building JSON:API compliant web APIs. The ultimate goal of this library is to eliminate as much boilerplate as possible by offering out-of-the-box features such as sorting, filtering and pagination. You just need to focus on defining the resources and implementing your custom business logic. This library has been designed around dependency injection making extensibility incredibly easy.</Description>
     <PackageProjectUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
