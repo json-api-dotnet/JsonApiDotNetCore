@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <summary>
-        /// Converts an outgoing typed resource identifier to string format for use in a json:api response.
+        /// Converts an outgoing typed resource identifier to string format for use in a JSON:API response.
         /// </summary>
         protected virtual string GetStringId(TId value)
         {
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <summary>
-        /// Converts an incoming 'id' element from a json:api request to the typed resource identifier.
+        /// Converts an incoming 'id' element from a JSON:API request to the typed resource identifier.
         /// </summary>
         protected virtual TId GetTypedId(string value)
         {

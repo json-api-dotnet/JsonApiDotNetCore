@@ -2,7 +2,7 @@
 
 Errors returned will contain only the properties that are set on the `Error` class. Custom fields can be added through `Error.Meta`.
 You can create a custom error by throwing a `JsonApiException` (which accepts an `Error` instance), or returning an `Error` instance from an `ActionResult` in a controller.
-Please keep in mind that json:api requires Title to be a generic message, while Detail should contain information about the specific problem occurence.
+Please keep in mind that JSON:API requires Title to be a generic message, while Detail should contain information about the specific problem occurence.
 
 From a controller method:
 ```c#
@@ -22,7 +22,7 @@ throw new JsonApiException(new Error(HttpStatusCode.Conflict)
 });
 ```
 
-In both cases, the middleware will properly serialize it and return it as a json:api error.
+In both cases, the middleware will properly serialize it and return it as a JSON:API error.
 
 # Exception handling
 

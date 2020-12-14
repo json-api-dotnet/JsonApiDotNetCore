@@ -2,7 +2,8 @@
 <img src ="https://raw.githubusercontent.com/json-api-dotnet/JsonApiDotnetCore/master/logo.png" />
 </p>
 
-# JSON:API Framework for ASP.NET Core
+# JsonApiDotNetCore
+A framework for building [JSON:API](http://jsonapi.org/) compliant REST APIs using .NET Core and Entity Framework Core.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/5go47hrm0iik0ls3/branch/master?svg=true)](https://ci.appveyor.com/project/jaredcnance/jsonapidotnetcore/branch/master)
 [![Travis](https://travis-ci.org/json-api-dotnet/JsonApiDotNetCore.svg?branch=master)](https://travis-ci.org/json-api-dotnet/JsonApiDotNetCore)
@@ -10,14 +11,14 @@
 [![Join the chat at https://gitter.im/json-api-dotnet-core/Lobby](https://badges.gitter.im/json-api-dotnet-core/Lobby.svg)](https://gitter.im/json-api-dotnet-core/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![FIRST-TIMERS](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
 
-A framework for building [json:api](http://jsonapi.org/) compliant web APIs. The ultimate goal of this library is to eliminate as much boilerplate as possible by offering out-of-the-box features such as sorting, filtering and pagination. You just need to focus on defining the resources and implementing your custom business logic. This library has been designed around dependency injection making extensibility incredibly easy.
+The ultimate goal of this library is to eliminate as much boilerplate as possible by offering out-of-the-box features such as sorting, filtering and pagination. You just need to focus on defining the resources and implementing your custom business logic. This library has been designed around dependency injection, making extensibility incredibly easy.
 
 ## Getting Started
 
 These are some steps you can take to help you understand what this project is and how you can use it:
 
-- [What is json:api and why should I use it?](https://nordicapis.com/the-benefits-of-using-json-api/)
-- [The json:api specification](http://jsonapi.org/format/)
+- [What is JSON:API and why should I use it?](https://nordicapis.com/the-benefits-of-using-json-api/)
+- [The JSON:API specification](http://jsonapi.org/format/)
 - [Demo [Video]](https://youtu.be/KAMuo6K7VcE)
 - [Our documentation](https://json-api-dotnet.github.io/JsonApiDotNetCore/)
 - [Check out the example projects](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples)

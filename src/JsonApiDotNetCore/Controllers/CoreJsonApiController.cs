@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JsonApiDotNetCore.Controllers
 {
     /// <summary>
-    /// Provides helper methods to raise json:api compliant errors from controller actions.
+    /// Provides helper methods to raise JSON:API compliant errors from controller actions.
     /// </summary>
     public abstract class CoreJsonApiController : ControllerBase
     {

@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         private LinkTypes _relationshipLinks = LinkTypes.NotConfigured;
 
         /// <summary>
-        /// Configures which links to show in the <see cref="TopLevelLinks"/>
+        /// Configures which links to show in the <see cref="Serialization.Objects.TopLevelLinks"/>
         /// section for this resource.
         /// Defaults to <see cref="LinkTypes.NotConfigured"/>.
         /// </summary>
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         }
 
         /// <summary>
-        /// Configures which links to show in the <see cref="ResourceLinks"/>
+        /// Configures which links to show in the <see cref="Serialization.Objects.ResourceLinks"/>
         /// section for this resource.
         /// Defaults to <see cref="LinkTypes.NotConfigured"/>.
         /// </summary>
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         }
 
         /// <summary>
-        /// Configures which links to show in the <see cref="RelationshipLinks"/>
+        /// Configures which links to show in the <see cref="Serialization.Objects.RelationshipLinks"/>
         /// for all relationships of the resource type on which this attribute was used.
         /// Defaults to <see cref="LinkTypes.NotConfigured"/>.
         /// </summary>

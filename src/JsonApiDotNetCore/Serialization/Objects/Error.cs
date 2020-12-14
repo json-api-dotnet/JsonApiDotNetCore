@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
     /// Provides additional information about a problem encountered while performing an operation.
-    /// Error objects MUST be returned as an array keyed by errors in the top level of a json:api document.
+    /// Error objects MUST be returned as an array keyed by errors in the top level of a JSON:API document.
     /// </summary>
     public sealed class Error
     {

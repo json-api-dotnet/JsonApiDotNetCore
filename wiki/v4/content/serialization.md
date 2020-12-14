@@ -8,7 +8,7 @@ The main change for serialization is that we have split the serialization respon
 
 This split is done because during deserialization, some parts are relevant only for *client*-side parsing whereas others are only for *server*-side parsing. for example, a server deserializer will never have to deal with a `included` object list. Similarly, in serialization, a client serializer will for example never ever have to populate any other top-level members than the primary data (like `meta`, `included`). 
 
-Throughout the document and the code when referring to fields, members, object types, the technical language of json:api spec is used. At the core of (de)serialization is the
+Throughout the document and the code when referring to fields, members, object types, the technical language of JSON:API spec is used. At the core of (de)serialization is the
 `Document` class, [see document spec](https://jsonapi.org/format/#document-structure).
 
 ## Changes
@@ -23,7 +23,7 @@ The previous `JsonApiDeSerializer` implementation is now split into a `RequestDe
 
 This (base) class is responsible for:
 
-* Converting the serialized string content into an intance of the `Document` class. Which is the most basic version of JSON API which has a `Data`, `Meta` and `Included` property.
+* Converting the serialized string content into an intance of the `Document` class. Which is the most basic version of JSON:API which has a `Data`, `Meta` and `Included` property.
 * Building instances of the corresponding resource class (eg `Article`) by going through the document's primary data (`Document.Data`) For the spec for this: [Document spec](https://jsonapi.org/format/#document-top-level).
 
 Responsibility of any implementation the base class-specific parsing is shifted through the abstract `BaseDocumentParser.AfterProcessField()` method. This method is fired once each time after a `AttrAttribute` or `RelationshipAttribute` is processed. It allows a implementation of `BaseDocumentParser` to intercept the parsing and add steps that are only required for new implementations.

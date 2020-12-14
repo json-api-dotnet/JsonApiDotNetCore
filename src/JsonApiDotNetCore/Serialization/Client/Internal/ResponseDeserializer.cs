@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
 
             if (relatedResourceContext == null)
             {
-                throw new InvalidOperationException($"Included type '{relatedResourceIdentifier.Type}' is not a registered json:api resource.");
+                throw new InvalidOperationException($"Included type '{relatedResourceIdentifier.Type}' is not a registered JSON:API resource.");
             }
             
             var relatedInstance = ResourceFactory.CreateInstance(relatedResourceContext.ResourceType);

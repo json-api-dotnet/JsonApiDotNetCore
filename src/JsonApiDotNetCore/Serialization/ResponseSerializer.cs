@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Serialization
     /// Server serializer implementation of <see cref="BaseSerializer"/>
     /// </summary>
     /// <remarks>
-    /// Because in JsonApiDotNetCore every json:api request is associated with exactly one
+    /// Because in JsonApiDotNetCore every JSON:API request is associated with exactly one
     /// resource (the primary resource, see <see cref="IJsonApiRequest.PrimaryResource"/>),
     /// the serializer can leverage this information using generics.
     /// See <see cref="ResponseSerializerFactory"/> for how this is instantiated.

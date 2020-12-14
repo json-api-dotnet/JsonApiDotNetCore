@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Errors;
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     /// <summary>
-    /// Used to expose a property on a resource class as a json:api relationship (https://jsonapi.org/format/#document-resource-object-relationships).
+    /// Used to expose a property on a resource class as a JSON:API relationship (https://jsonapi.org/format/#document-resource-object-relationships).
     /// </summary>
     public abstract class RelationshipAttribute : ResourceFieldAttribute
     {
@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
 
         /// <summary>
         /// The property name of the EF Core inverse navigation, which may or may not exist.
-        /// Even if it exists, it may not be exposed as a json:api relationship.
+        /// Even if it exists, it may not be exposed as a JSON:API relationship.
         /// </summary>
         /// <example>
         /// <code><![CDATA[

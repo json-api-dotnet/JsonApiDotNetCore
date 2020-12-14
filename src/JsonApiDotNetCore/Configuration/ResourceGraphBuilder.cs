@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Configuration
         }
         
         /// <summary>
-        /// Adds a json:api resource with <code>int</code> as the identifier type.
+        /// Adds a JSON:API resource with <code>int</code> as the identifier type.
         /// </summary>
         /// <typeparam name="TResource">The resource model type.</typeparam>
         /// <param name="publicName">
@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.Configuration
             => Add<TResource, int>(publicName);
         
         /// <summary>
-        /// Adds a json:api resource.
+        /// Adds a JSON:API resource.
         /// </summary>
         /// <typeparam name="TResource">The resource model type.</typeparam>
         /// <typeparam name="TId">The resource model identifier type.</typeparam>
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCore.Configuration
             => Add(typeof(TResource), typeof(TId), publicName);
         
         /// <summary>
-        /// Adds a json:api resource.
+        /// Adds a JSON:API resource.
         /// </summary>
         /// <param name="resourceType">The resource model type.</param>
         /// <param name="idType">The resource model identifier type.</param>

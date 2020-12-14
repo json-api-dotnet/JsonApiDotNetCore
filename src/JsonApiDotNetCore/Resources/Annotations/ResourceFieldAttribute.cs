@@ -4,7 +4,7 @@ using System.Reflection;
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     /// <summary>
-    /// Used to expose a property on a resource class as a json:api field (attribute or relationship).
+    /// Used to expose a property on a resource class as a JSON:API field (attribute or relationship).
     /// See https://jsonapi.org/format/#document-resource-object-fields.
     /// </summary>
     public abstract class ResourceFieldAttribute : Attribute
@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         private string _publicName;
 
         /// <summary>
-        /// The publicly exposed name of this json:api field.
+        /// The publicly exposed name of this JSON:API field.
         /// When not explicitly assigned, the configured naming convention is applied on the property name.
         /// </summary>
         public string PublicName

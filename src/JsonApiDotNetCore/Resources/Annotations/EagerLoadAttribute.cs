@@ -5,10 +5,10 @@ using System.Reflection;
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     /// <summary>
-    /// Used to unconditionally load a related entity that is not exposed as a json:api relationship.
+    /// Used to unconditionally load a related entity that is not exposed as a JSON:API relationship.
     /// </summary>
     /// <remarks>
-    /// This is intended for calculated properties that are exposed as json:api attributes, which depend on a related entity to always be loaded.
+    /// This is intended for calculated properties that are exposed as JSON:API attributes, which depend on a related entity to always be loaded.
     /// <example><![CDATA[
     /// public class User : Identifiable
     /// {

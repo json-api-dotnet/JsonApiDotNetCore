@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
     public static class ObjectAssertionsExtensions
     {
         /// <summary>
-        /// Used to assert on a nullable <see cref="DateTimeOffset"/> column, whose value is returned as <see cref="DateTime"/> in json:api response body.
+        /// Used to assert on a nullable <see cref="DateTimeOffset"/> column, whose value is returned as <see cref="DateTime"/> in JSON:API response body.
         /// </summary>
         public static void BeCloseTo(this ObjectAssertions source, DateTimeOffset? expected, string because = "",
             params object[] becauseArgs)

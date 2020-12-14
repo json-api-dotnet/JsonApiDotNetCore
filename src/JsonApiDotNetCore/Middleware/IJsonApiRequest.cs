@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
-    /// Metadata associated with the json:api request that is currently being processed.
+    /// Metadata associated with the JSON:API request that is currently being processed.
     /// </summary>
     public interface IJsonApiRequest
     {

@@ -19,7 +19,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
-    /// Intercepts HTTP requests to populate injected <see cref="IJsonApiRequest"/> instance for json:api requests.
+    /// Intercepts HTTP requests to populate injected <see cref="IJsonApiRequest"/> instance for JSON:API requests.
     /// </summary>
     public sealed class JsonApiMiddleware
     {

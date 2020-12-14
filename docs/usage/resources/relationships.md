@@ -77,7 +77,7 @@ public class TodoItem : Identifiable
 
 _since v4.0_
 
-Your resource may expose a calculated property, whose value depends on a related entity that is not exposed as a json:api resource.
+Your resource may expose a calculated property, whose value depends on a related entity that is not exposed as a JSON:API resource.
 So for the calculated property to be evaluated correctly, the related entity must always be retrieved. You can achieve that using `EagerLoad`, for example:
 
 ```c#

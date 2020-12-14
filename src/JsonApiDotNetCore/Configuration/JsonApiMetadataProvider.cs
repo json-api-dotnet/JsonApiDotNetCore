@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Custom implementation of <see cref="IModelMetadataProvider"/> to support json:api partial patching.
+    /// Custom implementation of <see cref="IModelMetadataProvider"/> to support JSON:API partial patching.
     /// </summary>
     internal class JsonApiModelMetadataProvider : DefaultModelMetadataProvider
     {

@@ -14,7 +14,7 @@ Which results in URLs like: https://yourdomain.com/api/v1/people
 
 ## Default Routing Convention
 
-The library will configure routes for all controllers in your project. By default, routes are camel-cased. This is based on the [recommendations](https://jsonapi.org/recommendations/) outlined in the json:api spec.
+The library will configure routes for all controllers in your project. By default, routes are camel-cased. This is based on the [recommendations](https://jsonapi.org/recommendations/) outlined in the JSON:API spec.
 
 ```c#
 public class OrderLine : Identifiable { }
@@ -35,7 +35,7 @@ GET /orderLines HTTP/1.1
 
 The exposed name of the resource ([which can be customized](~/usage/resource-graph.md#resource-name)) is used for the route, instead of the controller name.
 
-### Non-json:api controllers
+### Non-JSON:API controllers
 
 If a controller does not inherit from `JsonApiController<TResource>`, the [configured naming convention](~/usage/options.md#custom-serializer-settings) is applied to the name of the controller.
 ```c#

@@ -3,7 +3,7 @@ using System;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
-    /// The error that is thrown when (de)serialization of a json:api body fails.
+    /// The error that is thrown when (de)serialization of a JSON:API body fails.
     /// </summary>
     public class JsonApiSerializationException : Exception
     {

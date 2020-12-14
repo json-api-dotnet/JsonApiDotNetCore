@@ -3,7 +3,7 @@ using System;
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     /// <summary>
-    /// Used to expose a property on a resource class as a json:api attribute (https://jsonapi.org/format/#document-resource-object-attributes).
+    /// Used to expose a property on a resource class as a JSON:API attribute (https://jsonapi.org/format/#document-resource-object-attributes).
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class AttrAttribute : ResourceFieldAttribute

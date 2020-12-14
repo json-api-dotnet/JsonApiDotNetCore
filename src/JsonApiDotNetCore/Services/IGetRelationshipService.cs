@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<TId>
     {
         /// <summary>
-        /// Handles a json:api request to retrieve a single relationship.
+        /// Handles a JSON:API request to retrieve a single relationship.
         /// </summary>
         Task<object> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken);
     }

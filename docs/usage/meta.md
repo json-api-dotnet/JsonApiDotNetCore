@@ -1,6 +1,6 @@
 # Metadata
 
-We support two ways to add json:api meta to your responses: global and per resource.
+We support two ways to add JSON:API meta to your responses: global and per resource.
 
 ## Global Meta
 

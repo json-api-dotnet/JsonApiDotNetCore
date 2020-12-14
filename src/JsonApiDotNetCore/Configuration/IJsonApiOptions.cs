@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Configuration
         string Namespace { get; }
 
         /// <summary>
-        /// Specifies the default query string capabilities that can be used on exposed json:api attributes.
+        /// Specifies the default query string capabilities that can be used on exposed JSON:API attributes.
         /// Defaults to <see cref="AttrCapabilities.All"/>.
         /// </summary>
         AttrCapabilities DefaultAttrCapabilities { get; }
@@ -56,21 +56,21 @@ namespace JsonApiDotNetCore.Configuration
         bool UseRelativeLinks { get; }
 
         /// <summary>
-        /// Configures globally which links to show in the <see cref="TopLevelLinks"/>
+        /// Configures globally which links to show in the <see cref="Serialization.Objects.TopLevelLinks"/>
         /// object for a requested resource. Setting can be overridden per resource by
         /// adding a <see cref="ResourceLinksAttribute"/> to the class definition of that resource.
         /// </summary>
         LinkTypes TopLevelLinks { get; }
 
         /// <summary>
-        /// Configures globally which links to show in the <see cref="ResourceLinks"/>
+        /// Configures globally which links to show in the <see cref="Serialization.Objects.ResourceLinks"/>
         /// object for a requested resource. Setting can be overridden per resource by
         /// adding a <see cref="ResourceLinksAttribute"/> to the class definition of that resource.
         /// </summary>
         LinkTypes ResourceLinks { get; }
 
         /// <summary>
-        /// Configures globally which links to show in the <see cref="RelationshipLinks"/>
+        /// Configures globally which links to show in the <see cref="Serialization.Objects.RelationshipLinks"/>
         /// object for a requested resource. Setting can be overridden per resource by
         /// adding a <see cref="ResourceLinksAttribute"/> to the class definition of that resource.
         /// This option can also be specified per relationship by using the associated links argument
@@ -174,7 +174,7 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <summary>
         /// Specifies the settings that are used by the <see cref="JsonSerializer"/>.
-        /// Note that at some places a few settings are ignored, to ensure json:api spec compliance.
+        /// Note that at some places a few settings are ignored, to ensure JSON:API spec compliance.
         /// <example>
         /// The next example changes the naming convention to kebab casing.
         /// <code><![CDATA[

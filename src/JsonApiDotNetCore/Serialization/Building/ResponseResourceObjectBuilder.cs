@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// The server serializer only populates the "data" member when the relationship is included,
         /// and adds links unless these are turned off. This means that if a relationship is not included
         /// and links are turned off, the entry would be completely empty, ie { }, which is not conform
-        /// json:api spec. In that case we return null which will omit the entry from the output.
+        /// JSON:API spec. In that case we return null which will omit the entry from the output.
         /// </summary>
         protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
