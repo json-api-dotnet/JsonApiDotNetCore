@@ -87,10 +87,9 @@ In simple cases, you can also just wrap the base implementation with your custom
         ILoggerFactory loggerFactory,
         IJsonApiRequest request,
         IResourceChangeTracker&lt;TodoItem&gt; resourceChangeTracker,
-        IResourceFactory resourceFactory,
         IResourceHookExecutorFacade hookExecutor)
         : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory,
-            request, resourceChangeTracker, resourceFactory, hookExecutor)
+            request, resourceChangeTracker, hookExecutor)
     {
         _notificationService = notificationService;
     }
