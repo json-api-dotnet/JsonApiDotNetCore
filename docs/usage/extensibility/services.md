@@ -23,10 +23,9 @@ public class TodoItemService : JsonApiResourceService<TodoItem>
         ILoggerFactory loggerFactory,
         IJsonApiRequest request,
         IResourceChangeTracker<TodoItem> resourceChangeTracker,
-        IResourceFactory resourceFactory,
         IResourceHookExecutorFacade hookExecutor)
         : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory,
-            request, resourceChangeTracker, resourceFactory, hookExecutor)
+            request, resourceChangeTracker, hookExecutor)
     {
         _notificationService = notificationService;
     }

@@ -30,7 +30,6 @@ namespace JsonApiDotNetCore.Services
         private readonly TraceLogWriter<JsonApiResourceService<TResource, TId>> _traceWriter;
         private readonly IJsonApiRequest _request;
         private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
-        private readonly IResourceFactory _resourceFactory;
         private readonly IResourceHookExecutorFacade _hookExecutor;
 
         public JsonApiResourceService(
@@ -41,7 +40,6 @@ namespace JsonApiDotNetCore.Services
             ILoggerFactory loggerFactory,
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
-            IResourceFactory resourceFactory,
             IResourceHookExecutorFacade hookExecutor)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
@@ -53,7 +51,6 @@ namespace JsonApiDotNetCore.Services
             _traceWriter = new TraceLogWriter<JsonApiResourceService<TResource, TId>>(loggerFactory);
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _resourceChangeTracker = resourceChangeTracker ?? throw new ArgumentNullException(nameof(resourceChangeTracker));
-            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
             _hookExecutor = hookExecutor ?? throw new ArgumentNullException(nameof(hookExecutor));
         }
 
@@ -469,10 +466,9 @@ namespace JsonApiDotNetCore.Services
             ILoggerFactory loggerFactory,
             IJsonApiRequest request,
             IResourceChangeTracker<TResource> resourceChangeTracker,
-            IResourceFactory resourceFactory,
             IResourceHookExecutorFacade hookExecutor)
             : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                resourceChangeTracker, resourceFactory, hookExecutor)
+                resourceChangeTracker, hookExecutor)
         {
         }
     }

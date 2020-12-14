@@ -155,10 +155,9 @@ namespace DiscoveryTests
                 ILoggerFactory loggerFactory,
                 IJsonApiRequest request,
                 IResourceChangeTracker<TestModel> resourceChangeTracker,
-                IResourceFactory resourceFactory,
                 IResourceHookExecutorFacade hookExecutor)
                 : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                    resourceChangeTracker, resourceFactory, hookExecutor)
+                    resourceChangeTracker, hookExecutor)
             {
             }
         }
