@@ -25,16 +25,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         {
             if (operation == null) throw new ArgumentNullException(nameof(operation));
 
-            var stringId = operation.Ref.Id;
-            if (stringId == null)
-            {
-                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                {
-                    Title = "The ref.id element is required for remove operations."
-                });
-            }
-
-            var id = (TId) TypeHelper.ConvertType(stringId, typeof(TId));
+            var id = (TId) TypeHelper.ConvertType(operation.Ref.Id, typeof(TId));
             await _service.DeleteAsync(id, cancellationToken);
 
             return new AtomicResultObject();

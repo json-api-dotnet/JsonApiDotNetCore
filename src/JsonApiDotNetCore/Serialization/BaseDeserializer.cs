@@ -173,13 +173,13 @@ namespace JsonApiDotNetCore.Serialization
             return resource;
         }
 
-        private ResourceContext GetExistingResourceContext(string publicName)
+        protected ResourceContext GetExistingResourceContext(string publicName, int? atomicOperationIndex = null)
         {
             var resourceContext = ResourceContextProvider.GetResourceContext(publicName);
             if (resourceContext == null)
             {
                 throw new JsonApiSerializationException("Request body includes unknown resource type.",
-                    $"Resource type '{publicName}' does not exist.");
+                    $"Resource type '{publicName}' does not exist.", atomicOperationIndex: atomicOperationIndex);
             }
 
             return resourceContext;

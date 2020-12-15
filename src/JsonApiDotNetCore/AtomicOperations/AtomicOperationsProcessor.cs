@@ -193,14 +193,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             if (operation.Code == AtomicOperationCode.Remove)
             {
-                resourceName = operation.Ref?.Type;
-                if (resourceName == null)
-                {
-                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                    {
-                        Title = "The ref.type element is required."
-                    });
-                }
+                resourceName = operation.Ref.Type;
             }
 
             bool isResourceAdd = operation.Code == AtomicOperationCode.Add && operation.Ref == null;
@@ -239,25 +232,29 @@ namespace JsonApiDotNetCore.AtomicOperations
             ((JsonApiRequest) _request).OperationCode = operation.Code;
             ((JsonApiRequest)_request).PrimaryResource = primaryResourceContext;
 
-            if (operation.Ref?.Relationship != null)
+            if (operation.Ref != null)
             {
-                var relationship = primaryResourceContext.Relationships.SingleOrDefault(relationship => relationship.PublicName == operation.Ref.Relationship);
-                if (relationship == null)
-                {
-                    throw new InvalidOperationException("TODO: Relationship does not exist.");
-                }
-
-                var secondaryResource = _resourceContextProvider.GetResourceContext(relationship.RightType);
-                if (secondaryResource == null)
-                {
-                    throw new InvalidOperationException("TODO: Secondary resource does not exist.");
-                }
-
                 ((JsonApiRequest)_request).PrimaryId = operation.Ref.Id;
-                ((JsonApiRequest)_request).Relationship = relationship;
-                ((JsonApiRequest)_request).SecondaryResource = secondaryResource;
 
-                _targetedFields.Relationships.Add(relationship);
+                if (operation.Ref?.Relationship != null)
+                {
+                    var relationship = primaryResourceContext.Relationships.SingleOrDefault(relationship => relationship.PublicName == operation.Ref.Relationship);
+                    if (relationship == null)
+                    {
+                        throw new InvalidOperationException("TODO: Relationship does not exist.");
+                    }
+
+                    var secondaryResource = _resourceContextProvider.GetResourceContext(relationship.RightType);
+                    if (secondaryResource == null)
+                    {
+                        throw new InvalidOperationException("TODO: Secondary resource does not exist.");
+                    }
+
+                    ((JsonApiRequest)_request).Relationship = relationship;
+                    ((JsonApiRequest)_request).SecondaryResource = secondaryResource;
+
+                    _targetedFields.Relationships.Add(relationship);
+                }
             }
             else
             {

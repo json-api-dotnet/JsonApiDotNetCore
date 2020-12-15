@@ -50,12 +50,6 @@ namespace JsonApiDotNetCore.Serialization
             string url = context.HttpContext.Request.GetEncodedUrl();
             _traceWriter.LogMessage(() => $"Received request at '{url}' with body: <<{body}>>");
 
-            if (_request.Kind == EndpointKind.AtomicOperations)
-            {
-                var operations = _deserializer.DeserializeOperationsDocument(body);
-                return await InputFormatterResult.SuccessAsync(operations);
-            }
-
             object model = null;
             if (!string.IsNullOrWhiteSpace(body))
             {
@@ -65,7 +59,7 @@ namespace JsonApiDotNetCore.Serialization
                 }
                 catch (JsonApiSerializationException exception)
                 {
-                    throw new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, body, exception);
+                    throw ToInvalidRequestBodyException(exception, body);
                 }
                 catch (Exception exception)
                 {
@@ -73,7 +67,7 @@ namespace JsonApiDotNetCore.Serialization
                 }
             }
 
-            if (RequiresRequestBody(context.HttpContext.Request.Method))
+            if (_request.Kind != EndpointKind.AtomicOperations && RequiresRequestBody(context.HttpContext.Request.Method))
             {
                 ValidateRequestBody(model, body, context.HttpContext.Request);
             }
@@ -87,6 +81,28 @@ namespace JsonApiDotNetCore.Serialization
             return await reader.ReadToEndAsync();
         }
 
+        private InvalidRequestBodyException ToInvalidRequestBodyException(JsonApiSerializationException exception, string body)
+        {
+            if (_request.Kind != EndpointKind.AtomicOperations)
+            {
+                return new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, body,
+                    exception);
+            }
+
+            var requestException =
+                new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, null, exception.InnerException);
+
+            if (exception.AtomicOperationIndex != null)
+            {
+                foreach (var error in requestException.Errors)
+                {
+                    error.Source.Pointer = $"/atomic:operations[{exception.AtomicOperationIndex}]";
+                }
+            }
+
+            return requestException;
+        }
+        
         private bool RequiresRequestBody(string requestMethod)
         {
             if (requestMethod == HttpMethods.Post || requestMethod == HttpMethods.Patch)

@@ -109,5 +109,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
                 tracksInDatabase.Should().BeEmpty();
             });
         }
+
+        // TODO: Cannot_process_operations_for_missing_request_body
+        // TODO: Cannot_process_operations_for_broken_JSON_request_body
+        // TODO: Cannot_process_operations_for_unknown_operation_code
     }
 }

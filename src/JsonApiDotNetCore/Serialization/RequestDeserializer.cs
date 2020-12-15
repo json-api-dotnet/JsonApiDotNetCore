@@ -44,7 +44,12 @@ namespace JsonApiDotNetCore.Serialization
             {
                 _targetedFields.Relationships.Add(_request.Relationship);
             }
-            
+
+            if (_request.Kind == EndpointKind.AtomicOperations)
+            {
+                return DeserializeOperationsDocument(body);
+            }
+
             var instance = DeserializeBody(body);
 
             AssertResourceIdIsNotTargeted();
@@ -52,7 +57,7 @@ namespace JsonApiDotNetCore.Serialization
             return instance;
         }
 
-        public object DeserializeOperationsDocument(string body)
+        private object DeserializeOperationsDocument(string body)
         {
             JToken bodyToken = LoadJToken(body);
             var document = bodyToken.ToObject<AtomicOperationsDocument>();
@@ -65,7 +70,58 @@ namespace JsonApiDotNetCore.Serialization
                 });
             }
 
+            int index = 0;
+            foreach (var operation in document.Operations)
+            {
+                ValidateOperation(operation, index);
+                index++;
+            }
+
             return document;
+        }
+
+        private void ValidateOperation(AtomicOperationObject operation, int index)
+        {
+            if (operation.Href != null)
+            {
+                throw new JsonApiSerializationException("Usage of the 'href' element is not supported.", null,
+                    atomicOperationIndex: index);
+            }
+
+            if (operation.Code == AtomicOperationCode.Remove)
+            {
+                if (operation.Ref == null)
+                {
+                    throw new JsonApiSerializationException("The 'ref' element is required.", null,
+                        atomicOperationIndex: index);
+                }
+
+                if (operation.Ref.Type == null)
+                {
+                    throw new JsonApiSerializationException("The 'ref.type' element is required.", null,
+                        atomicOperationIndex: index);
+                }
+
+                var resourceContext = GetExistingResourceContext(operation.Ref.Type, index);
+                
+                if (operation.Ref.Id == null && operation.Ref.Lid == null)
+                {
+                    throw new JsonApiSerializationException("The 'ref.id' or 'ref.lid' element is required.", null,
+                        atomicOperationIndex: index);
+                }
+
+                if (operation.Ref.Id != null)
+                {
+                    try
+                    {
+                        TypeHelper.ConvertType(operation.Ref.Id, resourceContext.IdentityType);
+                    }
+                    catch (FormatException exception)
+                    {
+                        throw new JsonApiSerializationException(null, exception.Message, null, index);
+                    }
+                }
+            }
         }
 
         public IIdentifiable CreateResourceFromObject(ResourceObject data)

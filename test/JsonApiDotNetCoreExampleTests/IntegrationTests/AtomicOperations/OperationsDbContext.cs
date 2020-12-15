@@ -6,6 +6,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
     {
         public DbSet<Playlist> Playlists { get; set; }
         public DbSet<MusicTrack> MusicTracks { get; set; }
+        public DbSet<PlaylistMusicTrack> PlaylistMusicTracks { get; set; }
+        public DbSet<Lyric> Lyrics { get; set; }
         public DbSet<Performer> Performers { get; set; }
         public DbSet<RecordCompany> RecordCompanies { get; set; }
 
@@ -18,6 +20,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
         {
             builder.Entity<PlaylistMusicTrack>()
                 .HasKey(playlistMusicTrack => new {playlistMusicTrack.PlaylistId, playlistMusicTrack.MusicTrackId});
+
+            builder.Entity<MusicTrack>()
+                .HasOne(musicTrack => musicTrack.Lyric)
+                .WithOne(lyric => lyric.Track)
+                .HasForeignKey<MusicTrack>();
         }
     }
 }
