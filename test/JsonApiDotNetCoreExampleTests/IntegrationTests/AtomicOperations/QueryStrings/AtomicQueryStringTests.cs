@@ -247,7 +247,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/api/v1/operations?fields=id";
+            var route = "/api/v1/operations?fields[recordCompanies]=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -258,8 +258,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'fields' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("fields");
+            responseDocument.Errors[0].Detail.Should().Be("The parameter 'fields[recordCompanies]' cannot be used at this endpoint.");
+            responseDocument.Errors[0].Source.Parameter.Should().Be("fields[recordCompanies]");
         }
 
         [Fact]
