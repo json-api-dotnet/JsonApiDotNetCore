@@ -34,11 +34,6 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         {
             if (operation == null) throw new ArgumentNullException(nameof(operation));
 
-            if (operation.ManyData == null)
-            {
-                throw new InvalidOperationException("TODO: Expected data array. Can we ever get here?");
-            }
-
             var primaryId = GetPrimaryId(operation.Ref.Id);
             var secondaryResourceIds = GetSecondaryResourceIds(operation);
 

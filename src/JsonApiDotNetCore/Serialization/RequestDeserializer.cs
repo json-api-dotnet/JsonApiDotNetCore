@@ -121,6 +121,64 @@ namespace JsonApiDotNetCore.Serialization
                         throw new JsonApiSerializationException(null, exception.Message, null, index);
                     }
                 }
+
+                if (operation.Ref.Relationship != null)
+                {
+                    var relationship = resourceContext.Relationships.FirstOrDefault(r => r.PublicName == operation.Ref.Relationship);
+                    if (relationship == null)
+                    {
+                        throw new JsonApiSerializationException(
+                            "The referenced relationship does not exist.",
+                            $"Resource of type '{operation.Ref.Type}' does not contain a relationship named '{operation.Ref.Relationship}'.",
+                            atomicOperationIndex: index);
+                    }
+
+                    if (relationship is HasOneAttribute)
+                    {
+                        throw new JsonApiSerializationException(
+                            "Only to-many relationships can be targeted in 'remove' operations.",
+                            $"Relationship '{operation.Ref.Relationship}' must be a to-many relationship.",
+                            atomicOperationIndex: index);
+                    }
+
+                    if (operation.Data == null)
+                    {
+                        throw new JsonApiSerializationException(
+                            "Expected data[] element for to-many relationship.",
+                            $"Expected data[] element for '{relationship.PublicName}' relationship.",
+                            atomicOperationIndex: index);
+                    }
+
+                    if (!operation.IsManyData)
+                    {
+                        throw new Exception("TODO: data is not an array.");
+                    }
+
+                    foreach (var resourceObject in operation.ManyData)
+                    {
+                        if (resourceObject.Type == null)
+                        {
+                            throw new JsonApiSerializationException("The 'data[].type' element is required.", null,
+                                atomicOperationIndex: index);
+                        }
+
+                        if (resourceObject.Id == null && resourceObject.Lid == null)
+                        {
+                            throw new JsonApiSerializationException("The 'data[].id' or 'data[].lid' element is required.", null,
+                                atomicOperationIndex: index);
+                        }
+
+                        var rightResourceContext = GetExistingResourceContext(resourceObject.Type, index);
+                        if (!rightResourceContext.ResourceType.IsAssignableFrom(relationship.RightType))
+                        {
+                            var relationshipRightTypeName = ResourceContextProvider.GetResourceContext(relationship.RightType);
+                            
+                            throw new JsonApiSerializationException("Resource type mismatch between 'ref' and 'data' element.", 
+                                $@"Expected resource of type '{relationshipRightTypeName}' in 'data[].type', instead of '{rightResourceContext.PublicName}'.",
+                                atomicOperationIndex: index);
+                        }
+                    }
+                }
             }
         }
 
