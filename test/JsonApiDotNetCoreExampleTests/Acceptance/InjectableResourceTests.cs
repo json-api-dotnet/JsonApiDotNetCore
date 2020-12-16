@@ -103,6 +103,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             await _context.ClearTableAsync<Passport>();
+            await _context.ClearTableAsync<Person>();
 
             var passports = _passportFaker.Generate(3);
             foreach (var passport in passports)
@@ -114,7 +115,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             }
 
             passports[2].SocialSecurityNumber = 12345;
-            passports[2].Person.FirstName= "Joe";
+            passports[2].Person.FirstName = "Joe";
             
             _context.Passports.AddRange(passports);
             await _context.SaveChangesAsync();
