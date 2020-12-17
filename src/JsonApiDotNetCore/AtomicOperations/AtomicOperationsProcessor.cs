@@ -158,7 +158,16 @@ namespace JsonApiDotNetCore.AtomicOperations
             cancellationToken.ThrowIfCancellationRequested();
 
             string resourceName = null;
-            if (operation.Code == AtomicOperationCode.Add || operation.Code == AtomicOperationCode.Update)
+
+            if (operation.Code == AtomicOperationCode.Remove)
+            {
+                resourceName = operation.Ref.Type;
+            }
+            else if (operation.Code == AtomicOperationCode.Add && operation.Ref != null)
+            {
+                resourceName = operation.Ref.Type;
+            }
+            else
             {
                 if (operation.SingleData != null)
                 {
@@ -171,7 +180,7 @@ namespace JsonApiDotNetCore.AtomicOperations
                         });
                     }
                 }
-                else if (operation.ManyData != null)
+                else if (operation.ManyData != null && operation.ManyData.Any())
                 {
                     foreach (var resourceObject in operation.ManyData)
                     {
@@ -180,22 +189,20 @@ namespace JsonApiDotNetCore.AtomicOperations
                         {
                             throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
                             {
-                                Title = "The data.type element is required."
+                                Title = "The data[].type element is required."
                             });
                         }
+                        
+                        // TODO: Verify all are of the same (or compatible) type.
                     }
                 }
-                else
-                {
-                    throw new InvalidOperationException("TODO: Data is missing.");
-                }
             }
 
-            if (operation.Code == AtomicOperationCode.Remove)
+            if (resourceName == null)
             {
-                resourceName = operation.Ref.Type;
+                throw new InvalidOperationException("TODO: Failed to determine targeted resource.");
             }
-
+            
             bool isResourceAdd = operation.Code == AtomicOperationCode.Add && operation.Ref == null;
 
             if (isResourceAdd && operation.SingleData?.Lid != null)

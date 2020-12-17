@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -95,7 +96,10 @@ namespace JsonApiDotNetCore.Serialization
                     throw new JsonApiSerializationException("The 'ref' element is required.", null,
                         atomicOperationIndex: index);
                 }
+            }
 
+            if ((operation.Code == AtomicOperationCode.Remove || operation.Code == AtomicOperationCode.Add) && operation.Ref != null)
+            {
                 if (operation.Ref.Type == null)
                 {
                     throw new JsonApiSerializationException("The 'ref.type' element is required.", null,
@@ -136,7 +140,7 @@ namespace JsonApiDotNetCore.Serialization
                     if (relationship is HasOneAttribute)
                     {
                         throw new JsonApiSerializationException(
-                            "Only to-many relationships can be targeted in 'remove' operations.",
+                            $"Only to-many relationships can be targeted in '{operation.Code.ToString().Camelize()}' operations.",
                             $"Relationship '{operation.Ref.Relationship}' must be a to-many relationship.",
                             atomicOperationIndex: index);
                     }
