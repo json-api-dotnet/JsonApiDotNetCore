@@ -388,6 +388,43 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
+        public async Task Cannot_add_for_ID_and_local_ID_in_ref()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        @ref = new
+                        {
+                            type = "musicTracks",
+                            id = Guid.NewGuid().ToString(),
+                            lid = "local-1",
+                            relationship = "performers"
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: The 'ref.id' or 'ref.lid' element is required.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+        }
+
+        [Fact]
         public async Task Cannot_add_for_unknown_relationship_in_ref()
         {
             // Arrange
@@ -577,6 +614,51 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             new
                             {
                                 type = "performers"
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+            
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: The 'data[].id' or 'data[].lid' element is required.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+        }
+
+        [Fact]
+        public async Task Cannot_add_for_ID_and_local_ID_in_data()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        @ref = new
+                        {
+                            type = "musicTracks",
+                            id = Guid.NewGuid().ToString(),
+                            relationship = "performers"
+                        },
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "performers",
+                                id = 99999999,
+                                lid = "local-1"
                             }
                         }
                     }

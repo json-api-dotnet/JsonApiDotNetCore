@@ -108,7 +108,7 @@ namespace JsonApiDotNetCore.Serialization
 
                 var resourceContext = GetExistingResourceContext(operation.Ref.Type, index);
                 
-                if (operation.Ref.Id == null && operation.Ref.Lid == null)
+                if ((operation.Ref.Id == null && operation.Ref.Lid == null) || (operation.Ref.Id != null && operation.Ref.Lid != null))
                 {
                     throw new JsonApiSerializationException("The 'ref.id' or 'ref.lid' element is required.", null,
                         atomicOperationIndex: index);
@@ -171,7 +171,7 @@ namespace JsonApiDotNetCore.Serialization
                                     atomicOperationIndex: index);
                             }
 
-                            if (resourceObject.Id == null && resourceObject.Lid == null)
+                            if ((resourceObject.Id == null && resourceObject.Lid == null) || (resourceObject.Id != null && resourceObject.Lid != null))
                             {
                                 throw new JsonApiSerializationException("The 'data[].id' or 'data[].lid' element is required.", null,
                                     atomicOperationIndex: index);
@@ -199,7 +199,7 @@ namespace JsonApiDotNetCore.Serialization
                                 atomicOperationIndex: index);
                         }
 
-                        if (resourceObject.Id == null && resourceObject.Lid == null)
+                        if ((resourceObject.Id == null && resourceObject.Lid == null) || (resourceObject.Id != null && resourceObject.Lid != null))
                         {
                             throw new JsonApiSerializationException("The 'data.id' or 'data.lid' element is required.", null,
                                 atomicOperationIndex: index);

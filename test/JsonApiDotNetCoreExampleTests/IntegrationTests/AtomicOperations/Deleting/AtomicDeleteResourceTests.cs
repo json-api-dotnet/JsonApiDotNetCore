@@ -508,7 +508,43 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
             responseDocument.Errors[0].Detail.Should().BeNull();
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
-        
+
+        [Fact]
+        public async Task Cannot_delete_resource_for_ID_and_local_ID()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "remove",
+                        @ref = new
+                        {
+                            type = "musicTracks",
+                            id = Guid.NewGuid().ToString(),
+                            lid = "local-1"
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: The 'ref.id' or 'ref.lid' element is required.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+        }
+
         [Fact]
         public async Task Cannot_delete_resource_for_unknown_ID()
         {
@@ -543,7 +579,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'performers' with ID '99999999' does not exist.");
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
-        
+
         [Fact]
         public async Task Cannot_delete_resource_for_incompatible_ID()
         {
