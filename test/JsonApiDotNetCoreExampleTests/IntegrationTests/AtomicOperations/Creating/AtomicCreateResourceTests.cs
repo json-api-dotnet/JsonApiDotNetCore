@@ -84,57 +84,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         }
 
         [Fact]
-        public async Task Can_create_resource_without_attributes_or_relationships()
-        {
-            // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            attributes = new
-                            {
-                            },
-                            relationship = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
-            
-            var route = "/api/v1/operations";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("performers");
-            responseDocument.Results[0].SingleData.Attributes["artistName"].Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["bornAt"].Should().BeCloseTo(default(DateTimeOffset));
-
-            var newPerformerId = int.Parse(responseDocument.Results[0].SingleData.Id);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var performerInDatabase = await dbContext.Performers
-                    .FirstAsync(performer => performer.Id == newPerformerId);
-
-                performerInDatabase.ArtistName.Should().BeNull();
-                performerInDatabase.BornAt.Should().Be(default);
-            });
-        }
-
-        [Fact]
         public async Task Can_create_resources()
         {
             // Arrange
@@ -206,6 +155,57 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     trackInDatabase.Genre.Should().Be(newTracks[index].Genre);
                     trackInDatabase.ReleasedAt.Should().BeCloseTo(newTracks[index].ReleasedAt);
                 }
+            });
+        }
+
+        [Fact]
+        public async Task Can_create_resource_without_attributes_or_relationships()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "performers",
+                            attributes = new
+                            {
+                            },
+                            relationship = new
+                            {
+                            }
+                        }
+                    }
+                }
+            };
+            
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Results.Should().HaveCount(1);
+            responseDocument.Results[0].SingleData.Should().NotBeNull();
+            responseDocument.Results[0].SingleData.Type.Should().Be("performers");
+            responseDocument.Results[0].SingleData.Attributes["artistName"].Should().BeNull();
+            responseDocument.Results[0].SingleData.Attributes["bornAt"].Should().BeCloseTo(default(DateTimeOffset));
+
+            var newPerformerId = int.Parse(responseDocument.Results[0].SingleData.Id);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var performerInDatabase = await dbContext.Performers
+                    .FirstAsync(performer => performer.Id == newPerformerId);
+
+                performerInDatabase.ArtistName.Should().BeNull();
+                performerInDatabase.BornAt.Should().Be(default);
             });
         }
     }

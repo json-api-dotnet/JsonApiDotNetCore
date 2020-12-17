@@ -88,65 +88,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Can_update_resource_without_attributes_or_relationships()
-        {
-            // Arrange
-            var existingTrack = _fakers.MusicTrack.Generate();
-            existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.MusicTracks.Add(existingTrack);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/api/v1/operations";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var tracksInDatabase = await dbContext.MusicTracks
-                    .Include(musicTrack => musicTrack.OwnedBy)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
-
-                tracksInDatabase.Title.Should().Be(existingTrack.Title);
-                tracksInDatabase.Genre.Should().Be(existingTrack.Genre);
-
-                tracksInDatabase.OwnedBy.Should().NotBeNull();
-                tracksInDatabase.OwnedBy.Id.Should().Be(existingTrack.OwnedBy.Id);
-            });
-        }
-
-        [Fact]
         public async Task Can_update_resources()
         {
             // Arrange
@@ -209,6 +150,65 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     trackInDatabase.Title.Should().Be(newTrackTitles[index]);
                     trackInDatabase.Genre.Should().Be(existingTracks[index].Genre);
                 }
+            });
+        }
+
+        [Fact]
+        public async Task Can_update_resource_without_attributes_or_relationships()
+        {
+            // Arrange
+            var existingTrack = _fakers.MusicTrack.Generate();
+            existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.MusicTracks.Add(existingTrack);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        data = new
+                        {
+                            type = "musicTracks",
+                            id = existingTrack.StringId,
+                            attributes = new
+                            {
+                            },
+                            relationships = new
+                            {
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var tracksInDatabase = await dbContext.MusicTracks
+                    .Include(musicTrack => musicTrack.OwnedBy)
+                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+
+                tracksInDatabase.Title.Should().Be(existingTrack.Title);
+                tracksInDatabase.Genre.Should().Be(existingTrack.Genre);
+
+                tracksInDatabase.OwnedBy.Should().NotBeNull();
+                tracksInDatabase.OwnedBy.Id.Should().Be(existingTrack.OwnedBy.Id);
             });
         }
     }
