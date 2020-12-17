@@ -303,6 +303,37 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
+        public async Task Cannot_replace_for_href_element()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        href = "/api/v1/musicTracks/1/relationships/performers"
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Usage of the 'href' element is not supported.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+        }
+
+        [Fact]
         public async Task Cannot_replace_for_missing_type_in_ref()
         {
             // Arrange

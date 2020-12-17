@@ -208,5 +208,36 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                 performerInDatabase.BornAt.Should().Be(default);
             });
         }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_href_element()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        href = "/api/v1/musicTracks"
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Usage of the 'href' element is not supported.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+        }
     }
 }
