@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Transactions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -399,6 +400,13 @@ namespace JsonApiDotNetCore.Repositories
             }
             catch (DbUpdateException exception)
             {
+                if (_dbContext.Database.CurrentTransaction != null)
+                {
+                    // The ResourceService calling us needs to run additional SQL queries
+                    // after an aborted transaction, to determine error cause.
+                    await _dbContext.Database.CurrentTransaction.RollbackAsync(cancellationToken);
+                }
+
                 throw new DataStoreUpdateException(exception);
             }
         }

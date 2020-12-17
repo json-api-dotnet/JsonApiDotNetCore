@@ -145,6 +145,14 @@ namespace JsonApiDotNetCore.Serialization
                             atomicOperationIndex: index);
                     }
 
+                    if (relationship is HasOneAttribute && operation.ManyData != null)
+                    {
+                        throw new JsonApiSerializationException(
+                            "Expected single data element for to-one relationship.",
+                            $"Expected single data element for '{relationship.PublicName}' relationship.",
+                            atomicOperationIndex: index);
+                    }
+
                     if (relationship is HasManyAttribute && operation.ManyData == null)
                     {
                         throw new JsonApiSerializationException(
@@ -178,6 +186,33 @@ namespace JsonApiDotNetCore.Serialization
                                     $@"Expected resource of type '{relationshipRightTypeName}' in 'data[].type', instead of '{rightResourceContext.PublicName}'.",
                                     atomicOperationIndex: index);
                             }
+                        }
+                    }
+
+                    if (operation.SingleData != null)
+                    {
+                        var resourceObject = operation.SingleData;
+
+                        if (resourceObject.Type == null)
+                        {
+                            throw new JsonApiSerializationException("The 'data.type' element is required.", null,
+                                atomicOperationIndex: index);
+                        }
+
+                        if (resourceObject.Id == null && resourceObject.Lid == null)
+                        {
+                            throw new JsonApiSerializationException("The 'data.id' or 'data.lid' element is required.", null,
+                                atomicOperationIndex: index);
+                        }
+
+                        var rightResourceContext = GetExistingResourceContext(resourceObject.Type, index);
+                        if (!rightResourceContext.ResourceType.IsAssignableFrom(relationship.RightType))
+                        {
+                            var relationshipRightTypeName = ResourceContextProvider.GetResourceContext(relationship.RightType);
+                            
+                            throw new JsonApiSerializationException("Resource type mismatch between 'ref.relationship' and 'data.type' element.", 
+                                $@"Expected resource of type '{relationshipRightTypeName}' in 'data.type', instead of '{rightResourceContext.PublicName}'.",
+                                atomicOperationIndex: index);
                         }
                     }
                 }

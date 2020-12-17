@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
     /// <summary>
-    /// Processes a single entry in a list of atomic operations.
+    /// Processes a single entry in a list of operations.
     /// </summary>
     public interface IAtomicOperationProcessor
     {

@@ -32,8 +32,9 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Processes a document with atomic operations and returns their results.
-        /// If none of the operations contain data, HTTP 201 is returned instead 200.
+        /// Atomically processes a document with operations and returns their results.
+        /// If processing fails, all changes are reverted.
+        /// If processing succeeds and none of the operations contain data, HTTP 201 is returned instead 200.
         /// </summary>
         /// <example>
         /// The next example creates a new resource.

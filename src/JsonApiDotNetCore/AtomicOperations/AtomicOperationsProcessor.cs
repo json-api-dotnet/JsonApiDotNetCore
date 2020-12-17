@@ -88,7 +88,10 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
             catch (JsonApiException exception)
             {
-                await transaction.RollbackAsync(cancellationToken);
+                if (_dbContext.Database.CurrentTransaction != null)
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+                }
 
                 foreach (var error in exception.Errors)
                 {
@@ -99,11 +102,14 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
             catch (Exception exception)
             {
-                await transaction.RollbackAsync(cancellationToken);
+                if (_dbContext.Database.CurrentTransaction != null)
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+                }
 
                 throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
                 {
-                    Title = "An unhandled error occurred while processing an atomic operation in this request.",
+                    Title = "An unhandled error occurred while processing an operation in this request.",
                     Detail = exception.Message,
                     Source =
                     {

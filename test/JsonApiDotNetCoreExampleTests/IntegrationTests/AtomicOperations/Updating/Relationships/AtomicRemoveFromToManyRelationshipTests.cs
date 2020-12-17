@@ -419,8 +419,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "remove",
                         @ref = new
                         {
-                            id = existingTrack.StringId,
                             type = "musicTracks",
+                            id = existingTrack.StringId,
                             relationship = "performers"
                         },
                         data = (object)null
@@ -456,8 +456,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "remove",
                         @ref = new
                         {
-                            id = 99999999,
                             type = "playlists",
+                            id = 99999999,
                             relationship = "tracks"
                         },
                         data = new[]
@@ -499,8 +499,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "remove",
                         @ref = new
                         {
-                            id = Guid.NewGuid().ToString(),
                             type = "musicTracks",
+                            id = Guid.NewGuid().ToString(),
                             relationship = "performers"
                         },
                         data = new[]
@@ -543,8 +543,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "remove",
                         @ref = new
                         {
-                            id = Guid.NewGuid().ToString(),
                             type = "musicTracks",
+                            id = Guid.NewGuid().ToString(),
                             relationship = "performers"
                         },
                         data = new[]
@@ -595,8 +595,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "remove",
                         @ref = new
                         {
-                            id = existingCompany.StringId,
                             type = "recordCompanies",
+                            id = existingCompany.StringId,
                             relationship = "tracks"
                         },
                         data = new[]
@@ -658,8 +658,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "remove",
                         @ref = new
                         {
-                            id = existingTrack.StringId,
                             type = "musicTracks",
+                            id = existingTrack.StringId,
                             relationship = "performers"
                         },
                         data = new[]

@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.Configuration
                 }
             }
 
-            throw new InvalidOperationException($"Atomic operation code '{operation.Code}' is invalid.");
+            throw new InvalidOperationException($"Operation code '{operation.Code}' is invalid.");
         }
 
         private IAtomicOperationProcessor Resolve(AtomicOperationObject atomicOperationObject, Type processorInterface)

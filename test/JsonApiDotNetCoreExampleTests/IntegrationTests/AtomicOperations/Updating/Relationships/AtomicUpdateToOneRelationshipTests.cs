@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -12,13 +11,13 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updating.Relationships
 {
-    public sealed class AtomicReplaceToManyRelationshipTests
+    public sealed class AtomicUpdateToOneRelationshipTests
         : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicReplaceToManyRelationshipTests(
+        public AtomicUpdateToOneRelationshipTests(
             IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
@@ -29,17 +28,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 services.AddMvcCore().ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part));
             });
         }
-
+        
         [Fact]
-        public async Task Can_clear_HasMany_relationship()
+        public async Task Can_clear_OneToOne_relationship_from_dependent_side()
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
-            existingTrack.Performers = _fakers.Performer.Generate(2);
+            existingTrack.Lyric = _fakers.Lyric.Generate();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Performer>();
+                await dbContext.ClearTableAsync<Lyric>();
                 dbContext.MusicTracks.Add(existingTrack);
                 await dbContext.SaveChangesAsync();
             });
@@ -55,9 +54,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationship = "performers"
+                            relationship = "lyric"
                         },
-                        data = new object[0]
+                        data = (object)null
                     }
                 }
             };
@@ -75,37 +74,27 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var trackInDatabase = await dbContext.MusicTracks
-                    .Include(musicTrack => musicTrack.Performers)
+                    .Include(musicTrack => musicTrack.Lyric)
                     .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
 
-                trackInDatabase.Performers.Should().BeEmpty();
+                trackInDatabase.Lyric.Should().BeNull();
                 
-                var performersInDatabase = await dbContext.Performers.ToListAsync();
-                performersInDatabase.Should().HaveCount(2);
+                var lyricsInDatabase = await dbContext.Lyrics.ToListAsync();
+                lyricsInDatabase.Should().HaveCount(1);
             });
         }
 
         [Fact]
-        public async Task Can_clear_HasManyThrough_relationship()
+        public async Task Can_clear_OneToOne_relationship_from_principal_side()
         {
             // Arrange
-            var existingPlaylist = _fakers.Playlist.Generate();
-            existingPlaylist.PlaylistMusicTracks = new List<PlaylistMusicTrack>
-            {
-                new PlaylistMusicTrack
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                },
-                new PlaylistMusicTrack
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                }
-            };
-
+            var existingLyric = _fakers.Lyric.Generate();
+            existingLyric.Track = _fakers.MusicTrack.Generate();
+            
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<MusicTrack>();
-                dbContext.Playlists.Add(existingPlaylist);
+                dbContext.Lyrics.Add(existingLyric);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -118,11 +107,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "update",
                         @ref = new
                         {
-                            type = "playlists",
-                            id = existingPlaylist.StringId,
-                            relationship = "tracks"
+                            type = "lyrics",
+                            id = existingLyric.StringId,
+                            relationship = "track"
                         },
-                        data = new object[0]
+                        data = (object)null
                     }
                 }
             };
@@ -139,32 +128,372 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var playlistInDatabase = await dbContext.Playlists
-                    .Include(playlist => playlist.PlaylistMusicTracks)
-                    .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstAsync(playlist => playlist.Id == existingPlaylist.Id);
+                var lyricInDatabase = await dbContext.Lyrics
+                    .Include(lyric => lyric.Track)
+                    .FirstAsync(lyric => lyric.Id == existingLyric.Id);
 
-                playlistInDatabase.PlaylistMusicTracks.Should().BeEmpty();
+                lyricInDatabase.Track.Should().BeNull();
                 
+                var tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
+                tracksInDatabase.Should().HaveCount(1);
+            });
+        }
+
+        [Fact]
+        public async Task Can_clear_ManyToOne_relationship()
+        {
+            // Arrange
+            var existingTrack = _fakers.MusicTrack.Generate();
+            existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<RecordCompany>();
+                dbContext.MusicTracks.Add(existingTrack);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        @ref = new
+                        {
+                            type = "musicTracks",
+                            id = existingTrack.StringId,
+                            relationship = "ownedBy"
+                        },
+                        data = (object)null
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var trackInDatabase = await dbContext.MusicTracks
+                    .Include(musicTrack => musicTrack.OwnedBy)
+                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+
+                trackInDatabase.OwnedBy.Should().BeNull();
+                
+                var companiesInDatabase = await dbContext.RecordCompanies.ToListAsync();
+                companiesInDatabase.Should().HaveCount(1);
+            });
+        }
+
+        [Fact]
+        public async Task Can_create_OneToOne_relationship_from_dependent_side()
+        {
+            // Arrange
+            var existingTrack = _fakers.MusicTrack.Generate();
+            var existingLyric = _fakers.Lyric.Generate();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(existingTrack, existingLyric);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        @ref = new
+                        {
+                            type = "musicTracks",
+                            id = existingTrack.StringId,
+                            relationship = "lyric"
+                        },
+                        data = new
+                        {
+                            type = "lyrics",
+                            id = existingLyric.StringId
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var trackInDatabase = await dbContext.MusicTracks
+                    .Include(musicTrack => musicTrack.Lyric)
+                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+
+                trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
+            });
+        }
+
+        [Fact]
+        public async Task Can_create_OneToOne_relationship_from_principal_side()
+        {
+            // Arrange
+            var existingLyric = _fakers.Lyric.Generate();
+            var existingTrack = _fakers.MusicTrack.Generate();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(existingLyric, existingTrack);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        @ref = new
+                        {
+                            type = "lyrics",
+                            id = existingLyric.StringId,
+                            relationship = "track"
+                        },
+                        data = new
+                        {
+                            type = "musicTracks",
+                            id = existingTrack.StringId
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var lyricInDatabase = await dbContext.Lyrics
+                    .Include(lyric => lyric.Track)
+                    .FirstAsync(lyric => lyric.Id == existingLyric.Id);
+
+                lyricInDatabase.Track.Id.Should().Be(existingTrack.Id);
+            });
+        }
+
+        [Fact]
+        public async Task Can_create_ManyToOne_relationship()
+        {
+            // Arrange
+            var existingTrack = _fakers.MusicTrack.Generate();
+            var existingCompany = _fakers.RecordCompany.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddRange(existingTrack, existingCompany);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        @ref = new
+                        {
+                            type = "musicTracks",
+                            id = existingTrack.StringId,
+                            relationship = "ownedBy"
+                        },
+                        data = new
+                        {
+                            type = "recordCompanies",
+                            id = existingCompany.StringId
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var trackInDatabase = await dbContext.MusicTracks
+                    .Include(musicTrack => musicTrack.OwnedBy)
+                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+
+                trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
+            });
+        }
+
+        [Fact]
+        public async Task Can_replace_OneToOne_relationship_from_dependent_side()
+        {
+            // Arrange
+            var existingTrack = _fakers.MusicTrack.Generate();
+            existingTrack.Lyric = _fakers.Lyric.Generate();
+            
+            var existingLyric = _fakers.Lyric.Generate();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<Lyric>();
+                dbContext.AddRange(existingTrack, existingLyric);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        @ref = new
+                        {
+                            type = "musicTracks",
+                            id = existingTrack.StringId,
+                            relationship = "lyric"
+                        },
+                        data = new
+                        {
+                            type = "lyrics",
+                            id = existingLyric.StringId
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var trackInDatabase = await dbContext.MusicTracks
+                    .Include(musicTrack => musicTrack.Lyric)
+                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+
+                trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
+
+                var lyricsInDatabase = await dbContext.Lyrics.ToListAsync();
+                lyricsInDatabase.Should().HaveCount(2);
+            });
+        }
+
+        [Fact]
+        public async Task Can_replace_OneToOne_relationship_from_principal_side()
+        {
+            // Arrange
+            var existingLyric = _fakers.Lyric.Generate();
+            existingLyric.Track = _fakers.MusicTrack.Generate();
+            
+            var existingTrack = _fakers.MusicTrack.Generate();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<MusicTrack>();
+                dbContext.AddRange(existingLyric, existingTrack);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        @ref = new
+                        {
+                            type = "lyrics",
+                            id = existingLyric.StringId,
+                            relationship = "track"
+                        },
+                        data = new
+                        {
+                            type = "musicTracks",
+                            id = existingTrack.StringId
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var lyricInDatabase = await dbContext.Lyrics
+                    .Include(lyric => lyric.Track)
+                    .FirstAsync(lyric => lyric.Id == existingLyric.Id);
+
+                lyricInDatabase.Track.Id.Should().Be(existingTrack.Id);
+
                 var tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
                 tracksInDatabase.Should().HaveCount(2);
             });
         }
 
         [Fact]
-        public async Task Can_replace_HasMany_relationship()
+        public async Task Can_replace_ManyToOne_relationship()
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
-            existingTrack.Performers = _fakers.Performer.Generate(1);
+            existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
             
-            var existingPerformers = _fakers.Performer.Generate(2);
-            
+            var existingCompany = _fakers.RecordCompany.Generate();
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Performer>();
-                dbContext.MusicTracks.Add(existingTrack);
-                dbContext.Performers.AddRange(existingPerformers);
+                await dbContext.ClearTableAsync<RecordCompany>();
+                dbContext.AddRange(existingTrack, existingCompany);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -179,20 +508,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationship = "performers"
+                            relationship = "ownedBy"
                         },
-                        data = new[]
+                        data = new
                         {
-                            new
-                            {
-                                type = "performers",
-                                id = existingPerformers[0].StringId
-                            },
-                            new
-                            {
-                                type = "performers",
-                                id = existingPerformers[1].StringId
-                            }
+                            type = "recordCompanies",
+                            id = existingCompany.StringId
                         }
                     }
                 }
@@ -211,99 +532,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var trackInDatabase = await dbContext.MusicTracks
-                    .Include(musicTrack => musicTrack.Performers)
+                    .Include(musicTrack => musicTrack.OwnedBy)
                     .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
 
-                trackInDatabase.Performers.Should().HaveCount(2);
-                trackInDatabase.Performers.Should().ContainSingle(performer => performer.Id == existingPerformers[0].Id);
-                trackInDatabase.Performers.Should().ContainSingle(performer => performer.Id == existingPerformers[1].Id);
-                
-                var performersInDatabase = await dbContext.Performers.ToListAsync();
-                performersInDatabase.Should().HaveCount(3);
+                trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
+
+                var companiesInDatabase = await dbContext.RecordCompanies.ToListAsync();
+                companiesInDatabase.Should().HaveCount(2);
             });
         }
 
         [Fact]
-        public async Task Can_replace_HasManyThrough_relationship()
-        {
-            // Arrange
-            var existingPlaylist = _fakers.Playlist.Generate();
-            existingPlaylist.PlaylistMusicTracks = new List<PlaylistMusicTrack>
-            {
-                new PlaylistMusicTrack
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                }
-            };
-
-            var existingTracks = _fakers.MusicTrack.Generate(2);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<MusicTrack>();
-                dbContext.Playlists.Add(existingPlaylist);
-                dbContext.MusicTracks.AddRange(existingTracks);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            id = existingPlaylist.StringId,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "musicTracks",
-                                id = existingTracks[0].StringId
-                            },
-                            new
-                            {
-                                type = "musicTracks",
-                                id = existingTracks[1].StringId
-                            }
-                        }
-                    }
-                }
-            };
-
-            var route = "/api/v1/operations";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var playlistInDatabase = await dbContext.Playlists
-                    .Include(playlist => playlist.PlaylistMusicTracks)
-                    .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstAsync(playlist => playlist.Id == existingPlaylist.Id);
-
-                playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(2);
-                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTracks[0].Id);
-                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTracks[1].Id);
-                
-                var tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
-                tracksInDatabase.Should().HaveCount(3);
-            });
-        }
-
-        [Fact]
-        public async Task Cannot_replace_for_missing_type_in_ref()
+        public async Task Cannot_create_for_missing_type_in_ref()
         {
             // Arrange
             var requestBody = new
@@ -316,7 +556,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         @ref = new
                         {
                             id = 99999999,
-                            relationship = "tracks"
+                            relationship = "track"
                         }
                     }
                 }
@@ -338,7 +578,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_replace_for_unknown_type_in_ref()
+        public async Task Cannot_create_for_unknown_type_in_ref()
         {
             // Arrange
             var requestBody = new
@@ -352,7 +592,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "doesNotExist",
                             id = 99999999,
-                            relationship = "tracks"
+                            relationship = "ownedBy"
                         }
                     }
                 }
@@ -374,7 +614,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_replace_for_missing_ID_in_ref()
+        public async Task Cannot_create_for_missing_ID_in_ref()
         {
             // Arrange
             var requestBody = new
@@ -387,7 +627,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         @ref = new
                         {
                             type = "musicTracks",
-                            relationship = "performers"
+                            relationship = "ownedBy"
                         }
                     }
                 }
@@ -409,7 +649,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_replace_for_unknown_relationship_in_ref()
+        public async Task Cannot_create_for_unknown_relationship_in_ref()
         {
             // Arrange
             var requestBody = new
@@ -443,9 +683,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'performers' does not contain a relationship named 'doesNotExist'.");
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
-        
+
         [Fact]
-        public async Task Cannot_replace_for_null_data()
+        public async Task Cannot_create_for_array_in_data()
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
@@ -455,7 +695,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 dbContext.MusicTracks.Add(existingTrack);
                 await dbContext.SaveChangesAsync();
             });
-            
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -467,50 +707,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationship = "performers"
-                        },
-                        data = (object)null
-                    }
-                }
-            };
-
-            var route = "/api/v1/operations";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
-            responseDocument.Errors[0].Detail.Should().Be("Expected data[] element for 'performers' relationship.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
-        }
-
-        [Fact]
-        public async Task Cannot_replace_for_missing_type_in_data()
-        {
-            // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            id = 99999999,
-                            relationship = "tracks"
+                            relationship = "lyric"
                         },
                         data = new[]
                         {
                             new
                             {
-                                id = Guid.NewGuid().ToString()
+                                type = "lyrics",
+                                id = 99999999
                             }
                         }
                     }
@@ -527,13 +731,53 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: The 'data[].type' element is required.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected single data element for to-one relationship.");
+            responseDocument.Errors[0].Detail.Should().Be("Expected single data element for 'lyric' relationship.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+        }
+
+        [Fact]
+        public async Task Cannot_create_for_missing_type_in_data()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        @ref = new
+                        {
+                            type = "lyrics",
+                            id = 99999999,
+                            relationship = "track"
+                        },
+                        data = new
+                        {
+                            id = Guid.NewGuid().ToString()
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: The 'data.type' element is required.");
             responseDocument.Errors[0].Detail.Should().BeNull();
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]
-        public async Task Cannot_replace_for_unknown_type_in_data()
+        public async Task Cannot_create_for_unknown_type_in_data()
         {
             // Arrange
             var requestBody = new
@@ -547,15 +791,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = Guid.NewGuid().ToString(),
-                            relationship = "performers"
+                            relationship = "lyric"
                         },
-                        data = new[]
+                        data = new
                         {
-                            new
-                            {
-                                type = "doesNotExist",
-                                id = 99999999
-                            }
+                            type = "doesNotExist",
+                            id = 99999999
                         }
                     }
                 }
@@ -577,7 +818,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_replace_for_missing_ID_in_data()
+        public async Task Cannot_create_for_missing_ID_in_data()
         {
             // Arrange
             var requestBody = new
@@ -591,14 +832,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = Guid.NewGuid().ToString(),
-                            relationship = "performers"
+                            relationship = "lyric"
                         },
-                        data = new[]
+                        data = new
                         {
-                            new
-                            {
-                                type = "performers"
-                            }
+                            type = "lyrics"
                         }
                     }
                 }
@@ -614,24 +852,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: The 'data[].id' or 'data[].lid' element is required.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: The 'data.id' or 'data.lid' element is required.");
             responseDocument.Errors[0].Detail.Should().BeNull();
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]
-        public async Task Cannot_replace_for_unknown_IDs_in_data()
+        public async Task Cannot_create_for_unknown_ID_in_data()
         {
             // Arrange
-            var existingCompany = _fakers.RecordCompany.Generate();
-            var trackIds = new[] {Guid.NewGuid(), Guid.NewGuid()};
+            var existingTrack = _fakers.MusicTrack.Generate();
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.RecordCompanies.Add(existingCompany);
+                dbContext.MusicTracks.Add(existingTrack);
                 await dbContext.SaveChangesAsync();
             });
-            
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -641,22 +878,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "update",
                         @ref = new
                         {
-                            type = "recordCompanies",
-                            id = existingCompany.StringId,
-                            relationship = "tracks"
+                            type = "musicTracks",
+                            id = existingTrack.StringId,
+                            relationship = "lyric"
                         },
-                        data = new[]
+                        data = new
                         {
-                            new
-                            {
-                                type = "musicTracks",
-                                id = trackIds[0].ToString()
-                            },
-                            new
-                            {
-                                type = "musicTracks",
-                                id = trackIds[1].ToString()
-                            }
+                            type = "lyrics",
+                            id = 99999999
                         }
                     }
                 }
@@ -670,21 +899,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(2);
-
+            responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[0].Title.Should().Be("A related resource does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be($"Related resource of type 'musicTracks' with ID '{trackIds[0]}' in relationship 'tracks' does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be("Related resource of type 'lyrics' with ID '99999999' in relationship 'lyric' does not exist.");
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
-            
-            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[1].Title.Should().Be("A related resource does not exist.");
-            responseDocument.Errors[1].Detail.Should().Be($"Related resource of type 'musicTracks' with ID '{trackIds[1]}' in relationship 'tracks' does not exist.");
-            responseDocument.Errors[1].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]
-        public async Task Cannot_replace_for_relationship_mismatch_between_ref_and_data()
+        public async Task Cannot_create_for_relationship_mismatch_between_ref_and_data()
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
@@ -694,7 +917,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 dbContext.MusicTracks.Add(existingTrack);
                 await dbContext.SaveChangesAsync();
             });
-            
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -706,15 +929,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationship = "performers"
+                            relationship = "lyric"
                         },
-                        data = new[]
+                        data = new
                         {
-                            new
-                            {
-                                type = "playlists",
-                                id = 88888888
-                            }
+                            type = "playlists",
+                            id = 99999999
                         }
                     }
                 }
@@ -730,8 +950,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Resource type mismatch between 'ref.relationship' and 'data[].type' element.");
-            responseDocument.Errors[0].Detail.Should().Be("Expected resource of type 'performers' in 'data[].type', instead of 'playlists'.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Resource type mismatch between 'ref.relationship' and 'data.type' element.");
+            responseDocument.Errors[0].Detail.Should().Be("Expected resource of type 'lyrics' in 'data.type', instead of 'playlists'.");
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
     }
