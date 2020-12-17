@@ -580,7 +580,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
-        public async Task Cannot_update_resource_with_incompatible_attribute_value()
+        public async Task Cannot_create_resource_with_incompatible_attribute_value()
         {
             // Arrange
             var requestBody = new
