@@ -684,7 +684,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Resource type mismatch between 'ref' and 'data' element.");
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Resource type mismatch between 'ref.relationship' and 'data[].type' element.");
             responseDocument.Errors[0].Detail.Should().Be("Expected resource of type 'performers' in 'data[].type', instead of 'playlists'.");
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }

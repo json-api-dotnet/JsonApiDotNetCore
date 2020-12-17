@@ -98,7 +98,7 @@ namespace JsonApiDotNetCore.Serialization
                 }
             }
 
-            if ((operation.Code == AtomicOperationCode.Remove || operation.Code == AtomicOperationCode.Add) && operation.Ref != null)
+            if (operation.Ref != null)
             {
                 if (operation.Ref.Type == null)
                 {
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCore.Serialization
                             atomicOperationIndex: index);
                     }
 
-                    if (relationship is HasOneAttribute)
+                    if (operation.Code != AtomicOperationCode.Update && relationship is HasOneAttribute)
                     {
                         throw new JsonApiSerializationException(
                             $"Only to-many relationships can be targeted in '{operation.Code.ToString().Camelize()}' operations.",
@@ -145,7 +145,7 @@ namespace JsonApiDotNetCore.Serialization
                             atomicOperationIndex: index);
                     }
 
-                    if (operation.Data == null)
+                    if (relationship is HasManyAttribute && operation.ManyData == null)
                     {
                         throw new JsonApiSerializationException(
                             "Expected data[] element for to-many relationship.",
@@ -153,33 +153,31 @@ namespace JsonApiDotNetCore.Serialization
                             atomicOperationIndex: index);
                     }
 
-                    if (!operation.IsManyData)
+                    if (operation.ManyData != null)
                     {
-                        throw new Exception("TODO: data is not an array.");
-                    }
-
-                    foreach (var resourceObject in operation.ManyData)
-                    {
-                        if (resourceObject.Type == null)
+                        foreach (var resourceObject in operation.ManyData)
                         {
-                            throw new JsonApiSerializationException("The 'data[].type' element is required.", null,
-                                atomicOperationIndex: index);
-                        }
+                            if (resourceObject.Type == null)
+                            {
+                                throw new JsonApiSerializationException("The 'data[].type' element is required.", null,
+                                    atomicOperationIndex: index);
+                            }
 
-                        if (resourceObject.Id == null && resourceObject.Lid == null)
-                        {
-                            throw new JsonApiSerializationException("The 'data[].id' or 'data[].lid' element is required.", null,
-                                atomicOperationIndex: index);
-                        }
+                            if (resourceObject.Id == null && resourceObject.Lid == null)
+                            {
+                                throw new JsonApiSerializationException("The 'data[].id' or 'data[].lid' element is required.", null,
+                                    atomicOperationIndex: index);
+                            }
 
-                        var rightResourceContext = GetExistingResourceContext(resourceObject.Type, index);
-                        if (!rightResourceContext.ResourceType.IsAssignableFrom(relationship.RightType))
-                        {
-                            var relationshipRightTypeName = ResourceContextProvider.GetResourceContext(relationship.RightType);
+                            var rightResourceContext = GetExistingResourceContext(resourceObject.Type, index);
+                            if (!rightResourceContext.ResourceType.IsAssignableFrom(relationship.RightType))
+                            {
+                                var relationshipRightTypeName = ResourceContextProvider.GetResourceContext(relationship.RightType);
                             
-                            throw new JsonApiSerializationException("Resource type mismatch between 'ref' and 'data' element.", 
-                                $@"Expected resource of type '{relationshipRightTypeName}' in 'data[].type', instead of '{rightResourceContext.PublicName}'.",
-                                atomicOperationIndex: index);
+                                throw new JsonApiSerializationException("Resource type mismatch between 'ref.relationship' and 'data[].type' element.", 
+                                    $@"Expected resource of type '{relationshipRightTypeName}' in 'data[].type', instead of '{rightResourceContext.PublicName}'.",
+                                    atomicOperationIndex: index);
+                            }
                         }
                     }
                 }

@@ -159,11 +159,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             string resourceName = null;
 
-            if (operation.Code == AtomicOperationCode.Remove)
-            {
-                resourceName = operation.Ref.Type;
-            }
-            else if (operation.Code == AtomicOperationCode.Add && operation.Ref != null)
+            if (operation.Ref != null)
             {
                 resourceName = operation.Ref.Type;
             }

@@ -12,13 +12,13 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updating.Relationships
 {
-    public sealed class AtomicAddToToManyRelationshipTests
+    public sealed class AtomicReplaceToManyRelationshipTests
         : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicAddToToManyRelationshipTests(
+        public AtomicReplaceToManyRelationshipTests(
             IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
@@ -31,15 +31,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_add_to_HasOne_relationship()
+        public async Task Can_clear_HasMany_relationship()
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
-            var existingCompany = _fakers.RecordCompany.Generate();
-
+            existingTrack.Performers = _fakers.Performer.Generate(2);
+            
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AddRange(existingTrack, existingCompany);
+                await dbContext.ClearTableAsync<Performer>();
+                dbContext.MusicTracks.Add(existingTrack);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -49,18 +50,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 {
                     new
                     {
-                        op = "add",
+                        op = "update",
                         @ref = new
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationship = "ownedBy"
+                            relationship = "performers"
                         },
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            id = existingCompany.StringId
-                        }
+                        data = new object[0]
                     }
                 }
             };
@@ -68,19 +65,94 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             var route = "/api/v1/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Only to-many relationships can be targeted in 'add' operations.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'ownedBy' must be a to-many relationship.");
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var trackInDatabase = await dbContext.MusicTracks
+                    .Include(musicTrack => musicTrack.Performers)
+                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+
+                trackInDatabase.Performers.Should().BeEmpty();
+                
+                var performersInDatabase = await dbContext.Performers.ToListAsync();
+                performersInDatabase.Should().HaveCount(2);
+            });
         }
-        
+
         [Fact]
-        public async Task Can_add_to_HasMany_relationship()
+        public async Task Can_clear_HasManyThrough_relationship()
+        {
+            // Arrange
+            var existingPlaylist = _fakers.Playlist.Generate();
+            existingPlaylist.PlaylistMusicTracks = new List<PlaylistMusicTrack>
+            {
+                new PlaylistMusicTrack
+                {
+                    MusicTrack = _fakers.MusicTrack.Generate()
+                },
+                new PlaylistMusicTrack
+                {
+                    MusicTrack = _fakers.MusicTrack.Generate()
+                }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<MusicTrack>();
+                dbContext.Playlists.Add(existingPlaylist);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        @ref = new
+                        {
+                            type = "playlists",
+                            id = existingPlaylist.StringId,
+                            relationship = "tracks"
+                        },
+                        data = new object[0]
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var playlistInDatabase = await dbContext.Playlists
+                    .Include(playlist => playlist.PlaylistMusicTracks)
+                    .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
+                    .FirstAsync(playlist => playlist.Id == existingPlaylist.Id);
+
+                playlistInDatabase.PlaylistMusicTracks.Should().BeEmpty();
+                
+                var tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
+                tracksInDatabase.Should().HaveCount(2);
+            });
+        }
+
+        [Fact]
+        public async Task Can_replace_HasMany_relationship()
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
@@ -90,6 +162,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                await dbContext.ClearTableAsync<Performer>();
                 dbContext.MusicTracks.Add(existingTrack);
                 dbContext.Performers.AddRange(existingPerformers);
                 await dbContext.SaveChangesAsync();
@@ -101,7 +174,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 {
                     new
                     {
-                        op = "add",
+                        op = "update",
                         @ref = new
                         {
                             type = "musicTracks",
@@ -114,20 +187,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             {
                                 type = "performers",
                                 id = existingPerformers[0].StringId
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
+                            },
                             new
                             {
                                 type = "performers",
@@ -154,15 +214,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     .Include(musicTrack => musicTrack.Performers)
                     .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
 
-                trackInDatabase.Performers.Should().HaveCount(3);
-                trackInDatabase.Performers.Should().ContainSingle(performer => performer.Id == existingTrack.Performers[0].Id);
+                trackInDatabase.Performers.Should().HaveCount(2);
                 trackInDatabase.Performers.Should().ContainSingle(performer => performer.Id == existingPerformers[0].Id);
                 trackInDatabase.Performers.Should().ContainSingle(performer => performer.Id == existingPerformers[1].Id);
+                
+                var performersInDatabase = await dbContext.Performers.ToListAsync();
+                performersInDatabase.Should().HaveCount(3);
             });
         }
 
         [Fact]
-        public async Task Can_add_to_HasManyThrough_relationship()
+        public async Task Can_replace_HasManyThrough_relationship()
         {
             // Arrange
             var existingPlaylist = _fakers.Playlist.Generate();
@@ -175,9 +237,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             };
 
             var existingTracks = _fakers.MusicTrack.Generate(2);
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                await dbContext.ClearTableAsync<MusicTrack>();
                 dbContext.Playlists.Add(existingPlaylist);
                 dbContext.MusicTracks.AddRange(existingTracks);
                 await dbContext.SaveChangesAsync();
@@ -189,7 +252,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 {
                     new
                     {
-                        op = "add",
+                        op = "update",
                         @ref = new
                         {
                             type = "playlists",
@@ -202,20 +265,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             {
                                 type = "musicTracks",
                                 id = existingTracks[0].StringId
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            id = existingPlaylist.StringId,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
+                            },
                             new
                             {
                                 type = "musicTracks",
@@ -243,15 +293,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
                     .FirstAsync(playlist => playlist.Id == existingPlaylist.Id);
 
-                playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(3);
-                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingPlaylist.PlaylistMusicTracks[0].MusicTrack.Id);
+                playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(2);
                 playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTracks[0].Id);
                 playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTracks[1].Id);
+                
+                var tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
+                tracksInDatabase.Should().HaveCount(3);
             });
         }
 
         [Fact]
-        public async Task Cannot_add_for_missing_type_in_ref()
+        public async Task Cannot_replace_for_missing_type_in_ref()
         {
             // Arrange
             var requestBody = new
@@ -260,7 +312,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 {
                     new
                     {
-                        op = "add",
+                        op = "update",
                         @ref = new
                         {
                             id = 99999999,
@@ -286,7 +338,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_add_for_unknown_type_in_ref()
+        public async Task Cannot_replace_for_unknown_type_in_ref()
         {
             // Arrange
             var requestBody = new
@@ -295,7 +347,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 {
                     new
                     {
-                        op = "add",
+                        op = "update",
                         @ref = new
                         {
                             type = "doesNotExist",
@@ -322,7 +374,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_add_for_missing_ID_in_ref()
+        public async Task Cannot_replace_for_missing_ID_in_ref()
         {
             // Arrange
             var requestBody = new
@@ -331,7 +383,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 {
                     new
                     {
-                        op = "add",
+                        op = "update",
                         @ref = new
                         {
                             type = "musicTracks",
@@ -357,7 +409,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_add_for_unknown_relationship_in_ref()
+        public async Task Cannot_replace_for_unknown_relationship_in_ref()
         {
             // Arrange
             var requestBody = new
@@ -366,7 +418,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 {
                     new
                     {
-                        op = "add",
+                        op = "update",
                         @ref = new
                         {
                             type = "performers",
@@ -393,7 +445,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
         
         [Fact]
-        public async Task Cannot_add_for_null_data()
+        public async Task Cannot_replace_for_null_data()
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
@@ -410,7 +462,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 {
                     new
                     {
-                        op = "add",
+                        op = "update",
                         @ref = new
                         {
                             id = existingTrack.StringId,
@@ -438,7 +490,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_add_for_missing_type_in_data()
+        public async Task Cannot_replace_for_missing_type_in_data()
         {
             // Arrange
             var requestBody = new
@@ -447,7 +499,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 {
                     new
                     {
-                        op = "add",
+                        op = "update",
                         @ref = new
                         {
                             id = 99999999,
@@ -481,7 +533,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_add_for_unknown_type_in_data()
+        public async Task Cannot_replace_for_unknown_type_in_data()
         {
             // Arrange
             var requestBody = new
@@ -490,7 +542,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 {
                     new
                     {
-                        op = "add",
+                        op = "update",
                         @ref = new
                         {
                             id = Guid.NewGuid().ToString(),
@@ -525,7 +577,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_add_for_missing_ID_in_data()
+        public async Task Cannot_replace_for_missing_ID_in_data()
         {
             // Arrange
             var requestBody = new
@@ -534,7 +586,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 {
                     new
                     {
-                        op = "add",
+                        op = "update",
                         @ref = new
                         {
                             id = Guid.NewGuid().ToString(),
@@ -568,7 +620,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_add_for_unknown_IDs_in_data()
+        public async Task Cannot_replace_for_unknown_IDs_in_data()
         {
             // Arrange
             var existingCompany = _fakers.RecordCompany.Generate();
@@ -586,7 +638,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 {
                     new
                     {
-                        op = "add",
+                        op = "update",
                         @ref = new
                         {
                             id = existingCompany.StringId,
@@ -632,7 +684,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_add_for_relationship_mismatch_between_ref_and_data()
+        public async Task Cannot_replace_for_relationship_mismatch_between_ref_and_data()
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
@@ -649,7 +701,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 {
                     new
                     {
-                        op = "add",
+                        op = "update",
                         @ref = new
                         {
                             id = existingTrack.StringId,
@@ -681,58 +733,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Resource type mismatch between 'ref.relationship' and 'data[].type' element.");
             responseDocument.Errors[0].Detail.Should().Be("Expected resource of type 'performers' in 'data[].type', instead of 'playlists'.");
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
-        }
-
-        [Fact]
-        public async Task Can_add_with_empty_data_array()
-        {
-            // Arrange
-            var existingTrack = _fakers.MusicTrack.Generate();
-            existingTrack.Performers = _fakers.Performer.Generate(1);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.MusicTracks.Add(existingTrack);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "performers"
-                        },
-                        data = new object[0]
-                    }
-                }
-            };
-
-            var route = "/api/v1/operations";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .Include(musicTrack => musicTrack.Performers)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
-
-                trackInDatabase.Performers.Should().HaveCount(1);
-                trackInDatabase.Performers[0].Id.Should().Be(existingTrack.Performers[0].Id);
-            });
         }
     }
 }
