@@ -100,6 +100,12 @@ namespace JsonApiDotNetCore.Serialization
 
             if (operation.Ref != null)
             {
+                if (operation.Code == AtomicOperationCode.Add && operation.Ref.Relationship == null)
+                {
+                    throw new JsonApiSerializationException("The 'ref.relationship' element is required.", null,
+                        atomicOperationIndex: index);
+                }
+
                 if (operation.Ref.Type == null)
                 {
                     throw new JsonApiSerializationException("The 'ref.type' element is required.", null,

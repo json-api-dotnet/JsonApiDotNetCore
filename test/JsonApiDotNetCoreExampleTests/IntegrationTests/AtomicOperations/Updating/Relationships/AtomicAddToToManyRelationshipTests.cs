@@ -425,6 +425,41 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
+        public async Task Cannot_add_for_missing_relationship_in_ref()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        @ref = new
+                        {
+                            id = 99999999,
+                            type = "musicTracks"
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: The 'ref.relationship' element is required.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+        }
+        
+        [Fact]
         public async Task Cannot_add_for_unknown_relationship_in_ref()
         {
             // Arrange
