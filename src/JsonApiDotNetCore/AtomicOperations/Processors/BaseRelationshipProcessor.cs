@@ -1,45 +1,33 @@
-using System;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Middleware;
+using System.Linq;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
-    public abstract class BaseRelationshipProcessor<TResource, TId>
+    public abstract class BaseRelationshipProcessor
     {
-        private readonly IResourceFactory _resourceFactory;
-        protected readonly IJsonApiDeserializer _deserializer;
-        private readonly IJsonApiRequest _request;
-
-        protected BaseRelationshipProcessor(IResourceFactory resourceFactory, IJsonApiDeserializer deserializer,
-            IJsonApiRequest request)
+        protected ISet<IIdentifiable> GetSecondaryResourceIds(OperationContainer operation)
         {
-            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
-            _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
+            var relationship = operation.Request.Relationship;
+            var rightValue = relationship.GetValue(operation.Resource);
+
+            var rightResources = TypeHelper.ExtractResources(rightValue);
+            return rightResources.ToHashSet(IdentifiableComparer.Instance);
         }
 
-        protected TId GetPrimaryId(string stringId)
+        protected object GetSecondaryResourceIdOrIds(OperationContainer operation)
         {
-            IIdentifiable primaryResource = _resourceFactory.CreateInstance(_request.PrimaryResource.ResourceType);
-            primaryResource.StringId = stringId;
+            var relationship = operation.Request.Relationship;
+            var rightValue = relationship.GetValue(operation.Resource);
 
-            return (TId) primaryResource.GetTypedId();
-        }
-
-        protected HashSet<IIdentifiable> GetSecondaryResourceIds(AtomicOperationObject operation)
-        {
-            var secondaryResourceIds = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
-
-            foreach (var resourceObject in operation.ManyData)
+            if (relationship is HasManyAttribute)
             {
-                IIdentifiable rightResource = _deserializer.CreateResourceFromObject(resourceObject);
-                secondaryResourceIds.Add(rightResource);
+                var rightResources = TypeHelper.ExtractResources(rightValue);
+                return rightResources.ToHashSet(IdentifiableComparer.Instance);
             }
 
-            return secondaryResourceIds;
+            return rightValue;
         }
     }
 }

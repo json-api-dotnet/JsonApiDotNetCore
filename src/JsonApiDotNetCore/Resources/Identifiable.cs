@@ -24,6 +24,10 @@ namespace JsonApiDotNetCore.Resources
             set => Id = GetTypedId(value);
         }
 
+        /// <inheritdoc />
+        [NotMapped]
+        public string LocalId { get; set; }
+
         /// <summary>
         /// Converts an outgoing typed resource identifier to string format for use in a JSON:API response.
         /// </summary>

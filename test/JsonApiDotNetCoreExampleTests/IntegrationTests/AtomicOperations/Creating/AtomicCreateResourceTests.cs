@@ -319,7 +319,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             });
         }
 
-        [Fact(Skip = "TODO: Make this test work")]
+        [Fact(Skip = "TODO: @OPS: Make this test work")]
         public async Task Cannot_create_resource_with_client_generated_ID()
         {
             // Arrange
@@ -425,7 +425,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
-        [Fact(Skip = "TODO: Make this test work")]
+        [Fact(Skip = "TODO: @OPS: Make this test work")]
         public async Task Cannot_create_resource_for_missing_type()
         {
             // Arrange
@@ -461,7 +461,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
-        [Fact(Skip = "TODO: Make this test work")]
+        [Fact(Skip = "TODO: @OPS: Make this test work")]
         public async Task Cannot_create_resource_for_unknown_type()
         {
             // Arrange
@@ -495,7 +495,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
         
-        [Fact(Skip = "TODO: Make this test work")]
+        [Fact(Skip = "TODO: @OPS: Make this test work")]
         public async Task Cannot_create_resource_attribute_with_blocked_capability()
         {
             // Arrange
@@ -533,7 +533,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
         
-        [Fact(Skip = "TODO: Make this test work")]
+        [Fact(Skip = "TODO: @OPS: Make this test work")]
         public async Task Cannot_create_resource_with_incompatible_attribute_value()
         {
             // Arrange
@@ -610,12 +610,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                                         type = "lyrics",
                                         id = existingLyric.StringId
                                     }
-                                }, 
+                                },
                                 ownedBy = new
                                 {
                                     data = new
                                     {
-                                        type="recordCompanies",
+                                        type = "recordCompanies",
                                         id = existingCompany.StringId
                                     }
                                 },

@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,7 +37,7 @@ namespace JsonApiDotNetCore.Configuration
             }
 
             var httpContextAccessor = _serviceProvider.GetRequiredService<IHttpContextAccessor>();
-            if (httpContextAccessor.HttpContext.Request.Method == HttpMethods.Patch || request.OperationCode == AtomicOperationCode.Update)
+            if (httpContextAccessor.HttpContext.Request.Method == HttpMethods.Patch || request.OperationKind == OperationKind.UpdateResource)
             {
                 var targetedFields = _serviceProvider.GetRequiredService<ITargetedFields>();
                 return IsFieldTargeted(entry, targetedFields);

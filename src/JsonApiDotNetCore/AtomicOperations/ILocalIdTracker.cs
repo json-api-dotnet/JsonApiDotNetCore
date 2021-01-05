@@ -8,16 +8,16 @@ namespace JsonApiDotNetCore.AtomicOperations
         /// <summary>
         /// Declares a local ID without assigning a server-generated value.
         /// </summary>
-        void Declare(string lid, string type);
+        void Declare(string localId, string resourceType);
 
         /// <summary>
         /// Assigns a server-generated ID value to a previously declared local ID.
         /// </summary>
-        void Assign(string lid, string type, string id);
+        void Assign(string localId, string resourceType, string stringId);
 
         /// <summary>
         /// Gets the server-assigned ID for the specified local ID.
         /// </summary>
-        string GetValue(string lid, string type);
+        string GetValue(string localId, string resourceType);
     }
 }

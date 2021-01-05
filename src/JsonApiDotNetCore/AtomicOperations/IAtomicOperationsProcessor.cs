@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.AtomicOperations
 {
@@ -10,6 +10,6 @@ namespace JsonApiDotNetCore.AtomicOperations
     /// </summary>
     public interface IAtomicOperationsProcessor
     {
-        Task<IList<AtomicResultObject>> ProcessAsync(IList<AtomicOperationObject> operations, CancellationToken cancellationToken);
+        Task<IList<IIdentifiable>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken);
     }
 }

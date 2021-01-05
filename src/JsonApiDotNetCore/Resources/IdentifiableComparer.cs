@@ -4,7 +4,8 @@ using System.Collections.Generic;
 namespace JsonApiDotNetCore.Resources
 {
     /// <summary>
-    /// Compares `IIdentifiable` instances with each other based on their type and <see cref="IIdentifiable.StringId"/>.
+    /// Compares `IIdentifiable` instances with each other based on their type and <see cref="IIdentifiable.StringId"/>,
+    /// falling back to <see cref="IIdentifiable.LocalId"/> when both StringIds are null.
     /// </summary>
     public sealed class IdentifiableComparer : IEqualityComparer<IIdentifiable>
     {
@@ -26,12 +27,18 @@ namespace JsonApiDotNetCore.Resources
                 return false;
             }
 
+            if (x.StringId == null && y.StringId == null)
+            {
+                return x.LocalId == y.LocalId;
+            }
+
             return x.StringId == y.StringId;
         }
 
         public int GetHashCode(IIdentifiable obj)
         {
-            return obj.StringId != null ? HashCode.Combine(obj.GetType(), obj.StringId) : 0;
+            // LocalId is intentionally omitted here, it is okay for hashes to collide.
+            return HashCode.Combine(obj.GetType(), obj.StringId);
         }
     }
 }

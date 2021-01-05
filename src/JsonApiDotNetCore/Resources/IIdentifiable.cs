@@ -10,6 +10,11 @@ namespace JsonApiDotNetCore.Resources
         /// The value for element 'id' in a JSON:API request or response.
         /// </summary>
         string StringId { get; set; }
+
+        /// <summary>
+        /// The value for element 'lid' in a JSON:API request.
+        /// </summary>
+        string LocalId { get; set; }
     }
 
     /// <summary>

@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -22,17 +24,17 @@ namespace JsonApiDotNetCore.Controllers
     public abstract class JsonApiAtomicOperationsController : BaseJsonApiAtomicOperationsController
     {
         protected JsonApiAtomicOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IAtomicOperationsProcessor processor)
-            : base(options, loggerFactory, processor)
+            IAtomicOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
+            : base(options, loggerFactory, processor, request, targetedFields)
         {
         }
 
         /// <inheritdoc />
         [HttpPost]
-        public override async Task<IActionResult> PostOperationsAsync([FromBody] AtomicOperationsDocument document,
+        public override async Task<IActionResult> PostOperationsAsync([FromBody] IList<OperationContainer> operations,
             CancellationToken cancellationToken)
         {
-            return await base.PostOperationsAsync(document, cancellationToken);
+            return await base.PostOperationsAsync(operations, cancellationToken);
         }
     }
 }

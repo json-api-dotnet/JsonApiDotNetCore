@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization
@@ -14,11 +13,5 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         /// <param name="body">The JSON to be deserialized.</param>
         object DeserializeDocument(string body);
-
-        /// <summary>
-        /// Creates an instance of the referenced type in <paramref name="data"/>
-        /// and sets its attributes and relationships
-        /// </summary>
-        IIdentifiable CreateResourceFromObject(ResourceObject data);
     }
 }

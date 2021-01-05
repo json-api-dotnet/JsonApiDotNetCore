@@ -1,10 +1,7 @@
 using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
@@ -21,14 +18,14 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         }
 
         /// <inheritdoc />
-        public async Task<AtomicResultObject> ProcessAsync(AtomicOperationObject operation, CancellationToken cancellationToken)
+        public async Task<IIdentifiable> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
             if (operation == null) throw new ArgumentNullException(nameof(operation));
 
-            var id = (TId) TypeHelper.ConvertType(operation.Ref.Id, typeof(TId));
+            var id = (TId) operation.Resource.GetTypedId();
             await _service.DeleteAsync(id, cancellationToken);
 
-            return new AtomicResultObject();
+            return null;
         }
     }
 

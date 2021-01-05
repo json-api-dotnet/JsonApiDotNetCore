@@ -22,6 +22,8 @@ namespace JsonApiDotNetCore.Serialization
         protected IResourceFactory ResourceFactory { get; }
         protected Document Document { get; set; }
 
+        protected abstract bool AllowLocalIds { get; }
+
         protected BaseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory)
         {
             ResourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
@@ -53,13 +55,13 @@ namespace JsonApiDotNetCore.Serialization
                 if (Document.IsManyData)
                 {
                     return Document.ManyData
-                        .Select(data => ParseResourceObject(data, false))
+                        .Select(ParseResourceObject)
                         .ToHashSet(IdentifiableComparer.Instance);
                 }
 
                 if (Document.SingleData != null)
                 {
-                    return ParseResourceObject(Document.SingleData, false);
+                    return ParseResourceObject(Document.SingleData);
                 }
             }
 
@@ -152,13 +154,13 @@ namespace JsonApiDotNetCore.Serialization
         /// and sets its attributes and relationships.
         /// </summary>
         /// <returns>The parsed resource.</returns>
-        protected IIdentifiable ParseResourceObject(ResourceObject data, bool allowLocalIds)
+        protected IIdentifiable ParseResourceObject(ResourceObject data)
         {
             AssertHasType(data, null);
 
-            if (!allowLocalIds)
+            if (!AllowLocalIds)
             {
-                AssertHasNoLocalId(data);
+                AssertHasNoLid(data);
             }
 
             var resourceContext = GetExistingResourceContext(data.Type);
@@ -168,7 +170,11 @@ namespace JsonApiDotNetCore.Serialization
             resource = SetRelationships(resource, data.Relationships, resourceContext.Relationships);
 
             if (data.Id != null)
+            {
                 resource.StringId = data.Id;
+            }
+
+            resource.LocalId = data.Lid;
 
             return resource;
         }
@@ -234,13 +240,14 @@ namespace JsonApiDotNetCore.Serialization
             if (resourceIdentifierObject != null)
             {
                 AssertHasType(resourceIdentifierObject, relationship);
-                AssertHasId(resourceIdentifierObject, relationship);
+                AssertHasIdOrLid(resourceIdentifierObject, relationship);
 
                 var rightResourceContext = GetExistingResourceContext(resourceIdentifierObject.Type);
                 AssertRightTypeIsCompatible(rightResourceContext, relationship);
 
                 var rightInstance = ResourceFactory.CreateInstance(rightResourceContext.ResourceType);
                 rightInstance.StringId = resourceIdentifierObject.Id;
+                rightInstance.LocalId = resourceIdentifierObject.Lid;
 
                 return rightInstance;
             }
@@ -260,20 +267,36 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        private void AssertHasNoLocalId(ResourceIdentifierObject resourceIdentifierObject)
+        private void AssertHasIdOrLid(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)
+        {
+            if (AllowLocalIds)
+            {
+                bool hasNone = resourceIdentifierObject.Id == null && resourceIdentifierObject.Lid == null;
+                bool hasBoth = resourceIdentifierObject.Id != null && resourceIdentifierObject.Lid != null;
+
+                if (hasNone || hasBoth)
+                {
+                    throw new JsonApiSerializationException("TODO: Request body must include 'id' or 'lid' element.",
+                        $"Expected 'id' or 'lid' element in '{relationship.PublicName}' relationship.");
+                }
+            }
+            else
+            {
+                if (resourceIdentifierObject.Id == null)
+                {
+                    throw new JsonApiSerializationException("Request body must include 'id' element.",
+                        $"Expected 'id' element in '{relationship.PublicName}' relationship.");
+                }
+
+                AssertHasNoLid(resourceIdentifierObject);
+            }
+        }
+
+        private void AssertHasNoLid(ResourceIdentifierObject resourceIdentifierObject)
         {
             if (resourceIdentifierObject.Lid != null)
             {
                 throw new JsonApiSerializationException("Local IDs cannot be used at this endpoint.", null);
-            }
-        }
-
-        private void AssertHasId(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)
-        {
-            if (resourceIdentifierObject.Id == null)
-            {
-                throw new JsonApiSerializationException("Request body must include 'id' element.",
-                    $"Expected 'id' element in '{relationship.PublicName}' relationship.");
             }
         }
 

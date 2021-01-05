@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -22,6 +23,8 @@ namespace JsonApiDotNetCore.Serialization
         private readonly ITargetedFields  _targetedFields;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IJsonApiRequest _request;
+
+        protected override bool AllowLocalIds => _request.Kind == EndpointKind.AtomicOperations;
 
         public RequestDeserializer(
             IResourceContextProvider resourceContextProvider,
@@ -63,6 +66,8 @@ namespace JsonApiDotNetCore.Serialization
             JToken bodyToken = LoadJToken(body);
             var document = bodyToken.ToObject<AtomicOperationsDocument>();
 
+            var operations = new List<OperationContainer>();
+
             if (document?.Operations == null || !document.Operations.Any())
             {
                 throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
@@ -74,14 +79,18 @@ namespace JsonApiDotNetCore.Serialization
             int index = 0;
             foreach (var operation in document.Operations)
             {
-                ValidateOperation(operation, index);
+                var container = DeserializeOperation(operation, index);
+                operations.Add(container);
+
                 index++;
             }
 
-            return document;
+            return operations;
         }
 
-        private void ValidateOperation(AtomicOperationObject operation, int index)
+        // TODO: Cleanup code.
+
+        private OperationContainer DeserializeOperation(AtomicOperationObject operation, int index)
         {
             if (operation.Href != null)
             {
@@ -223,13 +232,122 @@ namespace JsonApiDotNetCore.Serialization
                     }
                 }
             }
+
+            return ToOperationContainer(operation);
         }
 
-        public IIdentifiable CreateResourceFromObject(ResourceObject data)
+        private OperationContainer ToOperationContainer(AtomicOperationObject operation)
         {
-            if (data == null) throw new ArgumentNullException(nameof(data));
+            var operationKind = GetOperationKind(operation);
 
-            return ParseResourceObject(data, true);
+            var resourceName = operation.GetResourceTypeName();
+            var primaryResourceContext = ResourceContextProvider.GetResourceContext(resourceName);
+
+            _targetedFields.Attributes.Clear();
+            _targetedFields.Relationships.Clear();
+
+            IIdentifiable resource;
+
+            switch (operationKind)
+            {
+                case OperationKind.CreateResource:
+                case OperationKind.UpdateResource:
+                {
+                    resource = ParseResourceObject(operation.SingleData);
+                    break;
+                }
+                case OperationKind.DeleteResource:
+                case OperationKind.SetRelationship:
+                case OperationKind.AddToRelationship:
+                case OperationKind.RemoveFromRelationship:
+                {
+                    resource = ResourceFactory.CreateInstance(primaryResourceContext.ResourceType);
+                    resource.StringId = operation.Ref.Id;
+                    resource.LocalId = operation.Ref.Lid;
+                    break;
+                }
+                default:
+                {
+                    throw new NotSupportedException($"Unknown operation kind '{operationKind}'.");
+                }
+            }
+
+            var request = new JsonApiRequest
+            {
+                Kind = EndpointKind.AtomicOperations,
+                OperationKind = operationKind,
+                BasePath = "TODO: Set this...",
+                PrimaryResource = primaryResourceContext
+            };
+
+            if (operation.Ref != null)
+            {
+                request.PrimaryId = operation.Ref.Id;
+
+                if (operation.Ref.Relationship != null)
+                {
+                    var relationship = primaryResourceContext.Relationships.SingleOrDefault(r => r.PublicName == operation.Ref.Relationship);
+                    if (relationship == null)
+                    {
+                        throw new InvalidOperationException("TODO: @OPS: Relationship does not exist.");
+                    }
+
+                    var secondaryResourceContext = ResourceContextProvider.GetResourceContext(relationship.RightType);
+                    if (secondaryResourceContext == null)
+                    {
+                        throw new InvalidOperationException("TODO: @OPS: Secondary resource type does not exist.");
+                    }
+
+                    request.SecondaryResource = secondaryResourceContext;
+                    request.Relationship = relationship;
+                    request.IsCollection = relationship is HasManyAttribute;
+
+                    _targetedFields.Relationships.Add(relationship);
+
+                    if (operation.SingleData != null)
+                    {
+                        var rightResource = ParseResourceObject(operation.SingleData);
+                        relationship.SetValue(resource, rightResource);
+                    }
+                    else if (operation.ManyData != null)
+                    {
+                        var secondaryResources = operation.ManyData.Select(ParseResourceObject).ToArray();
+                        var rightResources = TypeHelper.CopyToTypedCollection(secondaryResources, relationship.Property.PropertyType);
+                        relationship.SetValue(resource, rightResources);
+                    }
+                }
+            }
+
+            var targetedFields = new TargetedFields
+            {
+                Attributes = _targetedFields.Attributes.ToHashSet(),
+                Relationships = _targetedFields.Relationships.ToHashSet()
+            };
+
+            return new OperationContainer(operationKind, resource, targetedFields, request);
+        }
+
+        private static OperationKind GetOperationKind(AtomicOperationObject operation)
+        {
+            switch (operation.Code)
+            {
+                case AtomicOperationCode.Add:
+                {
+                    return operation.Ref != null ? OperationKind.AddToRelationship : OperationKind.CreateResource;
+                }
+                case AtomicOperationCode.Update:
+                {
+                    return operation.Ref?.Relationship != null ? OperationKind.SetRelationship : OperationKind.UpdateResource;
+                }
+                case AtomicOperationCode.Remove:
+                {
+                    return operation.Ref.Relationship != null ? OperationKind.RemoveFromRelationship : OperationKind.DeleteResource;
+                }
+                default:
+                {
+                    throw new NotSupportedException($"Unknown operation code '{operation.Code}'.");
+                }
+            }
         }
 
         private void AssertResourceIdIsNotTargeted()

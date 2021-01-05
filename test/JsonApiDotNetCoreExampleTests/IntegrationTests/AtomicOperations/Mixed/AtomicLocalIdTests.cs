@@ -1441,7 +1441,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             var existingPerformer = _fakers.Performer.Generate();
 
             var newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            var newArtistName = _fakers.Performer.Generate().ArtistName;
+            var newArtistName1 = _fakers.Performer.Generate().ArtistName;
+            var newArtistName2 = _fakers.Performer.Generate().ArtistName;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1450,7 +1451,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             });
 
             const string trackLocalId = "track-1";
-            const string performerLocalId = "performer-1";
+            const string performerLocalId1 = "performer-1";
+            const string performerLocalId2 = "performer-2";
 
             var requestBody = new
             {
@@ -1462,10 +1464,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
                         data = new
                         {
                             type = "performers",
-                            lid = performerLocalId,
+                            lid = performerLocalId1,
                             attributes = new
                             {
-                                artistName = newArtistName
+                                artistName = newArtistName1
+                            }
+                        }
+                    },
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "performers",
+                            lid = performerLocalId2,
+                            attributes = new
+                            {
+                                artistName = newArtistName2
                             }
                         }
                     },
@@ -1494,7 +1509,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
                                         new
                                         {
                                             type = "performers",
-                                            lid = performerLocalId
+                                            lid = performerLocalId1
+                                        },
+                                        new
+                                        {
+                                            type = "performers",
+                                            lid = performerLocalId2
                                         }
                                     }
                                 }
@@ -1515,7 +1535,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
                             new
                             {
                                 type = "performers",
-                                lid = performerLocalId
+                                lid = performerLocalId1
+                            },
+                            new
+                            {
+                                type = "performers",
+                                lid = performerLocalId2
                             }
                         }
                     }
@@ -1530,21 +1555,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(3);
+            responseDocument.Results.Should().HaveCount(4);
 
             responseDocument.Results[0].SingleData.Should().NotBeNull();
             responseDocument.Results[0].SingleData.Type.Should().Be("performers");
             responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["artistName"].Should().Be(newArtistName);
+            responseDocument.Results[0].SingleData.Attributes["artistName"].Should().Be(newArtistName1);
 
             responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("musicTracks");
+            responseDocument.Results[1].SingleData.Type.Should().Be("performers");
             responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[1].SingleData.Attributes["artistName"].Should().Be(newArtistName2);
 
-            responseDocument.Results[2].Data.Should().BeNull();
+            responseDocument.Results[2].SingleData.Should().NotBeNull();
+            responseDocument.Results[2].SingleData.Type.Should().Be("musicTracks");
+            responseDocument.Results[2].SingleData.Lid.Should().BeNull();
+            responseDocument.Results[2].SingleData.Attributes["title"].Should().Be(newTrackTitle);
 
-            var newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
+            responseDocument.Results[3].Data.Should().BeNull();
+
+            var newTrackId = Guid.Parse(responseDocument.Results[2].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

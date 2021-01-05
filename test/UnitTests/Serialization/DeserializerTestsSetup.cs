@@ -20,6 +20,8 @@ namespace UnitTests.Serialization
         }
         protected sealed class TestDeserializer : BaseDeserializer
         {
+            protected override bool AllowLocalIds => false;
+
             public TestDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory) : base(resourceGraph, resourceFactory) { }
 
             public object Deserialize(string body)

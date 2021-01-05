@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Serialization.Objects;
 
@@ -23,12 +24,12 @@ namespace JsonApiDotNetCore.Serialization.Building
                 return false;
             }
 
-            return x.Id == y.Id && x.Type == y.Type;
+            return x.Type == y.Type && x.Id == y.Id && x.Lid == y.Lid;
         }
 
         public int GetHashCode(ResourceIdentifierObject obj)
         {
-            return obj.GetHashCode();
+            return HashCode.Combine(obj.Type, obj.Id, obj.Lid);
         }
     }
 }

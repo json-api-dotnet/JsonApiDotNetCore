@@ -1,6 +1,5 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Middleware
 {
@@ -62,6 +61,11 @@ namespace JsonApiDotNetCore.Middleware
         /// <summary>
         /// In case of an atomic:operations request, this indicates the operation currently being processed.
         /// </summary>
-        AtomicOperationCode? OperationCode { get; }
+        OperationKind? OperationKind { get; }
+
+        /// <summary>
+        /// Performs a shallow copy.
+        /// </summary>
+        void CopyFrom(IJsonApiRequest other);
     }
 }

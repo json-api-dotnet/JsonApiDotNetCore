@@ -1,10 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
@@ -15,41 +12,27 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     /// <typeparam name="TResource">The resource type.</typeparam>
     /// <typeparam name="TId">The resource identifier type.</typeparam>
     public class SetRelationshipProcessor<TResource, TId> 
-        : BaseRelationshipProcessor<TResource, TId>, ISetRelationshipProcessor<TResource, TId>
+        : BaseRelationshipProcessor, ISetRelationshipProcessor<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
         private readonly ISetRelationshipService<TResource, TId> _service;
-        private readonly IJsonApiRequest _request;
 
-        public SetRelationshipProcessor(ISetRelationshipService<TResource, TId> service,
-            IResourceFactory resourceFactory, IJsonApiRequest request, IJsonApiDeserializer deserializer)
-            : base(resourceFactory, deserializer, request)
+        public SetRelationshipProcessor(ISetRelationshipService<TResource, TId> service)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
         }
 
         /// <inheritdoc />
-        public async Task<AtomicResultObject> ProcessAsync(AtomicOperationObject operation, CancellationToken cancellationToken)
+        public async Task<IIdentifiable> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
             if (operation == null) throw new ArgumentNullException(nameof(operation));
 
-            var primaryId = GetPrimaryId(operation.Ref.Id);
-            object relationshipValueToAssign = null;
+            var primaryId = (TId) operation.Resource.GetTypedId();
+            object secondaryResourceIds = GetSecondaryResourceIdOrIds(operation);
 
-            if (operation.SingleData != null)
-            {
-                relationshipValueToAssign = _deserializer.CreateResourceFromObject(operation.SingleData);
-            }
+            await _service.SetRelationshipAsync(primaryId, operation.Request.Relationship.PublicName, secondaryResourceIds, cancellationToken);
 
-            if (operation.ManyData != null)
-            {
-                relationshipValueToAssign = GetSecondaryResourceIds(operation);
-            }
-
-            await _service.SetRelationshipAsync(primaryId, _request.Relationship.PublicName, relationshipValueToAssign, cancellationToken);
-
-            return new AtomicResultObject();
+            return null;
         }
     }
 
@@ -61,9 +44,8 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         : SetRelationshipProcessor<TResource, int>, IUpdateProcessor<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public SetRelationshipProcessor(ISetRelationshipService<TResource> service,
-            IResourceFactory resourceFactory, IJsonApiRequest request, IJsonApiDeserializer deserializer)
-            : base(service, resourceFactory, request, deserializer)
+        public SetRelationshipProcessor(ISetRelationshipService<TResource> service)
+            : base(service)
         {
         }
     }

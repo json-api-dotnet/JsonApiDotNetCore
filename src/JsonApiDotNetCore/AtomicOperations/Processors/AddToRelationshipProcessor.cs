@@ -1,10 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
@@ -15,31 +12,27 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     /// <typeparam name="TResource">The resource type.</typeparam>
     /// <typeparam name="TId">The resource identifier type.</typeparam>
     public class AddToRelationshipProcessor<TResource, TId>
-        : BaseRelationshipProcessor<TResource, TId>, IAddToRelationshipProcessor<TResource, TId>
+        : BaseRelationshipProcessor, IAddToRelationshipProcessor<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
         private readonly IAddToRelationshipService<TResource, TId> _service;
-        private readonly IJsonApiRequest _request;
 
-        public AddToRelationshipProcessor(IAddToRelationshipService<TResource, TId> service,
-            IResourceFactory resourceFactory, IJsonApiRequest request, IJsonApiDeserializer deserializer)
-            : base(resourceFactory, deserializer, request)
+        public AddToRelationshipProcessor(IAddToRelationshipService<TResource, TId> service)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
         }
 
         /// <inheritdoc />
-        public async Task<AtomicResultObject> ProcessAsync(AtomicOperationObject operation, CancellationToken cancellationToken)
+        public async Task<IIdentifiable> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
             if (operation == null) throw new ArgumentNullException(nameof(operation));
 
-            var primaryId = GetPrimaryId(operation.Ref.Id);
+            var primaryId = (TId) operation.Resource.GetTypedId();
             var secondaryResourceIds = GetSecondaryResourceIds(operation);
 
-            await _service.AddToToManyRelationshipAsync(primaryId, _request.Relationship.PublicName, secondaryResourceIds, cancellationToken);
+            await _service.AddToToManyRelationshipAsync(primaryId, operation.Request.Relationship.PublicName, secondaryResourceIds, cancellationToken);
 
-            return new AtomicResultObject();
+            return null;
         }
     }
 
@@ -51,9 +44,8 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         : AddToRelationshipProcessor<TResource, int>, IAddToRelationshipProcessor<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public AddToRelationshipProcessor(IAddToRelationshipService<TResource> service,
-            IResourceFactory resourceFactory, IJsonApiRequest request, IJsonApiDeserializer deserializer)
-            : base(service, resourceFactory, request, deserializer)
+        public AddToRelationshipProcessor(IAddToRelationshipService<TResource> service)
+            : base(service)
         {
         }
     }

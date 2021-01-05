@@ -13,6 +13,8 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
     /// </summary>
     public class ResponseDeserializer : BaseDeserializer, IResponseDeserializer
     {
+        protected override bool AllowLocalIds => false;
+
         public ResponseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory) : base(resourceContextProvider, resourceFactory) { }
 
         /// <inheritdoc />

@@ -5,15 +5,11 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.AtomicOperations
@@ -22,51 +18,41 @@ namespace JsonApiDotNetCore.AtomicOperations
     public class AtomicOperationsProcessor : IAtomicOperationsProcessor
     {
         private readonly IAtomicOperationProcessorResolver _resolver;
-        private readonly IJsonApiOptions _options;
         private readonly ILocalIdTracker _localIdTracker;
-        private readonly DbContext _dbContext;
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceContextProvider _resourceContextProvider;
-        private readonly IObjectModelValidator _validator;
-        private readonly IJsonApiDeserializer _deserializer;
+        private readonly DbContext _dbContext;
 
-        public AtomicOperationsProcessor(IAtomicOperationProcessorResolver resolver, IJsonApiOptions options,
+        public AtomicOperationsProcessor(IAtomicOperationProcessorResolver resolver,
             ILocalIdTracker localIdTracker, IJsonApiRequest request, ITargetedFields targetedFields,
-            IResourceContextProvider resourceContextProvider, IEnumerable<IDbContextResolver> dbContextResolvers,
-            IObjectModelValidator validator, IJsonApiDeserializer deserializer)
+            IResourceContextProvider resourceContextProvider, IEnumerable<IDbContextResolver> dbContextResolvers)
         {
             if (dbContextResolvers == null) throw new ArgumentNullException(nameof(dbContextResolvers));
 
             _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
             _localIdTracker = localIdTracker ?? throw new ArgumentNullException(nameof(localIdTracker));
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
-            _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
 
             var resolvers = dbContextResolvers.ToArray();
             if (resolvers.Length != 1)
             {
                 throw new InvalidOperationException(
-                    "TODO: At least one DbContext is required for atomic operations. Multiple DbContexts are currently not supported.");
+                    "TODO: @OPS: At least one DbContext is required for atomic operations. Multiple DbContexts are currently not supported.");
             }
 
             _dbContext = resolvers[0].GetContext();
         }
 
-        public async Task<IList<AtomicResultObject>> ProcessAsync(IList<AtomicOperationObject> operations, CancellationToken cancellationToken)
+        public async Task<IList<IIdentifiable>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
         {
             if (operations == null) throw new ArgumentNullException(nameof(operations));
 
-            if (_options.ValidateModelState)
-            {
-                ValidateModelState(operations);
-            }
+            // TODO: @OPS: Consider to validate local:id usage upfront.
 
-            var results = new List<AtomicResultObject>();
+            var results = new List<IIdentifiable>();
 
             await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
             try
@@ -120,217 +106,58 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
         }
 
-        private void ValidateModelState(IEnumerable<AtomicOperationObject> operations)
-        {
-            var violations = new List<ModelStateViolation>();
-
-            int index = 0;
-            foreach (var operation in operations)
-            {
-                if (operation.Ref?.Relationship == null && operation.SingleData != null)
-                {
-                    PrepareForOperation(operation);
-
-                    var validationContext = new ActionContext();
-
-                    var model = _deserializer.CreateResourceFromObject(operation.SingleData);
-                    _validator.Validate(validationContext, null, string.Empty, model);
-
-                    if (!validationContext.ModelState.IsValid)
-                    {
-                        foreach (var (key, entry) in validationContext.ModelState)
-                        {
-                            foreach (var error in entry.Errors)
-                            {
-                                var violation = new ModelStateViolation($"/atomic:operations[{index}]/data/attributes/", key, model.GetType(), error);
-                                violations.Add(violation);
-                            }
-                        }
-                    }
-                }
-
-                index++;
-            }
-
-            if (violations.Any())
-            {
-                var namingStrategy = _options.SerializerContractResolver.NamingStrategy;
-                throw new InvalidModelStateException(violations, _options.IncludeExceptionStackTraceInErrors, namingStrategy);
-            }
-        }
-
-        private async Task<AtomicResultObject> ProcessOperation(AtomicOperationObject operation, CancellationToken cancellationToken)
+        private async Task<IIdentifiable> ProcessOperation(OperationContainer operation, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            string resourceName = null;
+            TrackLocalIds(operation);
 
-            if (operation.Ref != null)
-            {
-                resourceName = operation.Ref.Type;
-            }
-            else
-            {
-                if (operation.SingleData != null)
-                {
-                    resourceName = operation.SingleData.Type;
-                    if (resourceName == null)
-                    {
-                        throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                        {
-                            Title = "The data.type element is required."
-                        });
-                    }
-                }
-                else if (operation.ManyData != null && operation.ManyData.Any())
-                {
-                    foreach (var resourceObject in operation.ManyData)
-                    {
-                        resourceName = resourceObject.Type;
-                        if (resourceName == null)
-                        {
-                            throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                            {
-                                Title = "The data[].type element is required."
-                            });
-                        }
-                        
-                        // TODO: Verify all are of the same (or compatible) type.
-                    }
-                }
-            }
-
-            if (resourceName == null)
-            {
-                throw new InvalidOperationException("TODO: Failed to determine targeted resource.");
-            }
+            _targetedFields.Attributes = operation.TargetedFields.Attributes;
+            _targetedFields.Relationships = operation.TargetedFields.Relationships;
+                
+            _request.CopyFrom(operation.Request);
             
-            bool isResourceAdd = operation.Code == AtomicOperationCode.Add && operation.Ref == null;
-
-            if (isResourceAdd && operation.SingleData?.Lid != null)
-            {
-                _localIdTracker.Declare(operation.SingleData.Lid, operation.SingleData.Type);
-            }
-
-            ReplaceLocalIdsInOperationObject(operation, isResourceAdd);
-
-            var resourceContext = _resourceContextProvider.GetResourceContext(resourceName);
-            if (resourceContext == null)
-            {
-                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                {
-                    Title = "Request body includes unknown resource type.",
-                    Detail = $"Resource type '{resourceName}' does not exist."
-                });
-            }
-
-            PrepareForOperation(operation);
-
             var processor = _resolver.ResolveProcessor(operation);
             return await processor.ProcessAsync(operation, cancellationToken);
         }
 
-        private void PrepareForOperation(AtomicOperationObject operation)
+        private void TrackLocalIds(OperationContainer operation)
         {
-            _targetedFields.Attributes.Clear();
-            _targetedFields.Relationships.Clear();
-
-            var resourceName = operation.GetResourceTypeName();
-            var primaryResourceContext = _resourceContextProvider.GetResourceContext(resourceName);
-
-            ((JsonApiRequest) _request).OperationCode = operation.Code;
-            ((JsonApiRequest)_request).PrimaryResource = primaryResourceContext;
-
-            if (operation.Ref != null)
+            if (operation.Kind == OperationKind.CreateResource)
             {
-                ((JsonApiRequest)_request).PrimaryId = operation.Ref.Id;
-
-                if (operation.Ref?.Relationship != null)
-                {
-                    var relationship = primaryResourceContext.Relationships.SingleOrDefault(relationship => relationship.PublicName == operation.Ref.Relationship);
-                    if (relationship == null)
-                    {
-                        throw new InvalidOperationException("TODO: Relationship does not exist.");
-                    }
-
-                    var secondaryResource = _resourceContextProvider.GetResourceContext(relationship.RightType);
-                    if (secondaryResource == null)
-                    {
-                        throw new InvalidOperationException("TODO: Secondary resource does not exist.");
-                    }
-
-                    ((JsonApiRequest)_request).Relationship = relationship;
-                    ((JsonApiRequest)_request).SecondaryResource = secondaryResource;
-
-                    _targetedFields.Relationships.Add(relationship);
-                }
+                DeclareLocalId(operation.Resource);
             }
             else
             {
-                ((JsonApiRequest)_request).PrimaryId = null;
-                ((JsonApiRequest)_request).Relationship = null;
-                ((JsonApiRequest)_request).SecondaryResource = null;
-            }
-        }
-
-        private void ReplaceLocalIdsInOperationObject(AtomicOperationObject operation, bool isResourceAdd)
-        {
-            if (operation.Ref != null)
-            {
-                ReplaceLocalIdInResourceIdentifierObject(operation.Ref);
+                AssignStringId(operation.Resource);
             }
 
-            if (operation.SingleData != null)
+            foreach (var relationship in operation.TargetedFields.Relationships)
             {
-                ReplaceLocalIdsInResourceObject(operation.SingleData, isResourceAdd);
-            }
+                var rightValue = relationship.GetValue(operation.Resource);
 
-            if (operation.ManyData != null)
-            {
-                foreach (var resourceObject in operation.ManyData)
+                foreach (var rightResource in TypeHelper.ExtractResources(rightValue))
                 {
-                    ReplaceLocalIdsInResourceObject(resourceObject, isResourceAdd);
+                    AssignStringId(rightResource);
                 }
             }
         }
 
-        private void ReplaceLocalIdsInResourceObject(ResourceObject resourceObject, bool isResourceAdd)
+        private void DeclareLocalId(IIdentifiable resource)
         {
-            if (!isResourceAdd)
+            if (resource.LocalId != null)
             {
-                ReplaceLocalIdInResourceIdentifierObject(resourceObject);
-            }
-
-            if (resourceObject.Relationships != null)
-            {
-                foreach (var relationshipEntry in resourceObject.Relationships.Values)
-                {
-                    if (relationshipEntry.IsManyData)
-                    {
-                        foreach (var relationship in relationshipEntry.ManyData)
-                        {
-                            ReplaceLocalIdInResourceIdentifierObject(relationship);
-                        }
-                    }
-                    else
-                    {
-                        var relationship = relationshipEntry.SingleData;
-
-                        if (relationship != null)
-                        {
-                            ReplaceLocalIdInResourceIdentifierObject(relationship);
-                        }
-                    }
-                }
+                var resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
+                _localIdTracker.Declare(resource.LocalId, resourceContext.PublicName);
             }
         }
 
-        private void ReplaceLocalIdInResourceIdentifierObject(ResourceIdentifierObject resourceIdentifierObject)
+        private void AssignStringId(IIdentifiable resource)
         {
-            if (resourceIdentifierObject.Lid != null)
+            if (resource.LocalId != null)
             {
-                resourceIdentifierObject.Id =
-                    _localIdTracker.GetValue(resourceIdentifierObject.Lid, resourceIdentifierObject.Type);
+                var resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
+                resource.StringId = _localIdTracker.GetValue(resource.LocalId, resourceContext.PublicName);
             }
         }
     }

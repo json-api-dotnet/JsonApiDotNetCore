@@ -9,98 +9,108 @@ namespace JsonApiDotNetCore.AtomicOperations
     /// <inheritdoc />
     public sealed class LocalIdTracker : ILocalIdTracker
     {
-        private readonly IDictionary<string, LocalItem> _idsTracked = new Dictionary<string, LocalItem>();
+        private readonly IDictionary<string, LocalIdState> _idsTracked = new Dictionary<string, LocalIdState>();
 
         /// <inheritdoc />
-        public void Declare(string lid, string type)
+        public void Declare(string localId, string resourceType)
         {
-            AssertIsNotDeclared(lid);
+            if (localId == null) throw new ArgumentNullException(nameof(localId));
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
-            _idsTracked[lid] = new LocalItem(type);
+            AssertIsNotDeclared(localId);
+
+            _idsTracked[localId] = new LocalIdState(resourceType);
         }
 
-        private void AssertIsNotDeclared(string lid)
+        private void AssertIsNotDeclared(string localId)
         {
-            if (_idsTracked.ContainsKey(lid))
+            if (_idsTracked.ContainsKey(localId))
             {
                 throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
                 {
                     Title = "Another local ID with the same name is already defined at this point.",
-                    Detail = $"Another local ID with name '{lid}' is already defined at this point."
+                    Detail = $"Another local ID with name '{localId}' is already defined at this point."
                 });
             }
         }
 
         /// <inheritdoc />
-        public void Assign(string lid, string type, string id)
+        public void Assign(string localId, string resourceType, string stringId)
         {
-            AssertIsDeclared(lid);
+            if (localId == null) throw new ArgumentNullException(nameof(localId));
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            if (stringId == null) throw new ArgumentNullException(nameof(stringId));
 
-            var item = _idsTracked[lid];
+            AssertIsDeclared(localId);
 
-            AssertSameResourceType(type, item.Type, lid);
+            var item = _idsTracked[localId];
 
-            if (item.IdValue != null)
+            AssertSameResourceType(resourceType, item.ResourceType, localId);
+
+            if (item.ServerId != null)
             {
-                throw new InvalidOperationException($"Cannot reassign to existing local ID '{lid}'.");
+                throw new InvalidOperationException($"Cannot reassign to existing local ID '{localId}'.");
             }
 
-            item.IdValue = id;
+            item.ServerId = stringId;
         }
 
         /// <inheritdoc />
-        public string GetValue(string lid, string type)
+        public string GetValue(string localId, string resourceType)
         {
-            AssertIsDeclared(lid);
+            if (localId == null) throw new ArgumentNullException(nameof(localId));
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
-            var item = _idsTracked[lid];
+            AssertIsDeclared(localId);
 
-            AssertSameResourceType(type, item.Type, lid);
+            var item = _idsTracked[localId];
 
-            if (item.IdValue == null)
+            AssertSameResourceType(resourceType, item.ResourceType, localId);
+
+            if (item.ServerId == null)
             {
                 throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
                 {
                     Title = "Local ID cannot be both defined and used within the same operation.",
-                    Detail = $"Local ID '{lid}' cannot be both defined and used within the same operation."
+                    Detail = $"Local ID '{localId}' cannot be both defined and used within the same operation."
                 });
             }
 
-            return item.IdValue;
+            return item.ServerId;
         }
 
-        private void AssertIsDeclared(string lid)
+        private void AssertIsDeclared(string localId)
         {
-            if (!_idsTracked.ContainsKey(lid))
+            if (!_idsTracked.ContainsKey(localId))
             {
                 throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
                 {
                     Title = "Server-generated value for local ID is not available at this point.",
-                    Detail = $"Server-generated value for local ID '{lid}' is not available at this point."
+                    Detail = $"Server-generated value for local ID '{localId}' is not available at this point."
                 });
             }
         }
 
-        private static void AssertSameResourceType(string currentType, string declaredType, string lid)
+        private static void AssertSameResourceType(string currentType, string declaredType, string localId)
         {
             if (declaredType != currentType)
             {
                 throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
                 {
                     Title = "Type mismatch in local ID usage.",
-                    Detail = $"Local ID '{lid}' belongs to resource type '{declaredType}' instead of '{currentType}'."
+                    Detail = $"Local ID '{localId}' belongs to resource type '{declaredType}' instead of '{currentType}'."
                 });
             }
         }
 
-        private sealed class LocalItem
+        private sealed class LocalIdState
         {
-            public string Type { get; }
-            public string IdValue { get; set; }
+            public string ResourceType { get; }
+            public string ServerId { get; set; }
 
-            public LocalItem(string type)
+            public LocalIdState(string resourceType)
             {
-                Type = type;
+                ResourceType = resourceType;
             }
         }
     }
