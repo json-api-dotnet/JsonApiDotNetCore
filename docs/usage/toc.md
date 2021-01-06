@@ -2,6 +2,7 @@
 ## [Attributes](resources/attributes.md)
 ## [Relationships](resources/relationships.md)
 ## [Resource Definitions](resources/resource-definitions.md)
+## [Hooks](resources/hooks.md)
 
 # Reading data
 ## [Filtering](reading/filtering.md)
