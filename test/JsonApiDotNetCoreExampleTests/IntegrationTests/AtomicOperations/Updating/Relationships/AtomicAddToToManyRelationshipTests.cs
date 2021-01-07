@@ -388,6 +388,58 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
+        public async Task Cannot_add_for_unknown_ID_in_ref()
+        {
+            // Arrange
+            var existingTrack = _fakers.MusicTrack.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.MusicTracks.Add(existingTrack);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        @ref = new
+                        {
+                            type = "recordCompanies",
+                            id = 9999,
+                            relationship = "tracks"
+                        },
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "musicTracks",
+                                id = existingTrack.StringId
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[0].Title.Should().Be("The requested resource does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'recordCompanies' with ID '9999' does not exist.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+        }
+
+        [Fact]
         public async Task Cannot_add_for_ID_and_local_ID_in_ref()
         {
             // Arrange

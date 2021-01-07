@@ -444,7 +444,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
             responseDocument.Errors[0].Detail.Should().Be("Relationship 'performers' contains incompatible resource type 'playlists'.");
@@ -565,7 +564,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
             responseDocument.Errors[0].Detail.Should().Be("Expected data[] element for 'performers' relationship.");

@@ -680,6 +680,57 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
+        public async Task Cannot_create_for_unknown_ID_in_ref()
+        {
+            // Arrange
+            string missingTrackId = Guid.NewGuid().ToString();
+
+            var existingLyric = _fakers.Lyric.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Lyrics.Add(existingLyric);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        @ref = new
+                        {
+                            type = "musicTracks",
+                            id = missingTrackId,
+                            relationship = "lyric"
+                        },
+                        data = new
+                        {
+                            type = "lyrics",
+                            id = existingLyric.StringId
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
+            responseDocument.Errors[0].Title.Should().Be("The requested resource does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be($"Resource of type 'musicTracks' with ID '{missingTrackId}' does not exist.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+        }
+
+        [Fact]
         public async Task Cannot_create_for_ID_and_local_ID_in_ref()
         {
             // Arrange
