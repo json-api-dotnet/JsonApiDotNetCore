@@ -129,59 +129,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
                 tracksInDatabase.Should().BeEmpty();
             });
         }
-        
-        [Fact]
-        public async Task Can_delete_resource_with_OneToOne_relationship_from_dependent_side()
-        {
-            // Arrange
-            var existingTrack = _fakers.MusicTrack.Generate();
-            existingTrack.Lyric = _fakers.Lyric.Generate();
-            
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.MusicTracks.Add(existingTrack);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId
-                        }
-                    }
-                }
-            };
-
-            var route = "/api/v1/operations";
-
-            // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                var tracksInDatabase = await dbContext.MusicTracks
-                    .FirstOrDefaultAsync(musicTrack => musicTrack.Id == existingTrack.Id);
-                
-                tracksInDatabase.Should().BeNull();
-
-                var lyricInDatabase = await dbContext.Lyrics
-                    .FirstAsync(lyric => lyric.Id == existingTrack.Lyric.Id);
-
-                lyricInDatabase.Track.Should().BeNull();
-            });
-        }
 
         [Fact]
         public async Task Can_delete_resource_with_OneToOne_relationship_from_principal_side()
@@ -233,6 +180,59 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
                     .FirstAsync(musicTrack => musicTrack.Id == existingLyric.Track.Id);
 
                 trackInDatabase.Lyric.Should().BeNull();
+            });
+        }
+
+        [Fact]
+        public async Task Can_delete_resource_with_OneToOne_relationship_from_dependent_side()
+        {
+            // Arrange
+            var existingTrack = _fakers.MusicTrack.Generate();
+            existingTrack.Lyric = _fakers.Lyric.Generate();
+            
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.MusicTracks.Add(existingTrack);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "remove",
+                        @ref = new
+                        {
+                            type = "musicTracks",
+                            id = existingTrack.StringId
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var tracksInDatabase = await dbContext.MusicTracks
+                    .FirstOrDefaultAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                
+                tracksInDatabase.Should().BeNull();
+
+                var lyricInDatabase = await dbContext.Lyrics
+                    .FirstAsync(lyric => lyric.Id == existingTrack.Lyric.Id);
+
+                lyricInDatabase.Track.Should().BeNull();
             });
         }
 
