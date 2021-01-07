@@ -484,11 +484,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[0].Title.Should().Be("A related resource does not exist.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Related resource of type 'workItems' with ID '12345678' in relationship 'assignedItems' does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be("Related resource of type 'workItems' with ID '12345678' in relationship 'assignedItems' does not exist.");
 
             responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[1].Title.Should().Be("A related resource does not exist.");
-            responseDocument.Errors[1].Detail.Should().StartWith("Related resource of type 'workItems' with ID '87654321' in relationship 'assignedItems' does not exist.");
+            responseDocument.Errors[1].Detail.Should().Be("Related resource of type 'workItems' with ID '87654321' in relationship 'assignedItems' does not exist.");
         }
 
         [Fact]
