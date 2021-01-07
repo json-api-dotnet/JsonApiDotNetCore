@@ -532,7 +532,48 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Errors[0].Detail.Should().Be("Setting the initial value of 'createdAt' is not allowed.");
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
-        
+
+        [Fact]
+        public async Task Cannot_create_resource_with_readonly_attribute()
+        {
+            // Arrange
+            var newPlaylistName = _fakers.Playlist.Generate().Name;
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "playlists",
+                            attributes = new
+                            {
+                                name = newPlaylistName,
+                                isArchived = true
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
+            responseDocument.Errors[0].Detail.Should().Be("Attribute 'isArchived' is read-only.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+        }
+
         [Fact]
         public async Task Cannot_create_resource_with_incompatible_attribute_value()
         {
