@@ -111,7 +111,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
                 data = new
                 {
                     type = "todoItems",
-                    id = todoItem.Id,
+                    id = todoItem.StringId,
                     attributes = new
                     {
                         description = "Something else"
