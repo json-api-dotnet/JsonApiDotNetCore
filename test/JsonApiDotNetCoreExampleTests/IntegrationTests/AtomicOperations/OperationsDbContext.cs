@@ -8,6 +8,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
         public DbSet<MusicTrack> MusicTracks { get; set; }
         public DbSet<PlaylistMusicTrack> PlaylistMusicTracks { get; set; }
         public DbSet<Lyric> Lyrics { get; set; }
+        public DbSet<TextLanguage> TextLanguages { get; set; }
         public DbSet<Performer> Performers { get; set; }
         public DbSet<RecordCompany> RecordCompanies { get; set; }
 

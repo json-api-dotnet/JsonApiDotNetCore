@@ -1,10 +1,20 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using Bogus;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
 {
     internal sealed class OperationsFakers : FakerContainer
     {
+        private static readonly Lazy<IReadOnlyList<string>> _lazyLanguageIsoCodes =
+            new Lazy<IReadOnlyList<string>>(() => CultureInfo
+                .GetCultures(CultureTypes.NeutralCultures)
+                .Where(culture => !string.IsNullOrEmpty(culture.Name))
+                .Select(culture => culture.Name)
+                .ToArray());
+
         private readonly Lazy<Faker<Playlist>> _lazyPlaylistFaker = new Lazy<Faker<Playlist>>(() =>
             new Faker<Playlist>()
                 .UseSeed(GetFakerSeed())
@@ -24,6 +34,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
                 .RuleFor(lyric => lyric.Text, f => f.Lorem.Text())
                 .RuleFor(lyric => lyric.Format, "LRC"));
 
+        private readonly Lazy<Faker<TextLanguage>> _lazyTextLanguageFaker = new Lazy<Faker<TextLanguage>>(() =>
+            new Faker<TextLanguage>()
+                .UseSeed(GetFakerSeed())
+                .RuleFor(textLanguage => textLanguage.IsoCode, f => f.PickRandom<string>(_lazyLanguageIsoCodes.Value)));
+
         private readonly Lazy<Faker<Performer>> _lazyPerformerFaker = new Lazy<Faker<Performer>>(() =>
             new Faker<Performer>()
                 .UseSeed(GetFakerSeed())
@@ -39,6 +54,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
         public Faker<Playlist> Playlist => _lazyPlaylistFaker.Value;
         public Faker<MusicTrack> MusicTrack => _lazyMusicTrackFaker.Value;
         public Faker<Lyric> Lyric => _lazyLyricFaker.Value;
+        public Faker<TextLanguage> TextLanguage => _lazyTextLanguageFaker.Value;
         public Faker<Performer> Performer => _lazyPerformerFaker.Value;
         public Faker<RecordCompany> RecordCompany => _lazyRecordCompanyFaker.Value;
     }
