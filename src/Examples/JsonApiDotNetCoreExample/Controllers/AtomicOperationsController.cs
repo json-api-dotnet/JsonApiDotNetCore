@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
+    // TODO: @OPS: Apply route based on configured namespace.
     [DisableRoutingConvention, Route("/api/v1/operations")]
     public class AtomicOperationsController : JsonApiAtomicOperationsController
     {

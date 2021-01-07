@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Serialization
         protected IResourceFactory ResourceFactory { get; }
         protected Document Document { get; set; }
 
-        protected abstract bool AllowLocalIds { get; }
+        protected int? AtomicOperationIndex { get; set; }
 
         protected BaseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory)
         {
@@ -88,7 +88,8 @@ namespace JsonApiDotNetCore.Serialization
                 {
                     if (attr.Property.SetMethod == null)
                     {
-                        throw new JsonApiSerializationException("Attribute is read-only.", $"Attribute '{attr.PublicName}' is read-only.");
+                        throw new JsonApiSerializationException("Attribute is read-only.",
+                            $"Attribute '{attr.PublicName}' is read-only.", atomicOperationIndex: AtomicOperationIndex);
                     }
 
                     var convertedValue = ConvertAttrValue(newValue, attr.Property.PropertyType);
@@ -158,7 +159,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             AssertHasType(data, null);
 
-            if (!AllowLocalIds)
+            if (AtomicOperationIndex == null)
             {
                 AssertHasNoLid(data);
             }
@@ -179,13 +180,13 @@ namespace JsonApiDotNetCore.Serialization
             return resource;
         }
 
-        protected ResourceContext GetExistingResourceContext(string publicName, int? atomicOperationIndex = null)
+        protected ResourceContext GetExistingResourceContext(string publicName)
         {
             var resourceContext = ResourceContextProvider.GetResourceContext(publicName);
             if (resourceContext == null)
             {
                 throw new JsonApiSerializationException("Request body includes unknown resource type.",
-                    $"Resource type '{publicName}' does not exist.", atomicOperationIndex: atomicOperationIndex);
+                    $"Resource type '{publicName}' does not exist.", atomicOperationIndex: AtomicOperationIndex);
             }
 
             return resourceContext;
@@ -199,7 +200,8 @@ namespace JsonApiDotNetCore.Serialization
             if (relationshipData.ManyData != null)
             {
                 throw new JsonApiSerializationException("Expected single data element for to-one relationship.", 
-                    $"Expected single data element for '{hasOneRelationship.PublicName}' relationship.");
+                    $"Expected single data element for '{hasOneRelationship.PublicName}' relationship.",
+                    atomicOperationIndex: AtomicOperationIndex);
             }
 
             var rightResource = CreateRightResource(hasOneRelationship, relationshipData.SingleData);
@@ -221,7 +223,8 @@ namespace JsonApiDotNetCore.Serialization
             if (relationshipData.ManyData == null)
             {
                 throw new JsonApiSerializationException("Expected data[] element for to-many relationship.", 
-                    $"Expected data[] element for '{hasManyRelationship.PublicName}' relationship.");
+                    $"Expected data[] element for '{hasManyRelationship.PublicName}' relationship.",
+                    atomicOperationIndex: AtomicOperationIndex);
             }
 
             var rightResources = relationshipData.ManyData
@@ -263,13 +266,14 @@ namespace JsonApiDotNetCore.Serialization
                     ? $"Expected 'type' element in '{relationship.PublicName}' relationship."
                     : "Expected 'type' element in 'data' element.";
 
-                throw new JsonApiSerializationException("Request body must include 'type' element.", details);
+                throw new JsonApiSerializationException("Request body must include 'type' element.", details,
+                    atomicOperationIndex: AtomicOperationIndex);
             }
         }
 
         private void AssertHasIdOrLid(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)
         {
-            if (AllowLocalIds)
+            if (AtomicOperationIndex != null)
             {
                 bool hasNone = resourceIdentifierObject.Id == null && resourceIdentifierObject.Lid == null;
                 bool hasBoth = resourceIdentifierObject.Id != null && resourceIdentifierObject.Lid != null;
@@ -277,7 +281,8 @@ namespace JsonApiDotNetCore.Serialization
                 if (hasNone || hasBoth)
                 {
                     throw new JsonApiSerializationException("TODO: Request body must include 'id' or 'lid' element.",
-                        $"Expected 'id' or 'lid' element in '{relationship.PublicName}' relationship.");
+                        $"Expected 'id' or 'lid' element in '{relationship.PublicName}' relationship.",
+                        atomicOperationIndex: AtomicOperationIndex);
                 }
             }
             else
@@ -285,7 +290,8 @@ namespace JsonApiDotNetCore.Serialization
                 if (resourceIdentifierObject.Id == null)
                 {
                     throw new JsonApiSerializationException("Request body must include 'id' element.",
-                        $"Expected 'id' element in '{relationship.PublicName}' relationship.");
+                        $"Expected 'id' element in '{relationship.PublicName}' relationship.",
+                        atomicOperationIndex: AtomicOperationIndex);
                 }
 
                 AssertHasNoLid(resourceIdentifierObject);
@@ -296,7 +302,8 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (resourceIdentifierObject.Lid != null)
             {
-                throw new JsonApiSerializationException("Local IDs cannot be used at this endpoint.", null);
+                throw new JsonApiSerializationException("Local IDs cannot be used at this endpoint.", null,
+                    atomicOperationIndex: AtomicOperationIndex);
             }
         }
 
@@ -305,7 +312,8 @@ namespace JsonApiDotNetCore.Serialization
             if (!relationship.RightType.IsAssignableFrom(rightResourceContext.ResourceType))
             {
                 throw new JsonApiSerializationException("Relationship contains incompatible resource type.",
-                    $"Relationship '{relationship.PublicName}' contains incompatible resource type '{rightResourceContext.PublicName}'.");
+                    $"Relationship '{relationship.PublicName}' contains incompatible resource type '{rightResourceContext.PublicName}'.",
+                    atomicOperationIndex: AtomicOperationIndex);
             }
         }
 

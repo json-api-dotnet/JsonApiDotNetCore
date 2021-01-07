@@ -319,7 +319,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             });
         }
 
-        [Fact(Skip = "TODO: @OPS: Make this test work")]
+        [Fact]
         public async Task Cannot_create_resource_with_client_generated_ID()
         {
             // Arrange
@@ -355,7 +355,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("TODO: Specifying the resource ID in POST requests is not allowed.");
+            responseDocument.Errors[0].Title.Should().Be("Specifying the resource ID in POST requests is not allowed.");
             responseDocument.Errors[0].Detail.Should().BeNull();
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
         }
@@ -425,7 +425,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
-        [Fact(Skip = "TODO: @OPS: Make this test work")]
+        [Fact]
         public async Task Cannot_create_resource_for_missing_type()
         {
             // Arrange
@@ -461,7 +461,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
-        [Fact(Skip = "TODO: @OPS: Make this test work")]
+        [Fact]
         public async Task Cannot_create_resource_for_unknown_type()
         {
             // Arrange
@@ -495,7 +495,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
         
-        [Fact(Skip = "TODO: @OPS: Make this test work")]
+        [Fact]
         public async Task Cannot_create_resource_attribute_with_blocked_capability()
         {
             // Arrange
@@ -533,7 +533,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
         
-        [Fact(Skip = "TODO: @OPS: Make this test work")]
+        [Fact]
         public async Task Cannot_create_resource_with_incompatible_attribute_value()
         {
             // Arrange
@@ -567,8 +567,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
-            responseDocument.Errors[0].Detail.Should().Be("Failed to convert 'not-a-valid-time' of type 'String' to type 'DateTimeOffset'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+            responseDocument.Errors[0].Detail.Should().StartWith("Failed to convert 'not-a-valid-time' of type 'String' to type 'DateTimeOffset'. - Request body:");
+            responseDocument.Errors[0].Source.Pointer.Should().BeNull();
         }
 
         [Fact]

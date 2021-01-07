@@ -101,6 +101,8 @@ namespace JsonApiDotNetCore.Controllers
             _traceWriter.LogMethodStart(new {operations});
             if (operations == null) throw new ArgumentNullException(nameof(operations));
 
+            ValidateClientGeneratedIds(operations);
+
             if (_options.ValidateModelState)
             {
                 ValidateModelState(operations);
@@ -147,6 +149,23 @@ namespace JsonApiDotNetCore.Controllers
             {
                 var namingStrategy = _options.SerializerContractResolver.NamingStrategy;
                 throw new InvalidModelStateException(violations, _options.IncludeExceptionStackTraceInErrors, namingStrategy);
+            }
+        }
+
+        protected virtual void ValidateClientGeneratedIds(IEnumerable<OperationContainer> operations)
+        {
+            if (!_options.AllowClientGeneratedIds)
+            {
+                int index = 0;
+                foreach (var operation in operations)
+                {
+                    if (operation.Kind == OperationKind.CreateResource && operation.Resource.StringId != null)
+                    {
+                        throw new ResourceIdInPostRequestNotAllowedException(index);
+                    }
+
+                    index++;
+                }
             }
         }
     }
