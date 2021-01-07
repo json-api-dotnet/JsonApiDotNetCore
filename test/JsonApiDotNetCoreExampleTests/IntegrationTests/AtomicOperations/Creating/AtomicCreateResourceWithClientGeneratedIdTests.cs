@@ -58,7 +58,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -123,7 +123,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var trackInDatabase = await dbContext.MusicTracks
-                    .FirstAsync(track => track.Id == newTrack.Id);
+                    .FirstAsync(musicTrack => musicTrack.Id == newTrack.Id);
 
                 trackInDatabase.Title.Should().Be(newTrack.Title);
                 trackInDatabase.LengthInSeconds.Should().BeApproximately(newTrack.LengthInSeconds, 0.00000000001M);

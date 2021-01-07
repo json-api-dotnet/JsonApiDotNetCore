@@ -280,7 +280,7 @@ namespace JsonApiDotNetCore.Serialization
 
                 if (hasNone || hasBoth)
                 {
-                    throw new JsonApiSerializationException("TODO: Request body must include 'id' or 'lid' element.",
+                    throw new JsonApiSerializationException("Request body must include 'id' or 'lid' element.",
                         $"Expected 'id' or 'lid' element in '{relationship.PublicName}' relationship.",
                         atomicOperationIndex: AtomicOperationIndex);
                 }
