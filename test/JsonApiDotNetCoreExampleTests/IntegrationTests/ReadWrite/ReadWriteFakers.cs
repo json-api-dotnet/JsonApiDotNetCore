@@ -3,7 +3,7 @@ using Bogus;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
 {
-    internal sealed class WriteFakers : FakerContainer
+    internal sealed class ReadWriteFakers : FakerContainer
     {
         private readonly Lazy<Faker<WorkItem>> _lazyWorkItemFaker = new Lazy<Faker<WorkItem>>(() =>
             new Faker<WorkItem>()

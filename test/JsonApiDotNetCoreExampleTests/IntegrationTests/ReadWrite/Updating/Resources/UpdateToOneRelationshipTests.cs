@@ -9,12 +9,12 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Resources
 {
     public sealed class UpdateToOneRelationshipTests
-        : IClassFixture<IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext>>
+        : IClassFixture<IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> _testContext;
-        private readonly WriteFakers _fakers = new WriteFakers();
+        private readonly IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
+        private readonly ReadWriteFakers _fakers = new ReadWriteFakers();
 
-        public UpdateToOneRelationshipTests(IntegrationTestContext<TestableStartup<WriteDbContext>, WriteDbContext> testContext)
+        public UpdateToOneRelationshipTests(IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
         {
             _testContext = testContext;
         }

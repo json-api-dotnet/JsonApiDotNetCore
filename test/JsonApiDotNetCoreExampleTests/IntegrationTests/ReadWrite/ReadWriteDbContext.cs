@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
 {
-    public sealed class WriteDbContext : DbContext
+    public sealed class ReadWriteDbContext : DbContext
     {
         public DbSet<WorkItem> WorkItems { get; set; }
         public DbSet<WorkTag> WorkTags { get; set; }
@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
         public DbSet<RgbColor> RgbColors { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
 
-        public WriteDbContext(DbContextOptions<WriteDbContext> options)
+        public ReadWriteDbContext(DbContextOptions<ReadWriteDbContext> options)
             : base(options)
         {
         }
