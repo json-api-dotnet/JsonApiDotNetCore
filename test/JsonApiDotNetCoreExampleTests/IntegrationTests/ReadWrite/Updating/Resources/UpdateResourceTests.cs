@@ -4,11 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Resources
@@ -22,10 +20,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public UpdateResourceTests(IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
         {
             _testContext = testContext;
-
-            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.UseRelativeLinks = false;
-            options.AllowClientGeneratedIds = false;
         }
 
         [Fact]

@@ -2,10 +2,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
@@ -19,9 +17,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public CreateResourceWithToManyRelationshipTests(IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
         {
             _testContext = testContext;
-
-            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.AllowClientGeneratedIds = true;
         }
 
         [Fact]
