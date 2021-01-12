@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
 
@@ -55,7 +57,15 @@ namespace JsonApiDotNetCore.Serialization
                 if (resource != null)
                 {
                     var resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
-                    resourceObject = ResourceObjectBuilder.Build(resource, resourceContext.Attributes, resourceContext.Relationships);
+
+                    // TODO: @OPS: Should inject IFieldsToSerialize, which uses SparseFieldSetCache to call into resource definitions to hide fields.
+                    // But then we need to update IJsonApiRequest for each loop entry, which we don't have access to anymore.
+
+                    var attributes = resourceContext.Attributes
+                        .Where(attr => attr.Capabilities.HasFlag(AttrCapabilities.AllowView))
+                        .ToArray();
+
+                    resourceObject = ResourceObjectBuilder.Build(resource, attributes, resourceContext.Relationships);
                 }
 
                 document.Results.Add(new AtomicResultObject

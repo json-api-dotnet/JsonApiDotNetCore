@@ -71,6 +71,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Results[0].SingleData.Should().NotBeNull();
             responseDocument.Results[0].SingleData.Type.Should().Be("textLanguages");
             responseDocument.Results[0].SingleData.Attributes["isoCode"].Should().Be(newLanguage.IsoCode);
+            responseDocument.Results[0].SingleData.Attributes.Should().NotContainKey("concurrencyToken");
             responseDocument.Results[0].SingleData.Relationships.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
