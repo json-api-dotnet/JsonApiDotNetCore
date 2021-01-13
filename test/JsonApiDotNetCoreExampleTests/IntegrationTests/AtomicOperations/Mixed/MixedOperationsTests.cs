@@ -85,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
                     },
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act

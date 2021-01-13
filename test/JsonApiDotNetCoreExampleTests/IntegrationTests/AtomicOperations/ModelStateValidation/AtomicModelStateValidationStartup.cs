@@ -5,7 +5,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
 {
     public sealed class AtomicModelStateValidationStartup : TestableStartup<OperationsDbContext>
     {
-        public AtomicModelStateValidationStartup(IConfiguration configuration) : base(configuration)
+        public AtomicModelStateValidationStartup(IConfiguration configuration)
+            : base(configuration)
         {
         }
 

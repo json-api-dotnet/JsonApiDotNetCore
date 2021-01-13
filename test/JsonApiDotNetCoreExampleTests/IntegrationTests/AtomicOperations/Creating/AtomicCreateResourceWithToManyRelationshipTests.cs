@@ -544,7 +544,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                             {
                                 performers = new
                                 {
-                                    data = (object)null
+                                    data = (object) null
                                 }
                             }
                         }
@@ -585,7 +585,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                             {
                                 tracks = new
                                 {
-                                    data = (object)null
+                                    data = (object) null
                                 }
                             }
                         }

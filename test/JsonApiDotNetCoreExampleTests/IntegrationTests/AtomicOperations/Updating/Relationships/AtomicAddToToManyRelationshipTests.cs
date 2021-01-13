@@ -18,8 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicAddToToManyRelationshipTests(
-            IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicAddToToManyRelationshipTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -78,16 +77,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Only to-many relationships can be targeted in 'add' operations.");
             responseDocument.Errors[0].Detail.Should().Be("Relationship 'ownedBy' must be a to-many relationship.");
         }
-        
+
         [Fact]
         public async Task Can_add_to_HasMany_relationship()
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
             existingTrack.Performers = _fakers.Performer.Generate(1);
-            
+
             var existingPerformers = _fakers.Performer.Generate(2);
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.MusicTracks.Add(existingTrack);
@@ -175,7 +174,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             };
 
             var existingTracks = _fakers.MusicTrack.Generate(2);
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Playlists.Add(existingPlaylist);
@@ -510,7 +509,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             responseDocument.Errors[0].Detail.Should().BeNull();
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
-        
+
         [Fact]
         public async Task Cannot_add_for_unknown_relationship_in_ref()
         {
@@ -546,19 +545,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             responseDocument.Errors[0].Detail.Should().Be("Resource of type 'performers' does not contain a relationship named 'doesNotExist'.");
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
-        
+
         [Fact]
         public async Task Cannot_add_for_null_data()
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.MusicTracks.Add(existingTrack);
                 await dbContext.SaveChangesAsync();
             });
-            
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -572,7 +571,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             id = existingTrack.StringId,
                             relationship = "performers"
                         },
-                        data = (object)null
+                        data = (object) null
                     }
                 }
             };
@@ -714,7 +713,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-            
+
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: The 'data[].id' or 'data[].lid' element is required.");
@@ -759,7 +758,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-            
+
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: The 'data[].id' or 'data[].lid' element is required.");
@@ -773,13 +772,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var existingCompany = _fakers.RecordCompany.Generate();
             var trackIds = new[] {Guid.NewGuid(), Guid.NewGuid()};
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.RecordCompanies.Add(existingCompany);
                 await dbContext.SaveChangesAsync();
             });
-            
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -824,7 +823,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             responseDocument.Errors[0].Title.Should().Be("A related resource does not exist.");
             responseDocument.Errors[0].Detail.Should().Be($"Related resource of type 'musicTracks' with ID '{trackIds[0]}' in relationship 'tracks' does not exist.");
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
-            
+
             responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[1].Title.Should().Be("A related resource does not exist.");
             responseDocument.Errors[1].Detail.Should().Be($"Related resource of type 'musicTracks' with ID '{trackIds[1]}' in relationship 'tracks' does not exist.");
@@ -836,13 +835,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.MusicTracks.Add(existingTrack);
                 await dbContext.SaveChangesAsync();
             });
-            
+
             var requestBody = new
             {
                 atomic__operations = new[]

@@ -17,8 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicUpdateToOneRelationshipTests(
-            IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicUpdateToOneRelationshipTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -35,7 +34,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var existingLyric = _fakers.Lyric.Generate();
             existingLyric.Track = _fakers.MusicTrack.Generate();
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<MusicTrack>();
@@ -56,7 +55,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             id = existingLyric.StringId,
                             relationship = "track"
                         },
-                        data = (object)null
+                        data = (object) null
                     }
                 }
             };
@@ -78,7 +77,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     .FirstAsync(lyric => lyric.Id == existingLyric.Id);
 
                 lyricInDatabase.Track.Should().BeNull();
-                
+
                 var tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
                 tracksInDatabase.Should().HaveCount(1);
             });
@@ -90,7 +89,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
             existingTrack.Lyric = _fakers.Lyric.Generate();
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<Lyric>();
@@ -111,7 +110,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             id = existingTrack.StringId,
                             relationship = "lyric"
                         },
-                        data = (object)null
+                        data = (object) null
                     }
                 }
             };
@@ -133,7 +132,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
 
                 trackInDatabase.Lyric.Should().BeNull();
-                
+
                 var lyricsInDatabase = await dbContext.Lyrics.ToListAsync();
                 lyricsInDatabase.Should().HaveCount(1);
             });
@@ -166,7 +165,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             id = existingTrack.StringId,
                             relationship = "ownedBy"
                         },
-                        data = (object)null
+                        data = (object) null
                     }
                 }
             };
@@ -188,7 +187,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
 
                 trackInDatabase.OwnedBy.Should().BeNull();
-                
+
                 var companiesInDatabase = await dbContext.RecordCompanies.ToListAsync();
                 companiesInDatabase.Should().HaveCount(1);
             });
@@ -200,7 +199,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var existingLyric = _fakers.Lyric.Generate();
             var existingTrack = _fakers.MusicTrack.Generate();
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.AddRange(existingLyric, existingTrack);
@@ -255,7 +254,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
             var existingLyric = _fakers.Lyric.Generate();
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.AddRange(existingTrack, existingLyric);
@@ -365,9 +364,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var existingLyric = _fakers.Lyric.Generate();
             existingLyric.Track = _fakers.MusicTrack.Generate();
-            
+
             var existingTrack = _fakers.MusicTrack.Generate();
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<MusicTrack>();
@@ -426,9 +425,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
             existingTrack.Lyric = _fakers.Lyric.Generate();
-            
+
             var existingLyric = _fakers.Lyric.Generate();
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<Lyric>();
@@ -487,7 +486,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
             existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
-            
+
             var existingCompany = _fakers.RecordCompany.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -808,7 +807,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.MusicTracks.Add(existingTrack);
@@ -968,7 +967,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-            
+
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: The 'data.id' or 'data.lid' element is required.");
@@ -1010,7 +1009,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-            
+
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: The 'data.id' or 'data.lid' element is required.");
@@ -1023,7 +1022,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.MusicTracks.Add(existingTrack);
@@ -1072,7 +1071,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.MusicTracks.Add(existingTrack);

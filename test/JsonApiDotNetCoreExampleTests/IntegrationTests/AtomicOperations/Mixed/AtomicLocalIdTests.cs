@@ -924,7 +924,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
         {
             // Arrange
             var existingPerformer = _fakers.Performer.Generate();
-            
+
             var newTrackTitle = _fakers.MusicTrack.Generate().Title;
             var newArtistName = _fakers.Performer.Generate().ArtistName;
 
@@ -1169,7 +1169,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
         {
             // Arrange
             var existingPerformer = _fakers.Performer.Generate();
-            
+
             var newTrackTitle = _fakers.MusicTrack.Generate().Title;
             var newArtistName = _fakers.Performer.Generate().ArtistName;
 

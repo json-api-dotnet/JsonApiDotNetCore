@@ -110,7 +110,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
             {
                 atomic__operations = operationElements
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -173,7 +173,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
             {
                 var lyricsInDatabase = await dbContext.Lyrics
                     .FirstOrDefaultAsync(lyric => lyric.Id == existingLyric.Id);
-                
+
                 lyricsInDatabase.Should().BeNull();
 
                 var trackInDatabase = await dbContext.MusicTracks
@@ -189,7 +189,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
             existingTrack.Lyric = _fakers.Lyric.Generate();
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.MusicTracks.Add(existingTrack);
@@ -226,7 +226,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
             {
                 var tracksInDatabase = await dbContext.MusicTracks
                     .FirstOrDefaultAsync(musicTrack => musicTrack.Id == existingTrack.Id);
-                
+
                 tracksInDatabase.Should().BeNull();
 
                 var lyricInDatabase = await dbContext.Lyrics
@@ -242,7 +242,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
             existingTrack.Performers = _fakers.Performer.Generate(2);
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.MusicTracks.Add(existingTrack);
@@ -298,7 +298,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
                 Playlist = _fakers.Playlist.Generate(),
                 MusicTrack = _fakers.MusicTrack.Generate()
             };
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.PlaylistMusicTracks.Add(existingPlaylistMusicTrack);
@@ -474,7 +474,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
             responseDocument.Errors[0].Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
-        
+
         [Fact]
         public async Task Cannot_delete_resource_for_missing_ID()
         {
@@ -549,7 +549,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
         {
             // Arrange
             var guid = Guid.NewGuid().ToString();
-            
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -570,7 +570,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
-            
+
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 

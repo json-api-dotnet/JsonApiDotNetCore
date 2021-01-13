@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -116,7 +116,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -173,7 +173,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -227,7 +227,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -290,7 +290,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -347,7 +347,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -406,7 +406,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -464,7 +464,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
