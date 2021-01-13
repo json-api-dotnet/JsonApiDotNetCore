@@ -113,8 +113,11 @@ namespace JsonApiDotNetCore.Serialization
                 }
 
                 resourceContextInRef = GetExistingResourceContext(operation.Ref.Type);
-                
-                if ((operation.Ref.Id == null && operation.Ref.Lid == null) || (operation.Ref.Id != null && operation.Ref.Lid != null))
+
+                bool hasNone = operation.Ref.Id == null && operation.Ref.Lid == null;
+                bool hasBoth = operation.Ref.Id != null && operation.Ref.Lid != null;
+
+                if (hasNone || hasBoth)
                 {
                     throw new JsonApiSerializationException("The 'ref.id' or 'ref.lid' element is required.", null,
                         atomicOperationIndex: AtomicOperationIndex);
@@ -185,7 +188,10 @@ namespace JsonApiDotNetCore.Serialization
                             atomicOperationIndex: AtomicOperationIndex);
                     }
 
-                    if ((resourceObject.Id == null && resourceObject.Lid == null) || (resourceObject.Id != null && resourceObject.Lid != null))
+                    bool hasNone = resourceObject.Id == null && resourceObject.Lid == null;
+                    bool hasBoth = resourceObject.Id != null && resourceObject.Lid != null;
+
+                    if (hasNone || hasBoth)
                     {
                         throw new JsonApiSerializationException("The 'data[].id' or 'data[].lid' element is required.", null,
                             atomicOperationIndex: AtomicOperationIndex);
@@ -213,13 +219,13 @@ namespace JsonApiDotNetCore.Serialization
                         atomicOperationIndex: AtomicOperationIndex);
                 }
 
-                if (kind != OperationKind.CreateResource)
+                bool hasNone = resourceObject.Id == null && resourceObject.Lid == null;
+                bool hasBoth = resourceObject.Id != null && resourceObject.Lid != null;
+
+                if (kind == OperationKind.CreateResource ? hasBoth : hasNone || hasBoth)
                 {
-                    if ((resourceObject.Id == null && resourceObject.Lid == null) || (resourceObject.Id != null && resourceObject.Lid != null))
-                    {
-                        throw new JsonApiSerializationException("The 'data.id' or 'data.lid' element is required.", null,
-                            atomicOperationIndex: AtomicOperationIndex);
-                    }
+                    throw new JsonApiSerializationException("The 'data.id' or 'data.lid' element is required.", null,
+                        atomicOperationIndex: AtomicOperationIndex);
                 }
 
                 var resourceContextInData = GetExistingResourceContext(resourceObject.Type);
