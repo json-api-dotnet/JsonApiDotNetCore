@@ -76,7 +76,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
-
             var newPlaylistName = _fakers.Playlist.Generate().Name;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

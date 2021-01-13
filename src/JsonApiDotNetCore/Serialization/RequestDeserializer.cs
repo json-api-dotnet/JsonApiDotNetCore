@@ -54,8 +54,8 @@ namespace JsonApiDotNetCore.Serialization
 
             var instance = DeserializeBody(body);
 
-            AssertResourceIdIsNotTargeted();
-            
+            AssertResourceIdIsNotTargeted(_targetedFields);
+
             return instance;
         }
 
@@ -104,7 +104,8 @@ namespace JsonApiDotNetCore.Serialization
                     atomicOperationIndex: AtomicOperationIndex);
             }
 
-            RelationshipAttribute relationship = null;
+            RelationshipAttribute relationshipInRef = null;
+            ResourceContext resourceContextInRef = null;
 
             if (operation.Ref != null)
             {
@@ -114,7 +115,7 @@ namespace JsonApiDotNetCore.Serialization
                         atomicOperationIndex: AtomicOperationIndex);
                 }
 
-                var resourceContext = GetExistingResourceContext(operation.Ref.Type);
+                resourceContextInRef = GetExistingResourceContext(operation.Ref.Type);
                 
                 if ((operation.Ref.Id == null && operation.Ref.Lid == null) || (operation.Ref.Id != null && operation.Ref.Lid != null))
                 {
@@ -126,7 +127,7 @@ namespace JsonApiDotNetCore.Serialization
                 {
                     try
                     {
-                        TypeHelper.ConvertType(operation.Ref.Id, resourceContext.IdentityType);
+                        TypeHelper.ConvertType(operation.Ref.Id, resourceContextInRef.IdentityType);
                     }
                     catch (FormatException exception)
                     {
@@ -136,8 +137,8 @@ namespace JsonApiDotNetCore.Serialization
 
                 if (operation.Ref.Relationship != null)
                 {
-                    relationship = resourceContext.Relationships.FirstOrDefault(r => r.PublicName == operation.Ref.Relationship);
-                    if (relationship == null)
+                    relationshipInRef = resourceContextInRef.Relationships.FirstOrDefault(r => r.PublicName == operation.Ref.Relationship);
+                    if (relationshipInRef == null)
                     {
                         throw new JsonApiSerializationException(
                             "The referenced relationship does not exist.",
@@ -145,7 +146,7 @@ namespace JsonApiDotNetCore.Serialization
                             atomicOperationIndex: AtomicOperationIndex);
                     }
 
-                    if ((kind == OperationKind.AddToRelationship || kind == OperationKind.RemoveFromRelationship) && relationship is HasOneAttribute)
+                    if ((kind == OperationKind.AddToRelationship || kind == OperationKind.RemoveFromRelationship) && relationshipInRef is HasOneAttribute)
                     {
                         throw new JsonApiSerializationException(
                             $"Only to-many relationships can be targeted in '{operation.Code.ToString().Camelize()}' operations.",
@@ -153,19 +154,19 @@ namespace JsonApiDotNetCore.Serialization
                             atomicOperationIndex: AtomicOperationIndex);
                     }
 
-                    if (relationship is HasOneAttribute && operation.ManyData != null)
+                    if (relationshipInRef is HasOneAttribute && operation.ManyData != null)
                     {
                         throw new JsonApiSerializationException(
                             "Expected single data element for to-one relationship.",
-                            $"Expected single data element for '{relationship.PublicName}' relationship.",
+                            $"Expected single data element for '{relationshipInRef.PublicName}' relationship.",
                             atomicOperationIndex: AtomicOperationIndex);
                     }
 
-                    if (relationship is HasManyAttribute && operation.ManyData == null)
+                    if (relationshipInRef is HasManyAttribute && operation.ManyData == null)
                     {
                         throw new JsonApiSerializationException(
                             "Expected data[] element for to-many relationship.",
-                            $"Expected data[] element for '{relationship.PublicName}' relationship.",
+                            $"Expected data[] element for '{relationshipInRef.PublicName}' relationship.",
                             atomicOperationIndex: AtomicOperationIndex);
                     }
                 }
@@ -175,6 +176,12 @@ namespace JsonApiDotNetCore.Serialization
             {
                 foreach (var resourceObject in operation.ManyData)
                 {
+                    if (relationshipInRef == null)
+                    {
+                        throw new JsonApiSerializationException("Expected single data element for create/update resource operation.",
+                            null, atomicOperationIndex: AtomicOperationIndex);
+                    }
+
                     if (resourceObject.Type == null)
                     {
                         throw new JsonApiSerializationException("The 'data[].type' element is required.", null,
@@ -187,15 +194,10 @@ namespace JsonApiDotNetCore.Serialization
                             atomicOperationIndex: AtomicOperationIndex);
                     }
 
-                    if (relationship == null)
-                    {
-                        throw new Exception("TODO: @OPS: This happens when sending an array for CreateResource/UpdateResource.");
-                    }
-
                     var rightResourceContext = GetExistingResourceContext(resourceObject.Type);
-                    if (!rightResourceContext.ResourceType.IsAssignableFrom(relationship.RightType))
+                    if (!rightResourceContext.ResourceType.IsAssignableFrom(relationshipInRef.RightType))
                     {
-                        var relationshipRightTypeName = ResourceContextProvider.GetResourceContext(relationship.RightType);
+                        var relationshipRightTypeName = ResourceContextProvider.GetResourceContext(relationshipInRef.RightType);
                             
                         throw new JsonApiSerializationException("Resource type mismatch between 'ref.relationship' and 'data[].type' element.", 
                             $@"Expected resource of type '{relationshipRightTypeName}' in 'data[].type', instead of '{rightResourceContext.PublicName}'.",
@@ -223,18 +225,58 @@ namespace JsonApiDotNetCore.Serialization
                     }
                 }
 
-                var dataResourceContext = GetExistingResourceContext(resourceObject.Type);
+                var resourceContextInData = GetExistingResourceContext(resourceObject.Type);
 
-                if (kind.IsRelationship() && relationship != null)
+                if (kind.IsRelationship() && relationshipInRef != null)
                 {
-                    var rightResourceContext = dataResourceContext;
-                    if (!rightResourceContext.ResourceType.IsAssignableFrom(relationship.RightType))
+                    var rightResourceContext = resourceContextInData;
+                    if (!rightResourceContext.ResourceType.IsAssignableFrom(relationshipInRef.RightType))
                     {
-                        var relationshipRightTypeName = ResourceContextProvider.GetResourceContext(relationship.RightType);
+                        var relationshipRightTypeName = ResourceContextProvider.GetResourceContext(relationshipInRef.RightType);
                             
                         throw new JsonApiSerializationException("Resource type mismatch between 'ref.relationship' and 'data.type' element.", 
                             $@"Expected resource of type '{relationshipRightTypeName}' in 'data.type', instead of '{rightResourceContext.PublicName}'.",
                             atomicOperationIndex: AtomicOperationIndex);
+                    }
+                }
+                else 
+                {
+                    if (resourceContextInRef != null && resourceContextInRef != resourceContextInData)
+                    {
+                        throw new JsonApiSerializationException("Resource type mismatch between 'ref.type' and 'data.type' element.", 
+                            $@"Expected resource of type '{resourceContextInRef.PublicName}' in 'data.type', instead of '{resourceContextInData.PublicName}'.",
+                            atomicOperationIndex: AtomicOperationIndex);
+                    }
+
+                    if (operation.Ref != null)
+                    {
+                        if (operation.Ref.Id != null && resourceObject.Id != null && resourceObject.Id != operation.Ref.Id)
+                        {
+                            throw new JsonApiSerializationException("Resource ID mismatch between 'ref.id' and 'data.id' element.", 
+                                $@"Expected resource with ID '{operation.Ref.Id}' in 'data.id', instead of '{resourceObject.Id}'.",
+                                atomicOperationIndex: AtomicOperationIndex);
+                        }
+
+                        if (operation.Ref.Lid != null && resourceObject.Lid != null && resourceObject.Lid != operation.Ref.Lid)
+                        {
+                            throw new JsonApiSerializationException("Resource local ID mismatch between 'ref.lid' and 'data.lid' element.", 
+                                $@"Expected resource with local ID '{operation.Ref.Lid}' in 'data.lid', instead of '{resourceObject.Lid}'.",
+                                atomicOperationIndex: AtomicOperationIndex);
+                        }
+
+                        if (operation.Ref.Id != null && resourceObject.Lid != null)
+                        {
+                            throw new JsonApiSerializationException("Resource identity mismatch between 'ref.id' and 'data.lid' element.", 
+                                $@"Expected resource with ID '{operation.Ref.Id}' in 'data.id', instead of '{resourceObject.Lid}' in 'data.lid'.",
+                                atomicOperationIndex: AtomicOperationIndex);
+                        }
+
+                        if (operation.Ref.Lid != null && resourceObject.Id != null)
+                        {
+                            throw new JsonApiSerializationException("Resource identity mismatch between 'ref.lid' and 'data.id' element.", 
+                                $@"Expected resource with local ID '{operation.Ref.Lid}' in 'data.lid', instead of '{resourceObject.Id}' in 'data.id'.",
+                                atomicOperationIndex: AtomicOperationIndex);
+                        }
                     }
                 }
             }
@@ -257,6 +299,9 @@ namespace JsonApiDotNetCore.Serialization
                 case OperationKind.CreateResource:
                 case OperationKind.UpdateResource:
                 {
+                    // TODO: @OPS: Chicken-and-egg problem: ParseResourceObject depends on _request.OperationKind, which is not built yet.
+                    ((JsonApiRequest) _request).OperationKind = kind;
+
                     resource = ParseResourceObject(operation.SingleData);
                     break;
                 }
@@ -280,41 +325,37 @@ namespace JsonApiDotNetCore.Serialization
             {
                 Kind = EndpointKind.AtomicOperations,
                 OperationKind = kind,
+                PrimaryId = resource.StringId,
                 BasePath = "TODO: Set this...",
                 PrimaryResource = primaryResourceContext
             };
 
-            if (operation.Ref != null)
+            if (operation.Ref?.Relationship != null)
             {
-                request.PrimaryId = operation.Ref.Id;
+                var relationship = primaryResourceContext.Relationships.Single(r => r.PublicName == operation.Ref.Relationship);
 
-                if (operation.Ref.Relationship != null)
+                var secondaryResourceContext = ResourceContextProvider.GetResourceContext(relationship.RightType);
+                if (secondaryResourceContext == null)
                 {
-                    var relationship = primaryResourceContext.Relationships.Single(r => r.PublicName == operation.Ref.Relationship);
+                    throw new InvalidOperationException("TODO: @OPS: Secondary resource type does not exist.");
+                }
 
-                    var secondaryResourceContext = ResourceContextProvider.GetResourceContext(relationship.RightType);
-                    if (secondaryResourceContext == null)
-                    {
-                        throw new InvalidOperationException("TODO: @OPS: Secondary resource type does not exist.");
-                    }
+                request.SecondaryResource = secondaryResourceContext;
+                request.Relationship = relationship;
+                request.IsCollection = relationship is HasManyAttribute;
 
-                    request.SecondaryResource = secondaryResourceContext;
-                    request.Relationship = relationship;
-                    request.IsCollection = relationship is HasManyAttribute;
+                _targetedFields.Relationships.Add(relationship);
 
-                    _targetedFields.Relationships.Add(relationship);
-
-                    if (operation.SingleData != null)
-                    {
-                        var rightResource = ParseResourceObject(operation.SingleData);
-                        relationship.SetValue(resource, rightResource);
-                    }
-                    else if (operation.ManyData != null)
-                    {
-                        var secondaryResources = operation.ManyData.Select(ParseResourceObject).ToArray();
-                        var rightResources = TypeHelper.CopyToTypedCollection(secondaryResources, relationship.Property.PropertyType);
-                        relationship.SetValue(resource, rightResources);
-                    }
+                if (operation.SingleData != null)
+                {
+                    var rightResource = ParseResourceObject(operation.SingleData);
+                    relationship.SetValue(resource, rightResource);
+                }
+                else if (operation.ManyData != null)
+                {
+                    var secondaryResources = operation.ManyData.Select(ParseResourceObject).ToArray();
+                    var rightResources = TypeHelper.CopyToTypedCollection(secondaryResources, relationship.Property.PropertyType);
+                    relationship.SetValue(resource, rightResources);
                 }
             }
 
@@ -323,6 +364,8 @@ namespace JsonApiDotNetCore.Serialization
                 Attributes = _targetedFields.Attributes.ToHashSet(),
                 Relationships = _targetedFields.Relationships.ToHashSet()
             };
+
+            AssertResourceIdIsNotTargeted(targetedFields);
 
             return new OperationContainer(kind, resource, targetedFields, request);
         }
@@ -356,9 +399,9 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        private void AssertResourceIdIsNotTargeted()
+        private void AssertResourceIdIsNotTargeted(ITargetedFields targetedFields)
         {
-            if (!_request.IsReadOnly && _targetedFields.Attributes.Any(attribute => attribute.Property.Name == nameof(Identifiable.Id)))
+            if (!_request.IsReadOnly && targetedFields.Attributes.Any(attribute => attribute.Property.Name == nameof(Identifiable.Id)))
             {
                 throw new JsonApiSerializationException("Resource ID is read-only.", null,
                     atomicOperationIndex: AtomicOperationIndex);
@@ -374,10 +417,12 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="data">Relationship data for <paramref name="resource"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/>.</param>
         protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null)
         {
+            bool isCreatingResource = IsCreatingResource();
+            bool isUpdatingResource = IsUpdatingResource();
+
             if (field is AttrAttribute attr)
             {
-                if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Post.Method &&
-                    !attr.Capabilities.HasFlag(AttrCapabilities.AllowCreate))
+                if (isCreatingResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowCreate))
                 {
                     throw new JsonApiSerializationException(
                         "Setting the initial value of the requested attribute is not allowed.",
@@ -385,8 +430,7 @@ namespace JsonApiDotNetCore.Serialization
                         atomicOperationIndex: AtomicOperationIndex);
                 }
 
-                if (_httpContextAccessor.HttpContext.Request.Method == HttpMethod.Patch.Method &&
-                    !attr.Capabilities.HasFlag(AttrCapabilities.AllowChange))
+                if (isUpdatingResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowChange))
                 {
                     throw new JsonApiSerializationException(
                         "Changing the value of the requested attribute is not allowed.",
@@ -398,6 +442,22 @@ namespace JsonApiDotNetCore.Serialization
             }
             else if (field is RelationshipAttribute relationship)
                 _targetedFields.Relationships.Add(relationship);
+        }
+
+        private bool IsCreatingResource()
+        {
+            return _request.Kind == EndpointKind.AtomicOperations
+                ? _request.OperationKind == OperationKind.CreateResource
+                : _request.Kind == EndpointKind.Primary &&
+                  _httpContextAccessor.HttpContext.Request.Method == HttpMethod.Post.Method;
+        }
+
+        private bool IsUpdatingResource()
+        {
+            return _request.Kind == EndpointKind.AtomicOperations
+                ? _request.OperationKind == OperationKind.UpdateResource
+                : _request.Kind == EndpointKind.Primary &&
+                  _httpContextAccessor.HttpContext.Request.Method == HttpMethod.Patch.Method;
         }
     }
 }

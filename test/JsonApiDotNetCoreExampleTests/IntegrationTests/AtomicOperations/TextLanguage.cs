@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -17,5 +18,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
             get => Guid.NewGuid();
             set { }
         }
+
+        [HasMany]
+        public ICollection<Lyric> Lyrics { get; set; }
     }
 }

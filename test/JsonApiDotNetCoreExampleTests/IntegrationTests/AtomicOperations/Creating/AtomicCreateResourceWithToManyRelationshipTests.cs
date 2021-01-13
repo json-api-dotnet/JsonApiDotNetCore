@@ -33,7 +33,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         {
             // Arrange
             var existingPerformers = _fakers.Performer.Generate(2);
-
             var newTitle = _fakers.MusicTrack.Generate().Title;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -113,7 +112,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         {
             // Arrange
             var existingTracks = _fakers.MusicTrack.Generate(3);
-
             var newName = _fakers.Playlist.Generate().Name;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -455,7 +453,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         {
             // Arrange
             var existingPerformer = _fakers.Performer.Generate();
-
             var newTitle = _fakers.MusicTrack.Generate().Title;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             {
                 atomic__operations = operationElements
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -185,7 +185,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -238,7 +238,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -293,7 +293,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -324,7 +324,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         {
             // Arrange
             var newTitle = _fakers.MusicTrack.Generate().Title;
-            
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -344,7 +344,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -450,7 +450,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
-            
+
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
@@ -494,7 +494,50 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Errors[0].Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
-        
+
+        [Fact]
+        public async Task Cannot_create_resource_for_array()
+        {
+            // Arrange
+            var newArtistName = _fakers.Performer.Generate().ArtistName;
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "performers",
+                                attributes = new
+                                {
+                                    artistName = newArtistName
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/api/v1/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected single data element for create/update resource operation.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+        }
+
         [Fact]
         public async Task Cannot_create_resource_attribute_with_blocked_capability()
         {
@@ -517,7 +560,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -596,7 +639,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act
@@ -676,7 +719,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     }
                 }
             };
-            
+
             var route = "/api/v1/operations";
 
             // Act

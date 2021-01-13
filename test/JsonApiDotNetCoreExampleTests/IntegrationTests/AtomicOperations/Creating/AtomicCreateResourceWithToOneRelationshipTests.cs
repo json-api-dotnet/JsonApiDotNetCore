@@ -101,7 +101,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         {
             // Arrange
             var existingLyric = _fakers.Lyric.Generate();
-
             var newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -174,7 +173,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             const int elementCount = 5;
 
             var existingCompany = _fakers.RecordCompany.Generate();
-
             var newTrackTitles = _fakers.MusicTrack.Generate(elementCount).Select(musicTrack => musicTrack.Title).ToArray();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -485,7 +483,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         {
             // Arrange
             var existingCompany = _fakers.RecordCompany.Generate();
-
             var newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
