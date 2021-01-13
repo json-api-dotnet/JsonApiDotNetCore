@@ -68,6 +68,9 @@ namespace JsonApiDotNetCore.Configuration
         public int? MaximumIncludeDepth { get; set; }
 
         /// <inheritdoc />
+        public int? MaximumOperationsPerRequest { get; set; } = 10;
+
+        /// <inheritdoc />
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings
         {
             ContractResolver = new DefaultContractResolver

@@ -173,6 +173,12 @@ namespace JsonApiDotNetCore.Configuration
         int? MaximumIncludeDepth { get; }
 
         /// <summary>
+        /// Limits the maximum number of operations allowed per atomic:operations request. Defaults to 10.
+        /// Set to <c>null</c> for unlimited.
+        /// </summary>
+        int? MaximumOperationsPerRequest { get; }
+
+        /// <summary>
         /// Specifies the settings that are used by the <see cref="JsonSerializer"/>.
         /// Note that at some places a few settings are ignored, to ensure JSON:API spec compliance.
         /// <example>

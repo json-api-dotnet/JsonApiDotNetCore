@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -18,7 +19,7 @@ namespace UnitTests.Serialization.Server
         private readonly Mock<IJsonApiRequest> _requestMock = new Mock<IJsonApiRequest>();
         public RequestDeserializerTests()
         {
-            _deserializer = new RequestDeserializer(_resourceGraph, new ResourceFactory(new ServiceContainer()), _fieldsManagerMock.Object, _mockHttpContextAccessor.Object, _requestMock.Object);
+            _deserializer = new RequestDeserializer(_resourceGraph, new ResourceFactory(new ServiceContainer()), _fieldsManagerMock.Object, _mockHttpContextAccessor.Object, _requestMock.Object, new JsonApiOptions());
         }
 
         [Fact]

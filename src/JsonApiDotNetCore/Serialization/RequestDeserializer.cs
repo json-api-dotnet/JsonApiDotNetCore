@@ -23,18 +23,21 @@ namespace JsonApiDotNetCore.Serialization
         private readonly ITargetedFields  _targetedFields;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IJsonApiRequest _request;
+        private readonly IJsonApiOptions _options;
 
         public RequestDeserializer(
             IResourceContextProvider resourceContextProvider,
             IResourceFactory resourceFactory,
             ITargetedFields targetedFields,
             IHttpContextAccessor httpContextAccessor,
-            IJsonApiRequest request) 
+            IJsonApiRequest request,
+            IJsonApiOptions options) 
             : base(resourceContextProvider, resourceFactory)
         {
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             _request = request ?? throw new ArgumentNullException(nameof(request));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         /// <inheritdoc />
@@ -69,6 +72,12 @@ namespace JsonApiDotNetCore.Serialization
             if (document?.Operations == null || !document.Operations.Any())
             {
                 throw new JsonApiSerializationException("No operations found.", null);
+            }
+
+            if (document.Operations.Count > _options.MaximumOperationsPerRequest)
+            {
+                throw new JsonApiSerializationException("Request exceeds the maximum number of operations.", 
+                    $"The number of operations in this request ({document.Operations.Count}) is higher than {_options.MaximumOperationsPerRequest}.");
             }
 
             AtomicOperationIndex = 0;

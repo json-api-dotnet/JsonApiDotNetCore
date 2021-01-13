@@ -31,11 +31,13 @@ namespace UnitTests.Models
         public void When_resource_has_default_constructor_it_must_succeed()
         {
             // Arrange
-            var graph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
+            var options = new JsonApiOptions();
+
+            var graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
                 .Add<ResourceWithoutConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object, options);
 
             var body = new
             {
@@ -60,11 +62,13 @@ namespace UnitTests.Models
         public void When_resource_has_default_constructor_that_throws_it_must_fail()
         {
             // Arrange
-            var graph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
+            var options = new JsonApiOptions();
+
+            var graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
                 .Add<ResourceWithThrowingConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object, options);
 
             var body = new
             {
@@ -91,7 +95,9 @@ namespace UnitTests.Models
         public void When_resource_has_constructor_with_injectable_parameter_it_must_succeed()
         {
             // Arrange
-            var graph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
+            var options = new JsonApiOptions();
+
+            var graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
                 .Add<ResourceWithDbContextConstructor>()
                 .Build();
 
@@ -100,7 +106,7 @@ namespace UnitTests.Models
             var serviceContainer = new ServiceContainer();
             serviceContainer.AddService(typeof(AppDbContext), appDbContext);
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object, options);
 
             var body = new
             {
@@ -126,11 +132,13 @@ namespace UnitTests.Models
         public void When_resource_has_constructor_with_string_parameter_it_must_fail()
         {
             // Arrange
-            var graph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
+            var options = new JsonApiOptions();
+
+            var graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
                 .Add<ResourceWithStringConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object, options);
 
             var body = new
             {
