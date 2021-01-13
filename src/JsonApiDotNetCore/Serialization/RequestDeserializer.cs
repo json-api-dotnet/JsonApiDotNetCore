@@ -68,10 +68,7 @@ namespace JsonApiDotNetCore.Serialization
 
             if (document?.Operations == null || !document.Operations.Any())
             {
-                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                {
-                    Title = "Failed to deserialize operations request."
-                });
+                throw new JsonApiSerializationException("No operations found.", null);
             }
 
             AtomicOperationIndex = 0;

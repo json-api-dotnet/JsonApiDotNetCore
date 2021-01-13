@@ -104,7 +104,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                             attributes = new
                             {
                                 title = newTrack.Title,
-                                lengthInSeconds = newTrack.LengthInSeconds,
+                                lengthInSeconds = newTrack.LengthInSeconds
                             }
                         }
                     }

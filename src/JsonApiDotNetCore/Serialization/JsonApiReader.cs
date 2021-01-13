@@ -67,7 +67,11 @@ namespace JsonApiDotNetCore.Serialization
                 }
             }
 
-            if (_request.Kind != EndpointKind.AtomicOperations && RequiresRequestBody(context.HttpContext.Request.Method))
+            if (_request.Kind == EndpointKind.AtomicOperations)
+            {
+                AssertHasRequestBody(model, body);
+            }
+            else if (RequiresRequestBody(context.HttpContext.Request.Method))
             {
                 ValidateRequestBody(model, body, context.HttpContext.Request);
             }
@@ -115,13 +119,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private void ValidateRequestBody(object model, string body, HttpRequest httpRequest)
         {
-            if (model == null && string.IsNullOrWhiteSpace(body))
-            {
-                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                {
-                    Title = "Missing request body."
-                });
-            }
+            AssertHasRequestBody(model, body);
 
             ValidateIncomingResourceType(model, httpRequest);
 
@@ -134,6 +132,17 @@ namespace JsonApiDotNetCore.Serialization
             if (_request.Kind == EndpointKind.Relationship)
             {
                 ValidateForRelationshipType(httpRequest.Method, model, body);
+            }
+        }
+
+        private static void AssertHasRequestBody(object model, string body)
+        {
+            if (model == null && string.IsNullOrWhiteSpace(body))
+            {
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "Missing request body."
+                });
             }
         }
 

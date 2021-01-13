@@ -522,7 +522,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                                         type = "recordCompanies",
                                         id = existingCompany.StringId
                                     }
-                                },
+                                }
                             }
                         }
                     }
