@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -338,7 +336,7 @@ namespace JsonApiDotNetCore.Serialization
                 Kind = EndpointKind.AtomicOperations,
                 OperationKind = kind,
                 PrimaryId = resource.StringId,
-                BasePath = "TODO: Set this...",
+                BasePath = _request.BasePath,
                 PrimaryResource = primaryResourceContext
             };
 

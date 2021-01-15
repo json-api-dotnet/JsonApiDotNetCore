@@ -15,15 +15,17 @@ namespace JsonApiDotNetCore.Serialization
     /// </summary>
     public sealed class AtomicOperationsResponseSerializer : BaseSerializer, IJsonApiSerializer
     {
+        private readonly ILinkBuilder _linkBuilder;
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IJsonApiOptions _options;
 
         public string ContentType { get; } = HeaderConstants.AtomicOperationsMediaType;
 
-        public AtomicOperationsResponseSerializer(IResourceObjectBuilder resourceObjectBuilder,
+        public AtomicOperationsResponseSerializer(IResourceObjectBuilder resourceObjectBuilder, ILinkBuilder linkBuilder,
             IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
+            _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _options = options ?? throw new ArgumentNullException(nameof(options));
         }
@@ -60,12 +62,17 @@ namespace JsonApiDotNetCore.Serialization
 
                     // TODO: @OPS: Should inject IFieldsToSerialize, which uses SparseFieldSetCache to call into resource definitions to hide fields.
                     // But then we need to update IJsonApiRequest for each loop entry, which we don't have access to anymore.
+                    // That would be more correct, because ILinkBuilder depends on IJsonApiRequest too.
 
                     var attributes = resourceContext.Attributes
                         .Where(attr => attr.Capabilities.HasFlag(AttrCapabilities.AllowView))
                         .ToArray();
 
                     resourceObject = ResourceObjectBuilder.Build(resource, attributes, resourceContext.Relationships);
+                    if (resourceObject != null)
+                    {
+                        resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
+                    }
                 }
 
                 document.Results.Add(new AtomicResultObject

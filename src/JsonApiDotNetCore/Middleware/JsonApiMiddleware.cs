@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Middleware
                     return;
                 }
 
-                SetupAtomicOperationsRequest((JsonApiRequest)request);
+                SetupAtomicOperationsRequest((JsonApiRequest)request, options, httpContext.Request);
 
                 httpContext.RegisterJsonApiRequest();
             }
@@ -238,15 +238,18 @@ namespace JsonApiDotNetCore.Middleware
 
         private static string GetCustomRoute(string resourceName, string apiNamespace, HttpContext httpContext)
         {
-            var endpoint = httpContext.GetEndpoint();
-            var routeAttribute = endpoint.Metadata.GetMetadata<RouteAttribute>();
-            if (routeAttribute != null)
+            if (resourceName != null)
             {
-                var trimmedComponents = httpContext.Request.Path.Value.Trim('/').Split('/').ToList();
-                var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
-                var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
-                var customRoute = string.Join('/', newComponents);
-                return customRoute == apiNamespace ? null : customRoute;
+                var endpoint = httpContext.GetEndpoint();
+                var routeAttribute = endpoint.Metadata.GetMetadata<RouteAttribute>();
+                if (routeAttribute != null)
+                {
+                    var trimmedComponents = httpContext.Request.Path.Value.Trim('/').Split('/').ToList();
+                    var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
+                    var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
+                    var customRoute = string.Join('/', newComponents);
+                    return customRoute == apiNamespace ? null : customRoute;
+                }
             }
 
             return null;
@@ -269,13 +272,11 @@ namespace JsonApiDotNetCore.Middleware
             return actionName == "PostOperations";
         }
 
-        private static void SetupAtomicOperationsRequest(JsonApiRequest request)
+        private static void SetupAtomicOperationsRequest(JsonApiRequest request, IJsonApiOptions options, HttpRequest httpRequest)
         {
             request.IsReadOnly = false;
             request.Kind = EndpointKind.AtomicOperations;
-            
-            // TODO: @OPS: How should we set BasePath to make link rendering work?
-            request.BasePath = null;
+            request.BasePath = GetBasePath(null, options, httpRequest);
         }
     }
 }
