@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.AtomicOperations
 {
@@ -22,30 +19,21 @@ namespace JsonApiDotNetCore.AtomicOperations
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceContextProvider _resourceContextProvider;
-        private readonly DbContext _dbContext;
+        private readonly IAtomicOperationsTransactionFactory _atomicOperationsTransactionFactory;
 
         public AtomicOperationsProcessor(IAtomicOperationProcessorResolver resolver,
             ILocalIdTracker localIdTracker, IJsonApiRequest request, ITargetedFields targetedFields,
-            IResourceContextProvider resourceContextProvider, IEnumerable<IDbContextResolver> dbContextResolvers)
+            IResourceContextProvider resourceContextProvider, IAtomicOperationsTransactionFactory atomicOperationsTransactionFactory)
         {
-            if (dbContextResolvers == null) throw new ArgumentNullException(nameof(dbContextResolvers));
-
             _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
             _localIdTracker = localIdTracker ?? throw new ArgumentNullException(nameof(localIdTracker));
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-
-            var resolvers = dbContextResolvers.ToArray();
-            if (resolvers.Length != 1)
-            {
-                throw new InvalidOperationException(
-                    "TODO: @OPS: At least one DbContext is required for atomic operations. Multiple DbContexts are currently not supported.");
-            }
-
-            _dbContext = resolvers[0].GetContext();
+            _atomicOperationsTransactionFactory = atomicOperationsTransactionFactory ?? throw new ArgumentNullException(nameof(atomicOperationsTransactionFactory));
         }
 
+        /// <inheritdoc />
         public async Task<IList<IIdentifiable>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
         {
             if (operations == null) throw new ArgumentNullException(nameof(operations));
@@ -54,12 +42,14 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             var results = new List<IIdentifiable>();
 
-            await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+            await using var transaction = await _atomicOperationsTransactionFactory.BeginTransactionAsync(cancellationToken);
             try
             {
                 foreach (var operation in operations)
                 {
-                    _dbContext.ResetChangeTracker();
+                    operation.SetTransactionId(transaction.TransactionId);
+
+                    transaction.PrepareForNextOperation();
 
                     var result = await ProcessOperation(operation, cancellationToken);
                     results.Add(result);
@@ -74,11 +64,6 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
             catch (JsonApiException exception)
             {
-                if (_dbContext.Database.CurrentTransaction != null)
-                {
-                    await transaction.RollbackAsync(cancellationToken);
-                }
-
                 foreach (var error in exception.Errors)
                 {
                     error.Source.Pointer = $"/atomic:operations[{results.Count}]" + error.Source.Pointer;
@@ -88,11 +73,6 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
             catch (Exception exception)
             {
-                if (_dbContext.Database.CurrentTransaction != null)
-                {
-                    await transaction.RollbackAsync(cancellationToken);
-                }
-
                 throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
                 {
                     Title = "An unhandled error occurred while processing an operation in this request.",

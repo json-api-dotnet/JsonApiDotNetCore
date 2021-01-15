@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Repositories
     /// <summary>
     /// Implements the foundational Repository layer in the JsonApiDotNetCore architecture that uses Entity Framework Core.
     /// </summary>
-    public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository<TResource, TId>
+    public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository<TResource, TId>, IRepositorySupportsTransaction
         where TResource : class, IIdentifiable<TId>
     {
         private readonly ITargetedFields _targetedFields;
@@ -31,6 +31,9 @@ namespace JsonApiDotNetCore.Repositories
         private readonly IResourceFactory _resourceFactory;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
+
+        /// <inheritdoc />
+        public virtual Guid? TransactionId => _dbContext.Database.CurrentTransaction?.TransactionId;
 
         public EntityFrameworkCoreRepository(
             ITargetedFields targetedFields,
@@ -401,8 +404,8 @@ namespace JsonApiDotNetCore.Repositories
             {
                 if (_dbContext.Database.CurrentTransaction != null)
                 {
-                    // The ResourceService calling us needs to run additional SQL queries
-                    // after an aborted transaction, to determine error cause.
+                    // The ResourceService calling us needs to run additional SQL queries after an aborted transaction,
+                    // to determine error cause. This fails when a failed transaction is still in progress.
                     await _dbContext.Database.CurrentTransaction.RollbackAsync(cancellationToken);
                 }
 

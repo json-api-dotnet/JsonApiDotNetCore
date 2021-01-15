@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -15,11 +17,13 @@ namespace JsonApiDotNetCore.Repositories
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IJsonApiRequest _request;
 
-        public ResourceRepositoryAccessor(IServiceProvider serviceProvider, IResourceContextProvider resourceContextProvider)
+        public ResourceRepositoryAccessor(IServiceProvider serviceProvider, IResourceContextProvider resourceContextProvider, IJsonApiRequest request)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentException(nameof(serviceProvider));
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentException(nameof(serviceProvider));
+            _request = request ?? throw new ArgumentNullException(nameof(request));
         }
 
         /// <inheritdoc />
@@ -131,6 +135,28 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         protected virtual object ResolveWriteRepository(Type resourceType)
+        {
+            var writeRepository = ResolveWriteRepository(resourceType);
+
+            if (_request.TransactionId != null)
+            {
+                if (!(writeRepository is IRepositorySupportsTransaction repository))
+                {
+                    var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+                    throw new MissingTransactionSupportException(resourceContext.PublicName);
+
+                }
+
+                if (repository.TransactionId != _request.TransactionId)
+                {
+                    throw new MultipleTransactionsException();
+                }
+            }
+
+            return writeRepository;
+        }
+
+        private object ResolveWriteRepository(Type resourceType)
         {
             var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
 

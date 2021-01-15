@@ -21,5 +21,10 @@ namespace JsonApiDotNetCore.Resources
             TargetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
             Request = request ?? throw new ArgumentNullException(nameof(request));
         }
+
+        public void SetTransactionId(Guid transactionId)
+        {
+            ((JsonApiRequest) Request).TransactionId = transactionId;
+        }
     }
 }

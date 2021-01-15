@@ -1,3 +1,4 @@
+using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -62,6 +63,11 @@ namespace JsonApiDotNetCore.Middleware
         /// In case of an atomic:operations request, this indicates the operation currently being processed.
         /// </summary>
         OperationKind? OperationKind { get; }
+
+        /// <summary>
+        /// In case of an atomic:operations request, identifies the overarching transaction.
+        /// </summary>
+        Guid? TransactionId { get; }
 
         /// <summary>
         /// Performs a shallow copy.

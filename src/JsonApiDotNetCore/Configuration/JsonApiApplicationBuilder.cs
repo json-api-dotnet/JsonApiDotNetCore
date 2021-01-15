@@ -132,6 +132,12 @@ namespace JsonApiDotNetCore.Configuration
                     var contextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
                     _services.AddScoped(typeof(IDbContextResolver), contextResolverType);
                 }
+
+                _services.AddScoped<IAtomicOperationsTransactionFactory, EntityFrameworkCoreTransactionFactory>();
+            }
+            else
+            {
+                _services.AddScoped<IAtomicOperationsTransactionFactory, MissingTransactionFactory>();
             }
 
             AddResourceLayer();

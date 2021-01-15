@@ -35,6 +35,9 @@ namespace JsonApiDotNetCore.Middleware
         public OperationKind? OperationKind { get; set; }
 
         /// <inheritdoc />
+        public Guid? TransactionId { get; set; }
+
+        /// <inheritdoc />
         public void CopyFrom(IJsonApiRequest other)
         {
             if (other == null) throw new ArgumentNullException(nameof(other));
@@ -48,6 +51,7 @@ namespace JsonApiDotNetCore.Middleware
             IsCollection = other.IsCollection;
             IsReadOnly = other.IsReadOnly;
             OperationKind = other.OperationKind;
+            TransactionId = other.TransactionId;
         }
     }
 }
