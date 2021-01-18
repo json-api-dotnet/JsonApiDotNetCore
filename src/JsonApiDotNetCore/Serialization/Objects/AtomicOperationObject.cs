@@ -6,7 +6,7 @@ using Newtonsoft.Json.Converters;
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
-    /// https://jsonapi.org/ext/atomic/#operation-objects
+    /// See https://jsonapi.org/ext/atomic/#operation-objects.
     /// </summary>
     public sealed class AtomicOperationObject : ExposableData<ResourceObject>
     {

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
-    /// https://jsonapi.org/ext/atomic/#result-objects
+    /// See https://jsonapi.org/ext/atomic/#result-objects.
     /// </summary>
     public sealed class AtomicResultObject : ExposableData<ResourceObject>
     {

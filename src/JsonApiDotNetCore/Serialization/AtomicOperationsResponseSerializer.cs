@@ -18,16 +18,18 @@ namespace JsonApiDotNetCore.Serialization
         private readonly ILinkBuilder _linkBuilder;
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IJsonApiOptions _options;
+        private readonly IMetaBuilder _metaBuilder;
 
         public string ContentType { get; } = HeaderConstants.AtomicOperationsMediaType;
 
         public AtomicOperationsResponseSerializer(IResourceObjectBuilder resourceObjectBuilder, ILinkBuilder linkBuilder,
-            IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
+            IResourceContextProvider resourceContextProvider, IJsonApiOptions options, IMetaBuilder metaBuilder)
             : base(resourceObjectBuilder)
         {
             _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _options = options ?? throw new ArgumentNullException(nameof(options));
+            _metaBuilder = metaBuilder ?? throw new ArgumentNullException(nameof(metaBuilder));
         }
 
         public string Serialize(object content)
@@ -80,6 +82,8 @@ namespace JsonApiDotNetCore.Serialization
                     Data = resourceObject
                 });
             }
+
+            document.Meta = _metaBuilder.Build();
 
             return SerializeObject(document, _options.SerializerSettings);
         }
