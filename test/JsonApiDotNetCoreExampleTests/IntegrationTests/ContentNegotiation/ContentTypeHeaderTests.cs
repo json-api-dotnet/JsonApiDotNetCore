@@ -63,7 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
             
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
@@ -153,7 +153,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
             
-            var route = "/api/v1/operations";
+            var route = "/operations";
             var contentType = HeaderConstants.AtomicOperationsMediaType;
 
             // Act
@@ -341,7 +341,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
             
-            var route = "/api/v1/operations";
+            var route = "/operations";
             var contentType = HeaderConstants.MediaType;
 
             // Act

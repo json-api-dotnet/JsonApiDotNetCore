@@ -62,7 +62,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/api/v1/operations?include=recordCompanies";
+            var route = "/operations?include=recordCompanies";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/api/v1/operations?filter=equals(id,'1')";
+            var route = "/operations?filter=equals(id,'1')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -136,7 +136,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/api/v1/operations?sort=-id";
+            var route = "/operations?sort=-id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -173,7 +173,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/api/v1/operations?page[number]=1";
+            var route = "/operations?page[number]=1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -210,7 +210,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/api/v1/operations?page[size]=1";
+            var route = "/operations?page[size]=1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -247,7 +247,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/api/v1/operations?fields[recordCompanies]=id";
+            var route = "/operations?fields[recordCompanies]=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -316,7 +316,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/api/v1/operations?isRecentlyReleased=true";
+            var route = "/operations?isRecentlyReleased=true";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -358,7 +358,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/api/v1/operations?defaults=false";
+            var route = "/operations?defaults=false";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
@@ -401,7 +401,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/api/v1/operations?nulls=false";
+            var route = "/operations?nulls=false";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);

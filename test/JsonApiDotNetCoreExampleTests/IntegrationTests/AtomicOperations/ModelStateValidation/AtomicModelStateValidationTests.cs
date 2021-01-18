@@ -11,12 +11,12 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelStateValidation
 {
     public sealed class AtomicModelStateValidationTests
-        : IClassFixture<IntegrationTestContext<AtomicModelStateValidationStartup, OperationsDbContext>>
+        : IClassFixture<IntegrationTestContext<ModelStateValidationStartup<OperationsDbContext>, OperationsDbContext>>
     {
-        private readonly IntegrationTestContext<AtomicModelStateValidationStartup, OperationsDbContext> _testContext;
+        private readonly IntegrationTestContext<ModelStateValidationStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicModelStateValidationTests(IntegrationTestContext<AtomicModelStateValidationStartup, OperationsDbContext> testContext)
+        public AtomicModelStateValidationTests(IntegrationTestContext<ModelStateValidationStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
@@ -174,7 +174,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -228,7 +228,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
@@ -291,7 +291,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
@@ -348,7 +348,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
@@ -407,7 +407,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
@@ -465,7 +465,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);

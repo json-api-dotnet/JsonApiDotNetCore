@@ -17,15 +17,15 @@ namespace JsonApiDotNetCore.Controllers
     /// Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture for handling atomic:operations requests.
     /// See https://jsonapi.org/ext/atomic/ for details. Delegates work to <see cref="IAtomicOperationsProcessor"/>.
     /// </summary>
-    public abstract class BaseJsonApiAtomicOperationsController : CoreJsonApiController
+    public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     {
         private readonly IJsonApiOptions _options;
         private readonly IAtomicOperationsProcessor _processor;
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
-        private readonly TraceLogWriter<BaseJsonApiAtomicOperationsController> _traceWriter;
+        private readonly TraceLogWriter<BaseJsonApiOperationsController> _traceWriter;
 
-        protected BaseJsonApiAtomicOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
+        protected BaseJsonApiOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
             IAtomicOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Controllers
             _processor = processor ?? throw new ArgumentNullException(nameof(processor));
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
-            _traceWriter = new TraceLogWriter<BaseJsonApiAtomicOperationsController>(loggerFactory);
+            _traceWriter = new TraceLogWriter<BaseJsonApiOperationsController>(loggerFactory);
         }
 
         /// <summary>

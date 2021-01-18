@@ -65,7 +65,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
             
-            var route = "/api/v1/operations";
+            var route = "/operations";
             var contentType = HeaderConstants.AtomicOperationsMediaType;
             
             var acceptHeaders = new MediaTypeWithQualityHeaderValue[0];
@@ -160,7 +160,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
             
-            var route = "/api/v1/operations";
+            var route = "/operations";
             var contentType = HeaderConstants.AtomicOperationsMediaType;
             
             var acceptHeaders = new[]
@@ -229,7 +229,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
             
-            var route = "/api/v1/operations";
+            var route = "/operations";
             var contentType = HeaderConstants.AtomicOperationsMediaType;
 
             var acceptHeaders = new[]

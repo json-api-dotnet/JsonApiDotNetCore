@@ -63,18 +63,22 @@ namespace JsonApiDotNetCore.Middleware
 
             foreach (var controller in application.Controllers)
             {
-                var resourceType = ExtractResourceTypeFromController(controller.ControllerType);
-
-                if (resourceType != null)
+                bool isOperationsController = IsOperationsController(controller.ControllerType);
+                if (!isOperationsController)
                 {
-                    var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
-    
-                    if (resourceContext != null)
+                    var resourceType = ExtractResourceTypeFromController(controller.ControllerType);
+
+                    if (resourceType != null)
                     {
-                        _registeredResources.Add(controller.ControllerName, resourceContext);
+                        var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+    
+                        if (resourceContext != null)
+                        {
+                            _registeredResources.Add(controller.ControllerName, resourceContext);
+                        }
                     }
                 }
-
+                
                 if (!RoutingConventionDisabled(controller))
                 {
                     continue;
@@ -168,6 +172,12 @@ namespace JsonApiDotNetCore.Middleware
             }
 
             return currentType?.GetGenericArguments().First();
+        }
+
+        private static bool IsOperationsController(Type type)
+        {
+            var baseControllerType = typeof(BaseJsonApiOperationsController);
+            return baseControllerType.IsAssignableFrom(type);
         }
     }
 }

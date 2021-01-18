@@ -64,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
@@ -225,7 +225,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
@@ -265,7 +265,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -300,7 +300,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -336,7 +336,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -371,7 +371,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -423,7 +423,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -460,7 +460,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -495,7 +495,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -531,7 +531,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -576,7 +576,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -619,7 +619,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -663,7 +663,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -706,7 +706,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -751,7 +751,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -809,7 +809,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -867,7 +867,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -913,7 +913,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 }
             };
 
-            var route = "/api/v1/operations";
+            var route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);

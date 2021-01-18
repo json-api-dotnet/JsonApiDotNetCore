@@ -1,11 +1,13 @@
 using JsonApiDotNetCore.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelStateValidation
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests
 {
-    public sealed class AtomicModelStateValidationStartup : TestableStartup<OperationsDbContext>
+    public sealed class ModelStateValidationStartup<TDbContext> : TestableStartup<TDbContext>
+        where TDbContext : DbContext
     {
-        public AtomicModelStateValidationStartup(IConfiguration configuration)
+        public ModelStateValidationStartup(IConfiguration configuration)
             : base(configuration)
         {
         }
