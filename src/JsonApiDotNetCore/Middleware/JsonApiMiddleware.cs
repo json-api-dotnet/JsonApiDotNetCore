@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Middleware
                     return;
                 }
 
-                SetupRequest((JsonApiRequest)request, primaryResourceContext, routeValues, options, resourceContextProvider, httpContext.Request);
+                SetupResourceRequest((JsonApiRequest)request, primaryResourceContext, routeValues, options, resourceContextProvider, httpContext.Request);
 
                 httpContext.RegisterJsonApiRequest();
             }
@@ -175,7 +175,7 @@ namespace JsonApiDotNetCore.Middleware
             await httpResponse.Body.FlushAsync();
         }
 
-        private static void SetupRequest(JsonApiRequest request, ResourceContext primaryResourceContext,
+        private static void SetupResourceRequest(JsonApiRequest request, ResourceContext primaryResourceContext,
             RouteValueDictionary routeValues, IJsonApiOptions options, IResourceContextProvider resourceContextProvider,
             HttpRequest httpRequest)
         {

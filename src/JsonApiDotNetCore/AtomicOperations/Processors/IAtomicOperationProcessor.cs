@@ -9,6 +9,6 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     /// </summary>
     public interface IAtomicOperationProcessor
     {
-        Task<IIdentifiable> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken);
+        Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken);
     }
 }

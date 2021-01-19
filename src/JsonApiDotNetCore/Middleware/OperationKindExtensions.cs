@@ -4,14 +4,13 @@ namespace JsonApiDotNetCore.Middleware
     {
         public static bool IsRelationship(this OperationKind kind)
         {
-            return kind == OperationKind.SetRelationship || kind == OperationKind.AddToRelationship ||
-                   kind == OperationKind.RemoveFromRelationship;
+            return IsRelationship((OperationKind?)kind);
         }
 
-        public static bool IsResource(this OperationKind kind)
+        public static bool IsRelationship(this OperationKind? kind)
         {
-            return kind == OperationKind.CreateResource || kind == OperationKind.UpdateResource ||
-                   kind == OperationKind.DeleteResource;
+            return kind == OperationKind.SetRelationship || kind == OperationKind.AddToRelationship ||
+                   kind == OperationKind.RemoveFromRelationship;
         }
     }
 }

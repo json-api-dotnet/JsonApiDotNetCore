@@ -143,5 +143,10 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             return fieldSet;
         }
+
+        public void Reset()
+        {
+            _visitedTable.Clear();
+        }
     }
 }

@@ -34,13 +34,13 @@ namespace JsonApiDotNetCore.AtomicOperations
         }
 
         /// <inheritdoc />
-        public async Task<IList<IIdentifiable>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
+        public async Task<IList<OperationContainer>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
         {
             if (operations == null) throw new ArgumentNullException(nameof(operations));
 
             // TODO: @OPS: Consider to validate local:id usage upfront.
 
-            var results = new List<IIdentifiable>();
+            var results = new List<OperationContainer>();
 
             await using var transaction = await _atomicOperationsTransactionFactory.BeginTransactionAsync(cancellationToken);
             try
@@ -86,7 +86,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
         }
 
-        private async Task<IIdentifiable> ProcessOperation(OperationContainer operation, CancellationToken cancellationToken)
+        private async Task<OperationContainer> ProcessOperation(OperationContainer operation, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 

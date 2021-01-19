@@ -26,5 +26,12 @@ namespace JsonApiDotNetCore.Resources
         {
             ((JsonApiRequest) Request).TransactionId = transactionId;
         }
+
+        public OperationContainer WithResource(IIdentifiable resource)
+        {
+            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
+            return new OperationContainer(Kind, resource, TargetedFields, Request);
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         }
 
         /// <inheritdoc />
-        public async Task<IIdentifiable> ProcessAsync(OperationContainer operation,
+        public async Task<OperationContainer> ProcessAsync(OperationContainer operation,
             CancellationToken cancellationToken)
         {
             if (operation == null) throw new ArgumentNullException(nameof(operation));
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
                 _localIdTracker.Assign(operation.Resource.LocalId, resourceContext.PublicName, serverId);
             }
 
-            return newResource;
+            return newResource == null ? null : operation.WithResource(newResource);
         }
     }
 

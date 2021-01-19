@@ -17,6 +17,8 @@ namespace JsonApiDotNetCore.Serialization
     {
         private readonly ILinkBuilder _linkBuilder;
         private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IFieldsToSerialize _fieldsToSerialize;
+        private readonly IJsonApiRequest _request;
         private readonly IJsonApiOptions _options;
         private readonly IMetaBuilder _metaBuilder;
 
@@ -24,20 +26,23 @@ namespace JsonApiDotNetCore.Serialization
 
         public AtomicOperationsResponseSerializer(IMetaBuilder metaBuilder, ILinkBuilder linkBuilder,
             IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider resourceContextProvider,
+            IFieldsToSerialize fieldsToSerialize, IJsonApiRequest request,
             IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
             _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            _fieldsToSerialize = fieldsToSerialize ?? throw new ArgumentNullException(nameof(fieldsToSerialize));
+            _request = request ?? throw new ArgumentNullException(nameof(request));
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _metaBuilder = metaBuilder ?? throw new ArgumentNullException(nameof(metaBuilder));
         }
 
         public string Serialize(object content)
         {
-            if (content is IList<IIdentifiable> resources)
+            if (content is IList<OperationContainer> operations)
             {
-                return SerializeOperationsDocument(resources);
+                return SerializeOperationsDocument(operations);
             }
 
             if (content is ErrorDocument errorDocument)
@@ -48,30 +53,27 @@ namespace JsonApiDotNetCore.Serialization
             throw new InvalidOperationException("Data being returned must be errors or an atomic:operations document.");
         }
 
-        private string SerializeOperationsDocument(IEnumerable<IIdentifiable> resources)
+        private string SerializeOperationsDocument(IEnumerable<OperationContainer> operations)
         {
             var document = new AtomicOperationsDocument
             {
                 Results = new List<AtomicResultObject>()
             };
 
-            foreach (IIdentifiable resource in resources)
+            foreach (var operation in operations)
             {
                 ResourceObject resourceObject = null;
 
-                if (resource != null)
+                if (operation != null)
                 {
-                    var resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
+                    _request.CopyFrom(operation.Request);
+                    _fieldsToSerialize.ResetCache();
 
-                    // TODO: @OPS: Should inject IFieldsToSerialize, which uses SparseFieldSetCache to call into resource definitions to hide fields.
-                    // But then we need to update IJsonApiRequest for each loop entry, which we don't have access to anymore.
-                    // That would be more correct, because ILinkBuilder depends on IJsonApiRequest too.
+                    var resourceType = operation.Resource.GetType();
+                    var attributes = _fieldsToSerialize.GetAttributes(resourceType);
+                    var relationships = _fieldsToSerialize.GetRelationships(resourceType);
 
-                    var attributes = resourceContext.Attributes
-                        .Where(attr => attr.Capabilities.HasFlag(AttrCapabilities.AllowView))
-                        .ToArray();
-
-                    resourceObject = ResourceObjectBuilder.Build(resource, attributes, resourceContext.Relationships);
+                    resourceObject = ResourceObjectBuilder.Build(operation.Resource, attributes, relationships);
                     if (resourceObject != null)
                     {
                         resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
