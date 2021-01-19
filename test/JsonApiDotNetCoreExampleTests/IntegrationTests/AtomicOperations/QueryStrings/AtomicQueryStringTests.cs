@@ -32,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 services.AddMvcCore().ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part));
 
                 services.AddSingleton<ISystemClock>(new FrozenSystemClock(_frozenTime));
-                services.AddScoped<IResourceDefinition<MusicTrack, Guid>, MusicTrackResourceDefinition>();
+                services.AddScoped<IResourceDefinition<MusicTrack, Guid>, MusicTrackReleaseDefinition>();
             });
 
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

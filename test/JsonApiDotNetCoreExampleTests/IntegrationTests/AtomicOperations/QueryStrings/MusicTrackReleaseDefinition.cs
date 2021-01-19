@@ -5,13 +5,13 @@ using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Primitives;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryStrings
 {
-    public sealed class MusicTrackResourceDefinition : JsonApiResourceDefinition<MusicTrack, Guid>
+    public sealed class MusicTrackReleaseDefinition : JsonApiResourceDefinition<MusicTrack, Guid>
     {
         private readonly ISystemClock _systemClock;
 
-        public MusicTrackResourceDefinition(IResourceGraph resourceGraph, ISystemClock systemClock)
+        public MusicTrackReleaseDefinition(IResourceGraph resourceGraph, ISystemClock systemClock)
             : base(resourceGraph)
         {
             _systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));

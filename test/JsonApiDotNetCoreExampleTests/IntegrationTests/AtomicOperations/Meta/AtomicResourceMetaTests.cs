@@ -27,8 +27,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
                 var part = new AssemblyPart(typeof(EmptyStartup).Assembly);
                 services.AddMvcCore().ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part));
 
-                services.AddScoped<IResourceDefinition<MusicTrack, Guid>, MusicTrackDefinition>();
-                services.AddScoped<IResourceDefinition<TextLanguage, Guid>, TextLanguageDefinition>();
+                services.AddScoped<IResourceDefinition<MusicTrack, Guid>, MusicTrackMetaDefinition>();
+                services.AddScoped<IResourceDefinition<TextLanguage, Guid>, TextLanguageMetaDefinition>();
             });
         }
 

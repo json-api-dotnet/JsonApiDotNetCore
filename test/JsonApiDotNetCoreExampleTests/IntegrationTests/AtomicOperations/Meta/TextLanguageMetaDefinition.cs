@@ -5,9 +5,9 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
 {
-    public sealed class TextLanguageDefinition : JsonApiResourceDefinition<TextLanguage, Guid>
+    public sealed class TextLanguageMetaDefinition : JsonApiResourceDefinition<TextLanguage, Guid>
     {
-        public TextLanguageDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+        public TextLanguageMetaDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
         {
         }
 

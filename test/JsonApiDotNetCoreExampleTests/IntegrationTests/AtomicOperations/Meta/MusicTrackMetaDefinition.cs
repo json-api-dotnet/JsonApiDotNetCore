@@ -5,9 +5,9 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
 {
-    public sealed class MusicTrackDefinition : JsonApiResourceDefinition<MusicTrack, Guid>
+    public sealed class MusicTrackMetaDefinition : JsonApiResourceDefinition<MusicTrack, Guid>
     {
-        public MusicTrackDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+        public MusicTrackMetaDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
         {
         }
 
