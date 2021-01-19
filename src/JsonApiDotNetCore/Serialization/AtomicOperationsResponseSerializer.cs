@@ -19,20 +19,18 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IJsonApiOptions _options;
         private readonly IMetaBuilder _metaBuilder;
-        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
 
         public string ContentType { get; } = HeaderConstants.AtomicOperationsMediaType;
 
         public AtomicOperationsResponseSerializer(IMetaBuilder metaBuilder, ILinkBuilder linkBuilder,
             IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider resourceContextProvider,
-            IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiOptions options)
+            IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
             _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _metaBuilder = metaBuilder ?? throw new ArgumentNullException(nameof(metaBuilder));
-            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
         }
 
         public string Serialize(object content)
@@ -77,7 +75,6 @@ namespace JsonApiDotNetCore.Serialization
                     if (resourceObject != null)
                     {
                         resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
-                        resourceObject.Meta = _resourceDefinitionAccessor.GetMeta(resource.GetType(), resource);
                     }
                 }
 
