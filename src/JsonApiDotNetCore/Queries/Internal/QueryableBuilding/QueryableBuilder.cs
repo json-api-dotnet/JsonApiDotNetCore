@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// <summary>
     /// Drives conversion from <see cref="QueryLayer"/> into system <see cref="Expression"/> trees.
     /// </summary>
-    public sealed class QueryableBuilder
+    public class QueryableBuilder
     {
         private readonly Expression _source;
         private readonly Type _elementType;
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             _lambdaScopeFactory = lambdaScopeFactory ?? new LambdaScopeFactory(_nameFactory);
         }
 
-        public Expression ApplyQuery(QueryLayer layer)
+        public virtual Expression ApplyQuery(QueryLayer layer)
         {
             if (layer == null) throw new ArgumentNullException(nameof(layer));
 
@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return expression;
         }
 
-        private Expression ApplyInclude(Expression source, IncludeExpression include, ResourceContext resourceContext)
+        protected virtual Expression ApplyInclude(Expression source, IncludeExpression include, ResourceContext resourceContext)
         {
             using var lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return builder.ApplyInclude(include);
         }
 
-        private Expression ApplyFilter(Expression source, FilterExpression filter)
+        protected virtual Expression ApplyFilter(Expression source, FilterExpression filter)
         {
             using var lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return builder.ApplyWhere(filter);
         }
 
-        private Expression ApplySort(Expression source, SortExpression sort)
+        protected virtual Expression ApplySort(Expression source, SortExpression sort)
         {
             using var lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return builder.ApplyOrderBy(sort);
         }
 
-        private Expression ApplyPagination(Expression source, PaginationExpression pagination)
+        protected virtual Expression ApplyPagination(Expression source, PaginationExpression pagination)
         {
             using var lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
@@ -104,7 +104,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return builder.ApplySkipTake(pagination);
         }
 
-        private Expression ApplyProjection(Expression source, IDictionary<ResourceFieldAttribute, QueryLayer> projection, ResourceContext resourceContext)
+        protected virtual Expression ApplyProjection(Expression source, IDictionary<ResourceFieldAttribute, QueryLayer> projection, ResourceContext resourceContext)
         {
             using var lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 

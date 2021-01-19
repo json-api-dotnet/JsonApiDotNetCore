@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Resources
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
-            dynamic resourceDefinition = GetResourceDefinition(resourceType);
+            dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             return resourceDefinition.OnApplyIncludes(existingIncludes);
         }
 
@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Resources
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
-            dynamic resourceDefinition = GetResourceDefinition(resourceType);
+            dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             return resourceDefinition.OnApplyFilter(existingFilter);
         }
 
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Resources
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
-            dynamic resourceDefinition = GetResourceDefinition(resourceType);
+            dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             return resourceDefinition.OnApplySort(existingSort);
         }
 
@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Resources
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
-            dynamic resourceDefinition = GetResourceDefinition(resourceType);
+            dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             return resourceDefinition.OnApplyPagination(existingPagination);
         }
 
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Resources
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
-            dynamic resourceDefinition = GetResourceDefinition(resourceType);
+            dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             return resourceDefinition.OnApplySparseFieldSet(existingSparseFieldSet);
         }
 
@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.Resources
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
             if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
 
-            dynamic resourceDefinition = GetResourceDefinition(resourceType);
+            dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             var handlers = resourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters();
 
             return handlers != null && handlers.ContainsKey(parameterName) ? handlers[parameterName] : null;
@@ -80,11 +80,11 @@ namespace JsonApiDotNetCore.Resources
         {
             if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
 
-            dynamic resourceDefinition = GetResourceDefinition(resourceType);
+            dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             return resourceDefinition.GetMeta((dynamic) resourceInstance);
         }
 
-        protected object GetResourceDefinition(Type resourceType)
+        protected virtual object ResolveResourceDefinition(Type resourceType)
         {
             var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
 
