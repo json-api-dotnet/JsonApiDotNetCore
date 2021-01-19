@@ -121,7 +121,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             if (resourceOrResources is IEnumerable enumerable)
             {
-                var resources = enumerable.Cast<IIdentifiable>();
+                dynamic resources = enumerable;
                 return _resourceHookExecutor.OnReturn(resources, ResourcePipeline.GetRelationship).ToArray();
             }
 

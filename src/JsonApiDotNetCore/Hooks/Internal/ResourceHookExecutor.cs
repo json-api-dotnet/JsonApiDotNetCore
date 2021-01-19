@@ -118,7 +118,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <inheritdoc />
         public IEnumerable<TResource> OnReturn<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.OnReturn, resources, out var container, out var node) && pipeline != ResourcePipeline.GetRelationship)
+            if (GetHook(ResourceHook.OnReturn, resources, out var container, out var node))
             {
                 IEnumerable<TResource> updated = container.OnReturn((HashSet<TResource>)node.UniqueResources, pipeline);
                 ValidateHookResponse(updated);

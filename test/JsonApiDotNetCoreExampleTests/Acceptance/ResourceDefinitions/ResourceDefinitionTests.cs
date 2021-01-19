@@ -218,6 +218,30 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
+        public async Task Article_Through_Secondary_Endpoint_Is_Hidden()
+        {
+            // Arrange
+            var articles = _articleFaker.Generate(3);
+            string toBeExcluded = "This should not be included";
+            articles[0].Caption = toBeExcluded;
+            var author = _authorFaker.Generate();
+            author.Articles = articles;
+
+            _dbContext.AuthorDifferentDbContextName.Add(author);
+            await _dbContext.SaveChangesAsync();
+
+            var route = $"/api/v1/authors/{author.Id}/articles";
+
+            // Act
+            var response = await _client.GetAsync(route);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with body: {body}");
+            Assert.DoesNotContain(toBeExcluded, body);
+        }
+
+        [Fact]
         public async Task Tag_Is_Hidden()
         {
             // Arrange
