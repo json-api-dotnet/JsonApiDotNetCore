@@ -45,6 +45,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.OnReturn(articles, ResourcePipeline.GetRelationship);
 
             // Assert
+            articleResourceMock.Verify(rd => rd.OnReturn(It.Is<HashSet<Article>>((collection) => !collection.Except(articles).Any()), ResourcePipeline.GetRelationship), Times.Once());
             joinResourceMock.Verify(rd => rd.OnReturn(It.Is<HashSet<IdentifiableArticleTag>>((collection) => !collection.Except(joins).Any()), ResourcePipeline.GetRelationship), Times.Once());
             tagResourceMock.Verify(rd => rd.OnReturn(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourcePipeline.GetRelationship), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, joinResourceMock, tagResourceMock);

@@ -119,9 +119,9 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
         public object OnReturnRelationship(object resourceOrResources)
         {
-            if (resourceOrResources is IEnumerable enumerable)
+            if (resourceOrResources is IEnumerable)
             {
-                var resources = enumerable.Cast<IIdentifiable>();
+                dynamic resources = resourceOrResources;
                 return _resourceHookExecutor.OnReturn(resources, ResourcePipeline.GetRelationship).ToArray();
             }
 
