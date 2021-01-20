@@ -2,12 +2,6 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
-    /// <inheritdoc />
-    public interface ISetRelationshipProcessor<TResource> : ISetRelationshipProcessor<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-    }
-
     /// <summary>
     /// Processes a single operation to perform a complete replacement of a relationship on an existing resource.
     /// </summary>

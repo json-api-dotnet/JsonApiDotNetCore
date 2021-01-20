@@ -7,11 +7,7 @@ using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
-    /// <summary>
-    /// Processes a single operation to create a new resource with attributes, relationships or both.
-    /// </summary>
-    /// <typeparam name="TResource">The resource type.</typeparam>
-    /// <typeparam name="TId">The resource identifier type.</typeparam>
+    /// <inheritdoc />
     public class CreateProcessor<TResource, TId> : ICreateProcessor<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
@@ -44,21 +40,6 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             }
 
             return newResource == null ? null : operation.WithResource(newResource);
-        }
-    }
-
-    /// <summary>
-    /// Processes a single operation to create a new resource with attributes, relationships or both.
-    /// </summary>
-    /// <typeparam name="TResource">The resource type.</typeparam>
-    public class CreateProcessor<TResource>
-        : CreateProcessor<TResource, int>, ICreateProcessor<TResource>
-        where TResource : class, IIdentifiable<int>
-    {
-        public CreateProcessor(ICreateService<TResource> service, ILocalIdTracker localIdTracker,
-            IResourceContextProvider resourceContextProvider)
-            : base(service, localIdTracker, resourceContextProvider)
-        {
         }
     }
 }

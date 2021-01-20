@@ -1,14 +1,17 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.AtomicOperations.Processors
+namespace JsonApiDotNetCore.AtomicOperations
 {
-    public abstract class BaseRelationshipProcessor
+    public static class OperationContainerExtensions
     {
-        protected ISet<IIdentifiable> GetSecondaryResourceIds(OperationContainer operation)
+        public static ISet<IIdentifiable> GetSecondaryResourceIds(this OperationContainer operation)
         {
+            if (operation == null) throw new ArgumentNullException(nameof(operation));
+
             var relationship = operation.Request.Relationship;
             var rightValue = relationship.GetValue(operation.Resource);
 
@@ -16,8 +19,10 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             return rightResources.ToHashSet(IdentifiableComparer.Instance);
         }
 
-        protected object GetSecondaryResourceIdOrIds(OperationContainer operation)
+        public static object GetSecondaryResourceIdOrIds(this OperationContainer operation)
         {
+            if (operation == null) throw new ArgumentNullException(nameof(operation));
+
             var relationship = operation.Request.Relationship;
             var rightValue = relationship.GetValue(operation.Resource);
 

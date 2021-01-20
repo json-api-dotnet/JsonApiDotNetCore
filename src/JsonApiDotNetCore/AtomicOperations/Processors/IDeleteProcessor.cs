@@ -2,12 +2,6 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
-    /// <inheritdoc />
-    public interface IDeleteProcessor<TResource> : IDeleteProcessor<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-    }
-
     /// <summary>
     /// Processes a single operation to delete an existing resource.
     /// </summary>

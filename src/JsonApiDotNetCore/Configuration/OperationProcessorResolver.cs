@@ -23,8 +23,6 @@ namespace JsonApiDotNetCore.Configuration
         {
             if (operation == null) throw new ArgumentNullException(nameof(operation));
 
-            // TODO: @OPS: How about processors with a single type argument?
-
             switch (operation.Kind)
             {
                 case OperationKind.CreateResource:
