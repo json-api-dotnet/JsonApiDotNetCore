@@ -2,33 +2,45 @@
 
 # This script generates response documents for ./request-examples
 
-function Kill-WebServer {
+function Get-WebServer-ProcessId {
     $processId = $null
     if ($IsMacOs || $IsLinux) {
-        $processId = $(lsof -ti:8080)
+        $processId = $(lsof -ti:14141)
     }
     elseif ($IsWindows) {
         $processId = $(Get-NetTCPConnection -LocalPort 14141 -ErrorAction SilentlyContinue).OwningProcess
     }
+    else {
+        throw [System.Exception] "Unsupported operating system."
+    }
+
+    return $processId
+}
+
+function Kill-WebServer {
+    $processId = Get-WebServer-ProcessId
 
     if ($processId -ne $null) {
         Write-Output "Stopping web server"
         Get-Process -Id $processId | Stop-Process
     }
-
 }
 
-function Start-Webserver {
+function Start-WebServer {
     Write-Output "Starting web server"
     Start-Job -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj } | Out-Null
+
+    $webProcessId = $null
+    Do {
+        Start-Sleep -Seconds 1
+        $webProcessId = Get-WebServer-ProcessId
+    } While ($webProcessId -eq $null)
 }
 
 Kill-WebServer
-Start-Webserver
+Start-WebServer
 
 Remove-Item -Force -Path .\request-examples\*.json
-
-Start-Sleep -Seconds 10
 
 $scriptFiles = Get-ChildItem .\request-examples\*.ps1
 foreach ($scriptFile in $scriptFiles) {
@@ -38,7 +50,7 @@ foreach ($scriptFile in $scriptFiles) {
     & $scriptFile.FullName > .\request-examples\$jsonFileName
 
     if ($LastExitCode -ne 0) {
-        throw [System.Exception] "Example request from '$($scriptFile.Name)' failed."
+        throw [System.Exception] "Example request from '$($scriptFile.Name)' failed with exit code $LastExitCode."
     }
 }
 
