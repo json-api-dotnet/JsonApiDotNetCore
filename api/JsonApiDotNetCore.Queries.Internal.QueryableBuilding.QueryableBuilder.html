@@ -109,7 +109,7 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class QueryableBuilder</code></pre>
+    <pre><code class="lang-csharp hljs">public class QueryableBuilder</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -184,6 +184,224 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyFilter_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_FilterExpression_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyFilter(System.Linq.Expressions.Expression%2CJsonApiDotNetCore.Queries.Expressions.FilterExpression)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/QueryableBuilder.cs/#L83">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyFilter_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyFilter*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyFilter_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_FilterExpression_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyFilter(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.FilterExpression)">ApplyFilter(Expression, FilterExpression)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Expression ApplyFilter(Expression source, FilterExpression filter)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td><span class="parametername">source</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></td>
+        <td><span class="parametername">filter</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyInclude_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_IncludeExpression_JsonApiDotNetCore_Configuration_ResourceContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyInclude(System.Linq.Expressions.Expression%2CJsonApiDotNetCore.Queries.Expressions.IncludeExpression%2CJsonApiDotNetCore.Configuration.ResourceContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/QueryableBuilder.cs/#L75">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyInclude_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyInclude*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyInclude_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_IncludeExpression_JsonApiDotNetCore_Configuration_ResourceContext_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyInclude(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.IncludeExpression,JsonApiDotNetCore.Configuration.ResourceContext)">ApplyInclude(Expression, IncludeExpression, ResourceContext)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Expression ApplyInclude(Expression source, IncludeExpression include, ResourceContext resourceContext)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td><span class="parametername">source</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a></td>
+        <td><span class="parametername">include</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
+        <td><span class="parametername">resourceContext</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyPagination_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyPagination(System.Linq.Expressions.Expression%2CJsonApiDotNetCore.Queries.Expressions.PaginationExpression)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/QueryableBuilder.cs/#L99">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyPagination_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyPagination*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyPagination_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyPagination(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.PaginationExpression)">ApplyPagination(Expression, PaginationExpression)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Expression ApplyPagination(Expression source, PaginationExpression pagination)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td><span class="parametername">source</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html">PaginationExpression</a></td>
+        <td><span class="parametername">pagination</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyProjection_System_Linq_Expressions_Expression_System_Collections_Generic_IDictionary_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_JsonApiDotNetCore_Queries_QueryLayer__JsonApiDotNetCore_Configuration_ResourceContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyProjection(System.Linq.Expressions.Expression%2CSystem.Collections.Generic.IDictionary%7BJsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute%2CJsonApiDotNetCore.Queries.QueryLayer%7D%2CJsonApiDotNetCore.Configuration.ResourceContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/QueryableBuilder.cs/#L107">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyProjection_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyProjection*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyProjection_System_Linq_Expressions_Expression_System_Collections_Generic_IDictionary_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_JsonApiDotNetCore_Queries_QueryLayer__JsonApiDotNetCore_Configuration_ResourceContext_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyProjection(System.Linq.Expressions.Expression,System.Collections.Generic.IDictionary{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute,JsonApiDotNetCore.Queries.QueryLayer},JsonApiDotNetCore.Configuration.ResourceContext)">ApplyProjection(Expression, IDictionary&lt;ResourceFieldAttribute, QueryLayer&gt;, ResourceContext)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Expression ApplyProjection(Expression source, IDictionary&lt;ResourceFieldAttribute, QueryLayer&gt; projection, ResourceContext resourceContext)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td><span class="parametername">source</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html">ResourceFieldAttribute</a>, <a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a>&gt;</td>
+        <td><span class="parametername">projection</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
+        <td><span class="parametername">resourceContext</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyQuery_JsonApiDotNetCore_Queries_QueryLayer_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyQuery(JsonApiDotNetCore.Queries.QueryLayer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
@@ -195,7 +413,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Expression ApplyQuery(QueryLayer layer)</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual Expression ApplyQuery(QueryLayer layer)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -210,6 +428,58 @@
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a></td>
         <td><span class="parametername">layer</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplySort_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_SortExpression_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplySort(System.Linq.Expressions.Expression%2CJsonApiDotNetCore.Queries.Expressions.SortExpression)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/QueryableBuilder.cs/#L91">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplySort_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplySort*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplySort_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_SortExpression_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplySort(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.SortExpression)">ApplySort(Expression, SortExpression)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Expression ApplySort(Expression source, SortExpression sort)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td><span class="parametername">source</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SortExpression.html">SortExpression</a></td>
+        <td><span class="parametername">sort</span></td>
         <td></td>
       </tr>
     </tbody>

@@ -9668,6 +9668,61 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.QueryableBuilder
   nameWithType: QueryableBuilder.QueryableBuilder
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyFilter(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  name: ApplyFilter(Expression, FilterExpression)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyFilter_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_FilterExpression_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyFilter(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyFilter(System.Linq.Expressions.Expression, JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  nameWithType: QueryableBuilder.ApplyFilter(Expression, FilterExpression)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyFilter*
+  name: ApplyFilter
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyFilter_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyFilter
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyFilter
+  nameWithType: QueryableBuilder.ApplyFilter
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyInclude(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.IncludeExpression,JsonApiDotNetCore.Configuration.ResourceContext)
+  name: ApplyInclude(Expression, IncludeExpression, ResourceContext)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyInclude_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_IncludeExpression_JsonApiDotNetCore_Configuration_ResourceContext_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyInclude(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.IncludeExpression,JsonApiDotNetCore.Configuration.ResourceContext)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyInclude(System.Linq.Expressions.Expression, JsonApiDotNetCore.Queries.Expressions.IncludeExpression, JsonApiDotNetCore.Configuration.ResourceContext)
+  nameWithType: QueryableBuilder.ApplyInclude(Expression, IncludeExpression, ResourceContext)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyInclude*
+  name: ApplyInclude
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyInclude_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyInclude
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyInclude
+  nameWithType: QueryableBuilder.ApplyInclude
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyPagination(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  name: ApplyPagination(Expression, PaginationExpression)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyPagination_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyPagination(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyPagination(System.Linq.Expressions.Expression, JsonApiDotNetCore.Queries.Expressions.PaginationExpression)
+  nameWithType: QueryableBuilder.ApplyPagination(Expression, PaginationExpression)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyPagination*
+  name: ApplyPagination
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyPagination_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyPagination
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyPagination
+  nameWithType: QueryableBuilder.ApplyPagination
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyProjection(System.Linq.Expressions.Expression,System.Collections.Generic.IDictionary{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute,JsonApiDotNetCore.Queries.QueryLayer},JsonApiDotNetCore.Configuration.ResourceContext)
+  name: ApplyProjection(Expression, IDictionary<ResourceFieldAttribute, QueryLayer>, ResourceContext)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyProjection_System_Linq_Expressions_Expression_System_Collections_Generic_IDictionary_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_JsonApiDotNetCore_Queries_QueryLayer__JsonApiDotNetCore_Configuration_ResourceContext_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyProjection(System.Linq.Expressions.Expression,System.Collections.Generic.IDictionary{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute,JsonApiDotNetCore.Queries.QueryLayer},JsonApiDotNetCore.Configuration.ResourceContext)
+  name.vb: ApplyProjection(Expression, IDictionary(Of ResourceFieldAttribute, QueryLayer), ResourceContext)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyProjection(System.Linq.Expressions.Expression, System.Collections.Generic.IDictionary<JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute, JsonApiDotNetCore.Queries.QueryLayer>, JsonApiDotNetCore.Configuration.ResourceContext)
+  fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyProjection(System.Linq.Expressions.Expression, System.Collections.Generic.IDictionary(Of JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute, JsonApiDotNetCore.Queries.QueryLayer), JsonApiDotNetCore.Configuration.ResourceContext)
+  nameWithType: QueryableBuilder.ApplyProjection(Expression, IDictionary<ResourceFieldAttribute, QueryLayer>, ResourceContext)
+  nameWithType.vb: QueryableBuilder.ApplyProjection(Expression, IDictionary(Of ResourceFieldAttribute, QueryLayer), ResourceContext)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyProjection*
+  name: ApplyProjection
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyProjection_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyProjection
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyProjection
+  nameWithType: QueryableBuilder.ApplyProjection
 - uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyQuery(JsonApiDotNetCore.Queries.QueryLayer)
   name: ApplyQuery(QueryLayer)
   href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplyQuery_JsonApiDotNetCore_Queries_QueryLayer_
@@ -9681,6 +9736,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplyQuery
   nameWithType: QueryableBuilder.ApplyQuery
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplySort(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  name: ApplySort(Expression, SortExpression)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplySort_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_SortExpression_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplySort(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplySort(System.Linq.Expressions.Expression, JsonApiDotNetCore.Queries.Expressions.SortExpression)
+  nameWithType: QueryableBuilder.ApplySort(Expression, SortExpression)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplySort*
+  name: ApplySort
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder_ApplySort_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplySort
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.ApplySort
+  nameWithType: QueryableBuilder.ApplySort
 - uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder`1
   name: QueryClauseBuilder<TArgument>
   href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html
@@ -12762,32 +12830,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForUpdateAsync(Of TResource)(JsonApiDotNetCore.Queries.QueryLayer, System.Threading.CancellationToken)
   nameWithType: ResourceRepositoryAccessor.GetForUpdateAsync<TResource>(QueryLayer, CancellationToken)
   nameWithType.vb: ResourceRepositoryAccessor.GetForUpdateAsync(Of TResource)(QueryLayer, CancellationToken)
-- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetReadRepository(System.Type)
-  name: GetReadRepository(Type)
-  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetReadRepository_System_Type_
-  commentId: M:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetReadRepository(System.Type)
-  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetReadRepository(System.Type)
-  nameWithType: ResourceRepositoryAccessor.GetReadRepository(Type)
-- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetReadRepository*
-  name: GetReadRepository
-  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetReadRepository_
-  commentId: Overload:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetReadRepository
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetReadRepository
-  nameWithType: ResourceRepositoryAccessor.GetReadRepository
-- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetWriteRepository(System.Type)
-  name: GetWriteRepository(Type)
-  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetWriteRepository_System_Type_
-  commentId: M:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetWriteRepository(System.Type)
-  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetWriteRepository(System.Type)
-  nameWithType: ResourceRepositoryAccessor.GetWriteRepository(Type)
-- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetWriteRepository*
-  name: GetWriteRepository
-  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetWriteRepository_
-  commentId: Overload:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetWriteRepository
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetWriteRepository
-  nameWithType: ResourceRepositoryAccessor.GetWriteRepository
 - uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.RemoveFromToManyRelationshipAsync*
   name: RemoveFromToManyRelationshipAsync
   href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_RemoveFromToManyRelationshipAsync_
@@ -12804,6 +12846,32 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.RemoveFromToManyRelationshipAsync(Of TResource)(TResource, System.Collections.Generic.ISet(Of JsonApiDotNetCore.Resources.IIdentifiable), System.Threading.CancellationToken)
   nameWithType: ResourceRepositoryAccessor.RemoveFromToManyRelationshipAsync<TResource>(TResource, ISet<IIdentifiable>, CancellationToken)
   nameWithType.vb: ResourceRepositoryAccessor.RemoveFromToManyRelationshipAsync(Of TResource)(TResource, ISet(Of IIdentifiable), CancellationToken)
+- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveReadRepository(System.Type)
+  name: ResolveReadRepository(Type)
+  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_ResolveReadRepository_System_Type_
+  commentId: M:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveReadRepository(System.Type)
+  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveReadRepository(System.Type)
+  nameWithType: ResourceRepositoryAccessor.ResolveReadRepository(Type)
+- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveReadRepository*
+  name: ResolveReadRepository
+  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_ResolveReadRepository_
+  commentId: Overload:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveReadRepository
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveReadRepository
+  nameWithType: ResourceRepositoryAccessor.ResolveReadRepository
+- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveWriteRepository(System.Type)
+  name: ResolveWriteRepository(Type)
+  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_ResolveWriteRepository_System_Type_
+  commentId: M:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveWriteRepository(System.Type)
+  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveWriteRepository(System.Type)
+  nameWithType: ResourceRepositoryAccessor.ResolveWriteRepository(Type)
+- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveWriteRepository*
+  name: ResolveWriteRepository
+  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_ResolveWriteRepository_
+  commentId: Overload:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveWriteRepository
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveWriteRepository
+  nameWithType: ResourceRepositoryAccessor.ResolveWriteRepository
 - uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.SetRelationshipAsync*
   name: SetRelationshipAsync
   href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_SetRelationshipAsync_
@@ -14508,19 +14576,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
   nameWithType: ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
-- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetResourceDefinition(System.Type)
-  name: GetResourceDefinition(Type)
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_GetResourceDefinition_System_Type_
-  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetResourceDefinition(System.Type)
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetResourceDefinition(System.Type)
-  nameWithType: ResourceDefinitionAccessor.GetResourceDefinition(Type)
-- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetResourceDefinition*
-  name: GetResourceDefinition
-  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_GetResourceDefinition_
-  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetResourceDefinition
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetResourceDefinition
-  nameWithType: ResourceDefinitionAccessor.GetResourceDefinition
 - uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplyFilter(System.Type,JsonApiDotNetCore.Queries.Expressions.FilterExpression)
   name: OnApplyFilter(Type, FilterExpression)
   href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_OnApplyFilter_System_Type_JsonApiDotNetCore_Queries_Expressions_FilterExpression_
@@ -14589,6 +14644,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnApplySparseFieldSet
   nameWithType: ResourceDefinitionAccessor.OnApplySparseFieldSet
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.ResolveResourceDefinition(System.Type)
+  name: ResolveResourceDefinition(Type)
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_ResolveResourceDefinition_System_Type_
+  commentId: M:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.ResolveResourceDefinition(System.Type)
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.ResolveResourceDefinition(System.Type)
+  nameWithType: ResourceDefinitionAccessor.ResolveResourceDefinition(Type)
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.ResolveResourceDefinition*
+  name: ResolveResourceDefinition
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_ResolveResourceDefinition_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.ResolveResourceDefinition
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.ResolveResourceDefinition
+  nameWithType: ResourceDefinitionAccessor.ResolveResourceDefinition
 - uid: JsonApiDotNetCore.Resources.ResourceHooksDefinition`1
   name: ResourceHooksDefinition<TResource>
   href: api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html
