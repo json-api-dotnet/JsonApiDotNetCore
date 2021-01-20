@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using IOperationsProcessor = JsonApiDotNetCore.AtomicOperations.IOperationsProcessor;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -133,11 +134,11 @@ namespace JsonApiDotNetCore.Configuration
                     _services.AddScoped(typeof(IDbContextResolver), contextResolverType);
                 }
 
-                _services.AddScoped<IAtomicOperationsTransactionFactory, EntityFrameworkCoreTransactionFactory>();
+                _services.AddScoped<IOperationsTransactionFactory, EntityFrameworkCoreTransactionFactory>();
             }
             else
             {
-                _services.AddScoped<IAtomicOperationsTransactionFactory, MissingTransactionFactory>();
+                _services.AddScoped<IOperationsTransactionFactory, MissingTransactionFactory>();
             }
 
             AddResourceLayer();
@@ -279,8 +280,8 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddAtomicOperationsLayer()
         {
-            _services.AddScoped<IAtomicOperationsProcessor, AtomicOperationsProcessor>();
-            _services.AddScoped<IAtomicOperationProcessorResolver, AtomicOperationProcessorResolver>();
+            _services.AddScoped<IOperationsProcessor, OperationsProcessor>();
+            _services.AddScoped<IOperationProcessorResolver, OperationProcessorResolver>();
             _services.AddScoped<ILocalIdTracker, LocalIdTracker>();
 
             _services.AddScoped(typeof(ICreateProcessor<>), typeof(CreateProcessor<>));

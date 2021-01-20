@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.AtomicOperations
     /// <summary>
     /// Represents the overarching transaction in an atomic:operations request.
     /// </summary>
-    public interface IAtomicOperationsTransaction : IAsyncDisposable
+    public interface IOperationsTransaction : IAsyncDisposable
     {
         /// <summary>
         /// Identifies the active transaction.
@@ -23,10 +23,5 @@ namespace JsonApiDotNetCore.AtomicOperations
         /// Commits all changes made to the underlying data store.
         /// </summary>
         Task CommitAsync(CancellationToken cancellationToken);
-
-        /// <summary>
-        /// Discards all changes made to the underlying data store.
-        /// </summary>
-        Task RollbackAsync(CancellationToken cancellationToken);
     }
 }

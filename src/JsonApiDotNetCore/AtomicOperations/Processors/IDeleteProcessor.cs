@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
     /// <typeparam name="TId">The resource identifier type.</typeparam>
-    public interface IDeleteProcessor<TResource, TId> : IAtomicOperationProcessor
+    public interface IDeleteProcessor<TResource, TId> : IOperationProcessor
         where TResource : class, IIdentifiable<TId>
     {
     }

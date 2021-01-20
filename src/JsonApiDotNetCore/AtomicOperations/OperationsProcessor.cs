@@ -12,25 +12,25 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.AtomicOperations
 {
     /// <inheritdoc />
-    public class AtomicOperationsProcessor : IAtomicOperationsProcessor
+    public class OperationsProcessor : IOperationsProcessor
     {
-        private readonly IAtomicOperationProcessorResolver _resolver;
+        private readonly IOperationProcessorResolver _resolver;
         private readonly ILocalIdTracker _localIdTracker;
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceContextProvider _resourceContextProvider;
-        private readonly IAtomicOperationsTransactionFactory _atomicOperationsTransactionFactory;
+        private readonly IOperationsTransactionFactory _operationsTransactionFactory;
 
-        public AtomicOperationsProcessor(IAtomicOperationProcessorResolver resolver,
+        public OperationsProcessor(IOperationProcessorResolver resolver,
             ILocalIdTracker localIdTracker, IJsonApiRequest request, ITargetedFields targetedFields,
-            IResourceContextProvider resourceContextProvider, IAtomicOperationsTransactionFactory atomicOperationsTransactionFactory)
+            IResourceContextProvider resourceContextProvider, IOperationsTransactionFactory operationsTransactionFactory)
         {
             _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
             _localIdTracker = localIdTracker ?? throw new ArgumentNullException(nameof(localIdTracker));
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _atomicOperationsTransactionFactory = atomicOperationsTransactionFactory ?? throw new ArgumentNullException(nameof(atomicOperationsTransactionFactory));
+            _operationsTransactionFactory = operationsTransactionFactory ?? throw new ArgumentNullException(nameof(operationsTransactionFactory));
         }
 
         /// <inheritdoc />
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             var results = new List<OperationContainer>();
 
-            await using var transaction = await _atomicOperationsTransactionFactory.BeginTransactionAsync(cancellationToken);
+            await using var transaction = await _operationsTransactionFactory.BeginTransactionAsync(cancellationToken);
             try
             {
                 foreach (var operation in operations)

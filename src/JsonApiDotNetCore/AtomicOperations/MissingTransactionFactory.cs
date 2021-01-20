@@ -7,10 +7,12 @@ namespace JsonApiDotNetCore.AtomicOperations
     /// <summary>
     /// A transaction factory that throws when used in an atomic:operations request, because no transaction support is available.
     /// </summary>
-    public sealed class MissingTransactionFactory : IAtomicOperationsTransactionFactory
+    public sealed class MissingTransactionFactory : IOperationsTransactionFactory
     {
-        public Task<IAtomicOperationsTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
+        public Task<IOperationsTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
         {
+            // When using a data store other than Entity Framework Core, replace this type with your custom implementation
+            // by overwriting the IoC container registration.
             throw new NotImplementedException("No transaction support is available.");
         }
     }

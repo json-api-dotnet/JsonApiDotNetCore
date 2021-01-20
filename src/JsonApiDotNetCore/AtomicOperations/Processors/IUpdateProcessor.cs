@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
     /// <typeparam name="TId">The resource identifier type.</typeparam>
-    public interface IUpdateProcessor<TResource, TId> : IAtomicOperationProcessor
+    public interface IUpdateProcessor<TResource, TId> : IOperationProcessor
         where TResource : class, IIdentifiable<TId>
     {
     }

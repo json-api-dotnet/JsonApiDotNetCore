@@ -15,18 +15,18 @@ namespace JsonApiDotNetCore.Controllers
 {
     /// <summary>
     /// Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture for handling atomic:operations requests.
-    /// See https://jsonapi.org/ext/atomic/ for details. Delegates work to <see cref="IAtomicOperationsProcessor"/>.
+    /// See https://jsonapi.org/ext/atomic/ for details. Delegates work to <see cref="IOperationsProcessor"/>.
     /// </summary>
     public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     {
         private readonly IJsonApiOptions _options;
-        private readonly IAtomicOperationsProcessor _processor;
+        private readonly IOperationsProcessor _processor;
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
         private readonly TraceLogWriter<BaseJsonApiOperationsController> _traceWriter;
 
         protected BaseJsonApiOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IAtomicOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
+            IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
         {
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 

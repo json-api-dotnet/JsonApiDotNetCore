@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.AtomicOperations
     /// <summary>
     /// Provides transaction support for atomic:operation requests using Entity Framework Core.
     /// </summary>
-    public sealed class EntityFrameworkCoreTransactionFactory : IAtomicOperationsTransactionFactory
+    public sealed class EntityFrameworkCoreTransactionFactory : IOperationsTransactionFactory
     {
         private readonly IDbContextResolver _dbContextResolver;
 
@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         }
 
         /// <inheritdoc />
-        public async Task<IAtomicOperationsTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
+        public async Task<IOperationsTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
         {
             var dbContext = _dbContextResolver.GetContext();
             var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);

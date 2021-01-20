@@ -6,12 +6,12 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <inheritdoc />
-    public class AtomicOperationProcessorResolver : IAtomicOperationProcessorResolver
+    public class OperationProcessorResolver : IOperationProcessorResolver
     {
         private readonly IGenericServiceFactory _genericServiceFactory;
         private readonly IResourceContextProvider _resourceContextProvider;
 
-        public AtomicOperationProcessorResolver(IGenericServiceFactory genericServiceFactory,
+        public OperationProcessorResolver(IGenericServiceFactory genericServiceFactory,
             IResourceContextProvider resourceContextProvider)
         {
             _genericServiceFactory = genericServiceFactory ?? throw new ArgumentNullException(nameof(genericServiceFactory));
@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public IAtomicOperationProcessor ResolveProcessor(OperationContainer operation)
+        public IOperationProcessor ResolveProcessor(OperationContainer operation)
         {
             if (operation == null) throw new ArgumentNullException(nameof(operation));
 
@@ -44,11 +44,11 @@ namespace JsonApiDotNetCore.Configuration
             }
         }
 
-        private IAtomicOperationProcessor Resolve(OperationContainer operation, Type processorInterface)
+        private IOperationProcessor Resolve(OperationContainer operation, Type processorInterface)
         {
             var resourceContext = _resourceContextProvider.GetResourceContext(operation.Resource.GetType());
 
-            return _genericServiceFactory.Get<IAtomicOperationProcessor>(processorInterface,
+            return _genericServiceFactory.Get<IOperationProcessor>(processorInterface,
                 resourceContext.ResourceType, resourceContext.IdentityType
             );
         }

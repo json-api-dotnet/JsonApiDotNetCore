@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     /// </summary>
     /// <typeparam name="TResource"></typeparam>
     /// <typeparam name="TId"></typeparam>
-    public interface IRemoveFromRelationshipProcessor<TResource, TId> : IAtomicOperationProcessor
+    public interface IRemoveFromRelationshipProcessor<TResource, TId> : IOperationProcessor
         where TResource : class, IIdentifiable<TId>
     {
     }

@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.AtomicOperations
     /// <summary>
     /// Atomically processes a request that contains a list of operations.
     /// </summary>
-    public interface IAtomicOperationsProcessor
+    public interface IOperationsProcessor
     {
         /// <summary>
         /// Processes the list of specified operations.

@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.AtomicOperations
     /// <summary>
     /// Represents an Entity Framework Core transaction in an atomic:operations request.
     /// </summary>
-    public sealed class EntityFrameworkCoreTransaction : IAtomicOperationsTransaction
+    public sealed class EntityFrameworkCoreTransaction : IOperationsTransaction
     {
         private readonly IDbContextTransaction _transaction;
         private readonly DbContext _dbContext;
@@ -36,12 +36,6 @@ namespace JsonApiDotNetCore.AtomicOperations
         public Task CommitAsync(CancellationToken cancellationToken)
         {
             return _transaction.CommitAsync(cancellationToken);
-        }
-
-        /// <inheritdoc />
-        public Task RollbackAsync(CancellationToken cancellationToken)
-        {
-            return _transaction.RollbackAsync(cancellationToken);
         }
 
         /// <inheritdoc />

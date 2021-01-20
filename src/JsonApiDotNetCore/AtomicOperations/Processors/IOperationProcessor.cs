@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     /// <summary>
     /// Processes a single entry in a list of operations.
     /// </summary>
-    public interface IAtomicOperationProcessor
+    public interface IOperationProcessor
     {
         Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken);
     }
