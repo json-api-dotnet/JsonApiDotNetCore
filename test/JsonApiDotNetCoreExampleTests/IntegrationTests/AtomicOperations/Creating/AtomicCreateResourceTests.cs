@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creating
@@ -24,11 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         {
             _testContext = testContext;
 
-            testContext.ConfigureServicesAfterStartup(services =>
-            {
-                var part = new AssemblyPart(typeof(EmptyStartup).Assembly);
-                services.AddMvcCore().ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part));
-            });
+            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromTestProject());
         }
 
         [Fact]

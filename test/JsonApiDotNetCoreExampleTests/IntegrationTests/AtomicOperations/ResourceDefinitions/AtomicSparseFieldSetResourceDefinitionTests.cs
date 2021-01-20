@@ -3,27 +3,24 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ResourceDefinitions
 {
-    public sealed class SparseFieldSetResourceDefinitionTests
+    public sealed class AtomicSparseFieldSetResourceDefinitionTests
         : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public SparseFieldSetResourceDefinitionTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicSparseFieldSetResourceDefinitionTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                var part = new AssemblyPart(typeof(EmptyStartup).Assembly);
-                services.AddMvcCore().ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part));
+                services.AddControllersFromTestProject();
 
                 services.AddSingleton<LyricPermissionProvider>();
                 services.AddScoped<IResourceDefinition<Lyric, long>, LyricTextDefinition>();

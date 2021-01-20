@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -23,8 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                var part = new AssemblyPart(typeof(EmptyStartup).Assembly);
-                services.AddMvcCore().ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part));
+                services.AddControllersFromTestProject();
 
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
             });
@@ -76,7 +73,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
             responseDocument.Results[0].SingleData.Should().NotBeNull();
             
             var newLanguageId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
-            
+
             responseDocument.Results[0].SingleData.Links.Should().NotBeNull();
             responseDocument.Results[0].SingleData.Links.Self.Should().Be("/api/textLanguages/" + newLanguageId);
             responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();

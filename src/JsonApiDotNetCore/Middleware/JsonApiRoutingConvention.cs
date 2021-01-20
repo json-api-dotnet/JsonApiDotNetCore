@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Middleware
                     if (resourceType != null)
                     {
                         var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
-    
+
                         if (resourceContext != null)
                         {
                             _registeredResources.Add(controller.ControllerName, resourceContext);

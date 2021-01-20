@@ -4,9 +4,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
@@ -20,11 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         {
             _testContext = testContext;
 
-            testContext.ConfigureServicesAfterStartup(services =>
-            {
-                var part = new AssemblyPart(typeof(EmptyStartup).Assembly);
-                services.AddMvcCore().ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part));
-            });
+            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromTestProject());
         }
 
         [Fact]
@@ -64,10 +57,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                     }
                 }
             };
-            
+
             var route = "/operations";
             var contentType = HeaderConstants.AtomicOperationsMediaType;
-            
+
             var acceptHeaders = new MediaTypeWithQualityHeaderValue[0];
 
             // Act
@@ -159,10 +152,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                     }
                 }
             };
-            
+
             var route = "/operations";
             var contentType = HeaderConstants.AtomicOperationsMediaType;
-            
+
             var acceptHeaders = new[]
             {
                 MediaTypeWithQualityHeaderValue.Parse("text/html"),
@@ -228,7 +221,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                     }
                 }
             };
-            
+
             var route = "/operations";
             var contentType = HeaderConstants.AtomicOperationsMediaType;
 

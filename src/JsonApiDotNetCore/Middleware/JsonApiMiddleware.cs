@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Middleware
 
                 httpContext.RegisterJsonApiRequest();
             }
-            else if (IsAtomicOperationsRequest(routeValues))
+            else if (IsOperationsRequest(routeValues))
             {
                 if (!await ValidateContentTypeHeaderAsync(HeaderConstants.AtomicOperationsMediaType, httpContext, options.SerializerSettings) || 
                     !await ValidateAcceptHeaderAsync(_atomicOperationsMediaType, httpContext, options.SerializerSettings))
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Middleware
                     return;
                 }
 
-                SetupAtomicOperationsRequest((JsonApiRequest)request, options, httpContext.Request);
+                SetupOperationsRequest((JsonApiRequest)request, options, httpContext.Request);
 
                 httpContext.RegisterJsonApiRequest();
             }
@@ -266,13 +266,13 @@ namespace JsonApiDotNetCore.Middleware
             return actionName.EndsWith("Relationship", StringComparison.Ordinal);
         }
 
-        private static bool IsAtomicOperationsRequest(RouteValueDictionary routeValues)
+        private static bool IsOperationsRequest(RouteValueDictionary routeValues)
         {
             var actionName = (string)routeValues["action"];
             return actionName == "PostOperations";
         }
 
-        private static void SetupAtomicOperationsRequest(JsonApiRequest request, IJsonApiOptions options, HttpRequest httpRequest)
+        private static void SetupOperationsRequest(JsonApiRequest request, IJsonApiOptions options, HttpRequest httpRequest)
         {
             request.IsReadOnly = false;
             request.Kind = EndpointKind.AtomicOperations;

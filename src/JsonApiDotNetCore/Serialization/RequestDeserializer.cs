@@ -110,6 +110,7 @@ namespace JsonApiDotNetCore.Serialization
 
             RelationshipAttribute relationshipInRef = null;
             ResourceContext resourceContextInRef = null;
+            string resourceName = null;
 
             if (operation.Ref != null)
             {
@@ -120,6 +121,7 @@ namespace JsonApiDotNetCore.Serialization
                 }
 
                 resourceContextInRef = GetExistingResourceContext(operation.Ref.Type);
+                resourceName = resourceContextInRef.PublicName;
 
                 bool hasNone = operation.Ref.Id == null && operation.Ref.Lid == null;
                 bool hasBoth = operation.Ref.Id != null && operation.Ref.Lid != null;
@@ -236,6 +238,7 @@ namespace JsonApiDotNetCore.Serialization
                 }
 
                 var resourceContextInData = GetExistingResourceContext(resourceObject.Type);
+                resourceName ??= resourceContextInData.PublicName;
 
                 if (kind.IsRelationship() && relationshipInRef != null)
                 {
@@ -291,12 +294,11 @@ namespace JsonApiDotNetCore.Serialization
                 }
             }
 
-            return ToOperationContainer(operation, kind);
+            return ToOperationContainer(operation, resourceName, kind);
         }
 
-        private OperationContainer ToOperationContainer(AtomicOperationObject operation, OperationKind kind)
+        private OperationContainer ToOperationContainer(AtomicOperationObject operation, string resourceName, OperationKind kind)
         {
-            var resourceName = operation.GetResourceTypeName();
             var primaryResourceContext = GetExistingResourceContext(resourceName);
 
             _targetedFields.Attributes.Clear();
@@ -309,7 +311,7 @@ namespace JsonApiDotNetCore.Serialization
                 case OperationKind.CreateResource:
                 case OperationKind.UpdateResource:
                 {
-                    // TODO: @OPS: Chicken-and-egg problem: ParseResourceObject depends on _request.OperationKind, which is not built yet.
+                    // TODO: @OPS: Chicken-and-egg problem: ParseResourceObject depends on _request.OperationKind, which is not fully built yet.
                     ((JsonApiRequest) _request).OperationKind = kind;
 
                     resource = ParseResourceObject(operation.SingleData);

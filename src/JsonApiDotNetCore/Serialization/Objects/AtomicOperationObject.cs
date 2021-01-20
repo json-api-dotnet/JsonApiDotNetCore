@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -21,20 +20,5 @@ namespace JsonApiDotNetCore.Serialization.Objects
 
         [JsonProperty("href", NullValueHandling = NullValueHandling.Ignore)]
         public string Href { get; set; }
-
-        public string GetResourceTypeName()
-        {
-            if (Ref != null)
-            {
-                return Ref.Type;
-            }
-
-            if (IsManyData)
-            {
-                return ManyData.First().Type;
-            }
-
-            return SingleData.Type;
-        }
     }
 }
