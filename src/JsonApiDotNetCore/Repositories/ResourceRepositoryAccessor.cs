@@ -144,12 +144,11 @@ namespace JsonApiDotNetCore.Repositories
                 {
                     var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
                     throw new MissingTransactionSupportException(resourceContext.PublicName);
-
                 }
 
                 if (repository.TransactionId != _request.TransactionId)
                 {
-                    throw new MultipleTransactionsException();
+                    throw new MultipleActiveTransactionsException();
                 }
             }
 

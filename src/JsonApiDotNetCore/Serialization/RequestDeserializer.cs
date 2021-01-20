@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <inheritdoc />
-        public object DeserializeDocument(string body)
+        public object Deserialize(string body)
         {
             if (body == null) throw new ArgumentNullException(nameof(body));
 
@@ -65,8 +65,6 @@ namespace JsonApiDotNetCore.Serialization
             JToken bodyToken = LoadJToken(body);
             var document = bodyToken.ToObject<AtomicOperationsDocument>();
 
-            var operations = new List<OperationContainer>();
-
             if (document?.Operations == null || !document.Operations.Any())
             {
                 throw new JsonApiSerializationException("No operations found.", null);
@@ -78,7 +76,9 @@ namespace JsonApiDotNetCore.Serialization
                     $"The number of operations in this request ({document.Operations.Count}) is higher than {_options.MaximumOperationsPerRequest}.");
             }
 
+            var operations = new List<OperationContainer>();
             AtomicOperationIndex = 0;
+
             foreach (var operation in document.Operations)
             {
                 var container = DeserializeOperation(operation);

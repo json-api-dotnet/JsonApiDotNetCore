@@ -67,7 +67,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 userAccountInDatabase.FirstName.Should().Be(existingUserAccount.FirstName);
                 userAccountInDatabase.LastName.Should().Be(existingUserAccount.LastName);
             });
-
         }
 
         [Fact]

@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 try
                 {
-                    model = _deserializer.DeserializeDocument(body);
+                    model = _deserializer.Deserialize(body);
                 }
                 catch (JsonApiSerializationException exception)
                 {

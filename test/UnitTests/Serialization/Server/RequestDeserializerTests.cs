@@ -31,7 +31,7 @@ namespace UnitTests.Serialization.Server
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            _deserializer.DeserializeDocument(body);
+            _deserializer.Deserialize(body);
 
             // Assert
             Assert.Equal(5, attributesToUpdate.Count);
@@ -51,7 +51,7 @@ namespace UnitTests.Serialization.Server
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            _deserializer.DeserializeDocument(body);
+            _deserializer.Deserialize(body);
 
             // Assert
             Assert.Equal(4, relationshipsToUpdate.Count);
@@ -71,7 +71,7 @@ namespace UnitTests.Serialization.Server
             var body = JsonConvert.SerializeObject(content);
 
             // Act
-            _deserializer.DeserializeDocument(body);
+            _deserializer.Deserialize(body);
 
             // Assert
             Assert.Equal(4, relationshipsToUpdate.Count);

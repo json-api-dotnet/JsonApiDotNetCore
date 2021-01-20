@@ -78,7 +78,7 @@ namespace JsonApiDotNetCore.Middleware
                         }
                     }
                 }
-                
+
                 if (!RoutingConventionDisabled(controller))
                 {
                     continue;

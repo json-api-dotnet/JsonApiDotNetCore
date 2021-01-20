@@ -54,9 +54,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 if (Document.IsManyData)
                 {
-                    return Document.ManyData
-                        .Select(ParseResourceObject)
-                        .ToHashSet(IdentifiableComparer.Instance);
+                    return Document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
                 }
 
                 if (Document.SingleData != null)

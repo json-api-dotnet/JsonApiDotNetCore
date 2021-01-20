@@ -12,6 +12,6 @@ namespace JsonApiDotNetCore.Serialization
         /// from <see cref="ExposableData{T}.Data"/>.
         /// </summary>
         /// <param name="body">The JSON to be deserialized.</param>
-        object DeserializeDocument(string body);
+        object Deserialize(string body);
     }
 }
