@@ -14,23 +14,23 @@ namespace JsonApiDotNetCore.AtomicOperations
     /// <inheritdoc />
     public class OperationsProcessor : IOperationsProcessor
     {
-        private readonly IOperationProcessorResolver _resolver;
+        private readonly IOperationProcessorAccessor _operationProcessorAccessor;
+        private readonly IOperationsTransactionFactory _operationsTransactionFactory;
         private readonly ILocalIdTracker _localIdTracker;
+        private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
-        private readonly IResourceContextProvider _resourceContextProvider;
-        private readonly IOperationsTransactionFactory _operationsTransactionFactory;
 
-        public OperationsProcessor(IOperationProcessorResolver resolver,
-            ILocalIdTracker localIdTracker, IJsonApiRequest request, ITargetedFields targetedFields,
-            IResourceContextProvider resourceContextProvider, IOperationsTransactionFactory operationsTransactionFactory)
+        public OperationsProcessor(IOperationProcessorAccessor operationProcessorAccessor,
+            IOperationsTransactionFactory operationsTransactionFactory, ILocalIdTracker localIdTracker,
+            IResourceContextProvider resourceContextProvider, IJsonApiRequest request, ITargetedFields targetedFields)
         {
-            _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
+            _operationProcessorAccessor = operationProcessorAccessor ?? throw new ArgumentNullException(nameof(operationProcessorAccessor));
+            _operationsTransactionFactory = operationsTransactionFactory ?? throw new ArgumentNullException(nameof(operationsTransactionFactory));
             _localIdTracker = localIdTracker ?? throw new ArgumentNullException(nameof(localIdTracker));
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _operationsTransactionFactory = operationsTransactionFactory ?? throw new ArgumentNullException(nameof(operationsTransactionFactory));
         }
 
         /// <inheritdoc />
@@ -97,8 +97,7 @@ namespace JsonApiDotNetCore.AtomicOperations
                 
             _request.CopyFrom(operation.Request);
             
-            var processor = _resolver.ResolveProcessor(operation);
-            return await processor.ProcessAsync(operation, cancellationToken);
+            return await _operationProcessorAccessor.ProcessAsync(operation, cancellationToken);
         }
 
         private void TrackLocalIds(OperationContainer operation)

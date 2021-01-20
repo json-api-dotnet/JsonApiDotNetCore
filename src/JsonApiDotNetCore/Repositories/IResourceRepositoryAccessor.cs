@@ -9,7 +9,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.Repositories
 {
     /// <summary>
-    /// Retrieves a <see cref="IResourceRepository{TResource,TId}"/> instance from the D/I container and invokes a callback on it.
+    /// Retrieves a <see cref="IResourceRepository{TResource,TId}"/> instance from the D/I container and invokes a method on it.
     /// </summary>
     public interface IResourceRepositoryAccessor
     {

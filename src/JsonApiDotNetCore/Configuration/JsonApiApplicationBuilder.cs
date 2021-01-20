@@ -281,7 +281,7 @@ namespace JsonApiDotNetCore.Configuration
         private void AddAtomicOperationsLayer()
         {
             _services.AddScoped<IOperationsProcessor, OperationsProcessor>();
-            _services.AddScoped<IOperationProcessorResolver, OperationProcessorResolver>();
+            _services.AddScoped<IOperationProcessorAccessor, OperationProcessorAccessor>();
             _services.AddScoped<ILocalIdTracker, LocalIdTracker>();
 
             _services.AddScoped(typeof(ICreateProcessor<,>), typeof(CreateProcessor<,>));
