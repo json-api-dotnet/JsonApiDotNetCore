@@ -13,34 +13,34 @@ before_build:
         if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
             # https://dotnet.github.io/docfx/tutorial/docfx_getting_started.html
             git checkout $env:APPVEYOR_REPO_BRANCH -q
-            choco install docfx -y
         }
+        choco install docfx -y
 
 after_build:
   - pwsh: |
+        CD ./docs
+        & ./generate-examples.ps1
+        & docfx docfx.json
+        if ($lastexitcode -ne 0) {
+          throw [System.Exception] "docfx build failed with exit code $lastexitcode."
+        }
+        
+        git config --global credential.helper store
+        Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:ACCESS_TOKEN):x-oauth-basic@github.com`n"
+        git config --global user.email "jaredcnance@gmail.com"
+        git config --global user.name "Jared Nance"
+        git config --global core.autocrlf false
+        git config --global core.safecrlf false
+        git clone https://github.com/json-api-dotnet/JsonApiDotNetCore.git -b gh-pages origin_site -q
+        Copy-Item origin_site/.git _site -recurse
+        Copy-Item CNAME _site/CNAME
+        Copy-Item home/*.html _site/
+        Copy-Item home/*.ico _site/
+        Copy-Item -Recurse home/assets/* _site/styles/
+        CD _site
+        git add -A 2>&1
+        git commit -m "CI Updates" -q
         if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
-            CD ./docs
-            & ./generate-examples.ps1
-            & docfx docfx.json
-            if ($lastexitcode -ne 0) {
-              throw [System.Exception] "docfx build failed with exit code $lastexitcode."
-            }
-            
-            git config --global credential.helper store
-            Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:ACCESS_TOKEN):x-oauth-basic@github.com`n"
-            git config --global user.email "jaredcnance@gmail.com"
-            git config --global user.name "Jared Nance"
-            git config --global core.autocrlf false
-            git config --global core.safecrlf false
-            git clone https://github.com/json-api-dotnet/JsonApiDotNetCore.git -b gh-pages origin_site -q
-            Copy-Item origin_site/.git _site -recurse
-            Copy-Item CNAME _site/CNAME
-            Copy-Item home/*.html _site/
-            Copy-Item home/*.ico _site/
-            Copy-Item -Recurse home/assets/* _site/styles/
-            CD _site
-            git add -A 2>&1
-            git commit -m "CI Updates" -q
             git push origin gh-pages -q
             echo "Documentation updated successfully."
         }
