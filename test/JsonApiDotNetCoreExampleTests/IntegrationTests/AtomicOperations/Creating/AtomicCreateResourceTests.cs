@@ -355,7 +355,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("Specifying the resource ID in POST requests is not allowed.");
+            responseDocument.Errors[0].Title.Should().Be("Specifying the resource ID in operations that create a resource is not allowed.");
             responseDocument.Errors[0].Detail.Should().BeNull();
             responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
         }

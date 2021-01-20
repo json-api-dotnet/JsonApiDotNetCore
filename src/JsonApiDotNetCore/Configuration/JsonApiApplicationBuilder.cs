@@ -24,7 +24,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using IOperationsProcessor = JsonApiDotNetCore.AtomicOperations.IOperationsProcessor;
 
 namespace JsonApiDotNetCore.Configuration
 {

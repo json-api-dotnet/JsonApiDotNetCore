@@ -161,7 +161,7 @@ namespace JsonApiDotNetCore.Controllers
                 {
                     if (operation.Kind == OperationKind.CreateResource && operation.Resource.StringId != null)
                     {
-                        throw new ResourceIdInPostRequestNotAllowedException(index);
+                        throw new ResourceIdInCreateResourceRequestNotAllowedException(index);
                     }
 
                     index++;
