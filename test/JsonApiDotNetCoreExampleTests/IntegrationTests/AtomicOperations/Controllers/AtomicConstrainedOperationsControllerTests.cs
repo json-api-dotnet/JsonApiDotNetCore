@@ -6,13 +6,13 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Controllers
 {
-    public sealed class AtomicCreateMusicTrackTests
+    public sealed class AtomicConstrainedOperationsControllerTests
         : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicCreateMusicTrackTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicConstrainedOperationsControllerTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
         }
 
         [Fact]
-        public async Task Can_create_MusicTrack_resources()
+        public async Task Can_create_resources_for_matching_resource_type()
         {
             // Arrange
             var newTitle1 = _fakers.MusicTrack.Generate().Title;
@@ -69,7 +69,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
         }
 
         [Fact]
-        public async Task Cannot_create_other_resource()
+        public async Task Cannot_create_resource_for_mismatching_resource_type()
         {
             // Arrange
             var requestBody = new
@@ -106,7 +106,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
         }
 
         [Fact]
-        public async Task Cannot_update_MusicTrack_resource()
+        public async Task Cannot_update_resources_for_matching_resource_type()
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();
@@ -152,7 +152,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
         }
 
         [Fact]
-        public async Task Cannot_add_to_ToMany_relationship()
+        public async Task Cannot_add_to_ToMany_relationship_for_matching_resource_type()
         {
             // Arrange
             var existingTrack = _fakers.MusicTrack.Generate();

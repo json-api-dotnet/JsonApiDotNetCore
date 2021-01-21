@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.AtomicOperations
 {
+    /// <inheritdoc />
     public class OperationProcessorAccessor : IOperationProcessorAccessor
     {
         private readonly IResourceContextProvider _resourceContextProvider;
@@ -17,13 +18,15 @@ namespace JsonApiDotNetCore.AtomicOperations
         public OperationProcessorAccessor(IResourceContextProvider resourceContextProvider,
             IServiceProvider serviceProvider)
         {
-            _resourceContextProvider = resourceContextProvider ??
-                                       throw new ArgumentNullException(nameof(resourceContextProvider));
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
+        /// <inheritdoc />
         public Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
+            if (operation == null) throw new ArgumentNullException(nameof(operation));
+
             var processor = ResolveProcessor(operation);
             return processor.ProcessAsync(operation, cancellationToken);
         }

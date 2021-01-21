@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace JsonApiDotNetCore.Controllers
 {
+    /// <summary>
+    /// Represents the violation of a model state validation rule.
+    /// </summary>
     public sealed class ModelStateViolation
     {
         public string Prefix { get; }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -9,33 +10,32 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
-    /// Server serializer implementation of <see cref="BaseSerializer"/> for atomic:operations requests.
+    /// Server serializer implementation of <see cref="BaseSerializer"/> for atomic:operations responses.
     /// </summary>
     public sealed class AtomicOperationsResponseSerializer : BaseSerializer, IJsonApiSerializer
     {
+        private readonly IMetaBuilder _metaBuilder;
         private readonly ILinkBuilder _linkBuilder;
-        private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IJsonApiRequest _request;
         private readonly IJsonApiOptions _options;
-        private readonly IMetaBuilder _metaBuilder;
 
+        /// <inheritdoc />
         public string ContentType { get; } = HeaderConstants.AtomicOperationsMediaType;
 
-        public AtomicOperationsResponseSerializer(IMetaBuilder metaBuilder, ILinkBuilder linkBuilder,
-            IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider resourceContextProvider,
-            IFieldsToSerialize fieldsToSerialize, IJsonApiRequest request,
-            IJsonApiOptions options)
+        public AtomicOperationsResponseSerializer(IResourceObjectBuilder resourceObjectBuilder,
+            IMetaBuilder metaBuilder, ILinkBuilder linkBuilder, IFieldsToSerialize fieldsToSerialize,
+            IJsonApiRequest request, IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
+            _metaBuilder = metaBuilder ?? throw new ArgumentNullException(nameof(metaBuilder));
             _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _fieldsToSerialize = fieldsToSerialize ?? throw new ArgumentNullException(nameof(fieldsToSerialize));
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _options = options ?? throw new ArgumentNullException(nameof(options));
-            _metaBuilder = metaBuilder ?? throw new ArgumentNullException(nameof(metaBuilder));
         }
 
+        /// <inheritdoc />
         public string Serialize(object content)
         {
             if (content is IList<OperationContainer> operations)
@@ -48,45 +48,45 @@ namespace JsonApiDotNetCore.Serialization
                 return SerializeErrorDocument(errorDocument);
             }
 
-            throw new InvalidOperationException("Data being returned must be errors or an atomic:operations document.");
+            throw new InvalidOperationException("Data being returned must be errors or operations.");
         }
 
         private string SerializeOperationsDocument(IEnumerable<OperationContainer> operations)
         {
             var document = new AtomicOperationsDocument
             {
-                Results = new List<AtomicResultObject>()
+                Results = operations.Select(SerializeOperation).ToList(),
+                Meta = _metaBuilder.Build()
             };
 
-            foreach (var operation in operations)
+            return SerializeObject(document, _options.SerializerSettings);
+        }
+
+        private AtomicResultObject SerializeOperation(OperationContainer operation)
+        {
+            ResourceObject resourceObject = null;
+
+            if (operation != null)
             {
-                ResourceObject resourceObject = null;
+                _request.CopyFrom(operation.Request);
+                _fieldsToSerialize.ResetCache();
 
-                if (operation != null)
-                {
-                    _request.CopyFrom(operation.Request);
-                    _fieldsToSerialize.ResetCache();
+                var resourceType = operation.Resource.GetType();
+                var attributes = _fieldsToSerialize.GetAttributes(resourceType);
+                var relationships = _fieldsToSerialize.GetRelationships(resourceType);
 
-                    var resourceType = operation.Resource.GetType();
-                    var attributes = _fieldsToSerialize.GetAttributes(resourceType);
-                    var relationships = _fieldsToSerialize.GetRelationships(resourceType);
-
-                    resourceObject = ResourceObjectBuilder.Build(operation.Resource, attributes, relationships);
-                    if (resourceObject != null)
-                    {
-                        resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
-                    }
-                }
-
-                document.Results.Add(new AtomicResultObject
-                {
-                    Data = resourceObject
-                });
+                resourceObject = ResourceObjectBuilder.Build(operation.Resource, attributes, relationships);
             }
 
-            document.Meta = _metaBuilder.Build();
+            if (resourceObject != null)
+            {
+                resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
+            }
 
-            return SerializeObject(document, _options.SerializerSettings);
+            return new AtomicResultObject
+            {
+                Data = resourceObject
+            };
         }
 
         private string SerializeErrorDocument(ErrorDocument errorDocument)

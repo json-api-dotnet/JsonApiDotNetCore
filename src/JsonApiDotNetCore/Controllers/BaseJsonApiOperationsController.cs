@@ -39,8 +39,8 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <summary>
         /// Atomically processes a list of operations and returns a list of results.
-        /// If processing fails, all changes are reverted.
-        /// If processing succeeds, but none of the operations returns any data, then HTTP 201 is returned instead of 200.
+        /// All changes are reverted if processing fails.
+        /// If processing succeeds but none of the operations returns any data, then HTTP 201 is returned instead of 200.
         /// </summary>
         /// <example>
         /// The next example creates a new resource.
@@ -114,6 +114,9 @@ namespace JsonApiDotNetCore.Controllers
 
         protected virtual void ValidateModelState(IEnumerable<OperationContainer> operations)
         {
+            // We must validate the resource inside each operation manually, because they are typed as IIdentifiable.
+            // Instead of validating IIdentifiable we need to validate the resource runtime-type.
+
             var violations = new List<ModelStateViolation>();
 
             int index = 0;
@@ -161,7 +164,7 @@ namespace JsonApiDotNetCore.Controllers
                 {
                     if (operation.Kind == OperationKind.CreateResource && operation.Resource.StringId != null)
                     {
-                        throw new ResourceIdInCreateResourceRequestNotAllowedException(index);
+                        throw new ResourceIdInCreateResourceNotAllowedException(index);
                     }
 
                     index++;

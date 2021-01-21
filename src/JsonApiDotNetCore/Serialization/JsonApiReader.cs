@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.Serialization
 
             _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
             _request = request ?? throw new ArgumentNullException(nameof(request));
-            _resourceContextProvider = resourceContextProvider ??  throw new ArgumentNullException(nameof(resourceContextProvider));
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _traceWriter = new TraceLogWriter<JsonApiReader>(loggerFactory);
         }
 
@@ -93,6 +93,7 @@ namespace JsonApiDotNetCore.Serialization
                     exception);
             }
 
+            // In contrast to resource endpoints, we don't include the request body for operations because they are usually very long.
             var requestException =
                 new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, null, exception.InnerException);
 

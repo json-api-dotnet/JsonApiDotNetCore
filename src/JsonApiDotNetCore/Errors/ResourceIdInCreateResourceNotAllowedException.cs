@@ -4,11 +4,11 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.Errors
 {
     /// <summary>
-    /// The error that is thrown when a resource creation request is received that contains a client-generated ID.
+    /// The error that is thrown when a resource creation request or operation is received that contains a client-generated ID.
     /// </summary>
-    public sealed class ResourceIdInCreateResourceRequestNotAllowedException : JsonApiException
+    public sealed class ResourceIdInCreateResourceNotAllowedException : JsonApiException
     {
-        public ResourceIdInCreateResourceRequestNotAllowedException(int? atomicOperationIndex = null)
+        public ResourceIdInCreateResourceNotAllowedException(int? atomicOperationIndex = null)
             : base(new Error(HttpStatusCode.Forbidden)
             {
                 Title = atomicOperationIndex == null

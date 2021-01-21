@@ -32,6 +32,7 @@ namespace JsonApiDotNetCore.Serialization
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
 
+        /// <inheritdoc />
         public string ContentType { get; } = HeaderConstants.MediaType;
 
         public ResponseSerializer(IMetaBuilder metaBuilder,
