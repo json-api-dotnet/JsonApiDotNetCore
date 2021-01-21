@@ -32,6 +32,11 @@ namespace JsonApiDotNetCoreExample.Definitions
             resourcesByRelationship.GetByRelationship<Person>().ToList().ForEach(kvp => DoesNotTouchLockedPassports(kvp.Value));
         }
 
+        public override IEnumerable<Passport> OnReturn(HashSet<Passport> resources, ResourcePipeline pipeline)
+        {
+            return resources.Where(p => !p.IsLocked);
+        }
+
         private void DoesNotTouchLockedPassports(IEnumerable<Passport> resources)
         {
             foreach (var passport in resources ?? Enumerable.Empty<Passport>())

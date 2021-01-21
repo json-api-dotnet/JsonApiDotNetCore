@@ -242,6 +242,28 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
+        public async Task Passport_Through_Secondary_Endpoint_Is_Hidden()
+        {
+            // Arrange
+            var person = _personFaker.Generate();
+            var passport = new Passport(_dbContext) {IsLocked = true};
+            person.Passport = passport;
+
+            _dbContext.People.Add(person);
+            await _dbContext.SaveChangesAsync();
+
+            var route = $"/api/v1/people/{person.Id}/passport";
+
+            // Act
+            var response = await _client.GetAsync(route);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            var document = JsonConvert.DeserializeObject<Document>(body);
+            Assert.Null(document.Data);
+        }
+
+        [Fact]
         public async Task Tag_Is_Hidden()
         {
             // Arrange
