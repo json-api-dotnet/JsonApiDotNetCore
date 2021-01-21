@@ -484,6 +484,60 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
+        public async Task Cannot_replace_for_incompatible_ID_in_ref()
+        {
+            // Arrange
+            var guid = Guid.NewGuid().ToString();
+
+            var existingTrack = _fakers.MusicTrack.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.MusicTracks.Add(existingTrack);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        @ref = new
+                        {
+                            type = "recordCompanies",
+                            id = guid,
+                            relationship = "tracks"
+                        },
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "musicTracks",
+                                id = existingTrack.StringId
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
+            responseDocument.Errors[0].Detail.Should().Be($"Failed to convert '{guid}' of type 'String' to type 'Int16'.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+        }
+
+        [Fact]
         public async Task Cannot_replace_for_ID_and_local_ID_in_ref()
         {
             // Arrange
@@ -838,6 +892,58 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             responseDocument.Errors[1].Title.Should().Be("A related resource does not exist.");
             responseDocument.Errors[1].Detail.Should().Be($"Related resource of type 'musicTracks' with ID '{trackIds[1]}' in relationship 'tracks' does not exist.");
             responseDocument.Errors[1].Source.Pointer.Should().Be("/atomic:operations[0]");
+        }
+
+        [Fact]
+        public async Task Cannot_replace_for_incompatible_ID_in_data()
+        {
+            // Arrange
+            var existingCompany = _fakers.RecordCompany.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.RecordCompanies.Add(existingCompany);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        @ref = new
+                        {
+                            type = "recordCompanies",
+                            id = existingCompany.StringId,
+                            relationship = "tracks"
+                        },
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "musicTracks",
+                                id = "invalid-guid"
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/operations";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
+            responseDocument.Errors[0].Detail.Should().Be("Failed to convert 'invalid-guid' of type 'String' to type 'Guid'.");
+            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]
