@@ -20,6 +20,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
+        private readonly LocalIdValidator _localIdValidator;
 
         public OperationsProcessor(IOperationProcessorAccessor operationProcessorAccessor,
             IOperationsTransactionFactory operationsTransactionFactory, ILocalIdTracker localIdTracker,
@@ -31,6 +32,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
+            _localIdValidator = new LocalIdValidator(_localIdTracker, _resourceContextProvider);
         }
 
         /// <inheritdoc />
@@ -39,7 +41,8 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (operations == null) throw new ArgumentNullException(nameof(operations));
 
-            // TODO: @OPS: Consider to validate local:id usage upfront.
+            _localIdValidator.Validate(operations);
+            _localIdTracker.Reset();
 
             var results = new List<OperationContainer>();
 
@@ -59,7 +62,6 @@ namespace JsonApiDotNetCore.AtomicOperations
                 }
 
                 await transaction.CommitAsync(cancellationToken);
-                return results;
             }
             catch (OperationCanceledException)
             {
@@ -87,6 +89,8 @@ namespace JsonApiDotNetCore.AtomicOperations
 
                 }, exception);
             }
+
+            return results;
         }
 
         protected virtual async Task<OperationContainer> ProcessOperation(OperationContainer operation,
@@ -94,7 +98,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            TrackLocalIds(operation);
+            TrackLocalIdsForOperation(operation);
 
             _targetedFields.Attributes = operation.TargetedFields.Attributes;
             _targetedFields.Relationships = operation.TargetedFields.Relationships;
@@ -104,7 +108,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             return await _operationProcessorAccessor.ProcessAsync(operation, cancellationToken);
         }
 
-        protected void TrackLocalIds(OperationContainer operation)
+        protected void TrackLocalIdsForOperation(OperationContainer operation)
         {
             if (operation.Kind == OperationKind.CreateResource)
             {
@@ -115,14 +119,9 @@ namespace JsonApiDotNetCore.AtomicOperations
                 AssignStringId(operation.Resource);
             }
 
-            foreach (var relationship in operation.TargetedFields.Relationships)
+            foreach (var secondaryResource in operation.GetSecondaryResources())
             {
-                var rightValue = relationship.GetValue(operation.Resource);
-
-                foreach (var rightResource in TypeHelper.ExtractResources(rightValue))
-                {
-                    AssignStringId(rightResource);
-                }
+                AssignStringId(secondaryResource);
             }
         }
 

@@ -12,6 +12,12 @@ namespace JsonApiDotNetCore.AtomicOperations
         private readonly IDictionary<string, LocalIdState> _idsTracked = new Dictionary<string, LocalIdState>();
 
         /// <inheritdoc />
+        public void Reset()
+        {
+            _idsTracked.Clear();
+        }
+
+        /// <inheritdoc />
         public void Declare(string localId, string resourceType)
         {
             if (localId == null) throw new ArgumentNullException(nameof(localId));

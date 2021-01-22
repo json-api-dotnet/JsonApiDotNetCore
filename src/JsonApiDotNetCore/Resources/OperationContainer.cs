@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Middleware;
 
 namespace JsonApiDotNetCore.Resources
@@ -32,6 +33,22 @@ namespace JsonApiDotNetCore.Resources
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
             return new OperationContainer(Kind, resource, TargetedFields, Request);
+        }
+
+        public ISet<IIdentifiable> GetSecondaryResources()
+        {
+            var secondaryResources = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
+
+            foreach (var relationship in TargetedFields.Relationships)
+            {
+                var rightValue = relationship.GetValue(Resource);
+                foreach (var rightResource in TypeHelper.ExtractResources(rightValue))
+                {
+                    secondaryResources.Add(rightResource);
+                }
+            }
+
+            return secondaryResources;
         }
     }
 }

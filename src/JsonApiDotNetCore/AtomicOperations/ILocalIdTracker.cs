@@ -6,6 +6,11 @@ namespace JsonApiDotNetCore.AtomicOperations
     public interface ILocalIdTracker
     {
         /// <summary>
+        /// Removes all declared and assigned values.
+        /// </summary>
+        void Reset();
+
+        /// <summary>
         /// Declares a local ID without assigning a server-generated value.
         /// </summary>
         void Declare(string localId, string resourceType);

@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             if (operation == null) throw new ArgumentNullException(nameof(operation));
 
             var primaryId = (TId) operation.Resource.GetTypedId();
-            var secondaryResourceIds = operation.GetSecondaryResourceIds();
+            var secondaryResourceIds = operation.GetSecondaryResources();
 
             await _service.AddToToManyRelationshipAsync(primaryId, operation.Request.Relationship.PublicName,
                 secondaryResourceIds, cancellationToken);

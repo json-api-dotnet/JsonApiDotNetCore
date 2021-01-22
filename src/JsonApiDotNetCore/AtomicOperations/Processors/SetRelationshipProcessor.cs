@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
@@ -24,12 +26,26 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             if (operation == null) throw new ArgumentNullException(nameof(operation));
 
             var primaryId = (TId) operation.Resource.GetTypedId();
-            object secondaryResourceIds = operation.GetSecondaryResourceIdOrIds();
+            object rightValue = GetRelationshipRightValue(operation);
 
-            await _service.SetRelationshipAsync(primaryId, operation.Request.Relationship.PublicName,
-                secondaryResourceIds, cancellationToken);
+            await _service.SetRelationshipAsync(primaryId, operation.Request.Relationship.PublicName, rightValue,
+                cancellationToken);
 
             return null;
+        }
+
+        private static object GetRelationshipRightValue(OperationContainer operation)
+        {
+            var relationship = operation.Request.Relationship;
+            var rightValue = relationship.GetValue(operation.Resource);
+
+            if (relationship is HasManyAttribute)
+            {
+                var rightResources = TypeHelper.ExtractResources(rightValue);
+                return rightResources.ToHashSet(IdentifiableComparer.Instance);
+            }
+
+            return rightValue;
         }
     }
 }
