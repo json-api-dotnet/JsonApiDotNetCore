@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Middleware
 
             var errors = exception is JsonApiException jsonApiException
                 ? jsonApiException.Errors
-                : exception is TaskCanceledException
+                : exception is OperationCanceledException
                     ? new[]
                     {
                         new Error((HttpStatusCode) 499)

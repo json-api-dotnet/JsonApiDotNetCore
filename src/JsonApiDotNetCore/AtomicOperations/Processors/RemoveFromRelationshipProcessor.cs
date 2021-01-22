@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         }
 
         /// <inheritdoc />
-        public async Task<OperationContainer> ProcessAsync(OperationContainer operation,
+        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation,
             CancellationToken cancellationToken)
         {
             if (operation == null) throw new ArgumentNullException(nameof(operation));

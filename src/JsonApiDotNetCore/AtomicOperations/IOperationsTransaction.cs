@@ -15,9 +15,14 @@ namespace JsonApiDotNetCore.AtomicOperations
         Guid TransactionId { get; }
 
         /// <summary>
-        /// Enables to execute custom logic before processing of the next operation starts.
+        /// Enables to execute custom logic before processing of an operation starts.
         /// </summary>
-        void PrepareForNextOperation();
+        void BeforeProcessOperation();
+
+        /// <summary>
+        /// Enables to execute custom logic after processing of an operation succeeds.
+        /// </summary>
+        void AfterProcessOperation();
 
         /// <summary>
         /// Commits all changes made to the underlying data store.

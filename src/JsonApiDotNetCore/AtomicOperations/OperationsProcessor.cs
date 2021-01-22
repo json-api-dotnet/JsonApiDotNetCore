@@ -34,7 +34,8 @@ namespace JsonApiDotNetCore.AtomicOperations
         }
 
         /// <inheritdoc />
-        public async Task<IList<OperationContainer>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
+        public virtual async Task<IList<OperationContainer>> ProcessAsync(IList<OperationContainer> operations,
+            CancellationToken cancellationToken)
         {
             if (operations == null) throw new ArgumentNullException(nameof(operations));
 
@@ -49,10 +50,12 @@ namespace JsonApiDotNetCore.AtomicOperations
                 {
                     operation.SetTransactionId(transaction.TransactionId);
 
-                    transaction.PrepareForNextOperation();
+                    transaction.BeforeProcessOperation();
 
                     var result = await ProcessOperation(operation, cancellationToken);
                     results.Add(result);
+
+                    transaction.AfterProcessOperation();
                 }
 
                 await transaction.CommitAsync(cancellationToken);
@@ -86,7 +89,8 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
         }
 
-        private async Task<OperationContainer> ProcessOperation(OperationContainer operation, CancellationToken cancellationToken)
+        protected virtual async Task<OperationContainer> ProcessOperation(OperationContainer operation,
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -94,13 +98,13 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             _targetedFields.Attributes = operation.TargetedFields.Attributes;
             _targetedFields.Relationships = operation.TargetedFields.Relationships;
-                
+
             _request.CopyFrom(operation.Request);
-            
+
             return await _operationProcessorAccessor.ProcessAsync(operation, cancellationToken);
         }
 
-        private void TrackLocalIds(OperationContainer operation)
+        protected void TrackLocalIds(OperationContainer operation)
         {
             if (operation.Kind == OperationKind.CreateResource)
             {

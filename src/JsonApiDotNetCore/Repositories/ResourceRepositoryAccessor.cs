@@ -148,7 +148,7 @@ namespace JsonApiDotNetCore.Repositories
 
                 if (repository.TransactionId != _request.TransactionId)
                 {
-                    throw new MultipleActiveTransactionsException();
+                    throw new NonSharedTransactionException();
                 }
             }
 
