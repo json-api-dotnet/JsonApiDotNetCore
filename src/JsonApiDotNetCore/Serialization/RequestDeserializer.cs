@@ -424,14 +424,13 @@ namespace JsonApiDotNetCore.Serialization
 
                 if (operation.SingleData != null)
                 {
-                    ValidateDataForRelationship(operation.SingleData, secondaryResourceContext, "data");
+                    ValidateSingleDataForRelationship(operation.SingleData, secondaryResourceContext, "data");
 
                     var secondaryResource = ParseResourceObject(operation.SingleData);
                     relationship.SetValue(primaryResource, secondaryResource);
                 }
             }
-
-            if (relationship is HasManyAttribute)
+            else if (relationship is HasManyAttribute)
             {
                 if (operation.ManyData == null)
                 {
@@ -441,11 +440,11 @@ namespace JsonApiDotNetCore.Serialization
                         atomicOperationIndex: AtomicOperationIndex);
                 }
 
-                List<IIdentifiable> secondaryResources = new List<IIdentifiable>();
+                var secondaryResources = new List<IIdentifiable>();
 
                 foreach (var resourceObject in operation.ManyData)
                 {
-                    ValidateDataForRelationship(resourceObject, secondaryResourceContext, "data[]");
+                    ValidateSingleDataForRelationship(resourceObject, secondaryResourceContext, "data[]");
 
                     var secondaryResource = ParseResourceObject(resourceObject);
                     secondaryResources.Add(secondaryResource);
@@ -457,15 +456,15 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        private void ValidateDataForRelationship(ResourceObject dataResourceObject,
-            ResourceContext secondaryResourceContext, string elementPath)
+        private void ValidateSingleDataForRelationship(ResourceObject dataResourceObject,
+            ResourceContext resourceContext, string elementPath)
         {
             AssertElementHasType(dataResourceObject, elementPath);
             AssertElementHasIdOrLid(dataResourceObject, elementPath, true);
 
             var resourceContextInData = GetExistingResourceContext(dataResourceObject.Type);
 
-            AssertCompatibleType(resourceContextInData, secondaryResourceContext, elementPath);
+            AssertCompatibleType(resourceContextInData, resourceContext, elementPath);
             AssertCompatibleId(dataResourceObject, resourceContextInData.IdentityType);
         }
 
