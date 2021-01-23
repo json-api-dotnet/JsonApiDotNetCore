@@ -1,7 +1,7 @@
 namespace JsonApiDotNetCore.AtomicOperations
 {
     /// <summary>
-    /// Used to track assignments and references to local IDs an in atomic:operations request.
+    /// Used to track declarations, assignments and references to local IDs an in atomic:operations request.
     /// </summary>
     public interface ILocalIdTracker
     {

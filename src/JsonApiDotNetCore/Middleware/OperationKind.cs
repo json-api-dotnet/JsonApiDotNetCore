@@ -1,8 +1,7 @@
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
-    /// Lists the functional operations from an atomic:operations request.
-    /// See also <see cref="OperationKindExtensions"/>.
+    /// Lists the functional operation kinds from an atomic:operations request.
     /// </summary>
     public enum OperationKind
     {

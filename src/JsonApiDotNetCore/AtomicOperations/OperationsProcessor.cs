@@ -53,12 +53,12 @@ namespace JsonApiDotNetCore.AtomicOperations
                 {
                     operation.SetTransactionId(transaction.TransactionId);
 
-                    transaction.BeforeProcessOperation();
+                    await transaction.BeforeProcessOperationAsync(cancellationToken);
 
                     var result = await ProcessOperation(operation, cancellationToken);
                     results.Add(result);
 
-                    transaction.AfterProcessOperation();
+                    await transaction.AfterProcessOperationAsync(cancellationToken);
                 }
 
                 await transaction.CommitAsync(cancellationToken);

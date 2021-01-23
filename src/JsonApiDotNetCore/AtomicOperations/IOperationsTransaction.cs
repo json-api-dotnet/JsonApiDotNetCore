@@ -17,12 +17,12 @@ namespace JsonApiDotNetCore.AtomicOperations
         /// <summary>
         /// Enables to execute custom logic before processing of an operation starts.
         /// </summary>
-        void BeforeProcessOperation();
+        Task BeforeProcessOperationAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Enables to execute custom logic after processing of an operation succeeds.
         /// </summary>
-        void AfterProcessOperation();
+        Task AfterProcessOperationAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Commits all changes made to the underlying data store.

@@ -27,16 +27,18 @@ namespace JsonApiDotNetCore.AtomicOperations
         /// <summary>
         /// Detaches all entities from the Entity Framework Core change tracker.
         /// </summary>
-        public void BeforeProcessOperation()
+        public Task BeforeProcessOperationAsync(CancellationToken cancellationToken)
         {
             _dbContext.ResetChangeTracker();
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Does nothing.
         /// </summary>
-        public void AfterProcessOperation()
+        public Task AfterProcessOperationAsync(CancellationToken cancellationToken)
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />

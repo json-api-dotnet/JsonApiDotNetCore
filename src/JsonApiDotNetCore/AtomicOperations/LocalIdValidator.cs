@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.AtomicOperations
 {
     /// <summary>
-    /// Validates declaration, assignment and reference of local IDs with in a list of operations.
+    /// Validates declaration, assignment and reference of local IDs within a list of operations.
     /// </summary>
     public sealed class LocalIdValidator
     {

@@ -112,6 +112,23 @@ namespace JsonApiDotNetCore.Controllers
             return results.Any(result => result != null) ? (IActionResult) Ok(results) : NoContent();
         }
 
+        protected virtual void ValidateClientGeneratedIds(IEnumerable<OperationContainer> operations)
+        {
+            if (!_options.AllowClientGeneratedIds)
+            {
+                int index = 0;
+                foreach (var operation in operations)
+                {
+                    if (operation.Kind == OperationKind.CreateResource && operation.Resource.StringId != null)
+                    {
+                        throw new ResourceIdInCreateResourceNotAllowedException(index);
+                    }
+
+                    index++;
+                }
+            }
+        }
+
         protected virtual void ValidateModelState(IEnumerable<OperationContainer> operations)
         {
             // We must validate the resource inside each operation manually, because they are typed as IIdentifiable.
@@ -152,23 +169,6 @@ namespace JsonApiDotNetCore.Controllers
             {
                 var namingStrategy = _options.SerializerContractResolver.NamingStrategy;
                 throw new InvalidModelStateException(violations, _options.IncludeExceptionStackTraceInErrors, namingStrategy);
-            }
-        }
-
-        protected virtual void ValidateClientGeneratedIds(IEnumerable<OperationContainer> operations)
-        {
-            if (!_options.AllowClientGeneratedIds)
-            {
-                int index = 0;
-                foreach (var operation in operations)
-                {
-                    if (operation.Kind == OperationKind.CreateResource && operation.Resource.StringId != null)
-                    {
-                        throw new ResourceIdInCreateResourceNotAllowedException(index);
-                    }
-
-                    index++;
-                }
             }
         }
     }
