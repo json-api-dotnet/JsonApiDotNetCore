@@ -127,8 +127,8 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
             if (resourceOrResources is IIdentifiable)
             {
-                var resources = ToList((dynamic) resourceOrResources);
-                return _resourceHookExecutor.OnReturn(resources, ResourcePipeline.GetRelationship).SingleOrDefault();
+                var resources = ToList((dynamic)resourceOrResources);
+                return Enumerable.SingleOrDefault(_resourceHookExecutor.OnReturn(resources, ResourcePipeline.GetRelationship));
             }
 
             return resourceOrResources;

@@ -246,8 +246,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var person = _personFaker.Generate();
-            var passport = new Passport(_dbContext) {IsLocked = true};
-            person.Passport = passport;
+            person.Passport = new Passport(_dbContext) {IsLocked = true};
 
             _dbContext.People.Add(person);
             await _dbContext.SaveChangesAsync();
@@ -259,8 +258,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with body: {body}");
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.Null(document.Data);
+
         }
 
         [Fact]
