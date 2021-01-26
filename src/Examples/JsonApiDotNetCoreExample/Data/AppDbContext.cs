@@ -13,7 +13,6 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<Passport> Passports { get; set; }
         public DbSet<Person> People { get; set; }
         public DbSet<TodoItemCollection> TodoItemCollections { get; set; }
-        public DbSet<KebabCasedModel> KebabCasedModels { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<Author> AuthorDifferentDbContextName { get; set; }
         public DbSet<User> Users { get; set; }
