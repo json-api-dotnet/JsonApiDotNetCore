@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
 {
     [HttpReadOnly]
+    [DisableQueryString("skipCache")]
     public sealed class BlockingWritesController : JsonApiController<Bed>
     {
         public BlockingWritesController(IJsonApiOptions options, ILoggerFactory loggerFactory,

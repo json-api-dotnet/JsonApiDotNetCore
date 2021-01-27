@@ -4,9 +4,9 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.QueryStrings;
 using Microsoft.Extensions.Primitives;
 
-namespace JsonApiDotNetCoreExample.Services
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
 {
-    public class SkipCacheQueryStringParameterReader : IQueryStringParameterReader
+    public sealed class SkipCacheQueryStringParameterReader : IQueryStringParameterReader
     {
         private const string _skipCacheParameterName = "skipCache";
 
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreExample.Services
             if (!bool.TryParse(parameterValue, out bool skipCache))
             {
                 throw new InvalidQueryStringParameterException(parameterName, "Boolean value required.",
-                    $"The value {parameterValue} is not a valid boolean.");
+                    $"The value '{parameterValue}' is not a valid boolean.");
             }
 
             SkipCache = skipCache;

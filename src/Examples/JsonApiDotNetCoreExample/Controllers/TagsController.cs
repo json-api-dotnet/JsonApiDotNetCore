@@ -1,13 +1,11 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    [DisableQueryString("skipCache")]
     public sealed class TagsController : JsonApiController<Tag>
     {
         public TagsController(

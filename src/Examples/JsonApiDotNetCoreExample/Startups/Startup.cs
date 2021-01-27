@@ -1,8 +1,6 @@
 using System;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,9 +25,6 @@ namespace JsonApiDotNetCoreExample
         public override void ConfigureServices(IServiceCollection services)
         {
             ConfigureClock(services);
-
-            services.AddScoped<SkipCacheQueryStringParameterReader>();
-            services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<SkipCacheQueryStringParameterReader>());
 
             services.AddDbContext<AppDbContext>(options =>
             {
