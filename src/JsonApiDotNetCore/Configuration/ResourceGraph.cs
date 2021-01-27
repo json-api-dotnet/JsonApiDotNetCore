@@ -82,7 +82,14 @@ namespace JsonApiDotNetCore.Configuration
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            return GetResourceContext(type).Relationships;
+            var resourceContext = GetResourceContext(type);
+            
+            if (resourceContext != null)
+            {
+                return resourceContext.Relationships;
+            }
+            
+            return null;
         }
 
         /// <inheritdoc />
