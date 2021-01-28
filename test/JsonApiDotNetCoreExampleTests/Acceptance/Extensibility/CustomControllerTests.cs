@@ -38,26 +38,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         }
 
         [Fact]
-        public async Task NonJsonApiControllers_DoNotUse_Dasherized_Routes()
-        {
-            // Arrange
-            var builder = WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>();
-            var httpMethod = new HttpMethod("GET");
-            var route = "testValues";
-
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-            var request = new HttpRequestMessage(httpMethod, route);
-
-            // Act
-            var response = await client.SendAsync(request);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Fact]
         public async Task CustomRouteControllers_Uses_Dasherized_Collection_Route()
         {
             // Arrange
