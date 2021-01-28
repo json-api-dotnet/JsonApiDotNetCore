@@ -189,7 +189,8 @@ namespace JsonApiDotNetCoreExampleTests
 
             try
             {
-                return JsonConvert.DeserializeObject<TResponseDocument>(responseText);
+                return JsonConvert.DeserializeObject<TResponseDocument>(responseText,
+                    IntegrationTestConfiguration.DeserializationSettings);
             }
             catch (JsonException exception)
             {

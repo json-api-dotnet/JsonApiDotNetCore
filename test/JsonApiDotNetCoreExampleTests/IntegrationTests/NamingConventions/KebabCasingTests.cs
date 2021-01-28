@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("diving-boards");
             responseDocument.Included[0].Id.Should().Be(pools[1].DivingBoards[0].StringId);
-            responseDocument.Included[0].Attributes["height-in-meters"].Should().BeApproximately(pools[1].DivingBoards[0].HeightInMeters);
+            responseDocument.Included[0].Attributes["height-in-meters"].As<decimal>().Should().BeApproximately(pools[1].DivingBoards[0].HeightInMeters, 0.00000000001M);
             responseDocument.Included[0].Relationships.Should().BeNull();
             responseDocument.Included[0].Links.Self.Should().Be($"/public-api/diving-boards/{pools[1].DivingBoards[0].StringId}");
 

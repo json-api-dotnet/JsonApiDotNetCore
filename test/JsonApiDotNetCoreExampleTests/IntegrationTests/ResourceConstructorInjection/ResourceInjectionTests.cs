@@ -1,8 +1,7 @@
-using System;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FluentAssertions.Common;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Authentication;
@@ -56,7 +55,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(certificate.StringId);
-            responseDocument.SingleData.Attributes["issueDate"].Should().Be(certificate.IssueDate.DateTime);
+            responseDocument.SingleData.Attributes["issueDate"].Should().BeCloseTo(certificate.IssueDate);
             responseDocument.SingleData.Attributes["hasExpired"].Should().Be(false);
         }
 
@@ -129,7 +128,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
 
             var existingOffice = _fakers.PostOffice.Generate();
 
-            var newIssueDate = 18.March(1997);
+            var newIssueDate = 18.March(1997).ToDateTimeOffset();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -169,7 +168,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["issueDate"].Should().Be(newIssueDate);
+            responseDocument.SingleData.Attributes["issueDate"].Should().BeCloseTo(newIssueDate);
             responseDocument.SingleData.Attributes["hasExpired"].Should().Be(true);
             responseDocument.SingleData.Relationships["issuer"].SingleData.Id.Should().Be(existingOffice.StringId);
 

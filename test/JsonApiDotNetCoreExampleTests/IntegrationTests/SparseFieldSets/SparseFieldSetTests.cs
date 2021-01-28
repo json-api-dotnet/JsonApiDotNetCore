@@ -641,7 +641,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             responseDocument.Included[0].Id.Should().Be(blog.Owner.StringId);
             responseDocument.Included[0].Attributes["firstName"].Should().Be(blog.Owner.FirstName);
             responseDocument.Included[0].Attributes["lastName"].Should().Be(blog.Owner.LastName);
-            responseDocument.Included[0].Attributes["dateOfBirth"].Should().Be(blog.Owner.DateOfBirth);
+            responseDocument.Included[0].Attributes["dateOfBirth"].Should().BeCloseTo(blog.Owner.DateOfBirth);
             responseDocument.Included[0].Relationships["articles"].ManyData.Should().HaveCount(1);
             responseDocument.Included[0].Relationships["articles"].ManyData[0].Id.Should().Be(blog.Owner.Articles[0].StringId);
             responseDocument.Included[0].Relationships["articles"].Links.Self.Should().NotBeNull();

@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FluentAssertions.Common;
 using FluentAssertions.Extensions;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
@@ -138,7 +139,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["someDateTime"].Should().Be(resource.SomeDateTime);
+            responseDocument.ManyData[0].Attributes["someDateTime"].Should().BeCloseTo(resource.SomeDateTime);
         }
 
         [Fact]
@@ -147,7 +148,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
             // Arrange
             var resource = new FilterableResource
             {
-                SomeDateTimeOffset = new DateTimeOffset(27.January(2003).At(11, 22, 33, 44), TimeSpan.FromHours(3))
+                SomeDateTimeOffset = 27.January(2003).At(11, 22, 33, 44).ToDateTimeOffset(TimeSpan.FromHours(3))
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -167,7 +168,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["someDateTimeOffset"].Should().Be(resource.SomeDateTimeOffset.LocalDateTime);
+            responseDocument.ManyData[0].Attributes["someDateTimeOffset"].Should().BeCloseTo(resource.SomeDateTimeOffset);
         }
 
         [Fact]
@@ -254,7 +255,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
                 SomeNullableDouble = 1,
                 SomeNullableGuid = Guid.NewGuid(),
                 SomeNullableDateTime = 1.January(2001),
-                SomeNullableDateTimeOffset = 1.January(2001),
+                SomeNullableDateTimeOffset = 1.January(2001).ToDateTimeOffset(TimeSpan.FromHours(-1)),
                 SomeNullableTimeSpan = TimeSpan.FromHours(1),
                 SomeNullableEnum = DayOfWeek.Friday
             };
@@ -305,7 +306,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
                 SomeNullableDouble = 1,
                 SomeNullableGuid = Guid.NewGuid(),
                 SomeNullableDateTime = 1.January(2001),
-                SomeNullableDateTimeOffset = 1.January(2001),
+                SomeNullableDateTimeOffset = 1.January(2001).ToDateTimeOffset(TimeSpan.FromHours(-1)),
                 SomeNullableTimeSpan = TimeSpan.FromHours(1),
                 SomeNullableEnum = DayOfWeek.Friday
             };

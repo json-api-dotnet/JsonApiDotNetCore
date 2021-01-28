@@ -282,7 +282,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Includes
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("revisions");
             responseDocument.Included[0].Id.Should().Be(article.Revisions.Single().StringId);
-            responseDocument.Included[0].Attributes["publishTime"].Should().Be(article.Revisions.Single().PublishTime);
+            responseDocument.Included[0].Attributes["publishTime"].Should().BeCloseTo(article.Revisions.Single().PublishTime);
         }
 
         [Fact]
@@ -479,7 +479,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Includes
             
             responseDocument.Included[1].Type.Should().Be("revisions");
             responseDocument.Included[1].Id.Should().Be(blog.Articles[0].Revisions.Single().StringId);
-            responseDocument.Included[1].Attributes["publishTime"].Should().Be(blog.Articles[0].Revisions.Single().PublishTime);
+            responseDocument.Included[1].Attributes["publishTime"].Should().BeCloseTo(blog.Articles[0].Revisions.Single().PublishTime);
         }
 
         [Fact]
