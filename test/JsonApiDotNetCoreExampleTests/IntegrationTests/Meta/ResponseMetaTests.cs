@@ -7,9 +7,7 @@ using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
@@ -40,12 +38,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             var route = "/api/v1/people";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<JToken>(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            var expected = @"{
+            responseDocument.Should().BeJson(@"{
   ""meta"": {
     ""license"": ""MIT"",
     ""projectUrl"": ""https://github.com/json-api-dotnet/JsonApiDotNetCore/"",
@@ -61,9 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
     ""first"": ""http://localhost/api/v1/people""
   },
   ""data"": []
-}";
-
-            responseDocument.ToString().NormalizeLineEndings().Should().Be(expected.NormalizeLineEndings());
+}");
         }
     }
 

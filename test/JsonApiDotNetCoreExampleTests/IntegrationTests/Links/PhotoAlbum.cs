@@ -10,9 +10,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         [Attr]
         public string Name { get; set; }
 
-        [Attr]
-        public Guid ConcurrencyToken => Guid.NewGuid();
-
         [HasMany]
         public ISet<Photo> Photos { get; set; }
     }
