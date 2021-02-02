@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
@@ -79,7 +80,46 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
             responseDocument.Errors[0].Meta.Data["support"].Should().Be("Please contact us for info about similar articles at company@email.com.");
 
             loggerFactory.Logger.Messages.Should().HaveCount(1);
+            loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Warning);
             loggerFactory.Logger.Messages.Single().Text.Should().Contain("Article with code 'X123' is no longer available.");
+        }
+
+        [Fact]
+        public async Task Logs_and_produces_error_response_on_serialization_failure()
+        {
+            // Arrange
+            var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
+            loggerFactory.Logger.Clear();
+
+            var throwingArticle = new ThrowingArticle();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.ThrowingArticles.Add(throwingArticle);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var route = "/throwingArticles/" + throwingArticle.StringId;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+            responseDocument.Errors[0].Title.Should().Be("An unhandled error occurred while processing this request.");
+            responseDocument.Errors[0].Detail.Should().Be("Exception has been thrown by the target of an invocation.");
+
+            var stackTraceLines =
+                ((JArray) responseDocument.Errors[0].Meta.Data["stackTrace"]).Select(token => token.Value<string>());
+
+            stackTraceLines.Should().ContainMatch("* System.InvalidOperationException: Article status could not be determined.*");
+
+            loggerFactory.Logger.Messages.Should().HaveCount(1);
+            loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Error);
+            loggerFactory.Logger.Messages.Single().Text.Should().Contain("Exception has been thrown by the target of an invocation.");
         }
     }
 }

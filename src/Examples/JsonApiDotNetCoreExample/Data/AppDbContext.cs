@@ -28,8 +28,6 @@ namespace JsonApiDotNetCoreExample.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ThrowingResource>();
-
             modelBuilder.Entity<SuperUser>().HasBaseType<User>();
 
             modelBuilder.Entity<TodoItem>()
