@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
     public sealed class BlockingHttpPostController : JsonApiController<Table>
     {
         public BlockingHttpPostController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<Table, int> resourceService)
+            IResourceService<Table> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

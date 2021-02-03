@@ -12,13 +12,10 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<TodoItem> TodoItems { get; set; }
         public DbSet<Passport> Passports { get; set; }
         public DbSet<Person> People { get; set; }
-        public DbSet<TodoItemCollection> TodoItemCollections { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<Author> AuthorDifferentDbContextName { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<PersonRole> PersonRoles { get; set; }
         public DbSet<ArticleTag> ArticleTags { get; set; }
-        public DbSet<Tag> Tags { get; set; }
         public DbSet<Blog> Blogs { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options, ISystemClock systemClock) : base(options)

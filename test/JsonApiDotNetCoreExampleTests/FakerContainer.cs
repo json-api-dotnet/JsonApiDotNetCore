@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests
+namespace JsonApiDotNetCoreExampleTests
 {
     internal abstract class FakerContainer
     {

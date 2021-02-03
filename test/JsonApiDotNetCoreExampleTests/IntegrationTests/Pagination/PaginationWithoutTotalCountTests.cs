@@ -1,6 +1,5 @@
 using System.Net;
 using System.Threading.Tasks;
-using Bogus;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -17,8 +16,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         private const int _defaultPageSize = 5;
 
         private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
-
-        private readonly Faker<Article> _articleFaker = new Faker<Article>();
+        private readonly ExampleFakers _fakers;
 
         public PaginationWithoutTotalCountTests(IntegrationTestContext<Startup, AppDbContext> testContext)
         {
@@ -29,6 +27,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
             options.IncludeTotalResourceCount = false;
             options.DefaultPageSize = new PageSize(_defaultPageSize);
             options.AllowUnknownQueryStringParameters = true;
+
+            _fakers = new ExampleFakers(testContext.Factory.Services);
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         public async Task When_page_number_is_specified_in_query_string_with_partially_filled_page_it_should_render_pagination_links()
         {
             // Arrange
-            var articles = _articleFaker.Generate(12);
+            var articles = _fakers.Article.Generate(12);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -145,7 +145,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         public async Task When_page_number_is_specified_in_query_string_with_full_page_it_should_render_pagination_links()
         {
             // Arrange
-            var articles = _articleFaker.Generate(_defaultPageSize * 3);
+            var articles = _fakers.Article.Generate(_defaultPageSize * 3);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -179,7 +179,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
             // Arrange
             var author = new Author
             {
-                Articles = _articleFaker.Generate(_defaultPageSize * 3)
+                Articles = _fakers.Article.Generate(_defaultPageSize * 3)
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

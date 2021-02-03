@@ -2,7 +2,7 @@ using JsonApiDotNetCoreExample;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests
+namespace JsonApiDotNetCoreExampleTests
 {
     public static class ServiceCollectionExtensions
     {

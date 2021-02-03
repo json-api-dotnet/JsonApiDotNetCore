@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Bogus;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -10,25 +9,19 @@ using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Xunit;
-using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Sorting
 {
     public sealed class SortTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
     {
         private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
-        private readonly Faker<Article> _articleFaker;
-        private readonly Faker<Author> _authorFaker;
+        private readonly ExampleFakers _fakers;
 
         public SortTests(IntegrationTestContext<Startup, AppDbContext> testContext)
         {
             _testContext = testContext;
 
-            _articleFaker = new Faker<Article>()
-                .RuleFor(a => a.Caption, f => f.Random.AlphaNumeric(10));
-
-            _authorFaker = new Faker<Author>()
-                .RuleFor(a => a.LastName, f => f.Random.Words(2));
+            _fakers = new ExampleFakers(testContext.Factory.Services);
         }
 
         [Fact]
@@ -282,7 +275,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Sorting
         public async Task Can_sort_in_scope_of_HasMany_relationship()
         {
             // Arrange
-            var author = _authorFaker.Generate();
+            var author = _fakers.Author.Generate();
             author.Articles = new List<Article>
             {
                 new Article {Caption = "B"},
@@ -360,7 +353,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Sorting
         public async Task Can_sort_in_scope_of_HasManyThrough_relationship()
         {
             // Arrange
-            var article = _articleFaker.Generate();
+            var article = _fakers.Article.Generate();
             article.ArticleTags = new HashSet<ArticleTag>
             {
                 new ArticleTag

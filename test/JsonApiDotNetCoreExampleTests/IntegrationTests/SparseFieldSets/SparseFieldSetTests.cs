@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Bogus;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
@@ -11,8 +10,6 @@ using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -21,9 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
     public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
     {
         private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
-        private readonly Faker<Article> _articleFaker;
-        private readonly Faker<Author> _authorFaker;
-        private readonly Faker<User> _userFaker;
+        private readonly ExampleFakers _fakers;
 
         public SparseFieldSetTests(IntegrationTestContext<Startup, AppDbContext> testContext)
         {
@@ -41,18 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
                 services.AddScoped<IResourceService<Article>, JsonApiResourceService<Article>>();
             });
 
-            _articleFaker = new Faker<Article>()
-                .RuleFor(a => a.Caption, f => f.Random.AlphaNumeric(10));
-
-            _authorFaker = new Faker<Author>()
-                .RuleFor(a => a.LastName, f => f.Random.Words(2));
-
-            var systemClock = testContext.Factory.Services.GetRequiredService<ISystemClock>();
-            var options = testContext.Factory.Services.GetRequiredService<DbContextOptions<AppDbContext>>();
-            var tempDbContext = new AppDbContext(options, systemClock);
-
-            _userFaker = new Faker<User>()
-                .CustomInstantiator(f => new User(tempDbContext));
+            _fakers = new ExampleFakers(testContext.Factory.Services);
         }
 
         [Fact]
@@ -282,7 +266,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var article = _articleFaker.Generate();
+            var article = _fakers.Article.Generate();
             article.Caption = "Some";
             article.Author = new Author
             {
@@ -338,7 +322,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var author = _authorFaker.Generate();
+            var author = _fakers.Author.Generate();
             author.LastName = "Smith";
             author.Articles = new List<Article>
             {
@@ -460,7 +444,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var article = _articleFaker.Generate();
+            var article = _fakers.Article.Generate();
             article.Caption = "Some";
             article.ArticleTags = new HashSet<ArticleTag>
             {
@@ -724,7 +708,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
         public async Task Cannot_select_attribute_with_blocked_capability()
         {
             // Arrange
-            var user = _userFaker.Generate();
+            var user = _fakers.User.Generate();
 
             var route = $"/api/v1/users/{user.Id}?fields[users]=password";
 

@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
     public sealed class BlockingWritesController : JsonApiController<Bed>
     {
         public BlockingWritesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<Bed, int> resourceService)
+            IResourceService<Bed> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

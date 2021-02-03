@@ -57,27 +57,5 @@ namespace JsonApiDotNetCoreExampleTests
                 }   
             }
         }
-
-        public static void ClearTable<TEntity>(this DbContext dbContext) where TEntity : class
-        {
-            var entityType = dbContext.Model.FindEntityType(typeof(TEntity));
-            if (entityType == null)
-            {
-                throw new InvalidOperationException($"Table for '{typeof(TEntity).Name}' not found.");
-            }
-
-            string tableName = entityType.GetTableName();
-
-            // PERF: We first try to clear the table, which is fast and usually succeeds, unless foreign key constraints are violated.
-            // In that case, we recursively delete all related data, which is slow.
-            try
-            {
-                dbContext.Database.ExecuteSqlRaw("delete from \"" + tableName + "\"");
-            }
-            catch (PostgresException)
-            {
-                dbContext.Database.ExecuteSqlRaw("truncate table \"" + tableName + "\" cascade");
-            }
-        }
     }
 }

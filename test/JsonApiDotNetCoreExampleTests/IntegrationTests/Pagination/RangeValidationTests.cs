@@ -1,6 +1,5 @@
 using System.Net;
 using System.Threading.Tasks;
-using Bogus;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -15,7 +14,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
     public sealed class RangeValidationTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
     {
         private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
-        private readonly Faker<TodoItem> _todoItemFaker = new Faker<TodoItem>();
+        private readonly ExampleFakers _fakers;
 
         private const int _defaultPageSize = 5;
 
@@ -27,6 +26,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
             options.DefaultPageSize = new PageSize(_defaultPageSize);
             options.MaximumPageSize = null;
             options.MaximumPageNumber = null;
+
+            _fakers = new ExampleFakers(testContext.Factory.Services);
         }
 
         [Fact]
@@ -84,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         public async Task When_page_number_is_too_high_it_must_return_empty_set_of_resources()
         {
             // Arrange
-            var todoItems = _todoItemFaker.Generate(3);
+            var todoItems = _fakers.TodoItem.Generate(3);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

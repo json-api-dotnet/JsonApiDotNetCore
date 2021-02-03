@@ -2,12 +2,13 @@ using System;
 using Bogus;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.IntegrationTests;
 using Microsoft.Extensions.DependencyInjection;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
+namespace JsonApiDotNetCoreExampleTests
 {
-    internal sealed class HookFakers : FakerContainer
+    internal sealed class ExampleFakers : FakerContainer
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -58,7 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public Faker<Person> Person => _lazyPersonFaker.Value;
         public Faker<Tag> Tag => _lazyTagFaker.Value;
 
-        public HookFakers(IServiceProvider serviceProvider)
+        public ExampleFakers(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 

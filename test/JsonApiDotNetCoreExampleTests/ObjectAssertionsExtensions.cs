@@ -4,7 +4,7 @@ using FluentAssertions.Primitives;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests
+namespace JsonApiDotNetCoreExampleTests
 {
     public static class ObjectAssertionsExtensions
     {

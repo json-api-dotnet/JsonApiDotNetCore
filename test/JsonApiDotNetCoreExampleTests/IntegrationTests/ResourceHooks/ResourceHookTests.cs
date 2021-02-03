@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         : IClassFixture<IntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext>>
     {
         private readonly IntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext> _testContext;
-        private readonly HookFakers _fakers;
+        private readonly ExampleFakers _fakers;
 
         public ResourceHookTests(IntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext> testContext)
         {
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             options.DisableTopPagination = false;
             options.DisableChildrenPagination = false;
 
-            _fakers = new HookFakers(testContext.Factory.Services);
+            _fakers = new ExampleFakers(testContext.Factory.Services);
         }
 
         [Fact]
