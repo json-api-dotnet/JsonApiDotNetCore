@@ -24,5 +24,8 @@ namespace JsonApiDotNetCoreExample.Models
 
         [HasMany]
         public IList<Article> Articles { get; set; }
+
+        [HasMany]
+        public ISet<Blog> Blogs { get; set; }
     }
 }

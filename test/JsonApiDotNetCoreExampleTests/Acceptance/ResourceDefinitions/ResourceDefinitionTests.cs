@@ -24,6 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
         private readonly Faker<Article> _articleFaker;
+        private readonly Faker<Blog> _blogFaker;
         private readonly Faker<Author> _authorFaker;
         private readonly Faker<Tag> _tagFaker;
 
@@ -35,6 +36,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _articleFaker = new Faker<Article>()
                 .RuleFor(a => a.Caption, f => f.Random.AlphaNumeric(10))
                 .RuleFor(a => a.Author, f => _authorFaker.Generate());
+
+            _blogFaker = new Faker<Blog>()
+                .RuleFor(a => a.Title, f => f.Lorem.Word())
+                .RuleFor(a => a.CompanyName, f => f.Company.CompanyName());
 
             _userFaker = new Faker<User>()
                 .CustomInstantiator(f => new User(_dbContext))
@@ -231,6 +236,30 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             await _dbContext.SaveChangesAsync();
 
             var route = $"/api/v1/authors/{author.Id}/articles";
+
+            // Act
+            var response = await _client.GetAsync(route);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with body: {body}");
+            Assert.DoesNotContain(toBeExcluded, body);
+        }
+
+        [Fact]
+        public async Task Blog_Through_Secondary_Endpoint_Is_Hidden()
+        {
+            // Arrange
+            var blogs = _blogFaker.Generate(3).ToHashSet();
+            string toBeExcluded = "This should not be included";
+            blogs.First().Title = toBeExcluded;
+            var author = _authorFaker.Generate();
+            author.Blogs = blogs;
+
+            _dbContext.AuthorDifferentDbContextName.Add(author);
+            await _dbContext.SaveChangesAsync();
+
+            var route = $"/api/v1/authors/{author.Id}/blogs";
 
             // Act
             var response = await _client.GetAsync(route);
