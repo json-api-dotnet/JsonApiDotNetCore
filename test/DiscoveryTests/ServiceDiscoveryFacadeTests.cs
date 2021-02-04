@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Middleware;
@@ -47,10 +48,10 @@ namespace DiscoveryTests
         }
 
         [Fact]
-        public void DiscoverResources_Adds_Resources_From_Added_Assembly_To_Graph()
+        public void Can_add_resources_from_assembly_to_graph()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
             facade.AddAssembly(typeof(Person).Assembly);
 
             // Act
@@ -58,17 +59,19 @@ namespace DiscoveryTests
             
             // Assert
             var resourceGraph = _resourceGraphBuilder.Build();
+            
             var personResource = resourceGraph.GetResourceContext(typeof(Person));
+            personResource.Should().NotBeNull();
+
             var articleResource = resourceGraph.GetResourceContext(typeof(Article));
-            Assert.NotNull(personResource);
-            Assert.NotNull(articleResource);
+            articleResource.Should().NotBeNull();
         }
 
         [Fact]
-        public void DiscoverResources_Adds_Resources_From_Current_Assembly_To_Graph()
+        public void Can_add_resource_from_current_assembly_to_graph()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
             facade.AddCurrentAssembly();
 
             // Act
@@ -76,15 +79,16 @@ namespace DiscoveryTests
             
             // Assert
             var resourceGraph = _resourceGraphBuilder.Build();
-            var testModelResource = resourceGraph.GetResourceContext(typeof(TestModel));
-            Assert.NotNull(testModelResource);
+
+            var resource = resourceGraph.GetResourceContext(typeof(TestResource));
+            resource.Should().NotBeNull();
         }
 
         [Fact]
-        public void DiscoverInjectables_Adds_Resource_Services_From_Current_Assembly_To_Container()
+        public void Can_add_resource_service_from_current_assembly_to_container()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
             facade.AddCurrentAssembly();
             
             // Act
@@ -92,15 +96,16 @@ namespace DiscoveryTests
 
             // Assert
             var services = _services.BuildServiceProvider();
-            var service = services.GetRequiredService<IResourceService<TestModel>>();
-            Assert.IsType<TestModelService>(service);
+
+            var resourceService = services.GetRequiredService<IResourceService<TestResource>>();
+            resourceService.Should().BeOfType<TestResourceService>();
         }
 
         [Fact]
-        public void DiscoverInjectables_Adds_Resource_Repositories_From_Current_Assembly_To_Container()
+        public void Can_add_resource_repository_from_current_assembly_to_container()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
             facade.AddCurrentAssembly();
 
             // Act
@@ -108,14 +113,16 @@ namespace DiscoveryTests
 
             // Assert
             var services = _services.BuildServiceProvider();
-            Assert.IsType<TestModelRepository>(services.GetRequiredService<IResourceRepository<TestModel>>());
+
+            var resourceRepository = services.GetRequiredService<IResourceRepository<TestResource>>();
+            resourceRepository.Should().BeOfType<TestResourceRepository>();
         }
 
         [Fact]
-        public void AddCurrentAssembly_Adds_Resource_Definitions_From_Current_Assembly_To_Container()
+        public void Can_add_resource_definition_from_current_assembly_to_container()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
             facade.AddCurrentAssembly();
 
             // Act
@@ -123,14 +130,16 @@ namespace DiscoveryTests
 
             // Assert
             var services = _services.BuildServiceProvider();
-            Assert.IsType<TestModelResourceDefinition>(services.GetRequiredService<IResourceDefinition<TestModel>>());
+
+            var resourceDefinition = services.GetRequiredService<IResourceDefinition<TestResource>>();
+            resourceDefinition.Should().BeOfType<TestResourceDefinition>();
         }
 
         [Fact]
-        public void AddCurrentAssembly_Adds_Resource_Hooks_Definitions_From_Current_Assembly_To_Container()
+        public void Can_add_resource_hooks_definition_from_current_assembly_to_container()
         {
             // Arrange
-            ServiceDiscoveryFacade facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, _loggerFactory);
             facade.AddCurrentAssembly();
 
             _options.EnableResourceHooks = true;
@@ -140,21 +149,23 @@ namespace DiscoveryTests
 
             // Assert
             var services = _services.BuildServiceProvider();
-            Assert.IsType<TestModelResourceHooksDefinition>(services.GetRequiredService<ResourceHooksDefinition<TestModel>>());
+
+            var resourceHooksDefinition = services.GetRequiredService<ResourceHooksDefinition<TestResource>>();
+            resourceHooksDefinition.Should().BeOfType<TestResourceHooksDefinition>();
         }
 
-        public sealed class TestModel : Identifiable { }
+        public sealed class TestResource : Identifiable { }
 
-        public class TestModelService : JsonApiResourceService<TestModel>
+        public class TestResourceService : JsonApiResourceService<TestResource>
         {
-            public TestModelService(
+            public TestResourceService(
                 IResourceRepositoryAccessor repositoryAccessor,
                 IQueryLayerComposer queryLayerComposer,
                 IPaginationContext paginationContext,
                 IJsonApiOptions options,
                 ILoggerFactory loggerFactory,
                 IJsonApiRequest request,
-                IResourceChangeTracker<TestModel> resourceChangeTracker,
+                IResourceChangeTracker<TestResource> resourceChangeTracker,
                 IResourceHookExecutorFacade hookExecutor)
                 : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
                     resourceChangeTracker, hookExecutor)
@@ -162,9 +173,9 @@ namespace DiscoveryTests
             }
         }
 
-        public class TestModelRepository : EntityFrameworkCoreRepository<TestModel>
+        public class TestResourceRepository : EntityFrameworkCoreRepository<TestResource>
         {
-            public TestModelRepository(
+            public TestResourceRepository(
                 ITargetedFields targetedFields,
                 IDbContextResolver contextResolver,
                 IResourceGraph resourceGraph,
@@ -175,14 +186,14 @@ namespace DiscoveryTests
             { }
         }
         
-        public class TestModelResourceHooksDefinition : ResourceHooksDefinition<TestModel>
+        public class TestResourceHooksDefinition : ResourceHooksDefinition<TestResource>
         {
-            public TestModelResourceHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+            public TestResourceHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
         }
 
-        public class TestModelResourceDefinition : JsonApiResourceDefinition<TestModel>
+        public class TestResourceDefinition : JsonApiResourceDefinition<TestResource>
         {
-            public TestModelResourceDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+            public TestResourceDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
         }
     }
 }
