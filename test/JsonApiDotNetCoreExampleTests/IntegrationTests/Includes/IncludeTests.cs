@@ -16,11 +16,11 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Includes
 {
-    public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
+    public sealed class IncludeTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {
-        private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
 
-        public IncludeTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        public IncludeTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
         {
             _testContext = testContext;
 

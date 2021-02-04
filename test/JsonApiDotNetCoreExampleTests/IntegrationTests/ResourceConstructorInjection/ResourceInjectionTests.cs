@@ -13,12 +13,12 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInjection
 {
     public sealed class ResourceInjectionTests
-        : IClassFixture<IntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext>>
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> _testContext;
         private readonly InjectionFakers _fakers;
 
-        public ResourceInjectionTests(IntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> testContext)
+        public ResourceInjectionTests(ExampleIntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> testContext)
         {
             _testContext = testContext;
 

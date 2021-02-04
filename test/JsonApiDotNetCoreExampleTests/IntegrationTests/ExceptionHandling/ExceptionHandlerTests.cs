@@ -14,11 +14,11 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 {
     public sealed class ExceptionHandlerTests
-        : IClassFixture<IntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext>>
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> _testContext;
 
-        public ExceptionHandlerTests(IntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> testContext)
+        public ExceptionHandlerTests(ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> testContext)
         {
             _testContext = testContext;
 

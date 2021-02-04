@@ -13,12 +13,12 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 {
     public sealed class EmptyGuidAsKeyTests
-        : IClassFixture<IntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext>>
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext> _testContext;
         private readonly ZeroKeyFakers _fakers = new ZeroKeyFakers();
 
-        public EmptyGuidAsKeyTests(IntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext> testContext)
+        public EmptyGuidAsKeyTests(ExampleIntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext> testContext)
         {
             _testContext = testContext;
 

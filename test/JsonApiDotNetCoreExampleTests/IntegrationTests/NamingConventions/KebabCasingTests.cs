@@ -10,12 +10,12 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
 {
     public sealed class KebabCasingTests
-        : IClassFixture<IntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext>>
+        : IClassFixture<ExampleIntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext>>
     {
-        private readonly IntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> _testContext;
         private readonly SwimmingFakers _fakers = new SwimmingFakers();
 
-        public KebabCasingTests(IntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> testContext)
+        public KebabCasingTests(ExampleIntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> testContext)
         {
             _testContext = testContext;
         }

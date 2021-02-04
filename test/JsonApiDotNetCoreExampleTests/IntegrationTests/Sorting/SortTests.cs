@@ -13,12 +13,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Sorting
 {
-    public sealed class SortTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
+    public sealed class SortTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {
-        private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
         private readonly ExampleFakers _fakers;
 
-        public SortTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        public SortTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
         {
             _testContext = testContext;
 

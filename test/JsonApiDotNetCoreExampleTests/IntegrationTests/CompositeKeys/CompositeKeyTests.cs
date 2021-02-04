@@ -13,11 +13,11 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 {
     public sealed class CompositeKeyTests 
-        : IClassFixture<IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext>>
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> _testContext;
 
-        public CompositeKeyTests(IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> testContext)
+        public CompositeKeyTests(ExampleIntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> testContext)
         {
             _testContext = testContext;
 

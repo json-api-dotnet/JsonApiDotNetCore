@@ -9,12 +9,12 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
 {
     public sealed class CustomRouteTests
-        : IClassFixture<IntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>>
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> _testContext;
         private readonly CustomRouteFakers _fakers = new CustomRouteFakers();
 
-        public CustomRouteTests(IntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> testContext)
+        public CustomRouteTests(ExampleIntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> testContext)
         {
             _testContext = testContext;
         }

@@ -15,11 +15,11 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
 {
-    public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
+    public sealed class FilterDepthTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {
-        private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
 
-        public FilterDepthTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        public FilterDepthTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
         {
             _testContext = testContext;
 

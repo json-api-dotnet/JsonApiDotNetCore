@@ -12,11 +12,11 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
 {
-    public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
+    public sealed class LoggingTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {
-        private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
 
-        public LoggingTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        public LoggingTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
         {
             _testContext = testContext;
 

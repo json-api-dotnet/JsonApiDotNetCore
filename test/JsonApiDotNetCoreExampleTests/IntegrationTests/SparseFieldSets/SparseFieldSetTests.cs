@@ -16,12 +16,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
 {
-    public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
+    public sealed class SparseFieldSetTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {
-        private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
         private readonly ExampleFakers _fakers;
 
-        public SparseFieldSetTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        public SparseFieldSetTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
         {
             _testContext = testContext;
 

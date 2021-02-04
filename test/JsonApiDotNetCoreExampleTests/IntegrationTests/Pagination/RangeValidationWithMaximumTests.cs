@@ -11,14 +11,14 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
 {
-    public sealed class RangeValidationWithMaximumTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
+    public sealed class RangeValidationWithMaximumTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {
-        private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
 
         private const int _maximumPageSize = 15;
         private const int _maximumPageNumber = 20;
 
-        public RangeValidationWithMaximumTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        public RangeValidationWithMaximumTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
         {
             _testContext = testContext;
 

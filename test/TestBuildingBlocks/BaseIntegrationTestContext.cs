@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 namespace TestBuildingBlocks
 {
     /// <summary>
-    /// A test context that creates a new database and server instance before running tests and cleans up afterwards.
+    /// Base class for a test context that creates a new database and server instance before running tests and cleans up afterwards.
     /// You can either use this as a fixture on your tests class (init/cleanup runs once before/after all tests) or
     /// have your tests class inherit from it (init/cleanup runs once before/after each test). See
     /// <see href="https://xunit.net/docs/shared-context"/> for details on shared context usage.

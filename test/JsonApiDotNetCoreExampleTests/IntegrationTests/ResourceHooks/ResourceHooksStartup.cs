@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             base.ConfigureServices(services);
 
-            services.AddControllersFromTestProject();
+            services.AddControllersFromExampleProject();
             services.AddClientSerialization();
         }
 

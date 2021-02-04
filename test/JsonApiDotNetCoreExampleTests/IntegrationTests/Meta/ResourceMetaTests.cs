@@ -11,11 +11,11 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
+    public sealed class ResourceMetaTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {
-        private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
 
-        public ResourceMetaTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        public ResourceMetaTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
         {
             _testContext = testContext;
         }

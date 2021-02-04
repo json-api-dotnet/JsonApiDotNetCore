@@ -22,12 +22,12 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 {
     public sealed class ResourceHookTests
-        : IClassFixture<IntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext>>
+        : IClassFixture<ExampleIntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext>>
     {
-        private readonly IntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext> _testContext;
         private readonly ExampleFakers _fakers;
 
-        public ResourceHookTests(IntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext> testContext)
+        public ResourceHookTests(ExampleIntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext> testContext)
         {
             _testContext = testContext;
 

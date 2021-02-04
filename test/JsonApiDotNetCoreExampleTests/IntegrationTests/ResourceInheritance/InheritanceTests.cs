@@ -10,11 +10,11 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 {
-    public sealed class InheritanceTests : IClassFixture<IntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext>>
+    public sealed class InheritanceTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext> _testContext;
 
-        public InheritanceTests(IntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext> testContext)
+        public InheritanceTests(ExampleIntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext> testContext)
         {
             _testContext = testContext;
         }

@@ -15,14 +15,14 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
 {
-    public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
+    public sealed class PaginationWithTotalCountTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {
         private const int _defaultPageSize = 5;
 
-        private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
         private readonly ExampleFakers _fakers;
 
-        public PaginationWithTotalCountTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        public PaginationWithTotalCountTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
         {
             _testContext = testContext;
 
