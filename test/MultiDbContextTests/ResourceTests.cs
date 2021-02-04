@@ -5,7 +5,6 @@ using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.Testing;
 using MultiDbContextExample;
-using Newtonsoft.Json;
 using TestBuildingBlocks;
 using Xunit;
 
