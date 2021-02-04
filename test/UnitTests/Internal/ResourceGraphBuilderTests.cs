@@ -1,6 +1,8 @@
+using System.Linq;
 using Castle.DynamicProxy;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCoreExampleTests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -37,8 +39,8 @@ namespace UnitTests.Internal
 
             // Assert
             Assert.Single(loggerFactory.Logger.Messages);
-            Assert.Equal(LogLevel.Warning, loggerFactory.Logger.Messages[0].LogLevel);
-            Assert.Equal("Entity 'UnitTests.Internal.ResourceGraphBuilderTests+TestContext' does not implement 'IIdentifiable'.", loggerFactory.Logger.Messages[0].Text);
+            Assert.Equal(LogLevel.Warning, loggerFactory.Logger.Messages.Single().LogLevel);
+            Assert.Equal("Entity 'UnitTests.Internal.ResourceGraphBuilderTests+TestContext' does not implement 'IIdentifiable'.", loggerFactory.Logger.Messages.Single().Text);
         }
 
         [Fact]

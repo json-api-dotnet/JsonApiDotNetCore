@@ -14,6 +14,7 @@ using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;

@@ -15,6 +15,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;

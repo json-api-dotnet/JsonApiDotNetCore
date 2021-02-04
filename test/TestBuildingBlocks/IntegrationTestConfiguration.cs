@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCoreExampleTests
 {
-    internal static class IntegrationTestConfiguration
+    public static class IntegrationTestConfiguration
     {
         // Because our tests often deserialize incoming responses into weakly-typed string-to-object dictionaries (as part of ResourceObject),
         // Newtonsoft.JSON is unable to infer the target type in such cases. So we steer a bit using explicit configuration.

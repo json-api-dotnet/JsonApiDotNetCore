@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCoreExampleTests.IntegrationTests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

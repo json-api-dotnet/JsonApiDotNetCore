@@ -2,7 +2,6 @@ using System;
 using Bogus;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExampleTests.IntegrationTests;
 using Microsoft.Extensions.DependencyInjection;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 

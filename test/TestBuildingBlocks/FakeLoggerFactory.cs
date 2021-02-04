@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests
 {
-    internal sealed class FakeLoggerFactory : ILoggerFactory, ILoggerProvider
+    public sealed class FakeLoggerFactory : ILoggerFactory, ILoggerProvider
     {
         public FakeLogger Logger { get; }
 
@@ -24,11 +24,11 @@ namespace JsonApiDotNetCoreExampleTests
         {
         }
 
-        internal sealed class FakeLogger : ILogger
+        public sealed class FakeLogger : ILogger
         {
-            private readonly ConcurrentBag<LogMessage> _messages = new ConcurrentBag<LogMessage>();
+            private readonly ConcurrentBag<FakeLogMessage> _messages = new ConcurrentBag<FakeLogMessage>();
 
-            public IReadOnlyCollection<LogMessage> Messages => _messages;
+            public IReadOnlyCollection<FakeLogMessage> Messages => _messages;
 
             public bool IsEnabled(LogLevel logLevel) => true;
 
@@ -41,18 +41,18 @@ namespace JsonApiDotNetCoreExampleTests
                 Func<TState, Exception, string> formatter)
             {
                 var message = formatter(state, exception);
-                _messages.Add(new LogMessage(logLevel, message));
+                _messages.Add(new FakeLogMessage(logLevel, message));
             }
 
             public IDisposable BeginScope<TState>(TState state) => null;
         }
 
-        internal sealed class LogMessage
+        public sealed class FakeLogMessage
         {
             public LogLevel LogLevel { get; }
             public string Text { get; }
 
-            public LogMessage(LogLevel logLevel, string text)
+            public FakeLogMessage(LogLevel logLevel, string text)
             {
                 LogLevel = logLevel;
                 Text = text;

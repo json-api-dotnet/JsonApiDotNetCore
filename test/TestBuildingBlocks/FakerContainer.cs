@@ -6,7 +6,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests
 {
-    internal abstract class FakerContainer
+    public abstract class FakerContainer
     {
         protected static int GetFakerSeed()
         {

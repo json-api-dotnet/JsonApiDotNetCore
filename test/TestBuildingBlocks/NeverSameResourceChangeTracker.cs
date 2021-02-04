@@ -5,7 +5,7 @@ namespace JsonApiDotNetCoreExampleTests
     /// <summary>
     /// Ensures the resource attributes are returned when creating/updating a resource.
     /// </summary>
-    internal sealed class NeverSameResourceChangeTracker<TResource> : IResourceChangeTracker<TResource>
+    public sealed class NeverSameResourceChangeTracker<TResource> : IResourceChangeTracker<TResource>
         where TResource : class, IIdentifiable
     {
         public void SetInitiallyStoredAttributeValues(TResource resource)
