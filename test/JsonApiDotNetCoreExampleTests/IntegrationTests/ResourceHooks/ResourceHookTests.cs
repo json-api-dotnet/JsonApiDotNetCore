@@ -279,6 +279,41 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
+        public async Task Passport_Through_Secondary_Endpoint_Is_Hidden()
+        {
+            // Arrange
+            var person = _fakers.Person.Generate();
+
+            using (var scope = _testContext.Factory.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                person.Passport = new Passport(dbContext)
+                {
+                    IsLocked = true
+                };
+
+                dbContext.People.Add(person);
+                await dbContext.SaveChangesAsync();
+            }
+
+            var route = $"/api/v1/people/{person.Id}/passport";
+
+            using var client = _testContext.Factory.CreateClient();
+
+            // Act
+            var response = await client.GetAsync(route);
+
+            // Assert
+            response.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var document = JsonConvert.DeserializeObject<Document>(body);
+
+            document.Data.Should().BeNull();
+        }
+
+        [Fact]
         public async Task Tag_is_hidden()
         {
             // Arrange
