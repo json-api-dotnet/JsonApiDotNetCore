@@ -5,6 +5,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance

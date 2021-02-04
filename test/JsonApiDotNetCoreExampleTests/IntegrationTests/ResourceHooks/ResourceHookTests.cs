@@ -16,6 +16,7 @@ using JsonApiDotNetCoreExample.Definitions;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks

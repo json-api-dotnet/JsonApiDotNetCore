@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Authentication;
 
-namespace JsonApiDotNetCoreExampleTests
+namespace TestBuildingBlocks
 {
     public sealed class FrozenSystemClock : ISystemClock
     {

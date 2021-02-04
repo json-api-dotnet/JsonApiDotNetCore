@@ -3,9 +3,9 @@ using System.ComponentModel.Design;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExampleTests;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Models

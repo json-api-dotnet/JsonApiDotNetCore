@@ -1,6 +1,7 @@
 using System;
 using Bogus;
 using Microsoft.Extensions.DependencyInjection;
+using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInjection
 {

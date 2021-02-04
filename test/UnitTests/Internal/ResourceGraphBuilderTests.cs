@@ -2,10 +2,10 @@ using System.Linq;
 using Castle.DynamicProxy;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCoreExampleTests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Internal

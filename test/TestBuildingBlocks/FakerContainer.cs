@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests
+namespace TestBuildingBlocks
 {
     public abstract class FakerContainer
     {

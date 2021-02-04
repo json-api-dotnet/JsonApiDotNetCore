@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCoreExampleTests
+namespace TestBuildingBlocks
 {
     /// <summary>
     /// Ensures the resource attributes are returned when creating/updating a resource.

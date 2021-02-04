@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace JsonApiDotNetCoreExampleTests
+namespace TestBuildingBlocks
 {
     public static class IntegrationTestConfiguration
     {

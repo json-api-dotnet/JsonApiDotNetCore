@@ -1,5 +1,6 @@
 using JsonApiDotNetCoreExample;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreExampleTests
 {

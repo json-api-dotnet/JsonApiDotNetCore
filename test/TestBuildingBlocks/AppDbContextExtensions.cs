@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-namespace JsonApiDotNetCoreExampleTests
+namespace TestBuildingBlocks
 {
     public static class AppDbContextExtensions
     {

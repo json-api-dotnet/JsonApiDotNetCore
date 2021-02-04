@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation

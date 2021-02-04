@@ -4,6 +4,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers

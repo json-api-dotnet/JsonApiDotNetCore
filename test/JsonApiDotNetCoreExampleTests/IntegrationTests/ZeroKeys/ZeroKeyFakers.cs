@@ -1,5 +1,6 @@
 using System;
 using Bogus;
+using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 {

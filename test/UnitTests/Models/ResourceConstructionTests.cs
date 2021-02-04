@@ -5,12 +5,12 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExampleTests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Newtonsoft.Json;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Models
