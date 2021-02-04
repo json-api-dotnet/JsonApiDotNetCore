@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_size_is_unconstrained_it_should_not_render_pagination_links()
+        public async Task Hides_pagination_links_when_unconstrained_page_size()
         {
             // Arrange
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_size_is_specified_in_query_string_with_no_data_it_should_render_pagination_links()
+        public async Task Renders_pagination_links_when_page_size_is_specified_in_query_string_with_no_data()
         {
             // Arrange
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_number_is_specified_in_query_string_with_no_data_it_should_render_pagination_links()
+        public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_no_data()
         {
             // Arrange
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_number_is_specified_in_query_string_with_partially_filled_page_it_should_render_pagination_links()
+        public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_partially_filled_page()
         {
             // Arrange
             var articles = _fakers.Article.Generate(12);
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_number_is_specified_in_query_string_with_full_page_it_should_render_pagination_links()
+        public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_full_page()
         {
             // Arrange
             var articles = _fakers.Article.Generate(_defaultPageSize * 3);
@@ -175,7 +175,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_number_is_specified_in_query_string_with_full_page_on_secondary_endpoint_it_should_render_pagination_links()
+        public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_full_page_on_secondary_endpoint()
         {
             // Arrange
             var author = new Author

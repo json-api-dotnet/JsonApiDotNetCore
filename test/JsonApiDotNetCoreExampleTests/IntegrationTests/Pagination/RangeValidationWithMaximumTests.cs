@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_number_is_below_maximum_it_must_succeed()
+        public async Task Can_use_page_number_below_maximum()
         {
             // Arrange
             const int pageNumber = _maximumPageNumber - 1;
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_number_equals_maximum_it_must_succeed()
+        public async Task Can_use_page_number_equal_to_maximum()
         {
             // Arrange
             const int pageNumber = _maximumPageNumber;
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_number_is_over_maximum_it_must_fail()
+        public async Task Cannot_use_page_number_over_maximum()
         {
             // Arrange
             const int pageNumber = _maximumPageNumber + 1;
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_size_equals_zero_it_must_fail()
+        public async Task Cannot_use_zero_page_size()
         {
             // Arrange
             var route = "/api/v1/todoItems?page[size]=0";
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_size_is_below_maximum_it_must_succeed()
+        public async Task Can_use_page_size_below_maximum()
         {
             // Arrange
             const int pageSize = _maximumPageSize - 1;
@@ -110,7 +110,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_size_equals_maximum_it_must_succeed()
+        public async Task Can_use_page_size_equal_to_maximum()
         {
             // Arrange
             const int pageSize = _maximumPageSize;
@@ -124,7 +124,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_size_is_over_maximum_it_must_fail()
+        public async Task Cannot_use_page_size_over_maximum()
         {
             // Arrange
             const int pageSize = _maximumPageSize + 1;

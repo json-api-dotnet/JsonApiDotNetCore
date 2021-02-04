@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.Testing;
 using MultiDbContextExample;
 using Newtonsoft.Json;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace MultiDbContextTests
@@ -20,7 +21,7 @@ namespace MultiDbContextTests
         }
 
         [Fact]
-        public async Task Can_Get_ResourceAs()
+        public async Task Can_get_ResourceAs()
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -31,7 +32,7 @@ namespace MultiDbContextTests
             var response = await client.SendAsync(request);
 
             // Assert
-            AssertStatusCode(HttpStatusCode.OK, response);
+            response.Should().HaveStatusCode(HttpStatusCode.OK);
 
             string responseBody = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<Document>(responseBody);
@@ -41,7 +42,7 @@ namespace MultiDbContextTests
         }
 
         [Fact]
-        public async Task Can_Get_ResourceBs()
+        public async Task Can_get_ResourceBs()
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -52,22 +53,13 @@ namespace MultiDbContextTests
             var response = await client.SendAsync(request);
 
             // Assert
-            AssertStatusCode(HttpStatusCode.OK, response);
+            response.Should().HaveStatusCode(HttpStatusCode.OK);
 
             string responseBody = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<Document>(responseBody);
 
             document.ManyData.Should().HaveCount(1);
             document.ManyData[0].Attributes["nameB"].Should().Be("SampleB");
-        }
-
-        private static void AssertStatusCode(HttpStatusCode expected, HttpResponseMessage response)
-        {
-            if (expected != response.StatusCode)
-            {
-                var responseBody = response.Content.ReadAsStringAsync().Result;
-                Assert.True(expected == response.StatusCode, $"Got {response.StatusCode} status code instead of {expected}. Response body: {responseBody}");
-            }
         }
     }
 }

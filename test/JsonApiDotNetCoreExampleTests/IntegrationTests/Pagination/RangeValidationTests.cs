@@ -32,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_number_is_negative_it_must_fail()
+        public async Task Cannot_use_negative_page_number()
         {
             // Arrange
             var route = "/api/v1/todoItems?page[number]=-1";
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_number_is_zero_it_must_fail()
+        public async Task Cannot_use_zero_page_number()
         {
             // Arrange
             var route = "/api/v1/todoItems?page[number]=0";
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_number_is_positive_it_must_succeed()
+        public async Task Can_use_positive_page_number()
         {
             // Arrange
             var route = "/api/v1/todoItems?page[number]=20";
@@ -83,7 +83,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_number_is_too_high_it_must_return_empty_set_of_resources()
+        public async Task Returns_empty_set_of_resources_when_page_number_is_too_high()
         {
             // Arrange
             var todoItems = _fakers.TodoItem.Generate(3);
@@ -108,7 +108,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_size_is_negative_it_must_fail()
+        public async Task Cannot_use_negative_page_size()
         {
             // Arrange
             var route = "/api/v1/todoItems?page[size]=-1";
@@ -127,7 +127,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_size_is_zero_it_must_succeed()
+        public async Task Can_use_zero_page_size()
         {
             // Arrange
             var route = "/api/v1/todoItems?page[size]=0";
@@ -140,7 +140,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         }
 
         [Fact]
-        public async Task When_page_size_is_positive_it_must_succeed()
+        public async Task Can_use_positive_page_size()
         {
             // Arrange
             var route = "/api/v1/todoItems?page[size]=50";
