@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_posting_resource_with_invalid_attribute_value_it_must_succeed()
+        public async Task Can_create_resource_with_invalid_attribute_value()
         {
             // Arrange
             var requestBody = new
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_patching_resource_with_invalid_attribute_value_it_must_succeed()
+        public async Task Can_update_resource_with_invalid_attribute_value()
         {
             // Arrange
             var directory = new SystemDirectory
