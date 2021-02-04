@@ -15,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Data
@@ -102,7 +101,7 @@ namespace UnitTests.Data
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase(databaseName: $"IntegrationDatabaseRepository{actualSeed}")
                 .Options;
-            var context = new AppDbContext(options, new FrozenSystemClock());
+            var context = new AppDbContext(options);
 
             context.RemoveRange(context.TodoItems);
             return context;

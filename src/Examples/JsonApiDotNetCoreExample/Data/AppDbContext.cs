@@ -1,26 +1,19 @@
-using System;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExample.Data
 {
     public sealed class AppDbContext : DbContext
     {
-        public ISystemClock SystemClock { get; }
-
         public DbSet<TodoItem> TodoItems { get; set; }
-        public DbSet<Passport> Passports { get; set; }
         public DbSet<Person> People { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<Author> AuthorDifferentDbContextName { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<Blog> Blogs { get; set; }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options, ISystemClock systemClock) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            SystemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,9 +41,6 @@ namespace JsonApiDotNetCoreExample.Data
                 .HasOne(t => t.StakeHolderTodoItem)
                 .WithMany(t => t.StakeHolders)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<TodoItem>()
-                .HasOne(t => t.DependentOnTodo);
 
             modelBuilder.Entity<TodoItem>()
                 .HasMany(t => t.ChildrenTodos)

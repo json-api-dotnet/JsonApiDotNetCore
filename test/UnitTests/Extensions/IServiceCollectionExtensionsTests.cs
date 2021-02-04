@@ -14,11 +14,9 @@ using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Extensions
@@ -31,7 +29,6 @@ namespace UnitTests.Extensions
             // Arrange
             var services = new ServiceCollection();
             services.AddLogging();
-            services.AddSingleton<ISystemClock, FrozenSystemClock>();
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"));
             services.AddJsonApi<AppDbContext>();
 
@@ -66,7 +63,6 @@ namespace UnitTests.Extensions
             // Arrange
             var services = new ServiceCollection();
             services.AddLogging();
-            services.AddSingleton<ISystemClock, FrozenSystemClock>();
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"));
             services.AddJsonApi<AppDbContext>();
 

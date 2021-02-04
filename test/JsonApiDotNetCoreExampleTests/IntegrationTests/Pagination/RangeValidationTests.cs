@@ -15,7 +15,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
     public sealed class RangeValidationTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {
         private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
-        private readonly ExampleFakers _fakers;
+        private readonly ExampleFakers _fakers = new ExampleFakers();
 
         private const int _defaultPageSize = 5;
 
@@ -27,8 +27,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
             options.DefaultPageSize = new PageSize(_defaultPageSize);
             options.MaximumPageSize = null;
             options.MaximumPageNumber = null;
-
-            _fakers = new ExampleFakers(testContext.Factory.Services);
         }
 
         [Fact]

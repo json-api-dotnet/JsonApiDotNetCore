@@ -19,7 +19,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
     public sealed class SparseFieldSetTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {
         private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
-        private readonly ExampleFakers _fakers;
+        private readonly ExampleFakers _fakers = new ExampleFakers();
 
         public SparseFieldSetTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
         {
@@ -36,8 +36,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
 
                 services.AddScoped<IResourceService<Article>, JsonApiResourceService<Article>>();
             });
-
-            _fakers = new ExampleFakers(testContext.Factory.Services);
         }
 
         [Fact]

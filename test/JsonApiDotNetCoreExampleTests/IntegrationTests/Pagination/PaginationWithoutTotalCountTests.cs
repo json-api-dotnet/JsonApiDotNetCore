@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         private const int _defaultPageSize = 5;
 
         private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
-        private readonly ExampleFakers _fakers;
+        private readonly ExampleFakers _fakers = new ExampleFakers();
 
         public PaginationWithoutTotalCountTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
         {
@@ -28,8 +28,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
             options.IncludeTotalResourceCount = false;
             options.DefaultPageSize = new PageSize(_defaultPageSize);
             options.AllowUnknownQueryStringParameters = true;
-
-            _fakers = new ExampleFakers(testContext.Factory.Services);
         }
 
         [Fact]

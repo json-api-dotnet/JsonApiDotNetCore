@@ -16,13 +16,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Sorting
     public sealed class SortTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {
         private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
-        private readonly ExampleFakers _fakers;
+        private readonly ExampleFakers _fakers = new ExampleFakers();
 
         public SortTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
         {
             _testContext = testContext;
-
-            _fakers = new ExampleFakers(testContext.Factory.Services);
         }
 
         [Fact]

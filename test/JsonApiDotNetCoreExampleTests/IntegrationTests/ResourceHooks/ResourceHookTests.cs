@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
@@ -23,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         : IClassFixture<ExampleIntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext>>
     {
         private readonly ExampleIntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext> _testContext;
-        private readonly ExampleFakers _fakers;
+        private readonly ExampleFakers _fakers = new ExampleFakers();
 
         public ResourceHookTests(ExampleIntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext> testContext)
         {
@@ -36,13 +37,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
                 services.AddScoped<ResourceHooksDefinition<Person>, PersonHooksDefinition>();
                 services.AddScoped<ResourceHooksDefinition<Tag>, TagHooksDefinition>();
                 services.AddScoped<ResourceHooksDefinition<TodoItem>, TodoItemHooksDefinition>();
+
+                services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
             });
 
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.DisableTopPagination = false;
             options.DisableChildrenPagination = false;
-
-            _fakers = new ExampleFakers(testContext.Factory.Services);
         }
 
         [Fact]
@@ -205,12 +206,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public async Task Article_through_secondary_endpoint_is_hidden()
         {
             // Arrange
-            var articles = _fakers.Article.Generate(3);
             string toBeExcluded = "This should not be included";
-            articles[0].Caption = toBeExcluded;
 
             var author = _fakers.Author.Generate();
-            author.Articles = articles;
+            author.Articles = _fakers.Article.Generate(3);
+            author.Articles[0].Caption = toBeExcluded;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -234,10 +234,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         {
             // Arrange
             var person = _fakers.Person.Generate();
+            person.Passport = new Passport {IsLocked = true};
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                person.Passport = new Passport(dbContext) {IsLocked = true};
                 dbContext.People.Add(person);
                 await dbContext.SaveChangesAsync();
             });
@@ -257,28 +257,27 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public async Task Tag_is_hidden()
         {
             // Arrange
-            var article = _fakers.Article.Generate();
-            var tags = _fakers.Tag.Generate(2);
             string toBeExcluded = "This should not be included";
+
+            var tags = _fakers.Tag.Generate(2);
             tags[0].Name = toBeExcluded;
 
-            var articleTags = new[]
+            var article = _fakers.Article.Generate();
+            article.ArticleTags = new HashSet<ArticleTag>
             {
                 new ArticleTag
                 {
-                    Article = article,
                     Tag = tags[0]
                 },
                 new ArticleTag
                 {
-                    Article = article,
                     Tag = tags[1]
                 }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.ArticleTags.AddRange(articleTags);
+                dbContext.Articles.Add(article);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -308,11 +307,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             // Arrange
             var lockedPerson = _fakers.Person.Generate();
             lockedPerson.IsLocked = true;
+            lockedPerson.Passport = new Passport();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var passport = new Passport(dbContext);
-                lockedPerson.Passport = passport;
                 dbContext.People.Add(lockedPerson);
                 await dbContext.SaveChangesAsync();
             });
@@ -355,16 +353,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         {
             // Arrange
             var person = _fakers.Person.Generate();
-            Passport newPassport = null;
+            person.Passport = new Passport {IsLocked = true};
+
+            var newPassport = new Passport();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var passport = new Passport(dbContext) {IsLocked = true};
-                person.Passport = passport;
-                dbContext.People.Add(person);
-
-                newPassport = new Passport(dbContext);
-                dbContext.Passports.Add(newPassport);
+                dbContext.AddRange(person, newPassport);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -407,15 +402,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         {
             // Arrange
             var person = _fakers.Person.Generate();
+            person.Passport = new Passport {IsLocked = true};
+
+            var newPassport = new Passport();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var passport = new Passport(dbContext) {IsLocked = true};
-                person.Passport = passport;
-                dbContext.People.Add(person);
-
-                var newPassport = new Passport(dbContext);
-                dbContext.Passports.Add(newPassport);
+                dbContext.AddRange(person, newPassport);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -455,11 +448,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             // Arrange
             var lockedPerson = _fakers.Person.Generate();
             lockedPerson.IsLocked = true;
+            lockedPerson.Passport = new Passport();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var passport = new Passport(dbContext);
-                lockedPerson.Passport = passport;
                 dbContext.People.Add(lockedPerson);
                 await dbContext.SaveChangesAsync();
             });

@@ -24,9 +24,6 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
         public string CalculatedValue => "calculated";
 
-        [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowChange)]
-        public DateTimeOffset? OffsetDate { get; set; }
- 
         [HasOne]
         public Person Owner { get; set; }
 
@@ -41,10 +38,6 @@ namespace JsonApiDotNetCoreExample.Models
 
         [HasOne]
         public TodoItemCollection Collection { get; set; }
-
-        // cyclical to-one structure
-        [HasOne]
-        public TodoItem DependentOnTodo { get; set; }
 
         // cyclical to-many structure
         [HasOne]

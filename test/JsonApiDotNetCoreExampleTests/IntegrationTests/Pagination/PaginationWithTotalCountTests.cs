@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
         private const int _defaultPageSize = 5;
 
         private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
-        private readonly ExampleFakers _fakers;
+        private readonly ExampleFakers _fakers = new ExampleFakers();
 
         public PaginationWithTotalCountTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
         {
@@ -35,8 +35,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
 
             options.DisableTopPagination = false;
             options.DisableChildrenPagination = false;
-
-            _fakers = new ExampleFakers(testContext.Factory.Services);
         }
 
         [Fact]

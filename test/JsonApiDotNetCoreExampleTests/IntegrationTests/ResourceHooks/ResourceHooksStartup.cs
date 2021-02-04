@@ -1,9 +1,7 @@
 using JsonApiDotNetCore.Configuration;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 {
@@ -17,8 +15,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ISystemClock, FrozenSystemClock>();
-
             base.ConfigureServices(services);
 
             services.AddControllersFromExampleProject();
