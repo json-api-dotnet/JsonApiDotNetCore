@@ -2,18 +2,16 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Definitions;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using TestBuildingBlocks;
@@ -54,36 +52,29 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             var user = _fakers.User.Generate();
 
             var serializer = GetRequestSerializer<User>(p => new {p.Password, p.UserName});
+            string requestBody = serializer.Serialize(user);
 
             var route = "/api/v1/users";
 
-            var request = new HttpRequestMessage(HttpMethod.Post, route)
-            {
-                Content = new StringContent(serializer.Serialize(user))
-            };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.Created);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var returnedUser = GetResponseDeserializer().DeserializeSingle<User>(body).Data;
-            var document = JsonConvert.DeserializeObject<Document>(body);
+            var responseUser = GetResponseDeserializer().DeserializeSingle<User>(responseDocument).Data;
+            var document = JsonConvert.DeserializeObject<Document>(responseDocument);
 
             document.SingleData.Attributes.Should().NotContainKey("password");
             document.SingleData.Attributes["userName"].Should().Be(user.UserName);
 
-            using var scope = _testContext.Factory.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            var dbUser = await dbContext.Users.FindAsync(returnedUser.Id);
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var userInDatabase = await dbContext.Users.FirstAsync(u => u.Id == responseUser.Id);
 
-            dbUser.UserName.Should().Be(user.UserName);
-            dbUser.Password.Should().Be(user.Password);
+                userInDatabase.UserName.Should().Be(user.UserName);
+                userInDatabase.Password.Should().Be(user.Password);
+            });
         }
 
         [Fact]
@@ -92,47 +83,34 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             // Arrange
             var user = _fakers.User.Generate();
 
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
                 dbContext.Users.Add(user);
                 await dbContext.SaveChangesAsync();
-            }
+            });
 
             user.Password = _fakers.User.Generate().Password;
 
             var serializer = GetRequestSerializer<User>(p => new {p.Password});
+            string requestBody = serializer.Serialize(user);
 
             var route = $"/api/v1/users/{user.Id}";
 
-            var request = new HttpRequestMessage(HttpMethod.Patch, route)
-            {
-                Content = new StringContent(serializer.Serialize(user))
-            };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(body);
+            responseDocument.SingleData.Attributes.Should().NotContainKey("password");
+            responseDocument.SingleData.Attributes["userName"].Should().Be(user.UserName);
 
-            document.SingleData.Attributes.Should().NotContainKey("password");
-            document.SingleData.Attributes["userName"].Should().Be(user.UserName);
-
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                var dbUser = dbContext.Users.Single(u => u.Id == user.Id);
+                var userInDatabase = await dbContext.Users.FirstAsync(u => u.Id == user.Id);
 
-                dbUser.Password.Should().Be(user.Password);
-            }
+                userInDatabase.Password.Should().Be(user.Password);
+            });
         }
 
         [Fact]
@@ -141,21 +119,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             // Arrange
             var route = "/api/v1/todoItems/1337";
 
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.GetAsync(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-
-            errorDocument.Errors.Should().HaveCount(1);
-            errorDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            errorDocument.Errors[0].Title.Should().Be("You are not allowed to update the author of todo items.");
-            errorDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update the author of todo items.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
@@ -164,21 +137,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             // Arrange
             var route = "/api/v1/people/1?include=passport";
 
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.GetAsync(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-
-            errorDocument.Errors.Should().HaveCount(1);
-            errorDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            errorDocument.Errors[0].Title.Should().Be("You are not allowed to include passports on individual persons.");
-            errorDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to include passports on individual persons.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
@@ -188,31 +156,24 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             var article = _fakers.Article.Generate();
             article.Caption = "Classified";
 
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
                 dbContext.Articles.Add(article);
                 await dbContext.SaveChangesAsync();
-            }
+            });
 
             var route = $"/api/v1/articles/{article.Id}";
 
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.GetAsync(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-
-            errorDocument.Errors.Should().HaveCount(1);
-            errorDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            errorDocument.Errors[0].Title.Should().Be("You are not allowed to see this article.");
-            errorDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to see this article.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
@@ -223,26 +184,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             string toBeExcluded = "This should not be included";
             articles[0].Caption = toBeExcluded;
 
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
                 dbContext.Articles.AddRange(articles);
                 await dbContext.SaveChangesAsync();
-            }
+            });
 
             var route = "/api/v1/articles";
 
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.GetAsync(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            var body = await response.Content.ReadAsStringAsync();
-            body.Should().NotContain(toBeExcluded);
+            responseDocument.Should().NotContain(toBeExcluded);
         }
 
         [Fact]
@@ -256,26 +212,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             var author = _fakers.Author.Generate();
             author.Articles = articles;
 
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
                 dbContext.AuthorDifferentDbContextName.Add(author);
                 await dbContext.SaveChangesAsync();
-            }
+            });
 
             var route = $"/api/v1/authors/{author.Id}/articles";
 
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.GetAsync(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            var body = await response.Content.ReadAsStringAsync();
-            body.Should().NotContain(toBeExcluded);
+            responseDocument.Should().NotContain(toBeExcluded);
         }
 
         [Fact]
@@ -284,33 +235,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             // Arrange
             var person = _fakers.Person.Generate();
 
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-                person.Passport = new Passport(dbContext)
-                {
-                    IsLocked = true
-                };
-
+                person.Passport = new Passport(dbContext) {IsLocked = true};
                 dbContext.People.Add(person);
                 await dbContext.SaveChangesAsync();
-            }
+            });
 
             var route = $"/api/v1/people/{person.Id}/passport";
 
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.GetAsync(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(body);
-
-            document.Data.Should().BeNull();
+            responseDocument.Data.Should().BeNull();
         }
 
         [Fact]
@@ -336,13 +276,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
                 }
             };
 
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
                 dbContext.ArticleTags.AddRange(articleTags);
                 await dbContext.SaveChangesAsync();
-            }
+            });
 
             // Workaround for https://github.com/dotnet/efcore/issues/21026
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
@@ -351,16 +289,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             var route = "/api/v1/articles?include=tags";
 
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.GetAsync(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            var body = await response.Content.ReadAsStringAsync();
-            body.Should().NotContain(toBeExcluded);
+            responseDocument.Should().NotContain(toBeExcluded);
         }
 
         [Fact]
@@ -374,16 +309,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             var lockedPerson = _fakers.Person.Generate();
             lockedPerson.IsLocked = true;
 
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
                 var passport = new Passport(dbContext);
                 lockedPerson.Passport = passport;
-
                 dbContext.People.Add(lockedPerson);
                 await dbContext.SaveChangesAsync();
-            }
+            });
 
             var requestBody = new
             {
@@ -406,27 +338,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             var route = "/api/v1/people";
 
-            var request = new HttpRequestMessage(HttpMethod.Post, route);
-
-            string requestText = JsonConvert.SerializeObject(requestBody);
-            request.Content = new StringContent(requestText);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-
-            errorDocument.Errors.Should().HaveCount(1);
-            errorDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            errorDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
-            errorDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
@@ -434,19 +355,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         {
             // Arrange
             var person = _fakers.Person.Generate();
-            Passport newPassport;
+            Passport newPassport = null;
 
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
                 var passport = new Passport(dbContext) {IsLocked = true};
                 person.Passport = passport;
                 dbContext.People.Add(person);
+
                 newPassport = new Passport(dbContext);
                 dbContext.Passports.Add(newPassport);
                 await dbContext.SaveChangesAsync();
-            }
+            });
 
             var requestBody = new
             {
@@ -470,27 +390,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             var route = $"/api/v1/people/{person.Id}";
 
-            var request = new HttpRequestMessage(HttpMethod.Patch, route);
-
-            string requestText = JsonConvert.SerializeObject(requestBody);
-            request.Content = new StringContent(requestText);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-            
-            errorDocument.Errors.Should().HaveCount(1);
-            errorDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            errorDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked persons.");
-            errorDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked persons.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
@@ -499,17 +408,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             // Arrange
             var person = _fakers.Person.Generate();
 
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
                 var passport = new Passport(dbContext) {IsLocked = true};
                 person.Passport = passport;
                 dbContext.People.Add(person);
+
                 var newPassport = new Passport(dbContext);
                 dbContext.Passports.Add(newPassport);
                 await dbContext.SaveChangesAsync();
-            }
+            });
 
             var requestBody = new
             {
@@ -529,27 +437,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             var route = $"/api/v1/people/{person.Id}";
 
-            var request = new HttpRequestMessage(HttpMethod.Patch, route);
-
-            string requestText = JsonConvert.SerializeObject(requestBody);
-            request.Content = new StringContent(requestText);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-
-            errorDocument.Errors.Should().HaveCount(1);
-            errorDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            errorDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked persons.");
-            errorDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked persons.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
@@ -559,35 +456,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             var lockedPerson = _fakers.Person.Generate();
             lockedPerson.IsLocked = true;
 
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
                 var passport = new Passport(dbContext);
                 lockedPerson.Passport = passport;
                 dbContext.People.Add(lockedPerson);
                 await dbContext.SaveChangesAsync();
-            }
+            });
 
             var route = $"/api/v1/passports/{lockedPerson.Passport.StringId}";
 
-            var request = new HttpRequestMessage(HttpMethod.Delete, route);
-
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-
-            errorDocument.Errors.Should().HaveCount(1);
-            errorDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            errorDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
-            errorDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
@@ -599,13 +487,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             lockedTodo.IsLocked = true;
             lockedTodo.StakeHolders = persons.ToHashSet();
 
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
                 dbContext.TodoItems.Add(lockedTodo);
                 await dbContext.SaveChangesAsync();
-            }
+            });
 
             var requestBody = new
             {
@@ -636,27 +522,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             var route = "/api/v1/todoItems";
 
-            var request = new HttpRequestMessage(HttpMethod.Post, route);
-
-            string requestText = JsonConvert.SerializeObject(requestBody);
-            request.Content = new StringContent(requestText);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-
-            errorDocument.Errors.Should().HaveCount(1);
-            errorDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            errorDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
-            errorDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
@@ -671,13 +546,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             var unlockedTodo = _fakers.TodoItem.Generate();
 
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
                 dbContext.TodoItems.AddRange(lockedTodo, unlockedTodo);
                 await dbContext.SaveChangesAsync();
-            }
+            });
 
             var requestBody = new
             {
@@ -709,27 +582,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             var route = $"/api/v1/todoItems/{unlockedTodo.Id}";
 
-            var request = new HttpRequestMessage(HttpMethod.Patch, route);
-
-            string requestText = JsonConvert.SerializeObject(requestBody);
-            request.Content = new StringContent(requestText);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-
-            errorDocument.Errors.Should().HaveCount(1);
-            errorDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            errorDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
-            errorDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
@@ -741,33 +603,24 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             lockedTodo.IsLocked = true;
             lockedTodo.StakeHolders = persons.ToHashSet();
 
-            using (var scope = _testContext.Factory.Services.CreateScope())
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
                 dbContext.TodoItems.Add(lockedTodo);
                 await dbContext.SaveChangesAsync();
-            }
+            });
 
             var route = $"/api/v1/people/{persons[0].Id}";
 
-            var request = new HttpRequestMessage(HttpMethod.Delete, route);
-
-            using var client = _testContext.Factory.CreateClient();
-
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
-
-            errorDocument.Errors.Should().HaveCount(1);
-            errorDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            errorDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
-            errorDocument.Errors[0].Detail.Should().BeNull();
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
+            responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         private IRequestSerializer GetRequestSerializer<TResource>(Expression<Func<TResource, dynamic>> attributes = null,
