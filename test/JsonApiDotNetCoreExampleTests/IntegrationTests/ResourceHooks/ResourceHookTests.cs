@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Can_Create_User_With_Password()
+        public async Task Can_create_user_with_password()
         {
             // Arrange
             var user = _fakers.User.Generate();
@@ -87,7 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Can_Update_User_Password()
+        public async Task Can_update_user_password()
         {
             // Arrange
             var user = _fakers.User.Generate();
@@ -216,7 +216,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Article_Is_Hidden()
+        public async Task Article_is_hidden()
         {
             // Arrange
             var articles = _fakers.Article.Generate(3);
@@ -246,7 +246,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Article_Through_Secondary_Endpoint_Is_Hidden()
+        public async Task Article_through_secondary_endpoint_is_hidden()
         {
             // Arrange
             var articles = _fakers.Article.Generate(3);
@@ -279,7 +279,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Tag_Is_Hidden()
+        public async Task Tag_is_hidden()
         {
             // Arrange
             var article = _fakers.Article.Generate();
@@ -329,7 +329,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Cascade_Permission_Error_Create_ToOne_Relationship()
+        public async Task Cascade_permission_error_create_ToOne_relationship()
         {
             // In the Cascade Permission Error tests, we ensure that all the relevant resources are provided in the hook definitions. In this case, 
             // re-relating the meta object to a different article would require also a check for the lockedTodo, because we're implicitly updating 
@@ -395,7 +395,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Cascade_Permission_Error_Updating_ToOne_Relationship()
+        public async Task Cascade_permission_error_updating_ToOne_relationship()
         {
             // Arrange
             var person = _fakers.Person.Generate();
@@ -459,7 +459,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Cascade_Permission_Error_Updating_ToOne_Relationship_Deletion()
+        public async Task Cascade_permission_error_updating_ToOne_relationship_deletion()
         {
             // Arrange
             var person = _fakers.Person.Generate();
@@ -518,7 +518,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Cascade_Permission_Error_Delete_ToOne_Relationship()
+        public async Task Cascade_permission_error_delete_ToOne_relationship()
         {
             // Arrange
             var lockedPerson = _fakers.Person.Generate();
@@ -556,7 +556,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Cascade_Permission_Error_Create_ToMany_Relationship()
+        public async Task Cascade_permission_error_create_ToMany_relationship()
         {
             // Arrange
             var persons = _fakers.Person.Generate(2);
@@ -625,7 +625,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Cascade_Permission_Error_Updating_ToMany_Relationship()
+        public async Task Cascade_permission_error_updating_ToMany_relationship()
         {
             // Arrange
             var persons = _fakers.Person.Generate(2);
@@ -698,7 +698,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Cascade_Permission_Error_Delete_ToMany_Relationship()
+        public async Task Cascade_permission_error_delete_ToMany_relationship()
         {
             // Arrange
             var persons = _fakers.Person.Generate(2);
