@@ -15,13 +15,6 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public long Ordinal { get; set; }
 
-        [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowCreate)]
-        public string AlwaysChangingValue
-        {
-            get => Guid.NewGuid().ToString();
-            set { }
-        }
-
         [Attr]
         public DateTime CreatedDate { get; set; }
 

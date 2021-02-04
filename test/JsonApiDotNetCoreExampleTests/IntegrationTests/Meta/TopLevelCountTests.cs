@@ -2,6 +2,7 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
@@ -20,12 +21,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         {
             _testContext = testContext;
 
+            testContext.ConfigureServicesAfterStartup(services =>
+            {
+                services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
+            });
+
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.IncludeTotalResourceCount = true;
         }
 
         [Fact]
-        public async Task Total_Resource_Count_Included_For_Collection()
+        public async Task Renders_resource_count_for_collection()
         {
             // Arrange
             var todoItem = new TodoItem();
@@ -51,7 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         }
 
         [Fact]
-        public async Task Total_Resource_Count_Included_For_Empty_Collection()
+        public async Task Renders_resource_count_for_empty_collection()
         {
             // Arrange
             await _testContext.RunOnDatabaseAsync(async dbContext => { await dbContext.ClearTableAsync<TodoItem>(); });
@@ -69,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         }
 
         [Fact]
-        public async Task Total_Resource_Count_Excluded_From_POST_Response()
+        public async Task Hides_resource_count_in_create_resource_response()
         {
             // Arrange
             var requestBody = new
@@ -96,7 +102,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         }
 
         [Fact]
-        public async Task Total_Resource_Count_Excluded_From_PATCH_Response()
+        public async Task Hides_resource_count_in_update_resource_response()
         {
             // Arrange
             var todoItem = new TodoItem();

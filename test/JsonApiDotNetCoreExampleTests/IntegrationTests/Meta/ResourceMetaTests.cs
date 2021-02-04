@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         }
 
         [Fact]
-        public async Task ResourceDefinition_That_Implements_GetMeta_Contains_Resource_Meta()
+        public async Task Returns_resource_meta_from_ResourceDefinition()
         {
             // Arrange
             var todoItems = new[]
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         }
 
         [Fact]
-        public async Task ResourceDefinition_That_Implements_GetMeta_Contains_Include_Meta()
+        public async Task Returns_resource_meta_from_ResourceDefinition_in_included_resources()
         {
             // Arrange
             var person = new Person

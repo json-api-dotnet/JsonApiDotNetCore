@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -31,7 +30,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         }
 
         [Fact]
-        public async Task Registered_IResponseMeta_Adds_TopLevel_Meta()
+        public async Task Returns_top_level_meta()
         {
             // Arrange
             await _testContext.RunOnDatabaseAsync(async dbContext => { await dbContext.ClearTableAsync<Person>(); });
@@ -61,25 +60,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
   },
   ""data"": []
 }");
-        }
-    }
-
-    public sealed class TestResponseMeta : IResponseMeta
-    {
-        public IReadOnlyDictionary<string, object> GetMeta()
-        {
-            return new Dictionary<string, object>
-            {
-                ["license"] = "MIT",
-                ["projectUrl"] = "https://github.com/json-api-dotnet/JsonApiDotNetCore/",
-                ["versions"] = new[]
-                {
-                    "v4.0.0",
-                    "v3.1.0",
-                    "v2.5.2",
-                    "v1.3.1"
-                }
-            };
         }
     }
 }
