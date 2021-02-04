@@ -19,10 +19,11 @@ These are some steps you can take to help you understand what this project is an
 
 - [What is JSON:API and why should I use it?](https://nordicapis.com/the-benefits-of-using-json-api/)
 - [The JSON:API specification](http://jsonapi.org/format/)
-- [Demo [Video]](https://youtu.be/KAMuo6K7VcE)
-- [Our documentation](https://json-api-dotnet.github.io/JsonApiDotNetCore/)
+- Demo [Video](https://youtu.be/KAMuo6K7VcE), [Blog](https://dev.to/wunki/getting-started-5dkl)
+- [Our documentation](https://www.jsonapi.net/)
 - [Check out the example projects](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples)
 - [Embercasts: Full Stack Ember with ASP.NET Core](https://www.embercasts.com/course/full-stack-ember-with-dotnet/watch/whats-in-this-course-cs)
+- [Roadmap](ROADMAP.md)
 
 ## Related Projects
 
@@ -35,9 +36,9 @@ These are some steps you can take to help you understand what this project is an
 
 See the [examples](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples) directory for up-to-date sample applications. There is also a [Todo List App](https://github.com/json-api-dotnet/TodoListExample) that includes a JADNC API and an EmberJs client.
 
-## Installation And Usage
+## Installation and Usage
 
-See [our documentation](https://json-api-dotnet.github.io/JsonApiDotNetCore/) for detailed usage.
+See [our documentation](https://www.jsonapi.net/) for detailed usage.
 
 ### Models
 
@@ -81,7 +82,7 @@ public class Startup
 }
 ```
 
-### Development
+## Development
 
 Restore all NuGet packages with:
 
@@ -89,7 +90,7 @@ Restore all NuGet packages with:
 dotnet restore
 ```
 
-#### Testing
+### Testing
 
 Running tests locally requires access to a PostgreSQL database.  If you have docker installed, this can be propped up via:
 
@@ -103,7 +104,7 @@ And then to run the tests:
 dotnet test
 ```
 
-#### Compiler warnings
+### Compiler warnings
 
 The `Release` build configuration is set to fail on warnings. That means when submitting a PR there shouldn't be any compiler warnings because the CI build it set to `Release`.
 
@@ -117,7 +118,7 @@ A lot of changes were introduced in v4, the following chart should help you with
 | 3.x               | 3.x, 5.x        | v4.x          |
 | 5.x               | 5.x             | v4.x          |
 
-## Trying out the latest build
+### Trying out the latest build
 
 After each commit, a new prerelease NuGet package is automatically published to AppVeyor at https://ci.appveyor.com/nuget/jsonapidotnetcore. To try it out, follow the next steps:
 
