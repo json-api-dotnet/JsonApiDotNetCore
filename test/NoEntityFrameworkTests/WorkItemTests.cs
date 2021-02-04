@@ -1,8 +1,11 @@
 using System;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using NoEntityFrameworkExample;
 using NoEntityFrameworkExample.Data;
 using NoEntityFrameworkExample.Models;
@@ -11,20 +14,20 @@ using Xunit;
 
 namespace NoEntityFrameworkTests
 {
-    public sealed class WorkItemTests : IClassFixture<RemoteIntegrationTestContext<Startup, AppDbContext>>
+    public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicationFactory<Startup>>
     {
-        private readonly RemoteIntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly WebApplicationFactory<Startup> _factory;
 
-        public WorkItemTests(RemoteIntegrationTestContext<Startup, AppDbContext> testContext)
+        public WorkItemTests(WebApplicationFactory<Startup> factory)
         {
-            _testContext = testContext;
+            _factory = factory;
         }
 
         [Fact]
         public async Task Can_get_WorkItems()
         {
             // Arrange
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            await RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.WorkItems.Add(new WorkItem());
                 await dbContext.SaveChangesAsync();
@@ -33,7 +36,7 @@ namespace NoEntityFrameworkTests
             var route = "/api/v1/workItems";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            var (httpResponse, responseDocument) = await ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -47,7 +50,7 @@ namespace NoEntityFrameworkTests
             // Arrange
             var workItem = new WorkItem();
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            await RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.WorkItems.Add(workItem);
                 await dbContext.SaveChangesAsync();
@@ -56,7 +59,7 @@ namespace NoEntityFrameworkTests
             var route = "/api/v1/workItems/" + workItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            var (httpResponse, responseDocument) = await ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -87,7 +90,7 @@ namespace NoEntityFrameworkTests
             var route = "/api/v1/workItems/";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+            var (httpResponse, responseDocument) = await ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
@@ -102,7 +105,7 @@ namespace NoEntityFrameworkTests
             // Arrange
             var workItem = new WorkItem();
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            await RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.WorkItems.Add(workItem);
                 await dbContext.SaveChangesAsync();
@@ -111,12 +114,25 @@ namespace NoEntityFrameworkTests
             var route = "/api/v1/workItems/" + workItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
+            var (httpResponse, responseDocument) = await ExecuteDeleteAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             responseDocument.Should().BeEmpty();
+        }
+
+        protected override HttpClient CreateClient()
+        {
+            return _factory.CreateClient();
+        }
+
+        private async Task RunOnDatabaseAsync(Func<AppDbContext, Task> asyncAction)
+        {
+            using IServiceScope scope = _factory.Services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            await asyncAction(dbContext);
         }
     }
 }

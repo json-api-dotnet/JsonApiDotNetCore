@@ -11,7 +11,7 @@ using Xunit;
 
 namespace MultiDbContextTests
 {
-    public sealed class ResourceTests : IClassFixture<WebApplicationFactory<Startup>>
+    public sealed class ResourceTests : IntegrationTest, IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly WebApplicationFactory<Startup> _factory;
 
@@ -24,42 +24,37 @@ namespace MultiDbContextTests
         public async Task Can_get_ResourceAs()
         {
             // Arrange
-            var client = _factory.CreateClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Get, "/resourceAs");
+            var route = "/resourceAs";
 
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await ExecuteGetAsync<Document>(route);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            string responseBody = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(responseBody);
-
-            document.ManyData.Should().HaveCount(1);
-            document.ManyData[0].Attributes["nameA"].Should().Be("SampleA");
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Attributes["nameA"].Should().Be("SampleA");
         }
 
         [Fact]
         public async Task Can_get_ResourceBs()
         {
             // Arrange
-            var client = _factory.CreateClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Get, "/resourceBs");
+            var route = "/resourceBs";
 
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await ExecuteGetAsync<Document>(route);
 
             // Assert
-            response.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            string responseBody = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(responseBody);
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Attributes["nameB"].Should().Be("SampleB");
+        }
 
-            document.ManyData.Should().HaveCount(1);
-            document.ManyData[0].Attributes["nameB"].Should().Be("SampleB");
+        protected override HttpClient CreateClient()
+        {
+            return _factory.CreateClient();
         }
     }
 }
