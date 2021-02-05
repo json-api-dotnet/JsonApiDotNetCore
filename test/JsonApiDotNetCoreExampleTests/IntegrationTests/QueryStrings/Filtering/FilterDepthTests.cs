@@ -6,20 +6,21 @@ using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 {
-    public sealed class FilterDepthTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
+    public sealed class FilterDepthTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
+        private readonly QueryStringFakers _fakers = new QueryStringFakers();
 
-        public FilterDepthTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
+        public FilterDepthTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -34,27 +35,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_primary_resources()
         {
             // Arrange
-            var articles = new List<Article>
-            {
-                new Article
-                {
-                    Caption = "One"
-                },
-                new Article
-                {
-                    Caption = "Two"
-                }
-            };
+            var posts = _fakers.BlogPost.Generate(2);
+            posts[0].Caption = "One";
+            posts[1].Caption = "Two";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.AddRange(articles);
-
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(posts);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?filter=equals(caption,'Two')";
+            var route = "/blogPosts?filter=equals(caption,'Two')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -63,26 +55,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(articles[1].StringId);
+            responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
         }
 
         [Fact]
         public async Task Cannot_filter_in_single_primary_resource()
         {
             // Arrange
-            var article = new Article
-            {
-                Caption = "X"
-            };
+            var post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}?filter=equals(caption,'Two')";
+            var route = $"/blogPosts/{post.StringId}?filter=equals(caption,'Two')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -101,29 +89,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_secondary_resources()
         {
             // Arrange
-            var blog = new LegacyBlog
-            {
-                Articles = new List<Article>
-                {
-                    new Article
-                    {
-                        Caption = "One"
-                    },
-                    new Article
-                    {
-                        Caption = "Two"
-                    }
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Posts = _fakers.BlogPost.Generate(2);
+            blog.Posts[0].Caption = "One";
+            blog.Posts[1].Caption = "Two";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/legacyBlogs/{blog.StringId}/articles?filter=equals(caption,'Two')";
+            var route = $"/blogs/{blog.StringId}/posts?filter=equals(caption,'Two')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -132,26 +109,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(blog.Articles[1].StringId);
+            responseDocument.ManyData[0].Id.Should().Be(blog.Posts[1].StringId);
         }
 
         [Fact]
         public async Task Cannot_filter_in_single_secondary_resource()
         {
             // Arrange
-            var article = new Article
-            {
-                Caption = "X"
-            };
+            var post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}/author?filter=equals(lastName,'Smith')";
+            var route = $"/blogPosts/{post.StringId}/author?filter=equals(displayName,'John Smith')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -170,35 +143,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_on_HasOne_relationship()
         {
             // Arrange
-            var articles = new List<Article>
-            {
-                new Article
-                {
-                    Caption = "X",
-                    Author = new Author
-                    {
-                        LastName = "Conner"
-                    }
-                },
-                new Article
-                {
-                    Caption = "X",
-                    Author = new Author
-                    {
-                        LastName = "Smith"
-                    }
-                }
-            };
+            var posts = _fakers.BlogPost.Generate(2);
+            posts[0].Author = _fakers.WebAccount.Generate();
+            posts[0].Author.UserName = "Conner";
+            posts[1].Author = _fakers.WebAccount.Generate();
+            posts[1].Author.UserName = "Smith";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.AddRange(articles);
-
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(posts);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?include=author&filter=equals(author.lastName,'Smith')";
+            var route = "/blogPosts?include=author&filter=equals(author.userName,'Smith')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -209,37 +167,24 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.Included.Should().HaveCount(1);
 
-            responseDocument.Included[0].Id.Should().Be(articles[1].Author.StringId);
+            responseDocument.Included[0].Id.Should().Be(posts[1].Author.StringId);
         }
 
         [Fact]
         public async Task Can_filter_on_HasMany_relationship()
         {
             // Arrange
-            var blogs = new List<LegacyBlog>
-            {
-                new LegacyBlog(),
-                new LegacyBlog
-                {
-                    Articles = new List<Article>
-                    {
-                        new Article
-                        {
-                            Caption = "X"
-                        }
-                    }
-                }
-            };
+            var blogs = _fakers.Blog.Generate(2);
+            blogs[1].Posts = _fakers.BlogPost.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<LegacyBlog>();
+                await dbContext.ClearTableAsync<Blog>();
                 dbContext.Blogs.AddRange(blogs);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/legacyBlogs?filter=greaterThan(count(articles),'0')";
+            var route = "/blogs?filter=greaterThan(count(posts),'0')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -255,37 +200,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_on_HasManyThrough_relationship()
         {
             // Arrange
-            var articles = new List<Article>
+            var posts = _fakers.BlogPost.Generate(2);
+            posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                new Article
+                new BlogPostLabel
                 {
-                    Caption = "X"
-                },
-                new Article
-                {
-                    Caption = "X",
-                    ArticleTags = new HashSet<ArticleTag>
-                    {
-                        new ArticleTag
-                        {
-                            Tag = new Tag
-                            {
-                                Name = "Hot"
-                            }
-                        }
-                    }
+                    Label = _fakers.Label.Generate()
                 }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.AddRange(articles);
-
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(posts);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?filter=has(tags)";
+            var route = "/blogPosts?filter=has(labels)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -294,37 +225,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(articles[1].StringId);
+            responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
         }
 
         [Fact]
         public async Task Can_filter_in_scope_of_HasMany_relationship()
         {
             // Arrange
-            var blog = new LegacyBlog
-            {
-                Articles = new List<Article>
-                {
-                    new Article
-                    {
-                        Caption = "One"
-                    },
-                    new Article
-                    {
-                        Caption = "Two"
-                    }
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Posts = _fakers.BlogPost.Generate(2);
+            blog.Posts[0].Caption = "One";
+            blog.Posts[1].Caption = "Two";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<LegacyBlog>();
+                await dbContext.ClearTableAsync<Blog>();
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/legacyBlogs?include=articles&filter[articles]=equals(caption,'Two')";
+            var route = "/blogs?include=posts&filter[posts]=equals(caption,'Two')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -335,40 +255,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.Included.Should().HaveCount(1);
 
-            responseDocument.Included[0].Id.Should().Be(blog.Articles[1].StringId);
+            responseDocument.Included[0].Id.Should().Be(blog.Posts[1].StringId);
         }
 
         [Fact]
         public async Task Can_filter_in_scope_of_HasMany_relationship_on_secondary_resource()
         {
             // Arrange
-            var blog = new LegacyBlog
-            {
-                Owner = new Author
-                {
-                    LastName = "X",
-                    Articles = new List<Article>
-                    {
-                        new Article
-                        {
-                            Caption = "One"
-                        },
-                        new Article
-                        {
-                            Caption = "Two"
-                        }
-                    }
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Owner = _fakers.WebAccount.Generate();
+            blog.Owner.Posts = _fakers.BlogPost.Generate(2);
+            blog.Owner.Posts[0].Caption = "One";
+            blog.Owner.Posts[1].Caption = "Two";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/legacyBlogs/{blog.StringId}/owner?include=articles&filter[articles]=equals(caption,'Two')";
+            var route = $"/blogs/{blog.StringId}/owner?include=posts&filter[posts]=equals(caption,'Two')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -379,50 +285,36 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.Included.Should().HaveCount(1);
 
-            responseDocument.Included[0].Id.Should().Be(blog.Owner.Articles[1].StringId);
+            responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);
         }
 
         [Fact]
         public async Task Can_filter_in_scope_of_HasManyThrough_relationship()
         {
             // Arrange
-            var articles = new List<Article>
+            var posts = _fakers.BlogPost.Generate(2);
+            posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                new Article
+                new BlogPostLabel
                 {
-                    Caption = "X",
-                    ArticleTags = new HashSet<ArticleTag>
-                    {
-                        new ArticleTag
-                        {
-                            Tag = new Tag
-                            {
-                                Name = "Cold"
-                            }
-                        }
-                    }
-                },
-                new Article
+                    Label = _fakers.Label.Generate()
+                }
+            };
+            posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
+            {
+                new BlogPostLabel
                 {
-                    Caption = "X",
-                    ArticleTags = new HashSet<ArticleTag>
-                    {
-                        new ArticleTag
-                        {
-                            Tag = new Tag
-                            {
-                                Name = "Hot"
-                            }
-                        }
-                    }
+                    Label = _fakers.Label.Generate()
                 }
             };
 
+            posts[0].BlogPostLabels.Single().Label.Name = "Cold";
+            posts[1].BlogPostLabels.Single().Label.Name = "Hot";
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.AddRange(articles);
-
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(posts);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -431,7 +323,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             options.DisableTopPagination = false;
             options.DisableChildrenPagination = true;
 
-            var route = "/api/v1/articles?include=tags&filter[tags]=equals(name,'Hot')";
+            var route = "/blogPosts?include=labels&filter[labels]=equals(name,'Hot')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -442,41 +334,27 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.ManyData.Should().HaveCount(2);
             responseDocument.Included.Should().HaveCount(1);
 
-            responseDocument.Included[0].Id.Should().Be(articles[1].ArticleTags.First().Tag.StringId);
+            responseDocument.Included[0].Id.Should().Be(posts[1].BlogPostLabels.First().Label.StringId);
         }
 
         [Fact]
         public async Task Can_filter_in_scope_of_relationship_chain()
         {
             // Arrange
-            var blog = new LegacyBlog
-            {
-                Owner = new Author
-                {
-                    LastName = "Smith",
-                    Articles = new List<Article>
-                    {
-                        new Article
-                        {
-                            Caption = "One"
-                        },
-                        new Article
-                        {
-                            Caption = "Two"
-                        }
-                    }
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Owner = _fakers.WebAccount.Generate();
+            blog.Owner.Posts = _fakers.BlogPost.Generate(2);
+            blog.Owner.Posts[0].Caption = "One";
+            blog.Owner.Posts[1].Caption = "Two";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<LegacyBlog>();
+                await dbContext.ClearTableAsync<Blog>();
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/legacyBlogs?include=owner.articles&filter[owner.articles]=equals(caption,'Two')";
+            var route = "/blogs?include=owner.posts&filter[owner.posts]=equals(caption,'Two')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -488,38 +366,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.Included.Should().HaveCount(2);
 
             responseDocument.Included[0].Id.Should().Be(blog.Owner.StringId);
-            responseDocument.Included[1].Id.Should().Be(blog.Owner.Articles[1].StringId);
+            responseDocument.Included[1].Id.Should().Be(blog.Owner.Posts[1].StringId);
         }
 
         [Fact]
         public async Task Can_filter_in_same_scope_multiple_times()
         {
             // Arrange
-            var articles = new List<Article>
-            {
-                new Article
-                {
-                    Caption = "One"
-                },
-                new Article
-                {
-                    Caption = "Two"
-                },
-                new Article
-                {
-                    Caption = "Three"
-                }
-            };
+            var posts = _fakers.BlogPost.Generate(3);
+            posts[0].Caption = "One";
+            posts[1].Caption = "Two";
+            posts[2].Caption = "Three";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.AddRange(articles);
-
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(posts);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?filter=equals(caption,'One')&filter=equals(caption,'Three')";
+            var route = "/blogPosts?filter=equals(caption,'One')&filter=equals(caption,'Three')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -528,8 +394,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(articles[0].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(articles[2].StringId);
+            responseDocument.ManyData[0].Id.Should().Be(posts[0].StringId);
+            responseDocument.ManyData[1].Id.Should().Be(posts[2].StringId);
         }
 
         [Fact]
@@ -539,46 +405,29 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.EnableLegacyFilterNotation = true;
 
-            var articles = new List<Article>
-            {
-                new Article
-                {
-                    Caption = "One",
-                    Author = new Author
-                    {
-                        FirstName = "Joe",
-                        LastName = "Smith"
-                    }
-                },
-                new Article
-                {
-                    Caption = "Two",
-                    Author = new Author
-                    {
-                        FirstName = "John",
-                        LastName = "Doe"
-                    }
-                },
-                new Article
-                {
-                    Caption = "Three",
-                    Author = new Author
-                    {
-                        FirstName = "Jack",
-                        LastName = "Miller"
-                    }
-                }
-            };
+            var posts = _fakers.BlogPost.Generate(3);
+            posts[0].Author = _fakers.WebAccount.Generate();
+            posts[1].Author = _fakers.WebAccount.Generate();
+            posts[2].Author = _fakers.WebAccount.Generate();
+
+            posts[0].Author.UserName = "Joe";
+            posts[0].Author.DisplayName = "Smith";
+
+            posts[1].Author.UserName = "John";
+            posts[1].Author.DisplayName = "Doe";
+
+            posts[2].Author.UserName = "Jack";
+            posts[2].Author.DisplayName = "Miller";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.AddRange(articles);
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(posts);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?filter[author.firstName]=John&filter[author.lastName]=Smith";
+            var route = "/blogPosts?filter[author.userName]=John&filter[author.displayName]=Smith";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -587,61 +436,36 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(articles[0].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(articles[1].StringId);
+            responseDocument.ManyData[0].Id.Should().Be(posts[0].StringId);
+            responseDocument.ManyData[1].Id.Should().Be(posts[1].StringId);
         }
 
         [Fact]
         public async Task Can_filter_in_multiple_scopes()
         {
             // Arrange
-            var blogs = new List<LegacyBlog>
-            {
-                new LegacyBlog(),
-                new LegacyBlog
-                {
-                    Title = "Technology",
-                    Owner = new Author
-                    {
-                        LastName = "Smith",
-                        Articles = new List<Article>
-                        {
-                            new Article
-                            {
-                                Caption = "One"
-                            },
-                            new Article
-                            {
-                                Caption = "Two",
-                                Revisions = new List<Revision>
-                                {
-                                    new Revision
-                                    {
-                                        PublishTime = 1.January(2000)
-                                    },
-                                    new Revision
-                                    {
-                                        PublishTime = 10.January(2010)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+            var blogs = _fakers.Blog.Generate(2);
+            blogs[1].Title = "Technology";
+            blogs[1].Owner = _fakers.WebAccount.Generate();
+            blogs[1].Owner.UserName = "Smith";
+            blogs[1].Owner.Posts = _fakers.BlogPost.Generate(2);
+            blogs[1].Owner.Posts[0].Caption = "One";
+            blogs[1].Owner.Posts[1].Caption = "Two";
+            blogs[1].Owner.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
+            blogs[1].Owner.Posts[1].Comments.ElementAt(0).CreatedAt = 1.January(2000);
+            blogs[1].Owner.Posts[1].Comments.ElementAt(1).CreatedAt = 10.January(2010);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<LegacyBlog>();
+                await dbContext.ClearTableAsync<Blog>();
                 dbContext.Blogs.AddRange(blogs);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/legacyBlogs?include=owner.articles.revisions&" +
-                        "filter=and(equals(title,'Technology'),has(owner.articles),equals(owner.lastName,'Smith'))&" +
-                        "filter[owner.articles]=equals(caption,'Two')&" +
-                        "filter[owner.articles.revisions]=greaterThan(publishTime,'2005-05-05')";
+            var route = "/blogs?include=owner.posts.comments&" +
+                        "filter=and(equals(title,'Technology'),has(owner.posts),equals(owner.userName,'Smith'))&" +
+                        "filter[owner.posts]=equals(caption,'Two')&" +
+                        "filter[owner.posts.comments]=greaterThan(createdAt,'2005-05-05')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -654,8 +478,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 
             responseDocument.Included.Should().HaveCount(3);
             responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
-            responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Articles[1].StringId);
-            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Articles[1].Revisions.Skip(1).First().StringId);
+            responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
+            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.Skip(1).First().StringId);
         }
     }
 }

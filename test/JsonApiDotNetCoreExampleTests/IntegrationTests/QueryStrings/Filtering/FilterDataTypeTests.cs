@@ -14,7 +14,8 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 {
-    public sealed class FilterDataTypeTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext>>
+    public sealed class FilterDataTypeTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> _testContext;
 
@@ -22,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         {
             _testContext = testContext;
 
-            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.EnableLegacyFilterNotation = false;
         }
 
@@ -49,7 +50,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 await dbContext.ClearTableAsync<FilterableResource>();
                 dbContext.FilterableResources.AddRange(resource, new FilterableResource());
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -76,7 +76,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 await dbContext.ClearTableAsync<FilterableResource>();
                 dbContext.FilterableResources.AddRange(resource, new FilterableResource());
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -91,7 +90,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Attributes["someDecimal"].Should().Be(resource.SomeDecimal);
         }
-        
+
         [Fact]
         public async Task Can_filter_equality_on_type_Guid()
         {
@@ -102,7 +101,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 await dbContext.ClearTableAsync<FilterableResource>();
                 dbContext.FilterableResources.AddRange(resource, new FilterableResource());
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -128,7 +126,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 await dbContext.ClearTableAsync<FilterableResource>();
                 dbContext.FilterableResources.AddRange(resource, new FilterableResource());
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -157,7 +154,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 await dbContext.ClearTableAsync<FilterableResource>();
                 dbContext.FilterableResources.AddRange(resource, new FilterableResource());
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -183,7 +179,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 await dbContext.ClearTableAsync<FilterableResource>();
                 dbContext.FilterableResources.AddRange(resource, new FilterableResource());
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -209,7 +204,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 await dbContext.ClearTableAsync<FilterableResource>();
                 dbContext.FilterableResources.AddRange(resource, new FilterableResource());
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -266,7 +260,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 await dbContext.ClearTableAsync<FilterableResource>();
                 dbContext.FilterableResources.AddRange(resource, otherResource);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -317,7 +310,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 await dbContext.ClearTableAsync<FilterableResource>();
                 dbContext.FilterableResources.AddRange(resource, new FilterableResource());
-
                 await dbContext.SaveChangesAsync();
             });
 

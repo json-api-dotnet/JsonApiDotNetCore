@@ -3,31 +3,24 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
 {
-    public sealed class IncludeTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
+    public sealed class IncludeTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
+        private readonly QueryStringFakers _fakers = new QueryStringFakers();
 
-        public IncludeTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
+        public IncludeTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
         {
             _testContext = testContext;
-
-            testContext.ConfigureServicesAfterStartup(services =>
-            {
-                services.AddScoped<IResourceService<Article>, JsonApiResourceService<Article>>();
-            });
 
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.MaximumIncludeDepth = null;
@@ -37,24 +30,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_in_primary_resources()
         {
             // Arrange
-            var article = new Article
-            {
-                Caption = "One",
-                Author = new Author
-                {
-                    LastName = "Smith"
-                }
-            };
+            var post = _fakers.BlogPost.Generate();
+            post.Author = _fakers.WebAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.Add(article);
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.Add(post);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?include=author";
+            var route = "blogPosts?include=author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -63,36 +50,29 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(article.StringId);
-            responseDocument.ManyData[0].Attributes["caption"].Should().Be(article.Caption);
+            responseDocument.ManyData[0].Id.Should().Be(post.StringId);
+            responseDocument.ManyData[0].Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Type.Should().Be("authors");
-            responseDocument.Included[0].Id.Should().Be(article.Author.StringId);
-            responseDocument.Included[0].Attributes["lastName"].Should().Be(article.Author.LastName);
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
+            responseDocument.Included[0].Id.Should().Be(post.Author.StringId);
+            responseDocument.Included[0].Attributes["displayName"].Should().Be(post.Author.DisplayName);
         }
 
         [Fact]
         public async Task Can_include_in_primary_resource_by_ID()
         {
             // Arrange
-            var article = new Article
-            {
-                Caption = "One",
-                Author = new Author
-                {
-                    LastName = "Smith"
-                }
-            };
+            var post = _fakers.BlogPost.Generate();
+            post.Author = _fakers.WebAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}?include=author";
+            var route = $"blogPosts/{post.StringId}?include=author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -101,33 +81,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(article.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(article.Caption);
+            responseDocument.SingleData.Id.Should().Be(post.StringId);
+            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Type.Should().Be("authors");
-            responseDocument.Included[0].Id.Should().Be(article.Author.StringId);
-            responseDocument.Included[0].Attributes["lastName"].Should().Be(article.Author.LastName);
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
+            responseDocument.Included[0].Id.Should().Be(post.Author.StringId);
+            responseDocument.Included[0].Attributes["displayName"].Should().Be(post.Author.DisplayName);
         }
 
         [Fact]
         public async Task Can_include_in_secondary_resource()
         {
             // Arrange
-            var blog = new LegacyBlog
-            {
-                Owner = new Author
-                {
-                    LastName = "Smith",
-                    Articles = new List<Article>
-                    {
-                        new Article
-                        {
-                            Caption = "One"
-                        }
-                    }
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Owner = _fakers.WebAccount.Generate();
+            blog.Owner.Posts = _fakers.BlogPost.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -136,7 +105,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/legacyBlogs/{blog.StringId}/owner?include=articles";
+            var route = $"/blogs/{blog.StringId}/owner?include=posts";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -146,41 +115,29 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(blog.Owner.StringId);
-            responseDocument.SingleData.Attributes["lastName"].Should().Be(blog.Owner.LastName);
+            responseDocument.SingleData.Attributes["displayName"].Should().Be(blog.Owner.DisplayName);
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Type.Should().Be("articles");
-            responseDocument.Included[0].Id.Should().Be(blog.Owner.Articles[0].StringId);
-            responseDocument.Included[0].Attributes["caption"].Should().Be(blog.Owner.Articles[0].Caption);
+            responseDocument.Included[0].Type.Should().Be("blogPosts");
+            responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[0].StringId);
+            responseDocument.Included[0].Attributes["caption"].Should().Be(blog.Owner.Posts[0].Caption);
         }
 
         [Fact]
         public async Task Can_include_in_secondary_resources()
         {
             // Arrange
-            var blog = new LegacyBlog
-            {
-                Articles = new List<Article>
-                {
-                    new Article
-                    {
-                        Caption = "One",
-                        Author = new Author
-                        {
-                            LastName = "Smith"
-                        }
-                    }
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Posts = _fakers.BlogPost.Generate(1);
+            blog.Posts[0].Author = _fakers.WebAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/legacyBlogs/{blog.StringId}/articles?include=author";
+            var route = $"/blogs/{blog.StringId}/posts?include=author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -189,40 +146,30 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(blog.Articles[0].StringId);
-            responseDocument.ManyData[0].Attributes["caption"].Should().Be(blog.Articles[0].Caption);
+            responseDocument.ManyData[0].Id.Should().Be(blog.Posts[0].StringId);
+            responseDocument.ManyData[0].Attributes["caption"].Should().Be(blog.Posts[0].Caption);
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Type.Should().Be("authors");
-            responseDocument.Included[0].Id.Should().Be(blog.Articles[0].Author.StringId);
-            responseDocument.Included[0].Attributes["lastName"].Should().Be(blog.Articles[0].Author.LastName);
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
+            responseDocument.Included[0].Id.Should().Be(blog.Posts[0].Author.StringId);
+            responseDocument.Included[0].Attributes["displayName"].Should().Be(blog.Posts[0].Author.DisplayName);
         }
 
         [Fact]
         public async Task Can_include_HasOne_relationships()
         {
             // Arrange
-            var todoItem = new TodoItem
-            {
-                Description = "Work",
-                Owner = new Person
-                {
-                    FirstName = "Joel"
-                },
-                Assignee = new Person
-                {
-                    FirstName = "James"
-                }
-            };
+            var comment = _fakers.Comment.Generate();
+            comment.Author = _fakers.WebAccount.Generate();
+            comment.Parent = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.TodoItems.Add(todoItem);
-
+                dbContext.Comments.Add(comment);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/todoItems/{todoItem.StringId}?include=owner,assignee";
+            var route = $"/comments/{comment.StringId}?include=author,parent";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -231,44 +178,34 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(todoItem.StringId);
-            responseDocument.SingleData.Attributes["description"].Should().Be(todoItem.Description);
+            responseDocument.SingleData.Id.Should().Be(comment.StringId);
+            responseDocument.SingleData.Attributes["text"].Should().Be(comment.Text);
 
             responseDocument.Included.Should().HaveCount(2);
-            
-            responseDocument.Included[0].Type.Should().Be("people");
-            responseDocument.Included[0].Id.Should().Be(todoItem.Owner.StringId);
-            responseDocument.Included[0].Attributes["firstName"].Should().Be(todoItem.Owner.FirstName);
 
-            responseDocument.Included[1].Type.Should().Be("people");
-            responseDocument.Included[1].Id.Should().Be(todoItem.Assignee.StringId);
-            responseDocument.Included[1].Attributes["firstName"].Should().Be(todoItem.Assignee.FirstName);
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
+            responseDocument.Included[0].Id.Should().Be(comment.Author.StringId);
+            responseDocument.Included[0].Attributes["userName"].Should().Be(comment.Author.UserName);
+
+            responseDocument.Included[1].Type.Should().Be("blogPosts");
+            responseDocument.Included[1].Id.Should().Be(comment.Parent.StringId);
+            responseDocument.Included[1].Attributes["caption"].Should().Be(comment.Parent.Caption);
         }
 
         [Fact]
         public async Task Can_include_HasMany_relationship()
         {
             // Arrange
-            var article = new Article
-            {
-                Caption = "One",
-                Revisions = new List<Revision>
-                {
-                    new Revision
-                    {
-                        PublishTime = 24.July(2019)
-                    }
-                }
-            };
+            var post = _fakers.BlogPost.Generate();
+            post.Comments = _fakers.Comment.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}?include=revisions";
+            var route = $"blogPosts/{post.StringId}?include=comments";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -277,42 +214,35 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(article.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(article.Caption);
+            responseDocument.SingleData.Id.Should().Be(post.StringId);
+            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Type.Should().Be("revisions");
-            responseDocument.Included[0].Id.Should().Be(article.Revisions.Single().StringId);
-            responseDocument.Included[0].Attributes["publishTime"].Should().BeCloseTo(article.Revisions.Single().PublishTime);
+            responseDocument.Included[0].Type.Should().Be("comments");
+            responseDocument.Included[0].Id.Should().Be(post.Comments.Single().StringId);
+            responseDocument.Included[0].Attributes["createdAt"].Should().BeCloseTo(post.Comments.Single().CreatedAt);
         }
 
         [Fact]
         public async Task Can_include_HasManyThrough_relationship()
         {
             // Arrange
-            var article = new Article
+            var post = _fakers.BlogPost.Generate();
+            post.BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                Caption = "One",
-                ArticleTags = new HashSet<ArticleTag>
+                new BlogPostLabel
                 {
-                    new ArticleTag
-                    {
-                        Tag = new Tag
-                        {
-                            Name = "Hot"
-                        }
-                    }
+                    Label = _fakers.Label.Generate()
                 }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}?include=tags";
+            var route = $"blogPosts/{post.StringId}?include=labels";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -321,42 +251,35 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(article.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(article.Caption);
+            responseDocument.SingleData.Id.Should().Be(post.StringId);
+            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Type.Should().Be("tags");
-            responseDocument.Included[0].Id.Should().Be(article.ArticleTags.Single().Tag.StringId);
-            responseDocument.Included[0].Attributes["name"].Should().Be(article.ArticleTags.Single().Tag.Name);
+            responseDocument.Included[0].Type.Should().Be("labels");
+            responseDocument.Included[0].Id.Should().Be(post.BlogPostLabels.Single().Label.StringId);
+            responseDocument.Included[0].Attributes["name"].Should().Be(post.BlogPostLabels.Single().Label.Name);
         }
 
         [Fact]
         public async Task Can_include_HasManyThrough_relationship_in_secondary_resource()
         {
             // Arrange
-            var article = new Article
+            var post = _fakers.BlogPost.Generate();
+            post.BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                Caption = "One",
-                ArticleTags = new HashSet<ArticleTag>
+                new BlogPostLabel
                 {
-                    new ArticleTag
-                    {
-                        Tag = new Tag
-                        {
-                            Name = "Hot"
-                        }
-                    }
+                    Label = _fakers.Label.Generate()
                 }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}/tags?include=articles";
+            var route = $"/blogPosts/{post.StringId}/labels?include=posts";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -365,45 +288,32 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Type.Should().Be("tags");
-            responseDocument.ManyData[0].Id.Should().Be(article.ArticleTags.ElementAt(0).Tag.StringId);
-            responseDocument.ManyData[0].Attributes["name"].Should().Be(article.ArticleTags.Single().Tag.Name);
+            responseDocument.ManyData[0].Type.Should().Be("labels");
+            responseDocument.ManyData[0].Id.Should().Be(post.BlogPostLabels.ElementAt(0).Label.StringId);
+            responseDocument.ManyData[0].Attributes["name"].Should().Be(post.BlogPostLabels.Single().Label.Name);
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Type.Should().Be("articles");
-            responseDocument.Included[0].Id.Should().Be(article.StringId);
-            responseDocument.Included[0].Attributes["caption"].Should().Be(article.Caption);
+            responseDocument.Included[0].Type.Should().Be("blogPosts");
+            responseDocument.Included[0].Id.Should().Be(post.StringId);
+            responseDocument.Included[0].Attributes["caption"].Should().Be(post.Caption);
         }
 
         [Fact]
         public async Task Can_include_chain_of_HasOne_relationships()
         {
             // Arrange
-            var article = new Article
-            {
-                Caption = "One",
-                Author = new Author
-                {
-                    LastName = "Smith",
-                    LivingAddress = new Address
-                    {
-                        Street = "Main Road",
-                        Country = new Country
-                        {
-                            Name = "United States of America"
-                        }
-                    }
-                }
-            };
+            var comment = _fakers.Comment.Generate();
+            comment.Parent = _fakers.BlogPost.Generate();
+            comment.Parent.Author = _fakers.WebAccount.Generate();
+            comment.Parent.Author.Preferences = _fakers.AccountPreferences.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Comments.Add(comment);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}?include=author.livingAddress.country";
+            var route = $"comments/{comment.StringId}?include=parent.author.preferences";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -412,55 +322,39 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(article.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(article.Caption);
+            responseDocument.SingleData.Id.Should().Be(comment.StringId);
+            responseDocument.SingleData.Attributes["text"].Should().Be(comment.Text);
 
             responseDocument.Included.Should().HaveCount(3);
-            
-            responseDocument.Included[0].Type.Should().Be("authors");
-            responseDocument.Included[0].Id.Should().Be(article.Author.StringId);
-            responseDocument.Included[0].Attributes["lastName"].Should().Be(article.Author.LastName);
-            
-            responseDocument.Included[1].Type.Should().Be("addresses");
-            responseDocument.Included[1].Id.Should().Be(article.Author.LivingAddress.StringId);
-            responseDocument.Included[1].Attributes["street"].Should().Be(article.Author.LivingAddress.Street);
-            
-            responseDocument.Included[2].Type.Should().Be("countries");
-            responseDocument.Included[2].Id.Should().Be(article.Author.LivingAddress.Country.StringId);
-            responseDocument.Included[2].Attributes["name"].Should().Be(article.Author.LivingAddress.Country.Name);
+
+            responseDocument.Included[0].Type.Should().Be("blogPosts");
+            responseDocument.Included[0].Id.Should().Be(comment.Parent.StringId);
+            responseDocument.Included[0].Attributes["caption"].Should().Be(comment.Parent.Caption);
+
+            responseDocument.Included[1].Type.Should().Be("webAccounts");
+            responseDocument.Included[1].Id.Should().Be(comment.Parent.Author.StringId);
+            responseDocument.Included[1].Attributes["displayName"].Should().Be(comment.Parent.Author.DisplayName);
+
+            responseDocument.Included[2].Type.Should().Be("accountPreferences");
+            responseDocument.Included[2].Id.Should().Be(comment.Parent.Author.Preferences.StringId);
+            responseDocument.Included[2].Attributes["useDarkTheme"].Should().Be(comment.Parent.Author.Preferences.UseDarkTheme);
         }
 
         [Fact]
         public async Task Can_include_chain_of_HasMany_relationships()
         {
             // Arrange
-            var blog = new LegacyBlog
-            {
-                Title = "Some",
-                Articles = new List<Article>
-                {
-                    new Article
-                    {
-                        Caption = "One",
-                        Revisions = new List<Revision>
-                        {
-                            new Revision
-                            {
-                                PublishTime = 24.July(2019)
-                            }
-                        }
-                    }
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Posts = _fakers.BlogPost.Generate(1);
+            blog.Posts[0].Comments = _fakers.Comment.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/legacyBlogs/{blog.StringId}?include=articles.revisions";
+            var route = $"/blogs/{blog.StringId}?include=posts.comments";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -474,55 +368,32 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Included.Should().HaveCount(2);
 
-            responseDocument.Included[0].Type.Should().Be("articles");
-            responseDocument.Included[0].Id.Should().Be(blog.Articles[0].StringId);
-            responseDocument.Included[0].Attributes["caption"].Should().Be(blog.Articles[0].Caption);
-            
-            responseDocument.Included[1].Type.Should().Be("revisions");
-            responseDocument.Included[1].Id.Should().Be(blog.Articles[0].Revisions.Single().StringId);
-            responseDocument.Included[1].Attributes["publishTime"].Should().BeCloseTo(blog.Articles[0].Revisions.Single().PublishTime);
+            responseDocument.Included[0].Type.Should().Be("blogPosts");
+            responseDocument.Included[0].Id.Should().Be(blog.Posts[0].StringId);
+            responseDocument.Included[0].Attributes["caption"].Should().Be(blog.Posts[0].Caption);
+
+            responseDocument.Included[1].Type.Should().Be("comments");
+            responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Comments.Single().StringId);
+            responseDocument.Included[1].Attributes["createdAt"].Should().BeCloseTo(blog.Posts[0].Comments.Single().CreatedAt);
         }
 
         [Fact]
         public async Task Can_include_chain_of_recursive_relationships()
         {
             // Arrange
-            var todoItem = new TodoItem
-            {
-                Description = "Root",
-                Collection = new TodoItemCollection
-                {
-                    Name = "Primary",
-                    Owner = new Person
-                    {
-                        FirstName = "Jack"
-                    },
-                    TodoItems = new HashSet<TodoItem>
-                    {
-                        new TodoItem
-                        {
-                            Description = "This is nested.",
-                            Owner = new Person
-                            {
-                                FirstName = "Jill"
-                            }
-                        },
-                        new TodoItem
-                        {
-                            Description = "This is nested too."
-                        }
-                    }
-                }
-            };
+            var comment = _fakers.Comment.Generate();
+            comment.Parent = _fakers.BlogPost.Generate();
+            comment.Parent.Author = _fakers.WebAccount.Generate();
+            comment.Parent.Comments = _fakers.Comment.Generate(2).ToHashSet();
+            comment.Parent.Comments.ElementAt(0).Author = _fakers.WebAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.TodoItems.Add(todoItem);
-
+                dbContext.Comments.Add(comment);
                 await dbContext.SaveChangesAsync();
             });
-            
-            string route = $"/api/v1/todoItems/{todoItem.StringId}?include=collection.todoItems.owner";
+
+            string route = $"/comments/{comment.StringId}?include=parent.comments.author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -531,73 +402,51 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(todoItem.StringId);
-            responseDocument.SingleData.Attributes["description"].Should().Be(todoItem.Description);
+            responseDocument.SingleData.Id.Should().Be(comment.StringId);
+            responseDocument.SingleData.Attributes["text"].Should().Be(comment.Text);
 
             responseDocument.Included.Should().HaveCount(5);
 
-            responseDocument.Included[0].Type.Should().Be("todoCollections");
-            responseDocument.Included[0].Id.Should().Be(todoItem.Collection.StringId);
-            responseDocument.Included[0].Attributes["name"].Should().Be(todoItem.Collection.Name);
-            
-            responseDocument.Included[1].Type.Should().Be("todoItems");
-            responseDocument.Included[1].Id.Should().Be(todoItem.StringId);
-            responseDocument.Included[1].Attributes["description"].Should().Be(todoItem.Description);
+            responseDocument.Included[0].Type.Should().Be("blogPosts");
+            responseDocument.Included[0].Id.Should().Be(comment.Parent.StringId);
+            responseDocument.Included[0].Attributes["caption"].Should().Be(comment.Parent.Caption);
 
-            responseDocument.Included[2].Type.Should().Be("todoItems");
-            responseDocument.Included[2].Id.Should().Be(todoItem.Collection.TodoItems.First().StringId);
-            responseDocument.Included[2].Attributes["description"].Should().Be(todoItem.Collection.TodoItems.First().Description);
+            responseDocument.Included[1].Type.Should().Be("comments");
+            responseDocument.Included[1].Id.Should().Be(comment.StringId);
+            responseDocument.Included[1].Attributes["text"].Should().Be(comment.Text);
 
-            responseDocument.Included[3].Type.Should().Be("people");
-            responseDocument.Included[3].Id.Should().Be(todoItem.Collection.TodoItems.First().Owner.StringId);
-            responseDocument.Included[3].Attributes["firstName"].Should().Be(todoItem.Collection.TodoItems.First().Owner.FirstName);
+            responseDocument.Included[2].Type.Should().Be("comments");
+            responseDocument.Included[2].Id.Should().Be(comment.Parent.Comments.ElementAt(0).StringId);
+            responseDocument.Included[2].Attributes["text"].Should().Be(comment.Parent.Comments.ElementAt(0).Text);
 
-            responseDocument.Included[4].Type.Should().Be("todoItems");
-            responseDocument.Included[4].Id.Should().Be(todoItem.Collection.TodoItems.Skip(1).First().StringId);
-            responseDocument.Included[4].Attributes["description"].Should().Be(todoItem.Collection.TodoItems.Skip(1).First().Description);
+            responseDocument.Included[3].Type.Should().Be("webAccounts");
+            responseDocument.Included[3].Id.Should().Be(comment.Parent.Comments.ElementAt(0).Author.StringId);
+            responseDocument.Included[3].Attributes["userName"].Should().Be(comment.Parent.Comments.ElementAt(0).Author.UserName);
+
+            responseDocument.Included[4].Type.Should().Be("comments");
+            responseDocument.Included[4].Id.Should().Be(comment.Parent.Comments.ElementAt(1).StringId);
+            responseDocument.Included[4].Attributes["text"].Should().Be(comment.Parent.Comments.ElementAt(1).Text);
         }
 
         [Fact]
         public async Task Can_include_chain_of_relationships_with_multiple_paths()
         {
             // Arrange
-            var todoItem = new TodoItem
-            {
-                Description = "Root",
-                Collection = new TodoItemCollection
-                {
-                    Name = "Primary",
-                    Owner = new Person
-                    {
-                        FirstName = "Jack",
-                        Role = new PersonRole()
-                    },
-                    TodoItems = new HashSet<TodoItem>
-                    {
-                        new TodoItem
-                        {
-                            Description = "This is nested.",
-                            Owner = new Person
-                            {
-                                FirstName = "Jill"
-                            }
-                        },
-                        new TodoItem
-                        {
-                            Description = "This is nested too."
-                        }
-                    }
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Posts = _fakers.BlogPost.Generate(1);
+            blog.Posts[0].Author = _fakers.WebAccount.Generate();
+            blog.Posts[0].Author.Preferences = _fakers.AccountPreferences.Generate();
+            blog.Posts[0].Comments = _fakers.Comment.Generate(2).ToHashSet();
+            blog.Posts[0].Comments.ElementAt(0).Author = _fakers.WebAccount.Generate();
+            blog.Posts[0].Comments.ElementAt(0).Author.Posts = _fakers.BlogPost.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.TodoItems.Add(todoItem);
-
+                dbContext.Blogs.Add(blog);
                 await dbContext.SaveChangesAsync();
             });
-            
-            string route = $"/api/v1/todoItems/{todoItem.StringId}?include=collection.owner.role,collection.todoItems.owner";
+
+            string route = $"/blogs/{blog.StringId}?include=posts.author.preferences,posts.comments.author.posts";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -606,112 +455,93 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(todoItem.StringId);
-            responseDocument.SingleData.Attributes["description"].Should().Be(todoItem.Description);
+            responseDocument.SingleData.Id.Should().Be(blog.StringId);
+            responseDocument.SingleData.Attributes["title"].Should().Be(blog.Title);
 
             responseDocument.Included.Should().HaveCount(7);
 
-            responseDocument.Included[0].Type.Should().Be("todoCollections");
-            responseDocument.Included[0].Id.Should().Be(todoItem.Collection.StringId);
-            responseDocument.Included[0].Attributes["name"].Should().Be(todoItem.Collection.Name);
+            responseDocument.Included[0].Type.Should().Be("blogPosts");
+            responseDocument.Included[0].Id.Should().Be(blog.Posts[0].StringId);
+            responseDocument.Included[0].Attributes["caption"].Should().Be(blog.Posts[0].Caption);
 
-            responseDocument.Included[1].Type.Should().Be("people");
-            responseDocument.Included[1].Id.Should().Be(todoItem.Collection.Owner.StringId);
-            responseDocument.Included[1].Attributes["firstName"].Should().Be(todoItem.Collection.Owner.FirstName);
+            responseDocument.Included[1].Type.Should().Be("webAccounts");
+            responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Author.StringId);
+            responseDocument.Included[1].Attributes["userName"].Should().Be(blog.Posts[0].Author.UserName);
 
-            responseDocument.Included[2].Type.Should().Be("personRoles");
-            responseDocument.Included[2].Id.Should().Be(todoItem.Collection.Owner.Role.StringId);
+            responseDocument.Included[2].Type.Should().Be("accountPreferences");
+            responseDocument.Included[2].Id.Should().Be(blog.Posts[0].Author.Preferences.StringId);
+            responseDocument.Included[2].Attributes["useDarkTheme"].Should().Be(blog.Posts[0].Author.Preferences.UseDarkTheme);
 
-            responseDocument.Included[3].Type.Should().Be("todoItems");
-            responseDocument.Included[3].Id.Should().Be(todoItem.StringId);
-            responseDocument.Included[3].Attributes["description"].Should().Be(todoItem.Description);
+            responseDocument.Included[3].Type.Should().Be("comments");
+            responseDocument.Included[3].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).StringId);
+            responseDocument.Included[3].Attributes["text"].Should().Be(blog.Posts[0].Comments.ElementAt(0).Text);
 
-            responseDocument.Included[4].Type.Should().Be("todoItems");
-            responseDocument.Included[4].Id.Should().Be(todoItem.Collection.TodoItems.First().StringId);
-            responseDocument.Included[4].Attributes["description"].Should().Be(todoItem.Collection.TodoItems.First().Description);
+            responseDocument.Included[4].Type.Should().Be("webAccounts");
+            responseDocument.Included[4].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.StringId);
+            responseDocument.Included[4].Attributes["userName"].Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.UserName);
 
-            responseDocument.Included[5].Type.Should().Be("people");
-            responseDocument.Included[5].Id.Should().Be(todoItem.Collection.TodoItems.First().Owner.StringId);
-            responseDocument.Included[5].Attributes["firstName"].Should().Be(todoItem.Collection.TodoItems.First().Owner.FirstName);
+            responseDocument.Included[5].Type.Should().Be("blogPosts");
+            responseDocument.Included[5].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.Posts[0].StringId);
+            responseDocument.Included[5].Attributes["caption"].Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.Posts[0].Caption);
 
-            responseDocument.Included[6].Type.Should().Be("todoItems");
-            responseDocument.Included[6].Id.Should().Be(todoItem.Collection.TodoItems.Skip(1).First().StringId);
-            responseDocument.Included[6].Attributes["description"].Should().Be(todoItem.Collection.TodoItems.Skip(1).First().Description);
+            responseDocument.Included[6].Type.Should().Be("comments");
+            responseDocument.Included[6].Id.Should().Be(blog.Posts[0].Comments.ElementAt(1).StringId);
+            responseDocument.Included[6].Attributes["text"].Should().Be(blog.Posts[0].Comments.ElementAt(1).Text);
         }
 
         [Fact]
         public async Task Prevents_duplicate_includes_over_single_resource()
         {
             // Arrange
-            var person = new Person
-            {
-                FirstName = "Janice"
-            };
+            var account = _fakers.WebAccount.Generate();
 
-            var todoItem = new TodoItem
-            {
-                Description = "Root",
-                Owner = person,
-                Assignee = person
-            };
+            var post = _fakers.BlogPost.Generate();
+            post.Author = account;
+            post.Reviewer = account;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.TodoItems.Add(todoItem);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/todoItems/{todoItem.StringId}?include=owner&include=assignee";
+            var route = $"/blogPosts/{post.StringId}?include=author&include=reviewer";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-            
+
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(todoItem.StringId);
-            responseDocument.SingleData.Attributes["description"].Should().Be(todoItem.Description);
+            responseDocument.SingleData.Id.Should().Be(post.StringId);
+            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Type.Should().Be("people");
-            responseDocument.Included[0].Id.Should().Be(person.StringId);
-            responseDocument.Included[0].Attributes["firstName"].Should().Be(person.FirstName);
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
+            responseDocument.Included[0].Id.Should().Be(account.StringId);
+            responseDocument.Included[0].Attributes["userName"].Should().Be(account.UserName);
         }
 
         [Fact]
         public async Task Prevents_duplicate_includes_over_multiple_resources()
         {
             // Arrange
-            var person = new Person
-            {
-                FirstName = "Janice"
-            };
+            var account = _fakers.WebAccount.Generate();
 
-            var todoItems = new List<TodoItem>
-            {
-                new TodoItem
-                {
-                    Description = "First",
-                    Owner = person
-                },
-                new TodoItem
-                {
-                    Description = "Second",
-                    Owner = person
-                }
-            };
+            var posts = _fakers.BlogPost.Generate(2);
+            posts[0].Author = account;
+            posts[1].Author = account;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<TodoItem>();
-                dbContext.TodoItems.AddRange(todoItems);
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(posts);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/todoItems?include=owner";
+            var route = "/blogPosts?include=author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -722,16 +552,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             responseDocument.ManyData.Should().HaveCount(2);
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Type.Should().Be("people");
-            responseDocument.Included[0].Id.Should().Be(person.StringId);
-            responseDocument.Included[0].Attributes["firstName"].Should().Be(person.FirstName);
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
+            responseDocument.Included[0].Id.Should().Be(account.StringId);
+            responseDocument.Included[0].Attributes["userName"].Should().Be(account.UserName);
         }
 
         [Fact]
         public async Task Cannot_include_unknown_relationship()
         {
             // Arrange
-            var route = "/api/v1/people?include=doesNotExist";
+            var route = "/webAccounts?include=doesNotExist";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -742,7 +572,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors[0].Title.Should().Be("The specified include is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'people'.");
+            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
             responseDocument.Errors[0].Source.Parameter.Should().Be("include");
         }
 
@@ -750,7 +580,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Cannot_include_unknown_nested_relationship()
         {
             // Arrange
-            var route = "/api/v1/people?include=todoItems.doesNotExist";
+            var route = "/blogs?include=posts.doesNotExist";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -761,7 +591,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors[0].Title.Should().Be("The specified include is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' in 'todoItems.doesNotExist' does not exist on resource 'todoItems'.");
+            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
             responseDocument.Errors[0].Source.Parameter.Should().Be("include");
         }
 
@@ -769,18 +599,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Cannot_include_relationship_with_blocked_capability()
         {
             // Arrange
-            var route = "/api/v1/people?include=unIncludeableItem";
+            var route = "/blogPosts?include=parent";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
-            
+
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors[0].Title.Should().Be("Including the requested relationship is not allowed.");
-            responseDocument.Errors[0].Detail.Should().Be("Including the relationship 'unIncludeableItem' on 'people' is not allowed.");
+            responseDocument.Errors[0].Detail.Should().Be("Including the relationship 'parent' on 'blogPosts' is not allowed.");
             responseDocument.Errors[0].Source.Parameter.Should().Be("include");
         }
 
@@ -788,52 +618,38 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Ignores_null_parent_in_nested_include()
         {
             // Arrange
-            var todoItems = new List<TodoItem>
-            {
-                new TodoItem
-                {
-                    Description = "Owned",
-                    Owner = new Person
-                    {
-                        FirstName = "Julian"
-                    }
-                },
-                new TodoItem
-                {
-                    Description = "Unowned"
-                }
-            };
+            var posts = _fakers.BlogPost.Generate(2);
+            posts[0].Reviewer = _fakers.WebAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<TodoItem>();
-                dbContext.TodoItems.AddRange(todoItems);
-
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(posts);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/todoItems?include=owner.role";
+            var route = "/blogPosts?include=reviewer.preferences";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-            
+
             responseDocument.ManyData.Should().HaveCount(2);
 
-            var resourcesWithOwner = responseDocument.ManyData.Where(resource => resource.Relationships.First(pair => pair.Key == "owner").Value.SingleData != null).ToArray();
-            resourcesWithOwner.Should().HaveCount(1);
-            resourcesWithOwner[0].Attributes["description"].Should().Be(todoItems[0].Description);
+            var postWithReviewer = responseDocument.ManyData.Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.SingleData != null).ToArray();
+            postWithReviewer.Should().HaveCount(1);
+            postWithReviewer[0].Attributes["caption"].Should().Be(posts[0].Caption);
 
-            var resourcesWithoutOwner = responseDocument.ManyData.Where(resource => resource.Relationships.First(pair => pair.Key == "owner").Value.SingleData == null).ToArray();
-            resourcesWithoutOwner.Should().HaveCount(1);
-            resourcesWithoutOwner[0].Attributes["description"].Should().Be(todoItems[1].Description);
+            var postWithoutReviewer = responseDocument.ManyData.Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.SingleData == null).ToArray();
+            postWithoutReviewer.Should().HaveCount(1);
+            postWithoutReviewer[0].Attributes["caption"].Should().Be(posts[1].Caption);
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Type.Should().Be("people");
-            responseDocument.Included[0].Id.Should().Be(todoItems[0].Owner.StringId);
-            responseDocument.Included[0].Attributes["firstName"].Should().Be(todoItems[0].Owner.FirstName);
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
+            responseDocument.Included[0].Id.Should().Be(posts[0].Reviewer.StringId);
+            responseDocument.Included[0].Attributes["userName"].Should().Be(posts[0].Reviewer.UserName);
         }
 
         [Fact]
@@ -843,16 +659,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.MaximumIncludeDepth = 1;
 
-            var blog = new LegacyBlog();
+            var blog = _fakers.Blog.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/legacyBlogs/{blog.StringId}/articles?include=author,revisions";
+            var route = $"/blogs/{blog.StringId}/posts?include=author,comments";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -868,18 +683,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.MaximumIncludeDepth = 1;
 
-            var route = "/api/v1/legacyBlogs/123/owner?include=articles.revisions";
+            var route = "/blogs/123/owner?include=posts.comments";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
-            
+
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors[0].Title.Should().Be("The specified include is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Including 'articles.revisions' exceeds the maximum inclusion depth of 1.");
+            responseDocument.Errors[0].Detail.Should().Be("Including 'posts.comments' exceeds the maximum inclusion depth of 1.");
             responseDocument.Errors[0].Source.Parameter.Should().Be("include");
         }
     }

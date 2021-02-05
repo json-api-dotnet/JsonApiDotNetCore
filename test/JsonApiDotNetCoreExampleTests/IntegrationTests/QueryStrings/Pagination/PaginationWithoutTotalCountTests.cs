@@ -3,28 +3,27 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 {
-    public sealed class PaginationWithoutTotalCountTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
+    public sealed class PaginationWithoutTotalCountTests 
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
         private const int _defaultPageSize = 5;
 
-        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
-        private readonly ExampleFakers _fakers = new ExampleFakers();
+        private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
+        private readonly QueryStringFakers _fakers = new QueryStringFakers();
 
-        public PaginationWithoutTotalCountTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
+        public PaginationWithoutTotalCountTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
         {
             _testContext = testContext;
 
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            
+
             options.IncludeTotalResourceCount = false;
             options.DefaultPageSize = new PageSize(_defaultPageSize);
             options.AllowUnknownQueryStringParameters = true;
@@ -37,7 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.DefaultPageSize = null;
 
-            var route = "/api/v1/articles?foo=bar";
+            var route = "/blogPosts?foo=bar";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -46,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost/api/v1/articles?foo=bar");
+            responseDocument.Links.Self.Should().Be("http://localhost/blogPosts?foo=bar");
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
@@ -62,11 +61,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
+                await dbContext.ClearTableAsync<BlogPost>();
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?page[size]=8&foo=bar";
+            var route = "/blogPosts?page[size]=8&foo=bar";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -75,8 +74,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost/api/v1/articles?page[size]=8&foo=bar");
-            responseDocument.Links.First.Should().Be("http://localhost/api/v1/articles?page[size]=8&foo=bar");
+            responseDocument.Links.Self.Should().Be("http://localhost/blogPosts?page[size]=8&foo=bar");
+            responseDocument.Links.First.Should().Be("http://localhost/blogPosts?page[size]=8&foo=bar");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
@@ -88,11 +87,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             // Arrange
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
+                await dbContext.ClearTableAsync<BlogPost>();
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?page[number]=2&foo=bar";
+            var route = "/blogPosts?page[number]=2&foo=bar";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -101,10 +100,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost/api/v1/articles?page[number]=2&foo=bar");
-            responseDocument.Links.First.Should().Be("http://localhost/api/v1/articles?foo=bar");
+            responseDocument.Links.Self.Should().Be("http://localhost/blogPosts?page[number]=2&foo=bar");
+            responseDocument.Links.First.Should().Be("http://localhost/blogPosts?foo=bar");
             responseDocument.Links.Last.Should().BeNull();
-            responseDocument.Links.Prev.Should().Be("http://localhost/api/v1/articles?foo=bar");
+            responseDocument.Links.Prev.Should().Be("http://localhost/blogPosts?foo=bar");
             responseDocument.Links.Next.Should().BeNull();
         }
 
@@ -112,17 +111,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_partially_filled_page()
         {
             // Arrange
-            var articles = _fakers.Article.Generate(12);
+            var posts = _fakers.BlogPost.Generate(12);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.AddRange(articles);
-
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(posts);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?foo=bar&page[number]=3";
+            var route = "/blogPosts?foo=bar&page[number]=3";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -133,10 +131,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData.Count.Should().BeLessThan(_defaultPageSize);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost/api/v1/articles?foo=bar&page[number]=3");
-            responseDocument.Links.First.Should().Be("http://localhost/api/v1/articles?foo=bar");
+            responseDocument.Links.Self.Should().Be("http://localhost/blogPosts?foo=bar&page[number]=3");
+            responseDocument.Links.First.Should().Be("http://localhost/blogPosts?foo=bar");
             responseDocument.Links.Last.Should().BeNull();
-            responseDocument.Links.Prev.Should().Be("http://localhost/api/v1/articles?foo=bar&page[number]=2");
+            responseDocument.Links.Prev.Should().Be("http://localhost/blogPosts?foo=bar&page[number]=2");
             responseDocument.Links.Next.Should().BeNull();
         }
 
@@ -144,17 +142,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_full_page()
         {
             // Arrange
-            var articles = _fakers.Article.Generate(_defaultPageSize * 3);
+            var posts = _fakers.BlogPost.Generate(_defaultPageSize * 3);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.AddRange(articles);
-
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(posts);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?page[number]=3&foo=bar";
+            var route = "/blogPosts?page[number]=3&foo=bar";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -165,29 +162,27 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData.Should().HaveCount(_defaultPageSize);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost/api/v1/articles?page[number]=3&foo=bar");
-            responseDocument.Links.First.Should().Be("http://localhost/api/v1/articles?foo=bar");
+            responseDocument.Links.Self.Should().Be("http://localhost/blogPosts?page[number]=3&foo=bar");
+            responseDocument.Links.First.Should().Be("http://localhost/blogPosts?foo=bar");
             responseDocument.Links.Last.Should().BeNull();
-            responseDocument.Links.Prev.Should().Be("http://localhost/api/v1/articles?page[number]=2&foo=bar");
-            responseDocument.Links.Next.Should().Be("http://localhost/api/v1/articles?page[number]=4&foo=bar");
+            responseDocument.Links.Prev.Should().Be("http://localhost/blogPosts?page[number]=2&foo=bar");
+            responseDocument.Links.Next.Should().Be("http://localhost/blogPosts?page[number]=4&foo=bar");
         }
 
         [Fact]
         public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_full_page_on_secondary_endpoint()
         {
             // Arrange
-            var author = new Author
-            {
-                Articles = _fakers.Article.Generate(_defaultPageSize * 3)
-            };
+            var account = _fakers.WebAccount.Generate();
+            account.Posts = _fakers.BlogPost.Generate(_defaultPageSize * 3);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AuthorDifferentDbContextName.Add(author);
+                dbContext.Accounts.Add(account);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/authors/{author.StringId}/articles?page[number]=3&foo=bar";
+            var route = $"/webAccounts/{account.StringId}/posts?page[number]=3&foo=bar";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -198,11 +193,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData.Should().HaveCount(_defaultPageSize);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be($"http://localhost/api/v1/authors/{author.StringId}/articles?page[number]=3&foo=bar");
-            responseDocument.Links.First.Should().Be($"http://localhost/api/v1/authors/{author.StringId}/articles?foo=bar");
+            responseDocument.Links.Self.Should().Be($"http://localhost/webAccounts/{account.StringId}/posts?page[number]=3&foo=bar");
+            responseDocument.Links.First.Should().Be($"http://localhost/webAccounts/{account.StringId}/posts?foo=bar");
             responseDocument.Links.Last.Should().BeNull();
-            responseDocument.Links.Prev.Should().Be($"http://localhost/api/v1/authors/{author.StringId}/articles?page[number]=2&foo=bar");
-            responseDocument.Links.Next.Should().Be($"http://localhost/api/v1/authors/{author.StringId}/articles?page[number]=4&foo=bar");
+            responseDocument.Links.Prev.Should().Be($"http://localhost/webAccounts/{account.StringId}/posts?page[number]=2&foo=bar");
+            responseDocument.Links.Next.Should().Be($"http://localhost/webAccounts/{account.StringId}/posts?page[number]=4&foo=bar");
         }
     }
 }

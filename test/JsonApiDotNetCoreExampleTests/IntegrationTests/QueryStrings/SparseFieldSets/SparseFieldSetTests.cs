@@ -3,25 +3,22 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFieldSets
 {
-    public sealed class SparseFieldSetTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
+    public sealed class SparseFieldSetTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
-        private readonly ExampleFakers _fakers = new ExampleFakers();
+        private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
+        private readonly QueryStringFakers _fakers = new QueryStringFakers();
 
-        public SparseFieldSetTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
+        public SparseFieldSetTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -29,12 +26,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             {
                 services.AddSingleton<ResourceCaptureStore>();
 
-                services.AddResourceRepository<ResultCapturingRepository<LegacyBlog>>();
-                services.AddResourceRepository<ResultCapturingRepository<Article>>();
-                services.AddResourceRepository<ResultCapturingRepository<Author>>();
-                services.AddResourceRepository<ResultCapturingRepository<TodoItem>>();
-
-                services.AddScoped<IResourceService<Article>, JsonApiResourceService<Article>>();
+                services.AddResourceRepository<ResultCapturingRepository<Blog>>();
+                services.AddResourceRepository<ResultCapturingRepository<BlogPost>>();
+                services.AddResourceRepository<ResultCapturingRepository<WebAccount>>();
             });
         }
 
@@ -45,21 +39,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var article = new Article
-            {
-                Caption = "One",
-                Url = "https://one.domain.com"
-            };
+            var post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.Add(article);
-
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?fields[articles]=caption,author";
+            var route = "/blogPosts?fields[blogPosts]=caption,author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -68,17 +57,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(article.StringId);
+            responseDocument.ManyData[0].Id.Should().Be(post.StringId);
             responseDocument.ManyData[0].Attributes.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["caption"].Should().Be(article.Caption);
+            responseDocument.ManyData[0].Attributes["caption"].Should().Be(post.Caption);
             responseDocument.ManyData[0].Relationships.Should().HaveCount(1);
             responseDocument.ManyData[0].Relationships["author"].Data.Should().BeNull();
             responseDocument.ManyData[0].Relationships["author"].Links.Self.Should().NotBeNull();
             responseDocument.ManyData[0].Relationships["author"].Links.Related.Should().NotBeNull();
 
-            var articleCaptured = (Article) store.Resources.Should().ContainSingle(x => x is Article).And.Subject.Single();
-            articleCaptured.Caption.Should().Be(article.Caption);
-            articleCaptured.Url.Should().BeNull();
+            var postCaptured = (BlogPost) store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            postCaptured.Caption.Should().Be(post.Caption);
+            postCaptured.Url.Should().BeNull();
         }
 
         [Fact]
@@ -88,21 +77,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var article = new Article
-            {
-                Caption = "One",
-                Url = "https://one.domain.com"
-            };
+            var post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.Add(article);
-
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?fields[articles]=caption";
+            var route = "/blogPosts?fields[blogPosts]=caption";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -111,14 +95,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(article.StringId);
+            responseDocument.ManyData[0].Id.Should().Be(post.StringId);
             responseDocument.ManyData[0].Attributes.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["caption"].Should().Be(article.Caption);
+            responseDocument.ManyData[0].Attributes["caption"].Should().Be(post.Caption);
             responseDocument.ManyData[0].Relationships.Should().BeNull();
 
-            var articleCaptured = (Article) store.Resources.Should().ContainSingle(x => x is Article).And.Subject.Single();
-            articleCaptured.Caption.Should().Be(article.Caption);
-            articleCaptured.Url.Should().BeNull();
+            var postCaptured = (BlogPost) store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            postCaptured.Caption.Should().Be(post.Caption);
+            postCaptured.Url.Should().BeNull();
         }
 
         [Fact]
@@ -128,21 +112,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var article = new Article
-            {
-                Caption = "One",
-                Url = "https://one.domain.com"
-            };
+            var post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.Add(article);
-
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?fields[articles]=author";
+            var route = "/blogPosts?fields[blogPosts]=author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -151,16 +130,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(article.StringId);
+            responseDocument.ManyData[0].Id.Should().Be(post.StringId);
             responseDocument.ManyData[0].Attributes.Should().BeNull();
             responseDocument.ManyData[0].Relationships.Should().HaveCount(1);
             responseDocument.ManyData[0].Relationships["author"].Data.Should().BeNull();
             responseDocument.ManyData[0].Relationships["author"].Links.Self.Should().NotBeNull();
             responseDocument.ManyData[0].Relationships["author"].Links.Related.Should().NotBeNull();
 
-            var articleCaptured = (Article) store.Resources.Should().ContainSingle(x => x is Article).And.Subject.Single();
-            articleCaptured.Caption.Should().BeNull();
-            articleCaptured.Url.Should().BeNull();
+            var postCaptured = (BlogPost) store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            postCaptured.Caption.Should().BeNull();
+            postCaptured.Url.Should().BeNull();
         }
 
         [Fact]
@@ -170,20 +149,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var article = new Article
-            {
-                Caption = "One",
-                Url = "https://one.domain.com"
-            };
+            var post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}?fields[articles]=url,author";
+            var route = $"/blogPosts/{post.StringId}?fields[blogPosts]=url,author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -192,17 +166,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(article.StringId);
+            responseDocument.SingleData.Id.Should().Be(post.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["url"].Should().Be(article.Url);
+            responseDocument.SingleData.Attributes["url"].Should().Be(post.Url);
             responseDocument.SingleData.Relationships.Should().HaveCount(1);
             responseDocument.SingleData.Relationships["author"].Data.Should().BeNull();
             responseDocument.SingleData.Relationships["author"].Links.Self.Should().NotBeNull();
             responseDocument.SingleData.Relationships["author"].Links.Related.Should().NotBeNull();
 
-            var articleCaptured = (Article) store.Resources.Should().ContainSingle(x => x is Article).And.Subject.Single();
-            articleCaptured.Url.Should().Be(article.Url);
-            articleCaptured.Caption.Should().BeNull();
+            var postCaptured = (BlogPost) store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            postCaptured.Url.Should().Be(post.Url);
+            postCaptured.Caption.Should().BeNull();
         }
 
         [Fact]
@@ -212,27 +186,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var blog = new LegacyBlog
-            {
-                Title = "Some",
-                Articles = new List<Article>
-                {
-                    new Article
-                    {
-                        Caption = "One",
-                        Url = "https://one.domain.com"
-                    }
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Posts = _fakers.BlogPost.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/legacyBlogs/{blog.StringId}/articles?fields[articles]=caption,tags";
+            var route = $"/blogs/{blog.StringId}/posts?fields[blogPosts]=caption,labels";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -241,21 +204,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(blog.Articles[0].StringId);
+            responseDocument.ManyData[0].Id.Should().Be(blog.Posts[0].StringId);
             responseDocument.ManyData[0].Attributes.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["caption"].Should().Be(blog.Articles[0].Caption);
+            responseDocument.ManyData[0].Attributes["caption"].Should().Be(blog.Posts[0].Caption);
             responseDocument.ManyData[0].Relationships.Should().HaveCount(1);
-            responseDocument.ManyData[0].Relationships["tags"].Data.Should().BeNull();
-            responseDocument.ManyData[0].Relationships["tags"].Links.Self.Should().NotBeNull();
-            responseDocument.ManyData[0].Relationships["tags"].Links.Related.Should().NotBeNull();
+            responseDocument.ManyData[0].Relationships["labels"].Data.Should().BeNull();
+            responseDocument.ManyData[0].Relationships["labels"].Links.Self.Should().NotBeNull();
+            responseDocument.ManyData[0].Relationships["labels"].Links.Related.Should().NotBeNull();
 
-            var blogCaptured = (LegacyBlog)store.Resources.Should().ContainSingle(x => x is LegacyBlog).And.Subject.Single();
+            var blogCaptured = (Blog) store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
             blogCaptured.Title.Should().BeNull();
 
-            blogCaptured.Articles.Should().HaveCount(1);
-            blogCaptured.Articles[0].Caption.Should().Be(blog.Articles[0].Caption);
-            blogCaptured.Articles[0].Url.Should().BeNull();
+            blogCaptured.Posts.Should().HaveCount(1);
+            blogCaptured.Posts[0].Caption.Should().Be(blog.Posts[0].Caption);
+            blogCaptured.Posts[0].Url.Should().BeNull();
         }
 
         [Fact]
@@ -265,23 +228,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var article = _fakers.Article.Generate();
-            article.Caption = "Some";
-            article.Author = new Author
-            {
-                FirstName = "Joe",
-                LastName = "Smith",
-                BusinessEmail = "nospam@email.com"
-            };
+            var post = _fakers.BlogPost.Generate();
+            post.Author = _fakers.WebAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}?include=author&fields[authors]=lastName,businessEmail,livingAddress";
+            var route = $"/blogPosts/{post.StringId}?include=author&fields[webAccounts]=displayName,emailAddress,preferences";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -290,28 +246,28 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(article.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(article.Caption);
-            responseDocument.SingleData.Relationships["author"].SingleData.Id.Should().Be(article.Author.StringId);
+            responseDocument.SingleData.Id.Should().Be(post.StringId);
+            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.SingleData.Relationships["author"].SingleData.Id.Should().Be(post.Author.StringId);
             responseDocument.SingleData.Relationships["author"].Links.Self.Should().NotBeNull();
             responseDocument.SingleData.Relationships["author"].Links.Related.Should().NotBeNull();
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Attributes.Should().HaveCount(2);
-            responseDocument.Included[0].Attributes["lastName"].Should().Be(article.Author.LastName);
-            responseDocument.Included[0].Attributes["businessEmail"].Should().Be(article.Author.BusinessEmail);
+            responseDocument.Included[0].Attributes["displayName"].Should().Be(post.Author.DisplayName);
+            responseDocument.Included[0].Attributes["emailAddress"].Should().Be(post.Author.EmailAddress);
             responseDocument.Included[0].Relationships.Should().HaveCount(1);
-            responseDocument.Included[0].Relationships["livingAddress"].Data.Should().BeNull();
-            responseDocument.Included[0].Relationships["livingAddress"].Links.Self.Should().NotBeNull();
-            responseDocument.Included[0].Relationships["livingAddress"].Links.Related.Should().NotBeNull();
+            responseDocument.Included[0].Relationships["preferences"].Data.Should().BeNull();
+            responseDocument.Included[0].Relationships["preferences"].Links.Self.Should().NotBeNull();
+            responseDocument.Included[0].Relationships["preferences"].Links.Related.Should().NotBeNull();
 
-            var articleCaptured = (Article) store.Resources.Should().ContainSingle(x => x is Article).And.Subject.Single();
-            articleCaptured.Id.Should().Be(article.Id);
-            articleCaptured.Caption.Should().Be(article.Caption);
+            var postCaptured = (BlogPost) store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            postCaptured.Id.Should().Be(post.Id);
+            postCaptured.Caption.Should().Be(post.Caption);
 
-            articleCaptured.Author.LastName.Should().Be(article.Author.LastName);
-            articleCaptured.Author.BusinessEmail.Should().Be(article.Author.BusinessEmail);
-            articleCaptured.Author.FirstName.Should().BeNull();
+            postCaptured.Author.DisplayName.Should().Be(post.Author.DisplayName);
+            postCaptured.Author.EmailAddress.Should().Be(post.Author.EmailAddress);
+            postCaptured.Author.UserName.Should().BeNull();
         }
 
         [Fact]
@@ -321,25 +277,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var author = _fakers.Author.Generate();
-            author.LastName = "Smith";
-            author.Articles = new List<Article>
-            {
-                new Article
-                {
-                    Caption = "One",
-                    Url = "https://one.domain.com"
-                }
-            };
+            var account = _fakers.WebAccount.Generate();
+            account.Posts = _fakers.BlogPost.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AuthorDifferentDbContextName.Add(author);
-
+                dbContext.Accounts.Add(account);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/authors/{author.StringId}?include=articles&fields[articles]=caption,tags";
+            var route = $"/webAccounts/{account.StringId}?include=posts&fields[blogPosts]=caption,labels";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -348,28 +295,28 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(author.StringId);
-            responseDocument.SingleData.Attributes["lastName"].Should().Be(author.LastName);
-            responseDocument.SingleData.Relationships["articles"].ManyData.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["articles"].ManyData[0].Id.Should().Be(author.Articles[0].StringId);
-            responseDocument.SingleData.Relationships["articles"].Links.Self.Should().NotBeNull();
-            responseDocument.SingleData.Relationships["articles"].Links.Related.Should().NotBeNull();
+            responseDocument.SingleData.Id.Should().Be(account.StringId);
+            responseDocument.SingleData.Attributes["displayName"].Should().Be(account.DisplayName);
+            responseDocument.SingleData.Relationships["posts"].ManyData.Should().HaveCount(1);
+            responseDocument.SingleData.Relationships["posts"].ManyData[0].Id.Should().Be(account.Posts[0].StringId);
+            responseDocument.SingleData.Relationships["posts"].Links.Self.Should().NotBeNull();
+            responseDocument.SingleData.Relationships["posts"].Links.Related.Should().NotBeNull();
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Attributes.Should().HaveCount(1);
-            responseDocument.Included[0].Attributes["caption"].Should().Be(author.Articles[0].Caption);
+            responseDocument.Included[0].Attributes["caption"].Should().Be(account.Posts[0].Caption);
             responseDocument.Included[0].Relationships.Should().HaveCount(1);
-            responseDocument.Included[0].Relationships["tags"].Data.Should().BeNull();
-            responseDocument.Included[0].Relationships["tags"].Links.Self.Should().NotBeNull();
-            responseDocument.Included[0].Relationships["tags"].Links.Related.Should().NotBeNull();
+            responseDocument.Included[0].Relationships["labels"].Data.Should().BeNull();
+            responseDocument.Included[0].Relationships["labels"].Links.Self.Should().NotBeNull();
+            responseDocument.Included[0].Relationships["labels"].Links.Related.Should().NotBeNull();
 
-            var authorCaptured = (Author) store.Resources.Should().ContainSingle(x => x is Author).And.Subject.Single();
-            authorCaptured.Id.Should().Be(author.Id);
-            authorCaptured.LastName.Should().Be(author.LastName);
+            var accountCaptured = (WebAccount) store.Resources.Should().ContainSingle(x => x is WebAccount).And.Subject.Single();
+            accountCaptured.Id.Should().Be(account.Id);
+            accountCaptured.DisplayName.Should().Be(account.DisplayName);
 
-            authorCaptured.Articles.Should().HaveCount(1);
-            authorCaptured.Articles[0].Caption.Should().Be(author.Articles[0].Caption);
-            authorCaptured.Articles[0].Url.Should().BeNull();
+            accountCaptured.Posts.Should().HaveCount(1);
+            accountCaptured.Posts[0].Caption.Should().Be(account.Posts[0].Caption);
+            accountCaptured.Posts[0].Url.Should().BeNull();
         }
 
         [Fact]
@@ -379,30 +326,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var blog = new LegacyBlog
-            {
-                Owner = new Author
-                {
-                    LastName = "Smith",
-                    Articles = new List<Article>
-                    {
-                        new Article
-                        {
-                            Caption = "One",
-                            Url = "https://one.domain.com"
-                        }
-                    }
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Owner = _fakers.WebAccount.Generate();
+            blog.Owner.Posts = _fakers.BlogPost.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/legacyBlogs/{blog.StringId}/owner?include=articles&fields[articles]=caption,revisions";
+            var route = $"/blogs/{blog.StringId}/owner?include=posts&fields[blogPosts]=caption,comments";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -412,28 +346,28 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(blog.Owner.StringId);
-            responseDocument.SingleData.Attributes["lastName"].Should().Be(blog.Owner.LastName);
-            responseDocument.SingleData.Relationships["articles"].ManyData.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["articles"].ManyData[0].Id.Should().Be(blog.Owner.Articles[0].StringId);
-            responseDocument.SingleData.Relationships["articles"].Links.Self.Should().NotBeNull();
-            responseDocument.SingleData.Relationships["articles"].Links.Related.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["displayName"].Should().Be(blog.Owner.DisplayName);
+            responseDocument.SingleData.Relationships["posts"].ManyData.Should().HaveCount(1);
+            responseDocument.SingleData.Relationships["posts"].ManyData[0].Id.Should().Be(blog.Owner.Posts[0].StringId);
+            responseDocument.SingleData.Relationships["posts"].Links.Self.Should().NotBeNull();
+            responseDocument.SingleData.Relationships["posts"].Links.Related.Should().NotBeNull();
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Attributes.Should().HaveCount(1);
-            responseDocument.Included[0].Attributes["caption"].Should().Be(blog.Owner.Articles[0].Caption);
+            responseDocument.Included[0].Attributes["caption"].Should().Be(blog.Owner.Posts[0].Caption);
             responseDocument.Included[0].Relationships.Should().HaveCount(1);
-            responseDocument.Included[0].Relationships["revisions"].Data.Should().BeNull();
-            responseDocument.Included[0].Relationships["revisions"].Links.Self.Should().NotBeNull();
-            responseDocument.Included[0].Relationships["revisions"].Links.Related.Should().NotBeNull();
+            responseDocument.Included[0].Relationships["comments"].Data.Should().BeNull();
+            responseDocument.Included[0].Relationships["comments"].Links.Self.Should().NotBeNull();
+            responseDocument.Included[0].Relationships["comments"].Links.Related.Should().NotBeNull();
 
-            var blogCaptured = (LegacyBlog) store.Resources.Should().ContainSingle(x => x is LegacyBlog).And.Subject.Single();
+            var blogCaptured = (Blog) store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
             blogCaptured.Owner.Should().NotBeNull();
-            blogCaptured.Owner.LastName.Should().Be(blog.Owner.LastName);
+            blogCaptured.Owner.DisplayName.Should().Be(blog.Owner.DisplayName);
 
-            blogCaptured.Owner.Articles.Should().HaveCount(1);
-            blogCaptured.Owner.Articles[0].Caption.Should().Be(blog.Owner.Articles[0].Caption);
-            blogCaptured.Owner.Articles[0].Url.Should().BeNull();
+            blogCaptured.Owner.Posts.Should().HaveCount(1);
+            blogCaptured.Owner.Posts[0].Caption.Should().Be(blog.Owner.Posts[0].Caption);
+            blogCaptured.Owner.Posts[0].Url.Should().BeNull();
         }
 
         [Fact]
@@ -443,27 +377,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var article = _fakers.Article.Generate();
-            article.Caption = "Some";
-            article.ArticleTags = new HashSet<ArticleTag>
+            var post = _fakers.BlogPost.Generate();
+            post.BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                new ArticleTag
+                new BlogPostLabel
                 {
-                    Tag = new Tag
-                    {
-                        Name = "Hot"
-                    }
+                    Label = _fakers.Label.Generate()
                 }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}?include=tags&fields[tags]=color";
+            var route = $"/blogPosts/{post.StringId}?include=labels&fields[labels]=color";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -472,25 +401,25 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(article.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(article.Caption);
-            responseDocument.SingleData.Relationships["tags"].ManyData.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["tags"].ManyData[0].Id.Should().Be(article.ArticleTags.ElementAt(0).Tag.StringId);
-            responseDocument.SingleData.Relationships["tags"].Links.Self.Should().NotBeNull();
-            responseDocument.SingleData.Relationships["tags"].Links.Related.Should().NotBeNull();
+            responseDocument.SingleData.Id.Should().Be(post.StringId);
+            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.SingleData.Relationships["labels"].ManyData.Should().HaveCount(1);
+            responseDocument.SingleData.Relationships["labels"].ManyData[0].Id.Should().Be(post.BlogPostLabels.ElementAt(0).Label.StringId);
+            responseDocument.SingleData.Relationships["labels"].Links.Self.Should().NotBeNull();
+            responseDocument.SingleData.Relationships["labels"].Links.Related.Should().NotBeNull();
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Attributes.Should().HaveCount(1);
-            responseDocument.Included[0].Attributes["color"].Should().Be(article.ArticleTags.Single().Tag.Color.ToString("G"));
+            responseDocument.Included[0].Attributes["color"].Should().Be(post.BlogPostLabels.Single().Label.Color.ToString("G"));
             responseDocument.Included[0].Relationships.Should().BeNull();
 
-            var articleCaptured = (Article) store.Resources.Should().ContainSingle(x => x is Article).And.Subject.Single();
-            articleCaptured.Id.Should().Be(article.Id);
-            articleCaptured.Caption.Should().Be(article.Caption);
+            var postCaptured = (BlogPost) store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            postCaptured.Id.Should().Be(post.Id);
+            postCaptured.Caption.Should().Be(post.Caption);
 
-            articleCaptured.ArticleTags.Should().HaveCount(1);
-            articleCaptured.ArticleTags.Single().Tag.Color.Should().Be(article.ArticleTags.Single().Tag.Color);
-            articleCaptured.ArticleTags.Single().Tag.Name.Should().BeNull();
+            postCaptured.BlogPostLabels.Should().HaveCount(1);
+            postCaptured.BlogPostLabels.Single().Label.Color.Should().Be(post.BlogPostLabels.Single().Label.Color);
+            postCaptured.BlogPostLabels.Single().Label.Name.Should().BeNull();
         }
 
         [Fact]
@@ -500,34 +429,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var blog = new LegacyBlog
-            {
-                Title = "Technology",
-                CompanyName = "Contoso",
-                Owner = new Author
-                {
-                    FirstName = "Jason",
-                    LastName = "Smith",
-                    DateOfBirth = 21.November(1999),
-                    Articles = new List<Article>
-                    {
-                        new Article
-                        {
-                            Caption = "One",
-                            Url = "www.one.com"
-                        }
-                    }
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Owner = _fakers.WebAccount.Generate();
+            blog.Owner.Posts = _fakers.BlogPost.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/legacyBlogs/{blog.StringId}?include=owner.articles&fields[legacyBlogs]=title&fields[authors]=firstName,lastName&fields[articles]=caption";
+            var route = $"/blogs/{blog.StringId}?include=owner.posts&fields[blogs]=title&fields[webAccounts]=userName,displayName&fields[blogPosts]=caption";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -545,27 +457,27 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
 
             responseDocument.Included[0].Id.Should().Be(blog.Owner.StringId);
             responseDocument.Included[0].Attributes.Should().HaveCount(2);
-            responseDocument.Included[0].Attributes["firstName"].Should().Be(blog.Owner.FirstName);
-            responseDocument.Included[0].Attributes["lastName"].Should().Be(blog.Owner.LastName);
+            responseDocument.Included[0].Attributes["userName"].Should().Be(blog.Owner.UserName);
+            responseDocument.Included[0].Attributes["displayName"].Should().Be(blog.Owner.DisplayName);
             responseDocument.Included[0].Relationships.Should().BeNull();
 
-            responseDocument.Included[1].Id.Should().Be(blog.Owner.Articles[0].StringId);
+            responseDocument.Included[1].Id.Should().Be(blog.Owner.Posts[0].StringId);
             responseDocument.Included[1].Attributes.Should().HaveCount(1);
-            responseDocument.Included[1].Attributes["caption"].Should().Be(blog.Owner.Articles[0].Caption);
+            responseDocument.Included[1].Attributes["caption"].Should().Be(blog.Owner.Posts[0].Caption);
             responseDocument.Included[1].Relationships.Should().BeNull();
 
-            var blogCaptured = (LegacyBlog) store.Resources.Should().ContainSingle(x => x is LegacyBlog).And.Subject.Single();
+            var blogCaptured = (Blog) store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
             blogCaptured.Title.Should().Be(blog.Title);
-            blogCaptured.CompanyName.Should().BeNull();
+            blogCaptured.PlatformName.Should().BeNull();
 
-            blogCaptured.Owner.FirstName.Should().Be(blog.Owner.FirstName);
-            blogCaptured.Owner.LastName.Should().Be(blog.Owner.LastName);
+            blogCaptured.Owner.UserName.Should().Be(blog.Owner.UserName);
+            blogCaptured.Owner.DisplayName.Should().Be(blog.Owner.DisplayName);
             blogCaptured.Owner.DateOfBirth.Should().BeNull();
 
-            blogCaptured.Owner.Articles.Should().HaveCount(1);
-            blogCaptured.Owner.Articles[0].Caption.Should().Be(blog.Owner.Articles[0].Caption);
-            blogCaptured.Owner.Articles[0].Url.Should().BeNull();
+            blogCaptured.Owner.Posts.Should().HaveCount(1);
+            blogCaptured.Owner.Posts[0].Caption.Should().Be(blog.Owner.Posts[0].Caption);
+            blogCaptured.Owner.Posts[0].Url.Should().BeNull();
         }
 
         [Fact]
@@ -575,34 +487,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var blog = new LegacyBlog
-            {
-                Title = "Technology",
-                CompanyName = "Contoso",
-                Owner = new Author
-                {
-                    FirstName = "Jason",
-                    LastName = "Smith",
-                    DateOfBirth = 21.November(1999),
-                    Articles = new List<Article>
-                    {
-                        new Article
-                        {
-                            Caption = "One",
-                            Url = "www.one.com"
-                        }
-                    }
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Owner = _fakers.WebAccount.Generate();
+            blog.Owner.Posts = _fakers.BlogPost.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/legacyBlogs/{blog.StringId}?include=owner.articles&fields[legacyBlogs]=title,owner";
+            var route = $"/blogs/{blog.StringId}?include=owner.posts&fields[blogs]=title,owner";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -622,25 +517,25 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.Included.Should().HaveCount(2);
 
             responseDocument.Included[0].Id.Should().Be(blog.Owner.StringId);
-            responseDocument.Included[0].Attributes["firstName"].Should().Be(blog.Owner.FirstName);
-            responseDocument.Included[0].Attributes["lastName"].Should().Be(blog.Owner.LastName);
+            responseDocument.Included[0].Attributes["userName"].Should().Be(blog.Owner.UserName);
+            responseDocument.Included[0].Attributes["displayName"].Should().Be(blog.Owner.DisplayName);
             responseDocument.Included[0].Attributes["dateOfBirth"].Should().BeCloseTo(blog.Owner.DateOfBirth);
-            responseDocument.Included[0].Relationships["articles"].ManyData.Should().HaveCount(1);
-            responseDocument.Included[0].Relationships["articles"].ManyData[0].Id.Should().Be(blog.Owner.Articles[0].StringId);
-            responseDocument.Included[0].Relationships["articles"].Links.Self.Should().NotBeNull();
-            responseDocument.Included[0].Relationships["articles"].Links.Related.Should().NotBeNull();
+            responseDocument.Included[0].Relationships["posts"].ManyData.Should().HaveCount(1);
+            responseDocument.Included[0].Relationships["posts"].ManyData[0].Id.Should().Be(blog.Owner.Posts[0].StringId);
+            responseDocument.Included[0].Relationships["posts"].Links.Self.Should().NotBeNull();
+            responseDocument.Included[0].Relationships["posts"].Links.Related.Should().NotBeNull();
 
-            responseDocument.Included[1].Id.Should().Be(blog.Owner.Articles[0].StringId);
-            responseDocument.Included[1].Attributes["caption"].Should().Be(blog.Owner.Articles[0].Caption);
-            responseDocument.Included[1].Attributes["url"].Should().Be(blog.Owner.Articles[0].Url);
-            responseDocument.Included[1].Relationships["tags"].Data.Should().BeNull();
-            responseDocument.Included[1].Relationships["tags"].Links.Self.Should().NotBeNull();
-            responseDocument.Included[1].Relationships["tags"].Links.Related.Should().NotBeNull();
+            responseDocument.Included[1].Id.Should().Be(blog.Owner.Posts[0].StringId);
+            responseDocument.Included[1].Attributes["caption"].Should().Be(blog.Owner.Posts[0].Caption);
+            responseDocument.Included[1].Attributes["url"].Should().Be(blog.Owner.Posts[0].Url);
+            responseDocument.Included[1].Relationships["labels"].Data.Should().BeNull();
+            responseDocument.Included[1].Relationships["labels"].Links.Self.Should().NotBeNull();
+            responseDocument.Included[1].Relationships["labels"].Links.Related.Should().NotBeNull();
 
-            var blogCaptured = (LegacyBlog) store.Resources.Should().ContainSingle(x => x is LegacyBlog).And.Subject.Single();
+            var blogCaptured = (Blog) store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
             blogCaptured.Title.Should().Be(blog.Title);
-            blogCaptured.CompanyName.Should().BeNull();
+            blogCaptured.PlatformName.Should().BeNull();
         }
 
         [Fact]
@@ -650,21 +545,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var article = new Article
-            {
-                Caption = "One",
-                Url = "https://one.domain.com"
-            };
+            var post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.Add(article);
-
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?fields[articles]=id,caption";
+            var route = "/blogPosts?fields[blogPosts]=id,caption";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -673,22 +563,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(article.StringId);
+            responseDocument.ManyData[0].Id.Should().Be(post.StringId);
             responseDocument.ManyData[0].Attributes.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["caption"].Should().Be(article.Caption);
+            responseDocument.ManyData[0].Attributes["caption"].Should().Be(post.Caption);
             responseDocument.ManyData[0].Relationships.Should().BeNull();
 
-            var articleCaptured = (Article) store.Resources.Should().ContainSingle(x => x is Article).And.Subject.Single();
-            articleCaptured.Id.Should().Be(article.Id);
-            articleCaptured.Caption.Should().Be(article.Caption);
-            articleCaptured.Url.Should().BeNull();
+            var postCaptured = (BlogPost) store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            postCaptured.Id.Should().Be(post.Id);
+            postCaptured.Caption.Should().Be(post.Caption);
+            postCaptured.Url.Should().BeNull();
         }
 
         [Fact]
         public async Task Cannot_select_on_unknown_resource_type()
         {
             // Arrange
-            var route = "/api/v1/people?fields[doesNotExist]=id";
+            var route = "/webAccounts?fields[doesNotExist]=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -707,9 +597,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
         public async Task Cannot_select_attribute_with_blocked_capability()
         {
             // Arrange
-            var user = _fakers.User.Generate();
+            var account = _fakers.WebAccount.Generate();
 
-            var route = $"/api/v1/users/{user.Id}?fields[users]=password";
+            var route = $"/webAccounts/{account.Id}?fields[webAccounts]=password";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -721,7 +611,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors[0].Title.Should().Be("Retrieving the requested attribute is not allowed.");
             responseDocument.Errors[0].Detail.Should().Be("Retrieving the attribute 'password' is not allowed.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("fields[users]");
+            responseDocument.Errors[0].Source.Parameter.Should().Be("fields[webAccounts]");
         }
 
         [Fact]
@@ -731,19 +621,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var todoItem = new TodoItem
-            {
-                Description = "Pending work..."
-            };
+            var blog = _fakers.Blog.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.TodoItems.Add(todoItem);
-
+                dbContext.Blogs.Add(blog);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/todoItems/{todoItem.StringId}?fields[todoItems]=calculatedValue";
+            var route = $"/blogs/{blog.StringId}?fields[blogs]=showAdvertisements";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -752,14 +638,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(todoItem.StringId);
+            responseDocument.SingleData.Id.Should().Be(blog.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["calculatedValue"].Should().Be(todoItem.CalculatedValue);
+            responseDocument.SingleData.Attributes["showAdvertisements"].Should().Be(blog.ShowAdvertisements);
             responseDocument.SingleData.Relationships.Should().BeNull();
 
-            var todoItemCaptured = (TodoItem) store.Resources.Should().ContainSingle(x => x is TodoItem).And.Subject.Single();
-            todoItemCaptured.CalculatedValue.Should().Be(todoItem.CalculatedValue);
-            todoItemCaptured.Description.Should().Be(todoItem.Description);
+            var blogCaptured = (Blog) store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
+            blogCaptured.ShowAdvertisements.Should().Be(blogCaptured.ShowAdvertisements);
+            blogCaptured.Title.Should().Be(blog.Title);
         }
 
         [Fact]
@@ -769,24 +655,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var article = new Article
-            {
-                Caption = "One",
-                Url = "https://one.domain.com",
-                Author = new Author
-                {
-                    LastName = "Smith"
-                }
-            };
+            var post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}?fields[articles]=url&fields[articles]=caption,url&fields[articles]=caption,author";
+            var route = $"/blogPosts/{post.StringId}?fields[blogPosts]=url&fields[blogPosts]=caption,url&fields[blogPosts]=caption,author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -795,19 +672,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(article.StringId);
+            responseDocument.SingleData.Id.Should().Be(post.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(2);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(article.Caption);
-            responseDocument.SingleData.Attributes["url"].Should().Be(article.Url);
+            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.SingleData.Attributes["url"].Should().Be(post.Url);
             responseDocument.SingleData.Relationships.Should().HaveCount(1);
             responseDocument.SingleData.Relationships["author"].Data.Should().BeNull();
             responseDocument.SingleData.Relationships["author"].Links.Self.Should().NotBeNull();
             responseDocument.SingleData.Relationships["author"].Links.Related.Should().NotBeNull();
 
-            var articleCaptured = (Article) store.Resources.Should().ContainSingle(x => x is Article).And.Subject.Single();
-            articleCaptured.Id.Should().Be(article.Id);
-            articleCaptured.Caption.Should().Be(article.Caption);
-            articleCaptured.Url.Should().Be(articleCaptured.Url);
+            var postCaptured = (BlogPost) store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            postCaptured.Id.Should().Be(post.Id);
+            postCaptured.Caption.Should().Be(post.Caption);
+            postCaptured.Url.Should().Be(postCaptured.Url);
         }
     }
 }

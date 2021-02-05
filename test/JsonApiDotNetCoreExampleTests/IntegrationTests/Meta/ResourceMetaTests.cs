@@ -26,9 +26,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             // Arrange
             var todoItems = new[]
             {
-                new TodoItem {Id = 1, Description = "Important: Pay the bills"},
-                new TodoItem {Id = 2, Description = "Plan my birthday party"},
-                new TodoItem {Id = 3, Description = "Important: Call mom"}
+                new TodoItem {Description = "Important: Pay the bills"},
+                new TodoItem {Description = "Plan my birthday party"},
+                new TodoItem {Description = "Important: Call mom"}
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             {
                 TodoItems = new HashSet<TodoItem>
                 {
-                    new TodoItem {Id = 1, Description = "Important: Pay the bills"}
+                    new TodoItem {Description = "Important: Pay the bills"}
                 }
             };
 

@@ -3,23 +3,22 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 {
-    public sealed class RangeValidationTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
+    public sealed class RangeValidationTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
-        private readonly ExampleFakers _fakers = new ExampleFakers();
+        private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
+        private readonly QueryStringFakers _fakers = new QueryStringFakers();
 
         private const int _defaultPageSize = 5;
 
-        public RangeValidationTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
+        public RangeValidationTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -33,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_use_negative_page_number()
         {
             // Arrange
-            var route = "/api/v1/todoItems?page[number]=-1";
+            var route = "/blogs?page[number]=-1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -52,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_use_zero_page_number()
         {
             // Arrange
-            var route = "/api/v1/todoItems?page[number]=0";
+            var route = "/blogs?page[number]=0";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -71,7 +70,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_use_positive_page_number()
         {
             // Arrange
-            var route = "/api/v1/todoItems?page[number]=20";
+            var route = "/blogs?page[number]=20";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -84,17 +83,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Returns_empty_set_of_resources_when_page_number_is_too_high()
         {
             // Arrange
-            var todoItems = _fakers.TodoItem.Generate(3);
+            var blogs = _fakers.Blog.Generate(3);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<TodoItem>();
-                dbContext.TodoItems.AddRange(todoItems);
+                await dbContext.ClearTableAsync<Blog>();
+                dbContext.Blogs.AddRange(blogs);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/todoItems?sort=id&page[size]=3&page[number]=2";
+            var route = "/blogs?sort=id&page[size]=3&page[number]=2";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -109,7 +108,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_use_negative_page_size()
         {
             // Arrange
-            var route = "/api/v1/todoItems?page[size]=-1";
+            var route = "/blogs?page[size]=-1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -128,7 +127,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_use_zero_page_size()
         {
             // Arrange
-            var route = "/api/v1/todoItems?page[size]=0";
+            var route = "/blogs?page[size]=0";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -141,7 +140,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_use_positive_page_size()
         {
             // Arrange
-            var route = "/api/v1/todoItems?page[size]=50";
+            var route = "/blogs?page[size]=50";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);

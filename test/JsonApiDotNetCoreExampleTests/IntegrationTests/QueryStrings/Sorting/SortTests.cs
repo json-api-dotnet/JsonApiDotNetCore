@@ -5,20 +5,19 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
 {
-    public sealed class SortTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
+    public sealed class SortTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
-        private readonly ExampleFakers _fakers = new ExampleFakers();
+        private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
+        private readonly QueryStringFakers _fakers = new QueryStringFakers();
 
-        public SortTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
+        public SortTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
         {
             _testContext = testContext;
         }
@@ -27,22 +26,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_in_primary_resources()
         {
             // Arrange
-            var articles = new List<Article>
-            {
-                new Article {Caption = "B"},
-                new Article {Caption = "A"},
-                new Article {Caption = "C"}
-            };
+            var posts = _fakers.BlogPost.Generate(3);
+            posts[0].Caption = "B";
+            posts[1].Caption = "A";
+            posts[2].Caption = "C";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.AddRange(articles);
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(posts);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?sort=caption";
+            var route = "/blogPosts?sort=caption";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -51,28 +48,24 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(3);
-            responseDocument.ManyData[0].Id.Should().Be(articles[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(articles[0].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(articles[2].StringId);
+            responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
+            responseDocument.ManyData[1].Id.Should().Be(posts[0].StringId);
+            responseDocument.ManyData[2].Id.Should().Be(posts[2].StringId);
         }
 
         [Fact]
         public async Task Cannot_sort_in_single_primary_resource()
         {
             // Arrange
-            var article = new Article
-            {
-                Caption = "X"
-            };
+            var post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}?sort=id";
+            var route = $"/blogPosts/{post.StringId}?sort=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -91,24 +84,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_in_secondary_resources()
         {
             // Arrange
-            var blog = new LegacyBlog
-            {
-                Articles = new List<Article>
-                {
-                    new Article {Caption = "B"},
-                    new Article {Caption = "A"},
-                    new Article {Caption = "C"}
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Posts = _fakers.BlogPost.Generate(3);
+            blog.Posts[0].Caption = "B";
+            blog.Posts[1].Caption = "A";
+            blog.Posts[2].Caption = "C";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/legacyBlogs/{blog.StringId}/articles?sort=caption";
+            var route = $"/blogs/{blog.StringId}/posts?sort=caption";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -117,28 +105,24 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(3);
-            responseDocument.ManyData[0].Id.Should().Be(blog.Articles[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(blog.Articles[0].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(blog.Articles[2].StringId);
+            responseDocument.ManyData[0].Id.Should().Be(blog.Posts[1].StringId);
+            responseDocument.ManyData[1].Id.Should().Be(blog.Posts[0].StringId);
+            responseDocument.ManyData[2].Id.Should().Be(blog.Posts[2].StringId);
         }
 
         [Fact]
         public async Task Cannot_sort_in_single_secondary_resource()
         {
             // Arrange
-            var article = new Article
-            {
-                Caption = "X"
-            };
+            var post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}/author?sort=id";
+            var route = $"/blogPosts/{post.StringId}/author?sort=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -157,43 +141,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_on_HasMany_relationship()
         {
             // Arrange
-            var blogs = new List<LegacyBlog>
-            {
-                new LegacyBlog
-                {
-                    Articles = new List<Article>
-                    {
-                        new Article
-                        {
-                            Caption = "A"
-                        },
-                        new Article
-                        {
-                            Caption = "B"
-                        }
-                    }
-                },
-                new LegacyBlog
-                {
-                    Articles = new List<Article>
-                    {
-                        new Article
-                        {
-                            Caption = "C"
-                        }
-                    }
-                }
-            };
+            var blogs = _fakers.Blog.Generate(2);
+            blogs[0].Posts = _fakers.BlogPost.Generate(2);
+            blogs[1].Posts = _fakers.BlogPost.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<LegacyBlog>();
+                await dbContext.ClearTableAsync<Blog>();
                 dbContext.Blogs.AddRange(blogs);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/legacyBlogs?sort=count(articles)";
+            var route = "/blogs?sort=count(posts)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -210,54 +169,35 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_on_HasManyThrough_relationship()
         {
             // Arrange
-            var articles = new List<Article>
+            var posts = _fakers.BlogPost.Generate(2);
+            posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                new Article
+                new BlogPostLabel
                 {
-                    Caption = "First",
-                    ArticleTags = new HashSet<ArticleTag>
-                    {
-                        new ArticleTag
-                        {
-                            Tag = new Tag
-                            {
-                                Name = "A"
-                            }
-                        }
-                    }
+                    Label = _fakers.Label.Generate()
+                }
+            };
+            posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
+            {
+                new BlogPostLabel
+                {
+                    Label = _fakers.Label.Generate()
                 },
-                new Article
+                new BlogPostLabel
                 {
-                    Caption = "Second",
-                    ArticleTags = new HashSet<ArticleTag>
-                    {
-                        new ArticleTag
-                        {
-                            Tag = new Tag
-                            {
-                                Name = "B"
-                            }
-                        },
-                        new ArticleTag
-                        {
-                            Tag = new Tag
-                            {
-                                Name = "C"
-                            }
-                        }
-                    }
+                    Label = _fakers.Label.Generate()
                 }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.AddRange(articles);
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(posts);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?sort=-count(tags)";
+            var route = "/blogPosts?sort=-count(labels)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -266,30 +206,27 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(articles[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(articles[0].StringId);
+            responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
+            responseDocument.ManyData[1].Id.Should().Be(posts[0].StringId);
         }
 
         [Fact]
         public async Task Can_sort_in_scope_of_HasMany_relationship()
         {
             // Arrange
-            var author = _fakers.Author.Generate();
-            author.Articles = new List<Article>
-            {
-                new Article {Caption = "B"},
-                new Article {Caption = "A"},
-                new Article {Caption = "C"}
-            };
+            var account = _fakers.WebAccount.Generate();
+            account.Posts = _fakers.BlogPost.Generate(3);
+            account.Posts[0].Caption = "B";
+            account.Posts[1].Caption = "A";
+            account.Posts[2].Caption = "C";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AuthorDifferentDbContextName.Add(author);
-
+                dbContext.Accounts.Add(account);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/authors/{author.StringId}?include=articles&sort[articles]=caption";
+            var route = $"/webAccounts/{account.StringId}?include=posts&sort[posts]=caption";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -298,40 +235,32 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(author.StringId);
+            responseDocument.SingleData.Id.Should().Be(account.StringId);
 
             responseDocument.Included.Should().HaveCount(3);
-            responseDocument.Included[0].Id.Should().Be(author.Articles[1].StringId);
-            responseDocument.Included[1].Id.Should().Be(author.Articles[0].StringId);
-            responseDocument.Included[2].Id.Should().Be(author.Articles[2].StringId);
+            responseDocument.Included[0].Id.Should().Be(account.Posts[1].StringId);
+            responseDocument.Included[1].Id.Should().Be(account.Posts[0].StringId);
+            responseDocument.Included[2].Id.Should().Be(account.Posts[2].StringId);
         }
 
         [Fact]
         public async Task Can_sort_in_scope_of_HasMany_relationship_on_secondary_resource()
         {
             // Arrange
-            var blog = new LegacyBlog
-            {
-                Owner = new Author
-                {
-                    LastName = "Smith",
-                    Articles = new List<Article>
-                    {
-                        new Article {Caption = "B"},
-                        new Article {Caption = "A"},
-                        new Article {Caption = "C"}
-                    }
-                }
-            };
+            var blog = _fakers.Blog.Generate();
+            blog.Owner = _fakers.WebAccount.Generate();
+            blog.Owner.Posts = _fakers.BlogPost.Generate(3);
+            blog.Owner.Posts[0].Caption = "B";
+            blog.Owner.Posts[1].Caption = "A";
+            blog.Owner.Posts[2].Caption = "C";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/legacyBlogs/{blog.StringId}/owner?include=articles&sort[articles]=caption";
+            var route = $"/blogs/{blog.StringId}/owner?include=posts&sort[posts]=caption";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -343,49 +272,43 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             responseDocument.SingleData.Id.Should().Be(blog.Owner.StringId);
 
             responseDocument.Included.Should().HaveCount(3);
-            responseDocument.Included[0].Id.Should().Be(blog.Owner.Articles[1].StringId);
-            responseDocument.Included[1].Id.Should().Be(blog.Owner.Articles[0].StringId);
-            responseDocument.Included[2].Id.Should().Be(blog.Owner.Articles[2].StringId);
+            responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);
+            responseDocument.Included[1].Id.Should().Be(blog.Owner.Posts[0].StringId);
+            responseDocument.Included[2].Id.Should().Be(blog.Owner.Posts[2].StringId);
         }
 
         [Fact]
         public async Task Can_sort_in_scope_of_HasManyThrough_relationship()
         {
             // Arrange
-            var article = _fakers.Article.Generate();
-            article.ArticleTags = new HashSet<ArticleTag>
+            var post = _fakers.BlogPost.Generate();
+            post.BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                new ArticleTag
+                new BlogPostLabel
                 {
-                    Tag = new Tag
-                    {
-                        Name = "B"
-                    }
+                    Label = _fakers.Label.Generate()
                 },
-                new ArticleTag
+                new BlogPostLabel
                 {
-                    Tag = new Tag
-                    {
-                        Name = "A"
-                    }
+                    Label = _fakers.Label.Generate()
                 },
-                new ArticleTag
+                new BlogPostLabel
                 {
-                    Tag = new Tag
-                    {
-                        Name = "C"
-                    }
+                    Label = _fakers.Label.Generate()
                 }
             };
 
+            post.BlogPostLabels.ElementAt(0).Label.Name = "B";
+            post.BlogPostLabels.ElementAt(1).Label.Name = "A";
+            post.BlogPostLabels.ElementAt(2).Label.Name = "C";
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Articles.Add(article);
-
+                dbContext.Posts.Add(post);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/articles/{article.StringId}?include=tags&sort[tags]=name";
+            var route = $"/blogPosts/{post.StringId}?include=labels&sort[labels]=name";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -394,75 +317,45 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(article.StringId);
+            responseDocument.SingleData.Id.Should().Be(post.StringId);
 
             responseDocument.Included.Should().HaveCount(3);
-            responseDocument.Included[0].Id.Should().Be(article.ArticleTags.Skip(1).First().Tag.StringId);
-            responseDocument.Included[1].Id.Should().Be(article.ArticleTags.Skip(0).First().Tag.StringId);
-            responseDocument.Included[2].Id.Should().Be(article.ArticleTags.Skip(2).First().Tag.StringId);
+            responseDocument.Included[0].Id.Should().Be(post.BlogPostLabels.Skip(1).First().Label.StringId);
+            responseDocument.Included[1].Id.Should().Be(post.BlogPostLabels.Skip(0).First().Label.StringId);
+            responseDocument.Included[2].Id.Should().Be(post.BlogPostLabels.Skip(2).First().Label.StringId);
         }
 
         [Fact]
         public async Task Can_sort_on_multiple_fields_in_multiple_scopes()
         {
             // Arrange
-            var blogs = new List<LegacyBlog>
-            {
-                new LegacyBlog
-                {
-                    Title = "Z",
-                    Articles = new List<Article>
-                    {
-                        new Article
-                        {
-                            Caption = "B",
-                            Revisions = new List<Revision>
-                            {
-                                new Revision
-                                {
-                                    PublishTime = 1.January(2015)
-                                },
-                                new Revision
-                                {
-                                    PublishTime = 1.January(2014)
-                                },
-                                new Revision
-                                {
-                                    PublishTime = 1.January(2016)
-                                }
-                            }
-                        },
-                        new Article
-                        {
-                            Caption = "A",
-                            Url = "www.some2.com"
-                        },
-                        new Article
-                        {
-                            Caption = "A",
-                            Url = "www.some1.com"
-                        },
-                        new Article
-                        {
-                            Caption = "C"
-                        }
-                    }
-                },
-                new LegacyBlog
-                {
-                    Title = "Y"
-                }
-            };
+            var blogs = _fakers.Blog.Generate(2);
+            blogs[0].Title = "Z";
+            blogs[1].Title = "Y";
+
+            blogs[0].Posts = _fakers.BlogPost.Generate(4);
+            blogs[0].Posts[0].Caption = "B";
+            blogs[0].Posts[1].Caption = "A";
+            blogs[0].Posts[2].Caption = "A";
+            blogs[0].Posts[3].Caption = "C";
+            blogs[0].Posts[0].Url = "";
+            blogs[0].Posts[1].Url = "www.some2.com";
+            blogs[0].Posts[2].Url = "www.some1.com";
+            blogs[0].Posts[3].Url = "";
+
+            blogs[0].Posts[0].Comments = _fakers.Comment.Generate(3).ToHashSet();
+            blogs[0].Posts[0].Comments.ElementAt(0).CreatedAt = 1.January(2015);
+            blogs[0].Posts[0].Comments.ElementAt(1).CreatedAt = 1.January(2014);
+            blogs[0].Posts[0].Comments.ElementAt(2).CreatedAt = 1.January(2016);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<LegacyBlog>();
+                await dbContext.ClearTableAsync<Blog>();
                 dbContext.Blogs.AddRange(blogs);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/legacyBlogs?include=articles.revisions&sort=title&sort[articles]=caption,url&sort[articles.revisions]=-publishTime";
+            var route = "/blogs?include=posts.comments&sort=title&sort[posts]=caption,url&sort[posts.comments]=-createdAt";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -476,61 +369,47 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
 
             responseDocument.Included.Should().HaveCount(7);
 
-            responseDocument.Included[0].Type.Should().Be("articles");
-            responseDocument.Included[0].Id.Should().Be(blogs[0].Articles[2].StringId);
+            responseDocument.Included[0].Type.Should().Be("blogPosts");
+            responseDocument.Included[0].Id.Should().Be(blogs[0].Posts[2].StringId);
 
-            responseDocument.Included[1].Type.Should().Be("articles");
-            responseDocument.Included[1].Id.Should().Be(blogs[0].Articles[1].StringId);
+            responseDocument.Included[1].Type.Should().Be("blogPosts");
+            responseDocument.Included[1].Id.Should().Be(blogs[0].Posts[1].StringId);
 
-            responseDocument.Included[2].Type.Should().Be("articles");
-            responseDocument.Included[2].Id.Should().Be(blogs[0].Articles[0].StringId);
+            responseDocument.Included[2].Type.Should().Be("blogPosts");
+            responseDocument.Included[2].Id.Should().Be(blogs[0].Posts[0].StringId);
 
-            responseDocument.Included[3].Type.Should().Be("revisions");
-            responseDocument.Included[3].Id.Should().Be(blogs[0].Articles[0].Revisions.Skip(2).First().StringId);
+            responseDocument.Included[3].Type.Should().Be("comments");
+            responseDocument.Included[3].Id.Should().Be(blogs[0].Posts[0].Comments.Skip(2).First().StringId);
 
-            responseDocument.Included[4].Type.Should().Be("revisions");
-            responseDocument.Included[4].Id.Should().Be(blogs[0].Articles[0].Revisions.Skip(0).First().StringId);
+            responseDocument.Included[4].Type.Should().Be("comments");
+            responseDocument.Included[4].Id.Should().Be(blogs[0].Posts[0].Comments.Skip(0).First().StringId);
 
-            responseDocument.Included[5].Type.Should().Be("revisions");
-            responseDocument.Included[5].Id.Should().Be(blogs[0].Articles[0].Revisions.Skip(1).First().StringId);
-            
-            responseDocument.Included[6].Type.Should().Be("articles");
-            responseDocument.Included[6].Id.Should().Be(blogs[0].Articles[3].StringId);
+            responseDocument.Included[5].Type.Should().Be("comments");
+            responseDocument.Included[5].Id.Should().Be(blogs[0].Posts[0].Comments.Skip(1).First().StringId);
+
+            responseDocument.Included[6].Type.Should().Be("blogPosts");
+            responseDocument.Included[6].Id.Should().Be(blogs[0].Posts[3].StringId);
         }
 
         [Fact]
         public async Task Can_sort_on_HasOne_relationship()
         {
             // Arrange
-            var articles = new List<Article>
-            {
-                new Article
-                {
-                    Caption = "X",
-                    Author = new Author
-                    {
-                        LastName = "Conner"
-                    }
-                },
-                new Article
-                {
-                    Caption = "X",
-                    Author = new Author
-                    {
-                        LastName = "Smith"
-                    }
-                }
-            };
+            var posts = _fakers.BlogPost.Generate(2);
+            posts[0].Author = _fakers.WebAccount.Generate();
+            posts[1].Author = _fakers.WebAccount.Generate();
+
+            posts[0].Author.DisplayName = "Conner";
+            posts[1].Author.DisplayName = "Smith";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Article>();
-                dbContext.Articles.AddRange(articles);
-
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(posts);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles?sort=-author.lastName";
+            var route = "/blogPosts?sort=-author.displayName";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -539,64 +418,38 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(articles[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(articles[0].StringId);
+            responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
+            responseDocument.ManyData[1].Id.Should().Be(posts[0].StringId);
         }
 
         [Fact]
         public async Task Can_sort_in_multiple_scopes()
         {
             // Arrange
-            var blogs = new List<LegacyBlog>
-            {
-                new LegacyBlog
-                {
-                    Title = "Cooking"
-                },
-                new LegacyBlog
-                {
-                    Title = "Technology",
-                    Owner = new Author
-                    {
-                        LastName = "Smith",
-                        Articles = new List<Article>
-                        {
-                            new Article
-                            {
-                                Caption = "One"
-                            },
-                            new Article
-                            {
-                                Caption = "Two",
-                                Revisions = new List<Revision>
-                                {
-                                    new Revision
-                                    {
-                                        PublishTime = 1.January(2000)
-                                    },
-                                    new Revision
-                                    {
-                                        PublishTime = 10.January(2010)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+            var blogs = _fakers.Blog.Generate(2);
+            blogs[0].Title = "Cooking";
+            blogs[1].Title = "Technology";
+
+            blogs[1].Owner = _fakers.WebAccount.Generate();
+            blogs[1].Owner.Posts = _fakers.BlogPost.Generate(2);
+            blogs[1].Owner.Posts[0].Caption = "One";
+            blogs[1].Owner.Posts[1].Caption = "Two";
+
+            blogs[1].Owner.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
+            blogs[1].Owner.Posts[1].Comments.ElementAt(0).CreatedAt = 1.January(2000);
+            blogs[1].Owner.Posts[1].Comments.ElementAt(0).CreatedAt = 10.January(2010);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<LegacyBlog>();
+                await dbContext.ClearTableAsync<Blog>();
                 dbContext.Blogs.AddRange(blogs);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/legacyBlogs?include=owner.articles.revisions&" +
+            var route = "/blogs?include=owner.posts.comments&" +
                         "sort=-title&" +
-                        "sort[owner.articles]=-caption&" +
-                        "sort[owner.articles.revisions]=-publishTime";
+                        "sort[owner.posts]=-caption&" +
+                        "sort[owner.posts.comments]=-createdAt";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -610,28 +463,28 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
 
             responseDocument.Included.Should().HaveCount(5);
             responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
-            responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Articles[1].StringId);
-            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Articles[1].Revisions.Skip(1).First().StringId);
-            responseDocument.Included[3].Id.Should().Be(blogs[1].Owner.Articles[1].Revisions.Skip(0).First().StringId);
-            responseDocument.Included[4].Id.Should().Be(blogs[1].Owner.Articles[0].StringId);
+            responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
+            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.Skip(1).First().StringId);
+            responseDocument.Included[3].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.Skip(0).First().StringId);
+            responseDocument.Included[4].Id.Should().Be(blogs[1].Owner.Posts[0].StringId);
         }
 
         [Fact]
         public async Task Cannot_sort_in_unknown_scope()
         {
             // Arrange
-            var route = "/api/v1/people?sort[doesNotExist]=id";
+            var route = "/webAccounts?sort[doesNotExist]=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
-            
+
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors[0].Title.Should().Be("The specified sort is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'people'.");
+            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
             responseDocument.Errors[0].Source.Parameter.Should().Be("sort[doesNotExist]");
         }
 
@@ -639,37 +492,37 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Cannot_sort_in_unknown_nested_scope()
         {
             // Arrange
-            var route = "/api/v1/people?sort[todoItems.doesNotExist]=id";
+            var route = "/webAccounts?sort[posts.doesNotExist]=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
-            
+
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors[0].Title.Should().Be("The specified sort is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' in 'todoItems.doesNotExist' does not exist on resource 'todoItems'.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("sort[todoItems.doesNotExist]");
+            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
+            responseDocument.Errors[0].Source.Parameter.Should().Be("sort[posts.doesNotExist]");
         }
 
         [Fact]
         public async Task Cannot_sort_on_attribute_with_blocked_capability()
         {
             // Arrange
-            var route = "/api/v1/todoItems?sort=achievedDate";
+            var route = "/webAccounts?sort=dateOfBirth";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
-            
+
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors[0].Title.Should().Be("Sorting on the requested attribute is not allowed.");
-            responseDocument.Errors[0].Detail.Should().Be("Sorting on attribute 'achievedDate' is not allowed.");
+            responseDocument.Errors[0].Detail.Should().Be("Sorting on attribute 'dateOfBirth' is not allowed.");
             responseDocument.Errors[0].Source.Parameter.Should().Be("sort");
         }
 
@@ -677,22 +530,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_descending_by_ID()
         {
             // Arrange
-            var persons = new List<Person>
-            {
-                new Person {Id = 3, LastName = "B"},
-                new Person {Id = 2, LastName = "A"},
-                new Person {Id = 1, LastName = "A"}
-            };
+            var accounts = _fakers.WebAccount.Generate(3);
+            accounts[0].Id = 3000;
+            accounts[1].Id = 2000;
+            accounts[2].Id = 1000;
+
+            accounts[0].DisplayName = "B";
+            accounts[1].DisplayName = "A";
+            accounts[2].DisplayName = "A";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Person>();
-                dbContext.People.AddRange(persons);
-
+                await dbContext.ClearTableAsync<WebAccount>();
+                dbContext.Accounts.AddRange(accounts);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/people?sort=lastName,-id";
+            var route = "/webAccounts?sort=displayName,-id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -701,32 +555,30 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(3);
-            responseDocument.ManyData[0].Id.Should().Be(persons[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(persons[2].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(persons[0].StringId);
+            responseDocument.ManyData[0].Id.Should().Be(accounts[1].StringId);
+            responseDocument.ManyData[1].Id.Should().Be(accounts[2].StringId);
+            responseDocument.ManyData[2].Id.Should().Be(accounts[0].StringId);
         }
 
         [Fact]
         public async Task Sorts_by_ID_if_none_specified()
         {
             // Arrange
-            var persons = new List<Person>
-            {
-                new Person {Id = 3},
-                new Person {Id = 2},
-                new Person {Id = 1},
-                new Person {Id = 4}
-            };
+            var accounts = _fakers.WebAccount.Generate(4);
+            accounts[0].Id = 300;
+            accounts[1].Id = 200;
+            accounts[2].Id = 100;
+            accounts[3].Id = 400;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Person>();
-                dbContext.People.AddRange(persons);
+                await dbContext.ClearTableAsync<WebAccount>();
+                dbContext.Accounts.AddRange(accounts);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/people";
+            var route = "/webAccounts";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -735,10 +587,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(4);
-            responseDocument.ManyData[0].Id.Should().Be(persons[2].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(persons[1].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(persons[0].StringId);
-            responseDocument.ManyData[3].Id.Should().Be(persons[3].StringId);
+            responseDocument.ManyData[0].Id.Should().Be(accounts[2].StringId);
+            responseDocument.ManyData[1].Id.Should().Be(accounts[1].StringId);
+            responseDocument.ManyData[2].Id.Should().Be(accounts[0].StringId);
+            responseDocument.ManyData[3].Id.Should().Be(accounts[3].StringId);
         }
     }
 }

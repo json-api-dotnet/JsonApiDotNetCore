@@ -3,22 +3,22 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 {
-    public sealed class RangeValidationWithMaximumTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
+    public sealed class RangeValidationWithMaximumTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
 
         private const int _maximumPageSize = 15;
         private const int _maximumPageNumber = 20;
 
-        public RangeValidationWithMaximumTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
+        public RangeValidationWithMaximumTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             const int pageNumber = _maximumPageNumber - 1;
-            var route = "/api/v1/todoItems?page[number]=" + pageNumber;
+            var route = "/blogs?page[number]=" + pageNumber;
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             const int pageNumber = _maximumPageNumber;
-            var route = "/api/v1/todoItems?page[number]=" + pageNumber;
+            var route = "/blogs?page[number]=" + pageNumber;
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             const int pageNumber = _maximumPageNumber + 1;
-            var route = "/api/v1/todoItems?page[number]=" + pageNumber;
+            var route = "/blogs?page[number]=" + pageNumber;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -80,7 +80,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_use_zero_page_size()
         {
             // Arrange
-            var route = "/api/v1/todoItems?page[size]=0";
+            var route = "/blogs?page[size]=0";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             const int pageSize = _maximumPageSize - 1;
-            var route = "/api/v1/todoItems?page[size]=" + pageSize;
+            var route = "/blogs?page[size]=" + pageSize;
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -114,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             const int pageSize = _maximumPageSize;
-            var route = "/api/v1/todoItems?page[size]=" + pageSize;
+            var route = "/blogs?page[size]=" + pageSize;
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -128,7 +128,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             const int pageSize = _maximumPageSize + 1;
-            var route = "/api/v1/todoItems?page[size]=" + pageSize;
+            var route = "/blogs?page[size]=" + pageSize;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

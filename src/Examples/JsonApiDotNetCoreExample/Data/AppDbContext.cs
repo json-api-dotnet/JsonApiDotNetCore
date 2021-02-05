@@ -16,53 +16,53 @@ namespace JsonApiDotNetCoreExample.Data
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.Entity<SuperUser>().HasBaseType<User>();
+            builder.Entity<SuperUser>().HasBaseType<User>();
 
-            modelBuilder.Entity<TodoItem>()
+            builder.Entity<TodoItem>()
                 .Property(t => t.CreatedDate).HasDefaultValueSql("CURRENT_TIMESTAMP").IsRequired();
 
-            modelBuilder.Entity<TodoItem>()
+            builder.Entity<TodoItem>()
                 .HasOne(t => t.Assignee)
                 .WithMany(p => p.AssignedTodoItems);
 
-            modelBuilder.Entity<TodoItem>()
+            builder.Entity<TodoItem>()
                 .HasOne(t => t.Owner)
                 .WithMany(p => p.TodoItems);
 
-            modelBuilder.Entity<ArticleTag>()
+            builder.Entity<ArticleTag>()
                 .HasKey(bc => new {bc.ArticleId, bc.TagId});
 
-            modelBuilder.Entity<IdentifiableArticleTag>()
+            builder.Entity<IdentifiableArticleTag>()
                 .HasKey(bc => new {bc.ArticleId, bc.TagId});
 
-            modelBuilder.Entity<Person>()
+            builder.Entity<Person>()
                 .HasOne(t => t.StakeHolderTodoItem)
                 .WithMany(t => t.StakeHolders)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<TodoItem>()
+            builder.Entity<TodoItem>()
                 .HasMany(t => t.ChildrenTodos)
                 .WithOne(t => t.ParentTodo);
 
-            modelBuilder.Entity<Passport>()
+            builder.Entity<Passport>()
                 .HasOne(p => p.Person)
                 .WithOne(p => p.Passport)
                 .HasForeignKey<Person>("PassportKey")
                 .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<TodoItem>()
+            builder.Entity<TodoItem>()
                 .HasOne(p => p.OneToOnePerson)
                 .WithOne(p => p.OneToOneTodoItem)
                 .HasForeignKey<TodoItem>("OneToOnePersonKey");
 
-            modelBuilder.Entity<TodoItemCollection>()
+            builder.Entity<TodoItemCollection>()
                 .HasOne(p => p.Owner)
                 .WithMany(p => p.TodoCollections)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Person>()
+            builder.Entity<Person>()
                 .HasOne(p => p.Role)
                 .WithOne(p => p.Person)
                 .HasForeignKey<Person>("PersonRoleKey");
