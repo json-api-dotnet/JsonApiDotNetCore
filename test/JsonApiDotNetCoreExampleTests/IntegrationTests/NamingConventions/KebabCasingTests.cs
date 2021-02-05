@@ -135,7 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
         }
 
         [Fact]
-        public async Task Cannot_create_resource_for_invalid_request_body()
+        public async Task Applies_casing_convention_on_error_stack_trace()
         {
             // Arrange
             var requestBody = "{ \"data\": {";
@@ -155,7 +155,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
         }
 
         [Fact]
-        public async Task Cannot_update_resource_for_invalid_attribute()
+        public async Task Applies_casing_convention_on_source_pointer_from_ModelState()
         {
             // Arrange
             var existingBoard = _fakers.DivingBoard.Generate();

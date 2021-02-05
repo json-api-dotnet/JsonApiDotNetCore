@@ -13,6 +13,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 {
     public sealed class ConsumerArticleService : JsonApiResourceService<ConsumerArticle>
     {
+        public const string UnavailableArticlePrefix = "X";
+
         private const string _supportEmailAddress = "company@email.com";
 
         public ConsumerArticleService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
@@ -28,7 +30,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
         {
             var consumerArticle = await base.GetAsync(id, cancellationToken);
 
-            if (consumerArticle.Code.StartsWith("X"))
+            if (consumerArticle.Code.StartsWith(UnavailableArticlePrefix))
             {
                 throw new ConsumerArticleIsNoLongerAvailableException(consumerArticle.Code, _supportEmailAddress);
             }

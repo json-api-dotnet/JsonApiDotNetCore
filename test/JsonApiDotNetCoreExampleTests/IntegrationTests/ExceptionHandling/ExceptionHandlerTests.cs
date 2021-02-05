@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 
             var consumerArticle = new ConsumerArticle
             {
-                Code = "X123"
+                Code = ConsumerArticleService.UnavailableArticlePrefix + "123"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
