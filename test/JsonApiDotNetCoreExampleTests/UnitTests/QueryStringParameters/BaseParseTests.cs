@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace UnitTests.QueryStringParameters
+namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
 {
     public abstract class BaseParseTests
     {
@@ -16,7 +16,7 @@ namespace UnitTests.QueryStringParameters
             Options = new JsonApiOptions();
 
             ResourceGraph = new ResourceGraphBuilder(Options, NullLoggerFactory.Instance)
-                .Add<Blog>()
+                .Add<LegacyBlog>()
                 .Add<Article>()
                 .Add<Author>()
                 .Add<Address>()
@@ -27,7 +27,7 @@ namespace UnitTests.QueryStringParameters
 
             Request = new JsonApiRequest
             {
-                PrimaryResource = ResourceGraph.GetResourceContext<Blog>(),
+                PrimaryResource = ResourceGraph.GetResourceContext<LegacyBlog>(),
                 IsCollection = true
             };
         }

@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             {
                 services.AddSingleton<ResourceCaptureStore>();
 
-                services.AddResourceRepository<ResultCapturingRepository<Blog>>();
+                services.AddResourceRepository<ResultCapturingRepository<LegacyBlog>>();
                 services.AddResourceRepository<ResultCapturingRepository<Article>>();
                 services.AddResourceRepository<ResultCapturingRepository<Author>>();
                 services.AddResourceRepository<ResultCapturingRepository<TodoItem>>();
@@ -212,7 +212,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Title = "Some",
                 Articles = new List<Article>
@@ -232,7 +232,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/articles?fields[articles]=caption,tags";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/articles?fields[articles]=caption,tags";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -249,7 +249,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.ManyData[0].Relationships["tags"].Links.Self.Should().NotBeNull();
             responseDocument.ManyData[0].Relationships["tags"].Links.Related.Should().NotBeNull();
 
-            var blogCaptured = (Blog)store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
+            var blogCaptured = (LegacyBlog)store.Resources.Should().ContainSingle(x => x is LegacyBlog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
             blogCaptured.Title.Should().BeNull();
 
@@ -379,7 +379,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Owner = new Author
                 {
@@ -402,7 +402,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/owner?include=articles&fields[articles]=caption,revisions";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/owner?include=articles&fields[articles]=caption,revisions";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -426,7 +426,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.Included[0].Relationships["revisions"].Links.Self.Should().NotBeNull();
             responseDocument.Included[0].Relationships["revisions"].Links.Related.Should().NotBeNull();
 
-            var blogCaptured = (Blog) store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
+            var blogCaptured = (LegacyBlog) store.Resources.Should().ContainSingle(x => x is LegacyBlog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
             blogCaptured.Owner.Should().NotBeNull();
             blogCaptured.Owner.LastName.Should().Be(blog.Owner.LastName);
@@ -500,7 +500,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Title = "Technology",
                 CompanyName = "Contoso",
@@ -527,7 +527,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}?include=owner.articles&fields[blogs]=title&fields[authors]=firstName,lastName&fields[articles]=caption";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}?include=owner.articles&fields[legacyBlogs]=title&fields[authors]=firstName,lastName&fields[articles]=caption";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -554,7 +554,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.Included[1].Attributes["caption"].Should().Be(blog.Owner.Articles[0].Caption);
             responseDocument.Included[1].Relationships.Should().BeNull();
 
-            var blogCaptured = (Blog) store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
+            var blogCaptured = (LegacyBlog) store.Resources.Should().ContainSingle(x => x is LegacyBlog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
             blogCaptured.Title.Should().Be(blog.Title);
             blogCaptured.CompanyName.Should().BeNull();
@@ -575,7 +575,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Title = "Technology",
                 CompanyName = "Contoso",
@@ -602,7 +602,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}?include=owner.articles&fields[blogs]=title,owner";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}?include=owner.articles&fields[legacyBlogs]=title,owner";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -637,7 +637,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.Included[1].Relationships["tags"].Links.Self.Should().NotBeNull();
             responseDocument.Included[1].Relationships["tags"].Links.Related.Should().NotBeNull();
 
-            var blogCaptured = (Blog) store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
+            var blogCaptured = (LegacyBlog) store.Resources.Should().ContainSingle(x => x is LegacyBlog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
             blogCaptured.Title.Should().Be(blog.Title);
             blogCaptured.CompanyName.Should().BeNull();

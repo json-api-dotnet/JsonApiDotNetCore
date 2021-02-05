@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<Author> AuthorDifferentDbContextName { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<LegacyBlog> Blogs { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

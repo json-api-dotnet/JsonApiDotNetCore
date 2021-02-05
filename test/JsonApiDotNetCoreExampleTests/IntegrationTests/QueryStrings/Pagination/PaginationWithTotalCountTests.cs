@@ -115,7 +115,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_paginate_in_secondary_resources()
         {
             // Arrange
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Articles = new List<Article>
                 {
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/articles?page[number]=2&page[size]=1";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/articles?page[number]=2&page[size]=1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -150,10 +150,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             responseDocument.Links.Should().NotBeNull();
             responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be($"http://localhost/api/v1/blogs/{blog.StringId}/articles?page[size]=1");
+            responseDocument.Links.First.Should().Be($"http://localhost/api/v1/legacyBlogs/{blog.StringId}/articles?page[size]=1");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
-            responseDocument.Links.Next.Should().Be($"http://localhost/api/v1/blogs/{blog.StringId}/articles?page[number]=3&page[size]=1");
+            responseDocument.Links.Next.Should().Be($"http://localhost/api/v1/legacyBlogs/{blog.StringId}/articles?page[number]=3&page[size]=1");
         }
 
         [Fact]
@@ -191,9 +191,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_paginate_in_scope_of_HasMany_relationship()
         {
             // Arrange
-            var blogs = new List<Blog>
+            var blogs = new List<LegacyBlog>
             {
-                new Blog
+                new LegacyBlog
                 {
                     Articles = new List<Article>
                     {
@@ -207,7 +207,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                         }
                     }
                 },
-                new Blog
+                new LegacyBlog
                 {
                     Articles = new List<Article>
                     {
@@ -221,18 +221,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                         }
                     }
                 },
-                new Blog()
+                new LegacyBlog()
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Blog>();
+                await dbContext.ClearTableAsync<LegacyBlog>();
                 dbContext.Blogs.AddRange(blogs);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/blogs?include=articles&page[number]=articles:2&page[size]=2,articles:1";
+            var route = "/api/v1/legacyBlogs?include=articles&page[number]=articles:2&page[size]=2,articles:1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -248,8 +248,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             responseDocument.Links.Should().NotBeNull();
             responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be("http://localhost/api/v1/blogs?include=articles&page[size]=2,articles:1");
-            responseDocument.Links.Last.Should().Be("http://localhost/api/v1/blogs?include=articles&page[number]=2&page[size]=2,articles:1");
+            responseDocument.Links.First.Should().Be("http://localhost/api/v1/legacyBlogs?include=articles&page[size]=2,articles:1");
+            responseDocument.Links.Last.Should().Be("http://localhost/api/v1/legacyBlogs?include=articles&page[number]=2&page[size]=2,articles:1");
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().Be(responseDocument.Links.Last);
         }
@@ -258,7 +258,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_paginate_in_scope_of_HasMany_relationship_on_secondary_resource()
         {
             // Arrange
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Owner = new Author
                 {
@@ -284,7 +284,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/owner?include=articles&page[number]=articles:2&page[size]=articles:1";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/owner?include=articles&page[number]=articles:2&page[size]=articles:1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -308,7 +308,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_paginate_HasMany_relationship_on_relationship_endpoint()
         {
             // Arrange
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Articles = new List<Article>
                 {
@@ -330,7 +330,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/relationships/articles?page[number]=2&page[size]=1";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/relationships/articles?page[number]=2&page[size]=1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -343,7 +343,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             responseDocument.Links.Should().NotBeNull();
             responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be($"http://localhost/api/v1/blogs/{blog.StringId}/relationships/articles?page[size]=1");
+            responseDocument.Links.First.Should().Be($"http://localhost/api/v1/legacyBlogs/{blog.StringId}/relationships/articles?page[size]=1");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Next.Should().BeNull();
@@ -491,13 +491,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_paginate_in_multiple_scopes()
         {
             // Arrange
-            var blogs = new List<Blog>
+            var blogs = new List<LegacyBlog>
             {
-                new Blog
+                new LegacyBlog
                 {
                     Title = "Cooking"
                 },
-                new Blog
+                new LegacyBlog
                 {
                     Title = "Technology",
                     Owner = new Author
@@ -531,13 +531,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Blog>();
+                await dbContext.ClearTableAsync<LegacyBlog>();
                 dbContext.Blogs.AddRange(blogs);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/blogs?include=owner.articles.revisions&" +
+            var route = "/api/v1/legacyBlogs?include=owner.articles.revisions&" +
                         "page[size]=1,owner.articles:1,owner.articles.revisions:1&" +
                         "page[number]=2,owner.articles:2,owner.articles.revisions:2";
 
@@ -557,8 +557,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             responseDocument.Links.Should().NotBeNull();
             responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be("http://localhost/api/v1/blogs?include=owner.articles.revisions&page[size]=1,owner.articles:1,owner.articles.revisions:1");
-            responseDocument.Links.Last.Should().Be("http://localhost/api/v1/blogs?include=owner.articles.revisions&page[size]=1,owner.articles:1,owner.articles.revisions:1&page[number]=2");
+            responseDocument.Links.First.Should().Be("http://localhost/api/v1/legacyBlogs?include=owner.articles.revisions&page[size]=1,owner.articles:1,owner.articles.revisions:1");
+            responseDocument.Links.Last.Should().Be("http://localhost/api/v1/legacyBlogs?include=owner.articles.revisions&page[size]=1,owner.articles:1,owner.articles.revisions:1&page[number]=2");
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Next.Should().BeNull();
         }
@@ -608,7 +608,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.DefaultPageSize = new PageSize(2);
 
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Articles = new List<Article>
                 {
@@ -634,7 +634,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/articles";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/articles";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -651,7 +651,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
-            responseDocument.Links.Next.Should().Be($"http://localhost/api/v1/blogs/{blog.StringId}/articles?page[number]=2");
+            responseDocument.Links.Next.Should().Be($"http://localhost/api/v1/legacyBlogs/{blog.StringId}/articles?page[number]=2");
         }
 
         [Fact]
@@ -661,7 +661,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.DefaultPageSize = null;
 
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Articles = new List<Article>()
             };
@@ -681,7 +681,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/articles";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/articles";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

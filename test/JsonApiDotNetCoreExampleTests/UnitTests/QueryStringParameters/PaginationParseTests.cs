@@ -9,7 +9,7 @@ using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using Xunit;
 
-namespace UnitTests.QueryStringParameters
+namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
 {
     public sealed class PaginationParseTests : BaseParseTests
     {
@@ -66,7 +66,7 @@ namespace UnitTests.QueryStringParameters
         [InlineData("articles.id", "Relationship 'id' in 'articles.id' does not exist on resource 'articles'.")]
         [InlineData("articles.tags.id", "Relationship 'id' in 'articles.tags.id' does not exist on resource 'tags'.")]
         [InlineData("articles.author", "Relationship 'author' in 'articles.author' must be a to-many relationship on resource 'articles'.")]
-        [InlineData("something", "Relationship 'something' does not exist on resource 'blogs'.")]
+        [InlineData("something", "Relationship 'something' does not exist on resource 'legacyBlogs'.")]
         public void Reader_Read_Page_Number_Fails(string parameterValue, string errorMessage)
         {
             // Act
@@ -99,7 +99,7 @@ namespace UnitTests.QueryStringParameters
         [InlineData("articles.id", "Relationship 'id' in 'articles.id' does not exist on resource 'articles'.")]
         [InlineData("articles.tags.id", "Relationship 'id' in 'articles.tags.id' does not exist on resource 'tags'.")]
         [InlineData("articles.author", "Relationship 'author' in 'articles.author' must be a to-many relationship on resource 'articles'.")]
-        [InlineData("something", "Relationship 'something' does not exist on resource 'blogs'.")]
+        [InlineData("something", "Relationship 'something' does not exist on resource 'legacyBlogs'.")]
         public void Reader_Read_Page_Size_Fails(string parameterValue, string errorMessage)
         {
             // Act

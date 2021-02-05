@@ -114,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_in_secondary_resource()
         {
             // Arrange
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Owner = new Author
                 {
@@ -136,7 +136,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/owner?include=articles";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/owner?include=articles";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -158,7 +158,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_in_secondary_resources()
         {
             // Arrange
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Articles = new List<Article>
                 {
@@ -180,7 +180,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/articles?include=author";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/articles?include=author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -434,7 +434,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_chain_of_HasMany_relationships()
         {
             // Arrange
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Title = "Some",
                 Articles = new List<Article>
@@ -460,7 +460,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}?include=articles.revisions";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}?include=articles.revisions";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -843,7 +843,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.MaximumIncludeDepth = 1;
 
-            var blog = new Blog();
+            var blog = new LegacyBlog();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -852,7 +852,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/articles?include=author,revisions";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/articles?include=author,revisions";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -868,7 +868,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.MaximumIncludeDepth = 1;
 
-            var route = "/api/v1/blogs/123/owner?include=articles.revisions";
+            var route = "/api/v1/legacyBlogs/123/owner?include=articles.revisions";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

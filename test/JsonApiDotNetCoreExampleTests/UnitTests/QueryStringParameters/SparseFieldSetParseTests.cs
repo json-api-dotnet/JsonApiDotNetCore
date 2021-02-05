@@ -2,28 +2,30 @@ using System;
 using System.Linq;
 using System.Net;
 using FluentAssertions;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using Xunit;
 
-namespace UnitTests.QueryStringParameters
+namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
 {
-    public sealed class IncludeParseTests : BaseParseTests
+    public sealed class SparseFieldSetParseTests : BaseParseTests
     {
-        private readonly IncludeQueryStringParameterReader _reader;
+        private readonly SparseFieldSetQueryStringParameterReader _reader;
 
-        public IncludeParseTests()
+        public SparseFieldSetParseTests()
         {
-            _reader = new IncludeQueryStringParameterReader(Request, ResourceGraph, new JsonApiOptions());
+            _reader = new SparseFieldSetQueryStringParameterReader(Request, ResourceGraph);
         }
 
         [Theory]
-        [InlineData("include", true)]
-        [InlineData("include[some]", false)]
-        [InlineData("includes", false)]
+        [InlineData("fields", false)]
+        [InlineData("fields[articles]", true)]
+        [InlineData("fields[]", true)]
+        [InlineData("fieldset", false)]
+        [InlineData("fields[", false)]
+        [InlineData("fields]", false)]
         public void Reader_Supports_Parameter_Name(string parameterName, bool expectCanParse)
         {
             // Act
@@ -34,7 +36,7 @@ namespace UnitTests.QueryStringParameters
         }
 
         [Theory]
-        [InlineData(StandardQueryStringParameters.Include, false)]
+        [InlineData(StandardQueryStringParameters.Fields, false)]
         [InlineData(StandardQueryStringParameters.All, false)]
         [InlineData(StandardQueryStringParameters.None, true)]
         [InlineData(StandardQueryStringParameters.Filter, true)]
@@ -48,13 +50,20 @@ namespace UnitTests.QueryStringParameters
         }
 
         [Theory]
-        [InlineData("includes", "", "Relationship name expected.")]
-        [InlineData("includes", " ", "Unexpected whitespace.")]
-        [InlineData("includes", ",", "Relationship name expected.")]
-        [InlineData("includes", "articles,", "Relationship name expected.")]
-        [InlineData("includes", "articles[", ", expected.")]
-        [InlineData("includes", "title", "Relationship 'title' does not exist on resource 'blogs'.")]
-        [InlineData("includes", "articles.revisions.publishTime,", "Relationship 'publishTime' in 'articles.revisions.publishTime' does not exist on resource 'revisions'.")]
+        [InlineData("fields", "", "[ expected.")]
+        [InlineData("fields]", "", "[ expected.")]
+        [InlineData("fields[", "", "Resource type expected.")]
+        [InlineData("fields[]", "", "Resource type expected.")]
+        [InlineData("fields[ ]", "", "Unexpected whitespace.")]
+        [InlineData("fields[owner]", "", "Resource type 'owner' does not exist.")]
+        [InlineData("fields[owner.articles]", "id", "Resource type 'owner.articles' does not exist.")]
+        [InlineData("fields[articles]", "", "Field name expected.")]
+        [InlineData("fields[articles]", " ", "Unexpected whitespace.")]
+        [InlineData("fields[articles]", "some", "Field 'some' does not exist on resource 'articles'.")]
+        [InlineData("fields[articles]", "id,owner.name", "Field 'owner.name' does not exist on resource 'articles'.")]
+        [InlineData("fields[articles]", "id(", ", expected.")]
+        [InlineData("fields[articles]", "id,", "Field name expected.")]
+        [InlineData("fields[articles]", "author.id,", "Field 'author.id' does not exist on resource 'articles'.")]
         public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
         {
             // Act
@@ -66,19 +75,15 @@ namespace UnitTests.QueryStringParameters
             exception.QueryParameterName.Should().Be(parameterName);
             exception.Errors.Should().HaveCount(1);
             exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Errors[0].Title.Should().Be("The specified include is invalid.");
+            exception.Errors[0].Title.Should().Be("The specified fieldset is invalid.");
             exception.Errors[0].Detail.Should().Be(errorMessage);
             exception.Errors[0].Source.Parameter.Should().Be(parameterName);
         }
 
         [Theory]
-        [InlineData("includes", "owner", "owner")]
-        [InlineData("includes", "articles", "articles")]
-        [InlineData("includes", "owner.articles", "owner.articles")]
-        [InlineData("includes", "articles.author", "articles.author")]
-        [InlineData("includes", "articles.revisions", "articles.revisions")]
-        [InlineData("includes", "articles,articles.revisions", "articles.revisions")]
-        [InlineData("includes", "articles,articles.revisions,articles.tags", "articles.revisions,articles.tags")]
+        [InlineData("fields[articles]", "caption,url,author", "articles(caption,url,author)")]
+        [InlineData("fields[articles]", "author,revisions,tags", "articles(author,revisions,tags)")]
+        [InlineData("fields[countries]", "id", "countries(id)")]
         public void Reader_Read_Succeeds(string parameterName, string parameterValue, string valueExpected)
         {
             // Act

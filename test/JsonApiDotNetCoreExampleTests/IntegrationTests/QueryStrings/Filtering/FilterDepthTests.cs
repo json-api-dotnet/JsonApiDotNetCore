@@ -101,7 +101,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_secondary_resources()
         {
             // Arrange
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Articles = new List<Article>
                 {
@@ -123,7 +123,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/articles?filter=equals(caption,'Two')";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/articles?filter=equals(caption,'Two')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -216,10 +216,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_on_HasMany_relationship()
         {
             // Arrange
-            var blogs = new List<Blog>
+            var blogs = new List<LegacyBlog>
             {
-                new Blog(),
-                new Blog
+                new LegacyBlog(),
+                new LegacyBlog
                 {
                     Articles = new List<Article>
                     {
@@ -233,13 +233,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Blog>();
+                await dbContext.ClearTableAsync<LegacyBlog>();
                 dbContext.Blogs.AddRange(blogs);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/blogs?filter=greaterThan(count(articles),'0')";
+            var route = "/api/v1/legacyBlogs?filter=greaterThan(count(articles),'0')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -301,7 +301,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_scope_of_HasMany_relationship()
         {
             // Arrange
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Articles = new List<Article>
                 {
@@ -318,13 +318,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Blog>();
+                await dbContext.ClearTableAsync<LegacyBlog>();
                 dbContext.Blogs.Add(blog);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/blogs?include=articles&filter[articles]=equals(caption,'Two')";
+            var route = "/api/v1/legacyBlogs?include=articles&filter[articles]=equals(caption,'Two')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -342,7 +342,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_scope_of_HasMany_relationship_on_secondary_resource()
         {
             // Arrange
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Owner = new Author
                 {
@@ -368,7 +368,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/owner?include=articles&filter[articles]=equals(caption,'Two')";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/owner?include=articles&filter[articles]=equals(caption,'Two')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -449,7 +449,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_scope_of_relationship_chain()
         {
             // Arrange
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Owner = new Author
                 {
@@ -470,13 +470,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Blog>();
+                await dbContext.ClearTableAsync<LegacyBlog>();
                 dbContext.Blogs.Add(blog);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/blogs?include=owner.articles&filter[owner.articles]=equals(caption,'Two')";
+            var route = "/api/v1/legacyBlogs?include=owner.articles&filter[owner.articles]=equals(caption,'Two')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -595,10 +595,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_multiple_scopes()
         {
             // Arrange
-            var blogs = new List<Blog>
+            var blogs = new List<LegacyBlog>
             {
-                new Blog(),
-                new Blog
+                new LegacyBlog(),
+                new LegacyBlog
                 {
                     Title = "Technology",
                     Owner = new Author
@@ -632,13 +632,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Blog>();
+                await dbContext.ClearTableAsync<LegacyBlog>();
                 dbContext.Blogs.AddRange(blogs);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/blogs?include=owner.articles.revisions&" +
+            var route = "/api/v1/legacyBlogs?include=owner.articles.revisions&" +
                         "filter=and(equals(title,'Technology'),has(owner.articles),equals(owner.lastName,'Smith'))&" +
                         "filter[owner.articles]=equals(caption,'Two')&" +
                         "filter[owner.articles.revisions]=greaterThan(publishTime,'2005-05-05')";

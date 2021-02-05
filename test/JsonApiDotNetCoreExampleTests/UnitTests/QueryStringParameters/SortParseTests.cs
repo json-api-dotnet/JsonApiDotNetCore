@@ -8,7 +8,7 @@ using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using Xunit;
 
-namespace UnitTests.QueryStringParameters
+namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
 {
     public sealed class SortParseTests : BaseParseTests
     {
@@ -51,12 +51,12 @@ namespace UnitTests.QueryStringParameters
 
         [Theory]
         [InlineData("sort[", "id", "Field name expected.")]
-        [InlineData("sort[abc.def]", "id", "Relationship 'abc' in 'abc.def' does not exist on resource 'blogs'.")]
+        [InlineData("sort[abc.def]", "id", "Relationship 'abc' in 'abc.def' does not exist on resource 'legacyBlogs'.")]
         [InlineData("sort[articles.author]", "id", "Relationship 'author' in 'articles.author' must be a to-many relationship on resource 'articles'.")]
         [InlineData("sort", "", "-, count function or field name expected.")]
         [InlineData("sort", " ", "Unexpected whitespace.")]
         [InlineData("sort", "-", "Count function or field name expected.")]
-        [InlineData("sort", "abc", "Attribute 'abc' does not exist on resource 'blogs'.")]
+        [InlineData("sort", "abc", "Attribute 'abc' does not exist on resource 'legacyBlogs'.")]
         [InlineData("sort[articles]", "author", "Attribute 'author' does not exist on resource 'articles'.")]
         [InlineData("sort[articles]", "author.livingAddress", "Attribute 'livingAddress' in 'author.livingAddress' does not exist on resource 'authors'.")]
         [InlineData("sort", "-count", "( expected.")]
@@ -64,8 +64,8 @@ namespace UnitTests.QueryStringParameters
         [InlineData("sort", "count(articles", ") expected.")]
         [InlineData("sort", "count(", "Field name expected.")]
         [InlineData("sort", "count(-abc)", "Field name expected.")]
-        [InlineData("sort", "count(abc)", "Relationship 'abc' does not exist on resource 'blogs'.")]
-        [InlineData("sort", "count(id)", "Relationship 'id' does not exist on resource 'blogs'.")]
+        [InlineData("sort", "count(abc)", "Relationship 'abc' does not exist on resource 'legacyBlogs'.")]
+        [InlineData("sort", "count(id)", "Relationship 'id' does not exist on resource 'legacyBlogs'.")]
         [InlineData("sort[articles]", "count(author)", "Relationship 'author' must be a to-many relationship on resource 'articles'.")]
         [InlineData("sort[articles]", "caption,", "-, count function or field name expected.")]
         [InlineData("sort[articles]", "caption:", ", expected.")]

@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public sealed class Blog : Identifiable
+    public sealed class LegacyBlog : Identifiable
     {
         [Attr] 
         public string Title { get; set; }

@@ -6,12 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    public sealed class BlogsController : JsonApiController<Blog>
+    public sealed class LegacyBlogsController : JsonApiController<LegacyBlog>
     {
-        public BlogsController(
+        public LegacyBlogsController(
             IJsonApiOptions options,
             ILoggerFactory loggerFactory,
-            IResourceService<Blog> resourceService)
+            IResourceService<LegacyBlog> resourceService)
             : base(options, loggerFactory, resourceService)
         { }
     }

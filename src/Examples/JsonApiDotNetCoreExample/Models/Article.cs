@@ -30,6 +30,6 @@ namespace JsonApiDotNetCoreExample.Models
         public ICollection<Revision> Revisions { get; set; }
 
         [HasOne]
-        public Blog Blog { get; set; }
+        public LegacyBlog Blog { get; set; }
     }
 }

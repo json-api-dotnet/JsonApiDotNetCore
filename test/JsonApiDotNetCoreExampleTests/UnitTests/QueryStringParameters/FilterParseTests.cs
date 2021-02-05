@@ -10,7 +10,7 @@ using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
 using Xunit;
 
-namespace UnitTests.QueryStringParameters
+namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
 {
     public sealed class FilterParseTests : BaseParseTests
     {
@@ -55,7 +55,7 @@ namespace UnitTests.QueryStringParameters
 
         [Theory]
         [InlineData("filter[", "equals(caption,'some')", "Field name expected.")]
-        [InlineData("filter[caption]", "equals(url,'some')", "Relationship 'caption' does not exist on resource 'blogs'.")]
+        [InlineData("filter[caption]", "equals(url,'some')", "Relationship 'caption' does not exist on resource 'legacyBlogs'.")]
         [InlineData("filter[articles.caption]", "equals(firstName,'some')", "Relationship 'caption' in 'articles.caption' does not exist on resource 'articles'.")]
         [InlineData("filter[articles.author]", "equals(firstName,'some')", "Relationship 'author' in 'articles.author' must be a to-many relationship on resource 'articles'.")]
         [InlineData("filter[articles.revisions.author]", "equals(firstName,'some')", "Relationship 'author' in 'articles.revisions.author' must be a to-many relationship on resource 'revisions'.")]
@@ -70,14 +70,14 @@ namespace UnitTests.QueryStringParameters
         [InlineData("filter", "equals(count(articles),", "Count function, value between quotes, null or field name expected.")]
         [InlineData("filter", "equals(title,')", "' expected.")]
         [InlineData("filter", "equals(title,null", ") expected.")]
-        [InlineData("filter", "equals(null", "Field 'null' does not exist on resource 'blogs'.")]
+        [InlineData("filter", "equals(null", "Field 'null' does not exist on resource 'legacyBlogs'.")]
         [InlineData("filter", "equals(title,(", "Count function, value between quotes, null or field name expected.")]
-        [InlineData("filter", "equals(has(articles),'true')", "Field 'has' does not exist on resource 'blogs'.")]
+        [InlineData("filter", "equals(has(articles),'true')", "Field 'has' does not exist on resource 'legacyBlogs'.")]
         [InlineData("filter", "contains)", "( expected.")]
         [InlineData("filter", "contains(title,'a','b')", ") expected.")]
         [InlineData("filter", "contains(title,null)", "Value between quotes expected.")]
         [InlineData("filter[articles]", "contains(author,null)", "Attribute 'author' does not exist on resource 'articles'.")]
-        [InlineData("filter", "any(null,'a','b')", "Attribute 'null' does not exist on resource 'blogs'.")]
+        [InlineData("filter", "any(null,'a','b')", "Attribute 'null' does not exist on resource 'legacyBlogs'.")]
         [InlineData("filter", "any('a','b','c')", "Field name expected.")]
         [InlineData("filter", "any(title,'b','c',)", "Value between quotes expected.")]
         [InlineData("filter", "any(title,'b')", ", expected.")]

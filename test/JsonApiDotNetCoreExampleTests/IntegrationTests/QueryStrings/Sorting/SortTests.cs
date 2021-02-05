@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_in_secondary_resources()
         {
             // Arrange
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Articles = new List<Article>
                 {
@@ -108,7 +108,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/articles?sort=caption";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/articles?sort=caption";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -157,9 +157,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_on_HasMany_relationship()
         {
             // Arrange
-            var blogs = new List<Blog>
+            var blogs = new List<LegacyBlog>
             {
-                new Blog
+                new LegacyBlog
                 {
                     Articles = new List<Article>
                     {
@@ -173,7 +173,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
                         }
                     }
                 },
-                new Blog
+                new LegacyBlog
                 {
                     Articles = new List<Article>
                     {
@@ -187,13 +187,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Blog>();
+                await dbContext.ClearTableAsync<LegacyBlog>();
                 dbContext.Blogs.AddRange(blogs);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/blogs?sort=count(articles)";
+            var route = "/api/v1/legacyBlogs?sort=count(articles)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -310,7 +310,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_in_scope_of_HasMany_relationship_on_secondary_resource()
         {
             // Arrange
-            var blog = new Blog
+            var blog = new LegacyBlog
             {
                 Owner = new Author
                 {
@@ -331,7 +331,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/blogs/{blog.StringId}/owner?include=articles&sort[articles]=caption";
+            var route = $"/api/v1/legacyBlogs/{blog.StringId}/owner?include=articles&sort[articles]=caption";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -406,9 +406,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_on_multiple_fields_in_multiple_scopes()
         {
             // Arrange
-            var blogs = new List<Blog>
+            var blogs = new List<LegacyBlog>
             {
-                new Blog
+                new LegacyBlog
                 {
                     Title = "Z",
                     Articles = new List<Article>
@@ -448,7 +448,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
                         }
                     }
                 },
-                new Blog
+                new LegacyBlog
                 {
                     Title = "Y"
                 }
@@ -456,13 +456,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Blog>();
+                await dbContext.ClearTableAsync<LegacyBlog>();
                 dbContext.Blogs.AddRange(blogs);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/blogs?include=articles.revisions&sort=title&sort[articles]=caption,url&sort[articles.revisions]=-publishTime";
+            var route = "/api/v1/legacyBlogs?include=articles.revisions&sort=title&sort[articles]=caption,url&sort[articles.revisions]=-publishTime";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -547,13 +547,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_in_multiple_scopes()
         {
             // Arrange
-            var blogs = new List<Blog>
+            var blogs = new List<LegacyBlog>
             {
-                new Blog
+                new LegacyBlog
                 {
                     Title = "Cooking"
                 },
-                new Blog
+                new LegacyBlog
                 {
                     Title = "Technology",
                     Owner = new Author
@@ -587,13 +587,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<Blog>();
+                await dbContext.ClearTableAsync<LegacyBlog>();
                 dbContext.Blogs.AddRange(blogs);
 
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/blogs?include=owner.articles.revisions&" +
+            var route = "/api/v1/legacyBlogs?include=owner.articles.revisions&" +
                         "sort=-title&" +
                         "sort[owner.articles]=-caption&" +
                         "sort[owner.articles.revisions]=-publishTime";
