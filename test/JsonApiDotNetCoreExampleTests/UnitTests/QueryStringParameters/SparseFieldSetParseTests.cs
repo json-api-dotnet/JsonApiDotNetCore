@@ -56,14 +56,14 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("fields[]", "", "Resource type expected.")]
         [InlineData("fields[ ]", "", "Unexpected whitespace.")]
         [InlineData("fields[owner]", "", "Resource type 'owner' does not exist.")]
-        [InlineData("fields[owner.articles]", "id", "Resource type 'owner.articles' does not exist.")]
-        [InlineData("fields[articles]", "", "Field name expected.")]
-        [InlineData("fields[articles]", " ", "Unexpected whitespace.")]
-        [InlineData("fields[articles]", "some", "Field 'some' does not exist on resource 'articles'.")]
-        [InlineData("fields[articles]", "id,owner.name", "Field 'owner.name' does not exist on resource 'articles'.")]
-        [InlineData("fields[articles]", "id(", ", expected.")]
-        [InlineData("fields[articles]", "id,", "Field name expected.")]
-        [InlineData("fields[articles]", "author.id,", "Field 'author.id' does not exist on resource 'articles'.")]
+        [InlineData("fields[owner.posts]", "id", "Resource type 'owner.posts' does not exist.")]
+        [InlineData("fields[blogPosts]", "", "Field name expected.")]
+        [InlineData("fields[blogPosts]", " ", "Unexpected whitespace.")]
+        [InlineData("fields[blogPosts]", "some", "Field 'some' does not exist on resource 'blogPosts'.")]
+        [InlineData("fields[blogPosts]", "id,owner.name", "Field 'owner.name' does not exist on resource 'blogPosts'.")]
+        [InlineData("fields[blogPosts]", "id(", ", expected.")]
+        [InlineData("fields[blogPosts]", "id,", "Field name expected.")]
+        [InlineData("fields[blogPosts]", "author.id,", "Field 'author.id' does not exist on resource 'blogPosts'.")]
         public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
         {
             // Act
@@ -81,9 +81,9 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         }
 
         [Theory]
-        [InlineData("fields[articles]", "caption,url,author", "articles(caption,url,author)")]
-        [InlineData("fields[articles]", "author,revisions,tags", "articles(author,revisions,tags)")]
-        [InlineData("fields[countries]", "id", "countries(id)")]
+        [InlineData("fields[blogPosts]", "caption,url,author", "blogPosts(caption,url,author)")]
+        [InlineData("fields[blogPosts]", "author,comments,labels", "blogPosts(author,comments,labels)")]
+        [InlineData("fields[blogs]", "id", "blogs(id)")]
         public void Reader_Read_Succeeds(string parameterName, string parameterValue, string valueExpected)
         {
             // Act

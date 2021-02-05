@@ -6,7 +6,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
@@ -19,7 +19,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         {
             Options.EnableLegacyFilterNotation = true;
 
-            Request.PrimaryResource = ResourceGraph.GetResourceContext<Article>();
+            Request.PrimaryResource = ResourceGraph.GetResourceContext<BlogPost>();
 
             var resourceFactory = new ResourceFactory(new ServiceContainer());
             _reader = new FilterQueryStringParameterReader(Request, ResourceGraph, resourceFactory, Options);
@@ -29,16 +29,16 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("filter", "some", "Expected field name between brackets in filter parameter name.")]
         [InlineData("filter[", "some", "Expected field name between brackets in filter parameter name.")]
         [InlineData("filter[]", "some", "Expected field name between brackets in filter parameter name.")]
-        [InlineData("filter[.]", "some", "Relationship '' in '.' does not exist on resource 'articles'.")]
-        [InlineData("filter[some]", "other", "Field 'some' does not exist on resource 'articles'.")]
-        [InlineData("filter[author]", "some", "Attribute 'author' does not exist on resource 'articles'.")]
-        [InlineData("filter[author.articles]", "some", "Field 'articles' in 'author.articles' must be an attribute or a to-one relationship on resource 'authors'.")]
-        [InlineData("filter[unknown.id]", "some", "Relationship 'unknown' in 'unknown.id' does not exist on resource 'articles'.")]
+        [InlineData("filter[.]", "some", "Relationship '' in '.' does not exist on resource 'blogPosts'.")]
+        [InlineData("filter[some]", "other", "Field 'some' does not exist on resource 'blogPosts'.")]
+        [InlineData("filter[author]", "some", "Attribute 'author' does not exist on resource 'blogPosts'.")]
+        [InlineData("filter[author.posts]", "some", "Field 'posts' in 'author.posts' must be an attribute or a to-one relationship on resource 'webAccounts'.")]
+        [InlineData("filter[unknown.id]", "some", "Relationship 'unknown' in 'unknown.id' does not exist on resource 'blogPosts'.")]
         [InlineData("filter[author]", " ", "Unexpected whitespace.")]
-        [InlineData("filter", "expr:equals(some,'other')", "Field 'some' does not exist on resource 'articles'.")]
-        [InlineData("filter", "expr:equals(author,'Joe')", "Attribute 'author' does not exist on resource 'articles'.")]
-        [InlineData("filter", "expr:has(author)", "Relationship 'author' must be a to-many relationship on resource 'articles'.")]
-        [InlineData("filter", "expr:equals(count(author),'1')", "Relationship 'author' must be a to-many relationship on resource 'articles'.")]
+        [InlineData("filter", "expr:equals(some,'other')", "Field 'some' does not exist on resource 'blogPosts'.")]
+        [InlineData("filter", "expr:equals(author,'Joe')", "Attribute 'author' does not exist on resource 'blogPosts'.")]
+        [InlineData("filter", "expr:has(author)", "Relationship 'author' must be a to-many relationship on resource 'blogPosts'.")]
+        [InlineData("filter", "expr:equals(count(author),'1')", "Relationship 'author' must be a to-many relationship on resource 'blogPosts'.")]
         public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
         {
             // Act
@@ -72,11 +72,11 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("filter[caption]", "isnull:", "equals(caption,null)")]
         [InlineData("filter[caption]", "isnotnull:", "not(equals(caption,null))")]
         [InlineData("filter[caption]", "unknown:some", "equals(caption,'unknown:some')")]
-        [InlineData("filter[author.firstName]", "Jack", "equals(author.firstName,'Jack')")]
+        [InlineData("filter[author.userName]", "Jack", "equals(author.userName,'Jack')")]
         [InlineData("filter", "expr:equals(caption,'some')", "equals(caption,'some')")]
         [InlineData("filter", "expr:equals(author,null)", "equals(author,null)")]
-        [InlineData("filter", "expr:has(author.articles)", "has(author.articles)")]
-        [InlineData("filter", "expr:equals(count(author.articles),'1')", "equals(count(author.articles),'1')")]
+        [InlineData("filter", "expr:has(author.posts)", "has(author.posts)")]
+        [InlineData("filter", "expr:equals(count(author.posts),'1')", "equals(count(author.posts),'1')")]
         [InlineData("filter[caption]", "using,comma", "or(equals(caption,'using'),equals(caption,'comma'))")]
         [InlineData("filter[caption]", "like:First,Second", "or(contains(caption,'First'),equals(caption,'Second'))")]
         [InlineData("filter[caption]", "like:First,like:Second", "or(contains(caption,'First'),contains(caption,'Second'))")]

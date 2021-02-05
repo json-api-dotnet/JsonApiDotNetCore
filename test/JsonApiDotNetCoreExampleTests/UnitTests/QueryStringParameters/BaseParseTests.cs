@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
@@ -16,18 +16,17 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             Options = new JsonApiOptions();
 
             ResourceGraph = new ResourceGraphBuilder(Options, NullLoggerFactory.Instance)
-                .Add<LegacyBlog>()
-                .Add<Article>()
-                .Add<Author>()
-                .Add<Address>()
-                .Add<Country>()
-                .Add<Revision>()
-                .Add<Tag>()
+                .Add<Blog>()
+                .Add<BlogPost>()
+                .Add<Label>()
+                .Add<Comment>()
+                .Add<WebAccount>()
+                .Add<AccountPreferences>()
                 .Build();
 
             Request = new JsonApiRequest
             {
-                PrimaryResource = ResourceGraph.GetResourceContext<LegacyBlog>(),
+                PrimaryResource = ResourceGraph.GetResourceContext<Blog>(),
                 IsCollection = true
             };
         }

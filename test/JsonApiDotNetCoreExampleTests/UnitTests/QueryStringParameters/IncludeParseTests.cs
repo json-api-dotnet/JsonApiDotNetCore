@@ -51,10 +51,10 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("includes", "", "Relationship name expected.")]
         [InlineData("includes", " ", "Unexpected whitespace.")]
         [InlineData("includes", ",", "Relationship name expected.")]
-        [InlineData("includes", "articles,", "Relationship name expected.")]
-        [InlineData("includes", "articles[", ", expected.")]
-        [InlineData("includes", "title", "Relationship 'title' does not exist on resource 'legacyBlogs'.")]
-        [InlineData("includes", "articles.revisions.publishTime,", "Relationship 'publishTime' in 'articles.revisions.publishTime' does not exist on resource 'revisions'.")]
+        [InlineData("includes", "posts,", "Relationship name expected.")]
+        [InlineData("includes", "posts[", ", expected.")]
+        [InlineData("includes", "title", "Relationship 'title' does not exist on resource 'blogs'.")]
+        [InlineData("includes", "posts.comments.publishTime,", "Relationship 'publishTime' in 'posts.comments.publishTime' does not exist on resource 'comments'.")]
         public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
         {
             // Act
@@ -73,12 +73,12 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
 
         [Theory]
         [InlineData("includes", "owner", "owner")]
-        [InlineData("includes", "articles", "articles")]
-        [InlineData("includes", "owner.articles", "owner.articles")]
-        [InlineData("includes", "articles.author", "articles.author")]
-        [InlineData("includes", "articles.revisions", "articles.revisions")]
-        [InlineData("includes", "articles,articles.revisions", "articles.revisions")]
-        [InlineData("includes", "articles,articles.revisions,articles.tags", "articles.revisions,articles.tags")]
+        [InlineData("includes", "posts", "posts")]
+        [InlineData("includes", "owner.posts", "owner.posts")]
+        [InlineData("includes", "posts.author", "posts.author")]
+        [InlineData("includes", "posts.comments", "posts.comments")]
+        [InlineData("includes", "posts,posts.comments", "posts.comments")]
+        [InlineData("includes", "posts,posts.comments,posts.labels", "posts.comments,posts.labels")]
         public void Reader_Read_Succeeds(string parameterName, string parameterValue, string valueExpected)
         {
             // Act
