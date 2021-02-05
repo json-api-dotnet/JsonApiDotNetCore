@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// </summary>
     public abstract class RelationshipAttribute : ResourceFieldAttribute
     {
-        private LinkTypes _links;
+        private LinkTypes _links = LinkTypes.NotConfigured;
 
         /// <summary>
         /// The property name of the EF Core inverse navigation, which may or may not exist.
@@ -62,8 +62,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// When not explicitly assigned, the default value depends on the relationship type (see remarks).
         /// </summary>
         /// <remarks>
-        /// This defaults to <see cref="LinkTypes.All"/> for <see cref="HasManyAttribute"/> and <see cref="HasManyThroughAttribute"/> relationships.
-        /// This defaults to <see cref="LinkTypes.NotConfigured"/> for <see cref="HasOneAttribute"/> relationships, which means that
+        /// This defaults to <see cref="LinkTypes.NotConfigured"/>, which means that
         /// the configuration in <see cref="IJsonApiOptions"/> or <see cref="ResourceContext"/> is used.
         /// </remarks>
         public LinkTypes Links
