@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFieldSets
 {
     public sealed class SparseFieldSetTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {

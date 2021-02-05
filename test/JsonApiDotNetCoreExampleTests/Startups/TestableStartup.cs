@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace JsonApiDotNetCoreExampleTests
+namespace JsonApiDotNetCoreExampleTests.Startups
 {
     public class TestableStartup<TDbContext> : EmptyStartup
         where TDbContext : DbContext

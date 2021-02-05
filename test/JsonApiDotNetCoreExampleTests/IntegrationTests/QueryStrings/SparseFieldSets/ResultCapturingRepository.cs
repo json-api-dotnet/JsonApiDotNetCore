@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFieldSets
 {
     /// <summary>
     /// Enables sparse fieldset tests to verify which fields were (not) retrieved from the database.

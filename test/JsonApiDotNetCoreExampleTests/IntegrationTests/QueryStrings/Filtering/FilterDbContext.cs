@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 {
     public sealed class FilterDbContext : DbContext
     {

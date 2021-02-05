@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 {
     public sealed class FilterDepthTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {

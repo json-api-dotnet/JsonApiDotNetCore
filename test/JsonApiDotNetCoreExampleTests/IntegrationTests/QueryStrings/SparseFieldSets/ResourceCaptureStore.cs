@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SparseFieldSets
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFieldSets
 {
     public sealed class ResourceCaptureStore
     {

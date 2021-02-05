@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Serialization;

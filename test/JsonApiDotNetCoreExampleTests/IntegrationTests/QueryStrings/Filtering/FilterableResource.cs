@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Filtering
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 {
     public sealed class FilterableResource : Identifiable
     {

@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Includes
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
 {
     public sealed class IncludeTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {

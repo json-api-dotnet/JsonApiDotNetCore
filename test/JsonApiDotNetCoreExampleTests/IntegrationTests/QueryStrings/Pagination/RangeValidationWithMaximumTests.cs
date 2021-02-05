@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 {
     public sealed class RangeValidationWithMaximumTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {

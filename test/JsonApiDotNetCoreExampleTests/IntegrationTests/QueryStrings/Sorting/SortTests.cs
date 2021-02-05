@@ -11,7 +11,7 @@ using JsonApiDotNetCoreExample.Models;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Sorting
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
 {
     public sealed class SortTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {

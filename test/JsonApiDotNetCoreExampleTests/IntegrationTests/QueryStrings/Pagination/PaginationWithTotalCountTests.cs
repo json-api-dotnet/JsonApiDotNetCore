@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Pagination
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 {
     public sealed class PaginationWithTotalCountTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
     {
