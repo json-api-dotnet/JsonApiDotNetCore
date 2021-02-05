@@ -122,7 +122,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             if (resourceOrResources is IEnumerable)
             {
                 dynamic resources = resourceOrResources;
-                return _resourceHookExecutor.OnReturn(resources, ResourcePipeline.GetRelationship).ToArray();
+                return Enumerable.ToArray(_resourceHookExecutor.OnReturn(resources, ResourcePipeline.GetRelationship));
             }
 
             if (resourceOrResources is IIdentifiable)

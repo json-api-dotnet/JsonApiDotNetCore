@@ -242,6 +242,42 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
+        public async Task Tag_HashSet_Through_Secondary_Endpoint_Is_Hidden()
+        {
+            // Arrange
+            var article = _articleFaker.Generate();
+            var tags = _tagFaker.Generate(2);
+            string toBeExcluded = "This should not be included";
+            tags[0].Name = toBeExcluded;
+
+            var articleTags = new[]
+            {
+                new ArticleTag
+                {
+                    Article = article,
+                    Tag = tags[0]
+                },
+                new ArticleTag
+                {
+                    Article = article,
+                    Tag = tags[1]
+                }
+            };
+            _dbContext.ArticleTags.AddRange(articleTags);
+            await _dbContext.SaveChangesAsync();
+
+            var route = $"/api/v1/articles/{article.Id}/tags";
+
+            // Act
+            var response = await _client.GetAsync(route);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with body: {body}");
+            Assert.DoesNotContain(toBeExcluded, body);
+        }
+
+        [Fact]
         public async Task Passport_Through_Secondary_Endpoint_Is_Hidden()
         {
             // Arrange
