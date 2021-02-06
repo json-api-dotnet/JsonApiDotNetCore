@@ -46,7 +46,6 @@ namespace UnitTests.ResourceHooks
                 .Add<Article>()
                 .Add<IdentifiableArticleTag>()
                 .Add<Tag>()
-                .Add<TodoItemCollection, Guid>()
                 .Build();
 
             _todoFaker = new Faker<TodoItem>().Rules((f, i) => i.Id = f.UniqueIndex + 1);

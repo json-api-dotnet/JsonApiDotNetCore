@@ -10,7 +10,6 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<Author> AuthorDifferentDbContextName { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<LegacyBlog> Blogs { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -18,11 +17,6 @@ namespace JsonApiDotNetCoreExample.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<SuperUser>().HasBaseType<User>();
-
-            builder.Entity<TodoItem>()
-                .Property(t => t.CreatedDate).HasDefaultValueSql("CURRENT_TIMESTAMP").IsRequired();
-
             builder.Entity<TodoItem>()
                 .HasOne(t => t.Assignee)
                 .WithMany(p => p.AssignedTodoItems);
@@ -56,16 +50,6 @@ namespace JsonApiDotNetCoreExample.Data
                 .HasOne(p => p.OneToOnePerson)
                 .WithOne(p => p.OneToOneTodoItem)
                 .HasForeignKey<TodoItem>("OneToOnePersonKey");
-
-            builder.Entity<TodoItemCollection>()
-                .HasOne(p => p.Owner)
-                .WithMany(p => p.TodoCollections)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<Person>()
-                .HasOne(p => p.Role)
-                .WithOne(p => p.Person)
-                .HasForeignKey<Person>("PersonRoleKey");
         }
     }
 }

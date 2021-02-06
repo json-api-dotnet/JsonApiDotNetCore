@@ -72,7 +72,13 @@ namespace NoEntityFrameworkTests
         public async Task Can_create_WorkItem()
         {
             // Arrange
-            var newTitle = Guid.NewGuid().ToString();
+            var newWorkItem = new WorkItem
+            {
+                IsBlocked = true,
+                Title = "Some",
+                DurationInHours = 2,
+                ProjectId = Guid.NewGuid()
+            };
 
             var requestBody = new
             {
@@ -81,8 +87,10 @@ namespace NoEntityFrameworkTests
                     type = "workItems",
                     attributes = new
                     {
-                        title = newTitle,
-                        ordinal = 1
+                        isBlocked = newWorkItem.IsBlocked,
+                        title = newWorkItem.Title,
+                        durationInHours = newWorkItem.DurationInHours,
+                        projectId = newWorkItem.ProjectId,
                     }
                 }
             };
@@ -96,7 +104,10 @@ namespace NoEntityFrameworkTests
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["title"].Should().Be(newTitle);
+            responseDocument.SingleData.Attributes["isBlocked"].Should().Be(newWorkItem.IsBlocked);
+            responseDocument.SingleData.Attributes["title"].Should().Be(newWorkItem.Title);
+            responseDocument.SingleData.Attributes["durationInHours"].Should().Be(newWorkItem.DurationInHours);
+            responseDocument.SingleData.Attributes["projectId"].Should().Be(newWorkItem.ProjectId.ToString());
         }
 
         [Fact]

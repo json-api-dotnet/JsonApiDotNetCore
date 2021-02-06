@@ -12,7 +12,5 @@ namespace JsonApiDotNetCoreExample.Models
         public int TagId { get; set; }
         [HasOne]
         public Tag Tag { get; set; }
-
-        public string SomeMetaData { get; set; }
     }
 }
