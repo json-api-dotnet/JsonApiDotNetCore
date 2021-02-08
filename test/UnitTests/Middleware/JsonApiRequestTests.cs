@@ -19,16 +19,16 @@ namespace UnitTests.Middleware
         [InlineData("GET", "/articles", true, EndpointKind.Primary, true)]
         [InlineData("GET", "/articles/1", false, EndpointKind.Primary, true)]
         [InlineData("GET", "/articles/1/author", false, EndpointKind.Secondary, true)]
-        [InlineData("GET", "/articles/1/revisions", true, EndpointKind.Secondary, true)]
+        [InlineData("GET", "/articles/1/tags", true, EndpointKind.Secondary, true)]
         [InlineData("GET", "/articles/1/relationships/author", false, EndpointKind.Relationship, true)]
-        [InlineData("GET", "/articles/1/relationships/revisions", true, EndpointKind.Relationship, true)]
+        [InlineData("GET", "/articles/1/relationships/tags", true, EndpointKind.Relationship, true)]
         [InlineData("POST", "/articles", false, EndpointKind.Primary, false)]
-        [InlineData("POST", "/articles/1/relationships/revisions", true, EndpointKind.Relationship, false)]
+        [InlineData("POST", "/articles/1/relationships/tags", true, EndpointKind.Relationship, false)]
         [InlineData("PATCH", "/articles/1", false, EndpointKind.Primary, false)]
         [InlineData("PATCH", "/articles/1/relationships/author", false, EndpointKind.Relationship, false)]
-        [InlineData("PATCH", "/articles/1/relationships/revisions", true, EndpointKind.Relationship, false)]
+        [InlineData("PATCH", "/articles/1/relationships/tags", true, EndpointKind.Relationship, false)]
         [InlineData("DELETE", "/articles/1", false, EndpointKind.Primary, false)]
-        [InlineData("DELETE", "/articles/1/relationships/revisions", true, EndpointKind.Relationship, false)]
+        [InlineData("DELETE", "/articles/1/relationships/tags", true, EndpointKind.Relationship, false)]
         public async Task Sets_request_properties_correctly(string requestMethod, string requestPath, bool expectIsCollection, EndpointKind expectKind, bool expectIsReadOnly)
         {
             // Arrange
@@ -40,7 +40,6 @@ namespace UnitTests.Middleware
             var graphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
             graphBuilder.Add<Article>();
             graphBuilder.Add<Author>();
-            graphBuilder.Add<Revision>();
 
             var resourceGraph = graphBuilder.Build();
 

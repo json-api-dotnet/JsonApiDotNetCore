@@ -15,14 +15,4 @@ namespace JsonApiDotNetCoreExample.Controllers
             : base(options, loggerFactory, resourceService)
         { }
     }
-
-    public sealed class SuperUsersController : JsonApiController<SuperUser>
-    {
-        public SuperUsersController(
-            IJsonApiOptions options,
-            ILoggerFactory loggerFactory,
-            IResourceService<SuperUser> resourceService)
-            : base(options, loggerFactory, resourceService)
-        { }
-    }
 }

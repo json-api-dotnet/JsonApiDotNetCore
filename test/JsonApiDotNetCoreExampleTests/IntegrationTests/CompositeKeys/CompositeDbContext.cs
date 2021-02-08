@@ -13,17 +13,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.Entity<Car>()
+            builder.Entity<Car>()
                 .HasKey(car => new {car.RegionId, car.LicensePlate});
 
-            modelBuilder.Entity<Engine>()
+            builder.Entity<Engine>()
                 .HasOne(engine => engine.Car)
                 .WithOne(car => car.Engine)
                 .HasForeignKey<Engine>();
 
-            modelBuilder.Entity<Dealership>()
+            builder.Entity<Dealership>()
                 .HasMany(dealership => dealership.Inventory)
                 .WithOne(car => car.Dealership);
         }

@@ -2,21 +2,23 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.Startups;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 {
-    public sealed class NoModelStateValidationTests : IClassFixture<IntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext>>
+    public sealed class NoModelStateValidationTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext> _testContext;
 
-        public NoModelStateValidationTests(IntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext> testContext)
+        public NoModelStateValidationTests(ExampleIntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext> testContext)
         {
             _testContext = testContext;
         }
 
         [Fact]
-        public async Task When_posting_resource_with_invalid_attribute_value_it_must_succeed()
+        public async Task Can_create_resource_with_invalid_attribute_value()
         {
             // Arrange
             var requestBody = new
@@ -45,7 +47,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_patching_resource_with_invalid_attribute_value_it_must_succeed()
+        public async Task Can_update_resource_with_invalid_attribute_value()
         {
             // Arrange
             var directory = new SystemDirectory

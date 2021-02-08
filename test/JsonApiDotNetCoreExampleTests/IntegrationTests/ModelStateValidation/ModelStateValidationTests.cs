@@ -3,21 +3,23 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.Startups;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 {
-    public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestContext<ModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext>>
+    public sealed class ModelStateValidationTests : IClassFixture<ExampleIntegrationTestContext<ModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext>>
     {
-        private readonly IntegrationTestContext<ModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<ModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext> _testContext;
 
-        public ModelStateValidationTests(IntegrationTestContext<ModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext> testContext)
+        public ModelStateValidationTests(ExampleIntegrationTestContext<ModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext> testContext)
         {
             _testContext = testContext;
         }
 
         [Fact]
-        public async Task When_posting_resource_with_omitted_required_attribute_value_it_must_fail()
+        public async Task Cannot_create_resource_with_omitted_required_attribute()
         {
             // Arrange
             var requestBody = new
@@ -48,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_posting_resource_with_null_for_required_attribute_value_it_must_fail()
+        public async Task Cannot_create_resource_with_null_for_required_attribute_value()
         {
             // Arrange
             var requestBody = new
@@ -80,7 +82,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_posting_resource_with_invalid_attribute_value_it_must_fail()
+        public async Task Cannot_create_resource_with_invalid_attribute_value()
         {
             // Arrange
             var requestBody = new
@@ -112,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_posting_resource_with_valid_attribute_value_it_must_succeed()
+        public async Task Can_create_resource_with_valid_attribute_value()
         {
             // Arrange
             var requestBody = new
@@ -142,7 +144,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_posting_resource_with_multiple_violations_it_must_fail()
+        public async Task Cannot_create_resource_with_multiple_violations()
         {
             // Arrange
             var requestBody = new
@@ -184,7 +186,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_posting_resource_with_annotated_relationships_it_must_succeed()
+        public async Task Can_create_resource_with_annotated_relationships()
         {
             // Arrange
             var parentDirectory = new SystemDirectory
@@ -273,7 +275,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_posting_annotated_to_many_relationship_it_must_succeed()
+        public async Task Can_add_to_annotated_ToMany_relationship()
         {
             // Arrange
             var directory = new SystemDirectory
@@ -318,7 +320,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_patching_resource_with_omitted_required_attribute_value_it_must_succeed()
+        public async Task Can_update_resource_with_omitted_required_attribute_value()
         {
             // Arrange
             var directory = new SystemDirectory
@@ -358,7 +360,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_patching_resource_with_null_for_required_attribute_value_it_must_fail()
+        public async Task Cannot_update_resource_with_null_for_required_attribute_value()
         {
             // Arrange
             var directory = new SystemDirectory
@@ -402,7 +404,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_patching_resource_with_invalid_attribute_value_it_must_fail()
+        public async Task Cannot_update_resource_with_invalid_attribute_value()
         {
             // Arrange
             var directory = new SystemDirectory
@@ -446,7 +448,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_patching_resource_with_invalid_ID_it_must_fail()
+        public async Task Cannot_update_resource_with_invalid_ID()
         {
             // Arrange
             var directory = new SystemDirectory
@@ -510,7 +512,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_patching_resource_with_valid_attribute_value_it_must_succeed()
+        public async Task Can_update_resource_with_valid_attribute_value()
         {
             // Arrange
             var directory = new SystemDirectory
@@ -550,7 +552,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_patching_resource_with_annotated_relationships_it_must_succeed()
+        public async Task Can_update_resource_with_annotated_relationships()
         {
             // Arrange
             var directory = new SystemDirectory
@@ -662,7 +664,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_patching_resource_with_multiple_self_references_it_must_succeed()
+        public async Task Can_update_resource_with_multiple_self_references()
         {
             // Arrange
             var directory = new SystemDirectory
@@ -721,7 +723,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_patching_resource_with_collection_of_self_references_it_must_succeed()
+        public async Task Can_update_resource_with_collection_of_self_references()
         {
             // Arrange
             var directory = new SystemDirectory
@@ -775,7 +777,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_patching_annotated_ToOne_relationship_it_must_succeed()
+        public async Task Can_replace_annotated_ToOne_relationship()
         {
             // Arrange
             var directory = new SystemDirectory
@@ -822,7 +824,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_patching_annotated_ToMany_relationship_it_must_succeed()
+        public async Task Can_replace_annotated_ToMany_relationship()
         {
             // Arrange
             var directory = new SystemDirectory
@@ -879,7 +881,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         }
 
         [Fact]
-        public async Task When_deleting_annotated_to_many_relationship_it_must_succeed()
+        public async Task Can_remove_from_annotated_ToMany_relationship()
         {
             // Arrange
             var directory = new SystemDirectory

@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Newtonsoft.Json;
@@ -31,13 +30,11 @@ namespace UnitTests.Models
         public void When_resource_has_default_constructor_it_must_succeed()
         {
             // Arrange
-            var options = new JsonApiOptions();
-
-            var graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
+            var graph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .Add<ResourceWithoutConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object, options);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object);
 
             var body = new
             {
@@ -62,13 +59,11 @@ namespace UnitTests.Models
         public void When_resource_has_default_constructor_that_throws_it_must_fail()
         {
             // Arrange
-            var options = new JsonApiOptions();
-
-            var graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
+            var graph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .Add<ResourceWithThrowingConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object, options);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object);
 
             var body = new
             {
@@ -92,53 +87,14 @@ namespace UnitTests.Models
         }
 
         [Fact]
-        public void When_resource_has_constructor_with_injectable_parameter_it_must_succeed()
-        {
-            // Arrange
-            var options = new JsonApiOptions();
-
-            var graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
-                .Add<ResourceWithDbContextConstructor>()
-                .Build();
-
-            var appDbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>().Options, new FrozenSystemClock());
-
-            var serviceContainer = new ServiceContainer();
-            serviceContainer.AddService(typeof(AppDbContext), appDbContext);
-
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object, options);
-
-            var body = new
-            {
-                data = new
-                {
-                    id = "1",
-                    type = "resourceWithDbContextConstructors"
-                }
-            };
-
-            string content = JsonConvert.SerializeObject(body);
-
-            // Act
-            object result = serializer.Deserialize(content);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(typeof(ResourceWithDbContextConstructor), result.GetType());
-            Assert.Equal(appDbContext, ((ResourceWithDbContextConstructor)result).AppDbContext);
-        }
-
-        [Fact]
         public void When_resource_has_constructor_with_string_parameter_it_must_fail()
         {
             // Arrange
-            var options = new JsonApiOptions();
-
-            var graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
+            var graph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .Add<ResourceWithStringConstructor>()
                 .Build();
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object, options);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object);
 
             var body = new
             {
