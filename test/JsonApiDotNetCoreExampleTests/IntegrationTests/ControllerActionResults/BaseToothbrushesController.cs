@@ -12,6 +12,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
 {
     public abstract class BaseToothbrushesController : BaseJsonApiController<Toothbrush>
     {
+        public const int _emptyActionResultId = 11111111;
+        public const int _actionResultWithErrorObjectId = 22222222;
+        public const int _actionResultWithStringParameter = 33333333;
+        public const int _objectResultWithErrorObjectId = 44444444;
+        public const int _objectResultWithErrorCollectionId = 55555555;
+
         protected BaseToothbrushesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
             IResourceService<Toothbrush> resourceService)
             : base(options, loggerFactory, resourceService)
@@ -20,12 +26,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
 
         public override async Task<IActionResult> GetAsync(int id, CancellationToken cancellationToken)
         {
-            if (id == 11111111)
+            if (id == _emptyActionResultId)
             {
                 return NotFound();
             }
 
-            if (id == 22222222)
+            if (id == _actionResultWithErrorObjectId)
             {
                 return NotFound(new Error(HttpStatusCode.NotFound)
                 {
@@ -33,17 +39,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
                 });
             }
 
-            if (id == 33333333)
+            if (id == _actionResultWithStringParameter)
             {
                 return Conflict("Something went wrong.");
             }
 
-            if (id == 44444444)
+            if (id == _objectResultWithErrorObjectId)
             {
                 return Error(new Error(HttpStatusCode.BadGateway));
             }
 
-            if (id == 55555555)
+            if (id == _objectResultWithErrorCollectionId)
             {
                 var errors = new[]
                 {
