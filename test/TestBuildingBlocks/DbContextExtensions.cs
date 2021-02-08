@@ -5,7 +5,7 @@ using Npgsql;
 
 namespace TestBuildingBlocks
 {
-    public static class AppDbContextExtensions
+    public static class DbContextExtensions
     {
         public static async Task ClearTableAsync<TEntity>(this DbContext dbContext) where TEntity : class
         {
