@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
@@ -177,6 +178,12 @@ namespace JsonApiDotNetCore.Configuration
         /// Set to <c>null</c> for unlimited.
         /// </summary>
         int? MaximumOperationsPerRequest { get; }
+
+        /// <summary>
+        /// Enables to override the default isolation level for database transactions, enabling to balance between consistency and performance.
+        /// Defaults to <c>null</c>, which leaves this up to Entity Framework Core to choose (and then it varies per database provider).
+        /// </summary>
+        IsolationLevel? TransactionIsolationLevel { get; }
 
         /// <summary>
         /// Specifies the settings that are used by the <see cref="JsonSerializer"/>.
