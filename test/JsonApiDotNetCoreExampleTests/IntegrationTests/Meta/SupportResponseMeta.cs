@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Serialization;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class TestResponseMeta : IResponseMeta
+    public sealed class SupportResponseMeta : IResponseMeta
     {
         public IReadOnlyDictionary<string, object> GetMeta()
         {

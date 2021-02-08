@@ -1,45 +1,47 @@
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Startups;
+using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class ResourceMetaTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
+    public sealed class ResourceMetaTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
+        private readonly SupportFakers _fakers = new SupportFakers();
 
-        public ResourceMetaTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
+        public ResourceMetaTests(ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.ConfigureServicesAfterStartup(services =>
+            {
+                services.AddScoped<IResourceDefinition<SupportTicket>, SupportTicketDefinition>();
+            });
         }
 
         [Fact]
         public async Task Returns_resource_meta_from_ResourceDefinition()
         {
             // Arrange
-            var todoItems = new[]
-            {
-                new TodoItem {Description = "Important: Pay the bills"},
-                new TodoItem {Description = "Plan my birthday party"},
-                new TodoItem {Description = "Important: Call mom"}
-            };
+            var tickets = _fakers.SupportTicket.Generate(3);
+            tickets[0].Description = "Critical: " + tickets[0].Description;
+            tickets[2].Description = "Critical: " + tickets[2].Description;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<TodoItem>();
-                dbContext.TodoItems.AddRange(todoItems);
-
+                await dbContext.ClearTableAsync<SupportTicket>();
+                dbContext.SupportTickets.AddRange(tickets);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/todoItems";
+            var route = "/supportTickets";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -57,22 +59,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         public async Task Returns_resource_meta_from_ResourceDefinition_in_included_resources()
         {
             // Arrange
-            var person = new Person
-            {
-                TodoItems = new HashSet<TodoItem>
-                {
-                    new TodoItem {Description = "Important: Pay the bills"}
-                }
-            };
+            var family = _fakers.ProductFamily.Generate();
+            family.Tickets = _fakers.SupportTicket.Generate(1);
+            family.Tickets[0].Description = "Critical: " + family.Tickets[0].Description;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<TodoItem>();
-                dbContext.People.Add(person);
+                await dbContext.ClearTableAsync<ProductFamily>();
+                dbContext.ProductFamilies.Add(family);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/people/{person.StringId}?include=todoItems";
+            var route = $"/productFamilies/{family.StringId}?include=tickets";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

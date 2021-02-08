@@ -3,26 +3,25 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class ResponseMetaTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
+    public sealed class ResponseMetaTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
 
-        public ResponseMetaTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
+        public ResponseMetaTests(ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
         {
             _testContext = testContext;
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddSingleton<IResponseMeta, TestResponseMeta>();
+                services.AddSingleton<IResponseMeta, SupportResponseMeta>();
             });
 
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
@@ -33,9 +32,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         public async Task Returns_top_level_meta()
         {
             // Arrange
-            await _testContext.RunOnDatabaseAsync(async dbContext => { await dbContext.ClearTableAsync<Person>(); });
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<SupportTicket>();
+            });
 
-            var route = "/api/v1/people";
+            var route = "/supportTickets";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -55,8 +57,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
     ]
   },
   ""links"": {
-    ""self"": ""http://localhost/api/v1/people"",
-    ""first"": ""http://localhost/api/v1/people""
+    ""self"": ""http://localhost/supportTickets"",
+    ""first"": ""http://localhost/supportTickets""
   },
   ""data"": []
 }");

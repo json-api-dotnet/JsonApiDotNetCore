@@ -4,20 +4,20 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class TopLevelCountTests : IClassFixture<ExampleIntegrationTestContext<Startup, AppDbContext>>
+    public sealed class TopLevelCountTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
+        private readonly SupportFakers _fakers = new SupportFakers();
 
-        public TopLevelCountTests(ExampleIntegrationTestContext<Startup, AppDbContext> testContext)
+        public TopLevelCountTests(ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -34,17 +34,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         public async Task Renders_resource_count_for_collection()
         {
             // Arrange
-            var todoItem = new TodoItem();
+            var ticket = _fakers.SupportTicket.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTableAsync<TodoItem>();
-                dbContext.TodoItems.Add(todoItem);
-
+                await dbContext.ClearTableAsync<SupportTicket>();
+                dbContext.SupportTickets.Add(ticket);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/todoItems";
+            var route = "/supportTickets";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -60,9 +59,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         public async Task Renders_resource_count_for_empty_collection()
         {
             // Arrange
-            await _testContext.RunOnDatabaseAsync(async dbContext => { await dbContext.ClearTableAsync<TodoItem>(); });
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<SupportTicket>();
+            });
 
-            var route = "/api/v1/todoItems";
+            var route = "/supportTickets";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -78,19 +80,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         public async Task Hides_resource_count_in_create_resource_response()
         {
             // Arrange
+            var newDescription = _fakers.SupportTicket.Generate().Description;
+
             var requestBody = new
             {
                 data = new
                 {
-                    type = "todoItems",
+                    type = "supportTickets",
                     attributes = new
                     {
-                        description = "Something"
+                        description = newDescription
                     }
                 }
             };
 
-            var route = "/api/v1/todoItems";
+            var route = "/supportTickets";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -105,11 +109,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         public async Task Hides_resource_count_in_update_resource_response()
         {
             // Arrange
-            var todoItem = new TodoItem();
+            var existingTicket = _fakers.SupportTicket.Generate();
+
+            var newDescription = _fakers.SupportTicket.Generate().Description;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.TodoItems.Add(todoItem);
+                dbContext.SupportTickets.Add(existingTicket);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -117,16 +123,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             {
                 data = new
                 {
-                    type = "todoItems",
-                    id = todoItem.StringId,
+                    type = "supportTickets",
+                    id = existingTicket.StringId,
                     attributes = new
                     {
-                        description = "Something else"
+                        description = newDescription
                     }
                 }
             };
 
-            var route = "/api/v1/todoItems/" + todoItem.StringId;
+            var route = "/supportTickets/" + existingTicket.StringId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
