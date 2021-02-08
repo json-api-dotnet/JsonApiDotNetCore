@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Net;
-using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Serialization.Objects;

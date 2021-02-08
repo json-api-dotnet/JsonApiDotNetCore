@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Bogus;
+using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
 {

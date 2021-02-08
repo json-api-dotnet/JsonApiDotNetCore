@@ -6,22 +6,24 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creating
 {
     public sealed class AtomicCreateResourceTests
-        : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicCreateResourceTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicCreateResourceTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
 
-            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromTestProject());
+            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromExampleProject());
         }
 
         [Fact]
@@ -126,7 +128,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                 responseDocument.Results[index].SingleData.Should().NotBeNull();
                 responseDocument.Results[index].SingleData.Type.Should().Be("musicTracks");
                 responseDocument.Results[index].SingleData.Attributes["title"].Should().Be(newTracks[index].Title);
-                responseDocument.Results[index].SingleData.Attributes["lengthInSeconds"].Should().BeApproximately(newTracks[index].LengthInSeconds);
+                responseDocument.Results[index].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTracks[index].LengthInSeconds, 0.00000000001M);
                 responseDocument.Results[index].SingleData.Attributes["genre"].Should().Be(newTracks[index].Genre);
                 responseDocument.Results[index].SingleData.Attributes["releasedAt"].Should().BeCloseTo(newTracks[index].ReleasedAt);
                 responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();

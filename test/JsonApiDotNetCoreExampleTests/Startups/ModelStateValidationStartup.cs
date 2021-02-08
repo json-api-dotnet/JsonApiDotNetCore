@@ -2,12 +2,12 @@ using JsonApiDotNetCore.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests
+namespace JsonApiDotNetCoreExampleTests.Startups
 {
-    public sealed class RelativeApiNamespaceStartup<TDbContext> : TestableStartup<TDbContext>
+    public sealed class ModelStateValidationStartup<TDbContext> : TestableStartup<TDbContext>
         where TDbContext : DbContext
     {
-        public RelativeApiNamespaceStartup(IConfiguration configuration)
+        public ModelStateValidationStartup(IConfiguration configuration)
             : base(configuration)
         {
         }
@@ -16,8 +16,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
         {
             base.SetJsonApiOptions(options);
 
-            options.Namespace = "api";
-            options.UseRelativeLinks = true;
+            options.ValidateModelState = true;
         }
     }
 }

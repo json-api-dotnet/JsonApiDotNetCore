@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         {
             _testContext = testContext;
 
-            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromTestProject());
+            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromExampleProject());
         }
 
         [Fact]

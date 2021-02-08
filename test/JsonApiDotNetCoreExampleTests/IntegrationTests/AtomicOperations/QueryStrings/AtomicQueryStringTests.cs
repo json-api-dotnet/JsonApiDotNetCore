@@ -6,29 +6,31 @@ using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryStrings
 {
     public sealed class AtomicQueryStringTests
-        : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private static readonly DateTime _frozenTime = 30.July(2018).At(13, 46, 12);
 
-        private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicQueryStringTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicQueryStringTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddControllersFromTestProject();
+                services.AddControllersFromExampleProject();
 
-                services.AddSingleton<ISystemClock>(new FrozenSystemClock(_frozenTime));
+                services.AddSingleton<ISystemClock>(new FrozenSystemClock {UtcNow = _frozenTime});
                 services.AddScoped<IResourceDefinition<MusicTrack, Guid>, MusicTrackReleaseDefinition>();
             });
 
@@ -368,7 +370,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
             responseDocument.Results[0].SingleData.Attributes.Should().HaveCount(2);
             responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
-            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].Should().BeApproximately(newTrackLength);
+            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTrackLength, 0.00000000001M);
         }
 
         [Fact]
@@ -411,7 +413,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
             responseDocument.Results[0].SingleData.Attributes.Should().HaveCount(2);
             responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
-            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].Should().BeApproximately(newTrackLength);
+            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTrackLength, 0.00000000001M);
         }
     }
 }

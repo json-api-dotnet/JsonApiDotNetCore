@@ -14,7 +14,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         : IClassFixture<ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
-        private readonly RestrictionFakers _fakers = new RestrictionFakers();
 
         public DisableQueryStringTests(ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> testContext)
         {
