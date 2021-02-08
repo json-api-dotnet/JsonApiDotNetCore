@@ -10,7 +10,7 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class PassportHooksDefinition : ResourceHooksDefinition<Passport>
+    public class PassportHooksDefinition : LockableHooksDefinition<Passport>
     {
         public PassportHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
         {
@@ -29,26 +29,12 @@ namespace JsonApiDotNetCoreExample.Definitions
 
         public override void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<Passport> resourcesByRelationship, ResourcePipeline pipeline)
         {
-            resourcesByRelationship.GetByRelationship<Person>().ToList().ForEach(kvp => DoesNotTouchLockedPassports(kvp.Value));
+            resourcesByRelationship.GetByRelationship<Person>().ToList().ForEach(kvp => DisallowLocked(kvp.Value));
         }
 
         public override IEnumerable<Passport> OnReturn(HashSet<Passport> resources, ResourcePipeline pipeline)
         {
             return resources.Where(p => !p.IsLocked);
-        }
-
-        private void DoesNotTouchLockedPassports(IEnumerable<Passport> resources)
-        {
-            foreach (var passport in resources ?? Enumerable.Empty<Passport>())
-            {
-                if (passport.IsLocked)
-                {
-                    throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
-                    {
-                        Title = "You are not allowed to update fields or relationships of locked persons."
-                    });
-                }
-            }
         }
     }
 }
