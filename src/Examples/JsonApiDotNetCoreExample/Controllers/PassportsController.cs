@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreExample.Controllers
 {
     public sealed class PassportsController : JsonApiController<Passport>
     {
-        public PassportsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Passport, int> resourceService)
+        public PassportsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Passport> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

@@ -1,21 +1,20 @@
 using System;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Middleware;
+using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using NoEntityFrameworkExample;
 using NoEntityFrameworkExample.Data;
 using NoEntityFrameworkExample.Models;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace NoEntityFrameworkTests
 {
-    public sealed class WorkItemTests : IClassFixture<WebApplicationFactory<Startup>>
+    public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly WebApplicationFactory<Startup> _factory;
 
@@ -25,143 +24,126 @@ namespace NoEntityFrameworkTests
         }
 
         [Fact]
-        public async Task Can_Get_WorkItems()
+        public async Task Can_get_WorkItems()
         {
             // Arrange
-            await ExecuteOnDbContextAsync(async dbContext =>
+            await RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.WorkItems.Add(new WorkItem());
                 await dbContext.SaveChangesAsync();
             });
 
-            var client = _factory.CreateClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/workItems");
+            var route = "/api/v1/workItems";
 
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await ExecuteGetAsync<Document>(route);
 
             // Assert
-            AssertStatusCode(HttpStatusCode.OK, response);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            string responseBody = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(responseBody);
-
-            Assert.NotEmpty(document.ManyData);
+            responseDocument.ManyData.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task Can_Get_WorkItem_By_Id()
+        public async Task Can_get_WorkItem_by_ID()
         {
             // Arrange
             var workItem = new WorkItem();
 
-            await ExecuteOnDbContextAsync(async dbContext =>
+            await RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.WorkItems.Add(workItem);
                 await dbContext.SaveChangesAsync();
             });
 
-            var client = _factory.CreateClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/workItems/" + workItem.StringId);
+            var route = "/api/v1/workItems/" + workItem.StringId;
 
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await ExecuteGetAsync<Document>(route);
 
             // Assert
-            AssertStatusCode(HttpStatusCode.OK, response);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            string responseBody = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(responseBody);
-
-            Assert.NotNull(document.SingleData);
-            Assert.Equal(workItem.StringId, document.SingleData.Id);
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Id.Should().Be(workItem.StringId);
         }
 
         [Fact]
-        public async Task Can_Create_WorkItem()
+        public async Task Can_create_WorkItem()
         {
             // Arrange
-            var title = Guid.NewGuid().ToString();
+            var newWorkItem = new WorkItem
+            {
+                IsBlocked = true,
+                Title = "Some",
+                DurationInHours = 2,
+                ProjectId = Guid.NewGuid()
+            };
 
-            var requestContent = new
+            var requestBody = new
             {
                 data = new
                 {
                     type = "workItems",
                     attributes = new
                     {
-                        title,
-                        ordinal = 1
+                        isBlocked = newWorkItem.IsBlocked,
+                        title = newWorkItem.Title,
+                        durationInHours = newWorkItem.DurationInHours,
+                        projectId = newWorkItem.ProjectId,
                     }
                 }
             };
 
-            var requestBody = JsonConvert.SerializeObject(requestContent);
-
-            var request = new HttpRequestMessage(HttpMethod.Post, "/api/v1/workItems/")
-            {
-                Content = new StringContent(requestBody)
-            };
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(HeaderConstants.MediaType);
-
-            var client = _factory.CreateClient();
+            var route = "/api/v1/workItems/";
 
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            AssertStatusCode(HttpStatusCode.Created, response);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            string responseBody = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(responseBody);
-
-            Assert.NotNull(document.SingleData);
-            Assert.Equal(title, document.SingleData.Attributes["title"]);
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Attributes["isBlocked"].Should().Be(newWorkItem.IsBlocked);
+            responseDocument.SingleData.Attributes["title"].Should().Be(newWorkItem.Title);
+            responseDocument.SingleData.Attributes["durationInHours"].Should().Be(newWorkItem.DurationInHours);
+            responseDocument.SingleData.Attributes["projectId"].Should().Be(newWorkItem.ProjectId.ToString());
         }
 
         [Fact]
-        public async Task Can_Delete_WorkItem()
+        public async Task Can_delete_WorkItem()
         {
             // Arrange
             var workItem = new WorkItem();
 
-            await ExecuteOnDbContextAsync(async dbContext =>
+            await RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.WorkItems.Add(workItem);
                 await dbContext.SaveChangesAsync();
             });
 
-            var client = _factory.CreateClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Delete, "/api/v1/workItems/" + workItem.StringId);
+            var route = "/api/v1/workItems/" + workItem.StringId;
 
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await ExecuteDeleteAsync<string>(route);
 
             // Assert
-            AssertStatusCode(HttpStatusCode.NoContent, response);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            string responseBody = await response.Content.ReadAsStringAsync();
-            Assert.Empty(responseBody);
+            responseDocument.Should().BeEmpty();
         }
 
-        private async Task ExecuteOnDbContextAsync(Func<AppDbContext, Task> asyncAction)
+        protected override HttpClient CreateClient()
+        {
+            return _factory.CreateClient();
+        }
+
+        private async Task RunOnDatabaseAsync(Func<AppDbContext, Task> asyncAction)
         {
             using IServiceScope scope = _factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             await asyncAction(dbContext);
-        }
-
-        private static void AssertStatusCode(HttpStatusCode expected, HttpResponseMessage response)
-        {
-            if (expected != response.StatusCode)
-            {
-                var responseBody = response.Content.ReadAsStringAsync().Result;
-                Assert.True(expected == response.StatusCode, $"Got {response.StatusCode} status code instead of {expected}. Response body: {responseBody}");
-            }
         }
     }
 }

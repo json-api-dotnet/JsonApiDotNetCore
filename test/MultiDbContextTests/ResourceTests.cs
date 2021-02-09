@@ -5,12 +5,12 @@ using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.Testing;
 using MultiDbContextExample;
-using Newtonsoft.Json;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace MultiDbContextTests
 {
-    public sealed class ResourceTests : IClassFixture<WebApplicationFactory<Startup>>
+    public sealed class ResourceTests : IntegrationTest, IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly WebApplicationFactory<Startup> _factory;
 
@@ -20,54 +20,40 @@ namespace MultiDbContextTests
         }
 
         [Fact]
-        public async Task Can_Get_ResourceAs()
+        public async Task Can_get_ResourceAs()
         {
             // Arrange
-            var client = _factory.CreateClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Get, "/resourceAs");
+            var route = "/resourceAs";
 
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await ExecuteGetAsync<Document>(route);
 
             // Assert
-            AssertStatusCode(HttpStatusCode.OK, response);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            string responseBody = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(responseBody);
-
-            document.ManyData.Should().HaveCount(1);
-            document.ManyData[0].Attributes["nameA"].Should().Be("SampleA");
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Attributes["nameA"].Should().Be("SampleA");
         }
 
         [Fact]
-        public async Task Can_Get_ResourceBs()
+        public async Task Can_get_ResourceBs()
         {
             // Arrange
-            var client = _factory.CreateClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Get, "/resourceBs");
+            var route = "/resourceBs";
 
             // Act
-            var response = await client.SendAsync(request);
+            var (httpResponse, responseDocument) = await ExecuteGetAsync<Document>(route);
 
             // Assert
-            AssertStatusCode(HttpStatusCode.OK, response);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            string responseBody = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(responseBody);
-
-            document.ManyData.Should().HaveCount(1);
-            document.ManyData[0].Attributes["nameB"].Should().Be("SampleB");
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Attributes["nameB"].Should().Be("SampleB");
         }
 
-        private static void AssertStatusCode(HttpStatusCode expected, HttpResponseMessage response)
+        protected override HttpClient CreateClient()
         {
-            if (expected != response.StatusCode)
-            {
-                var responseBody = response.Content.ReadAsStringAsync().Result;
-                Assert.True(expected == response.StatusCode, $"Got {response.StatusCode} status code instead of {expected}. Response body: {responseBody}");
-            }
+            return _factory.CreateClient();
         }
     }
 }

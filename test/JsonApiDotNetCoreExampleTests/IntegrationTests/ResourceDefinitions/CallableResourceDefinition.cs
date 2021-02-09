@@ -11,11 +11,6 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 {
-    public interface IUserRolesService
-    {
-        bool AllowIncludeOwner { get; }
-    }
-
     public sealed class CallableResourceDefinition : JsonApiResourceDefinition<CallableResource>
     {
         private readonly IUserRolesService _userRolesService;

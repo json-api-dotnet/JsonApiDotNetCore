@@ -146,7 +146,7 @@ namespace JsonApiDotNetCore.Serialization.Building
                     return;
                 }
 
-                if (_settings.SerializerDefaultValueHandling == DefaultValueHandling.Ignore && value == TypeHelper.GetDefaultValue(attr.Property.PropertyType))
+                if (_settings.SerializerDefaultValueHandling == DefaultValueHandling.Ignore && Equals(value, TypeHelper.GetDefaultValue(attr.Property.PropertyType)))
                 {
                     return;
                 }

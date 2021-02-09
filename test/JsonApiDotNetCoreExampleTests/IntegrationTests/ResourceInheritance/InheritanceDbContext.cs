@@ -13,24 +13,24 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public DbSet<ContentItem> ContentItems { get; set; }
         public DbSet<HumanFavoriteContentItem> HumanFavoriteContentItems { get; set; }
         
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.Entity<Human>()
+            builder.Entity<Human>()
                 .HasDiscriminator<int>("Type")
                 .HasValue<Man>(1)
                 .HasValue<Woman>(2);
             
-            modelBuilder.Entity<HealthInsurance>()
+            builder.Entity<HealthInsurance>()
                 .HasDiscriminator<int>("Type")
                 .HasValue<CompanyHealthInsurance>(1)
                 .HasValue<FamilyHealthInsurance>(2);
             
-            modelBuilder.Entity<ContentItem>()
+            builder.Entity<ContentItem>()
                 .HasDiscriminator<int>("Type")
                 .HasValue<Video>(1)
                 .HasValue<Book>(2);
             
-            modelBuilder.Entity<HumanFavoriteContentItem>()
+            builder.Entity<HumanFavoriteContentItem>()
                 .HasKey(item => new { ContentPersonId = item.ContentItemId, PersonId = item.HumanId });
         }
     }

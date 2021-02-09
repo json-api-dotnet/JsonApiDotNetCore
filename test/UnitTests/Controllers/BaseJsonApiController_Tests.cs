@@ -29,7 +29,7 @@ namespace UnitTests
             public ResourceController(
                 IJsonApiOptions options,
                 ILoggerFactory loggerFactory,
-                IResourceService<Resource, int> resourceService)
+                IResourceService<Resource> resourceService)
                 : base(options, loggerFactory, resourceService)
             { }
 

@@ -1,30 +1,27 @@
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
+    public sealed class ResponseMetaTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
     {
-        private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
 
-        public ResponseMetaTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        public ResponseMetaTests(ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
         {
             _testContext = testContext;
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddSingleton<IResponseMeta, TestResponseMeta>();
+                services.AddSingleton<IResponseMeta, SupportResponseMeta>();
             });
 
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
@@ -32,20 +29,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         }
 
         [Fact]
-        public async Task Registered_IResponseMeta_Adds_TopLevel_Meta()
+        public async Task Returns_top_level_meta()
         {
             // Arrange
-            await _testContext.RunOnDatabaseAsync(async dbContext => { await dbContext.ClearTableAsync<Person>(); });
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<SupportTicket>();
+            });
 
-            var route = "/api/v1/people";
+            var route = "/supportTickets";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<JToken>(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            var expected = @"{
+            responseDocument.Should().BeJson(@"{
   ""meta"": {
     ""license"": ""MIT"",
     ""projectUrl"": ""https://github.com/json-api-dotnet/JsonApiDotNetCore/"",
@@ -57,32 +57,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
     ]
   },
   ""links"": {
-    ""self"": ""http://localhost/api/v1/people"",
-    ""first"": ""http://localhost/api/v1/people""
+    ""self"": ""http://localhost/supportTickets"",
+    ""first"": ""http://localhost/supportTickets""
   },
   ""data"": []
-}";
-
-            responseDocument.ToString().NormalizeLineEndings().Should().Be(expected.NormalizeLineEndings());
-        }
-    }
-
-    public sealed class TestResponseMeta : IResponseMeta
-    {
-        public IReadOnlyDictionary<string, object> GetMeta()
-        {
-            return new Dictionary<string, object>
-            {
-                ["license"] = "MIT",
-                ["projectUrl"] = "https://github.com/json-api-dotnet/JsonApiDotNetCore/",
-                ["versions"] = new[]
-                {
-                    "v4.0.0",
-                    "v3.1.0",
-                    "v2.5.2",
-                    "v1.3.1"
-                }
-            };
+}");
         }
     }
 }

@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Newtonsoft.Json;
@@ -85,41 +84,6 @@ namespace UnitTests.Models
             Assert.Equal(
                 "Failed to create an instance of 'UnitTests.Models.ResourceWithThrowingConstructor' using its default constructor.",
                 exception.Message);
-        }
-
-        [Fact]
-        public void When_resource_has_constructor_with_injectable_parameter_it_must_succeed()
-        {
-            // Arrange
-            var graph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-                .Add<ResourceWithDbContextConstructor>()
-                .Build();
-
-            var appDbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>().Options, new FrozenSystemClock());
-
-            var serviceContainer = new ServiceContainer();
-            serviceContainer.AddService(typeof(AppDbContext), appDbContext);
-
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object);
-
-            var body = new
-            {
-                data = new
-                {
-                    id = "1",
-                    type = "resourceWithDbContextConstructors"
-                }
-            };
-
-            string content = JsonConvert.SerializeObject(body);
-
-            // Act
-            object result = serializer.Deserialize(content);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(typeof(ResourceWithDbContextConstructor), result.GetType());
-            Assert.Equal(appDbContext, ((ResourceWithDbContextConstructor)result).AppDbContext);
         }
 
         [Fact]

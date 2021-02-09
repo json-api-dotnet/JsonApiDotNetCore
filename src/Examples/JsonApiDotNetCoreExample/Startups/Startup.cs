@@ -1,8 +1,6 @@
 using System;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,9 +14,11 @@ namespace JsonApiDotNetCoreExample
 {
     public class Startup : EmptyStartup
     {
+        private static readonly Version _postgresCiBuildVersion = new Version(9, 6);
         private readonly string _connectionString;
 
-        public Startup(IConfiguration configuration) : base(configuration)
+        public Startup(IConfiguration configuration)
+            : base(configuration)
         {
             string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
             _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
@@ -26,31 +26,18 @@ namespace JsonApiDotNetCoreExample
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            ConfigureClock(services);
-
-            services.AddScoped<SkipCacheQueryStringParameterReader>();
-            services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<SkipCacheQueryStringParameterReader>());
+            services.AddSingleton<ISystemClock, SystemClock>();
 
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.EnableSensitiveDataLogging();
-                options.UseNpgsql(_connectionString, innerOptions => innerOptions.SetPostgresVersion(new Version(9, 6)));
-            },
-                // TODO: Remove ServiceLifetime.Transient, after all integration tests have been converted to use IntegrationTestContext.
-                ServiceLifetime.Transient);
+                options.UseNpgsql(_connectionString, postgresOptions => postgresOptions.SetPostgresVersion(_postgresCiBuildVersion));
+            });
 
             services.AddJsonApi<AppDbContext>(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
-
-            // once all tests have been moved to WebApplicationFactory format we can get rid of this line below
-            services.AddClientSerialization();
         }
 
-        protected virtual void ConfigureClock(IServiceCollection services)
-        {
-            services.AddSingleton<ISystemClock, SystemClock>();
-        }
-
-        protected virtual void ConfigureJsonApiOptions(JsonApiOptions options)
+        protected void ConfigureJsonApiOptions(JsonApiOptions options)
         {
             options.IncludeExceptionStackTraceInErrors = true;
             options.Namespace = "api/v1";
@@ -68,7 +55,7 @@ namespace JsonApiDotNetCoreExample
                 var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 appDbContext.Database.EnsureCreated();
             }
-            
+
             app.UseRouting();
             app.UseJsonApi();
             app.UseEndpoints(endpoints => endpoints.MapControllers());

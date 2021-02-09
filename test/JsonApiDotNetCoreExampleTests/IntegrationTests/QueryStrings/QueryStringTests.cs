@@ -3,18 +3,19 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
 {
-    public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Startup, AppDbContext>>
+    public sealed class QueryStringTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
-        private readonly IntegrationTestContext<Startup, AppDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
 
-        public QueryStringTests(IntegrationTestContext<Startup, AppDbContext> testContext)
+        public QueryStringTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
         {
             _testContext = testContext;
         }
@@ -26,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowUnknownQueryStringParameters = false;
 
-            var route = "/api/v1/articles?foo=bar";
+            var route = "/calendars?foo=bar";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -48,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowUnknownQueryStringParameters = true;
 
-            var route = "/api/v1/articles?foo=bar";
+            var route = "/calendars?foo=bar";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -71,7 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowUnknownQueryStringParameters = false;
 
-            var route = "/api/v1/articles?" + parameterName + "=";
+            var route = "calendars?" + parameterName + "=";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

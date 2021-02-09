@@ -2,9 +2,6 @@ using System;
 using System.ComponentModel.Design;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCoreExample.Data;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace UnitTests.Models
@@ -27,34 +24,6 @@ namespace UnitTests.Models
             
             ResourceWithoutConstructor resource = function();
             Assert.NotNull(resource);
-        }
-
-        [Fact]
-        public void When_resource_has_constructor_with_injectable_parameter_it_must_succeed()
-        {
-            // Arrange
-            var contextOptions = new DbContextOptionsBuilder<AppDbContext>().Options;
-            var systemClock = new FrozenSystemClock();
-            var appDbContext = new AppDbContext(contextOptions, systemClock);
-            
-            using var serviceContainer = new ServiceContainer();
-            serviceContainer.AddService(typeof(DbContextOptions<AppDbContext>), contextOptions);
-            serviceContainer.AddService(typeof(ISystemClock), systemClock);
-            serviceContainer.AddService(typeof(AppDbContext), appDbContext);
-
-            var factory = new ResourceFactory(serviceContainer);
-
-            // Act
-            NewExpression newExpression = factory.CreateNewExpression(typeof(ResourceWithDbContextConstructor));
-
-            // Assert
-            var function = Expression
-                .Lambda<Func<ResourceWithDbContextConstructor>>(newExpression)
-                .Compile();
-
-            ResourceWithDbContextConstructor resource = function();
-            Assert.NotNull(resource);
-            Assert.Equal(appDbContext, resource.AppDbContext);
         }
 
         [Fact]
