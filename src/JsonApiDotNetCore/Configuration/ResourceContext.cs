@@ -52,27 +52,33 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <summary>
         /// Configures which links to show in the <see cref="Serialization.Objects.TopLevelLinks"/>
-        /// object for this resource. If set to <see cref="LinkTypes.NotConfigured"/>,
-        /// the configuration will be read from <see cref="IJsonApiOptions"/>.
-        /// Defaults to <see cref="LinkTypes.NotConfigured"/>.
+        /// object for this resource type.
+        /// Defaults to <see cref="LinkTypes.NotConfigured"/>, which falls back to <see cref="IJsonApiOptions.TopLevelLinks"/>.
         /// </summary>
+        /// <remarks>
+        /// In the process of building the resource graph, this value is set based on <see cref="ResourceLinksAttribute.TopLevelLinks"/> usage.
+        /// </remarks>
         public LinkTypes TopLevelLinks { get; internal set; } = LinkTypes.NotConfigured;
 
         /// <summary>
         /// Configures which links to show in the <see cref="Serialization.Objects.ResourceLinks"/>
-        /// object for this resource. If set to <see cref="LinkTypes.NotConfigured"/>,
-        /// the configuration will be read from <see cref="IJsonApiOptions"/>.
-        /// Defaults to <see cref="LinkTypes.NotConfigured"/>.
+        /// object for this resource type.
+        /// Defaults to <see cref="LinkTypes.NotConfigured"/>, which falls back to <see cref="IJsonApiOptions.ResourceLinks"/>.
         /// </summary>
+        /// <remarks>
+        /// In the process of building the resource graph, this value is set based on <see cref="ResourceLinksAttribute.ResourceLinks"/> usage.
+        /// </remarks>
         public LinkTypes ResourceLinks { get; internal set; } = LinkTypes.NotConfigured;
 
         /// <summary>
         /// Configures which links to show in the <see cref="Serialization.Objects.RelationshipLinks"/>
-        /// for all relationships of the resource for which this attribute was instantiated.
-        /// If set to <see cref="LinkTypes.NotConfigured"/>, the configuration will
-        /// be read from <see cref="RelationshipAttribute.Links"/>  or
-        /// <see cref="IJsonApiOptions"/>. Defaults to <see cref="LinkTypes.NotConfigured"/>.
+        /// object for all relationships of this resource type.
+        /// Defaults to <see cref="LinkTypes.NotConfigured"/>, which falls back to <see cref="IJsonApiOptions.RelationshipLinks"/>.
+        /// This can be overruled per relationship by setting <see cref="RelationshipAttribute.Links"/>.
         /// </summary>
+        /// <remarks>
+        /// In the process of building the resource graph, this value is set based on <see cref="ResourceLinksAttribute.RelationshipLinks"/> usage.
+        /// </remarks>
         public LinkTypes RelationshipLinks { get; internal set; } = LinkTypes.NotConfigured;
 
         public override string ToString()
