@@ -115,7 +115,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Unauthorized_TodoItem()
+        public async Task Can_block_access_to_resource_from_GetSingle_endpoint_using_BeforeRead_hook()
         {
             // Arrange
             var route = "/api/v1/todoItems/1337";
@@ -133,7 +133,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Unauthorized_Passport()
+        public async Task Can_block_access_to_included_resource_using_BeforeRead_hook()
         {
             // Arrange
             var route = "/api/v1/people/1?include=passport";
@@ -151,7 +151,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Unauthorized_Article()
+        public async Task Can_block_access_to_resource_from_GetSingle_endpoint_using_OnReturn_hook()
         {
             // Arrange
             var article = _fakers.Article.Generate();
@@ -178,7 +178,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Article_is_hidden()
+        public async Task Can_hide_primary_resource_from_result_set_from_GetAll_endpoint_using_OnReturn_hook()
         {
             // Arrange
             var articles = _fakers.Article.Generate(3);
@@ -203,7 +203,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Article_through_secondary_endpoint_is_hidden()
+        public async Task Can_hide_secondary_resource_from_ToMany_List_relationship_using_OnReturn_hook()
         {
             // Arrange
             string toBeExcluded = "This should not be included";
@@ -230,7 +230,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Passport_Through_Secondary_Endpoint_Is_Hidden()
+        public async Task Can_hide_secondary_resource_from_ToMany_Set_relationship_using_OnReturn_hook()
         {
             // Arrange
             var person = _fakers.Person.Generate();
@@ -254,7 +254,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Tag_is_hidden()
+        public async Task Can_hide_resource_from_included_HasManyThrough_relationship_using_OnReturn_hook()
         {
             // Arrange
             string toBeExcluded = "This should not be included";
@@ -298,12 +298,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
-        public async Task Cascade_permission_error_create_ToOne_relationship()
+        public async Task Can_block_creating_ToOne_relationship_using_BeforeUpdateRelationship_hook()
         {
-            // In the Cascade Permission Error tests, we ensure that all the relevant resources are provided in the hook definitions. In this case, 
-            // re-relating the meta object to a different article would require also a check for the lockedTodo, because we're implicitly updating 
-            // its foreign key.
-
             // Arrange
             var lockedPerson = _fakers.Person.Generate();
             lockedPerson.IsLocked = true;
@@ -344,12 +340,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'people'.");
             responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
-        public async Task Cascade_permission_error_updating_ToOne_relationship()
+        public async Task Can_block_replacing_ToOne_relationship_using_BeforeImplicitUpdateRelationship_hook()
         {
             // Arrange
             var person = _fakers.Person.Generate();
@@ -393,12 +389,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked persons.");
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'passports'.");
             responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
-        public async Task Cascade_permission_error_updating_ToOne_relationship_deletion()
+        public async Task Can_block_clearing_ToOne_relationship_using_BeforeImplicitUpdateRelationship_hook()
         {
             // Arrange
             var person = _fakers.Person.Generate();
@@ -438,12 +434,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked persons.");
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'passports'.");
             responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
-        public async Task Cascade_permission_error_delete_ToOne_relationship()
+        public async Task Can_block_deleting_primary_resource_using_BeforeImplicitUpdateRelationship_hook()
         {
             // Arrange
             var lockedPerson = _fakers.Person.Generate();
@@ -466,12 +462,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'people'.");
             responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
-        public async Task Cascade_permission_error_create_ToMany_relationship()
+        public async Task Can_block_creating_ToMany_relationship_using_BeforeUpdateRelationship_hook()
         {
             // Arrange
             var persons = _fakers.Person.Generate(2);
@@ -522,12 +518,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'todoItems'.");
             responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
-        public async Task Cascade_permission_error_updating_ToMany_relationship()
+        public async Task Can_block_replacing_ToMany_relationship_using_BeforeImplicitUpdateRelationship_hook()
         {
             // Arrange
             var persons = _fakers.Person.Generate(2);
@@ -582,12 +578,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'todoItems'.");
             responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
         [Fact]
-        public async Task Cascade_permission_error_delete_ToMany_relationship()
+        public async Task Can_block_clearing_ToMany_relationship_using_BeforeImplicitUpdateRelationship_hook()
         {
             // Arrange
             var persons = _fakers.Person.Generate(2);
@@ -611,7 +607,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             responseDocument.Errors.Should().HaveCount(1);
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked todo items.");
+            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'todoItems'.");
             responseDocument.Errors[0].Detail.Should().BeNull();
         }
 
