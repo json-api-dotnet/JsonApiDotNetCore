@@ -12,7 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "async": "^3.2.0",
-    "newman": "^5.2.1",
+    "marked": "^2.0.0",
+    "newman": "^5.2.2",
     "path": "^0.12.7"
   }
 }

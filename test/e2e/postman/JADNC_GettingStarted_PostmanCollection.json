@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f44d0703-d5b8-4bcf-8c8b-f5d23baa7ce7",
+		"_postman_id": "ba36148c-078c-4864-95fe-e0a2f47e3878",
 		"name": "JsonApiDotNetCoreGettingStarted",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,7 +11,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "346f319b-c87c-4fd3-81ff-874f695d7206",
 						"exec": [
 							"pm.test(\"Correct response is returned\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -63,7 +62,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "35583730-4fc2-420a-bb58-baaa38993567",
 						"exec": [
 							"pm.test(\"Correct response is returned\", function () {\r",
 							"    pm.response.to.have.status(404);\r",
@@ -114,7 +112,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "c7db941a-26f5-4650-bb22-cc2bcea0b1fb",
 						"exec": [
 							"pm.test(\"Correct response is returned\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -166,7 +163,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "c3d53ca9-5b59-4a9e-871e-cca1d02b4334",
 						"exec": [
 							"pm.test(\"Correct response is returned\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -201,7 +197,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{host}}/api/books?fields=title&include=author",
+					"raw": "{{host}}/api/books?fields[books]=title&include=author",
 					"host": [
 						"{{host}}"
 					],
@@ -211,7 +207,7 @@
 					],
 					"query": [
 						{
-							"key": "fields",
+							"key": "fields[books]",
 							"value": "title"
 						},
 						{
@@ -229,7 +225,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "595ed506-f24c-453a-aaea-99f4b82e6a87",
 						"exec": [
 							"pm.test(\"Correct response is returned\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -287,7 +282,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "0a5476d6-5c52-4b7c-8ef5-fee6e8f5856b",
 						"exec": [
 							"pm.test(\"Correct response is returned\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -345,7 +339,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "406d83df-1b2c-4bce-a2a6-d04bcb5756e3",
 						"exec": [
 							"pm.test(\"Correct response is returned\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -414,7 +407,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "eed97da8-1407-416f-838e-4aaa9191edd0",
 						"exec": [
 							"pm.test(\"Correct response is returned\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -466,7 +458,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e6d4ef48-4706-47fa-9a82-1b312753b303",
 						"exec": [
 							"pm.test(\"Correct response is returned\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -535,7 +526,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ef34f885-48d2-4fed-ab5b-fc55b02598f3",
 						"exec": [
 							"pm.test(\"Correct response is returned\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -592,6 +582,5 @@
 			},
 			"response": []
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }

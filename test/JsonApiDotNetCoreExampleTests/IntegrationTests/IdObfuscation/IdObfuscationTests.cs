@@ -2,18 +2,20 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
 {
     public sealed class IdObfuscationTests
-        : IClassFixture<IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext>>
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> _testContext;
         private readonly ObfuscationFakers _fakers = new ObfuscationFakers();
 
-        public IdObfuscationTests(IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> testContext)
+        public IdObfuscationTests(ExampleIntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> testContext)
         {
             _testContext = testContext;
         }

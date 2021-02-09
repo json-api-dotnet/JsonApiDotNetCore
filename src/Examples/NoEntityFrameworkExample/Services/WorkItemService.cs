@@ -52,12 +52,12 @@ namespace NoEntityFrameworkExample.Services
             return (await QueryAsync(async connection =>
             {
                 var query =
-                    @"insert into ""WorkItems"" (""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId"") values " + 
-                    @"(@description, @isLocked, @ordinal, @uniqueId) returning ""Id"", ""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId""";
+                    @"insert into ""WorkItems"" (""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId"") values " +
+                    @"(@title, @isBlocked, @durationInHours, @projectId) returning ""Id"", ""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId""";
 
                 return await connection.QueryAsync<WorkItem>(new CommandDefinition(query, new
                 {
-                    description = resource.Title, ordinal = resource.DurationInHours, uniqueId = resource.ProjectId, isLocked = resource.IsBlocked
+                    title = resource.Title, isBlocked = resource.IsBlocked, durationInHours = resource.DurationInHours, projectId = resource.ProjectId
                 }, cancellationToken: cancellationToken));
             })).SingleOrDefault();
         }

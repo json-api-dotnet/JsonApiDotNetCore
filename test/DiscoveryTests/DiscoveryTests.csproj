@@ -11,11 +11,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Examples\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj" />
+    <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
-    <PackageReference Include="xunit" Version="$(XUnitVersion)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
   </ItemGroup>
 </Project>

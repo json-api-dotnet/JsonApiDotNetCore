@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -13,19 +12,10 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr]
         public string LastName { get; set; }
 
-        [Attr]
-        public DateTime? DateOfBirth { get; set; }
-
-        [Attr]
-        public string BusinessEmail { get; set; }
-
-        [HasOne]
-        public Address LivingAddress { get; set; }
-
         [HasMany]
         public IList<Article> Articles { get; set; }
 
         [HasMany]
-        public ISet<Blog> Blogs { get; set; }
+        public ISet<Article> Revisions { get; set; }
     }
 }

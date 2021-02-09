@@ -39,8 +39,6 @@ namespace UnitTests.ResourceHooks
 
         public HooksDummyData()
         {
-            var appDbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>().Options, new FrozenSystemClock());
-
             _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .Add<TodoItem>()
                 .Add<Person>()
@@ -48,21 +46,18 @@ namespace UnitTests.ResourceHooks
                 .Add<Article>()
                 .Add<IdentifiableArticleTag>()
                 .Add<Tag>()
-                .Add<TodoItemCollection, Guid>()
                 .Build();
 
             _todoFaker = new Faker<TodoItem>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
             _personFaker = new Faker<Person>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
 
             _articleFaker = new Faker<Article>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
-            _articleTagFaker = new Faker<ArticleTag>().CustomInstantiator(f => new ArticleTag());
+            _articleTagFaker = new Faker<ArticleTag>();
             _identifiableArticleTagFaker = new Faker<IdentifiableArticleTag>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
             _tagFaker = new Faker<Tag>()
-                .CustomInstantiator(f => new Tag())
                 .Rules((f, i) => i.Id = f.UniqueIndex + 1);
 
             _passportFaker = new Faker<Passport>()
-                .CustomInstantiator(f => new Passport(appDbContext))
                 .Rules((f, i) => i.Id = f.UniqueIndex + 1);
         }
 
@@ -193,7 +188,7 @@ namespace UnitTests.ResourceHooks
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, constraintsMock, gpfMock, options) = CreateMocks();
 
-            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions, new FrozenSystemClock()) : null;
+            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
             var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .Add<TPrimary>()
@@ -229,7 +224,7 @@ namespace UnitTests.ResourceHooks
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, constraintsMock, gpfMock, options) = CreateMocks();
 
-            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions, new FrozenSystemClock()) : null;
+            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
             var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .Add<TPrimary>()
@@ -280,7 +275,7 @@ namespace UnitTests.ResourceHooks
                 .UseInMemoryDatabase(databaseName: "repository_mock")
                 .Options;
 
-            using (var context = new AppDbContext(options, new FrozenSystemClock()))
+            using (var context = new AppDbContext(options))
             {
                 seeder(context);
                 ResolveInverseRelationships(context);

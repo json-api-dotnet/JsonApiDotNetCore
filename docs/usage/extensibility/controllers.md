@@ -74,7 +74,7 @@ The next option is to use the ActionFilter attributes that ship with the library
 - `HttpReadOnly`: all of the above
 
 Not only does this reduce boilerplate, but it also provides a more meaningful HTTP response code.
-An attempt to use one blacklisted methods will result in a HTTP 405 Method Not Allowed response.
+An attempt to use one of the blacklisted methods will result in a HTTP 405 Method Not Allowed response.
 
 ```c#
 [HttpReadOnly]

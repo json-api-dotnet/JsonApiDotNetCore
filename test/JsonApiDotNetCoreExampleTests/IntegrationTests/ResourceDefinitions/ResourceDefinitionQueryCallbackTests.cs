@@ -6,16 +6,18 @@ using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 {
-    public sealed class ResourceDefinitionQueryCallbackTests : IClassFixture<IntegrationTestContext<TestableStartup<CallableDbContext>, CallableDbContext>>
+    public sealed class ResourceDefinitionQueryCallbackTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<CallableDbContext>, CallableDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<CallableDbContext>, CallableDbContext> _testContext;
+        private readonly ExampleIntegrationTestContext<TestableStartup<CallableDbContext>, CallableDbContext> _testContext;
 
-        public ResourceDefinitionQueryCallbackTests(IntegrationTestContext<TestableStartup<CallableDbContext>, CallableDbContext> testContext)
+        public ResourceDefinitionQueryCallbackTests(ExampleIntegrationTestContext<TestableStartup<CallableDbContext>, CallableDbContext> testContext)
         {
             _testContext = testContext;
 

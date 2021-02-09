@@ -11,13 +11,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Examples\MultiDbContextExample\MultiDbContextExample.csproj" />
+    <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="$(FluentAssertionsVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
-    <PackageReference Include="xunit" Version="$(XUnitVersion)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
   </ItemGroup>
 </Project>

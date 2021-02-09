@@ -12,9 +12,9 @@ namespace GettingStarted.Data
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.Entity<Person>();
+            builder.Entity<Person>();
         }
     }
 }
