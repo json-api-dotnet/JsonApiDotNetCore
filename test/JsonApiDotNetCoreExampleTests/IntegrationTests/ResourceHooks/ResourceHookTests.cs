@@ -203,6 +203,31 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         }
 
         [Fact]
+        public async Task Can_hide_secondary_resource_from_ToOne_relationship_using_OnReturn_hook()
+        {
+            // Arrange
+            var person = _fakers.Person.Generate();
+            person.Passport = new Passport {IsLocked = true};
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.People.Add(person);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var route = $"/api/v1/people/{person.Id}/passport";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Data.Should().BeNull();
+        }
+
+
+        [Fact]
         public async Task Can_hide_secondary_resource_from_ToMany_List_relationship_using_OnReturn_hook()
         {
             // Arrange
@@ -233,8 +258,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public async Task Can_hide_secondary_resource_from_ToMany_Set_relationship_using_OnReturn_hook()
         {
             // Arrange
+            string toBeExcluded = "This should not be included";
+
             var person = _fakers.Person.Generate();
-            person.Passport = new Passport {IsLocked = true};
+            person.TodoItems = _fakers.TodoItem.Generate(3).ToHashSet();
+            person.TodoItems.First().Description = toBeExcluded;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -242,15 +270,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/people/{person.Id}/passport";
+            var route = $"/api/v1/people/{person.Id}/todoItems";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Should().NotContain(toBeExcluded);
         }
 
         [Fact]
