@@ -126,7 +126,7 @@
 <li><code>HttpReadOnly</code>: all of the above</li>
 </ul>
 <p>Not only does this reduce boilerplate, but it also provides a more meaningful HTTP response code.
-An attempt to use one blacklisted methods will result in a HTTP 405 Method Not Allowed response.</p>
+An attempt to use one of the blacklisted methods will result in a HTTP 405 Method Not Allowed response.</p>
 <pre><code class="lang-c#">[HttpReadOnly]
 public class ArticlesController : BaseJsonApiController&lt;Article&gt;
 {
