@@ -29,5 +29,10 @@ namespace JsonApiDotNetCoreExample.Definitions
             List<TodoItem> todos = resourcesByRelationship.GetByRelationship<Person>().SelectMany(kvp => kvp.Value).ToList();
             DisallowLocked(todos);
         }
+
+        public override IEnumerable<TodoItem> OnReturn(HashSet<TodoItem> resources, ResourcePipeline pipeline)
+        {
+            return resources.Where(t => t.Description != "This should not be included");
+        }
     }
 }

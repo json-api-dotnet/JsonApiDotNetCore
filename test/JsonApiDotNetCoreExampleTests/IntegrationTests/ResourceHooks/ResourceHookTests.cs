@@ -260,17 +260,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             // Arrange
             string toBeExcluded = "This should not be included";
 
-            var author = _fakers.Author.Generate();
-            author.Revisions = _fakers.Article.Generate(3).ToHashSet();
-            author.Articles[0].Caption = toBeExcluded;
+            var person = _fakers.Person.Generate();
+            person.TodoItems = _fakers.TodoItem.Generate(3).ToHashSet();
+            person.TodoItems.First().Description = toBeExcluded;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AuthorDifferentDbContextName.Add(author);
+                dbContext.People.Add(person);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/api/v1/authors/{author.Id}/revisions";
+            var route = $"/api/v1/people/{person.Id}/todoItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
