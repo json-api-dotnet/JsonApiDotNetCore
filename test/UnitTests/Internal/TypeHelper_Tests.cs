@@ -191,6 +191,7 @@ namespace UnitTests.Internal
         private sealed class Model : IIdentifiable
         {
             public string StringId { get; set; }
+            public string LocalId { get; set; }
         }
     }
 }

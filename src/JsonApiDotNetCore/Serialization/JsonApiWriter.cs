@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Serialization
             if (context == null) throw new ArgumentNullException(nameof(context));
 
             var response = context.HttpContext.Response;
-            response.ContentType = HeaderConstants.MediaType;
+            response.ContentType = _serializer.ContentType;
 
             await using var writer = context.WriterFactory(response.Body, Encoding.UTF8);
             string responseContent;

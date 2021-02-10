@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.Serialization
 
             _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
             _request = request ?? throw new ArgumentNullException(nameof(request));
-            _resourceContextProvider = resourceContextProvider ??  throw new ArgumentNullException(nameof(resourceContextProvider));
+            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
             _traceWriter = new TraceLogWriter<JsonApiReader>(loggerFactory);
         }
 
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Serialization
                 }
                 catch (JsonApiSerializationException exception)
                 {
-                    throw new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, body, exception);
+                    throw ToInvalidRequestBodyException(exception, body);
                 }
                 catch (Exception exception)
                 {
@@ -67,7 +67,11 @@ namespace JsonApiDotNetCore.Serialization
                 }
             }
 
-            if (RequiresRequestBody(context.HttpContext.Request.Method))
+            if (_request.Kind == EndpointKind.AtomicOperations)
+            {
+                AssertHasRequestBody(model, body);
+            }
+            else if (RequiresRequestBody(context.HttpContext.Request.Method))
             {
                 ValidateRequestBody(model, body, context.HttpContext.Request);
             }
@@ -81,6 +85,29 @@ namespace JsonApiDotNetCore.Serialization
             return await reader.ReadToEndAsync();
         }
 
+        private InvalidRequestBodyException ToInvalidRequestBodyException(JsonApiSerializationException exception, string body)
+        {
+            if (_request.Kind != EndpointKind.AtomicOperations)
+            {
+                return new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, body,
+                    exception);
+            }
+
+            // In contrast to resource endpoints, we don't include the request body for operations because they are usually very long.
+            var requestException =
+                new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, null, exception.InnerException);
+
+            if (exception.AtomicOperationIndex != null)
+            {
+                foreach (var error in requestException.Errors)
+                {
+                    error.Source.Pointer = $"/atomic:operations[{exception.AtomicOperationIndex}]";
+                }
+            }
+
+            return requestException;
+        }
+        
         private bool RequiresRequestBody(string requestMethod)
         {
             if (requestMethod == HttpMethods.Post || requestMethod == HttpMethods.Patch)
@@ -93,13 +120,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private void ValidateRequestBody(object model, string body, HttpRequest httpRequest)
         {
-            if (model == null && string.IsNullOrWhiteSpace(body))
-            {
-                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                {
-                    Title = "Missing request body."
-                });
-            }
+            AssertHasRequestBody(model, body);
 
             ValidateIncomingResourceType(model, httpRequest);
 
@@ -112,6 +133,17 @@ namespace JsonApiDotNetCore.Serialization
             if (_request.Kind == EndpointKind.Relationship)
             {
                 ValidateForRelationshipType(httpRequest.Method, model, body);
+            }
+        }
+
+        private static void AssertHasRequestBody(object model, string body)
+        {
+            if (model == null && string.IsNullOrWhiteSpace(body))
+            {
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "Missing request body."
+                });
             }
         }
 

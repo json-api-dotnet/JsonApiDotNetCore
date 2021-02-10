@@ -1,3 +1,4 @@
+using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -29,5 +30,28 @@ namespace JsonApiDotNetCore.Middleware
         
         /// <inheritdoc />
         public bool IsReadOnly { get; set; }
+
+        /// <inheritdoc />
+        public OperationKind? OperationKind { get; set; }
+
+        /// <inheritdoc />
+        public Guid? TransactionId { get; set; }
+
+        /// <inheritdoc />
+        public void CopyFrom(IJsonApiRequest other)
+        {
+            if (other == null) throw new ArgumentNullException(nameof(other));
+
+            Kind = other.Kind;
+            BasePath = other.BasePath;
+            PrimaryId = other.PrimaryId;
+            PrimaryResource = other.PrimaryResource;
+            SecondaryResource = other.SecondaryResource;
+            Relationship = other.Relationship;
+            IsCollection = other.IsCollection;
+            IsReadOnly = other.IsReadOnly;
+            OperationKind = other.OperationKind;
+            TransactionId = other.TransactionId;
+        }
     }
 }

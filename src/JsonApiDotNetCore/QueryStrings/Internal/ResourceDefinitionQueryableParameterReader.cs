@@ -32,6 +32,11 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool CanRead(string parameterName)
         {
+            if (_request.Kind == EndpointKind.AtomicOperations)
+            {
+                return false;
+            }
+
             var queryableHandler = GetQueryableHandler(parameterName);
             return queryableHandler != null;
         }

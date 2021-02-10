@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -15,11 +17,13 @@ namespace JsonApiDotNetCore.Repositories
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IJsonApiRequest _request;
 
-        public ResourceRepositoryAccessor(IServiceProvider serviceProvider, IResourceContextProvider resourceContextProvider)
+        public ResourceRepositoryAccessor(IServiceProvider serviceProvider, IResourceContextProvider resourceContextProvider, IJsonApiRequest request)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentException(nameof(serviceProvider));
             _resourceContextProvider = resourceContextProvider ?? throw new ArgumentException(nameof(serviceProvider));
+            _request = request ?? throw new ArgumentNullException(nameof(request));
         }
 
         /// <inheritdoc />
@@ -51,7 +55,7 @@ namespace JsonApiDotNetCore.Repositories
         public async Task<TResource> GetForCreateAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable<TId>
         {
-            dynamic repository = ResolveWriteRepository(typeof(TResource));
+            dynamic repository = GetWriteRepository(typeof(TResource));
             return await repository.GetForCreateAsync(id, cancellationToken);
         }
 
@@ -59,7 +63,7 @@ namespace JsonApiDotNetCore.Repositories
         public async Task CreateAsync<TResource>(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
-            dynamic repository = ResolveWriteRepository(typeof(TResource));
+            dynamic repository = GetWriteRepository(typeof(TResource));
             await repository.CreateAsync(resourceFromRequest, resourceForDatabase, cancellationToken);
         }
 
@@ -67,7 +71,7 @@ namespace JsonApiDotNetCore.Repositories
         public async Task<TResource> GetForUpdateAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
-            dynamic repository = ResolveWriteRepository(typeof(TResource));
+            dynamic repository = GetWriteRepository(typeof(TResource));
             return await repository.GetForUpdateAsync(queryLayer, cancellationToken);
         }
 
@@ -75,7 +79,7 @@ namespace JsonApiDotNetCore.Repositories
         public async Task UpdateAsync<TResource>(TResource resourceFromRequest, TResource resourceFromDatabase, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
-            dynamic repository = ResolveWriteRepository(typeof(TResource));
+            dynamic repository = GetWriteRepository(typeof(TResource));
             await repository.UpdateAsync(resourceFromRequest, resourceFromDatabase, cancellationToken);
         }
 
@@ -83,7 +87,7 @@ namespace JsonApiDotNetCore.Repositories
         public async Task DeleteAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable<TId>
         {
-            dynamic repository = ResolveWriteRepository(typeof(TResource));
+            dynamic repository = GetWriteRepository(typeof(TResource));
             await repository.DeleteAsync(id, cancellationToken);
         }
 
@@ -91,7 +95,7 @@ namespace JsonApiDotNetCore.Repositories
         public async Task SetRelationshipAsync<TResource>(TResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
-            dynamic repository = ResolveWriteRepository(typeof(TResource));
+            dynamic repository = GetWriteRepository(typeof(TResource));
             await repository.SetRelationshipAsync(primaryResource, secondaryResourceIds, cancellationToken);
         }
 
@@ -99,7 +103,7 @@ namespace JsonApiDotNetCore.Repositories
         public async Task AddToToManyRelationshipAsync<TResource, TId>(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable<TId>
         {
-            dynamic repository = ResolveWriteRepository(typeof(TResource));
+            dynamic repository = GetWriteRepository(typeof(TResource));
             await repository.AddToToManyRelationshipAsync(primaryId, secondaryResourceIds, cancellationToken);
         }
 
@@ -107,7 +111,7 @@ namespace JsonApiDotNetCore.Repositories
         public async Task RemoveFromToManyRelationshipAsync<TResource>(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
-            dynamic repository = ResolveWriteRepository(typeof(TResource));
+            dynamic repository = GetWriteRepository(typeof(TResource));
             await repository.RemoveFromToManyRelationshipAsync(primaryResource, secondaryResourceIds, cancellationToken);
         }
 
@@ -128,6 +132,27 @@ namespace JsonApiDotNetCore.Repositories
 
             var resourceDefinitionType = typeof(IResourceReadRepository<,>).MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
             return _serviceProvider.GetRequiredService(resourceDefinitionType);
+        }
+
+        private object GetWriteRepository(Type resourceType)
+        {
+            var writeRepository = ResolveWriteRepository(resourceType);
+
+            if (_request.TransactionId != null)
+            {
+                if (!(writeRepository is IRepositorySupportsTransaction repository))
+                {
+                    var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+                    throw new MissingTransactionSupportException(resourceContext.PublicName);
+                }
+
+                if (repository.TransactionId != _request.TransactionId)
+                {
+                    throw new NonSharedTransactionException();
+                }
+            }
+
+            return writeRepository;
         }
 
         protected virtual object ResolveWriteRepository(Type resourceType)

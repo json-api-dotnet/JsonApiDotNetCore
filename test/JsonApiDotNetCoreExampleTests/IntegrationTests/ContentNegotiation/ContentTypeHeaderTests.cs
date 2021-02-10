@@ -17,6 +17,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public ContentTypeHeaderTests(ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromExampleProject());
         }
 
         [Fact]
@@ -31,6 +33,39 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
             httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.MediaType);
+        }
+
+        [Fact]
+        public async Task Returns_JsonApi_ContentType_header_with_AtomicOperations_extension()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "policies",
+                            attributes = new
+                            {
+                                name = "some"
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/operations";
+
+            // Act
+            var (httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.AtomicOperationsMediaType);
         }
 
         [Fact]
@@ -88,6 +123,39 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        }
+
+        [Fact]
+        public async Task Permits_JsonApi_ContentType_header_with_AtomicOperations_extension_at_operations_endpoint()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "policies",
+                            attributes = new
+                            {
+                                name = "some"
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/operations";
+            var contentType = HeaderConstants.AtomicOperationsMediaType;
+
+            // Act
+            var (httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -153,6 +221,37 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         }
 
         [Fact]
+        public async Task Denies_JsonApi_ContentType_header_with_AtomicOperations_extension_at_resource_endpoint()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "policies",
+                    attributes = new
+                    {
+                        name = "some"
+                    }
+                }
+            };
+
+            var route = "/policies";
+            var contentType = HeaderConstants.AtomicOperationsMediaType;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
+            responseDocument.Errors[0].Title.Should().Be("The specified Content-Type header value is not supported.");
+            responseDocument.Errors[0].Detail.Should().Be("Please specify 'application/vnd.api+json' instead of 'application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic\"' for the Content-Type header value.");
+        }
+
+        [Fact]
         public async Task Denies_JsonApi_ContentType_header_with_CharSet()
         {
             // Arrange
@@ -212,6 +311,44 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             responseDocument.Errors[0].Title.Should().Be("The specified Content-Type header value is not supported.");
             responseDocument.Errors[0].Detail.Should().Be("Please specify 'application/vnd.api+json' instead of 'application/vnd.api+json; unknown=unexpected' for the Content-Type header value.");
+        }
+
+        [Fact]
+        public async Task Denies_JsonApi_ContentType_header_at_operations_endpoint()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "policies",
+                            attributes = new
+                            {
+                                name = "some"
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/operations";
+            var contentType = HeaderConstants.MediaType;
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
+            responseDocument.Errors[0].Title.Should().Be("The specified Content-Type header value is not supported.");
+            responseDocument.Errors[0].Detail.Should().Be("Please specify 'application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic\"' instead of 'application/vnd.api+json' for the Content-Type header value.");
         }
     }
 }

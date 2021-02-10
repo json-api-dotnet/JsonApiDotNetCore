@@ -14,6 +14,7 @@
 ## [Creating](writing/creating.md)
 ## [Updating](writing/updating.md)
 ## [Deleting](writing/deleting.md)
+## [Bulk/batch](writing/bulk-batch-operations.md)
 
 # [Resource Graph](resource-graph.md)
 # [Options](options.md)

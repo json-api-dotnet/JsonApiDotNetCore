@@ -1,3 +1,4 @@
+using System.Data;
 using JsonApiDotNetCore.Resources.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -66,6 +67,12 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <inheritdoc />
         public int? MaximumIncludeDepth { get; set; }
+
+        /// <inheritdoc />
+        public int? MaximumOperationsPerRequest { get; set; } = 10;
+
+        /// <inheritdoc />
+        public IsolationLevel? TransactionIsolationLevel { get; }
 
         /// <inheritdoc />
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings

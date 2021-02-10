@@ -63,5 +63,11 @@ namespace JsonApiDotNetCore.Serialization
             var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
             return resourceContext.Relationships;
         }
+
+        /// <inheritdoc />
+        public void ResetCache()
+        {
+            _sparseFieldSetCache.Reset();
+        }
     }
 }

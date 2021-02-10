@@ -25,6 +25,11 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         public IJsonApiSerializer GetSerializer()
         {
+            if (_request.Kind == EndpointKind.AtomicOperations)
+            {
+                return (IJsonApiSerializer)_provider.GetRequiredService(typeof(AtomicOperationsResponseSerializer));
+            }
+
             var targetType = GetDocumentType();
 
             var serializerType = typeof(ResponseSerializer<>).MakeGenericType(targetType);

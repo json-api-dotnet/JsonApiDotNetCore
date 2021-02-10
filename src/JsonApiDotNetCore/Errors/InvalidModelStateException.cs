@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Reflection;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -18,37 +18,50 @@ namespace JsonApiDotNetCore.Errors
     {
         public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType,
             bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
-            : base(FromModelState(modelState, resourceType, includeExceptionStackTraceInErrors, namingStrategy))
+            : this(FromModelStateDictionary(modelState, resourceType), includeExceptionStackTraceInErrors, namingStrategy)
         {
         }
 
-        private static IReadOnlyCollection<Error> FromModelState(ModelStateDictionary modelState, Type resourceType,
-            bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
+        private static IEnumerable<ModelStateViolation> FromModelStateDictionary(ModelStateDictionary modelState, Type resourceType)
         {
-            if (modelState == null) throw new ArgumentNullException(nameof(modelState));
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
-            if (namingStrategy == null) throw new ArgumentNullException(nameof(namingStrategy));
-
-            List<Error> errors = new List<Error>();
-
-            foreach (var (propertyName, entry) in modelState.Where(x => x.Value.Errors.Any()))
+            foreach (var (propertyName, entry) in modelState)
             {
-                string attributeName = GetDisplayNameForProperty(propertyName, resourceType, namingStrategy);
-
-                foreach (var modelError in entry.Errors)
+                foreach (ModelError error in entry.Errors)
                 {
-                    if (modelError.Exception is JsonApiException jsonApiException)
-                    {
-                        errors.AddRange(jsonApiException.Errors);
-                    }
-                    else
-                    {
-                        errors.Add(FromModelError(modelError, attributeName, includeExceptionStackTraceInErrors));
-                    }
+                    yield return new ModelStateViolation("/data/attributes/", propertyName, resourceType, error);
                 }
             }
+        }
 
-            return errors;
+        public InvalidModelStateException(IEnumerable<ModelStateViolation> violations,
+            bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
+            : base(FromModelStateViolations(violations, includeExceptionStackTraceInErrors, namingStrategy))
+        {
+        }
+
+        private static IEnumerable<Error> FromModelStateViolations(IEnumerable<ModelStateViolation> violations, 
+            bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
+        {
+            if (violations == null) throw new ArgumentNullException(nameof(violations));
+            if (namingStrategy == null) throw new ArgumentNullException(nameof(namingStrategy));
+
+            foreach (var violation in violations)
+            {
+                if (violation.Error.Exception is JsonApiException jsonApiException)
+                {
+                    foreach (var error in jsonApiException.Errors)
+                    {
+                        yield return error;
+                    }
+                }
+                else
+                {
+                    string attributeName = GetDisplayNameForProperty(violation.PropertyName, violation.ResourceType, namingStrategy);
+                    var attributePath = violation.Prefix + attributeName;
+
+                    yield return FromModelError(violation.Error, attributePath, includeExceptionStackTraceInErrors);
+                }
+            }
         }
 
         private static string GetDisplayNameForProperty(string propertyName, Type resourceType,
@@ -64,18 +77,18 @@ namespace JsonApiDotNetCore.Errors
             return propertyName;
         }
 
-        private static Error FromModelError(ModelError modelError, string attributeName,
+        private static Error FromModelError(ModelError modelError, string attributePath,
             bool includeExceptionStackTraceInErrors)
         {
             var error = new Error(HttpStatusCode.UnprocessableEntity)
             {
                 Title = "Input validation failed.",
                 Detail = modelError.ErrorMessage,
-                Source = attributeName == null
+                Source = attributePath == null
                     ? null
                     : new ErrorSource
                     {
-                        Pointer = $"/data/attributes/{attributeName}"
+                        Pointer = attributePath
                     }
             };
 

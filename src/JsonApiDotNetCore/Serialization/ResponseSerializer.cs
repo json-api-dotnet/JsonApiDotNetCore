@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
-    /// Server serializer implementation of <see cref="BaseSerializer"/>
+    /// Server serializer implementation of <see cref="BaseSerializer"/> for resources of a specific type.
     /// </summary>
     /// <remarks>
     /// Because in JsonApiDotNetCore every JSON:API request is associated with exactly one
@@ -31,6 +31,9 @@ namespace JsonApiDotNetCore.Serialization
         private readonly Type _primaryResourceType;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
+
+        /// <inheritdoc />
+        public string ContentType { get; } = HeaderConstants.MediaType;
 
         public ResponseSerializer(IMetaBuilder metaBuilder,
             ILinkBuilder linkBuilder,

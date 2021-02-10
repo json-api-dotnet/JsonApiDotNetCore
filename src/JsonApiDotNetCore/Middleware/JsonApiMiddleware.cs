@@ -24,6 +24,7 @@ namespace JsonApiDotNetCore.Middleware
     public sealed class JsonApiMiddleware
     {
         private static readonly MediaTypeHeaderValue _mediaType = MediaTypeHeaderValue.Parse(HeaderConstants.MediaType);
+        private static readonly MediaTypeHeaderValue _atomicOperationsMediaType = MediaTypeHeaderValue.Parse(HeaderConstants.AtomicOperationsMediaType);
 
         private readonly RequestDelegate _next;
 
@@ -49,13 +50,25 @@ namespace JsonApiDotNetCore.Middleware
             var primaryResourceContext = CreatePrimaryResourceContext(routeValues, controllerResourceMapping, resourceContextProvider);
             if (primaryResourceContext != null)
             {
-                if (!await ValidateContentTypeHeaderAsync(httpContext, options.SerializerSettings) || 
-                    !await ValidateAcceptHeaderAsync(httpContext, options.SerializerSettings))
+                if (!await ValidateContentTypeHeaderAsync(HeaderConstants.MediaType, httpContext, options.SerializerSettings) || 
+                    !await ValidateAcceptHeaderAsync(_mediaType, httpContext, options.SerializerSettings))
                 {
                     return;
                 }
 
-                SetupRequest((JsonApiRequest)request, primaryResourceContext, routeValues, options, resourceContextProvider, httpContext.Request);
+                SetupResourceRequest((JsonApiRequest)request, primaryResourceContext, routeValues, options, resourceContextProvider, httpContext.Request);
+
+                httpContext.RegisterJsonApiRequest();
+            }
+            else if (IsOperationsRequest(routeValues))
+            {
+                if (!await ValidateContentTypeHeaderAsync(HeaderConstants.AtomicOperationsMediaType, httpContext, options.SerializerSettings) || 
+                    !await ValidateAcceptHeaderAsync(_atomicOperationsMediaType, httpContext, options.SerializerSettings))
+                {
+                    return;
+                }
+
+                SetupOperationsRequest((JsonApiRequest)request, options, httpContext.Request);
 
                 httpContext.RegisterJsonApiRequest();
             }
@@ -79,15 +92,15 @@ namespace JsonApiDotNetCore.Middleware
             return null;
         }
 
-        private static async Task<bool> ValidateContentTypeHeaderAsync(HttpContext httpContext, JsonSerializerSettings serializerSettings)
+        private static async Task<bool> ValidateContentTypeHeaderAsync(string allowedContentType, HttpContext httpContext, JsonSerializerSettings serializerSettings)
         {
             var contentType = httpContext.Request.ContentType;
-            if (contentType != null && contentType != HeaderConstants.MediaType)
+            if (contentType != null && contentType != allowedContentType)
             {
                 await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.UnsupportedMediaType)
                 {
                     Title = "The specified Content-Type header value is not supported.",
-                    Detail = $"Please specify '{HeaderConstants.MediaType}' instead of '{contentType}' for the Content-Type header value."
+                    Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' for the Content-Type header value."
                 });
                 return false;
             }
@@ -95,7 +108,7 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private static async Task<bool> ValidateAcceptHeaderAsync(HttpContext httpContext, JsonSerializerSettings serializerSettings)
+        private static async Task<bool> ValidateAcceptHeaderAsync(MediaTypeHeaderValue allowedMediaTypeValue, HttpContext httpContext, JsonSerializerSettings serializerSettings)
         {
             StringValues acceptHeaders = httpContext.Request.Headers["Accept"];
             if (!acceptHeaders.Any())
@@ -117,7 +130,7 @@ namespace JsonApiDotNetCore.Middleware
                         break;
                     }
 
-                    if (_mediaType.Equals(headerValue))
+                    if (allowedMediaTypeValue.Equals(headerValue))
                     {
                         seenCompatibleMediaType = true;
                         break;
@@ -130,7 +143,7 @@ namespace JsonApiDotNetCore.Middleware
                 await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.NotAcceptable)
                 {
                     Title = "The specified Accept header value does not contain any supported media types.",
-                    Detail = $"Please include '{_mediaType}' in the Accept header values."
+                    Detail = $"Please include '{allowedMediaTypeValue}' in the Accept header values."
                 });
                 return false;
             }
@@ -162,7 +175,7 @@ namespace JsonApiDotNetCore.Middleware
             await httpResponse.Body.FlushAsync();
         }
 
-        private static void SetupRequest(JsonApiRequest request, ResourceContext primaryResourceContext,
+        private static void SetupResourceRequest(JsonApiRequest request, ResourceContext primaryResourceContext,
             RouteValueDictionary routeValues, IJsonApiOptions options, IResourceContextProvider resourceContextProvider,
             HttpRequest httpRequest)
         {
@@ -225,15 +238,18 @@ namespace JsonApiDotNetCore.Middleware
 
         private static string GetCustomRoute(string resourceName, string apiNamespace, HttpContext httpContext)
         {
-            var endpoint = httpContext.GetEndpoint();
-            var routeAttribute = endpoint.Metadata.GetMetadata<RouteAttribute>();
-            if (routeAttribute != null)
+            if (resourceName != null)
             {
-                var trimmedComponents = httpContext.Request.Path.Value.Trim('/').Split('/').ToList();
-                var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
-                var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
-                var customRoute = string.Join('/', newComponents);
-                return customRoute == apiNamespace ? null : customRoute;
+                var endpoint = httpContext.GetEndpoint();
+                var routeAttribute = endpoint.Metadata.GetMetadata<RouteAttribute>();
+                if (routeAttribute != null)
+                {
+                    var trimmedComponents = httpContext.Request.Path.Value.Trim('/').Split('/').ToList();
+                    var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
+                    var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
+                    var customRoute = string.Join('/', newComponents);
+                    return customRoute == apiNamespace ? null : customRoute;
+                }
             }
 
             return null;
@@ -248,6 +264,19 @@ namespace JsonApiDotNetCore.Middleware
         {
             var actionName = (string)routeValues["action"];
             return actionName.EndsWith("Relationship", StringComparison.Ordinal);
+        }
+
+        private static bool IsOperationsRequest(RouteValueDictionary routeValues)
+        {
+            var actionName = (string)routeValues["action"];
+            return actionName == "PostOperations";
+        }
+
+        private static void SetupOperationsRequest(JsonApiRequest request, IJsonApiOptions options, HttpRequest httpRequest)
+        {
+            request.IsReadOnly = false;
+            request.Kind = EndpointKind.AtomicOperations;
+            request.BasePath = GetBasePath(null, options, httpRequest);
         }
     }
 }

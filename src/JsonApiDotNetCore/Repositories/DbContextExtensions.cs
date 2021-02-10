@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Resources;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace JsonApiDotNetCore.Repositories
 {
@@ -41,6 +43,21 @@ namespace JsonApiDotNetCore.Repositories
                     ((IIdentifiable) entry.Entity).StringId == identifiable.StringId);
 
             return entityEntry?.Entity;
+        }
+
+        /// <summary>
+        /// Detaches all entities from the change tracker.
+        /// </summary>
+        public static void ResetChangeTracker(this DbContext dbContext)
+        {
+            if (dbContext == null) throw new ArgumentNullException(nameof(dbContext));
+
+            List<EntityEntry> entriesWithChanges = dbContext.ChangeTracker.Entries().ToList();
+
+            foreach (EntityEntry entry in entriesWithChanges)
+            {
+                entry.State = EntityState.Detached;
+            }
         }
     }
 }

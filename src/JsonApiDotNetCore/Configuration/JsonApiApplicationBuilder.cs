@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.AtomicOperations;
+using JsonApiDotNetCore.AtomicOperations.Processors;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
@@ -130,6 +132,12 @@ namespace JsonApiDotNetCore.Configuration
                     var contextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
                     _services.AddScoped(typeof(IDbContextResolver), contextResolverType);
                 }
+
+                _services.AddScoped<IOperationsTransactionFactory, EntityFrameworkCoreTransactionFactory>();
+            }
+            else
+            {
+                _services.AddScoped<IOperationsTransactionFactory, MissingTransactionFactory>();
             }
 
             AddResourceLayer();
@@ -138,6 +146,7 @@ namespace JsonApiDotNetCore.Configuration
             AddMiddlewareLayer();
             AddSerializationLayer();
             AddQueryStringLayer();
+            AddOperationsLayer();
 
             AddResourceHooks();
 
@@ -263,8 +272,23 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IResponseMeta, EmptyResponseMeta>();
             _services.AddScoped<IMetaBuilder, MetaBuilder>();
             _services.AddScoped(typeof(ResponseSerializer<>));
+            _services.AddScoped(typeof(AtomicOperationsResponseSerializer));
             _services.AddScoped(sp => sp.GetRequiredService<IJsonApiSerializerFactory>().GetSerializer());
             _services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
+        }
+
+        private void AddOperationsLayer()
+        {
+            _services.AddScoped(typeof(ICreateProcessor<,>), typeof(CreateProcessor<,>));
+            _services.AddScoped(typeof(IUpdateProcessor<,>), typeof(UpdateProcessor<,>));
+            _services.AddScoped(typeof(IDeleteProcessor<,>), typeof(DeleteProcessor<,>));
+            _services.AddScoped(typeof(IAddToRelationshipProcessor<,>), typeof(AddToRelationshipProcessor<,>));
+            _services.AddScoped(typeof(ISetRelationshipProcessor<,>), typeof(SetRelationshipProcessor<,>));
+            _services.AddScoped(typeof(IRemoveFromRelationshipProcessor<,>), typeof(RemoveFromRelationshipProcessor<,>));
+
+            _services.AddScoped<IOperationsProcessor, OperationsProcessor>();
+            _services.AddScoped<IOperationProcessorAccessor, OperationProcessorAccessor>();
+            _services.AddScoped<ILocalIdTracker, LocalIdTracker>();
         }
 
         private void AddResourcesFromDbContext(DbContext dbContext, ResourceGraphBuilder builder)

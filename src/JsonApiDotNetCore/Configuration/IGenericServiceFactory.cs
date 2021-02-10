@@ -4,7 +4,7 @@ namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
     /// Represents the Service Locator design pattern. Used to obtain object instances for types are not known until runtime.
-    /// The typical use case would be for accessing relationship data or resolving operations processors.
+    /// This is only used by resource hooks and subject to be removed in a future version.
     /// </summary>
     public interface IGenericServiceFactory
     {

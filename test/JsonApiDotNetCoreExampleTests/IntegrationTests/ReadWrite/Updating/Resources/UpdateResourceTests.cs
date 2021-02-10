@@ -60,6 +60,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                var userAccountInDatabase = await dbContext.UserAccounts
+                    .FirstAsync(userAccount => userAccount.Id == existingUserAccount.Id);
+
+                userAccountInDatabase.FirstName.Should().Be(existingUserAccount.FirstName);
+                userAccountInDatabase.LastName.Should().Be(existingUserAccount.LastName);
+            });
         }
 
         [Fact]

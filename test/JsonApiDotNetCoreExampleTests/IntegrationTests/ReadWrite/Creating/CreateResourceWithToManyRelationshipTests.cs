@@ -486,11 +486,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[0].Title.Should().Be("A related resource does not exist.");
-            responseDocument.Errors[0].Detail.Should().StartWith("Related resource of type 'workItems' with ID '12345678' in relationship 'assignedItems' does not exist.");
+            responseDocument.Errors[0].Detail.Should().Be("Related resource of type 'workItems' with ID '12345678' in relationship 'assignedItems' does not exist.");
 
             responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.NotFound);
             responseDocument.Errors[1].Title.Should().Be("A related resource does not exist.");
-            responseDocument.Errors[1].Detail.Should().StartWith("Related resource of type 'workItems' with ID '87654321' in relationship 'assignedItems' does not exist.");
+            responseDocument.Errors[1].Detail.Should().Be("Related resource of type 'workItems' with ID '87654321' in relationship 'assignedItems' does not exist.");
         }
 
         [Fact]
@@ -665,6 +665,49 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
             responseDocument.Errors[0].Detail.Should().StartWith("Expected data[] element for 'tags' relationship. - Request body: <<");
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_with_local_ID()
+        {
+            // Arrange
+            const string workItemLocalId = "wo-1";
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    lid = workItemLocalId,
+                    relationships = new
+                    {
+                        children = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "workItems",
+                                    lid = workItemLocalId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var route = "/workItems";
+
+            // Act
+            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Local IDs cannot be used at this endpoint.");
+            responseDocument.Errors[0].Detail.Should().StartWith("Local IDs cannot be used at this endpoint. - Request body: <<");
         }
     }
 }
