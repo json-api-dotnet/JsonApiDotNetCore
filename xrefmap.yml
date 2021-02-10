@@ -13073,19 +13073,6 @@ references:
   commentId: T:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute
   fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute
   nameWithType: HasManyAttribute
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.#ctor
-  name: HasManyAttribute()
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute__ctor
-  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.#ctor
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.HasManyAttribute()
-  nameWithType: HasManyAttribute.HasManyAttribute()
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.#ctor*
-  name: HasManyAttribute
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute__ctor_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.HasManyAttribute
-  nameWithType: HasManyAttribute.HasManyAttribute
 - uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute
   name: HasManyThroughAttribute
   href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html
@@ -13319,19 +13306,6 @@ references:
   commentId: T:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute
   fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute
   nameWithType: HasOneAttribute
-- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor
-  name: HasOneAttribute()
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute__ctor
-  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.HasOneAttribute()
-  nameWithType: HasOneAttribute.HasOneAttribute()
-- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor*
-  name: HasOneAttribute
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute__ctor_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.HasOneAttribute
-  nameWithType: HasOneAttribute.HasOneAttribute
 - uid: JsonApiDotNetCore.Resources.Annotations.LinkTypes
   name: LinkTypes
   href: api/JsonApiDotNetCore.Resources.Annotations.LinkTypes.html

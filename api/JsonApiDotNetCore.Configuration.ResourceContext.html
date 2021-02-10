@@ -272,15 +272,14 @@ See <a href="https://jsonapi.org/format/#document-resource-object-fields">https:
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_ResourceContext_RelationshipLinks.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.ResourceContext.RelationshipLinks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceContext.cs/#L76">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceContext.cs/#L82">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_ResourceContext_RelationshipLinks_" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.RelationshipLinks*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_ResourceContext_RelationshipLinks" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.RelationshipLinks">RelationshipLinks</h4>
   <div class="markdown level1 summary"><p>Configures which links to show in the <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.RelationshipLinks.html">RelationshipLinks</a>
-for all relationships of the resource for which this attribute was instantiated.
-If set to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html#JsonApiDotNetCore_Resources_Annotations_LinkTypes_NotConfigured">NotConfigured</a>, the configuration will
-be read from <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Links">Links</a>  or
-<a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a>. Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html#JsonApiDotNetCore_Resources_Annotations_LinkTypes_NotConfigured">NotConfigured</a>.</p>
+object for all relationships of this resource type.
+Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html#JsonApiDotNetCore_Resources_Annotations_LinkTypes_NotConfigured">NotConfigured</a>, which falls back to <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_RelationshipLinks">RelationshipLinks</a>.
+This can be overruled per relationship by setting <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Links">Links</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -302,6 +301,9 @@ be read from <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.Relat
       </tr>
     </tbody>
   </table>
+  <h5 id="JsonApiDotNetCore_Configuration_ResourceContext_RelationshipLinks_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>In the process of building the resource graph, this value is set based on <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceLinksAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceLinksAttribute_RelationshipLinks">RelationshipLinks</a> usage.</p>
+</div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_ResourceContext_Relationships.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.ResourceContext.Relationships%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -339,14 +341,13 @@ See <a href="https://jsonapi.org/format/#document-resource-object-relationships"
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_ResourceContext_ResourceLinks.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.ResourceContext.ResourceLinks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceContext.cs/#L67">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceContext.cs/#L71">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_ResourceContext_ResourceLinks_" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.ResourceLinks*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_ResourceContext_ResourceLinks" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.ResourceLinks">ResourceLinks</h4>
   <div class="markdown level1 summary"><p>Configures which links to show in the <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceLinks.html">ResourceLinks</a>
-object for this resource. If set to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html#JsonApiDotNetCore_Resources_Annotations_LinkTypes_NotConfigured">NotConfigured</a>,
-the configuration will be read from <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a>.
-Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html#JsonApiDotNetCore_Resources_Annotations_LinkTypes_NotConfigured">NotConfigured</a>.</p>
+object for this resource type.
+Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html#JsonApiDotNetCore_Resources_Annotations_LinkTypes_NotConfigured">NotConfigured</a>, which falls back to <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_ResourceLinks">ResourceLinks</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -368,6 +369,9 @@ Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTy
       </tr>
     </tbody>
   </table>
+  <h5 id="JsonApiDotNetCore_Configuration_ResourceContext_ResourceLinks_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>In the process of building the resource graph, this value is set based on <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceLinksAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceLinksAttribute_ResourceLinks">ResourceLinks</a> usage.</p>
+</div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_ResourceContext_ResourceType.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.ResourceContext.ResourceType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -404,14 +408,13 @@ Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTy
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_ResourceContext_TopLevelLinks.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.ResourceContext.TopLevelLinks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceContext.cs/#L59">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceContext.cs/#L61">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_ResourceContext_TopLevelLinks_" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.TopLevelLinks*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_ResourceContext_TopLevelLinks" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.TopLevelLinks">TopLevelLinks</h4>
   <div class="markdown level1 summary"><p>Configures which links to show in the <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.TopLevelLinks.html">TopLevelLinks</a>
-object for this resource. If set to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html#JsonApiDotNetCore_Resources_Annotations_LinkTypes_NotConfigured">NotConfigured</a>,
-the configuration will be read from <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a>.
-Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html#JsonApiDotNetCore_Resources_Annotations_LinkTypes_NotConfigured">NotConfigured</a>.</p>
+object for this resource type.
+Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html#JsonApiDotNetCore_Resources_Annotations_LinkTypes_NotConfigured">NotConfigured</a>, which falls back to <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_TopLevelLinks">TopLevelLinks</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -433,6 +436,9 @@ Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTy
       </tr>
     </tbody>
   </table>
+  <h5 id="JsonApiDotNetCore_Configuration_ResourceContext_TopLevelLinks_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>In the process of building the resource graph, this value is set based on <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceLinksAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceLinksAttribute_TopLevelLinks">TopLevelLinks</a> usage.</p>
+</div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
@@ -440,7 +446,7 @@ Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTy
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_ResourceContext_ToString.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.ResourceContext.ToString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceContext.cs/#L78">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceContext.cs/#L84">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_ResourceContext_ToString_" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.ToString*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_ResourceContext_ToString" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.ToString">ToString()</h4>
