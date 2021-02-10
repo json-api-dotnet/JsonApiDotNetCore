@@ -8,9 +8,5 @@ namespace JsonApiDotNetCore.Resources.Annotations
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class HasOneAttribute : RelationshipAttribute
     {
-        public HasOneAttribute()
-        {
-            Links = LinkTypes.NotConfigured;
-        }
     }
 }

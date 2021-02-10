@@ -10,6 +10,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         public string Url { get; set; }
 
         [HasOne]
+        public PhotoLocation Location { get; set; }
+
+        [HasOne]
         public PhotoAlbum Album { get; set; }
     }
 }

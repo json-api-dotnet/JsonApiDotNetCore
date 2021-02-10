@@ -6,10 +6,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
     {
         public DbSet<PhotoAlbum> PhotoAlbums { get; set; }
         public DbSet<Photo> Photos { get; set; }
+        public DbSet<PhotoLocation> PhotoLocations { get; set; }
 
         public LinksDbContext(DbContextOptions<LinksDbContext> options)
             : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Photo>()
+                .HasOne(photo => photo.Location)
+                .WithOne(location => location.Photo)
+                .HasForeignKey<Photo>("PhotoLocationKey");
         }
     }
 }
