@@ -21,7 +21,7 @@ using Xunit;
 
 namespace UnitTests.Extensions
 {
-    public sealed class IServiceCollectionExtensionsTests
+    public sealed class ServiceCollectionExtensionsTests
     {
         [Fact]
         public void AddJsonApiInternals_Adds_All_Required_Services()

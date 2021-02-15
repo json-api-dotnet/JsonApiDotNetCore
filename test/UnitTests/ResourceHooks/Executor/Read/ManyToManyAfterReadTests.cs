@@ -7,16 +7,16 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks.Executor.Read
 {
-    public sealed class ManyToMany_AfterReadTests : HooksTestsSetup
+    public sealed class ManyToManyAfterReadTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] targetHooks = { ResourceHook.AfterRead };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.AfterRead };
 
         [Fact]
         public void AfterRead()
         {
             // Arrange
-            var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
-            var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
+            var articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
+            var tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
             var (articles, _, tags) = CreateManyToManyData();
 
@@ -34,7 +34,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
         {
             // Arrange
             var articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
-            var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
+            var tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
             var (articles, _, tags) = CreateManyToManyData();
 
@@ -50,7 +50,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
         public void AfterRead_Without_Children_Hooks_Implemented()
         {
             // Arrange
-            var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
+            var articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
             var (articles, _, _) = CreateManyToManyData();

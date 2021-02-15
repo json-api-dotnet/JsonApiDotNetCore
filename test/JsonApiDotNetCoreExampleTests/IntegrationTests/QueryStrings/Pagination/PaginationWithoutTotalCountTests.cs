@@ -13,7 +13,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
     public sealed class PaginationWithoutTotalCountTests 
         : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
-        private const int _defaultPageSize = 5;
+        private const int DefaultPageSize = 5;
 
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
         private readonly QueryStringFakers _fakers = new QueryStringFakers();
@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
 
             options.IncludeTotalResourceCount = false;
-            options.DefaultPageSize = new PageSize(_defaultPageSize);
+            options.DefaultPageSize = new PageSize(DefaultPageSize);
             options.AllowUnknownQueryStringParameters = true;
         }
 
@@ -128,7 +128,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Count.Should().BeLessThan(_defaultPageSize);
+            responseDocument.ManyData.Count.Should().BeLessThan(DefaultPageSize);
 
             responseDocument.Links.Should().NotBeNull();
             responseDocument.Links.Self.Should().Be("http://localhost/blogPosts?foo=bar&page[number]=3");
@@ -142,7 +142,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_full_page()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(_defaultPageSize * 3);
+            var posts = _fakers.BlogPost.Generate(DefaultPageSize * 3);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -159,7 +159,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(_defaultPageSize);
+            responseDocument.ManyData.Should().HaveCount(DefaultPageSize);
 
             responseDocument.Links.Should().NotBeNull();
             responseDocument.Links.Self.Should().Be("http://localhost/blogPosts?page[number]=3&foo=bar");
@@ -174,7 +174,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             var account = _fakers.WebAccount.Generate();
-            account.Posts = _fakers.BlogPost.Generate(_defaultPageSize * 3);
+            account.Posts = _fakers.BlogPost.Generate(DefaultPageSize * 3);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -190,7 +190,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(_defaultPageSize);
+            responseDocument.ManyData.Should().HaveCount(DefaultPageSize);
 
             responseDocument.Links.Should().NotBeNull();
             responseDocument.Links.Self.Should().Be($"http://localhost/webAccounts/{account.StringId}/posts?page[number]=3&foo=bar");

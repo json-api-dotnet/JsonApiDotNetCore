@@ -17,8 +17,8 @@ namespace JsonApiDotNetCore.Serialization.Building
 {
     public class LinkBuilder : ILinkBuilder
     {
-        private const string _pageSizeParameterName = "page[size]";
-        private const string _pageNumberParameterName = "page[number]";
+        private const string PageSizeParameterName = "page[size]";
+        private const string PageNumberParameterName = "page[number]";
 
         private readonly IResourceContextProvider _provider;
         private readonly IRequestQueryStringAccessor _queryStringAccessor;
@@ -156,8 +156,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             return GetSelfTopLevelLink(resourceContext, parameters =>
             {
-                var existingPageSizeParameterValue = parameters.ContainsKey(_pageSizeParameterName)
-                    ? parameters[_pageSizeParameterName]
+                var existingPageSizeParameterValue = parameters.ContainsKey(PageSizeParameterName)
+                    ? parameters[PageSizeParameterName]
                     : null;
 
                 PageSize newTopPageSize = Equals(pageSize, _options.DefaultPageSize) ? null : pageSize;
@@ -165,20 +165,20 @@ namespace JsonApiDotNetCore.Serialization.Building
                 string newPageSizeParameterValue = ChangeTopPageSize(existingPageSizeParameterValue, newTopPageSize);
                 if (newPageSizeParameterValue == null)
                 {
-                    parameters.Remove(_pageSizeParameterName);
+                    parameters.Remove(PageSizeParameterName);
                 }
                 else
                 {
-                    parameters[_pageSizeParameterName] = newPageSizeParameterValue;
+                    parameters[PageSizeParameterName] = newPageSizeParameterValue;
                 }
 
                 if (pageOffset == 1)
                 {
-                    parameters.Remove(_pageNumberParameterName);
+                    parameters.Remove(PageNumberParameterName);
                 }
                 else
                 {
-                    parameters[_pageNumberParameterName] = pageOffset.ToString();
+                    parameters[PageNumberParameterName] = pageOffset.ToString();
                 }
             });
         }

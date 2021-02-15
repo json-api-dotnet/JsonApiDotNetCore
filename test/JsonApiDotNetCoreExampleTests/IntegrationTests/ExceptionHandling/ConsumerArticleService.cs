@@ -15,7 +15,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
     {
         public const string UnavailableArticlePrefix = "X";
 
-        private const string _supportEmailAddress = "company@email.com";
+        private const string SupportEmailAddress = "company@email.com";
 
         public ConsumerArticleService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
@@ -32,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 
             if (consumerArticle.Code.StartsWith(UnavailableArticlePrefix))
             {
-                throw new ConsumerArticleIsNoLongerAvailableException(consumerArticle.Code, _supportEmailAddress);
+                throw new ConsumerArticleIsNoLongerAvailableException(consumerArticle.Code, SupportEmailAddress);
             }
 
             return consumerArticle;

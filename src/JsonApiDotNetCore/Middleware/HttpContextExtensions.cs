@@ -4,7 +4,7 @@ namespace JsonApiDotNetCore.Middleware
 {
     public static class HttpContextExtensions
     {
-        private const string _isJsonApiRequestKey = "JsonApiDotNetCore_IsJsonApiRequest";
+        private const string IsJsonApiRequestKey = "JsonApiDotNetCore_IsJsonApiRequest";
 
         /// <summary>
         /// Indicates whether the currently executing HTTP request is being handled by JsonApiDotNetCore.
@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Middleware
         {
             ArgumentGuard.NotNull(httpContext, nameof(httpContext));
 
-            string value = httpContext.Items[_isJsonApiRequestKey] as string;
+            string value = httpContext.Items[IsJsonApiRequestKey] as string;
             return value == bool.TrueString;
         }
 
@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Middleware
         {
             ArgumentGuard.NotNull(httpContext, nameof(httpContext));
 
-            httpContext.Items[_isJsonApiRequestKey] = bool.TrueString;
+            httpContext.Items[IsJsonApiRequestKey] = bool.TrueString;
         }
     }
 }

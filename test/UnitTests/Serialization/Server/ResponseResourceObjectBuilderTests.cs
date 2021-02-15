@@ -9,7 +9,7 @@ namespace UnitTests.Serialization.Server
     public sealed class ResponseResourceObjectBuilderTests : SerializerTestsSetup
     { 
         private readonly List<RelationshipAttribute> _relationshipsForBuild;
-        private const string _relationshipName = "dependents";
+        private const string RelationshipName = "dependents";
 
         public ResponseResourceObjectBuilderTests()
         {
@@ -27,7 +27,7 @@ namespace UnitTests.Serialization.Server
             var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
-            Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));
+            Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out var entry));
             Assert.Equal("http://www.dummy.com/dummy-relationship-self-link", entry.Links.Self);
             Assert.Equal("http://www.dummy.com/dummy-relationship-related-link", entry.Links.Related);
             Assert.False(entry.IsPopulated);
@@ -58,7 +58,7 @@ namespace UnitTests.Serialization.Server
             var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
-            Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));
+            Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out var entry));
             Assert.Null(entry.Links);
             Assert.True(entry.IsPopulated);
             Assert.Equal("20", entry.ManyData.Single().Id);
@@ -75,7 +75,7 @@ namespace UnitTests.Serialization.Server
             var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
-            Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));
+            Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out var entry));
             Assert.Equal("http://www.dummy.com/dummy-relationship-self-link", entry.Links.Self);
             Assert.Equal("http://www.dummy.com/dummy-relationship-related-link", entry.Links.Related);
             Assert.True(entry.IsPopulated);

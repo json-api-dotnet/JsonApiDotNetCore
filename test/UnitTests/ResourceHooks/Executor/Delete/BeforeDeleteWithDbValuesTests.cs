@@ -9,25 +9,25 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks.Executor.Delete
 {
-    public sealed class BeforeDelete_WithDbValues_Tests : HooksTestsSetup
+    public sealed class BeforeDeleteWithDbValuesTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeDelete, ResourceHook.BeforeImplicitUpdateRelationship, ResourceHook.BeforeUpdateRelationship };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.BeforeDelete, ResourceHook.BeforeImplicitUpdateRelationship, ResourceHook.BeforeUpdateRelationship };
 
-        private readonly DbContextOptions<AppDbContext> options;
-        private readonly Person person;
-        public BeforeDelete_WithDbValues_Tests()
+        private readonly DbContextOptions<AppDbContext> _options;
+        private readonly Person _person;
+        public BeforeDeleteWithDbValuesTests()
         {
-            person = _personFaker.Generate();
+            _person = _personFaker.Generate();
             var todo1 = _todoFaker.Generate();
             var todo2 = _todoFaker.Generate();
             var passport = _passportFaker.Generate();
 
-            person.Passport = passport;
-            person.TodoItems = new HashSet<TodoItem> { todo1 };
-            person.StakeHolderTodoItem = todo2;
-            options = InitInMemoryDb(context =>
+            _person.Passport = passport;
+            _person.TodoItems = new HashSet<TodoItem> { todo1 };
+            _person.StakeHolderTodoItem = todo2;
+            _options = InitInMemoryDb(context =>
             {
-                context.Set<Person>().Add(person);
+                context.Set<Person>().Add(_person);
                 context.SaveChanges();
             });
         }
@@ -36,13 +36,13 @@ namespace UnitTests.ResourceHooks.Executor.Delete
         public void BeforeDelete()
         {
             // Arrange
-            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, EnableDbValues);
-            var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, EnableDbValues);
-            var (_, hookExecutor, personResourceMock, todoResourceMock, passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: options);
+            var personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, EnableDbValues);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, EnableDbValues);
+            var passportDiscovery = SetDiscoverableHooks<Passport>(_targetHooks, EnableDbValues);
+            var (_, hookExecutor, personResourceMock, todoResourceMock, passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: _options);
 
             // Act
-            hookExecutor.BeforeDelete(new List<Person> { person }, ResourcePipeline.Delete);
+            hookExecutor.BeforeDelete(new List<Person> { _person }, ResourcePipeline.Delete);
 
             // Assert
             personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IResourceHashSet<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());
@@ -56,12 +56,12 @@ namespace UnitTests.ResourceHooks.Executor.Delete
         {
             // Arrange
             var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, EnableDbValues);
-            var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, EnableDbValues);
-            var (_, hookExecutor, personResourceMock, todoResourceMock, passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: options);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, EnableDbValues);
+            var passportDiscovery = SetDiscoverableHooks<Passport>(_targetHooks, EnableDbValues);
+            var (_, hookExecutor, personResourceMock, todoResourceMock, passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: _options);
 
             // Act
-            hookExecutor.BeforeDelete(new List<Person> { person }, ResourcePipeline.Delete);
+            hookExecutor.BeforeDelete(new List<Person> { _person }, ResourcePipeline.Delete);
 
             // Assert
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<TodoItem>>(rh => CheckImplicitTodos(rh)), ResourcePipeline.Delete), Times.Once());
@@ -73,13 +73,13 @@ namespace UnitTests.ResourceHooks.Executor.Delete
         public void BeforeDelete_No_Children_Hooks()
         {
             // Arrange
-            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, EnableDbValues);
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(NoHooks, DisableDbValues);
-            var (_, hookExecutor, personResourceMock, todoResourceMock, passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: options);
+            var (_, hookExecutor, personResourceMock, todoResourceMock, passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: _options);
 
             // Act
-            hookExecutor.BeforeDelete(new List<Person> { person }, ResourcePipeline.Delete);
+            hookExecutor.BeforeDelete(new List<Person> { _person }, ResourcePipeline.Delete);
 
             // Assert
             personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IResourceHashSet<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());

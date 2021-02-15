@@ -15,7 +15,7 @@ namespace Benchmarks.Serialization
     [MarkdownExporter]
     public class JsonApiDeserializerBenchmarks
     {
-        private static readonly string Content = JsonConvert.SerializeObject(new Document
+        private static readonly string _content = JsonConvert.SerializeObject(new Document
         {
             Data = new ResourceObject
             {
@@ -43,6 +43,6 @@ namespace Benchmarks.Serialization
         }
 
         [Benchmark]
-        public object DeserializeSimpleObject() => _jsonApiDeserializer.Deserialize(Content);
+        public object DeserializeSimpleObject() => _jsonApiDeserializer.Deserialize(_content);
     }
 }

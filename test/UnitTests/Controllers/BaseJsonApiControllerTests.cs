@@ -17,7 +17,7 @@ using Xunit;
 
 namespace UnitTests.Controllers
 {
-    public sealed class BaseJsonApiController_Tests
+    public sealed class BaseJsonApiControllerTests
     {
         public sealed class Resource : Identifiable
         {

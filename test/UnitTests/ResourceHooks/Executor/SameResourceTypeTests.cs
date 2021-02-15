@@ -8,14 +8,14 @@ namespace UnitTests.ResourceHooks.Executor
 {
     public sealed class SameResourceTypeTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] targetHooks = { ResourceHook.OnReturn };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.OnReturn };
 
         [Fact]
         public void Resource_Has_Multiple_Relations_To_Same_Type()
         {
             // Arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
-            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, DisableDbValues);
             var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var person1 = new Person();
             var todo = new TodoItem { Owner = person1 };
@@ -38,7 +38,7 @@ namespace UnitTests.ResourceHooks.Executor
         public void Resource_Has_Cyclic_Relations()
         {
             // Arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
             var (_, hookExecutor, todoResourceMock) = CreateTestObjects(todoDiscovery);
             var todo = new TodoItem();
             todo.ParentTodo  = todo;
@@ -57,7 +57,7 @@ namespace UnitTests.ResourceHooks.Executor
         public void Resource_Has_Nested_Cyclic_Relations()
         {
             // Arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
             var (_, hookExecutor, todoResourceMock) = CreateTestObjects(todoDiscovery);
             var rootTodo = new TodoItem { Id = 1 };
             var child = new TodoItem { ParentTodo  = rootTodo, Id = 2 };

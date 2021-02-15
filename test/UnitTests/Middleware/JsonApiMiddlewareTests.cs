@@ -70,12 +70,12 @@ namespace UnitTests.Middleware
 
         private sealed class InvokeConfiguration
         {
-            public JsonApiMiddleware MiddleWare;
-            public HttpContext HttpContext;
-            public Mock<IControllerResourceMapping> ControllerResourceMapping;
-            public Mock<IJsonApiOptions> Options;
-            public JsonApiRequest Request;
-            public Mock<IResourceGraph> ResourceGraph;
+            public JsonApiMiddleware MiddleWare { get; set; }
+            public HttpContext HttpContext { get; set; }
+            public Mock<IControllerResourceMapping> ControllerResourceMapping { get; set; }
+            public Mock<IJsonApiOptions> Options { get; set; }
+            public JsonApiRequest Request { get; set; }
+            public Mock<IResourceGraph> ResourceGraph { get; set; }
         }
         private Task RunMiddlewareTask(InvokeConfiguration holder)
         {

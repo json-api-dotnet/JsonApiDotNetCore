@@ -46,7 +46,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
         public async Task Converts_empty_ActionResult_to_error_collection()
         {
             // Arrange
-            var route = "/toothbrushes/" + BaseToothbrushesController._emptyActionResultId;
+            var route = "/toothbrushes/" + BaseToothbrushesController.EmptyActionResultId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
         public async Task Converts_ActionResult_with_error_object_to_error_collection()
         {
             // Arrange
-            var route = "/toothbrushes/" + BaseToothbrushesController._actionResultWithErrorObjectId;
+            var route = "/toothbrushes/" + BaseToothbrushesController.ActionResultWithErrorObjectId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -82,7 +82,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
         public async Task Cannot_convert_ActionResult_with_string_parameter_to_error_collection()
         {
             // Arrange
-            var route = "/toothbrushes/" + BaseToothbrushesController._actionResultWithStringParameter;
+            var route = "/toothbrushes/" + BaseToothbrushesController.ActionResultWithStringParameter;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
         public async Task Converts_ObjectResult_with_error_object_to_error_collection()
         {
             // Arrange
-            var route = "/toothbrushes/" + BaseToothbrushesController._objectResultWithErrorObjectId;
+            var route = "/toothbrushes/" + BaseToothbrushesController.ObjectResultWithErrorObjectId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -118,7 +118,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
         public async Task Converts_ObjectResult_with_error_objects_to_error_collection()
         {
             // Arrange
-            var route = "/toothbrushes/" + BaseToothbrushesController._objectResultWithErrorCollectionId;
+            var route = "/toothbrushes/" + BaseToothbrushesController.ObjectResultWithErrorCollectionId;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

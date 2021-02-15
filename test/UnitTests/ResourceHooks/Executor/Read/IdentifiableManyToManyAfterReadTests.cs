@@ -7,17 +7,17 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks.Executor.Read
 {
-    public sealed class IdentifiableManyToMany_AfterReadTests : HooksTestsSetup
+    public sealed class IdentifiableManyToManyAfterReadTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] targetHooks = { ResourceHook.AfterRead };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.AfterRead };
 
         [Fact]
         public void AfterRead()
         {
             // Arrange
-            var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
-            var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(targetHooks, DisableDbValues);
-            var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
+            var articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
+            var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(_targetHooks, DisableDbValues);
+            var tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
             var (_, hookExecutor, articleResourceMock, joinResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
             var (articles, joins, tags) = CreateIdentifiableManyToManyData();
 
@@ -36,8 +36,8 @@ namespace UnitTests.ResourceHooks.Executor.Read
         {
             // Arrange
             var articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
-            var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(targetHooks, DisableDbValues);
-            var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
+            var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(_targetHooks, DisableDbValues);
+            var tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
             var (_, hookExecutor, articleResourceMock, joinResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
             var (articles, joins, tags) = CreateIdentifiableManyToManyData();
 
@@ -54,9 +54,9 @@ namespace UnitTests.ResourceHooks.Executor.Read
         public void AfterRead_Without_Children_Hooks_Implemented()
         {
             // Arrange
-            var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
+            var articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
             var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(NoHooks, DisableDbValues);
-            var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
+            var tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
 
             var (_, hookExecutor, articleResourceMock, joinResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
 
@@ -75,8 +75,8 @@ namespace UnitTests.ResourceHooks.Executor.Read
         public void AfterRead_Without_Grand_Children_Hooks_Implemented()
         {
             // Arrange
-            var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
-            var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(targetHooks, DisableDbValues);
+            var articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
+            var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(_targetHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, hookExecutor, articleResourceMock, joinResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
             var (articles, joins, _) = CreateIdentifiableManyToManyData();
@@ -94,7 +94,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
         public void AfterRead_Without_Any_Descendant_Hooks_Implemented()
         {
             // Arrange
-            var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
+            var articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
             var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(NoHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, hookExecutor, articleResourceMock, joinResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);

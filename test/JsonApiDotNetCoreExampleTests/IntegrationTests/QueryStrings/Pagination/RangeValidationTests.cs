@@ -16,14 +16,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
         private readonly QueryStringFakers _fakers = new QueryStringFakers();
 
-        private const int _defaultPageSize = 5;
+        private const int DefaultPageSize = 5;
 
         public RangeValidationTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
         {
             _testContext = testContext;
 
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.DefaultPageSize = new PageSize(_defaultPageSize);
+            options.DefaultPageSize = new PageSize(DefaultPageSize);
             options.MaximumPageSize = null;
             options.MaximumPageNumber = null;
         }

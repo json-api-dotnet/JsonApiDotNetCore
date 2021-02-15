@@ -46,9 +46,9 @@ namespace UnitTests.ResourceHooks
 
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery);
 
-            var execHelper = new HookExecutorHelper(gpfMock.Object, _resourceGraph, options);
-            var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph);
+            var execHelper = new HookExecutorHelper(gpfMock.Object, ResourceGraph, options);
+            var traversalHelper = new TraversalHelper(ResourceGraph, ufMock.Object);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, ResourceGraph);
 
             return (constraintsMock, hookExecutor, primaryResource);
         }
@@ -79,9 +79,9 @@ namespace UnitTests.ResourceHooks
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery, dbContext, resourceGraph);
             SetupProcessorFactoryForResourceDefinition(gpfMock, secondaryResource.Object, secondaryDiscovery, dbContext, resourceGraph);
 
-            var execHelper = new HookExecutorHelper(gpfMock.Object, _resourceGraph, options);
-            var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph);
+            var execHelper = new HookExecutorHelper(gpfMock.Object, ResourceGraph, options);
+            var traversalHelper = new TraversalHelper(ResourceGraph, ufMock.Object);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, ResourceGraph);
 
             return (constraintsMock, ufMock, hookExecutor, primaryResource, secondaryResource);
         }
@@ -117,9 +117,9 @@ namespace UnitTests.ResourceHooks
             SetupProcessorFactoryForResourceDefinition(gpfMock, firstSecondaryResource.Object, firstSecondaryDiscovery, dbContext, resourceGraph);
             SetupProcessorFactoryForResourceDefinition(gpfMock, secondSecondaryResource.Object, secondSecondaryDiscovery, dbContext, resourceGraph);
 
-            var execHelper = new HookExecutorHelper(gpfMock.Object, _resourceGraph, options);
-            var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
-            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, _resourceGraph);
+            var execHelper = new HookExecutorHelper(gpfMock.Object, ResourceGraph, options);
+            var traversalHelper = new TraversalHelper(ResourceGraph, ufMock.Object);
+            var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, ResourceGraph);
 
             return (constraintsMock, hookExecutor, primaryResource, firstSecondaryResource, secondSecondaryResource);
         }
@@ -259,7 +259,7 @@ namespace UnitTests.ResourceHooks
         private void ResolveInverseRelationships(AppDbContext context)
         {
             var dbContextResolvers = new[] {new DbContextResolver<AppDbContext>(context)};
-            var inverseRelationships = new InverseNavigationResolver(_resourceGraph, dbContextResolvers);
+            var inverseRelationships = new InverseNavigationResolver(ResourceGraph, dbContextResolvers);
             inverseRelationships.Resolve();
         }
 
@@ -288,13 +288,13 @@ namespace UnitTests.ResourceHooks
         protected List<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
         {
             var parsedChain = new List<RelationshipAttribute>();
-            var resourceContext = _resourceGraph.GetResourceContext<TodoItem>();
+            var resourceContext = ResourceGraph.GetResourceContext<TodoItem>();
             var splitPath = chain.Split('.');
             foreach (var requestedRelationship in splitPath)
             {
                 var relationship = resourceContext.Relationships.Single(r => r.PublicName == requestedRelationship);
                 parsedChain.Add(relationship);
-                resourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
+                resourceContext = ResourceGraph.GetResourceContext(relationship.RightType);
             }
             return parsedChain;
         }

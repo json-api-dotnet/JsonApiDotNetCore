@@ -8,14 +8,14 @@ namespace UnitTests.ResourceHooks.Executor.Update
 {
     public sealed class AfterUpdateTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] targetHooks = { ResourceHook.AfterUpdate, ResourceHook.AfterUpdateRelationship };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.AfterUpdate, ResourceHook.AfterUpdateRelationship };
 
         [Fact]
         public void AfterUpdate()
         {
             // Arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
-            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, DisableDbValues);
             var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();
 
@@ -33,7 +33,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
         {
             // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
-            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, DisableDbValues);
             var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();
 
@@ -49,7 +49,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
         public void AfterUpdate_Without_Child_Hook_Implemented()
         {
             // Arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
             var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();

@@ -15,7 +15,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
     public sealed class PaginationWithTotalCountTests
         : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
-        private const int _defaultPageSize = 5;
+        private const int DefaultPageSize = 5;
 
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
         private readonly QueryStringFakers _fakers = new QueryStringFakers();
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.IncludeTotalResourceCount = true;
-            options.DefaultPageSize = new PageSize(_defaultPageSize);
+            options.DefaultPageSize = new PageSize(DefaultPageSize);
             options.MaximumPageSize = null;
             options.MaximumPageNumber = null;
             options.AllowUnknownQueryStringParameters = true;
@@ -522,7 +522,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             var account = _fakers.WebAccount.Generate();
             account.UserName = "&" + account.UserName;
 
-            const int totalCount = 3 * _defaultPageSize + 3;
+            const int totalCount = 3 * DefaultPageSize + 3;
             var posts = _fakers.BlogPost.Generate(totalCount);
 
             foreach (var post in posts)

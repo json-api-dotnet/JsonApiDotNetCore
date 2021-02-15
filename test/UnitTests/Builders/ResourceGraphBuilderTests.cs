@@ -11,7 +11,7 @@ using Xunit;
 
 namespace UnitTests.Builders
 {
-    public sealed class ResourceGraphBuilder_Tests
+    public sealed class ResourceGraphBuilderTests
     {
         private sealed class NonDbResource : Identifiable { }
 

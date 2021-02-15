@@ -7,9 +7,9 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks.Executor
 {
-    public sealed class ManyToMany_OnReturnTests : HooksTestsSetup
+    public sealed class ManyToManyOnReturnTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] targetHooks = { ResourceHook.OnReturn };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.OnReturn };
 
         private (List<Article>, List<ArticleTag>, List<Tag>) CreateDummyData()
         {
@@ -45,8 +45,8 @@ namespace UnitTests.ResourceHooks.Executor
         public void OnReturn()
         {
             // Arrange
-            var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
-            var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
+            var articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
+            var tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
             var (articles, _, tags) = CreateDummyData();
 
@@ -64,7 +64,7 @@ namespace UnitTests.ResourceHooks.Executor
         {
             // Arrange
             var articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
-            var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
+            var tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
             var (articles, _, tags) = CreateDummyData();
 
@@ -80,7 +80,7 @@ namespace UnitTests.ResourceHooks.Executor
         public void OnReturn_Without_Children_Hooks_Implemented()
         {
             // Arrange
-            var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
+            var articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
             var (articles, _, _) = CreateDummyData();

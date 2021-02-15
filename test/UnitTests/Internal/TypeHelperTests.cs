@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UnitTests.Internal
 {
-    public sealed class TypeHelper_Tests
+    public sealed class TypeHelperTests
     {
         [Fact]
         public void Can_Convert_DateTimeOffsets()

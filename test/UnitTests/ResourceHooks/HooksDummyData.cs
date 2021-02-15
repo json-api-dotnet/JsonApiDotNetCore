@@ -11,10 +11,10 @@ namespace UnitTests.ResourceHooks
 {
     public class HooksDummyData
     {
-        protected IResourceGraph _resourceGraph;
-        protected ResourceHook[] NoHooks = new ResourceHook[0];
-        protected ResourceHook[] EnableDbValues = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
-        protected ResourceHook[] DisableDbValues = new ResourceHook[0];
+        protected IResourceGraph ResourceGraph { get; }
+        protected ResourceHook[] NoHooks { get; } = new ResourceHook[0];
+        protected ResourceHook[] EnableDbValues { get; } = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
+        protected ResourceHook[] DisableDbValues { get; } = new ResourceHook[0];
         protected readonly Faker<Person> _personFaker;
         protected readonly Faker<TodoItem> _todoFaker;
         protected readonly Faker<Tag> _tagFaker;
@@ -25,7 +25,7 @@ namespace UnitTests.ResourceHooks
 
         public HooksDummyData()
         {
-            _resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
+            ResourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .Add<TodoItem>()
                 .Add<Person>()
                 .Add<Passport>()

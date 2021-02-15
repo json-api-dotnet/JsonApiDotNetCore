@@ -8,13 +8,13 @@ namespace UnitTests.ResourceHooks.Executor.Delete
 {
     public sealed class AfterDeleteTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] targetHooks = { ResourceHook.AfterDelete };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.AfterDelete };
 
         [Fact]
         public void AfterDelete()
         {
             // Arrange
-            var discovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
+            var discovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
             var (_, hookExecutor, resourceDefinitionMock) = CreateTestObjects(discovery);
             var todoList = CreateTodoWithOwner();
 

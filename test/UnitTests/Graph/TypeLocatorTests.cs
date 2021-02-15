@@ -4,7 +4,7 @@ using Xunit;
 
 namespace UnitTests.Graph
 {
-    public sealed class TypeLocator_Tests
+    public sealed class TypeLocatorTests
     {
         [Fact]
         public void GetGenericInterfaceImplementation_Gets_Implementation()
