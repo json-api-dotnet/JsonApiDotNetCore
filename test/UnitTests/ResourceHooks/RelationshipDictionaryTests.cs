@@ -2,29 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public sealed class Dummy : Identifiable
-    {
-        public string SomeUpdatedProperty { get; set; }
-        public string SomeNotUpdatedProperty { get; set; }
-
-        [HasOne]
-        public ToOne FirstToOne { get; set; }
-        [HasOne]
-        public ToOne SecondToOne { get; set; }
-        [HasMany]
-        public ISet<ToMany> ToManies { get; set; }
-    }
-
-    public class NotTargeted : Identifiable { }
-    public sealed class ToMany : Identifiable { }
-    public sealed class ToOne : Identifiable { }
-
     public sealed class RelationshipDictionaryTests
     {
         public readonly HasOneAttribute FirstToOneAttr;

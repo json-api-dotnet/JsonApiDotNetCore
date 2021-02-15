@@ -9,16 +9,6 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Hooks.Internal.Execution
 {
     /// <summary>
-    /// A helper class that provides insights in which relationships have been updated for which resources.
-    /// </summary>
-    public interface IRelationshipsDictionary<TRightResource> :
-        IRelationshipGetters<TRightResource>,
-        IReadOnlyDictionary<RelationshipAttribute, HashSet<TRightResource>>,
-        IRelationshipsDictionary where TRightResource : class, IIdentifiable
-    { }
-
-
-    /// <summary>
     /// Implementation of IAffectedRelationships{TRightResource}
     /// 
     /// It is practically a ReadOnlyDictionary{RelationshipAttribute, HashSet{TRightResource}} dictionary

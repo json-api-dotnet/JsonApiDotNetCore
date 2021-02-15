@@ -1,6 +1,5 @@
 using System;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Resources;
 using Xunit;
 
 namespace UnitTests.Internal
@@ -108,12 +107,4 @@ namespace UnitTests.Internal
             Assert.Null(descriptor);
         }
     }
-    
-    public interface IGenericInterface<T> { }
-    public sealed class Implementation : IGenericInterface<int> { }
-
-    public class BaseType<T> { }
-    public sealed class DerivedType : BaseType<int> { }
-
-    public sealed class Model : Identifiable { }
 }

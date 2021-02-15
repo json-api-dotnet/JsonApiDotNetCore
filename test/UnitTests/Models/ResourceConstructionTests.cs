@@ -1,11 +1,9 @@
 using System;
 using System.ComponentModel.Design;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -122,42 +120,6 @@ namespace UnitTests.Models
             Assert.Equal(
                 "Failed to create an instance of 'UnitTests.Models.ResourceWithStringConstructor' using injected constructor parameters.",
                 exception.Message);
-        }
-    }
-
-    public class ResourceWithoutConstructor : Identifiable
-    {
-    }
-
-    public class ResourceWithDbContextConstructor : Identifiable
-    {
-        public AppDbContext AppDbContext { get; }
-
-        public ResourceWithDbContextConstructor(AppDbContext appDbContext)
-        {
-            ArgumentGuard.NotNull(appDbContext, nameof(appDbContext));
-
-            AppDbContext = appDbContext;
-        }
-    }
-
-    public class ResourceWithThrowingConstructor : Identifiable
-    {
-        public ResourceWithThrowingConstructor()
-        {
-            throw new ArgumentException("Failed to initialize.");
-        }
-    }
-
-    public class ResourceWithStringConstructor : Identifiable
-    {
-        public string Text { get; }
-
-        public ResourceWithStringConstructor(string text)
-        {
-            ArgumentGuard.NotNull(text, nameof(text));
-
-            Text = text;
         }
     }
 }
