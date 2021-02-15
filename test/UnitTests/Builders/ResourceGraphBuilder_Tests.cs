@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
-namespace UnitTests
+namespace UnitTests.Builders
 {
     public sealed class ResourceGraphBuilder_Tests
     {

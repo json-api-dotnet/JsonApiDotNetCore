@@ -2,7 +2,7 @@ using System;
 using JsonApiDotNetCore.Configuration;
 using Xunit;
 
-namespace UnitTests.Internal
+namespace UnitTests.Graph
 {
     public sealed class TypeLocator_Tests
     {

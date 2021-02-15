@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using UnitTests.TestModels;
 using Xunit;
 
-namespace UnitTests.Serialization.Deserializer
+namespace UnitTests.Serialization.Common
 {
     public sealed class BaseDocumentParserTests : DeserializerTestsSetup
     {

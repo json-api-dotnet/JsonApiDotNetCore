@@ -7,7 +7,7 @@ using Moq;
 using UnitTests.TestModels;
 using Xunit;
 
-namespace UnitTests.Serialization.Serializer
+namespace UnitTests.Serialization.Common
 {
     public sealed class BaseDocumentBuilderTests : SerializerTestsSetup
     {

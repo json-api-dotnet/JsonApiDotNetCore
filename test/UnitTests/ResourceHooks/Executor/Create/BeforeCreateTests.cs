@@ -4,7 +4,7 @@ using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
 
-namespace UnitTests.ResourceHooks
+namespace UnitTests.ResourceHooks.Executor.Create
 {
     public sealed class BeforeCreateTests : HooksTestsSetup
     {

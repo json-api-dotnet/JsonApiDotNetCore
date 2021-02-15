@@ -3,7 +3,7 @@ using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
 
-namespace UnitTests.ResourceHooks
+namespace UnitTests.ResourceHooks.Executor.Delete
 {
     public sealed class BeforeDeleteTests : HooksTestsSetup
     {

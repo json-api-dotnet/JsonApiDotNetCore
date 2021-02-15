@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Resources;
 
-namespace UnitTests.Internal
+namespace UnitTests.Graph
 {
     public sealed class Model : Identifiable { }
 }

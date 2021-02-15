@@ -1,5 +1,5 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCoreExample;
+using JsonApiDotNetCoreExample.Startups;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

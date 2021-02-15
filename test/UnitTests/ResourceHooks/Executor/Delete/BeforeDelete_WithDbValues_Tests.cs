@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
-namespace UnitTests.ResourceHooks
+namespace UnitTests.ResourceHooks.Executor.Delete
 {
     public sealed class BeforeDelete_WithDbValues_Tests : HooksTestsSetup
     {

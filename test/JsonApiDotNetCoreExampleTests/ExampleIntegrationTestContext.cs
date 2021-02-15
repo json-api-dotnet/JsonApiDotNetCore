@@ -1,4 +1,4 @@
-using JsonApiDotNetCoreExample;
+using JsonApiDotNetCoreExample.Startups;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 

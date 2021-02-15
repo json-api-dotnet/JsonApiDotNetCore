@@ -1,3 +1,4 @@
+using JsonApiDotNetCoreExample.Startups;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 

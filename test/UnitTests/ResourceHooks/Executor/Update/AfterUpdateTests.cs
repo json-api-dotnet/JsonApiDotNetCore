@@ -4,14 +4,14 @@ using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
 
-namespace UnitTests.ResourceHooks
+namespace UnitTests.ResourceHooks.Executor.Update
 {
-    public sealed class BeforeUpdateTests : HooksTestsSetup
+    public sealed class AfterUpdateTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
+        private readonly ResourceHook[] targetHooks = { ResourceHook.AfterUpdate, ResourceHook.AfterUpdateRelationship };
 
         [Fact]
-        public void BeforeUpdate()
+        public void AfterUpdate()
         {
             // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
@@ -20,16 +20,16 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // Act
-            hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
+            hookExecutor.AfterUpdate(todoList, ResourcePipeline.Patch);
 
             // Assert
-            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IDiffableResourceHashSet<TodoItem>>(), ResourcePipeline.Patch), Times.Once());
-            ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<Person>>(), ResourcePipeline.Patch), Times.Once());
+            todoResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Patch), Times.Once());
+            ownerResourceMock.Verify(rd => rd.AfterUpdateRelationship(It.IsAny<IRelationshipsDictionary<Person>>(), ResourcePipeline.Patch), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
         [Fact]
-        public void BeforeUpdate_Without_Parent_Hook_Implemented()
+        public void AfterUpdate_Without_Parent_Hook_Implemented()
         {
             // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
@@ -38,33 +38,32 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // Act
-            hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
+            hookExecutor.AfterUpdate(todoList, ResourcePipeline.Patch);
 
             // Assert
-            ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<Person>>(), ResourcePipeline.Patch), Times.Once());
+            ownerResourceMock.Verify(rd => rd.AfterUpdateRelationship(It.IsAny<IRelationshipsDictionary<Person>>(), ResourcePipeline.Patch), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
         [Fact]
-        public void BeforeUpdate_Without_Child_Hook_Implemented()
+        public void AfterUpdate_Without_Child_Hook_Implemented()
         {
             // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
-
             var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();
 
             // Act
-            hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
+            hookExecutor.AfterUpdate(todoList, ResourcePipeline.Patch);
 
             // Assert
-            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IDiffableResourceHashSet<TodoItem>>(), ResourcePipeline.Patch), Times.Once());
+            todoResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Patch), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
         [Fact]
-        public void BeforeUpdate_Without_Any_Hook_Implemented()
+        public void AfterUpdate_Without_Any_Hook_Implemented()
         {
             // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
@@ -73,7 +72,7 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // Act
-            hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
+            hookExecutor.AfterUpdate(todoList, ResourcePipeline.Patch);
 
             // Assert
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);

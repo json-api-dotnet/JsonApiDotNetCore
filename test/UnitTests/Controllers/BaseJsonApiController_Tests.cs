@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 
-namespace UnitTests
+namespace UnitTests.Controllers
 {
     public sealed class BaseJsonApiController_Tests
     {

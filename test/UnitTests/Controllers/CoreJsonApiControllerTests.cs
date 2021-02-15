@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
-namespace UnitTests
+namespace UnitTests.Controllers
 {
     public sealed class CoreJsonApiControllerTests : CoreJsonApiController
     {

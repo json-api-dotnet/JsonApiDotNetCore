@@ -1,7 +1,6 @@
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
-using UnitTests.Internal;
 using Xunit;
 
 namespace UnitTests.Graph

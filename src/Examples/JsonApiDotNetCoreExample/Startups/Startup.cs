@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace JsonApiDotNetCoreExample
+namespace JsonApiDotNetCoreExample.Startups
 {
     public class Startup : EmptyStartup
     {

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JsonApiDotNetCoreExample
+namespace JsonApiDotNetCoreExample.Startups
 {
     /// <summary>
     /// Empty startup class, required for integration tests.

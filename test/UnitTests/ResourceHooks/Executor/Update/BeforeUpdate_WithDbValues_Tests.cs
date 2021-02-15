@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
-namespace UnitTests.ResourceHooks
+namespace UnitTests.ResourceHooks.Executor.Update
 {
     public sealed class BeforeUpdate_WithDbValues_Tests : HooksTestsSetup
     {
