@@ -22,16 +22,16 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         public WhereClauseBuilder(Expression source, LambdaScope lambdaScope, Type extensionType)
             : base(lambdaScope)
         {
-            _source = source ?? throw new ArgumentNullException(nameof(source));
-            _extensionType = extensionType ?? throw new ArgumentNullException(nameof(extensionType));
+            ArgumentGuard.NotNull(source, nameof(source));
+            ArgumentGuard.NotNull(extensionType, nameof(extensionType));
+
+            _source = source;
+            _extensionType = extensionType;
         }
 
         public Expression ApplyWhere(FilterExpression filter)
         {
-            if (filter == null)
-            {
-                throw new ArgumentNullException(nameof(filter));
-            }
+            ArgumentGuard.NotNull(filter, nameof(filter));
 
             Expression body = Visit(filter, null);
             LambdaExpression lambda = Expression.Lambda(body, LambdaScope.Parameter);

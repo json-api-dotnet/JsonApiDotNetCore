@@ -30,7 +30,9 @@ namespace JsonApiDotNetCore.Resources
 
         public JsonApiResourceDefinition(IResourceGraph resourceGraph)
         {
-            ResourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+
+            ResourceGraph = resourceGraph;
         }
 
         /// <inheritdoc />
@@ -65,10 +67,7 @@ namespace JsonApiDotNetCore.Resources
         /// </example>
         protected SortExpression CreateSortExpressionFromLambda(PropertySortOrder keySelectors)
         {
-            if (keySelectors == null)
-            {
-                throw new ArgumentNullException(nameof(keySelectors));
-            }
+            ArgumentGuard.NotNull(keySelectors, nameof(keySelectors));
 
             List<SortElementExpression> sortElements = new List<SortElementExpression>();
 

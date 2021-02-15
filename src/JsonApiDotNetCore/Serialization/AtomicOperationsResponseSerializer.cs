@@ -28,11 +28,17 @@ namespace JsonApiDotNetCore.Serialization
             IJsonApiRequest request, IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
-            _metaBuilder = metaBuilder ?? throw new ArgumentNullException(nameof(metaBuilder));
-            _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
-            _fieldsToSerialize = fieldsToSerialize ?? throw new ArgumentNullException(nameof(fieldsToSerialize));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ArgumentGuard.NotNull(metaBuilder, nameof(metaBuilder));
+            ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
+            ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(options, nameof(options));
+
+            _metaBuilder = metaBuilder;
+            _linkBuilder = linkBuilder;
+            _fieldsToSerialize = fieldsToSerialize;
+            _request = request;
+            _options = options;
         }
 
         /// <inheritdoc />

@@ -26,8 +26,11 @@ namespace JsonApiDotNetCore.Serialization
 
         protected BaseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory)
         {
-            ResourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            ResourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+
+            ResourceContextProvider = resourceContextProvider;
+            ResourceFactory = resourceFactory;
         }
 
         /// <summary>
@@ -46,7 +49,7 @@ namespace JsonApiDotNetCore.Serialization
 
         protected object DeserializeBody(string body)
         {
-            if (body == null) throw new ArgumentNullException(nameof(body));
+            ArgumentGuard.NotNull(body, nameof(body));
 
             var bodyJToken = LoadJToken(body);
             Document = bodyJToken.ToObject<Document>();
@@ -74,8 +77,8 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="attributes">Exposed attributes for <paramref name="resource"/>.</param>
         protected IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (attributes == null) throw new ArgumentNullException(nameof(attributes));
+            ArgumentGuard.NotNull(resource, nameof(resource));
+            ArgumentGuard.NotNull(attributes, nameof(attributes));
 
             if (attributeValues == null || attributeValues.Count == 0)
                 return resource;
@@ -107,8 +110,8 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="relationshipAttributes">Exposed relationships for <paramref name="resource"/>.</param>
         protected virtual IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipEntry> relationshipValues, IReadOnlyCollection<RelationshipAttribute> relationshipAttributes)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (relationshipAttributes == null) throw new ArgumentNullException(nameof(relationshipAttributes));
+            ArgumentGuard.NotNull(resource, nameof(resource));
+            ArgumentGuard.NotNull(relationshipAttributes, nameof(relationshipAttributes));
 
             if (relationshipValues == null || relationshipValues.Count == 0)
             {

@@ -30,7 +30,9 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory, IJsonApiOptions options)
             : base(request, resourceContextProvider)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ArgumentGuard.NotNull(options, nameof(options));
+
+            _options = options;
             _scopeParser = new QueryStringParameterScopeParser(resourceContextProvider, FieldChainRequirements.EndsInToMany);
             _filterParser = new FilterParser(resourceContextProvider, resourceFactory, ValidateSingleField);
         }
@@ -47,7 +49,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
+            ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
             return !IsAtomicOperationsRequest &&
                 !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Filter);

@@ -32,18 +32,20 @@ namespace JsonApiDotNetCore.Serialization
             IResourceContextProvider resourceContextProvider,
             ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(deserializer, nameof(deserializer));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
 
-            _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            _deserializer = deserializer;
+            _request = request;
+            _resourceContextProvider = resourceContextProvider;
             _traceWriter = new TraceLogWriter<JsonApiReader>(loggerFactory);
         }
 
         public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentGuard.NotNull(context, nameof(context));
 
             string body = await GetRequestBodyAsync(context.HttpContext.Request.Body);
 

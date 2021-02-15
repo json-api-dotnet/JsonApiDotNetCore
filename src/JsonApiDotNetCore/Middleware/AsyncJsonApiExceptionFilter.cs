@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -12,13 +11,15 @@ namespace JsonApiDotNetCore.Middleware
 
         public AsyncJsonApiExceptionFilter(IExceptionHandler exceptionHandler)
         {
-            _exceptionHandler = exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler));
+            ArgumentGuard.NotNull(exceptionHandler, nameof(exceptionHandler));
+
+            _exceptionHandler = exceptionHandler;
         }
 
         /// <inheritdoc />
         public Task OnExceptionAsync(ExceptionContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            ArgumentGuard.NotNull(context, nameof(context));
 
             if (context.HttpContext.IsJsonApiRequest())
             {

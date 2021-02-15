@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 
@@ -14,8 +13,10 @@ namespace JsonApiDotNetCore.Queries
 
         public ExpressionInScope(ResourceFieldChainExpression scope, QueryExpression expression)
         {
+            ArgumentGuard.NotNull(expression, nameof(expression));
+
             Scope = scope;
-            Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+            Expression = expression;
         }
 
         public override string ToString()

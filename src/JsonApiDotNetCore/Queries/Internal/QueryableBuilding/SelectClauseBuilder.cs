@@ -31,20 +31,24 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             LambdaParameterNameFactory nameFactory, IResourceFactory resourceFactory, IResourceContextProvider resourceContextProvider)
             : base(lambdaScope)
         {
-            _source = source ?? throw new ArgumentNullException(nameof(source));
-            _entityModel = entityModel ?? throw new ArgumentNullException(nameof(entityModel));
-            _extensionType = extensionType ?? throw new ArgumentNullException(nameof(extensionType));
-            _nameFactory = nameFactory ?? throw new ArgumentNullException(nameof(nameFactory));
-            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(source, nameof(source));
+            ArgumentGuard.NotNull(entityModel, nameof(entityModel));
+            ArgumentGuard.NotNull(extensionType, nameof(extensionType));
+            ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
+            ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+
+            _source = source;
+            _entityModel = entityModel;
+            _extensionType = extensionType;
+            _nameFactory = nameFactory;
+            _resourceFactory = resourceFactory;
+            _resourceContextProvider = resourceContextProvider;
         }
 
         public Expression ApplySelect(IDictionary<ResourceFieldAttribute, QueryLayer> selectors, ResourceContext resourceContext)
         {
-            if (selectors == null)
-            {
-                throw new ArgumentNullException(nameof(selectors));
-            }
+            ArgumentGuard.NotNull(selectors, nameof(selectors));
 
             if (!selectors.Any())
             {
@@ -232,18 +236,19 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             public PropertySelector(PropertyInfo property, QueryLayer nextLayer = null)
             {
-                Property = property ?? throw new ArgumentNullException(nameof(property));
+                ArgumentGuard.NotNull(property, nameof(property));
+
+                Property = property;
                 NextLayer = nextLayer;
             }
 
             public PropertySelector(ResourceFieldAttribute field, QueryLayer nextLayer = null)
             {
-                OriginatingField = field ?? throw new ArgumentNullException(nameof(field));
-                NextLayer = nextLayer;
+                ArgumentGuard.NotNull(field, nameof(field));
 
-                Property = field is HasManyThroughAttribute hasManyThrough
-                    ? hasManyThrough.ThroughProperty
-                    : field.Property;
+                OriginatingField = field;
+                NextLayer = nextLayer;
+                Property = field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty : field.Property;
             }
 
             public override string ToString()

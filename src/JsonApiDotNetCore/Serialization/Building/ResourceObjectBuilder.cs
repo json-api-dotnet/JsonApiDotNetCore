@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
@@ -17,14 +16,17 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         public ResourceObjectBuilder(IResourceContextProvider resourceContextProvider, ResourceObjectBuilderSettings settings)
         {
-            ResourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(settings, nameof(settings));
+
+            ResourceContextProvider = resourceContextProvider;
+            _settings = settings;
         }
 
         /// <inheritdoc /> 
         public virtual ResourceObject Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             var resourceContext = ResourceContextProvider.GetResourceContext(resource.GetType());
 
@@ -51,8 +53,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         protected virtual RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
-            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            ArgumentGuard.NotNull(relationship, nameof(relationship));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             return new RelationshipEntry { Data = GetRelatedResourceLinkage(relationship, resource) };
         }
@@ -62,8 +64,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         protected object GetRelatedResourceLinkage(RelationshipAttribute relationship, IIdentifiable resource)
         {
-            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            ArgumentGuard.NotNull(relationship, nameof(relationship));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             return relationship is HasOneAttribute hasOne
                 ? (object) GetRelatedResourceLinkageForHasOne(hasOne, resource)

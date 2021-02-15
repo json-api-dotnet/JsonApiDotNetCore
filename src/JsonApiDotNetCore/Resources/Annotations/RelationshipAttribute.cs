@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public virtual object GetValue(object resource)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             return Property.GetValue(resource);
         }
@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public virtual void SetValue(object resource, object newValue)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             Property.SetValue(resource, newValue);
         }

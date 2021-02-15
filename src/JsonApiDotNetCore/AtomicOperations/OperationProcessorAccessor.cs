@@ -18,14 +18,17 @@ namespace JsonApiDotNetCore.AtomicOperations
         public OperationProcessorAccessor(IResourceContextProvider resourceContextProvider,
             IServiceProvider serviceProvider)
         {
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
+
+            _resourceContextProvider = resourceContextProvider;
+            _serviceProvider = serviceProvider;
         }
 
         /// <inheritdoc />
         public Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
-            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            ArgumentGuard.NotNull(operation, nameof(operation));
 
             var processor = ResolveProcessor(operation);
             return processor.ProcessAsync(operation, cancellationToken);

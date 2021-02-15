@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal;
@@ -18,7 +17,9 @@ namespace JsonApiDotNetCore.Resources
 
         public ResourceHooksDefinition(IResourceGraph resourceGraph)
         {
-            ResourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+
+            ResourceGraph = resourceGraph;
         }
 
         /// <inheritdoc />

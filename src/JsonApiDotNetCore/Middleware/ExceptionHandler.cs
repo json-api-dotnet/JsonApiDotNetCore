@@ -16,15 +16,16 @@ namespace JsonApiDotNetCore.Middleware
 
         public ExceptionHandler(ILoggerFactory loggerFactory, IJsonApiOptions options)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+            ArgumentGuard.NotNull(options, nameof(options));
 
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _options = options;
             _logger = loggerFactory.CreateLogger<ExceptionHandler>();
         }
 
         public ErrorDocument HandleException(Exception exception)
         {
-            if (exception == null) throw new ArgumentNullException(nameof(exception));
+            ArgumentGuard.NotNull(exception, nameof(exception));
 
             Exception demystified = exception.Demystify();
 
@@ -43,7 +44,7 @@ namespace JsonApiDotNetCore.Middleware
 
         protected virtual LogLevel GetLogLevel(Exception exception)
         {
-            if (exception == null) throw new ArgumentNullException(nameof(exception));
+            ArgumentGuard.NotNull(exception, nameof(exception));
 
             if (exception is OperationCanceledException)
             {
@@ -60,14 +61,14 @@ namespace JsonApiDotNetCore.Middleware
 
         protected virtual string GetLogMessage(Exception exception)
         {
-            if (exception == null) throw new ArgumentNullException(nameof(exception));
+            ArgumentGuard.NotNull(exception, nameof(exception));
 
             return exception.Message;
         }
 
         protected virtual ErrorDocument CreateErrorDocument(Exception exception)
         {
-            if (exception == null) throw new ArgumentNullException(nameof(exception));
+            ArgumentGuard.NotNull(exception, nameof(exception));
 
             var errors = exception is JsonApiException jsonApiException
                 ? jsonApiException.Errors

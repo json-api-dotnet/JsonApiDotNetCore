@@ -18,8 +18,11 @@ namespace JsonApiDotNetCore.Repositories
 
         public PlaceholderResourceCollector(IResourceFactory resourceFactory, DbContext dbContext)
         {
-            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+            ArgumentGuard.NotNull(dbContext, nameof(dbContext));
+
+            _resourceFactory = resourceFactory;
+            _dbContext = dbContext;
         }
 
         /// <summary>

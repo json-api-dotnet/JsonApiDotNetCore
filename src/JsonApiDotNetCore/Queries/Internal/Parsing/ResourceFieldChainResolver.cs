@@ -15,7 +15,9 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public ResourceFieldChainResolver(IResourceContextProvider resourceContextProvider)
         {
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+
+            _resourceContextProvider = resourceContextProvider;
         }
 
         /// <summary>

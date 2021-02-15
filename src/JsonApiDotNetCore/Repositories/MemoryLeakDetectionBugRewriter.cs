@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
@@ -19,7 +18,7 @@ namespace JsonApiDotNetCore.Repositories
     {
         public QueryLayer Rewrite(QueryLayer queryLayer)
         {
-            if (queryLayer == null) throw new ArgumentNullException(nameof(queryLayer));
+            ArgumentGuard.NotNull(queryLayer, nameof(queryLayer));
 
             return RewriteLayer(queryLayer);
         }

@@ -17,7 +17,9 @@ namespace JsonApiDotNetCore.Configuration
 
         public JsonApiValidationFilter(IRequestScopedServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
+
+            _serviceProvider = serviceProvider;
         }
 
         /// <inheritdoc />

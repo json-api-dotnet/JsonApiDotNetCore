@@ -18,10 +18,7 @@ namespace JsonApiDotNetCore
 
         public static object ConvertType(object value, Type type)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentGuard.NotNull(type, nameof(type));
 
             if (value == null)
             {
@@ -288,10 +285,7 @@ namespace JsonApiDotNetCore
 
         public static object CreateInstance(Type type)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentGuard.NotNull(type, nameof(type));
 
             try
             {
@@ -331,8 +325,8 @@ namespace JsonApiDotNetCore
         /// <param name="collectionType">Target collection type, for example: typeof(List{Article}) or typeof(ISet{Person}).</param>
         public static IEnumerable CopyToTypedCollection(IEnumerable source, Type collectionType)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (collectionType == null) throw new ArgumentNullException(nameof(collectionType));
+            ArgumentGuard.NotNull(source, nameof(source));
+            ArgumentGuard.NotNull(collectionType, nameof(collectionType));
 
             var concreteCollectionType = ToConcreteCollectionType(collectionType);
             dynamic concreteCollectionInstance = CreateInstance(concreteCollectionType);
@@ -350,10 +344,7 @@ namespace JsonApiDotNetCore
         /// </summary>
         public static bool IsOrImplementsInterface(Type source, Type interfaceType)
         {
-            if (interfaceType == null)
-            {
-                throw new ArgumentNullException(nameof(interfaceType));
-            }
+            ArgumentGuard.NotNull(interfaceType, nameof(interfaceType));
 
             if (source == null)
             {

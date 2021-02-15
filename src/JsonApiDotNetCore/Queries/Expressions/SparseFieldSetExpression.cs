@@ -14,12 +14,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public SparseFieldSetExpression(IReadOnlyCollection<ResourceFieldAttribute> fields)
         {
-            Fields = fields ?? throw new ArgumentNullException(nameof(fields));
+            ArgumentGuard.NotNull(fields, nameof(fields));
 
             if (!fields.Any())
             {
                 throw new ArgumentException("Must have one or more fields.", nameof(fields));
             }
+
+            Fields = fields;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)

@@ -7,8 +7,8 @@ namespace JsonApiDotNetCore.Resources
     {
         public static object GetTypedId(this IIdentifiable identifiable)
         {
-            if (identifiable == null) throw new ArgumentNullException(nameof(identifiable));
-            
+            ArgumentGuard.NotNull(identifiable, nameof(identifiable));
+
             PropertyInfo property = identifiable.GetType().GetProperty(nameof(Identifiable.Id));
             
             if (property == null)

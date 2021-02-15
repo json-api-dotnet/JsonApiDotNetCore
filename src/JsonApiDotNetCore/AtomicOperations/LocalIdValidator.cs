@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -17,8 +16,11 @@ namespace JsonApiDotNetCore.AtomicOperations
 
         public LocalIdValidator(ILocalIdTracker localIdTracker, IResourceContextProvider resourceContextProvider)
         {
-            _localIdTracker = localIdTracker ?? throw new ArgumentNullException(nameof(localIdTracker));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(localIdTracker, nameof(localIdTracker));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+
+            _localIdTracker = localIdTracker;
+            _resourceContextProvider = resourceContextProvider;
         }
 
         public void Validate(IEnumerable<OperationContainer> operations)

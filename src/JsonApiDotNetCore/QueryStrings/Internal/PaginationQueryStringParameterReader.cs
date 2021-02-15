@@ -26,14 +26,16 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         public PaginationQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
             : base(request, resourceContextProvider)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ArgumentGuard.NotNull(options, nameof(options));
+
+            _options = options;
             _paginationParser = new PaginationParser(resourceContextProvider);
         }
 
         /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
+            ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
             return !IsAtomicOperationsRequest &&
                 !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Page);

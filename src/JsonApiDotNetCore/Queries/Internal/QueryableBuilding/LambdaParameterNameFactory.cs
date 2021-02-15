@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Humanizer;
 
@@ -13,10 +12,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public LambdaParameterNameScope Create(string typeName)
         {
-            if (typeName == null)
-            {
-                throw new ArgumentNullException(nameof(typeName));
-            }
+            ArgumentGuard.NotNull(typeName, nameof(typeName));
 
             string parameterName = typeName.Camelize();
             parameterName = EnsureNameIsUnique(parameterName);

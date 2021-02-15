@@ -1,5 +1,6 @@
 using System;
 using Bogus;
+using JsonApiDotNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 
@@ -17,7 +18,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
 
         public InjectionFakers(IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
+
+            _serviceProvider = serviceProvider;
 
             _lazyPostOfficeFaker = new Lazy<Faker<PostOffice>>(() =>
                 new Faker<PostOffice>()

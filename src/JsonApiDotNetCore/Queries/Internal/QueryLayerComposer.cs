@@ -27,12 +27,19 @@ namespace JsonApiDotNetCore.Queries.Internal
             IPaginationContext paginationContext,
             ITargetedFields targetedFields)
         {
-            _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
-            _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
+            ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
+            ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+
+            _constraintProviders = constraintProviders;
+            _resourceContextProvider = resourceContextProvider;
+            _resourceDefinitionAccessor = resourceDefinitionAccessor;
+            _options = options;
+            _paginationContext = paginationContext;
+            _targetedFields = targetedFields;
             _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
         }
 
@@ -53,7 +60,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public QueryLayer ComposeFromConstraints(ResourceContext requestResource)
         {
-            if (requestResource == null) throw new ArgumentNullException(nameof(requestResource));
+            ArgumentGuard.NotNull(requestResource, nameof(requestResource));
 
             var constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
 
@@ -173,7 +180,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public QueryLayer ComposeForGetById<TId>(TId id, ResourceContext resourceContext, TopFieldSelection fieldSelection)
         {
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var idAttribute = GetIdAttribute(resourceContext);
 
@@ -204,7 +211,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public QueryLayer ComposeSecondaryLayerForRelationship(ResourceContext secondaryResourceContext)
         {
-            if (secondaryResourceContext == null) throw new ArgumentNullException(nameof(secondaryResourceContext));
+            ArgumentGuard.NotNull(secondaryResourceContext, nameof(secondaryResourceContext));
 
             var secondaryLayer = ComposeFromConstraints(secondaryResourceContext);
             secondaryLayer.Projection = GetProjectionForRelationship(secondaryResourceContext);
@@ -223,9 +230,9 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceContext primaryResourceContext, TId primaryId, RelationshipAttribute secondaryRelationship)
         {
-            if (secondaryLayer == null) throw new ArgumentNullException(nameof(secondaryLayer));
-            if (primaryResourceContext == null) throw new ArgumentNullException(nameof(primaryResourceContext));
-            if (secondaryRelationship == null) throw new ArgumentNullException(nameof(secondaryRelationship));
+            ArgumentGuard.NotNull(secondaryLayer, nameof(secondaryLayer));
+            ArgumentGuard.NotNull(primaryResourceContext, nameof(primaryResourceContext));
+            ArgumentGuard.NotNull(secondaryRelationship, nameof(secondaryRelationship));
 
             var innerInclude = secondaryLayer.Include;
             secondaryLayer.Include = null;
@@ -281,7 +288,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public QueryLayer ComposeForUpdate<TId>(TId id, ResourceContext primaryResource)
         {
-            if (primaryResource == null) throw new ArgumentNullException(nameof(primaryResource));
+            ArgumentGuard.NotNull(primaryResource, nameof(primaryResource));
 
             var includeElements = _targetedFields.Relationships
                 .Select(relationship => new IncludeElementExpression(relationship)).ToArray();
@@ -370,7 +377,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual IReadOnlyCollection<IncludeElementExpression> GetIncludeElements(IReadOnlyCollection<IncludeElementExpression> includeElements, ResourceContext resourceContext)
         {
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             includeElements = _resourceDefinitionAccessor.OnApplyIncludes(resourceContext.ResourceType, includeElements);
             return includeElements;
@@ -378,8 +385,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual FilterExpression GetFilter(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
-            if (expressionsInScope == null) throw new ArgumentNullException(nameof(expressionsInScope));
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(expressionsInScope, nameof(expressionsInScope));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var filters = expressionsInScope.OfType<FilterExpression>().ToArray();
 
@@ -392,8 +399,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual SortExpression GetSort(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
-            if (expressionsInScope == null) throw new ArgumentNullException(nameof(expressionsInScope));
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(expressionsInScope, nameof(expressionsInScope));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var sort = expressionsInScope.OfType<SortExpression>().FirstOrDefault();
 
@@ -410,8 +417,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual PaginationExpression GetPagination(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
-            if (expressionsInScope == null) throw new ArgumentNullException(nameof(expressionsInScope));
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(expressionsInScope, nameof(expressionsInScope));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var pagination = expressionsInScope.OfType<PaginationExpression>().FirstOrDefault();
 
@@ -424,7 +431,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual IDictionary<ResourceFieldAttribute, QueryLayer> GetProjectionForSparseAttributeSet(ResourceContext resourceContext)
         {
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(resourceContext);
             if (!fieldSet.Any())

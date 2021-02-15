@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Controllers.Annotations;
@@ -14,14 +13,16 @@ namespace JsonApiDotNetCore.Middleware
     
         public AsyncQueryStringActionFilter(IQueryStringReader queryStringReader)
         {
-            _queryStringReader = queryStringReader ?? throw new ArgumentNullException(nameof(queryStringReader));
+            ArgumentGuard.NotNull(queryStringReader, nameof(queryStringReader));
+
+            _queryStringReader = queryStringReader;
         }
 
         /// <inheritdoc />
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
-            if (next == null) throw new ArgumentNullException(nameof(next));
+            ArgumentGuard.NotNull(context, nameof(context));
+            ArgumentGuard.NotNull(next, nameof(next));
 
             if (context.HttpContext.IsJsonApiRequest())
             {

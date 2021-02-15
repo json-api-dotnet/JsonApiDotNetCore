@@ -20,8 +20,11 @@ namespace JsonApiDotNetCore.AtomicOperations
 
         public EntityFrameworkCoreTransaction(IDbContextTransaction transaction, DbContext dbContext)
         {
-            _transaction = transaction ?? throw new ArgumentNullException(nameof(transaction));
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            ArgumentGuard.NotNull(transaction, nameof(transaction));
+            ArgumentGuard.NotNull(dbContext, nameof(dbContext));
+
+            _transaction = transaction;
+            _dbContext = dbContext;
         }
 
         /// <summary>

@@ -17,10 +17,14 @@ namespace JsonApiDotNetCore.Resources
         public OperationContainer(OperationKind kind, IIdentifiable resource, ITargetedFields targetedFields,
             IJsonApiRequest request)
         {
+            ArgumentGuard.NotNull(resource, nameof(resource));
+            ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+            ArgumentGuard.NotNull(request, nameof(request));
+
             Kind = kind;
-            Resource = resource ?? throw new ArgumentNullException(nameof(resource));
-            TargetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
-            Request = request ?? throw new ArgumentNullException(nameof(request));
+            Resource = resource;
+            TargetedFields = targetedFields;
+            Request = request;
         }
 
         public void SetTransactionId(Guid transactionId)
@@ -30,7 +34,7 @@ namespace JsonApiDotNetCore.Resources
 
         public OperationContainer WithResource(IIdentifiable resource)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             return new OperationContainer(Kind, resource, TargetedFields, Request);
         }

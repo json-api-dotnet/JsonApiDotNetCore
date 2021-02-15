@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Configuration
             IMvcCoreBuilder mvcBuilder = null,
             ICollection<Type> dbContextTypes = null)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            ArgumentGuard.NotNull(services, nameof(services));
 
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder,
                 dbContextTypes ?? Array.Empty<Type>());
@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public static IServiceCollection AddClientSerialization(this IServiceCollection services)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            ArgumentGuard.NotNull(services, nameof(services));
 
             services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
             services.AddScoped<IRequestSerializer>(sp =>
@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public static IServiceCollection AddResourceService<TService>(this IServiceCollection services)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            ArgumentGuard.NotNull(services, nameof(services));
 
             RegisterForConstructedType(services, typeof(TService), ServiceDiscoveryFacade.ServiceInterfaces);
 
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public static IServiceCollection AddResourceRepository<TRepository>(this IServiceCollection services)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            ArgumentGuard.NotNull(services, nameof(services));
 
             RegisterForConstructedType(services, typeof(TRepository), ServiceDiscoveryFacade.RepositoryInterfaces);
 

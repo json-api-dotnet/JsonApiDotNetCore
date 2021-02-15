@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,10 +26,15 @@ namespace JsonApiDotNetCore.Serialization.Building
                                              IResourceObjectBuilderSettingsProvider settingsProvider)
             : base(resourceContextProvider, settingsProvider.Get())
         {
+            ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
+            ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
+            ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
+            ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
+
             _included = new HashSet<ResourceObject>(ResourceIdentifierObjectComparer.Instance);
-            _fieldsToSerialize = fieldsToSerialize ?? throw new ArgumentNullException(nameof(fieldsToSerialize));
-            _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
-            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
+            _fieldsToSerialize = fieldsToSerialize;
+            _linkBuilder = linkBuilder;
+            _resourceDefinitionAccessor = resourceDefinitionAccessor;
             _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
         }
 
@@ -89,8 +93,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <inheritdoc />
         public void IncludeRelationshipChain(IReadOnlyCollection<RelationshipAttribute> inclusionChain, IIdentifiable rootResource)
         {
-            if (inclusionChain == null) throw new ArgumentNullException(nameof(inclusionChain));
-            if (rootResource == null) throw new ArgumentNullException(nameof(rootResource));
+            ArgumentGuard.NotNull(inclusionChain, nameof(inclusionChain));
+            ArgumentGuard.NotNull(rootResource, nameof(rootResource));
 
             // We don't have to build a resource object for the root resource because
             // this one is already encoded in the documents primary data, so we process the chain
@@ -149,8 +153,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
-            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            ArgumentGuard.NotNull(relationship, nameof(relationship));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             return new RelationshipEntry { Links = _linkBuilder.GetRelationshipLinks(relationship, resource) };
         }

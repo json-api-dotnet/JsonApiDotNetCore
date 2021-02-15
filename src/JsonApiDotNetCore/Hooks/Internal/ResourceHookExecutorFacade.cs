@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +18,11 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
         public ResourceHookExecutorFacade(IResourceHookExecutor resourceHookExecutor, IResourceFactory resourceFactory)
         {
-            _resourceHookExecutor =
-                resourceHookExecutor ?? throw new ArgumentNullException(nameof(resourceHookExecutor));
-            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
+            ArgumentGuard.NotNull(resourceHookExecutor, nameof(resourceHookExecutor));
+            ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+
+            _resourceHookExecutor = resourceHookExecutor;
+            _resourceFactory = resourceFactory;
         }
 
         public void BeforeReadSingle<TResource, TId>(TId id, ResourcePipeline pipeline)

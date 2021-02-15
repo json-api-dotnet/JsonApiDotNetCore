@@ -42,8 +42,8 @@ namespace JsonApiDotNetCore.Errors
         private static IEnumerable<Error> FromModelStateViolations(IEnumerable<ModelStateViolation> violations, 
             bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
         {
-            if (violations == null) throw new ArgumentNullException(nameof(violations));
-            if (namingStrategy == null) throw new ArgumentNullException(nameof(namingStrategy));
+            ArgumentGuard.NotNull(violations, nameof(violations));
+            ArgumentGuard.NotNull(namingStrategy, nameof(namingStrategy));
 
             foreach (var violation in violations)
             {

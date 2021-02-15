@@ -23,7 +23,9 @@ namespace JsonApiDotNetCore.Queries
 
         public QueryLayer(ResourceContext resourceContext)
         {
-            ResourceContext = resourceContext ?? throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
+
+            ResourceContext = resourceContext;
         }
 
         public override string ToString()

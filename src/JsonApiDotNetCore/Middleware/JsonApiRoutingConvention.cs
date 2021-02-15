@@ -39,15 +39,18 @@ namespace JsonApiDotNetCore.Middleware
 
         public JsonApiRoutingConvention(IJsonApiOptions options, IResourceContextProvider resourceContextProvider)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+
+            _options = options;
+            _resourceContextProvider = resourceContextProvider;
         }
 
         /// <inheritdoc />
         public Type GetResourceTypeForController(string controllerName)
         {
-            if (controllerName == null) throw new ArgumentNullException(nameof(controllerName));
-            
+            ArgumentGuard.NotNull(controllerName, nameof(controllerName));
+
             if (_registeredResources.TryGetValue(controllerName, out var resourceContext))
             {
                 return resourceContext.ResourceType;
@@ -59,7 +62,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public void Apply(ApplicationModel application)
         {
-            if (application == null) throw new ArgumentNullException(nameof(application));
+            ArgumentGuard.NotNull(application, nameof(application));
 
             foreach (var controller in application.Controllers)
             {

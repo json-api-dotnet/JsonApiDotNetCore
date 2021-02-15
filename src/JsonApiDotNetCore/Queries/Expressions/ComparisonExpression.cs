@@ -14,9 +14,12 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public ComparisonExpression(ComparisonOperator @operator, QueryExpression left, QueryExpression right)
         {
+            ArgumentGuard.NotNull(left, nameof(left));
+            ArgumentGuard.NotNull(right, nameof(right));
+
             Operator = @operator;
-            Left = left ?? throw new ArgumentNullException(nameof(left));
-            Right = right ?? throw new ArgumentNullException(nameof(right));
+            Left = left;
+            Right = right;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)

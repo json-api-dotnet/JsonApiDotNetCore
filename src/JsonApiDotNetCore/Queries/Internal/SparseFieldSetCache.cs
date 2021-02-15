@@ -19,9 +19,10 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         public SparseFieldSetCache(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor)
         {
-            if (constraintProviders == null) throw new ArgumentNullException(nameof(constraintProviders));
-            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
+            ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
+            ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
 
+            _resourceDefinitionAccessor = resourceDefinitionAccessor;
             _lazySourceTable = new Lazy<IDictionary<ResourceContext, HashSet<ResourceFieldAttribute>>>(() => BuildSourceTable(constraintProviders));
             _visitedTable = new Dictionary<ResourceContext, HashSet<ResourceFieldAttribute>>();
         }
@@ -59,7 +60,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         public IReadOnlyCollection<ResourceFieldAttribute> GetSparseFieldSetForQuery(ResourceContext resourceContext)
         {
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             if (!_visitedTable.ContainsKey(resourceContext))
             {
@@ -81,7 +82,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         public IReadOnlyCollection<AttrAttribute> GetIdAttributeSetForRelationshipQuery(ResourceContext resourceContext)
         {
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
             var inputExpression = new SparseFieldSetExpression(new []{idAttribute});
@@ -127,7 +128,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private HashSet<ResourceFieldAttribute> GetResourceFields(ResourceContext resourceContext)
         {
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var fieldSet = new HashSet<ResourceFieldAttribute>();
 

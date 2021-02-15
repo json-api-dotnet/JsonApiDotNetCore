@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -22,17 +21,18 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             IResourceContextProvider resourceContextProvider)
             : base(lambdaScope)
         {
-            _source = source ?? throw new ArgumentNullException(nameof(source));
-            _resourceContext = resourceContext ?? throw new ArgumentNullException(nameof(resourceContext));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(source, nameof(source));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+
+            _source = source;
+            _resourceContext = resourceContext;
+            _resourceContextProvider = resourceContextProvider;
         }
 
         public Expression ApplyInclude(IncludeExpression include)
         {
-            if (include == null)
-            {
-                throw new ArgumentNullException(nameof(include));
-            }
+            ArgumentGuard.NotNull(include, nameof(include));
 
             return Visit(include, null);
         }

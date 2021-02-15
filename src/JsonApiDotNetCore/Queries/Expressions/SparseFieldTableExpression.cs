@@ -15,12 +15,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public SparseFieldTableExpression(IReadOnlyDictionary<ResourceContext, SparseFieldSetExpression> table)
         {
-            Table = table ?? throw new ArgumentNullException(nameof(table));
+            ArgumentGuard.NotNull(table, nameof(table));
 
             if (!table.Any())
             {
                 throw new ArgumentException("Must have one or more entries.", nameof(table));
             }
+
+            Table = table;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)

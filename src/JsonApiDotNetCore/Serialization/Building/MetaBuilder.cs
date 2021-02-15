@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
@@ -17,15 +16,19 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         public MetaBuilder(IPaginationContext paginationContext, IJsonApiOptions options, IResponseMeta responseMeta)
         {
-            _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _responseMeta = responseMeta ?? throw new ArgumentNullException(nameof(responseMeta));
+            ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(responseMeta, nameof(responseMeta));
+
+            _paginationContext = paginationContext;
+            _options = options;
+            _responseMeta = responseMeta;
         }
 
         /// <inheritdoc />
         public void Add(IReadOnlyDictionary<string, object> values)
         {
-            if (values == null) throw new ArgumentNullException(nameof(values));
+            ArgumentGuard.NotNull(values, nameof(values));
 
             _meta = values.Keys.Union(_meta.Keys)
                 .ToDictionary(key => key,

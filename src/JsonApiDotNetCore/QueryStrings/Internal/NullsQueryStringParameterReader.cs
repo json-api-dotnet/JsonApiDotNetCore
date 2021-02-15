@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -17,14 +16,16 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         public NullsQueryStringParameterReader(IJsonApiOptions options)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ArgumentGuard.NotNull(options, nameof(options));
+
+            _options = options;
             SerializerNullValueHandling = options.SerializerSettings.NullValueHandling;
         }
 
         /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
+            ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
             return _options.AllowQueryStringOverrideForSerializerNullValueHandling &&
                    !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Nulls);

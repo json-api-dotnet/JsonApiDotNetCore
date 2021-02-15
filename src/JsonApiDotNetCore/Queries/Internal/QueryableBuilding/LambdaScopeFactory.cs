@@ -11,16 +11,15 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public LambdaScopeFactory(LambdaParameterNameFactory nameFactory, HasManyThroughAttribute hasManyThrough = null)
         {
-            _nameFactory = nameFactory ?? throw new ArgumentNullException(nameof(nameFactory));
+            ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
+
+            _nameFactory = nameFactory;
             _hasManyThrough = hasManyThrough;
         }
 
         public LambdaScope CreateScope(Type elementType, Expression accessorExpression = null)
         {
-            if (elementType == null)
-            {
-                throw new ArgumentNullException(nameof(elementType));
-            }
+            ArgumentGuard.NotNull(elementType, nameof(elementType));
 
             return new LambdaScope(_nameFactory, elementType, accessorExpression, _hasManyThrough);
         }

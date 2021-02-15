@@ -16,8 +16,11 @@ namespace JsonApiDotNetCore.Queries.Expressions
         public MatchTextExpression(ResourceFieldChainExpression targetAttribute, LiteralConstantExpression textValue,
             TextMatchKind matchKind)
         {
-            TargetAttribute = targetAttribute ?? throw new ArgumentNullException(nameof(targetAttribute));
-            TextValue = textValue ?? throw new ArgumentNullException(nameof(textValue));
+            ArgumentGuard.NotNull(targetAttribute, nameof(targetAttribute));
+            ArgumentGuard.NotNull(textValue, nameof(textValue));
+
+            TargetAttribute = targetAttribute;
+            TextValue = textValue;
             MatchKind = matchKind;
         }
 

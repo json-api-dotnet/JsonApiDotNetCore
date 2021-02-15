@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -18,16 +17,20 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         public CreateProcessor(ICreateService<TResource, TId> service, ILocalIdTracker localIdTracker,
             IResourceContextProvider resourceContextProvider)
         {
-            _service = service ?? throw new ArgumentNullException(nameof(service));
-            _localIdTracker = localIdTracker ?? throw new ArgumentNullException(nameof(localIdTracker));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(service, nameof(service));
+            ArgumentGuard.NotNull(localIdTracker, nameof(localIdTracker));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+
+            _service = service;
+            _localIdTracker = localIdTracker;
+            _resourceContextProvider = resourceContextProvider;
         }
 
         /// <inheritdoc />
         public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation,
             CancellationToken cancellationToken)
         {
-            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            ArgumentGuard.NotNull(operation, nameof(operation));
 
             var newResource = await _service.CreateAsync((TResource) operation.Resource, cancellationToken);
 

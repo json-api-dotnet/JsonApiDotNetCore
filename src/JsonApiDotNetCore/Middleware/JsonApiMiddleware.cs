@@ -39,11 +39,11 @@ namespace JsonApiDotNetCore.Middleware
             IJsonApiRequest request, 
             IResourceContextProvider resourceContextProvider)
         {
-            if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
-            if (controllerResourceMapping == null) throw new ArgumentNullException(nameof(controllerResourceMapping));
-            if (options == null) throw new ArgumentNullException(nameof(options));
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            if (resourceContextProvider == null) throw new ArgumentNullException(nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(httpContext, nameof(httpContext));
+            ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
 
             var routeValues = httpContext.GetRouteData().Values;
 

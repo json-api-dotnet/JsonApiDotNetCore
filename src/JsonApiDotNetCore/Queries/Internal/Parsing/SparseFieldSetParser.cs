@@ -20,7 +20,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public SparseFieldSetExpression Parse(string source, ResourceContext resourceContext)
         {
-            _resourceContext = resourceContext ?? throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
+
+            _resourceContext = resourceContext;
+
             Tokenize(source);
 
             var expression = ParseSparseFieldSet();

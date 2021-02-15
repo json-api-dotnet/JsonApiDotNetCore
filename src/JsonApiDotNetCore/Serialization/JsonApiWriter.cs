@@ -26,16 +26,18 @@ namespace JsonApiDotNetCore.Serialization
 
         public JsonApiWriter(IJsonApiSerializer serializer, IExceptionHandler exceptionHandler, ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(serializer, nameof(serializer));
+            ArgumentGuard.NotNull(exceptionHandler, nameof(exceptionHandler));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
 
-            _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
-            _exceptionHandler = exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler));
+            _serializer = serializer;
+            _exceptionHandler = exceptionHandler;
             _traceWriter = new TraceLogWriter<JsonApiWriter>(loggerFactory);
         }
 
         public async Task WriteAsync(OutputFormatterWriteContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            ArgumentGuard.NotNull(context, nameof(context));
 
             var response = context.HttpContext.Response;
             response.ContentType = _serializer.ContentType;

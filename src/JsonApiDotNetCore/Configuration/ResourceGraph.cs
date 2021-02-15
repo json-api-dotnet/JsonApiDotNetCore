@@ -15,7 +15,9 @@ namespace JsonApiDotNetCore.Configuration
 
         public ResourceGraph(IReadOnlyCollection<ResourceContext> resources)
         {
-            _resources = resources ?? throw new ArgumentNullException(nameof(resources));
+            ArgumentGuard.NotNull(resources, nameof(resources));
+
+            _resources = resources;
         }
 
         /// <inheritdoc />
@@ -24,7 +26,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public ResourceContext GetResourceContext(string resourceName)
         {
-            if (resourceName == null) throw new ArgumentNullException(nameof(resourceName));
+            ArgumentGuard.NotNull(resourceName, nameof(resourceName));
 
             return _resources.SingleOrDefault(e => e.PublicName == resourceName);
         }
@@ -32,7 +34,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public ResourceContext GetResourceContext(Type resourceType)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             return IsLazyLoadingProxyForResourceType(resourceType)
                 ? _resources.SingleOrDefault(e => e.ResourceType == resourceType.BaseType)
@@ -64,7 +66,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public IReadOnlyCollection<ResourceFieldAttribute> GetFields(Type type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ArgumentGuard.NotNull(type, nameof(type));
 
             return GetResourceContext(type).Fields;
         }
@@ -72,7 +74,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public IReadOnlyCollection<AttrAttribute> GetAttributes(Type type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ArgumentGuard.NotNull(type, nameof(type));
 
             return GetResourceContext(type).Attributes;
         }
@@ -80,7 +82,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ArgumentGuard.NotNull(type, nameof(type));
 
             return GetResourceContext(type).Relationships;
         }
@@ -88,7 +90,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship)
         {
-            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
+            ArgumentGuard.NotNull(relationship, nameof(relationship));
 
             if (relationship.InverseNavigationProperty == null)
             {

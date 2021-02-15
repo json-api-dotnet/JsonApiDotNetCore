@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Resources;
@@ -14,14 +13,16 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
 
         public DeleteProcessor(IDeleteService<TResource, TId> service)
         {
-            _service = service ?? throw new ArgumentNullException(nameof(service));
+            ArgumentGuard.NotNull(service, nameof(service));
+
+            _service = service;
         }
 
         /// <inheritdoc />
         public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation,
             CancellationToken cancellationToken)
         {
-            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            ArgumentGuard.NotNull(operation, nameof(operation));
 
             var id = (TId) operation.Resource.GetTypedId();
             await _service.DeleteAsync(id, cancellationToken);

@@ -21,7 +21,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public IncludeExpression Parse(string source, ResourceContext resourceContextInScope, int? maximumDepth)
         {
-            _resourceContextInScope = resourceContextInScope ?? throw new ArgumentNullException(nameof(resourceContextInScope));
+            ArgumentGuard.NotNull(resourceContextInScope, nameof(resourceContextInScope));
+
+            _resourceContextInScope = resourceContextInScope;
+
             Tokenize(source);
 
             var expression = ParseInclude(maximumDepth);

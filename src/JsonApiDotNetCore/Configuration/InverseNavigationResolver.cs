@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -16,8 +15,11 @@ namespace JsonApiDotNetCore.Configuration
         public InverseNavigationResolver(IResourceContextProvider resourceContextProvider,
             IEnumerable<IDbContextResolver> dbContextResolvers)
         {
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _dbContextResolvers = dbContextResolvers ?? throw new ArgumentNullException(nameof(dbContextResolvers));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(dbContextResolvers, nameof(dbContextResolvers));
+
+            _resourceContextProvider = resourceContextProvider;
+            _dbContextResolvers = dbContextResolvers;
         }
 
         /// <inheritdoc />

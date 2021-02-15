@@ -16,16 +16,16 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         public SkipTakeClauseBuilder(Expression source, LambdaScope lambdaScope, Type extensionType)
             : base(lambdaScope)
         {
-            _source = source ?? throw new ArgumentNullException(nameof(source));
-            _extensionType = extensionType ?? throw new ArgumentNullException(nameof(extensionType));
+            ArgumentGuard.NotNull(source, nameof(source));
+            ArgumentGuard.NotNull(extensionType, nameof(extensionType));
+
+            _source = source;
+            _extensionType = extensionType;
         }
 
         public Expression ApplySkipTake(PaginationExpression expression)
         {
-            if (expression == null)
-            {
-                throw new ArgumentNullException(nameof(expression));
-            }
+            ArgumentGuard.NotNull(expression, nameof(expression));
 
             return Visit(expression, null);
         }

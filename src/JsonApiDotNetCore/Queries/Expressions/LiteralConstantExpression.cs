@@ -1,5 +1,3 @@
-using System;
-
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
@@ -11,7 +9,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public LiteralConstantExpression(string text)
         {
-            Value = text ?? throw new ArgumentNullException(nameof(text));
+            ArgumentGuard.NotNull(text, nameof(text));
+
+            Value = text;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)

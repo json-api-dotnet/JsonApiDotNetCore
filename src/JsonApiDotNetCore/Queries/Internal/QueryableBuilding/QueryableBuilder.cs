@@ -28,19 +28,27 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             IResourceFactory resourceFactory, IResourceContextProvider resourceContextProvider, IModel entityModel,
             LambdaScopeFactory lambdaScopeFactory = null)
         {
-            _source = source ?? throw new ArgumentNullException(nameof(source));
-            _elementType = elementType ?? throw new ArgumentNullException(nameof(elementType));
-            _extensionType = extensionType ?? throw new ArgumentNullException(nameof(extensionType));
-            _nameFactory = nameFactory ?? throw new ArgumentNullException(nameof(nameFactory));
-            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _entityModel = entityModel ?? throw new ArgumentNullException(nameof(entityModel));
+            ArgumentGuard.NotNull(source, nameof(source));
+            ArgumentGuard.NotNull(elementType, nameof(elementType));
+            ArgumentGuard.NotNull(extensionType, nameof(extensionType));
+            ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
+            ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(entityModel, nameof(entityModel));
+
+            _source = source;
+            _elementType = elementType;
+            _extensionType = extensionType;
+            _nameFactory = nameFactory;
+            _resourceFactory = resourceFactory;
+            _resourceContextProvider = resourceContextProvider;
+            _entityModel = entityModel;
             _lambdaScopeFactory = lambdaScopeFactory ?? new LambdaScopeFactory(_nameFactory);
         }
 
         public virtual Expression ApplyQuery(QueryLayer layer)
         {
-            if (layer == null) throw new ArgumentNullException(nameof(layer));
+            ArgumentGuard.NotNull(layer, nameof(layer));
 
             Expression expression = _source;
 

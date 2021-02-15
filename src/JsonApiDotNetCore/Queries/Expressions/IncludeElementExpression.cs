@@ -21,8 +21,11 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public IncludeElementExpression(RelationshipAttribute relationship, IReadOnlyCollection<IncludeElementExpression> children)
         {
-            Relationship = relationship ?? throw new ArgumentNullException(nameof(relationship));
-            Children = children ?? throw new ArgumentNullException(nameof(children));
+            ArgumentGuard.NotNull(relationship, nameof(relationship));
+            ArgumentGuard.NotNull(children, nameof(children));
+
+            Relationship = relationship;
+            Children = children;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)

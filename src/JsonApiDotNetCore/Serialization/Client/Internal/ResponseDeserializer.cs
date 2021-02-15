@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         /// <inheritdoc />
         public SingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
         {
-            if (body == null) throw new ArgumentNullException(nameof(body));
+            ArgumentGuard.NotNull(body, nameof(body));
 
             var resource = DeserializeBody(body);
             return new SingleResponse<TResource>
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         /// <inheritdoc />
         public ManyResponse<TResource> DeserializeMany<TResource>(string body) where TResource : class, IIdentifiable
         {
-            if (body == null) throw new ArgumentNullException(nameof(body));
+            ArgumentGuard.NotNull(body, nameof(body));
 
             var resources = DeserializeBody(body);
             return new ManyResponse<TResource>
@@ -57,8 +57,8 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         /// <param name="data">Relationship data for <paramref name="resource"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/>.</param>
         protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (field == null) throw new ArgumentNullException(nameof(field));
+            ArgumentGuard.NotNull(resource, nameof(resource));
+            ArgumentGuard.NotNull(field, nameof(field));
 
             // Client deserializers do not need additional processing for attributes.
             if (field is AttrAttribute)

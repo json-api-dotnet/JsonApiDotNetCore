@@ -43,14 +43,17 @@ namespace JsonApiDotNetCore.Repositories
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             ILoggerFactory loggerFactory)
         {
-            if (contextResolver == null) throw new ArgumentNullException(nameof(contextResolver));
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(contextResolver, nameof(contextResolver));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+            ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+            ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+            ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
 
-            _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
-            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
-            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
-            _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
-
+            _targetedFields = targetedFields;
+            _resourceGraph = resourceGraph;
+            _resourceFactory = resourceFactory;
+            _constraintProviders = constraintProviders;
             _dbContext = contextResolver.GetContext();
             _traceWriter = new TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>>(loggerFactory);
         }
@@ -59,7 +62,8 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {layer});
-            if (layer == null) throw new ArgumentNullException(nameof(layer));
+
+            ArgumentGuard.NotNull(layer, nameof(layer));
 
             IQueryable<TResource> query = ApplyQueryLayer(layer);
             return await query.ToListAsync(cancellationToken);
@@ -83,7 +87,8 @@ namespace JsonApiDotNetCore.Repositories
         protected virtual IQueryable<TResource> ApplyQueryLayer(QueryLayer layer)
         {
             _traceWriter.LogMethodStart(new {layer});
-            if (layer == null) throw new ArgumentNullException(nameof(layer));
+
+            ArgumentGuard.NotNull(layer, nameof(layer));
 
             if (EntityFrameworkCoreSupport.Version.Major < 5)
             {
@@ -130,8 +135,9 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task CreateAsync(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {resourceFromRequest, resourceForDatabase});
-            if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
-            if (resourceForDatabase == null) throw new ArgumentNullException(nameof(resourceForDatabase));
+
+            ArgumentGuard.NotNull(resourceFromRequest, nameof(resourceFromRequest));
+            ArgumentGuard.NotNull(resourceForDatabase, nameof(resourceForDatabase));
 
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
 
@@ -163,8 +169,9 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task UpdateAsync(TResource resourceFromRequest, TResource resourceFromDatabase, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {resourceFromRequest, resourceFromDatabase});
-            if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
-            if (resourceFromDatabase == null) throw new ArgumentNullException(nameof(resourceFromDatabase));
+
+            ArgumentGuard.NotNull(resourceFromRequest, nameof(resourceFromRequest));
+            ArgumentGuard.NotNull(resourceFromDatabase, nameof(resourceFromDatabase));
 
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
 
@@ -309,7 +316,8 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {primaryId, secondaryResourceIds});
-            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
+
+            ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
 
             var relationship = _targetedFields.Relationships.Single();
 
@@ -328,7 +336,8 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task RemoveFromToManyRelationshipAsync(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {primaryResource, secondaryResourceIds});
-            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
+
+            ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
 
             var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
 

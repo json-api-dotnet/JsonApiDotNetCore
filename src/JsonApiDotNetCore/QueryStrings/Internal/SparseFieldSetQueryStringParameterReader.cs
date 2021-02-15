@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
+            ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
             return !IsAtomicOperationsRequest &&
                 !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Fields);

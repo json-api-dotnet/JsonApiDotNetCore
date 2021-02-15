@@ -25,12 +25,12 @@ namespace JsonApiDotNetCore.Serialization
     public class ResponseSerializer<TResource> : BaseSerializer, IJsonApiSerializer
         where TResource : class, IIdentifiable
     {
-        private readonly IFieldsToSerialize _fieldsToSerialize;
-        private readonly IJsonApiOptions _options;
         private readonly IMetaBuilder _metaBuilder;
-        private readonly Type _primaryResourceType;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
+        private readonly IFieldsToSerialize _fieldsToSerialize;
+        private readonly IJsonApiOptions _options;
+        private readonly Type _primaryResourceType;
 
         /// <inheritdoc />
         public string ContentType { get; } = HeaderConstants.MediaType;
@@ -43,11 +43,17 @@ namespace JsonApiDotNetCore.Serialization
             IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
-            _fieldsToSerialize = fieldsToSerialize ?? throw new ArgumentNullException(nameof(fieldsToSerialize));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
-            _metaBuilder = metaBuilder ?? throw new ArgumentNullException(nameof(metaBuilder));
-            _includedBuilder = includedBuilder ?? throw new ArgumentNullException(nameof(includedBuilder));
+            ArgumentGuard.NotNull(metaBuilder, nameof(metaBuilder));
+            ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
+            ArgumentGuard.NotNull(includedBuilder, nameof(includedBuilder));
+            ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
+            ArgumentGuard.NotNull(options, nameof(options));
+
+            _metaBuilder = metaBuilder;
+            _linkBuilder = linkBuilder;
+            _includedBuilder = includedBuilder;
+            _fieldsToSerialize = fieldsToSerialize;
+            _options = options;
             _primaryResourceType = typeof(TResource);
         }
 

@@ -38,10 +38,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public object GetValue(object resource)
         {
-            if (resource == null)
-            {
-                throw new ArgumentNullException(nameof(resource));
-            }
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             if (Property.GetMethod == null)
             {
@@ -56,10 +53,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public void SetValue(object resource, object newValue)
         {
-            if (resource == null)
-            {
-                throw new ArgumentNullException(nameof(resource));
-            }
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             if (Property.SetMethod == null)
             {

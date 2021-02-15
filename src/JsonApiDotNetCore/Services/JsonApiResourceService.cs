@@ -42,16 +42,23 @@ namespace JsonApiDotNetCore.Services
             IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceHookExecutorFacade hookExecutor)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(repositoryAccessor, nameof(repositoryAccessor));
+            ArgumentGuard.NotNull(queryLayerComposer, nameof(queryLayerComposer));
+            ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(resourceChangeTracker, nameof(resourceChangeTracker));
+            ArgumentGuard.NotNull(hookExecutor, nameof(hookExecutor));
 
-            _repositoryAccessor = repositoryAccessor ?? throw new ArgumentNullException(nameof(repositoryAccessor));
-            _queryLayerComposer = queryLayerComposer ?? throw new ArgumentNullException(nameof(queryLayerComposer));
-            _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _repositoryAccessor = repositoryAccessor;
+            _queryLayerComposer = queryLayerComposer;
+            _paginationContext = paginationContext;
+            _options = options;
+            _request = request;
+            _resourceChangeTracker = resourceChangeTracker;
+            _hookExecutor = hookExecutor;
             _traceWriter = new TraceLogWriter<JsonApiResourceService<TResource, TId>>(loggerFactory);
-            _request = request ?? throw new ArgumentNullException(nameof(request));
-            _resourceChangeTracker = resourceChangeTracker ?? throw new ArgumentNullException(nameof(resourceChangeTracker));
-            _hookExecutor = hookExecutor ?? throw new ArgumentNullException(nameof(hookExecutor));
         }
 
         /// <inheritdoc />
@@ -141,7 +148,8 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id, relationshipName});
-            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+
+            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
@@ -166,7 +174,8 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<TResource> CreateAsync(TResource resource, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {resource});
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             var resourceFromRequest = resource;
             _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
@@ -255,8 +264,9 @@ namespace JsonApiDotNetCore.Services
         public async Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {primaryId, secondaryResourceIds});
-            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
-            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
+
+            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
+            ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
@@ -314,7 +324,8 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<TResource> UpdateAsync(TId id, TResource resource, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {id, resource});
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             var resourceFromRequest = resource;
             _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
@@ -356,7 +367,8 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task SetRelationshipAsync(TId primaryId, string relationshipName, object secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {primaryId, relationshipName, secondaryResourceIds});
-            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
+
+            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
@@ -402,8 +414,9 @@ namespace JsonApiDotNetCore.Services
         public async Task RemoveFromToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {primaryId, relationshipName, secondaryResourceIds});
-            if (relationshipName == null) throw new ArgumentNullException(nameof(relationshipName));
-            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
+
+            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
+            ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 

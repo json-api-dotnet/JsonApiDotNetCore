@@ -32,11 +32,17 @@ namespace JsonApiDotNetCore.Serialization.Building
                            IResourceContextProvider provider,
                            IRequestQueryStringAccessor queryStringAccessor)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
-            _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
-            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-            _queryStringAccessor = queryStringAccessor ?? throw new ArgumentNullException(nameof(queryStringAccessor));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
+            ArgumentGuard.NotNull(provider, nameof(provider));
+            ArgumentGuard.NotNull(queryStringAccessor, nameof(queryStringAccessor));
+
+            _options = options;
+            _request = request;
+            _paginationContext = paginationContext;
+            _provider = provider;
+            _queryStringAccessor = queryStringAccessor;
         }
 
         /// <inheritdoc />
@@ -227,8 +233,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <inheritdoc />
         public ResourceLinks GetResourceLinks(string resourceName, string id)
         {
-            if (resourceName == null) throw new ArgumentNullException(nameof(resourceName));
-            if (id == null) throw new ArgumentNullException(nameof(id));
+            ArgumentGuard.NotNull(resourceName, nameof(resourceName));
+            ArgumentGuard.NotNull(id, nameof(id));
 
             var resourceContext = _provider.GetResourceContext(resourceName);
             if (ShouldAddResourceLink(resourceContext, LinkTypes.Self))
@@ -242,8 +248,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <inheritdoc />
         public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable parent)
         {
-            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
-            if (parent == null) throw new ArgumentNullException(nameof(parent));
+            ArgumentGuard.NotNull(relationship, nameof(relationship));
+            ArgumentGuard.NotNull(parent, nameof(parent));
 
             var parentResourceContext = _provider.GetResourceContext(parent.GetType());
             var childNavigation = relationship.PublicName;

@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Middleware
@@ -12,7 +11,7 @@ namespace JsonApiDotNetCore.Middleware
         /// </summary>
         public static bool IsJsonApiRequest(this HttpContext httpContext)
         {
-            if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
+            ArgumentGuard.NotNull(httpContext, nameof(httpContext));
 
             string value = httpContext.Items[_isJsonApiRequestKey] as string;
             return value == bool.TrueString;
@@ -20,7 +19,7 @@ namespace JsonApiDotNetCore.Middleware
 
         internal static void RegisterJsonApiRequest(this HttpContext httpContext)
         {
-            if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
+            ArgumentGuard.NotNull(httpContext, nameof(httpContext));
 
             httpContext.Items[_isJsonApiRequestKey] = bool.TrueString;
         }

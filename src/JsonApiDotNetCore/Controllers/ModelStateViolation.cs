@@ -15,10 +15,15 @@ namespace JsonApiDotNetCore.Controllers
 
         public ModelStateViolation(string prefix, string propertyName, Type resourceType, ModelError error)
         {
-            Prefix = prefix ?? throw new ArgumentNullException(nameof(prefix));
-            PropertyName = propertyName ?? throw new ArgumentNullException(nameof(propertyName));
-            ResourceType = resourceType ?? throw new ArgumentNullException(nameof(resourceType));
-            Error = error ?? throw new ArgumentNullException(nameof(error));
+            ArgumentGuard.NotNull(prefix, nameof(prefix));
+            ArgumentGuard.NotNull(propertyName, nameof(propertyName));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNull(error, nameof(error));
+
+            Prefix = prefix;
+            PropertyName = propertyName;
+            ResourceType = resourceType;
+            Error = error;
         }
     }
 }

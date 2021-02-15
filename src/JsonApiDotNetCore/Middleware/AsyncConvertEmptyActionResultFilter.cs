@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -12,8 +11,8 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
-            if (next == null) throw new ArgumentNullException(nameof(next));
+            ArgumentGuard.NotNull(context, nameof(context));
+            ArgumentGuard.NotNull(next, nameof(next));
 
             if (context.HttpContext.IsJsonApiRequest())
             {

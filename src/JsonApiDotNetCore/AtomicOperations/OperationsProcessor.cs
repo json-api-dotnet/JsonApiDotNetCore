@@ -26,12 +26,19 @@ namespace JsonApiDotNetCore.AtomicOperations
             IOperationsTransactionFactory operationsTransactionFactory, ILocalIdTracker localIdTracker,
             IResourceContextProvider resourceContextProvider, IJsonApiRequest request, ITargetedFields targetedFields)
         {
-            _operationProcessorAccessor = operationProcessorAccessor ?? throw new ArgumentNullException(nameof(operationProcessorAccessor));
-            _operationsTransactionFactory = operationsTransactionFactory ?? throw new ArgumentNullException(nameof(operationsTransactionFactory));
-            _localIdTracker = localIdTracker ?? throw new ArgumentNullException(nameof(localIdTracker));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
-            _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
+            ArgumentGuard.NotNull(operationProcessorAccessor, nameof(operationProcessorAccessor));
+            ArgumentGuard.NotNull(operationsTransactionFactory, nameof(operationsTransactionFactory));
+            ArgumentGuard.NotNull(localIdTracker, nameof(localIdTracker));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+
+            _operationProcessorAccessor = operationProcessorAccessor;
+            _operationsTransactionFactory = operationsTransactionFactory;
+            _localIdTracker = localIdTracker;
+            _resourceContextProvider = resourceContextProvider;
+            _request = request;
+            _targetedFields = targetedFields;
             _localIdValidator = new LocalIdValidator(_localIdTracker, _resourceContextProvider);
         }
 
@@ -39,7 +46,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         public virtual async Task<IList<OperationContainer>> ProcessAsync(IList<OperationContainer> operations,
             CancellationToken cancellationToken)
         {
-            if (operations == null) throw new ArgumentNullException(nameof(operations));
+            ArgumentGuard.NotNull(operations, nameof(operations));
 
             _localIdValidator.Validate(operations);
             _localIdTracker.Reset();

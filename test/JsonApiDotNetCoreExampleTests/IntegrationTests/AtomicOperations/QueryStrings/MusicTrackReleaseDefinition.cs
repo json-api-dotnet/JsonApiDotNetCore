@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Authentication;
@@ -14,7 +15,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         public MusicTrackReleaseDefinition(IResourceGraph resourceGraph, ISystemClock systemClock)
             : base(resourceGraph)
         {
-            _systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
+            ArgumentGuard.NotNull(systemClock, nameof(systemClock));
+
+            _systemClock = systemClock;
         }
 
         public override QueryStringParameterHandlers<MusicTrack> OnRegisterQueryableHandlersForQueryStringParameters()

@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
 
         public ErrorDocument(IEnumerable<Error> errors)
         {
-            if (errors == null) throw new ArgumentNullException(nameof(errors));
+            ArgumentGuard.NotNull(errors, nameof(errors));
 
             Errors = errors.ToList();
         }

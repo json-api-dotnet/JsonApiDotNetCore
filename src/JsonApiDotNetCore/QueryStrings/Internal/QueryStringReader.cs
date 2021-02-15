@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
@@ -19,12 +18,14 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         public QueryStringReader(IJsonApiOptions options, IRequestQueryStringAccessor queryStringAccessor,
             IEnumerable<IQueryStringParameterReader> parameterReaders, ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(queryStringAccessor, nameof(queryStringAccessor));
+            ArgumentGuard.NotNull(parameterReaders, nameof(parameterReaders));
 
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _queryStringAccessor = queryStringAccessor ?? throw new ArgumentNullException(nameof(queryStringAccessor));
-            _parameterReaders = parameterReaders ?? throw new ArgumentNullException(nameof(parameterReaders));
-
+            _options = options;
+            _queryStringAccessor = queryStringAccessor;
+            _parameterReaders = parameterReaders;
             _logger = loggerFactory.CreateLogger<QueryStringReader>();
         }
 

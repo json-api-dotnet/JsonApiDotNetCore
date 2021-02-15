@@ -17,7 +17,9 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         protected QueryClauseBuilder(LambdaScope lambdaScope)
         {
-            LambdaScope = lambdaScope ?? throw new ArgumentNullException(nameof(lambdaScope));
+            ArgumentGuard.NotNull(lambdaScope, nameof(lambdaScope));
+
+            LambdaScope = lambdaScope;
         }
 
         public override Expression VisitCount(CountExpression expression, TArgument argument)

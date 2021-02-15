@@ -10,8 +10,11 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public LambdaParameterNameScope(string name, LambdaParameterNameFactory owner)
         {
-            _owner = owner ?? throw new ArgumentNullException(nameof(owner));
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            ArgumentGuard.NotNull(name, nameof(name));
+            ArgumentGuard.NotNull(owner, nameof(owner));
+
+            Name = name;
+            _owner = owner;
         }
 
         public void Dispose()

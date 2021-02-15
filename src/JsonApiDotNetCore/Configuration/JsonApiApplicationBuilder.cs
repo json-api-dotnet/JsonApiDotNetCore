@@ -44,16 +44,19 @@ namespace JsonApiDotNetCore.Configuration
 
         public JsonApiApplicationBuilder(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
         {
-            _services = services ?? throw new ArgumentNullException(nameof(services));
-            _mvcBuilder = mvcBuilder ?? throw new ArgumentNullException(nameof(mvcBuilder));
-            
+            ArgumentGuard.NotNull(services, nameof(services));
+            ArgumentGuard.NotNull(mvcBuilder, nameof(mvcBuilder));
+
+            _services = services;
+            _mvcBuilder = mvcBuilder;
             _intermediateProvider = services.BuildServiceProvider();
+
             var loggerFactory = _intermediateProvider.GetRequiredService<ILoggerFactory>();
-            
+
             _resourceGraphBuilder = new ResourceGraphBuilder(_options, loggerFactory);
             _serviceDiscoveryFacade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, loggerFactory);
         }
-        
+
         /// <summary>
         /// Executes the action provided by the user to configure <see cref="JsonApiOptions"/>.
         /// </summary>

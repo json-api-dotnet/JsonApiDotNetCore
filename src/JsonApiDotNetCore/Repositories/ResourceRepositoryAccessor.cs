@@ -21,9 +21,13 @@ namespace JsonApiDotNetCore.Repositories
 
         public ResourceRepositoryAccessor(IServiceProvider serviceProvider, IResourceContextProvider resourceContextProvider, IJsonApiRequest request)
         {
-            _serviceProvider = serviceProvider ?? throw new ArgumentException(nameof(serviceProvider));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentException(nameof(serviceProvider));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
+            ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(request, nameof(request));
+
+            _serviceProvider = serviceProvider;
+            _resourceContextProvider = resourceContextProvider;
+            _request = request;
         }
 
         /// <inheritdoc />
@@ -37,7 +41,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public async Task<IReadOnlyCollection<IIdentifiable>> GetAsync(Type resourceType, QueryLayer layer, CancellationToken cancellationToken)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             dynamic repository = ResolveReadRepository(resourceType);
             return (IReadOnlyCollection<IIdentifiable>) await repository.GetAsync(layer, cancellationToken);

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -28,12 +27,16 @@ namespace JsonApiDotNetCore.Controllers
         protected BaseJsonApiOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
             IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+            ArgumentGuard.NotNull(processor, nameof(processor));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
 
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _processor = processor ?? throw new ArgumentNullException(nameof(processor));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
-            _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
+            _options = options;
+            _processor = processor;
+            _request = request;
+            _targetedFields = targetedFields;
             _traceWriter = new TraceLogWriter<BaseJsonApiOperationsController>(loggerFactory);
         }
 
@@ -99,7 +102,8 @@ namespace JsonApiDotNetCore.Controllers
             CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {operations});
-            if (operations == null) throw new ArgumentNullException(nameof(operations));
+
+            ArgumentGuard.NotNull(operations, nameof(operations));
 
             ValidateClientGeneratedIds(operations);
 

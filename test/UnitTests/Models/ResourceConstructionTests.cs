@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.Design;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -134,7 +135,9 @@ namespace UnitTests.Models
 
         public ResourceWithDbContextConstructor(AppDbContext appDbContext)
         {
-            AppDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
+            ArgumentGuard.NotNull(appDbContext, nameof(appDbContext));
+
+            AppDbContext = appDbContext;
         }
     }
 
@@ -152,7 +155,9 @@ namespace UnitTests.Models
 
         public ResourceWithStringConstructor(string text)
         {
-            Text = text ?? throw new ArgumentNullException(nameof(text));
+            ArgumentGuard.NotNull(text, nameof(text));
+
+            Text = text;
         }
     }
 }

@@ -68,15 +68,15 @@ namespace JsonApiDotNetCore.Configuration
 
         public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(loggerFactory));
-            }
-            
+            ArgumentGuard.NotNull(services, nameof(services));
+            ArgumentGuard.NotNull(resourceGraphBuilder, nameof(resourceGraphBuilder));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+            ArgumentGuard.NotNull(options, nameof(options));
+
             _logger = loggerFactory.CreateLogger<ServiceDiscoveryFacade>();
-            _services = services ?? throw new ArgumentNullException(nameof(services));
-            _resourceGraphBuilder = resourceGraphBuilder ?? throw new ArgumentNullException(nameof(resourceGraphBuilder));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _services = services;
+            _resourceGraphBuilder = resourceGraphBuilder;
+            _options = options;
         }
 
         /// <summary>
@@ -89,11 +89,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
         {
-            if (assembly == null)
-            {
-                throw new ArgumentNullException(nameof(assembly));
-            }
-            
+            ArgumentGuard.NotNull(assembly, nameof(assembly));
+
             _assemblyCache.RegisterAssembly(assembly);
             _logger.LogDebug($"Registering assembly '{assembly.FullName}' for discovery of resources and injectables.");
 

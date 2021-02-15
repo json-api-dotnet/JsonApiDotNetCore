@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
@@ -23,7 +22,9 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         public IncludeQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
             : base(request, resourceContextProvider)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ArgumentGuard.NotNull(options, nameof(options));
+
+            _options = options;
             _includeParser = new IncludeParser(resourceContextProvider, ValidateSingleRelationship);
         }
 
@@ -42,7 +43,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
+            ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
             return !IsAtomicOperationsRequest &&
                 !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Include);

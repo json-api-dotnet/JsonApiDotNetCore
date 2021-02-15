@@ -16,10 +16,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public LogicalExpression(LogicalOperator @operator, IReadOnlyCollection<QueryExpression> terms)
         {
-            if (terms == null)
-            {
-                throw new ArgumentNullException(nameof(terms));
-            }
+            ArgumentGuard.NotNull(terms, nameof(terms));
 
             if (terms.Count < 2)
             {

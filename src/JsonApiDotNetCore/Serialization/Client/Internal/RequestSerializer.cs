@@ -23,7 +23,9 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
                                 IResourceObjectBuilder resourceObjectBuilder)
             : base(resourceObjectBuilder)
         {
-            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+
+            _resourceGraph = resourceGraph;
         }
 
         /// <inheritdoc />
@@ -45,7 +47,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         /// <inheritdoc />
         public string Serialize(IReadOnlyCollection<IIdentifiable> resources)
         {
-            if (resources == null) throw new ArgumentNullException(nameof(resources));
+            ArgumentGuard.NotNull(resources, nameof(resources));
 
             IIdentifiable firstResource = resources.FirstOrDefault();
 

@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public void CopyFrom(IJsonApiRequest other)
         {
-            if (other == null) throw new ArgumentNullException(nameof(other));
+            ArgumentGuard.NotNull(other, nameof(other));
 
             Kind = other.Kind;
             BasePath = other.BasePath;

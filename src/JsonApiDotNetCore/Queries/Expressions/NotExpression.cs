@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -12,7 +11,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public NotExpression(QueryExpression child)
         {
-            Child = child ?? throw new ArgumentNullException(nameof(child));
+            ArgumentGuard.NotNull(child, nameof(child));
+
+            Child = child;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)

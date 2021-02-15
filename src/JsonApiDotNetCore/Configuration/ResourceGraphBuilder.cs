@@ -20,9 +20,10 @@ namespace JsonApiDotNetCore.Configuration
 
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
 
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _options = options;
             _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
         }
 
@@ -80,7 +81,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </param>
         public ResourceGraphBuilder Add(Type resourceType, Type idType = null, string publicName = null)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             if (_resources.All(e => e.ResourceType != resourceType))
             {
@@ -112,7 +113,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             var attributes = new List<AttrAttribute>();
 
@@ -153,7 +154,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             var attributes = new List<RelationshipAttribute>();
             var properties = resourceType.GetProperties();
@@ -249,8 +250,8 @@ namespace JsonApiDotNetCore.Configuration
 
         private Type GetRelationshipType(RelationshipAttribute relationship, PropertyInfo property)
         {
-            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
-            if (property == null) throw new ArgumentNullException(nameof(property));
+            ArgumentGuard.NotNull(relationship, nameof(relationship));
+            ArgumentGuard.NotNull(property, nameof(property));
 
             return relationship is HasOneAttribute ? property.PropertyType : property.PropertyType.GetGenericArguments()[0];
         }

@@ -12,7 +12,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public QueryStringParameterScopeExpression(LiteralConstantExpression parameterName, ResourceFieldChainExpression scope)
         {
-            ParameterName = parameterName ?? throw new ArgumentNullException(nameof(parameterName));
+            ArgumentGuard.NotNull(parameterName, nameof(parameterName));
+
+            ParameterName = parameterName;
             Scope = scope;
         }
 

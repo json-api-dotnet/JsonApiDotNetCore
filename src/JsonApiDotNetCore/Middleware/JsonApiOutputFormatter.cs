@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -12,7 +11,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public bool CanWriteResult(OutputFormatterCanWriteContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            ArgumentGuard.NotNull(context, nameof(context));
 
             return context.HttpContext.IsJsonApiRequest();
         }
@@ -20,7 +19,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public async Task WriteAsync(OutputFormatterWriteContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            ArgumentGuard.NotNull(context, nameof(context));
 
             var writer = context.HttpContext.RequestServices.GetRequiredService<IJsonApiWriter>();
             await writer.WriteAsync(context);

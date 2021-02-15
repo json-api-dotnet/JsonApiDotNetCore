@@ -23,6 +23,7 @@
   <ItemGroup>
     <PackageReference Include="Ben.Demystifier" Version="0.1.6" />
     <PackageReference Include="Humanizer" Version="2.8.26" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />

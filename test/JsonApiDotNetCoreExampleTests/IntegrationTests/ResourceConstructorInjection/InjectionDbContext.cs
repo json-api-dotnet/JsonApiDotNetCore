@@ -1,4 +1,4 @@
-using System;
+using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +14,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         public InjectionDbContext(DbContextOptions<InjectionDbContext> options, ISystemClock systemClock)
             : base(options)
         {
-            SystemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
+            ArgumentGuard.NotNull(systemClock, nameof(systemClock));
+
+            SystemClock = systemClock;
         }
     }
 }

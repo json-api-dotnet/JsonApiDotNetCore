@@ -17,13 +17,16 @@ namespace JsonApiDotNetCore.Queries.Expressions
         public EqualsAnyOfExpression(ResourceFieldChainExpression targetAttribute,
             IReadOnlyCollection<LiteralConstantExpression> constants)
         {
-            TargetAttribute = targetAttribute ?? throw new ArgumentNullException(nameof(targetAttribute));
-            Constants = constants ?? throw new ArgumentNullException(nameof(constants));
+            ArgumentGuard.NotNull(targetAttribute, nameof(targetAttribute));
+            ArgumentGuard.NotNull(constants, nameof(constants));
 
             if (constants.Count < 2)
             {
                 throw new ArgumentException("At least two constants are required.", nameof(constants));
             }
+
+            TargetAttribute = targetAttribute;
+            Constants = constants;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)

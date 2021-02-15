@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Errors
         public JsonApiException(Error error, Exception innerException = null)
             : base(null, innerException)
         {
-            if (error == null) throw new ArgumentNullException(nameof(error));
+            ArgumentGuard.NotNull(error, nameof(error));
 
             Errors = new[] {error};
         }
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Errors
         public JsonApiException(IEnumerable<Error> errors, Exception innerException = null)
             : base(null, innerException)
         {
-            if (errors == null) throw new ArgumentNullException(nameof(errors));
+            ArgumentGuard.NotNull(errors, nameof(errors));
 
             Errors = errors.ToList();
 

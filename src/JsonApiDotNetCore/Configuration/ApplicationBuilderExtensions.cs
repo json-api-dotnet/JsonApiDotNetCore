@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,8 +21,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         public static void UseJsonApi(this IApplicationBuilder builder)
         {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
-            
+            ArgumentGuard.NotNull(builder, nameof(builder));
+
             using var scope = builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
             var inverseNavigationResolver = scope.ServiceProvider.GetRequiredService<IInverseNavigationResolver>();
             inverseNavigationResolver.Resolve();

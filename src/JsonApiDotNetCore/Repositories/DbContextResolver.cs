@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Repositories
@@ -11,7 +10,9 @@ namespace JsonApiDotNetCore.Repositories
 
         public DbContextResolver(TDbContext context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            ArgumentGuard.NotNull(context, nameof(context));
+
+            _context = context;
         }
 
         public DbContext GetContext() => _context;

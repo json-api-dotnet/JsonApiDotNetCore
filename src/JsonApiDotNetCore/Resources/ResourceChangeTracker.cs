@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -20,15 +19,19 @@ namespace JsonApiDotNetCore.Resources
         public ResourceChangeTracker(IJsonApiOptions options, IResourceContextProvider resourceContextProvider,
             ITargetedFields targetedFields)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+
+            _options = options;
+            _resourceContextProvider = resourceContextProvider;
+            _targetedFields = targetedFields;
         }
 
         /// <inheritdoc />
         public void SetInitiallyStoredAttributeValues(TResource resource)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             var resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
             _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
@@ -37,7 +40,7 @@ namespace JsonApiDotNetCore.Resources
         /// <inheritdoc />
         public void SetRequestedAttributeValues(TResource resource)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             _requestedAttributeValues = CreateAttributeDictionary(resource, _targetedFields.Attributes);
         }
@@ -45,7 +48,7 @@ namespace JsonApiDotNetCore.Resources
         /// <inheritdoc />
         public void SetFinallyStoredAttributeValues(TResource resource)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             var resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
             _finallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);

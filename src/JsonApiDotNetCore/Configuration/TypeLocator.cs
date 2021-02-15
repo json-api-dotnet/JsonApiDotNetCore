@@ -50,9 +50,9 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         public static (Type implementation, Type registrationInterface)? GetGenericInterfaceImplementation(Assembly assembly, Type openGenericInterface, params Type[] interfaceGenericTypeArguments)
         {
-            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
-            if (openGenericInterface == null) throw new ArgumentNullException(nameof(openGenericInterface));
-            if (interfaceGenericTypeArguments == null) throw new ArgumentNullException(nameof(interfaceGenericTypeArguments));
+            ArgumentGuard.NotNull(assembly, nameof(assembly));
+            ArgumentGuard.NotNull(openGenericInterface, nameof(openGenericInterface));
+            ArgumentGuard.NotNull(interfaceGenericTypeArguments, nameof(interfaceGenericTypeArguments));
 
             if (!openGenericInterface.IsInterface || !openGenericInterface.IsGenericType ||
                 openGenericInterface != openGenericInterface.GetGenericTypeDefinition())

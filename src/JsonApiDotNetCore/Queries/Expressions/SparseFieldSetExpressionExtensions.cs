@@ -13,15 +13,8 @@ namespace JsonApiDotNetCore.Queries.Expressions
             Expression<Func<TResource, dynamic>> fieldSelector, IResourceGraph resourceGraph)
             where TResource : class, IIdentifiable
         {
-            if (fieldSelector == null)
-            {
-                throw new ArgumentNullException(nameof(fieldSelector));
-            }
-
-            if (resourceGraph == null)
-            {
-                throw new ArgumentNullException(nameof(resourceGraph));
-            }
+            ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
             foreach (var field in resourceGraph.GetFields(fieldSelector))
             {
@@ -47,15 +40,8 @@ namespace JsonApiDotNetCore.Queries.Expressions
             Expression<Func<TResource, dynamic>> fieldSelector, IResourceGraph resourceGraph)
             where TResource : class, IIdentifiable
         {
-            if (fieldSelector == null)
-            {
-                throw new ArgumentNullException(nameof(fieldSelector));
-            }
-
-            if (resourceGraph == null)
-            {
-                throw new ArgumentNullException(nameof(resourceGraph));
-            }
+            ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
             foreach (var field in resourceGraph.GetFields(fieldSelector))
             {

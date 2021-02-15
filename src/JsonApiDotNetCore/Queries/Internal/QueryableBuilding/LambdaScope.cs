@@ -17,8 +17,8 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public LambdaScope(LambdaParameterNameFactory nameFactory, Type elementType, Expression accessorExpression, HasManyThroughAttribute hasManyThrough)
         {
-            if (nameFactory == null) throw new ArgumentNullException(nameof(nameFactory));
-            if (elementType == null) throw new ArgumentNullException(nameof(elementType));
+            ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
+            ArgumentGuard.NotNull(elementType, nameof(elementType));
 
             _parameterNameScope = nameFactory.Create(elementType.Name);
             Parameter = Expression.Parameter(elementType, _parameterNameScope.Name);

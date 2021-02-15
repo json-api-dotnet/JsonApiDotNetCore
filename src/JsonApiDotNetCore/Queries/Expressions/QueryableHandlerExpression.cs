@@ -15,7 +15,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public QueryableHandlerExpression(object queryableHandler, StringValues parameterValue)
         {
-            _queryableHandler = queryableHandler ?? throw new ArgumentNullException(nameof(queryableHandler));
+            ArgumentGuard.NotNull(queryableHandler, nameof(queryableHandler));
+
+            _queryableHandler = queryableHandler;
             _parameterValue = parameterValue;
         }
 

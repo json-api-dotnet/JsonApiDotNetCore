@@ -21,7 +21,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public PaginationQueryStringValueExpression Parse(string source, ResourceContext resourceContextInScope)
         {
-            _resourceContextInScope = resourceContextInScope ?? throw new ArgumentNullException(nameof(resourceContextInScope));
+            ArgumentGuard.NotNull(resourceContextInScope, nameof(resourceContextInScope));
+
+            _resourceContextInScope = resourceContextInScope;
+
             Tokenize(source);
 
             var expression = ParsePagination();

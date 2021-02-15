@@ -13,7 +13,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public PaginationExpression(PageNumber pageNumber, PageSize pageSize)
         {
-            PageNumber = pageNumber ?? throw new ArgumentNullException(nameof(pageNumber));
+            ArgumentGuard.NotNull(pageNumber, nameof(pageNumber));
+
+            PageNumber = pageNumber;
             PageSize = pageSize;
         }
 
