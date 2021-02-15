@@ -48,11 +48,17 @@ namespace JsonApiDotNetCore.Queries.Internal
         {
             var constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
 
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
             var filtersInTopScope = constraints
                 .Where(constraint => constraint.Scope == null)
                 .Select(constraint => constraint.Expression)
                 .OfType<FilterExpression>()
                 .ToArray();
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
             return GetFilter(filtersInTopScope, resourceContext);
         }
@@ -72,10 +78,16 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private QueryLayer ComposeTopLayer(IEnumerable<ExpressionInScope> constraints, ResourceContext resourceContext)
         {
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
             var expressionsInTopScope = constraints
                 .Where(constraint => constraint.Scope == null)
                 .Select(constraint => constraint.Expression)
                 .ToArray();
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
             var topPagination = GetPagination(expressionsInTopScope, resourceContext);
             if (topPagination != null)
@@ -95,11 +107,17 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private IncludeExpression ComposeChildren(QueryLayer topLayer, ICollection<ExpressionInScope> constraints)
         {
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
             var include = constraints
                 .Where(constraint => constraint.Scope == null)
                 .Select(constraint => constraint.Expression)
                 .OfType<IncludeExpression>()
                 .FirstOrDefault() ?? IncludeExpression.Empty;
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
             var includeElements =
                 ProcessIncludeSet(include.Elements, topLayer, new List<RelationshipAttribute>(), constraints);
@@ -127,11 +145,17 @@ namespace JsonApiDotNetCore.Queries.Internal
                         includeElement.Relationship
                     };
 
+                    // @formatter:wrap_chained_method_calls chop_always
+                    // @formatter:keep_existing_linebreaks true
+
                     var expressionsInCurrentScope = constraints
                         .Where(constraint =>
                             constraint.Scope != null && constraint.Scope.Fields.SequenceEqual(relationshipChain))
                         .Select(constraint => constraint.Expression)
                         .ToArray();
+
+                    // @formatter:keep_existing_linebreaks restore
+                    // @formatter:wrap_chained_method_calls restore
 
                     var resourceContext =
                         _resourceContextProvider.GetResourceContext(includeElement.Relationship.RightType);
@@ -187,7 +211,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             var queryLayer = ComposeFromConstraints(resourceContext);
             queryLayer.Sort = null;
             queryLayer.Pagination = null;
-            queryLayer.Filter = CreateFilterByIds(new[] {id}, idAttribute, queryLayer.Filter);
+            queryLayer.Filter = CreateFilterById(id, idAttribute, queryLayer.Filter);
 
             if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
             {
@@ -247,7 +271,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             return new QueryLayer(primaryResourceContext)
             {
                 Include = RewriteIncludeForSecondaryEndpoint(innerInclude, secondaryRelationship),
-                Filter = CreateFilterByIds(new[] {primaryId}, primaryIdAttribute, primaryFilter),
+                Filter = CreateFilterById(primaryId, primaryIdAttribute, primaryFilter),
                 Projection = primaryProjection
             };
         }
@@ -259,6 +283,12 @@ namespace JsonApiDotNetCore.Queries.Internal
                 : new IncludeElementExpression(secondaryRelationship);
 
             return new IncludeExpression(new[] {parentElement});
+        }
+
+        private FilterExpression CreateFilterById<TId>(TId id, AttrAttribute idAttribute, FilterExpression existingFilter)
+        {
+            var ids = new[] { id };
+            return CreateFilterByIds(ids, idAttribute, existingFilter);
         }
 
         private FilterExpression CreateFilterByIds<TId>(ICollection<TId> ids, AttrAttribute idAttribute, FilterExpression existingFilter)
@@ -278,11 +308,15 @@ namespace JsonApiDotNetCore.Queries.Internal
                 filter = new EqualsAnyOfExpression(idChain, constants);
             }
 
+            // @formatter:keep_existing_linebreaks true
+
             return filter == null
                 ? existingFilter
                 : existingFilter == null
                     ? filter
                     : new LogicalExpression(LogicalOperator.And, new[] {filter, existingFilter});
+
+            // @formatter:keep_existing_linebreaks restore
         }
 
         /// <inheritdoc />
@@ -299,7 +333,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             primaryLayer.Include = includeElements.Any() ? new IncludeExpression(includeElements) : IncludeExpression.Empty;
             primaryLayer.Sort = null;
             primaryLayer.Pagination = null;
-            primaryLayer.Filter = CreateFilterByIds(new[] {id}, primaryIdAttribute, primaryLayer.Filter);
+            primaryLayer.Filter = CreateFilterById(id, primaryIdAttribute, primaryLayer.Filter);
             primaryLayer.Projection = null;
 
             return primaryLayer;
@@ -353,7 +387,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             var rightIdAttribute = GetIdAttribute(rightResourceContext);
             var rightTypedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
 
-            var leftFilter = CreateFilterByIds(new[] {leftId}, leftIdAttribute, null);
+            var leftFilter = CreateFilterById(leftId, leftIdAttribute, null);
             var rightFilter = CreateFilterByIds(rightTypedIds, rightIdAttribute, null);
 
             return new QueryLayer(leftResourceContext)

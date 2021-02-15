@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Resources;
@@ -34,14 +35,18 @@ namespace JsonApiDotNetCore.Repositories
             ArgumentGuard.NotNull(dbContext, nameof(dbContext));
             ArgumentGuard.NotNull(identifiable, nameof(identifiable));
 
-            var entityType = identifiable.GetType();
-            var entityEntry = dbContext.ChangeTracker
-                .Entries()
-                .FirstOrDefault(entry =>
-                    entry.Entity.GetType() == entityType &&
-                    ((IIdentifiable) entry.Entity).StringId == identifiable.StringId);
+            var resourceType = identifiable.GetType();
+            string stringId = identifiable.StringId;
+
+            var entityEntry = dbContext.ChangeTracker.Entries()
+                .FirstOrDefault(entry => IsResource(entry, resourceType, stringId));
 
             return entityEntry?.Entity;
+        }
+
+        private static bool IsResource(EntityEntry entry, Type resourceType, string stringId)
+        {
+            return entry.Entity.GetType() == resourceType && ((IIdentifiable) entry.Entity).StringId == stringId;
         }
 
         /// <summary>

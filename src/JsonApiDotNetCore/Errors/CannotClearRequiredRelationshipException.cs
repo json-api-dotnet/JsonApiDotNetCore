@@ -12,7 +12,8 @@ namespace JsonApiDotNetCore.Errors
             string resourceType) : base(new Error(HttpStatusCode.BadRequest)
         {
             Title = "Failed to clear a required relationship.",
-            Detail = $"The relationship '{relationshipName}' of resource type '{resourceType}' with ID '{resourceId}' cannot be cleared because it is a required relationship."
+            Detail = $"The relationship '{relationshipName}' of resource type '{resourceType}' " +
+                $"with ID '{resourceId}' cannot be cleared because it is a required relationship."
         })
         {
         }

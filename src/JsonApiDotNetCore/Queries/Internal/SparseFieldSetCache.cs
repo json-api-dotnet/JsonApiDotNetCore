@@ -29,6 +29,9 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private static IDictionary<ResourceContext, HashSet<ResourceFieldAttribute>> BuildSourceTable(IEnumerable<IQueryConstraintProvider> constraintProviders)
         {
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
             var sparseFieldTables = constraintProviders
                 .SelectMany(provider => provider.GetConstraints())
                 .Where(constraint => constraint.Scope == null)
@@ -36,6 +39,9 @@ namespace JsonApiDotNetCore.Queries.Internal
                 .OfType<SparseFieldTableExpression>()
                 .Select(expression => expression.Table)
                 .ToArray();
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
             var mergedTable = new Dictionary<ResourceContext, HashSet<ResourceFieldAttribute>>();
 

@@ -33,8 +33,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
 
         /// <summary>
         /// Get the value of the attribute for the given object.
-        /// Returns null if the attribute does not belong to the
-        /// provided object.
+        /// Throws if the attribute does not belong to the provided object.
         /// </summary>
         public object GetValue(object resource)
         {

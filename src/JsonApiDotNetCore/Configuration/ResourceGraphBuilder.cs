@@ -179,13 +179,15 @@ namespace JsonApiDotNetCore.Configuration
                     var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.ThroughPropertyName);
                     if (throughProperty == null)
                     {
-                        throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
+                        throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': " +
+                            $"Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
                     }
 
                     var throughType = TryGetThroughType(throughProperty);
                     if (throughType == null)
                     {
-                        throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
+                        throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': " +
+                            $"Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
                     }
 
                     // ICollection<ArticleTag>

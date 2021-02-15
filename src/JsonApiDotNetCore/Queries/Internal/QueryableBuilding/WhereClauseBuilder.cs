@@ -278,11 +278,14 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         protected override MemberExpression CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute> chain, Expression source)
         {
-            var components = chain.Select(field =>
-                // In case of a HasManyThrough access (from count() or has() function), we only need to look at the number of entries in the join table.
-                field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty.Name : field.Property.Name).ToArray();
-
+            var components = chain.Select(GetPropertyName).ToArray();
             return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
+        }
+
+        private static string GetPropertyName(ResourceFieldAttribute field)
+        {
+            // In case of a HasManyThrough access (from count() or has() function), we only need to look at the number of entries in the join table.
+            return field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty.Name : field.Property.Name;
         }
     }
 }

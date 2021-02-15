@@ -18,8 +18,10 @@ namespace JsonApiDotNetCore.Middleware
         /// The request URL prefix. This may be an absolute or relative path, depending on <see cref="IJsonApiOptions.UseRelativeLinks"/>.
         /// </summary>
         /// <example>
+        /// <code><![CDATA[
         /// Absolute: https://example.com/api/v1
         /// Relative: /api/v1
+        /// ]]></code>
         /// </example>
         string BasePath { get; }
 

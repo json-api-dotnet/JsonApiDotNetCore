@@ -15,6 +15,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         /// </summary>
         /// <example>
         /// Input tree:
+        /// <code><![CDATA[
         /// Article
         /// {
         ///   Blog,
@@ -23,10 +24,12 @@ namespace JsonApiDotNetCore.Queries.Expressions
         ///     Author
         ///   }
         /// }
-        ///
+        /// ]]></code>
         /// Output chains:
+        /// <code><![CDATA[
         /// Article -> Blog,
         /// Article -> Revisions -> Author
+        /// ]]></code>
         /// </example>
         public static IReadOnlyCollection<ResourceFieldChainExpression> GetRelationshipChains(IncludeExpression include)
         {
@@ -43,10 +46,12 @@ namespace JsonApiDotNetCore.Queries.Expressions
         /// </summary>
         /// <example>
         /// Input chains:
+        /// <code><![CDATA[
         /// Article -> Blog,
         /// Article -> Revisions -> Author
-        ///
+        /// ]]></code>
         /// Output tree:
+        /// <code><![CDATA[
         /// Article
         /// {
         ///   Blog,
@@ -55,6 +60,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         ///     Author
         ///   }
         /// }
+        /// ]]></code>
         /// </example>
         public static IncludeExpression FromRelationshipChains(IReadOnlyCollection<ResourceFieldChainExpression> chains)
         {

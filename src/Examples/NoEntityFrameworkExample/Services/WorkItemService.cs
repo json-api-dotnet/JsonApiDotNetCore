@@ -25,16 +25,19 @@ namespace NoEntityFrameworkExample.Services
 
         public async Task<IReadOnlyCollection<WorkItem>> GetAsync(CancellationToken cancellationToken)
         {
-            return (await QueryAsync(async connection =>
-                await connection.QueryAsync<WorkItem>(new CommandDefinition(@"select * from ""WorkItems""", cancellationToken: cancellationToken)))).ToList();
+            const string commandText = @"select * from ""WorkItems""";
+            var commandDefinition = new CommandDefinition(commandText, cancellationToken: cancellationToken);
+
+            return await QueryAsync(async connection => await connection.QueryAsync<WorkItem>(commandDefinition));
         }
 
         public async Task<WorkItem> GetAsync(int id, CancellationToken cancellationToken)
         {
-            var query = await QueryAsync(async connection =>
-                await connection.QueryAsync<WorkItem>(new CommandDefinition(@"select * from ""WorkItems"" where ""Id""=@id", new {id}, cancellationToken: cancellationToken)));
+            const string commandText = @"select * from ""WorkItems"" where ""Id""=@id";
+            var commandDefinition = new CommandDefinition(commandText, new {id}, cancellationToken: cancellationToken);
 
-            return query.Single();
+            var workItems = await QueryAsync(async connection => await connection.QueryAsync<WorkItem>(commandDefinition));
+            return workItems.Single();
         }
 
         public Task<object> GetSecondaryAsync(int id, string relationshipName, CancellationToken cancellationToken)
@@ -49,16 +52,16 @@ namespace NoEntityFrameworkExample.Services
 
         public async Task<WorkItem> CreateAsync(WorkItem resource, CancellationToken cancellationToken)
         {
-            return (await QueryAsync(async connection =>
-            {
-                const string query = @"insert into ""WorkItems"" (""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId"") values " +
-                    @"(@title, @isBlocked, @durationInHours, @projectId) returning ""Id"", ""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId""";
+            const string commandText = @"insert into ""WorkItems"" (""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId"") values " +
+                @"(@title, @isBlocked, @durationInHours, @projectId) returning ""Id"", ""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId""";
 
-                return await connection.QueryAsync<WorkItem>(new CommandDefinition(query, new
-                {
-                    title = resource.Title, isBlocked = resource.IsBlocked, durationInHours = resource.DurationInHours, projectId = resource.ProjectId
-                }, cancellationToken: cancellationToken));
-            })).SingleOrDefault();
+            var commandDefinition = new CommandDefinition(commandText, new
+            {
+                title = resource.Title, isBlocked = resource.IsBlocked, durationInHours = resource.DurationInHours, projectId = resource.ProjectId
+            }, cancellationToken: cancellationToken);
+
+            var workItems = await QueryAsync(async connection => await connection.QueryAsync<WorkItem>(commandDefinition));
+            return workItems.Single();
         }
 
         public Task AddToToManyRelationshipAsync(int primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
@@ -78,8 +81,10 @@ namespace NoEntityFrameworkExample.Services
 
         public async Task DeleteAsync(int id, CancellationToken cancellationToken)
         {
+            const string commandText = @"delete from ""WorkItems"" where ""Id""=@id";
+
             await QueryAsync(async connection =>
-                await connection.QueryAsync<WorkItem>(new CommandDefinition(@"delete from ""WorkItems"" where ""Id""=@id", new {id}, cancellationToken: cancellationToken)));
+                await connection.QueryAsync<WorkItem>(new CommandDefinition(commandText, new {id}, cancellationToken: cancellationToken)));
         }
 
         public Task RemoveFromToManyRelationshipAsync(int primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
@@ -87,13 +92,13 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        private async Task<IEnumerable<T>> QueryAsync<T>(Func<IDbConnection, Task<IEnumerable<T>>> query)
+        private async Task<IReadOnlyCollection<T>> QueryAsync<T>(Func<IDbConnection, Task<IEnumerable<T>>> query)
         {
-            using IDbConnection dbConnection = GetConnection;
+            using IDbConnection dbConnection = new NpgsqlConnection(_connectionString);
             dbConnection.Open();
-            return await query(dbConnection);
-        }
 
-        private IDbConnection GetConnection => new NpgsqlConnection(_connectionString);
+            IEnumerable<T> resources = await query(dbConnection);
+            return resources.ToList();
+        }
     }
 }

@@ -13,7 +13,8 @@ namespace JsonApiDotNetCore.Errors
             : base(new Error(HttpStatusCode.UnprocessableEntity)
             {
                 Title = "Unsupported resource type in atomic:operations request.",
-                Detail = $"Operations on resources of type '{resourceType}' cannot be used because transaction support is unavailable."
+                Detail = $"Operations on resources of type '{resourceType}' " +
+                    "cannot be used because transaction support is unavailable."
             })
         {
         }

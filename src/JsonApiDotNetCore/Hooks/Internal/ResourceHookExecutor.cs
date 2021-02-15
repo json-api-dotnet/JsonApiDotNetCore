@@ -45,11 +45,17 @@ namespace JsonApiDotNetCore.Hooks.Internal
             hookContainer?.BeforeRead(pipeline, false, stringId);
             var calledContainers = new List<LeftType> { typeof(TResource) };
 
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
             var includes = _constraintProviders
-                .SelectMany(p => p.GetConstraints())
+                .SelectMany(provider => provider.GetConstraints())
                 .Select(expressionInScope => expressionInScope.Expression)
                 .OfType<IncludeExpression>()
                 .ToArray();
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
             foreach (var chain in includes.SelectMany(IncludeChainConverter.GetRelationshipChains))
             {
@@ -399,8 +405,8 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             if (pipeline == ResourcePipeline.GetSingle && returnedList.Count() > 1)
             {
-                throw new ApplicationException("The returned collection from this hook may contain at most one item in the case of the" +
-                    pipeline.ToString("G") + "pipeline");
+                throw new ApplicationException("The returned collection from this hook may contain at most one item in the case of the " +
+                    pipeline.ToString("G") + " pipeline");
             }
         }
 
@@ -454,7 +460,10 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             foreach (var key in prevLayerRelationships.Keys.ToList())
             {
-                var replaced = TypeHelper.CopyToList(prevLayerRelationships[key].Cast<IIdentifiable>().Select(resource => dbValues.Single(dbResource => dbResource.StringId == resource.StringId)), key.LeftType);
+                var source = prevLayerRelationships[key].Cast<IIdentifiable>().Select(resource =>
+                    dbValues.Single(dbResource => dbResource.StringId == resource.StringId));
+
+                var replaced = TypeHelper.CopyToList(source, key.LeftType);
                 prevLayerRelationships[key] = TypeHelper.CreateHashSetFor(key.LeftType, replaced);
             }
             return prevLayerRelationships;

@@ -52,11 +52,19 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             LambdaExpression lambda = Expression.Lambda(body, LambdaScope.Parameter);
 
-            string operationName = previousExpression == null ? 
-                expression.IsAscending ? "OrderBy" : "OrderByDescending" :
-                expression.IsAscending ? "ThenBy" : "ThenByDescending";
+            string operationName = GetOperationName(previousExpression != null, expression.IsAscending);
 
             return ExtensionMethodCall(previousExpression ?? _source, operationName, body.Type, lambda);
+        }
+
+        private static string GetOperationName(bool hasPrecedingSort, bool isAscending)
+        {
+            if (hasPrecedingSort)
+            {
+                return isAscending ? "ThenBy" : "ThenByDescending";
+            }
+
+            return isAscending ? "OrderBy" : "OrderByDescending";
         }
 
         private Expression ExtensionMethodCall(Expression source, string operationName, Type keyType,
@@ -71,11 +79,14 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         protected override MemberExpression CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute> chain, Expression source)
         {
-            var components = chain.Select(field =>
-                // In case of a HasManyThrough access (from count() function), we only need to look at the number of entries in the join table.
-                field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty.Name : field.Property.Name).ToArray();
-
+            var components = chain.Select(GetPropertyName).ToArray();
             return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
+        }
+
+        private static string GetPropertyName(ResourceFieldAttribute field)
+        {
+            // In case of a HasManyThrough access (from count() function), we only need to look at the number of entries in the join table.
+            return field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty.Name : field.Property.Name;
         }
     }
 }

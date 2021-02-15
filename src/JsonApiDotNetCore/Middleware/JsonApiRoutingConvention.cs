@@ -33,9 +33,7 @@ namespace JsonApiDotNetCore.Middleware
         private readonly IJsonApiOptions _options;
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly HashSet<string> _registeredTemplates = new HashSet<string>();
-
-        private readonly Dictionary<string, ResourceContext> _registeredResources =
-            new Dictionary<string, ResourceContext>();
+        private readonly Dictionary<string, ResourceContext> _registeredResources = new Dictionary<string, ResourceContext>();
 
         public JsonApiRoutingConvention(IJsonApiOptions options, IResourceContextProvider resourceContextProvider)
         {
@@ -82,7 +80,7 @@ namespace JsonApiDotNetCore.Middleware
                     }
                 }
 
-                if (!RoutingConventionDisabled(controller))
+                if (!IsRoutingConventionEnabled(controller))
                 {
                     continue;
                 }
@@ -98,14 +96,10 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-        /// <summary>
-        /// Verifies if routing convention should be enabled for this controller.
-        /// </summary>
-        private bool RoutingConventionDisabled(ControllerModel controller)
+        private bool IsRoutingConventionEnabled(ControllerModel controller)
         {
-            var type = controller.ControllerType;
-            var notDisabled = type.GetCustomAttribute<DisableRoutingConventionAttribute>() == null;
-            return notDisabled && type.IsSubclassOf(typeof(CoreJsonApiController));
+            return controller.ControllerType.IsSubclassOf(typeof(CoreJsonApiController)) &&
+                controller.ControllerType.GetCustomAttribute<DisableRoutingConventionAttribute>() == null;
         }
 
         /// <summary>

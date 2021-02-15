@@ -57,14 +57,17 @@ namespace JsonApiDotNetCore.Configuration
             if (!openGenericInterface.IsInterface || !openGenericInterface.IsGenericType ||
                 openGenericInterface != openGenericInterface.GetGenericTypeDefinition())
             {
-                throw new ArgumentException($"Specified type '{openGenericInterface.FullName}' is not an open generic interface.", nameof(openGenericInterface));
+                throw new ArgumentException(
+                    $"Specified type '{openGenericInterface.FullName}' " + "is not an open generic interface.",
+                    nameof(openGenericInterface));
             }
 
             if (interfaceGenericTypeArguments.Length != openGenericInterface.GetGenericArguments().Length)
             {
                 throw new ArgumentException(
-                    $"Interface '{openGenericInterface.FullName}' requires {openGenericInterface.GetGenericArguments().Length} type parameters instead of {interfaceGenericTypeArguments.Length}.",
-                    nameof(interfaceGenericTypeArguments));
+                    $"Interface '{openGenericInterface.FullName}' " +
+                    $"requires {openGenericInterface.GetGenericArguments().Length} type parameters " +
+                    $"instead of {interfaceGenericTypeArguments.Length}.", nameof(interfaceGenericTypeArguments));
             }
 
             foreach (var nextType in assembly.GetTypes())

@@ -121,8 +121,11 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// </summary>
         private (Dictionary<RelationshipProxy, List<IIdentifiable>>, Dictionary<RelationshipProxy, List<IIdentifiable>>) ExtractResources(IEnumerable<IResourceNode> leftNodes)
         {
-            var leftResourcesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();  // RelationshipAttr_prevLayer->currentLayer  => prevLayerResources
-            var rightResourcesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>(); // RelationshipAttr_prevLayer->currentLayer   => currentLayerResources
+            // RelationshipAttr_prevLayer->currentLayer  => prevLayerResources
+            var leftResourcesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();
+
+            // RelationshipAttr_prevLayer->currentLayer  => currentLayerResources
+            var rightResourcesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();
 
             foreach (var node in leftNodes)
             {

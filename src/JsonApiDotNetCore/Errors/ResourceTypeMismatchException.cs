@@ -14,7 +14,8 @@ namespace JsonApiDotNetCore.Errors
             : base(new Error(HttpStatusCode.Conflict)
         {
             Title = "Resource type mismatch between request body and endpoint URL.",
-            Detail = $"Expected resource of type '{expected.PublicName}' in {method} request body at endpoint '{requestPath}', instead of '{actual?.PublicName}'."
+            Detail = $"Expected resource of type '{expected.PublicName}' in {method} " +
+                $"request body at endpoint '{requestPath}', instead of '{actual?.PublicName}'."
         })
         {
         }

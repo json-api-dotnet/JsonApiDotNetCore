@@ -19,11 +19,11 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             Tokenize(source);
 
-            var expression = ParseSparseFieldTarget();
+            var resourceContext = ParseSparseFieldTarget();
 
             AssertTokenStackIsEmpty();
 
-            return expression;
+            return resourceContext;
         }
 
         private ResourceContext ParseSparseFieldTarget()

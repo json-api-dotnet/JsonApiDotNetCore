@@ -23,10 +23,7 @@ namespace Benchmarks.Serialization
                 Id = "1",
                 Attributes = new Dictionary<string, object>
                 {
-                    {
-                        "name",
-                        Guid.NewGuid().ToString()
-                    }
+                    ["name"] = Guid.NewGuid().ToString()
                 }
             }
         });

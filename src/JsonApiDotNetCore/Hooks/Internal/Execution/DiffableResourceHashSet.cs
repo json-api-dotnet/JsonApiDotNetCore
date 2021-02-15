@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
                   Dictionary<RelationshipAttribute, IEnumerable> relationships,
                   ITargetedFields targetedFields)
             : this((HashSet<TResource>)requestResources, (HashSet<TResource>)databaseResources, TypeHelper.ConvertRelationshipDictionary<TResource>(relationships),
-              TypeHelper.ConvertAttributeDictionary(targetedFields.Attributes, (HashSet<TResource>)requestResources))
+                targetedFields.Attributes == null ? null : TypeHelper.ConvertAttributeDictionary(targetedFields.Attributes, (HashSet<TResource>)requestResources))
         { }
 
 

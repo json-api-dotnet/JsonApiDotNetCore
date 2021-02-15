@@ -25,7 +25,8 @@ namespace JsonApiDotNetCoreExample.Definitions
                 {
                     throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
                     {
-                        Title = $"You are not allowed to update fields or relationships of locked resource of type '{_resourceGraph.GetResourceContext<T>().PublicName}'."
+                        Title = "You are not allowed to update fields or relationships of " +
+                            $"locked resource of type '{_resourceGraph.GetResourceContext<T>().PublicName}'."
                     });
                 }
             }

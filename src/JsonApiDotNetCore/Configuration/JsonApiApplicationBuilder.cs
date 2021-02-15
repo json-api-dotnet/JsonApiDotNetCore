@@ -228,24 +228,31 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<INullsQueryStringParameterReader, NullsQueryStringParameterReader>();
             _services.AddScoped<IResourceDefinitionQueryableParameterReader, ResourceDefinitionQueryableParameterReader>();
 
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<IIncludeQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<IFilterQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<ISortQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<ISparseFieldSetQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<IPaginationQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<IDefaultsQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<INullsQueryStringParameterReader>());
-            _services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<IResourceDefinitionQueryableParameterReader>());
+            RegisterDependentService<IQueryStringParameterReader, IIncludeQueryStringParameterReader>();
+            RegisterDependentService<IQueryStringParameterReader, IFilterQueryStringParameterReader>();
+            RegisterDependentService<IQueryStringParameterReader, ISortQueryStringParameterReader>();
+            RegisterDependentService<IQueryStringParameterReader, ISparseFieldSetQueryStringParameterReader>();
+            RegisterDependentService<IQueryStringParameterReader, IPaginationQueryStringParameterReader>();
+            RegisterDependentService<IQueryStringParameterReader, IDefaultsQueryStringParameterReader>();
+            RegisterDependentService<IQueryStringParameterReader, INullsQueryStringParameterReader>();
+            RegisterDependentService<IQueryStringParameterReader, IResourceDefinitionQueryableParameterReader>();
 
-            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetRequiredService<IIncludeQueryStringParameterReader>());
-            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetRequiredService<IFilterQueryStringParameterReader>());
-            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetRequiredService<ISortQueryStringParameterReader>());
-            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetRequiredService<ISparseFieldSetQueryStringParameterReader>());
-            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetRequiredService<IPaginationQueryStringParameterReader>());
-            _services.AddScoped<IQueryConstraintProvider>(sp => sp.GetRequiredService<IResourceDefinitionQueryableParameterReader>());
+            RegisterDependentService<IQueryConstraintProvider, IIncludeQueryStringParameterReader>();
+            RegisterDependentService<IQueryConstraintProvider, IFilterQueryStringParameterReader>();
+            RegisterDependentService<IQueryConstraintProvider, ISortQueryStringParameterReader>();
+            RegisterDependentService<IQueryConstraintProvider, ISparseFieldSetQueryStringParameterReader>();
+            RegisterDependentService<IQueryConstraintProvider, IPaginationQueryStringParameterReader>();
+            RegisterDependentService<IQueryConstraintProvider, IResourceDefinitionQueryableParameterReader>();
 
             _services.AddScoped<IQueryStringReader, QueryStringReader>();
             _services.AddSingleton<IRequestQueryStringAccessor, RequestQueryStringAccessor>();
+        }
+
+        private void RegisterDependentService<TCollectionElement, TElementToAdd>()
+            where TCollectionElement : class
+            where TElementToAdd : TCollectionElement
+        {
+            _services.AddScoped<TCollectionElement>(serviceProvider => serviceProvider.GetRequiredService<TElementToAdd>());
         }
 
         private void AddResourceHooks()

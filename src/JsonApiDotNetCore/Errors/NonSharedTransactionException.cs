@@ -13,7 +13,8 @@ namespace JsonApiDotNetCore.Errors
             : base(new Error(HttpStatusCode.UnprocessableEntity)
             {
                 Title = "Unsupported combination of resource types in atomic:operations request.",
-                Detail = "All operations need to participate in a single shared transaction, which is not the case for this request."
+                Detail = "All operations need to participate in a single shared transaction, " +
+                    "which is not the case for this request."
             })
         {
         }

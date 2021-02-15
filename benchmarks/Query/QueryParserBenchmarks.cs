@@ -94,7 +94,10 @@ namespace Benchmarks.Query
         [Benchmark]
         public void ComplexQuery() => Run(100, () =>
         {
-            var queryString = $"?filter[{BenchmarkResourcePublicNames.NameAttr}]=abc,eq:abc&sort=-{BenchmarkResourcePublicNames.NameAttr}&include=child&page[size]=1&fields[{BenchmarkResourcePublicNames.Type}]={BenchmarkResourcePublicNames.NameAttr}";
+            const string resourceName = BenchmarkResourcePublicNames.Type;
+            const string attrName = BenchmarkResourcePublicNames.NameAttr;
+
+            var queryString = $"?filter[{attrName}]=abc,eq:abc&sort=-{attrName}&include=child&page[size]=1&fields[{resourceName}]={attrName}";
 
             _queryStringAccessor.SetQueryString(queryString);
             _queryStringReaderForAll.ReadAll(null);

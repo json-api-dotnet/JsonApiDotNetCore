@@ -100,7 +100,8 @@ namespace JsonApiDotNetCore.Middleware
                 await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.UnsupportedMediaType)
                 {
                     Title = "The specified Content-Type header value is not supported.",
-                    Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' for the Content-Type header value."
+                    Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' " +
+                        "for the Content-Type header value."
                 });
                 return false;
             }

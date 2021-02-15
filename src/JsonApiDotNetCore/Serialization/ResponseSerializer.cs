@@ -91,7 +91,9 @@ namespace JsonApiDotNetCore.Serialization
         /// </remarks>
         internal string SerializeSingle(IIdentifiable resource)
         {
-            var (attributes, relationships) = GetFieldsToSerialize();
+            var attributes = _fieldsToSerialize.GetAttributes(_primaryResourceType);
+            var relationships = _fieldsToSerialize.GetRelationships(_primaryResourceType);
+
             var document = Build(resource, attributes, relationships);
             var resourceObject = document.SingleData;
             if (resourceObject != null)
@@ -104,11 +106,6 @@ namespace JsonApiDotNetCore.Serialization
             return SerializeObject(document, _options.SerializerSettings, serializer => { serializer.NullValueHandling = NullValueHandling.Include; });
         }
 
-        private (IReadOnlyCollection<AttrAttribute>, IReadOnlyCollection<RelationshipAttribute>) GetFieldsToSerialize()
-        {
-            return (_fieldsToSerialize.GetAttributes(_primaryResourceType), _fieldsToSerialize.GetRelationships(_primaryResourceType));
-        }
-
         /// <summary>
         /// Converts a collection of resources into a serialized <see cref="Document"/>.
         /// </summary>
@@ -117,7 +114,9 @@ namespace JsonApiDotNetCore.Serialization
         /// </remarks>
         internal string SerializeMany(IReadOnlyCollection<IIdentifiable> resources)
         {
-            var (attributes, relationships) = GetFieldsToSerialize();
+            var attributes = _fieldsToSerialize.GetAttributes(_primaryResourceType);
+            var relationships = _fieldsToSerialize.GetRelationships(_primaryResourceType);
+
             var document = Build(resources, attributes, relationships);
             foreach (ResourceObject resourceObject in document.ManyData)
             {

@@ -119,12 +119,18 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         private bool ShouldInclude(RelationshipAttribute relationship, out List<IReadOnlyCollection<RelationshipAttribute>> inclusionChain)
         {
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
             var chains = _constraintProviders
-                .SelectMany(p => p.GetConstraints())
+                .SelectMany(provider => provider.GetConstraints())
                 .Select(expressionInScope => expressionInScope.Expression)
                 .OfType<IncludeExpression>()
                 .SelectMany(IncludeChainConverter.GetRelationshipChains)
                 .ToArray();
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
             inclusionChain = new List<IReadOnlyCollection<RelationshipAttribute>>();
 

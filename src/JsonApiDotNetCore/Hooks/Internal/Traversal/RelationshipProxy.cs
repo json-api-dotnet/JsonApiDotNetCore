@@ -21,6 +21,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
     {
         private readonly bool _skipThroughType;
 
+        public Type LeftType => Attribute.LeftType;
+
         /// <summary>
         /// The target type for this relationship attribute. 
         /// For HasOne has HasMany this is trivial: just the right-hand side.
@@ -28,10 +30,11 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// Identifiable) or it is the right-hand side (when the through resource is not identifiable)
         /// </summary>
         public Type RightType { get; }
-        public Type LeftType => Attribute.LeftType;
+
         public bool IsContextRelation { get; }
 
         public RelationshipAttribute Attribute { get; set; }
+
         public RelationshipProxy(RelationshipAttribute attr, Type relatedType, bool isContextRelation)
         {
             RightType = relatedType;
