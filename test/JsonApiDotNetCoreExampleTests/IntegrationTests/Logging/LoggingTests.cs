@@ -63,7 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             };
 
             // Arrange
-            var route = "/auditEntries";
+            const string route = "/auditEntries";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             loggerFactory.Logger.Clear();
 
             // Arrange
-            var route = "/auditEntries";
+            const string route = "/auditEntries";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
@@ -107,9 +107,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             loggerFactory.Logger.Clear();
 
             // Arrange
-            var requestBody = "{ \"data\" {";
+            const string requestBody = "{ \"data\" {";
 
-            var route = "/auditEntries";
+            const string route = "/auditEntries";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);

@@ -72,7 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
                 }
             };
 
-            var route = "/operations";
+            const string route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);

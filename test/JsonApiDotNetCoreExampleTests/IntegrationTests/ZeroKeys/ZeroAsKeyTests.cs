@@ -41,7 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/games?filter=equals(id,'0')";
+            const string route = "/games?filter=equals(id,'0')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -69,7 +69,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/games/0?include=activePlayers";
+            const string route = "/games/0?include=activePlayers";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 }
             };
 
-            var route = "/games";
+            const string route = "/games";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -161,7 +161,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 }
             };
 
-            var route = "/games/0";
+            const string route = "/games/0";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -573,7 +573,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/games/0";
+            const string route = "/games/0";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);

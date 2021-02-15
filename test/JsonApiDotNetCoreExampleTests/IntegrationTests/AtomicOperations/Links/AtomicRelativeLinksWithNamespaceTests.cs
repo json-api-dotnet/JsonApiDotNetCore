@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
                 }
             };
 
-            var route = "/api/operations";
+            const string route = "/api/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);

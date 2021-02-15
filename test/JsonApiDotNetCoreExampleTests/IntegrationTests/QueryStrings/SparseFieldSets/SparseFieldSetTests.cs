@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?fields[blogPosts]=caption,author";
+            const string route = "/blogPosts?fields[blogPosts]=caption,author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -86,7 +86,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?fields[blogPosts]=caption";
+            const string route = "/blogPosts?fields[blogPosts]=caption";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -121,7 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?fields[blogPosts]=author";
+            const string route = "/blogPosts?fields[blogPosts]=author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -554,7 +554,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?fields[blogPosts]=id,caption";
+            const string route = "/blogPosts?fields[blogPosts]=id,caption";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -578,7 +578,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
         public async Task Cannot_select_on_unknown_resource_type()
         {
             // Arrange
-            var route = "/webAccounts?fields[doesNotExist]=id";
+            const string route = "/webAccounts?fields[doesNotExist]=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

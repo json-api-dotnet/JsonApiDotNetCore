@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?page[number]=2&page[size]=1";
+            const string route = "/blogPosts?page[number]=2&page[size]=1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -168,7 +168,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogs?include=posts&page[number]=posts:2&page[size]=2,posts:1";
+            const string route = "/blogs?include=posts&page[number]=posts:2&page[size]=2,posts:1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -296,7 +296,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             options.DisableTopPagination = true;
             options.DisableChildrenPagination = false;
 
-            var route = "/blogPosts?include=labels&page[number]=labels:2&page[size]=labels:1";
+            const string route = "/blogPosts?include=labels&page[number]=labels:2&page[size]=labels:1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -377,9 +377,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogs?include=owner.posts.comments&" +
-                        "page[size]=1,owner.posts:1,owner.posts.comments:1&" +
-                        "page[number]=2,owner.posts:2,owner.posts.comments:2";
+            const string route = "/blogs?include=owner.posts.comments&" +
+                "page[size]=1,owner.posts:1,owner.posts.comments:1&" +
+                "page[number]=2,owner.posts:2,owner.posts.comments:2";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -407,7 +407,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_paginate_in_unknown_scope()
         {
             // Arrange
-            var route = "/webAccounts?page[number]=doesNotExist:1";
+            const string route = "/webAccounts?page[number]=doesNotExist:1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -426,7 +426,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_paginate_in_unknown_nested_scope()
         {
             // Arrange
-            var route = "/webAccounts?page[size]=posts.doesNotExist:1";
+            const string route = "/webAccounts?page[size]=posts.doesNotExist:1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

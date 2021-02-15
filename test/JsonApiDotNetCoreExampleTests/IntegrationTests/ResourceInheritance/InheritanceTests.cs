@@ -45,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 }
             };
 
-            var route = "/men";
+            const string route = "/men";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -104,7 +104,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 }
             };
 
-            var route = "/men";
+            const string route = "/men";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -271,7 +271,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 }
             };
 
-            var route = "/men";
+            const string route = "/men";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -389,11 +389,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 }
             };
 
-            var route = "/men";
+            const string route = "/men";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
-        
+
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 

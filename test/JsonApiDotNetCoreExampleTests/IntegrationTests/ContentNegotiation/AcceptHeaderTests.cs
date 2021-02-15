@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Permits_no_Accept_headers()
         {
             // Arrange
-            var route = "/policies";
+            const string route = "/policies";
 
             var acceptHeaders = new MediaTypeWithQualityHeaderValue[0];
 
@@ -60,8 +60,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
 
-            var route = "/operations";
-            var contentType = HeaderConstants.AtomicOperationsMediaType;
+            const string route = "/operations";
+            const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
             var acceptHeaders = new MediaTypeWithQualityHeaderValue[0];
 
@@ -76,7 +76,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Permits_global_wildcard_in_Accept_headers()
         {
             // Arrange
-            var route = "/policies";
+            const string route = "/policies";
 
             var acceptHeaders = new[]
             {
@@ -95,7 +95,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Permits_application_wildcard_in_Accept_headers()
         {
             // Arrange
-            var route = "/policies";
+            const string route = "/policies";
 
             var acceptHeaders = new[]
             {
@@ -114,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Permits_JsonApi_without_parameters_in_Accept_headers()
         {
             // Arrange
-            var route = "/policies";
+            const string route = "/policies";
 
             var acceptHeaders = new[]
             {
@@ -155,8 +155,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
 
-            var route = "/operations";
-            var contentType = HeaderConstants.AtomicOperationsMediaType;
+            const string route = "/operations";
+            const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
             var acceptHeaders = new[]
             {
@@ -178,7 +178,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Denies_JsonApi_with_parameters_in_Accept_headers()
         {
             // Arrange
-            var route = "/policies";
+            const string route = "/policies";
 
             var acceptHeaders = new[]
             {
@@ -224,8 +224,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
 
-            var route = "/operations";
-            var contentType = HeaderConstants.AtomicOperationsMediaType;
+            const string route = "/operations";
+            const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
             var acceptHeaders = new[]
             {

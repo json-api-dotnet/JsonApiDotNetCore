@@ -207,7 +207,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/filterableResources?filter=equals(someInt32,'ABC')";
+            const string route = "/filterableResources?filter=equals(someInt32,'ABC')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

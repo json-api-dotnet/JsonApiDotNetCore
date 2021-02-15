@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string route = "/systemDirectories";
+            const string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);

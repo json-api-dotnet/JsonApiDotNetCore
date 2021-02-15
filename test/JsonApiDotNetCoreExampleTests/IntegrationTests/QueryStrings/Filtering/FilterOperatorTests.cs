@@ -79,7 +79,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/filterableResources?filter=equals(someInt32,otherInt32)";
+            const string route = "/filterableResources?filter=equals(someInt32,otherInt32)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/filterableResources?filter=equals(someNullableInt32,otherNullableInt32)";
+            const string route = "/filterableResources?filter=equals(someNullableInt32,otherNullableInt32)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -151,7 +151,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/filterableResources?filter=equals(someNullableInt32,someInt32)";
+            const string route = "/filterableResources?filter=equals(someNullableInt32,someInt32)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -187,7 +187,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/filterableResources?filter=equals(someInt32,someNullableInt32)";
+            const string route = "/filterableResources?filter=equals(someInt32,someNullableInt32)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -223,7 +223,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/filterableResources?filter=equals(someInt32,someUnsignedInt64)";
+            const string route = "/filterableResources?filter=equals(someInt32,someUnsignedInt64)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -240,7 +240,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Cannot_filter_equality_on_two_attributes_of_incompatible_types()
         {
             // Arrange
-            var route = "/filterableResources?filter=equals(someDouble,someTimeSpan)";
+            const string route = "/filterableResources?filter=equals(someDouble,someTimeSpan)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -470,7 +470,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/filterableResources?filter=has(children)";
+            const string route = "/filterableResources?filter=has(children)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -502,7 +502,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/filterableResources?filter=equals(count(children),'2')";
+            const string route = "/filterableResources?filter=equals(count(children),'2')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

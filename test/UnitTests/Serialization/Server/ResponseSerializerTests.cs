@@ -23,7 +23,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                ""data"":{
                   ""type"":""testResource"",
                   ""id"":""1"",
@@ -55,7 +55,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeMany(new List<TestResource> { resource });
 
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                ""data"":[{
                   ""type"":""testResource"",
                   ""id"":""1"",
@@ -92,7 +92,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                ""data"":{
                   ""type"":""multiPrincipals"",
                   ""id"":""1"",
@@ -166,7 +166,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                ""data"":{ 
                   ""type"":""multiPrincipals"",
                   ""id"":""10"",
@@ -236,7 +236,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(null);
 
             // Assert
-            var expectedFormatted = @"{ ""data"": null }";
+            const string expectedFormatted = @"{ ""data"": null }";
             var expected = Regex.Replace(expectedFormatted, @"\s+", "");
             Assert.Equal(expected, serialized);
         }
@@ -250,7 +250,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeMany(new List<TestResource>());
 
             // Assert
-            var expectedFormatted = @"{ ""data"": [] }";
+            const string expectedFormatted = @"{ ""data"": [] }";
             var expected = Regex.Replace(expectedFormatted, @"\s+", "");
             Assert.Equal(expected, serialized);
         }
@@ -266,7 +266,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                ""links"":{
                   ""self"":""http://www.dummy.com/dummy-self-link"",
                   ""first"":""http://www.dummy.com/dummy-first-link"",
@@ -310,7 +310,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                 ""meta"":{ ""test"": ""meta"" },
                 ""data"":{
                     ""type"":""oneToManyPrincipals"",
@@ -336,7 +336,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(null);
             
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                 ""meta"":{ ""test"": ""meta"" },
                 ""links"":{
                     ""self"":""http://www.dummy.com/dummy-self-link"",

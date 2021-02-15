@@ -59,7 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItemGroups";
+            const string route = "/workItemGroups";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -102,7 +102,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 await dbContext.SaveChangesAsync();
             });
 
-            string colorId = "0A0B0C";
+            const string colorId = "0A0B0C";
 
             var requestBody = new
             {
@@ -124,7 +124,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/rgbColors";
+            const string route = "/rgbColors";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
@@ -181,7 +181,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems?include=assignee";
+            const string route = "/workItems?include=assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -250,7 +250,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems?fields[workItems]=description,assignee&include=assignee";
+            const string route = "/workItems?fields[workItems]=description,assignee&include=assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -308,7 +308,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -345,7 +345,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -381,7 +381,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -418,7 +418,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -455,7 +455,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -510,7 +510,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             var requestBodyText = JsonConvert.SerializeObject(requestBody).Replace("assignee_duplicate", "assignee");
 
-            var route = "/workItems?include=assignee";
+            const string route = "/workItems?include=assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBodyText);
@@ -576,7 +576,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -616,7 +616,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);

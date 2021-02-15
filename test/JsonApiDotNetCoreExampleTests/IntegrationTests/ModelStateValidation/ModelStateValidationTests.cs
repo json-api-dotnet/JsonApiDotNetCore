@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string route = "/systemDirectories";
+            const string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -66,7 +66,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string route = "/systemDirectories";
+            const string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -98,7 +98,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string route = "/systemDirectories";
+            const string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -130,7 +130,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string route = "/systemDirectories";
+            const string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -159,7 +159,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string route = "/systemDirectories";
+            const string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -260,7 +260,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string route = "/systemDirectories";
+            const string route = "/systemDirectories";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -489,7 +489,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 }
             };
 
-            string route = "/systemDirectories/-1";
+            const string route = "/systemDirectories/-1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);

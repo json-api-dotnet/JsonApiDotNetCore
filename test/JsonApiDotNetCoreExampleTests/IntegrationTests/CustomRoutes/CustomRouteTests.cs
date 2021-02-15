@@ -65,7 +65,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/world-api/civilization/popular/towns/largest-5";
+            const string route = "/world-api/civilization/popular/towns/largest-5";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

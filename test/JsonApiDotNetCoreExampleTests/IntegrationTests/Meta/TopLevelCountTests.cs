@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/supportTickets";
+            const string route = "/supportTickets";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
                 await dbContext.ClearTableAsync<SupportTicket>();
             });
 
-            var route = "/supportTickets";
+            const string route = "/supportTickets";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -94,7 +94,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
                 }
             };
 
-            var route = "/supportTickets";
+            const string route = "/supportTickets";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);

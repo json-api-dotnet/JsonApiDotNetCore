@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Returns_JsonApi_ContentType_header()
         {
             // Arrange
-            var route = "/policies";
+            const string route = "/policies";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -58,7 +58,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
 
-            var route = "/operations";
+            const string route = "/operations";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
@@ -84,8 +84,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
 
-            var route = "/policies";
-            var contentType = "text/html";
+            const string route = "/policies";
+            const string contentType = "text/html";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
@@ -115,8 +115,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
 
-            var route = "/policies";
-            var contentType = HeaderConstants.MediaType;
+            const string route = "/policies";
+            const string contentType = HeaderConstants.MediaType;
 
             // Act
             var (httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
@@ -148,8 +148,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
 
-            var route = "/operations";
-            var contentType = HeaderConstants.AtomicOperationsMediaType;
+            const string route = "/operations";
+            const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
             // Act
             var (httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
@@ -174,8 +174,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
 
-            var route = "/policies";
-            var contentType = HeaderConstants.MediaType + "; profile=something";
+            const string route = "/policies";
+            const string contentType = HeaderConstants.MediaType + "; profile=something";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
@@ -205,8 +205,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
 
-            var route = "/policies";
-            var contentType = HeaderConstants.MediaType + "; ext=something";
+            const string route = "/policies";
+            const string contentType = HeaderConstants.MediaType + "; ext=something";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
@@ -236,8 +236,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
 
-            var route = "/policies";
-            var contentType = HeaderConstants.AtomicOperationsMediaType;
+            const string route = "/policies";
+            const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
@@ -267,8 +267,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
 
-            var route = "/policies";
-            var contentType = HeaderConstants.MediaType + "; charset=ISO-8859-4";
+            const string route = "/policies";
+            const string contentType = HeaderConstants.MediaType + "; charset=ISO-8859-4";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
@@ -298,8 +298,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
 
-            var route = "/policies";
-            var contentType = HeaderConstants.MediaType + "; unknown=unexpected";
+            const string route = "/policies";
+            const string contentType = HeaderConstants.MediaType + "; unknown=unexpected";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
@@ -336,8 +336,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
                 }
             };
 
-            var route = "/operations";
-            var contentType = HeaderConstants.MediaType;
+            const string route = "/operations";
+            const string contentType = HeaderConstants.MediaType;
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);

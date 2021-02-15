@@ -30,7 +30,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         public async Task Cannot_sort_if_query_string_parameter_is_blocked_by_controller()
         {
             // Arrange
-            var route = "/sofas?sort=id";
+            const string route = "/sofas?sort=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         public async Task Cannot_paginate_if_query_string_parameter_is_blocked_by_controller()
         {
             // Arrange
-            var route = "/sofas?page[number]=2";
+            const string route = "/sofas?page[number]=2";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         public async Task Cannot_use_custom_query_string_parameter_if_blocked_by_controller()
         {
             // Arrange
-            var route = "/beds?skipCache=true";
+            const string route = "/beds?skipCache=true";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

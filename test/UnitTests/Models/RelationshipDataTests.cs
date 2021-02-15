@@ -34,7 +34,7 @@ namespace UnitTests.Models
         {
             // Arrange
             var relationshipData = new RelationshipEntry();
-            var relationshipsJson = @"[
+            const string relationshipsJson = @"[
                 {
                     ""type"": ""authors"",
                     ""id"": ""9""
@@ -78,7 +78,7 @@ namespace UnitTests.Models
         {
             // Arrange
             var relationshipData = new RelationshipEntry();
-            var relationshipJson = @"{
+            const string relationshipJson = @"{
                     ""id"": ""9"",
                     ""type"": ""authors""
                 }";

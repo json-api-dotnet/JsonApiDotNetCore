@@ -26,7 +26,7 @@ namespace UnitTests.Internal
         public void Bad_DateTimeOffset_String_Throws()
         {
             // Arrange
-            var formattedString = "this_is_not_a_valid_dto";
+            const string formattedString = "this_is_not_a_valid_dto";
 
             // Act
             // Assert
@@ -37,7 +37,7 @@ namespace UnitTests.Internal
         public void Can_Convert_Enums()
         {
             // Arrange
-            var formattedString = "1";
+            const string formattedString = "1";
 
             // Act
             var result = TypeHelper.ConvertType(formattedString, typeof(TestEnum));
@@ -123,10 +123,10 @@ namespace UnitTests.Internal
         }
 
         [Fact]
-        public void Bad_TimeSpanString_Throws() 
+        public void Bad_TimeSpanString_Throws()
         {
             // Arrange
-            var formattedString = "this_is_not_a_valid_timespan";
+            const string formattedString = "this_is_not_a_valid_timespan";
 
             // Act/assert
             Assert.Throws<FormatException>(() => TypeHelper.ConvertType(formattedString, typeof(TimeSpan)));

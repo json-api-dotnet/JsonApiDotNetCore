@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/cars?filter=any(id,'123:AA-BB-11','999:XX-YY-22')";
+            const string route = "/cars?filter=any(id,'123:AA-BB-11','999:XX-YY-22')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -106,7 +106,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/cars?sort=id";
+            const string route = "/cars?sort=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -135,7 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/cars?fields[cars]=id";
+            const string route = "/cars?fields[cars]=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -169,7 +169,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 }
             };
 
-            var route = "/cars";
+            const string route = "/cars";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);

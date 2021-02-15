@@ -28,8 +28,7 @@ namespace UnitTests.Serialization.Client
             string serialized = _serializer.Serialize(resource);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            const string expectedFormatted = @"{
                ""data"":{
                   ""type"":""testResource"",
                   ""id"":""1"",
@@ -59,8 +58,7 @@ namespace UnitTests.Serialization.Client
             string serialized = _serializer.Serialize(resource);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            const string expectedFormatted = @"{
                ""data"":{
                   ""type"":""testResource"",
                   ""id"":""1"",
@@ -84,8 +82,7 @@ namespace UnitTests.Serialization.Client
             string serialized = _serializer.Serialize(resourceNoId);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            const string expectedFormatted = @"{
                ""data"":{
                   ""type"":""testResource"",
                   ""attributes"":{
@@ -109,8 +106,7 @@ namespace UnitTests.Serialization.Client
             string serialized = _serializer.Serialize(resource);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            const string expectedFormatted = @"{
                ""data"":{
                   ""type"":""testResource"",
                   ""id"":""1""
@@ -135,8 +131,7 @@ namespace UnitTests.Serialization.Client
             // Act
             string serialized = _serializer.Serialize(resourceWithRelationships);
             // Assert
-            var expectedFormatted =
-            @"{
+            const string expectedFormatted = @"{
                 ""data"":{
                     ""type"":""multiPrincipals"",
                     ""attributes"":{
@@ -185,8 +180,7 @@ namespace UnitTests.Serialization.Client
             string serialized = _serializer.Serialize(resources);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            const string expectedFormatted = @"{
                 ""data"":[
                     {
                         ""type"":""testResource"",
@@ -218,8 +212,7 @@ namespace UnitTests.Serialization.Client
             string serialized = _serializer.Serialize((IIdentifiable) null);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            const string expectedFormatted = @"{
                 ""data"":null
             }";
             var expected = Regex.Replace(expectedFormatted, @"\s+", "");
@@ -237,8 +230,7 @@ namespace UnitTests.Serialization.Client
             string serialized = _serializer.Serialize(resources);
 
             // Assert
-            var expectedFormatted =
-            @"{
+            const string expectedFormatted = @"{
                 ""data"":[]
             }";
             var expected = Regex.Replace(expectedFormatted, @"\s+", "");

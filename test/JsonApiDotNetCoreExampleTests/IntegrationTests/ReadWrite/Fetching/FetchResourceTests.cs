@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         public async Task Cannot_get_primary_resources_for_unknown_type()
         {
             // Arrange
-            var route = "/doesNotExist";
+            const string route = "/doesNotExist";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -107,7 +107,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         public async Task Cannot_get_primary_resource_for_unknown_type()
         {
             // Arrange
-            var route = "/doesNotExist/99999999";
+            const string route = "/doesNotExist/99999999";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -122,7 +122,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         public async Task Cannot_get_primary_resource_for_unknown_ID()
         {
             // Arrange
-            var route = "/workItems/99999999";
+            const string route = "/workItems/99999999";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -322,7 +322,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         public async Task Cannot_get_secondary_resource_for_unknown_primary_type()
         {
             // Arrange
-            var route = "/doesNotExist/99999999/assignee";
+            const string route = "/doesNotExist/99999999/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -337,7 +337,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         public async Task Cannot_get_secondary_resource_for_unknown_primary_ID()
         {
             // Arrange
-            var route = "/workItems/99999999/assignee";
+            const string route = "/workItems/99999999/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

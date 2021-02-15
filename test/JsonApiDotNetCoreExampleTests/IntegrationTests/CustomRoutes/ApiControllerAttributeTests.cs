@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
         public async Task ApiController_attribute_transforms_NotFound_action_result_without_arguments_into_ProblemDetails()
         {
             // Arrange
-            var route = "/world-civilians/missing";
+            const string route = "/world-civilians/missing";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

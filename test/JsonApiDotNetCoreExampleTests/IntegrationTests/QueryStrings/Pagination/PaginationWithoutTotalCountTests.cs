@@ -36,7 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.DefaultPageSize = null;
 
-            var route = "/blogPosts?foo=bar";
+            const string route = "/blogPosts?foo=bar";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -65,7 +65,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?page[size]=8&foo=bar";
+            const string route = "/blogPosts?page[size]=8&foo=bar";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?page[number]=2&foo=bar";
+            const string route = "/blogPosts?page[number]=2&foo=bar";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -120,7 +120,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?foo=bar&page[number]=3";
+            const string route = "/blogPosts?foo=bar&page[number]=3";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -151,7 +151,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?page[number]=3&foo=bar";
+            const string route = "/blogPosts?page[number]=3&foo=bar";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

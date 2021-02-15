@@ -33,7 +33,7 @@ namespace NoEntityFrameworkTests
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/workItems";
+            const string route = "/api/v1/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await ExecuteGetAsync<Document>(route);
@@ -95,7 +95,7 @@ namespace NoEntityFrameworkTests
                 }
             };
 
-            var route = "/api/v1/workItems/";
+            const string route = "/api/v1/workItems/";
 
             // Act
             var (httpResponse, responseDocument) = await ExecutePostAsync<Document>(route, requestBody);

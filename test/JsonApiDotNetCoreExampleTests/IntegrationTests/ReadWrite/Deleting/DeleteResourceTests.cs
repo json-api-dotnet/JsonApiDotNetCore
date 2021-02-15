@@ -56,7 +56,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
         public async Task Cannot_delete_missing_resource()
         {
             // Arrange
-            var route = "/workItems/99999999";
+            const string route = "/workItems/99999999";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);

@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources?include=owner";
+            const string route = "/callableResources?include=owner";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources";
+            const string route = "/callableResources";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -149,7 +149,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources?filter=equals(label,'B')";
+            const string route = "/callableResources?filter=equals(label,'B')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -196,7 +196,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources";
+            const string route = "/callableResources";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -243,7 +243,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources?sort=-createdAt,modifiedAt";
+            const string route = "/callableResources?sort=-createdAt,modifiedAt";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -275,7 +275,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources?page[size]=8";
+            const string route = "/callableResources?page[size]=8";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -444,7 +444,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources?isHighRisk=true";
+            const string route = "/callableResources?isHighRisk=true";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -492,7 +492,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources?isHighRisk=false&filter=equals(label,'B')";
+            const string route = "/callableResources?isHighRisk=false&filter=equals(label,'B')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

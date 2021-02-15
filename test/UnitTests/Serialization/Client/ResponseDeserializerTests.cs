@@ -114,8 +114,8 @@ namespace UnitTests.Serialization.Client
             content.SingleData.Relationships.Add("populatedToManies", CreateRelationshipData("oneToManyDependents", isToManyData: true));
             content.SingleData.Relationships.Add("emptyToOne", CreateRelationshipData());
             content.SingleData.Relationships.Add("emptyToManies", CreateRelationshipData(isToManyData: true));
-            var toOneAttributeValue = "populatedToOne member content";
-            var toManyAttributeValue = "populatedToManies member content";
+            const string toOneAttributeValue = "populatedToOne member content";
+            const string toManyAttributeValue = "populatedToManies member content";
             content.Included = new List<ResourceObject>
             {
                 new ResourceObject
@@ -157,8 +157,8 @@ namespace UnitTests.Serialization.Client
             content.SingleData.Relationships.Add("populatedToMany", CreateRelationshipData("oneToManyPrincipals"));
             content.SingleData.Relationships.Add("emptyToOne", CreateRelationshipData());
             content.SingleData.Relationships.Add("emptyToMany", CreateRelationshipData());
-            var toOneAttributeValue = "populatedToOne member content";
-            var toManyAttributeValue = "populatedToManies member content";
+            const string toOneAttributeValue = "populatedToOne member content";
+            const string toManyAttributeValue = "populatedToManies member content";
             content.Included = new List<ResourceObject>
             {
                 new ResourceObject
@@ -196,8 +196,8 @@ namespace UnitTests.Serialization.Client
             // Arrange
             var content = CreateDocumentWithRelationships("multiPrincipals");
             content.SingleData.Relationships.Add("populatedToManies", CreateRelationshipData("oneToManyDependents", isToManyData: true));
-            var toManyAttributeValue = "populatedToManies member content";
-            var nestedIncludeAttributeValue = "nested include member content";
+            const string toManyAttributeValue = "populatedToManies member content";
+            const string nestedIncludeAttributeValue = "nested include member content";
             content.Included = new List<ResourceObject>
             {
                 new ResourceObject
@@ -238,9 +238,9 @@ namespace UnitTests.Serialization.Client
             // Arrange
             var content = CreateDocumentWithRelationships("multiPrincipals");
             content.SingleData.Relationships.Add("multi", CreateRelationshipData("multiPrincipals"));
-            var includedAttributeValue = "multi member content";
-            var nestedIncludedAttributeValue = "nested include member content";
-            var deeplyNestedIncludedAttributeValue = "deeply nested member content";
+            const string includedAttributeValue = "multi member content";
+            const string nestedIncludedAttributeValue = "nested include member content";
+            const string deeplyNestedIncludedAttributeValue = "deeply nested member content";
             content.Included = new List<ResourceObject>
             {
                 new ResourceObject
@@ -289,9 +289,9 @@ namespace UnitTests.Serialization.Client
             // Arrange
             var content = new Document { Data = new List<ResourceObject> { CreateDocumentWithRelationships("multiPrincipals").SingleData } };
             content.ManyData[0].Relationships.Add("multi", CreateRelationshipData("multiPrincipals"));
-            var includedAttributeValue = "multi member content";
-            var nestedIncludedAttributeValue = "nested include member content";
-            var deeplyNestedIncludedAttributeValue = "deeply nested member content";
+            const string includedAttributeValue = "multi member content";
+            const string nestedIncludedAttributeValue = "nested include member content";
+            const string deeplyNestedIncludedAttributeValue = "deeply nested member content";
             content.Included = new List<ResourceObject>
             {
                 new ResourceObject

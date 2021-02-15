@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
         public async Task Cannot_process_for_missing_request_body()
         {
             // Arrange
-            var route = "/operations";
+            const string route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, null);
@@ -53,9 +53,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
         public async Task Cannot_process_for_broken_JSON_request_body()
         {
             // Arrange
-            var requestBody = "{\"atomic__operations\":[{\"op\":";
+            const string requestBody = "{\"atomic__operations\":[{\"op\":";
 
-            var route = "/operations";
+            const string route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -81,7 +81,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
                 }
             };
 
-            var route = "/operations";
+            const string route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -127,7 +127,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
                 }
             };
 
-            var route = "/operations";
+            const string route = "/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);

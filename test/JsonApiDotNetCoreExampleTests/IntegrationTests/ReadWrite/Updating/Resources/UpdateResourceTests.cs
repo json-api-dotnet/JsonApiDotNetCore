@@ -703,7 +703,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/workItems/99999999";
+            const string route = "/workItems/99999999";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -877,7 +877,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = "{ \"data\" {";
+            const string requestBody = "{ \"data\" {";
 
             var route = "/workItemGroups/" + existingWorkItem.StringId;
 

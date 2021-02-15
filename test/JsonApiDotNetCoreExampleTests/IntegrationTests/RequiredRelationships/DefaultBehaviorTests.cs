@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                 }
             };
 
-            var route = "/orders";
+            const string route = "/orders";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                 }
             };
 
-            var route = "/shipments";
+            const string route = "/shipments";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);

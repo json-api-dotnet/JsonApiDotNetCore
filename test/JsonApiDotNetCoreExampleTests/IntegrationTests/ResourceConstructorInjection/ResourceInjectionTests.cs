@@ -161,7 +161,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
                 }
             };
 
-            var route = "/giftCertificates?include=issuer";
+            const string route = "/giftCertificates?include=issuer";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -297,7 +297,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         public async Task Cannot_delete_unknown_resource()
         {
             // Arrange
-            var route = "/postOffices/99999999";
+            const string route = "/postOffices/99999999";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);

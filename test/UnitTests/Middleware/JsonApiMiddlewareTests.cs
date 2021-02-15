@@ -18,7 +18,7 @@ namespace UnitTests.Middleware
         public async Task ParseUrlBase_ObfuscatedIdClass_ShouldSetIdCorrectly()
         {
             // Arrange
-            var id = "ABC123ABC";
+            const string id = "ABC123ABC";
             var configuration = GetConfiguration($"/obfuscatedIdModel/{id}", action: "GetAsync", id: id);
             var request = configuration.Request;
 
@@ -33,7 +33,7 @@ namespace UnitTests.Middleware
         public async Task ParseUrlBase_UrlHasPrimaryIdSet_ShouldSetupRequestWithSameId()
         {
             // Arrange
-            var id = "123";
+            const string id = "123";
             var configuration = GetConfiguration($"/users/{id}", id: id);
             var request = configuration.Request;
 
@@ -96,7 +96,7 @@ namespace UnitTests.Middleware
             {
                 return Task.Run(() => Console.WriteLine("finished"));
             });
-            var forcedNamespace = "api/v1";
+            const string forcedNamespace = "api/v1";
             var mockMapping = new Mock<IControllerResourceMapping>();
             mockMapping.Setup(x => x.GetResourceTypeForController(It.IsAny<string>())).Returns(typeof(string));
 

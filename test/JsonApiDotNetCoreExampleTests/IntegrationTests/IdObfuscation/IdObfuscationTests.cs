@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public async Task Cannot_get_primary_resource_for_invalid_ID()
         {
             // Arrange
-            var route = "/bankAccounts/not-a-hex-value";
+            const string route = "/bankAccounts/not-a-hex-value";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -229,8 +229,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                     }
                 }
             };
-            
-            var route = "/debitCards";
+
+            const string route = "/debitCards";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);

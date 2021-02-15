@@ -78,7 +78,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/photoAlbums?include=photos";
+            const string route = "/photoAlbums?include=photos";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -272,7 +272,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
                 }
             };
 
-            var route = "/photoAlbums?include=photos";
+            const string route = "/photoAlbums?include=photos";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);

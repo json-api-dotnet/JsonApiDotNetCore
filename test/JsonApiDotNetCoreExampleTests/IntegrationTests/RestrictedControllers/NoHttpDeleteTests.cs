@@ -23,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         public async Task Can_get_resources()
         {
             // Arrange
-            var route = "/sofas";
+            const string route = "/sofas";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
                 }
             };
 
-            var route = "/sofas";
+            const string route = "/sofas";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);

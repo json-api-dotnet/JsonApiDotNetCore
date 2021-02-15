@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/maps?filter=equals(id,'00000000-0000-0000-0000-000000000000')";
+            const string route = "/maps?filter=equals(id,'00000000-0000-0000-0000-000000000000')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/maps/00000000-0000-0000-0000-000000000000?include=game";
+            const string route = "/maps/00000000-0000-0000-0000-000000000000?include=game";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 }
             };
 
-            var route = "/maps";
+            const string route = "/maps";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
@@ -162,7 +162,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 }
             };
 
-            var route = "/maps/00000000-0000-0000-0000-000000000000";
+            const string route = "/maps/00000000-0000-0000-0000-000000000000";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -572,7 +572,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/maps/00000000-0000-0000-0000-000000000000";
+            const string route = "/maps/00000000-0000-0000-0000-000000000000";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);

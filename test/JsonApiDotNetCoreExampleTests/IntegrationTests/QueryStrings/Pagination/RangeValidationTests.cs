@@ -32,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_use_negative_page_number()
         {
             // Arrange
-            var route = "/blogs?page[number]=-1";
+            const string route = "/blogs?page[number]=-1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_use_zero_page_number()
         {
             // Arrange
-            var route = "/blogs?page[number]=0";
+            const string route = "/blogs?page[number]=0";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_use_positive_page_number()
         {
             // Arrange
-            var route = "/blogs?page[number]=20";
+            const string route = "/blogs?page[number]=20";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogs?sort=id&page[size]=3&page[number]=2";
+            const string route = "/blogs?sort=id&page[size]=3&page[number]=2";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -107,7 +107,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_use_negative_page_size()
         {
             // Arrange
-            var route = "/blogs?page[size]=-1";
+            const string route = "/blogs?page[size]=-1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -126,7 +126,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_use_zero_page_size()
         {
             // Arrange
-            var route = "/blogs?page[size]=0";
+            const string route = "/blogs?page[size]=0";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -139,7 +139,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_use_positive_page_size()
         {
             // Arrange
-            var route = "/blogs?page[size]=50";
+            const string route = "/blogs?page[size]=50";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);

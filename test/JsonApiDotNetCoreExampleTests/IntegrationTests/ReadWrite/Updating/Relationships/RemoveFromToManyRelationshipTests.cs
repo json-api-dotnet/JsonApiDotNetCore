@@ -477,7 +477,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = "/workItems/99999999/relationships/subscribers";
+            const string route = "/workItems/99999999/relationships/subscribers";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);

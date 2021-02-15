@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Cannot_filter_in_unknown_scope()
         {
             // Arrange
-            var route = "/webAccounts?filter[doesNotExist]=equals(title,null)";
+            const string route = "/webAccounts?filter[doesNotExist]=equals(title,null)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Cannot_filter_in_unknown_nested_scope()
         {
             // Arrange
-            var route = "/webAccounts?filter[posts.doesNotExist]=equals(title,null)";
+            const string route = "/webAccounts?filter[posts.doesNotExist]=equals(title,null)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -66,7 +66,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Cannot_filter_on_attribute_with_blocked_capability()
         {
             // Arrange
-            var route = "/webAccounts?filter=equals(dateOfBirth,null)";
+            const string route = "/webAccounts?filter=equals(dateOfBirth,null)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

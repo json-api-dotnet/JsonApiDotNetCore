@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/public-api/swimming-pools?include=diving-boards";
+            const string route = "/public-api/swimming-pools?include=diving-boards";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -105,7 +105,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
                 }
             };
 
-            var route = "/public-api/swimming-pools";
+            const string route = "/public-api/swimming-pools";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -138,9 +138,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
         public async Task Applies_casing_convention_on_error_stack_trace()
         {
             // Arrange
-            var requestBody = "{ \"data\": {";
+            const string requestBody = "{ \"data\": {";
 
-            var route = "/public-api/swimming-pools";
+            const string route = "/public-api/swimming-pools";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);

@@ -224,7 +224,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 }
             };
 
-            var route = "/buildings";
+            const string route = "/buildings";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);

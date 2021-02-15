@@ -59,7 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
                 }
             };
 
-            var route = "/operations/musicTracks/create";
+            const string route = "/operations/musicTracks/create";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
                 }
             };
 
-            var route = "/operations/musicTracks/create";
+            const string route = "/operations/musicTracks/create";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -138,7 +138,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
                 }
             };
 
-            var route = "/operations/musicTracks/create";
+            const string route = "/operations/musicTracks/create";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -191,7 +191,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
                 }
             };
 
-            var route = "/operations/musicTracks/create";
+            const string route = "/operations/musicTracks/create";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);

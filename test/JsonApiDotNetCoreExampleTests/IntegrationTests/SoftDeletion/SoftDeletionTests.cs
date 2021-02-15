@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/departments";
+            const string route = "/departments";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/departments?filter=startsWith(name,'S')";
+            const string route = "/departments?filter=startsWith(name,'S')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -252,7 +252,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/companies?include=departments";
+            const string route = "/companies?include=departments";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

@@ -55,7 +55,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             var serializer = GetRequestSerializer<User>(p => new {p.Password, p.UserName});
             string requestBody = serializer.Serialize(user);
 
-            var route = "/api/v1/users";
+            const string route = "/api/v1/users";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
@@ -118,7 +118,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public async Task Can_block_access_to_resource_from_GetSingle_endpoint_using_BeforeRead_hook()
         {
             // Arrange
-            var route = "/api/v1/todoItems/1337";
+            const string route = "/api/v1/todoItems/1337";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -136,7 +136,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public async Task Can_block_access_to_included_resource_using_BeforeRead_hook()
         {
             // Arrange
-            var route = "/api/v1/people/1?include=passport";
+            const string route = "/api/v1/people/1?include=passport";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -182,7 +182,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         {
             // Arrange
             var articles = _fakers.Article.Generate(3);
-            string toBeExcluded = "This should not be included";
+            const string toBeExcluded = "This should not be included";
             articles[0].Caption = toBeExcluded;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -191,7 +191,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/articles";
+            const string route = "/api/v1/articles";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -231,7 +231,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public async Task Can_hide_secondary_resource_from_ToMany_List_relationship_using_OnReturn_hook()
         {
             // Arrange
-            string toBeExcluded = "This should not be included";
+            const string toBeExcluded = "This should not be included";
 
             var author = _fakers.Author.Generate();
             author.Articles = _fakers.Article.Generate(3);
@@ -258,7 +258,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public async Task Can_hide_secondary_resource_from_ToMany_Set_relationship_using_OnReturn_hook()
         {
             // Arrange
-            string toBeExcluded = "This should not be included";
+            const string toBeExcluded = "This should not be included";
 
             var person = _fakers.Person.Generate();
             person.TodoItems = _fakers.TodoItem.Generate(3).ToHashSet();
@@ -285,7 +285,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public async Task Can_hide_resource_from_included_HasManyThrough_relationship_using_OnReturn_hook()
         {
             // Arrange
-            string toBeExcluded = "This should not be included";
+            const string toBeExcluded = "This should not be included";
 
             var tags = _fakers.Tag.Generate(2);
             tags[0].Name = toBeExcluded;
@@ -314,7 +314,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             options.DisableTopPagination = false;
             options.DisableChildrenPagination = true;
 
-            var route = "/api/v1/articles?include=tags";
+            const string route = "/api/v1/articles?include=tags";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -358,7 +358,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
                 }
             };
 
-            var route = "/api/v1/people";
+            const string route = "/api/v1/people";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -536,7 +536,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
                 }
             };
 
-            var route = "/api/v1/todoItems";
+            const string route = "/api/v1/todoItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);

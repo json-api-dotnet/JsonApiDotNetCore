@@ -80,7 +80,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_use_zero_page_size()
         {
             // Arrange
-            var route = "/blogs?page[size]=0";
+            const string route = "/blogs?page[size]=0";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

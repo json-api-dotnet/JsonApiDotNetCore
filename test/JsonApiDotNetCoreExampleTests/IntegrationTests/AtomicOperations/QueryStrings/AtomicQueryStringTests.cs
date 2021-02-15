@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?include=recordCompanies";
+            const string route = "/operations?include=recordCompanies";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -98,7 +98,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?filter=equals(id,'1')";
+            const string route = "/operations?filter=equals(id,'1')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -135,7 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?sort=-id";
+            const string route = "/operations?sort=-id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -172,7 +172,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?page[number]=1";
+            const string route = "/operations?page[number]=1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -209,7 +209,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?page[size]=1";
+            const string route = "/operations?page[size]=1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -246,7 +246,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?fields[recordCompanies]=id";
+            const string route = "/operations?fields[recordCompanies]=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -277,7 +277,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/musicTracks?isRecentlyReleased=true";
+            const string route = "/musicTracks?isRecentlyReleased=true";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -314,7 +314,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?isRecentlyReleased=true";
+            const string route = "/operations?isRecentlyReleased=true";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -356,7 +356,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?defaults=false";
+            const string route = "/operations?defaults=false";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
@@ -399,7 +399,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?nulls=false";
+            const string route = "/operations?nulls=false";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);

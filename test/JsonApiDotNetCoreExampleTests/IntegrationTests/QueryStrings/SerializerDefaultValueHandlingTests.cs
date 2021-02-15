@@ -30,7 +30,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowQueryStringOverrideForSerializerDefaultValueHandling = false;
 
-            var route = "/calendars?defaults=true";
+            const string route = "/calendars?defaults=true";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

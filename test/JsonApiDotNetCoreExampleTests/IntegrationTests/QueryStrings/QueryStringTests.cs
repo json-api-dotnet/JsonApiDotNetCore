@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowUnknownQueryStringParameters = false;
 
-            var route = "/calendars?foo=bar";
+            const string route = "/calendars?foo=bar";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowUnknownQueryStringParameters = true;
 
-            var route = "/calendars?foo=bar";
+            const string route = "/calendars?foo=bar";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);

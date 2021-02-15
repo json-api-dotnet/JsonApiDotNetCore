@@ -51,8 +51,7 @@ namespace NoEntityFrameworkExample.Services
         {
             return (await QueryAsync(async connection =>
             {
-                var query =
-                    @"insert into ""WorkItems"" (""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId"") values " +
+                const string query = @"insert into ""WorkItems"" (""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId"") values " +
                     @"(@title, @isBlocked, @durationInHours, @projectId) returning ""Id"", ""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId""";
 
                 return await connection.QueryAsync<WorkItem>(new CommandDefinition(query, new

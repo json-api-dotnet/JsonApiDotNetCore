@@ -197,7 +197,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         [Fact]
         public async Task Cannot_get_relationship_for_unknown_primary_type()
         {
-            var route = "/doesNotExist/99999999/relationships/assignee";
+            const string route = "/doesNotExist/99999999/relationships/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -211,7 +211,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         [Fact]
         public async Task Cannot_get_relationship_for_unknown_primary_ID()
         {
-            var route = "/workItems/99999999/relationships/assignee";
+            const string route = "/workItems/99999999/relationships/assignee";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

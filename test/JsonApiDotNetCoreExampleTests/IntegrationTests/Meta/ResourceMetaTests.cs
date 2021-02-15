@@ -41,7 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/supportTickets";
+            const string route = "/supportTickets";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

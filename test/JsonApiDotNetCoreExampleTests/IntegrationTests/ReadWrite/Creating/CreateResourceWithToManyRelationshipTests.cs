@@ -60,7 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -126,7 +126,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems?include=subscribers";
+            const string route = "/workItems?include=subscribers";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -199,7 +199,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems?include=subscribers&fields[userAccounts]=firstName";
+            const string route = "/workItems?include=subscribers&fields[userAccounts]=firstName";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -283,7 +283,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems?fields[workItems]=priority,tags&include=tags&fields[workTags]=text";
+            const string route = "/workItems?fields[workItems]=priority,tags&include=tags&fields[workTags]=text";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -350,7 +350,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -390,7 +390,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -429,7 +429,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -474,7 +474,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/userAccounts";
+            const string route = "/userAccounts";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -519,7 +519,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -572,7 +572,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems?include=subscribers";
+            const string route = "/workItems?include=subscribers";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -620,7 +620,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -653,7 +653,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -696,7 +696,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItems";
+            const string route = "/workItems";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
