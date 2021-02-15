@@ -14,9 +14,9 @@ namespace UnitTests.Models
 {
     public sealed class ResourceConstructionTests
     {
-        public Mock<IJsonApiRequest> _requestMock;
-        public Mock<IHttpContextAccessor> _mockHttpContextAccessor;
-        
+        private readonly Mock<IJsonApiRequest> _requestMock;
+        private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
+
         public ResourceConstructionTests()
         {
             _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();

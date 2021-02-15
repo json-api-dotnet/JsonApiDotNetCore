@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             _includedBuilder = includedBuilder;
             _constraintProviders = constraintProviders;
             _resourceDefinitionAccessor = resourceDefinitionAccessor;
-            _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
+            _sparseFieldSetCache = new SparseFieldSetCache(_constraintProviders, resourceDefinitionAccessor);
         }
 
         public RelationshipEntry Build(IIdentifiable resource, RelationshipAttribute requestRelationship)

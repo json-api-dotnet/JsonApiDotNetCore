@@ -85,7 +85,7 @@ namespace UnitTests.Serialization.Server
                 PopulatedToOne = new OneToOneDependent { Id = 10 },
                 PopulatedToManies = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
             };
-            var chain = _resourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(r => new List<RelationshipAttribute> { r }).ToList();
+            var chain = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(r => new List<RelationshipAttribute> { r }).ToList();
             var serializer = GetResponseSerializer<MultipleRelationshipsPrincipalPart>(inclusionChains: chain);
 
             // Act
@@ -147,7 +147,7 @@ namespace UnitTests.Serialization.Server
                 PopulatedToManies = new HashSet<OneToManyDependent> { includedResource }
             };
 
-            var chains = _resourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>()
+            var chains = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>()
                 .Select(r =>
                 {
                     var chain = new List<RelationshipAttribute> {r};
@@ -156,7 +156,7 @@ namespace UnitTests.Serialization.Server
                         return new List<RelationshipAttribute> {r};
                     }
 
-                    chain.AddRange(_resourceGraph.GetRelationships<OneToManyDependent>());
+                    chain.AddRange(ResourceGraph.GetRelationships<OneToManyDependent>());
                     return chain;
                 }).ToList();
 

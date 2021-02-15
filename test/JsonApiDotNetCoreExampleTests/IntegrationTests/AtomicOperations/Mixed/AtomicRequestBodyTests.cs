@@ -77,8 +77,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             var requestBody = new
             {
                 atomic__operations = new object[0]
-                {
-                }
             };
 
             const string route = "/operations";

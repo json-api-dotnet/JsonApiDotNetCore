@@ -12,7 +12,7 @@ namespace UnitTests.Internal
         public void Can_Convert_DateTimeOffsets()
         {
             // Arrange
-            var dto = new DateTimeOffset(new DateTime(2002, 2,2), TimeSpan.FromHours(4));;
+            var dto = new DateTimeOffset(new DateTime(2002, 2, 2), TimeSpan.FromHours(4));
             var formattedString = dto.ToString("O");
 
             // Act

@@ -69,11 +69,10 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
                 // the navigation action references a relationship. Redirect the call to the relationship dictionary. 
                 return base.GetAffected(navigationAction);
             }
-            else if (_updatedAttributes.TryGetValue(propertyInfo, out HashSet<TResource> resources))
-            {
-                return resources;
-            }
-            return new HashSet<TResource>();
+
+            return _updatedAttributes.TryGetValue(propertyInfo, out HashSet<TResource> resources)
+                ? resources
+                : new HashSet<TResource>();
         }
 
         private void ThrowNoDbValuesError()

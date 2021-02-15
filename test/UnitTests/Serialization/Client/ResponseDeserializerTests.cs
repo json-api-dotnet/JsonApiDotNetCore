@@ -17,7 +17,7 @@ namespace UnitTests.Serialization.Client
 
         public ResponseDeserializerTests()
         {
-            _deserializer = new ResponseDeserializer(_resourceGraph, new ResourceFactory(new ServiceContainer()));
+            _deserializer = new ResponseDeserializer(ResourceGraph, new ResourceFactory(new ServiceContainer()));
             _linkValues.Add("self", "http://example.com/articles");
             _linkValues.Add("next", "http://example.com/articles?page[number]=2");
             _linkValues.Add("last", "http://example.com/articles?page[number]=10");

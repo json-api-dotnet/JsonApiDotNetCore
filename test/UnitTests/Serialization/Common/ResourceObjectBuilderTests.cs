@@ -14,7 +14,7 @@ namespace UnitTests.Serialization.Common
 
         public ResourceObjectBuilderTests()
         {
-            _builder = new ResourceObjectBuilder(_resourceGraph, new ResourceObjectBuilderSettings());
+            _builder = new ResourceObjectBuilder(ResourceGraph, new ResourceObjectBuilderSettings());
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             var resource = new TestResource { StringField = stringFieldValue, NullableIntField = intFieldValue };
-            var attrs = _resourceGraph.GetAttributes<TestResource>(tr => new { tr.StringField, tr.NullableIntField });
+            var attrs = ResourceGraph.GetAttributes<TestResource>(tr => new { tr.StringField, tr.NullableIntField });
 
             // Act
             var resourceObject = _builder.Build(resource, attrs);
@@ -112,7 +112,7 @@ namespace UnitTests.Serialization.Common
                 PopulatedToOne = new OneToOneDependent { Id = 10 },
                 PopulatedToManies = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
             };
-            var relationships = _resourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>(tr => new { tr.PopulatedToManies, tr.PopulatedToOne, tr.EmptyToOne, tr.EmptyToManies });
+            var relationships = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>(tr => new { tr.PopulatedToManies, tr.PopulatedToOne, tr.EmptyToOne, tr.EmptyToManies });
 
             // Act
             var resourceObject = _builder.Build(resource, relationships: relationships);
@@ -136,7 +136,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             var resource = new OneToOneDependent { Principal = new OneToOnePrincipal { Id = 10 }, PrincipalId = 123 };
-            var relationships = _resourceGraph.GetRelationships<OneToOneDependent>(tr => tr.Principal);
+            var relationships = ResourceGraph.GetRelationships<OneToOneDependent>(tr => tr.Principal);
 
             // Act
             var resourceObject = _builder.Build(resource, relationships: relationships);
@@ -153,7 +153,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             var resource = new OneToOneDependent { Principal = null, PrincipalId = 123 };
-            var relationships = _resourceGraph.GetRelationships<OneToOneDependent>(tr => tr.Principal);
+            var relationships = ResourceGraph.GetRelationships<OneToOneDependent>(tr => tr.Principal);
 
             // Act
             var resourceObject = _builder.Build(resource, relationships: relationships);
@@ -167,7 +167,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             var resource = new OneToOneRequiredDependent { Principal = new OneToOnePrincipal { Id = 10 }, PrincipalId = 123 };
-            var relationships = _resourceGraph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
+            var relationships = ResourceGraph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
 
             // Act
             var resourceObject = _builder.Build(resource, relationships: relationships);

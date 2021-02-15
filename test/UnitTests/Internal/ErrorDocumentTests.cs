@@ -10,10 +10,8 @@ namespace UnitTests.Internal
         [Fact]
         public void Can_GetStatusCode()
         {
-            List<Error> errors = new List<Error>();
-
             // Add First 422 error
-            errors.Add(new Error(HttpStatusCode.UnprocessableEntity) {Title = "Something wrong"});
+            var errors = new List<Error> { new Error(HttpStatusCode.UnprocessableEntity) { Title = "Something wrong" } };
             Assert.Equal(HttpStatusCode.UnprocessableEntity, new ErrorDocument(errors).GetErrorStatusCode());
 
             // Add a second 422 error

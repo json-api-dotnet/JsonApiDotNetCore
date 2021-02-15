@@ -28,6 +28,6 @@ namespace JsonApiDotNetCoreExample.Models
         public TodoItem ParentTodo { get; set; }
 
         [HasMany]
-        public IList<TodoItem> ChildrenTodos { get; set; }
+        public IList<TodoItem> ChildTodoItems { get; set; }
     }
 }

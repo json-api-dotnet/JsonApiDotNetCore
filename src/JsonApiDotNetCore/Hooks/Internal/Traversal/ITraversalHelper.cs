@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         NodeLayer CreateNextLayer(IEnumerable<IResourceNode> nodes);
         /// <summary>
         /// Creates a root node for breadth-first-traversal (BFS). Note that typically, in
-        /// JADNC, the root layer will be homogeneous. Also, because it is the first layer,
+        /// JsonApiDotNetCore, the root layer will be homogeneous. Also, because it is the first layer,
         /// there can be no relationships to previous layers, only to next layers.
         /// </summary>
         /// <returns>The root node.</returns>

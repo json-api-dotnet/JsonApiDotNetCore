@@ -157,13 +157,13 @@ namespace UnitTests.Serialization.Server
         private List<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
         {
             var parsedChain = new List<RelationshipAttribute>();
-            var resourceContext = _resourceGraph.GetResourceContext<Article>();
+            var resourceContext = ResourceGraph.GetResourceContext<Article>();
             var splitPath = chain.Split('.');
             foreach (var requestedRelationship in splitPath)
             {
                 var relationship = resourceContext.Relationships.Single(r => r.PublicName == requestedRelationship);
                 parsedChain.Add(relationship);
-                resourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
+                resourceContext = ResourceGraph.GetResourceContext(relationship.RightType);
             }
             return parsedChain;
         }
@@ -174,7 +174,7 @@ namespace UnitTests.Serialization.Server
             var links = GetLinkBuilder();
 
             var accessor = new Mock<IResourceDefinitionAccessor>().Object;
-            return new IncludedResourceObjectBuilder(fields, links, _resourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), accessor, GetSerializerSettingsProvider());
+            return new IncludedResourceObjectBuilder(fields, links, ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), accessor, GetSerializerSettingsProvider());
         }
     }
 }

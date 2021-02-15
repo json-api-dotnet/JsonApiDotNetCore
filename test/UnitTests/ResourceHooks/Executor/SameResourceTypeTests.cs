@@ -42,7 +42,7 @@ namespace UnitTests.ResourceHooks.Executor
             var (_, hookExecutor, todoResourceMock) = CreateTestObjects(todoDiscovery);
             var todo = new TodoItem();
             todo.ParentTodo  = todo;
-            todo.ChildrenTodos = new List<TodoItem> { todo };
+            todo.ChildTodoItems = new List<TodoItem> { todo };
             var todoList = new List<TodoItem> { todo };
 
             // Act
@@ -61,12 +61,12 @@ namespace UnitTests.ResourceHooks.Executor
             var (_, hookExecutor, todoResourceMock) = CreateTestObjects(todoDiscovery);
             var rootTodo = new TodoItem { Id = 1 };
             var child = new TodoItem { ParentTodo  = rootTodo, Id = 2 };
-            rootTodo.ChildrenTodos = new List<TodoItem> { child };
+            rootTodo.ChildTodoItems = new List<TodoItem> { child };
             var grandChild = new TodoItem { ParentTodo  = child, Id = 3 };
-            child.ChildrenTodos = new List<TodoItem> { grandChild };
+            child.ChildTodoItems = new List<TodoItem> { grandChild };
             var greatGrandChild = new TodoItem { ParentTodo  = grandChild, Id = 4 };
-            grandChild.ChildrenTodos = new List<TodoItem> { greatGrandChild };
-            greatGrandChild.ChildrenTodos = new List<TodoItem> { rootTodo };
+            grandChild.ChildTodoItems = new List<TodoItem> { greatGrandChild };
+            greatGrandChild.ChildTodoItems = new List<TodoItem> { rootTodo };
             var todoList = new List<TodoItem> { rootTodo };
 
             // Act

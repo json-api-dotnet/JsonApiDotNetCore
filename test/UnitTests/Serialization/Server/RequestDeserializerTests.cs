@@ -19,7 +19,7 @@ namespace UnitTests.Serialization.Server
         private readonly Mock<IJsonApiRequest> _requestMock = new Mock<IJsonApiRequest>();
         public RequestDeserializerTests()
         {
-            _deserializer = new RequestDeserializer(_resourceGraph, new ResourceFactory(new ServiceContainer()), _fieldsManagerMock.Object, _mockHttpContextAccessor.Object, _requestMock.Object, new JsonApiOptions());
+            _deserializer = new RequestDeserializer(ResourceGraph, new ResourceFactory(new ServiceContainer()), _fieldsManagerMock.Object, MockHttpContextAccessor.Object, _requestMock.Object, new JsonApiOptions());
         }
 
         [Fact]

@@ -46,7 +46,7 @@ namespace UnitTests.Serialization
             var includeConstraints = GetIncludeConstraints(inclusionChains);
             var includedBuilder = GetIncludedBuilder();
             var fieldsToSerialize = GetSerializableFields();
-            ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, _resourceGraph, GetResourceDefinitionAccessor(), GetSerializerSettingsProvider());
+            ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph, GetResourceDefinitionAccessor(), GetSerializerSettingsProvider());
             return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, new JsonApiOptions());
         }
 
@@ -55,12 +55,12 @@ namespace UnitTests.Serialization
             var link = GetLinkBuilder(null, resourceLinks, relationshipLinks);
             var includeConstraints = GetIncludeConstraints(inclusionChains);
             var includedBuilder = GetIncludedBuilder();
-            return new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, _resourceGraph, GetResourceDefinitionAccessor(), GetSerializerSettingsProvider());
+            return new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph, GetResourceDefinitionAccessor(), GetSerializerSettingsProvider());
         }
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder()
         {
-            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), GetResourceDefinitionAccessor(), GetSerializerSettingsProvider());
+            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), GetResourceDefinitionAccessor(), GetSerializerSettingsProvider());
         }
 
         protected IResourceObjectBuilderSettingsProvider GetSerializerSettingsProvider()
@@ -95,8 +95,8 @@ namespace UnitTests.Serialization
         protected IFieldsToSerialize GetSerializableFields()
         {
             var mock = new Mock<IFieldsToSerialize>();
-            mock.Setup(m => m.GetAttributes(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetResourceContext(t).Attributes);
-            mock.Setup(m => m.GetRelationships(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetResourceContext(t).Relationships);
+            mock.Setup(m => m.GetAttributes(It.IsAny<Type>())).Returns<Type>(t => ResourceGraph.GetResourceContext(t).Attributes);
+            mock.Setup(m => m.GetRelationships(It.IsAny<Type>())).Returns<Type>(t => ResourceGraph.GetResourceContext(t).Relationships);
             return mock.Object;
         }
 

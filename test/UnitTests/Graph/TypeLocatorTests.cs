@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Configuration;
 using Xunit;
 
@@ -98,7 +97,7 @@ namespace UnitTests.Graph
         public void TryGetResourceDescriptor_Returns_False_If_Type_Is_IIdentifiable()
         {
             // Arrange
-            var resourceType = typeof(String);
+            var resourceType = typeof(string);
 
             // Act
             var descriptor = TypeLocator.TryGetResourceDescriptor(resourceType);

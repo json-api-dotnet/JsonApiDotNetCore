@@ -11,7 +11,8 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
 {
-    [DisableRoutingConvention, Route("world-api/civilization/popular/towns")]
+    [DisableRoutingConvention]
+    [Route("world-api/civilization/popular/towns")]
     public sealed class TownsController : JsonApiController<Town>
     {
         private readonly CustomRouteDbContext _dbContext;

@@ -206,24 +206,28 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// </summary>
         private void Traverse(NodeLayer currentLayer, ResourceHook target, Action<IResourceHookContainer, IResourceNode> action)
         {
-            if (!currentLayer.AnyResources())
+            while (true)
             {
-                return;
-            }
-
-            foreach (IResourceNode node in currentLayer)
-            {
-                var resourceType = node.ResourceType;
-                var hookContainer = _executorHelper.GetResourceHookContainer(resourceType, target);
-                if (hookContainer == null)
+                if (!currentLayer.AnyResources())
                 {
-                    continue;
+                    return;
                 }
 
-                action(hookContainer, node);
-            }
+                foreach (IResourceNode node in currentLayer)
+                {
+                    var resourceType = node.ResourceType;
+                    var hookContainer = _executorHelper.GetResourceHookContainer(resourceType, target);
 
-            Traverse(_traversalHelper.CreateNextLayer(currentLayer.ToList()), target, action);
+                    if (hookContainer == null)
+                    {
+                        continue;
+                    }
+
+                    action(hookContainer, node);
+                }
+
+                currentLayer = _traversalHelper.CreateNextLayer(currentLayer.ToList());
+            }
         }
 
         /// <summary>
@@ -233,20 +237,32 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// </summary>
         private void RecursiveBeforeRead(List<RelationshipAttribute> relationshipChain, ResourcePipeline pipeline, List<LeftType> calledContainers)
         {
-            var relationship = relationshipChain.First();
-            if (!calledContainers.Contains(relationship.RightType))
+            while (true)
             {
-                calledContainers.Add(relationship.RightType);
-                var container = _executorHelper.GetResourceHookContainer(relationship.RightType, ResourceHook.BeforeRead);
-                if (container != null)
+                var relationship = relationshipChain.First();
+
+                if (!calledContainers.Contains(relationship.RightType))
                 {
-                    CallHook(container, ResourceHook.BeforeRead, new object[] { pipeline, true, null });
+                    calledContainers.Add(relationship.RightType);
+                    var container = _executorHelper.GetResourceHookContainer(relationship.RightType, ResourceHook.BeforeRead);
+
+                    if (container != null)
+                    {
+                        CallHook(container, ResourceHook.BeforeRead, new object[]
+                        {
+                            pipeline,
+                            true,
+                            null
+                        });
+                    }
                 }
-            }
-            relationshipChain.RemoveAt(0);
-            if (relationshipChain.Any())
-            {
-                RecursiveBeforeRead(relationshipChain, pipeline, calledContainers);
+
+                relationshipChain.RemoveAt(0);
+
+                if (!relationshipChain.Any())
+                {
+                    break;
+                }
             }
         }
 
@@ -325,7 +341,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                     // RelationshipAttribute from owner to article, which is the
                     // inverse of HasOneAttribute:owner
                     currentResourcesGroupedInverse = ReplaceKeysWithInverseRelationships(currentResourcesGrouped);
-                    // Note that currently in the JADNC implementation of hooks, 
+                    // Note that currently in the JsonApiDotNetCore implementation of hooks, 
                     // the root layer is ALWAYS homogenous, so we safely assume 
                     // that for every relationship to the previous layer, the 
                     // left type is the same.
@@ -344,7 +360,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             // when Article has one Owner (HasOneAttribute:owner) is set, there is no guarantee
             // that the inverse attribute was also set (Owner has one Article: HasOneAttr:article).
-            // If it isn't, JADNC currently knows nothing about this relationship pointing back, and it 
+            // If it isn't, JsonApiDotNetCore currently knows nothing about this relationship pointing back, and it 
             // currently cannot fire hooks for resources resolved through inverse relationships.
             var inversableRelationshipAttributes = resourcesByRelationship.Where(kvp => kvp.Key.InverseNavigationProperty != null);
             return inversableRelationshipAttributes.ToDictionary(kvp => _resourceGraph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);

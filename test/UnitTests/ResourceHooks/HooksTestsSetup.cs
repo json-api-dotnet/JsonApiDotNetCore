@@ -156,11 +156,11 @@ namespace UnitTests.ResourceHooks
                 .UseInMemoryDatabase(databaseName: "repository_mock")
                 .Options;
 
-            using (var context = new AppDbContext(options))
-            {
-                seeder(context);
-                ResolveInverseRelationships(context);
-            }
+            using var context = new AppDbContext(options);
+
+            seeder(context);
+            ResolveInverseRelationships(context);
+
             return options;
         }
 

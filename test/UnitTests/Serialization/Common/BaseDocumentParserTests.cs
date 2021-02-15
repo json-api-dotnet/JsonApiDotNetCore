@@ -17,7 +17,7 @@ namespace UnitTests.Serialization.Common
 
         public BaseDocumentParserTests()
         {
-            _deserializer = new TestDeserializer(_resourceGraph, new ResourceFactory(new ServiceContainer()));
+            _deserializer = new TestDeserializer(ResourceGraph, new ResourceFactory(new ServiceContainer()));
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace UnitTests.Serialization.Common
             var resource = (TestResource)_deserializer.Deserialize(body);
 
             // Assert
-            var pi = _resourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicName == member).Property;
+            var pi = ResourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicName == member).Property;
             var deserializedValue = pi.GetValue(resource);
 
             if (member == "intField")

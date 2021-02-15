@@ -184,7 +184,7 @@ namespace JsonApiDotNetCore
         }
 
         /// <summary>
-        /// Use this overload if you need to instantiate a type that has a internal constructor
+        /// Use this overload if you need to instantiate a type that has an internal constructor
         /// </summary>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, bool hasInternalConstructor, params object[] constructorArguments)
         {
@@ -204,18 +204,18 @@ namespace JsonApiDotNetCore
         /// Reflectively instantiates a list of a certain type.
         /// </summary>
         /// <returns>The list of the target type</returns>
-        /// <param name="type">The target type</param>
-        public static IList CreateListFor(Type type)
+        /// <param name="elementType">The target type</param>
+        public static IList CreateListFor(Type elementType)
         {
-            return (IList)CreateInstanceOfOpenType(typeof(List<>), type);
+            return (IList)CreateInstanceOfOpenType(typeof(List<>), elementType);
         }
 
         /// <summary>
         /// Reflectively instantiates a hashset of a certain type. 
         /// </summary>
-        public static IEnumerable CreateHashSetFor(Type type, object elements = null)
+        public static IEnumerable CreateHashSetFor(Type type, object elements)
         {
-            return (IEnumerable)CreateInstanceOfOpenType(typeof(HashSet<>), type, elements ?? new object());
+            return (IEnumerable)CreateInstanceOfOpenType(typeof(HashSet<>), type, elements);
         }
 
         /// <summary>
@@ -258,14 +258,14 @@ namespace JsonApiDotNetCore
         }
 
         /// <summary>
-        /// Gets the type (Guid or int) of the Id of a type that implements IIdentifiable
+        /// Gets the type (such as Guid or int) of the Id property on a type that implements <see cref="IIdentifiable"/>.
         /// </summary>
         public static Type GetIdType(Type resourceType)
         {
             var property = resourceType.GetProperty(nameof(Identifiable.Id));
             if (property == null)
             {
-                throw new ArgumentException("Type does not have 'Id' property.");
+                throw new ArgumentException($"Type '{resourceType.Name}' does not have 'Id' property.");
             }
 
             return property.PropertyType;

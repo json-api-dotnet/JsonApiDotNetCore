@@ -32,8 +32,9 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void HookDiscovery_StandardResourceDefinition_CanDiscover()
         {
-            // Arrange & act
+            // Act
             var hookConfig = new HooksDiscovery<Dummy>(MockProvider<Dummy>(new DummyResourceDefinition()));
+
             // Assert
             Assert.Contains(ResourceHook.BeforeDelete, hookConfig.ImplementedHooks);
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
@@ -55,8 +56,9 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void HookDiscovery_InheritanceSubclass_CanDiscover()
         {
-            // Arrange & act
+            // Act
             var hookConfig = new HooksDiscovery<AnotherDummy>(MockProvider<AnotherDummy>(new AnotherDummyResourceDefinition()));
+
             // Assert
             Assert.Contains(ResourceHook.BeforeDelete, hookConfig.ImplementedHooks);
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
@@ -76,18 +78,17 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void HookDiscovery_WronglyUsedLoadDatabaseValueAttribute_ThrowsJsonApiSetupException()
         {
-            //  assert
-            Assert.Throws<InvalidConfigurationException>(() =>
-            {
-                // Arrange & act
-                new HooksDiscovery<YetAnotherDummy>(MockProvider<YetAnotherDummy>(new YetAnotherDummyResourceDefinition()));
-            });
+            // Act
+            Action action = () => _ = new HooksDiscovery<YetAnotherDummy>(MockProvider<YetAnotherDummy>(new YetAnotherDummyResourceDefinition()));
+
+            // Assert
+            Assert.Throws<InvalidConfigurationException>(action);
         }
 
         [Fact]
         public void HookDiscovery_InheritanceWithGenericSubclass_CanDiscover()
         {
-            // Arrange & act
+            // Act
             var hookConfig = new HooksDiscovery<AnotherDummy>(MockProvider<AnotherDummy>(new GenericDummyResourceDefinition<AnotherDummy>()));
 
             // Assert

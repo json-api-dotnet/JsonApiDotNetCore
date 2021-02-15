@@ -13,7 +13,7 @@ namespace UnitTests.Serialization.Server
 
         public ResponseResourceObjectBuilderTests()
         {
-            _relationshipsForBuild = _resourceGraph.GetRelationships<OneToManyPrincipal>(e => new { e.Dependents }).ToList();
+            _relationshipsForBuild = ResourceGraph.GetRelationships<OneToManyPrincipal>(e => new { e.Dependents }).ToList();
         }
 
         [Fact]

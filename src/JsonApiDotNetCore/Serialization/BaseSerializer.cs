@@ -71,11 +71,9 @@ namespace JsonApiDotNetCore.Serialization
             changeSerializer?.Invoke(serializer);
 
             using var stringWriter = new StringWriter();
-            using (var jsonWriter = new JsonTextWriter(stringWriter))
-            {
-                serializer.Serialize(jsonWriter, value);
-            }
+            using var jsonWriter = new JsonTextWriter(stringWriter);
 
+            serializer.Serialize(jsonWriter, value);
             return stringWriter.ToString();
         }
     }

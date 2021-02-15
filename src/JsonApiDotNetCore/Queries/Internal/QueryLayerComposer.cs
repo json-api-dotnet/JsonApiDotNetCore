@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             _options = options;
             _paginationContext = paginationContext;
             _targetedFields = targetedFields;
-            _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
+            _sparseFieldSetCache = new SparseFieldSetCache(_constraintProviders, resourceDefinitionAccessor);
         }
 
         /// <inheritdoc />

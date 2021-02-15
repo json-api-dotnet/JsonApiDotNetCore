@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExample.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<TodoItem>()
-                .HasMany(t => t.ChildrenTodos)
+                .HasMany(t => t.ChildTodoItems)
                 .WithOne(t => t.ParentTodo);
 
             builder.Entity<Passport>()

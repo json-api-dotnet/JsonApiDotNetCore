@@ -11,12 +11,12 @@ namespace UnitTests.Serialization
 {
     public class DeserializerTestsSetup : SerializationTestsSetupBase
     {
-        public Mock<IHttpContextAccessor> _mockHttpContextAccessor;
+        protected Mock<IHttpContextAccessor> MockHttpContextAccessor { get; }
 
         public DeserializerTestsSetup()
         {
-            _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
-            _mockHttpContextAccessor.Setup(mock => mock.HttpContext).Returns(new DefaultHttpContext());
+            MockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            MockHttpContextAccessor.Setup(mock => mock.HttpContext).Returns(new DefaultHttpContext());
         }
         protected sealed class TestDeserializer : BaseDeserializer
         {

@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
             }
             else if (field is HasManyAttribute hasManyAttr)
             {  // add attributes and relationships of a parsed HasMany relationship
-                var items = data.ManyData.Select(rio => ParseIncludedRelationship(rio));
+                var items = data.ManyData.Select(ParseIncludedRelationship);
                 var values = TypeHelper.CopyToTypedCollection(items, hasManyAttr.Property.PropertyType);
                 hasManyAttr.SetValue(resource, values);
             }

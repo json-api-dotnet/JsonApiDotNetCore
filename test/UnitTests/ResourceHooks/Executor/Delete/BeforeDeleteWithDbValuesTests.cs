@@ -46,7 +46,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
 
             // Assert
             personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IResourceHashSet<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());
-            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<TodoItem>>(rh => CheckImplicitTodos(rh)), ResourcePipeline.Delete), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<TodoItem>>(rh => CheckImplicitTodoItems(rh)), ResourcePipeline.Delete), Times.Once());
             passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Passport>>(rh => CheckImplicitPassports(rh)), ResourcePipeline.Delete), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
@@ -64,7 +64,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             hookExecutor.BeforeDelete(new List<Person> { _person }, ResourcePipeline.Delete);
 
             // Assert
-            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<TodoItem>>(rh => CheckImplicitTodos(rh)), ResourcePipeline.Delete), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<TodoItem>>(rh => CheckImplicitTodoItems(rh)), ResourcePipeline.Delete), Times.Once());
             passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Passport>>(rh => CheckImplicitPassports(rh)), ResourcePipeline.Delete), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
@@ -86,10 +86,10 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
 
-        private bool CheckImplicitTodos(IRelationshipsDictionary<TodoItem> rh)
+        private bool CheckImplicitTodoItems(IRelationshipsDictionary<TodoItem> rh)
         {
-            var todos = rh.GetByRelationship<Person>();
-            return todos.Count == 2;
+            var todoItems = rh.GetByRelationship<Person>();
+            return todoItems.Count == 2;
         }
 
         private bool CheckImplicitPassports(IRelationshipsDictionary<Passport> rh)

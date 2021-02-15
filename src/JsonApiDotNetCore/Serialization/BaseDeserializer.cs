@@ -143,14 +143,13 @@ namespace JsonApiDotNetCore.Serialization
 
         protected JToken LoadJToken(string body)
         {
-            JToken jToken;
-            using (JsonReader jsonReader = new JsonTextReader(new StringReader(body)))
+            using JsonReader jsonReader = new JsonTextReader(new StringReader(body))
             {
                 // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/509
-                jsonReader.DateParseHandling = DateParseHandling.None;
-                jToken = JToken.Load(jsonReader);
-            }
-            return jToken;
+                DateParseHandling = DateParseHandling.None
+            };
+
+            return JToken.Load(jsonReader);
         }
 
         /// <summary>

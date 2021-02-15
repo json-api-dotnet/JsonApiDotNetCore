@@ -174,10 +174,19 @@ namespace JsonApiDotNetCore.Configuration
             _proxyTargetAccessorType?.IsAssignableFrom(resourceType) ?? false;
 
         private static Expression RemoveConvert(Expression expression)
-            => expression is UnaryExpression unaryExpression
-               && unaryExpression.NodeType == ExpressionType.Convert
-                ? RemoveConvert(unaryExpression.Operand)
-                : expression;
+        {
+            while (true)
+            {
+                if (expression is UnaryExpression { NodeType: ExpressionType.Convert } unaryExpression)
+                {
+                    expression = unaryExpression.Operand;
+                }
+                else
+                {
+                    return expression;
+                }
+            }
+        }
 
         private void ThrowNotExposedError(string memberName, FieldFilterType type)
         {
