@@ -206,12 +206,20 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// </summary>
         private void Traverse(NodeLayer currentLayer, ResourceHook target, Action<IResourceHookContainer, IResourceNode> action)
         {
-            if (!currentLayer.AnyResources()) return;
+            if (!currentLayer.AnyResources())
+            {
+                return;
+            }
+
             foreach (IResourceNode node in currentLayer)
             {
                 var resourceType = node.ResourceType;
                 var hookContainer = _executorHelper.GetResourceHookContainer(resourceType, target);
-                if (hookContainer == null) continue;
+                if (hookContainer == null)
+                {
+                    continue;
+                }
+
                 action(hookContainer, node);
             }
 
@@ -231,11 +239,15 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 calledContainers.Add(relationship.RightType);
                 var container = _executorHelper.GetResourceHookContainer(relationship.RightType, ResourceHook.BeforeRead);
                 if (container != null)
+                {
                     CallHook(container, ResourceHook.BeforeRead, new object[] { pipeline, true, null });
+                }
             }
             relationshipChain.RemoveAt(0);
             if (relationshipChain.Any())
+            {
                 RecursiveBeforeRead(relationshipChain, pipeline, calledContainers);
+            }
         }
 
         /// <summary>
@@ -345,9 +357,17 @@ namespace JsonApiDotNetCore.Hooks.Internal
         private void FireForAffectedImplicits(Type resourceTypeToInclude, Dictionary<RelationshipAttribute, IEnumerable> implicitsTarget, ResourcePipeline pipeline, IEnumerable existingImplicitResources = null)
         {
             var container = _executorHelper.GetResourceHookContainer(resourceTypeToInclude, ResourceHook.BeforeImplicitUpdateRelationship);
-            if (container == null) return;
+            if (container == null)
+            {
+                return;
+            }
+
             var implicitAffected = _executorHelper.LoadImplicitlyAffected(implicitsTarget, existingImplicitResources);
-            if (!implicitAffected.Any()) return;
+            if (!implicitAffected.Any())
+            {
+                return;
+            }
+
             var inverse = implicitAffected.ToDictionary(kvp => _resourceGraph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
             var resourcesByRelationship = CreateRelationshipHelper(resourceTypeToInclude, inverse);
             CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { resourcesByRelationship, pipeline});
@@ -402,7 +422,11 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <returns>The relationship helper.</returns>
         private IRelationshipsDictionary CreateRelationshipHelper(RightType resourceType, Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
         {
-            if (dbValues != null) prevLayerRelationships = ReplaceWithDbValues(prevLayerRelationships, dbValues.Cast<IIdentifiable>());
+            if (dbValues != null)
+            {
+                prevLayerRelationships = ReplaceWithDbValues(prevLayerRelationships, dbValues.Cast<IIdentifiable>());
+            }
+
             return (IRelationshipsDictionary)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsDictionary<>), resourceType, true, prevLayerRelationships);
         }
 
@@ -443,7 +467,11 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             // We only need to load database values if the target hook of this hook execution
             // cycle is compatible with displaying database values and has this option enabled.
-            if (!_executorHelper.ShouldLoadDbValues(resourceType, targetHook)) return null;
+            if (!_executorHelper.ShouldLoadDbValues(resourceType, targetHook))
+            {
+                return null;
+            }
+
             return _executorHelper.LoadDbValues(resourceType, uniqueResources, targetHook, relationshipsToNextLayer);
         }
 

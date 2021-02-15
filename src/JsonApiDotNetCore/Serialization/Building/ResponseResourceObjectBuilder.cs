@@ -78,9 +78,13 @@ namespace JsonApiDotNetCore.Serialization.Building
             {
                 relationshipEntry = base.GetRelationshipData(relationship, resource);
                 if (relationshipChains != null && relationshipEntry.HasResource)
+                {
                     foreach (var chain in relationshipChains)
+                    {
                         // traverses (recursively) and extracts all (nested) related resources for the current inclusion chain.
                         _includedBuilder.IncludeRelationshipChain(chain, resource);
+                    }
+                }
             }
 
             if (!IsRelationshipInSparseFieldSet(relationship))

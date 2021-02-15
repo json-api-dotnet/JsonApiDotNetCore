@@ -80,7 +80,9 @@ namespace UnitTests.Serialization.Server
             var nonOverlappingBlogs = result.Where(ro => ro.Type == "blogs" && ro.Id != sharedBlog.StringId).ToList();
 
             foreach (var blog in nonOverlappingBlogs)
+            {
                 Assert.Single(blog.Relationships.Keys);
+            }
 
             Assert.Equal(authorSong.StringId, sharedBlogAuthor.FavoriteSong.StringId);
             Assert.Equal(reviewerFood.StringId, sharedBlogAuthor.FavoriteFood.StringId);

@@ -60,12 +60,19 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
                 }
                 var collection = new List<IIdentifiable>();
                 var throughResources = (IEnumerable)hasManyThrough.ThroughProperty.GetValue(resource);
-                if (throughResources == null) return null;
+                if (throughResources == null)
+                {
+                    return null;
+                }
 
                 foreach (var throughResource in throughResources)
                 {
                     var rightResource = (IIdentifiable)hasManyThrough.RightProperty.GetValue(throughResource);
-                    if (rightResource == null) continue;
+                    if (rightResource == null)
+                    {
+                        continue;
+                    }
+
                     collection.Add(rightResource);
                 }
 

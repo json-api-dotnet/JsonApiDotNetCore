@@ -118,7 +118,9 @@ namespace JsonApiDotNetCore.Configuration
             foreach (var type in assembly.GetTypes())
             {
                 if (inheritedType.IsAssignableFrom(type))
+                {
                     yield return type;
+                }
             }
         }
     }

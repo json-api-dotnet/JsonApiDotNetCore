@@ -152,7 +152,10 @@ namespace UnitTests.Serialization.Server
                 {
                     var chain = new List<RelationshipAttribute> {r};
                     if (r.PublicName != "populatedToManies")
+                    {
                         return new List<RelationshipAttribute> {r};
+                    }
+
                     chain.AddRange(_resourceGraph.GetRelationships<OneToManyDependent>());
                     return chain;
                 }).ToList();

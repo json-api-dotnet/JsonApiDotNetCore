@@ -83,12 +83,16 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         {
             var currentResourceType = resource.GetType();
             if (_currentTargetedResource != currentResourceType)
+            {
                 // We're dealing with a relationship that is being serialized, for which
                 // we never want to include any attributes in the request body.
                 return new List<AttrAttribute>();
+            }
 
             if (AttributesToSerialize == null)
+            {
                 return _resourceGraph.GetAttributes(currentResourceType);
+            }
 
             return AttributesToSerialize;
         }

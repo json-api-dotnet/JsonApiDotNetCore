@@ -134,13 +134,21 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
                     {
                         var relationshipValue = proxy.GetValue(leftResource);
                         // skip this relationship if it's not populated
-                        if (!proxy.IsContextRelation && relationshipValue == null) continue;
+                        if (!proxy.IsContextRelation && relationshipValue == null)
+                        {
+                            continue;
+                        }
+
                         if (!(relationshipValue is IEnumerable rightResources))
                         {
                             // in the case of a to-one relationship, the assigned value
                             // will not be a list. We therefore first wrap it in a list.
                             var list = TypeHelper.CreateListFor(proxy.RightType);
-                            if (relationshipValue != null) list.Add(relationshipValue);
+                            if (relationshipValue != null)
+                            {
+                                list.Add(relationshipValue);
+                            }
+
                             rightResources = list;
                         }
 
@@ -199,13 +207,21 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         {
             foreach (RelationshipAttribute attr in _resourceGraph.GetRelationships(type))
             {
-                if (!attr.CanInclude) continue;
+                if (!attr.CanInclude)
+                {
+                    continue;
+                }
+
                 if (!_relationshipProxies.TryGetValue(attr, out _))
                 {
                     RightType rightType = GetRightTypeFromRelationship(attr);
                     bool isContextRelation = false;
                     var relationshipsToUpdate = _targetedFields.Relationships;
-                    if (relationshipsToUpdate != null) isContextRelation = relationshipsToUpdate.Contains(attr);
+                    if (relationshipsToUpdate != null)
+                    {
+                        isContextRelation = relationshipsToUpdate.Contains(attr);
+                    }
+
                     var proxy = new RelationshipProxy(attr, rightType, isContextRelation);
                     _relationshipProxies[attr] = proxy;
                 }

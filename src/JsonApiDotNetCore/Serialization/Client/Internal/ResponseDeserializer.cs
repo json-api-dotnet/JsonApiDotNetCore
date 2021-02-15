@@ -62,11 +62,15 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
 
             // Client deserializers do not need additional processing for attributes.
             if (field is AttrAttribute)
+            {
                 return;
+            }
 
             // if the included property is empty or absent, there is no additional data to be parsed.
             if (Document.Included == null || Document.Included.Count == 0)
+            {
                 return;
+            }
 
             if (field is HasOneAttribute hasOneAttr)
             {

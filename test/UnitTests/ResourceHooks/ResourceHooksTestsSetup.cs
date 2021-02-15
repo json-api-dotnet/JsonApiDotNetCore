@@ -397,7 +397,9 @@ namespace UnitTests.ResourceHooks
             var parsedChains = new List<List<RelationshipAttribute>>();
 
             foreach (var chain in chains)
+            {
                 parsedChains.Add(GetIncludedRelationshipsChain(chain));
+            }
 
             return parsedChains;
         }

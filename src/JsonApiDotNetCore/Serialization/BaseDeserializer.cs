@@ -81,7 +81,9 @@ namespace JsonApiDotNetCore.Serialization
             ArgumentGuard.NotNull(attributes, nameof(attributes));
 
             if (attributeValues == null || attributeValues.Count == 0)
+            {
                 return resource;
+            }
 
             foreach (var attr in attributes)
             {
@@ -321,8 +323,10 @@ namespace JsonApiDotNetCore.Serialization
         private object ConvertAttrValue(object newValue, Type targetType)
         {
             if (newValue is JContainer jObject)
+            {
                 // the attribute value is a complex type that needs additional deserialization
                 return DeserializeComplexType(jObject, targetType);
+            }
 
             // the attribute value is a native C# type.
             var convertedValue = TypeHelper.ConvertType(newValue, targetType);

@@ -137,7 +137,9 @@ namespace JsonApiDotNetCore.Configuration
                 }
 
                 if (attribute == null)
+                {
                     continue;
+                }
 
                 attribute.PublicName ??= FormatPropertyName(property);
                 attribute.Property = property;
@@ -161,7 +163,10 @@ namespace JsonApiDotNetCore.Configuration
             foreach (var prop in properties)
             {
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
-                if (attribute == null) continue;
+                if (attribute == null)
+                {
+                    continue;
+                }
 
                 attribute.Property = prop;
                 attribute.PublicName ??= FormatPropertyName(prop);
@@ -173,11 +178,15 @@ namespace JsonApiDotNetCore.Configuration
                 {
                     var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.ThroughPropertyName);
                     if (throughProperty == null)
+                    {
                         throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
+                    }
 
                     var throughType = TryGetThroughType(throughProperty);
                     if (throughType == null)
+                    {
                         throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
+                    }
 
                     // ICollection<ArticleTag>
                     hasManyThroughAttribute.ThroughProperty = throughProperty;
@@ -269,7 +278,10 @@ namespace JsonApiDotNetCore.Configuration
             foreach (var property in properties)
             {
                 var attribute = (EagerLoadAttribute) property.GetCustomAttribute(typeof(EagerLoadAttribute));
-                if (attribute == null) continue;
+                if (attribute == null)
+                {
+                    continue;
+                }
 
                 Type innerType = TypeOrElementType(property.PropertyType);
                 attribute.Children = GetEagerLoads(innerType, recursionDepth + 1);

@@ -61,7 +61,11 @@ namespace JsonApiDotNetCore.Serialization.Building
 
                         // removes relationship entries (<see cref="RelationshipEntry"/>s) if they're completely empty.  
                         var pruned = resourceObject.Relationships.Where(p => p.Value.IsPopulated || p.Value.Links != null).ToDictionary(p => p.Key, p => p.Value);
-                        if (!pruned.Any()) pruned = null;
+                        if (!pruned.Any())
+                        {
+                            pruned = null;
+                        }
+
                         resourceObject.Relationships = pruned;
                     }
                     resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
@@ -108,10 +112,16 @@ namespace JsonApiDotNetCore.Serialization.Building
         private void ProcessChain(object related, List<RelationshipAttribute> inclusionChain)
         {
             if (related is IEnumerable children)
+            {
                 foreach (IIdentifiable child in children)
+                {
                     ProcessRelationship(child, inclusionChain);
+                }
+            }
             else
+            {
                 ProcessRelationship((IIdentifiable)related, inclusionChain);
+            }
         }
 
         private void ProcessRelationship(IIdentifiable parent, List<RelationshipAttribute> inclusionChain)
@@ -119,7 +129,10 @@ namespace JsonApiDotNetCore.Serialization.Building
             // get the resource object for parent.
             var resourceObject = GetOrBuildResourceObject(parent);
             if (!inclusionChain.Any())
+            {
                 return;
+            }
+
             var nextRelationship = inclusionChain.First();
             var chainRemainder = inclusionChain.ToList();
             chainRemainder.RemoveAt(0);
@@ -128,7 +141,9 @@ namespace JsonApiDotNetCore.Serialization.Building
             var relationshipsObject = resourceObject.Relationships;
             // add the relationship entry in the relationship object.
             if (!relationshipsObject.TryGetValue(nextRelationshipName, out var relationshipEntry))
+            {
                 relationshipsObject[nextRelationshipName] = relationshipEntry = GetRelationshipData(nextRelationship, parent);
+            }
 
             relationshipEntry.Data = GetRelatedResourceLinkage(nextRelationship, parent);
 

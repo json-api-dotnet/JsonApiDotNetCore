@@ -100,9 +100,12 @@ namespace Benchmarks.Query
             _queryStringReaderForAll.ReadAll(null);
         });
 
-        private void Run(int iterations, Action action) { 
+        private void Run(int iterations, Action action)
+        {
             for (int i = 0; i < iterations; i++)
+            {
                 action();
+            }
         }
 
         private sealed class FakeRequestQueryStringAccessor : IRequestQueryStringAccessor

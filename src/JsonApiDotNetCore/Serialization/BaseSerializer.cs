@@ -35,7 +35,9 @@ namespace JsonApiDotNetCore.Serialization
         protected Document Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes, IReadOnlyCollection<RelationshipAttribute> relationships)
         {
             if (resource == null)
+            {
                 return new Document();
+            }
 
             return new Document { Data = ResourceObjectBuilder.Build(resource, attributes, relationships) };
         }
@@ -54,7 +56,9 @@ namespace JsonApiDotNetCore.Serialization
 
             var data = new List<ResourceObject>();
             foreach (IIdentifiable resource in resources)
+            {
                 data.Add(ResourceObjectBuilder.Build(resource, attributes, relationships));
+            }
 
             return new Document { Data = data };
         }

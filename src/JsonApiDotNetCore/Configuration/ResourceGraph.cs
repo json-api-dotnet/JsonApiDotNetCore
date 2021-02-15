@@ -106,14 +106,22 @@ namespace JsonApiDotNetCore.Configuration
         {
             IReadOnlyCollection<ResourceFieldAttribute> available;
             if (type == FieldFilterType.Attribute)
+            {
                 available = GetResourceContext(typeof(TResource)).Attributes;
+            }
             else if (type == FieldFilterType.Relationship)
+            {
                 available = GetResourceContext(typeof(TResource)).Relationships;
+            }
             else
+            {
                 available = GetResourceContext(typeof(TResource)).Fields;
+            }
 
             if (selector == null)
+            {
                 return available;
+            }
 
             var targeted = new List<ResourceFieldAttribute>();
 
@@ -140,7 +148,9 @@ namespace JsonApiDotNetCore.Configuration
                 try
                 {
                     if (newExpression.Members == null)
+                    {
                         return targeted;
+                    }
 
                     foreach (var member in newExpression.Members)
                     {

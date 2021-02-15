@@ -42,7 +42,10 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         /// <inheritdoc />
         public IEnumerable<ResourceDiffPair<TResource>> GetDiffs()
         {
-            if (!_databaseValuesLoaded) ThrowNoDbValuesError();
+            if (!_databaseValuesLoaded)
+            {
+                ThrowNoDbValuesError();
+            }
 
             foreach (var resource in this)
             {

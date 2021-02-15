@@ -62,7 +62,9 @@ namespace JsonApiDotNetCore.Hooks.Internal.Discovery
             {
                 var method = containerType.GetMethod(hook.ToString("G"));
                 if (method.DeclaringType == _boundResourceDefinitionType)
+                {
                     continue;
+                }
 
                 implementedHooks.Add(hook);
                 var attr = method.GetCustomAttributes(true).OfType<LoadDatabaseValuesAttribute>().SingleOrDefault();

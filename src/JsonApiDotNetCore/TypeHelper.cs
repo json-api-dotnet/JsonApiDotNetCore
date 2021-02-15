@@ -189,10 +189,14 @@ namespace JsonApiDotNetCore
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, bool hasInternalConstructor, params object[] constructorArguments)
         {
             Type[] parameters = {parameter};
-            if (!hasInternalConstructor) return CreateInstanceOfOpenType(openType, parameters, constructorArguments);
+            if (!hasInternalConstructor)
+            {
+                return CreateInstanceOfOpenType(openType, parameters, constructorArguments);
+            }
+
             var parameterizedType = openType.MakeGenericType(parameters);
             // note that if for whatever reason the constructor of AffectedResource is set from
-            // internal to public, this will throw an error, as it is looking for a no
+            // internal to public, this will throw an error, as it is looking for a non-public one.
             return Activator.CreateInstance(parameterizedType, BindingFlags.NonPublic | BindingFlags.Instance, null, constructorArguments, null);
         }
 
@@ -259,7 +263,11 @@ namespace JsonApiDotNetCore
         public static Type GetIdType(Type resourceType)
         {
             var property = resourceType.GetProperty(nameof(Identifiable.Id));
-            if (property == null) throw new ArgumentException("Type does not have 'Id' property.");
+            if (property == null)
+            {
+                throw new ArgumentException("Type does not have 'Id' property.");
+            }
+
             return property.PropertyType;
         }
 

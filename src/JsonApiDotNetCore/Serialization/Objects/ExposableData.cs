@@ -28,7 +28,10 @@ namespace JsonApiDotNetCore.Serialization.Objects
         public bool ShouldSerializeData()
         {
             if (GetType() == typeof(RelationshipEntry))
+            {
                 return IsPopulated;
+            }
+
             return true;
         }
 
@@ -70,7 +73,10 @@ namespace JsonApiDotNetCore.Serialization.Objects
         protected object GetPrimaryData()
         {
             if (IsManyData)
+            {
                 return ManyData;
+            }
+
             return SingleData;
         }
 
@@ -81,16 +87,24 @@ namespace JsonApiDotNetCore.Serialization.Objects
         {
             IsPopulated = true;
             if (value is JObject jObject)
+            {
                 SingleData = jObject.ToObject<TResource>();
+            }
             else if (value is TResource ro)
+            {
                 SingleData = ro;
+            }
             else if (value != null)
             {
                 IsManyData = true;
                 if (value is JArray jArray)
+                {
                     ManyData = jArray.ToObject<List<TResource>>();
+                }
                 else
+                {
                     ManyData = (List<TResource>)value;
+                }
             }
         }
     }
