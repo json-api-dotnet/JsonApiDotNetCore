@@ -25,7 +25,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // Assert
             articleResourceMock.Verify(rd => rd.AfterRead(It.IsAny<HashSet<Article>>(), ResourcePipeline.Get, false), Times.Once());
-            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourcePipeline.Get, true), Times.Once());
+            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<HashSet<Tag>>(collection => !collection.Except(tags).Any()), ResourcePipeline.Get, true), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
 
@@ -42,7 +42,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
             hookExecutor.AfterRead(articles, ResourcePipeline.Get);
 
             // Assert
-            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourcePipeline.Get, true), Times.Once());
+            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<HashSet<Tag>>(collection => !collection.Except(tags).Any()), ResourcePipeline.Get, true), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
 

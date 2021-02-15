@@ -25,7 +25,7 @@ namespace UnitTests.ResourceHooks
         private IServiceProvider MockProvider<TResource>(object service) where TResource : class, IIdentifiable
         {
             var services = new ServiceCollection();
-            services.AddScoped((_) => (ResourceHooksDefinition<TResource>)service);
+            services.AddScoped(_ => (ResourceHooksDefinition<TResource>)service);
             return services.BuildServiceProvider();
         }
 
