@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
@@ -16,7 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 return 0;
             }
 
-            if (!value.StartsWith("x"))
+            if (!value.StartsWith("x", StringComparison.Ordinal))
             {
                 throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
                 {

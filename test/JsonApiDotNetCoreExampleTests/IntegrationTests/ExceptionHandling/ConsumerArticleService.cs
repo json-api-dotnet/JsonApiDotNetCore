@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -30,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
         {
             var consumerArticle = await base.GetAsync(id, cancellationToken);
 
-            if (consumerArticle.Code.StartsWith(UnavailableArticlePrefix))
+            if (consumerArticle.Code.StartsWith(UnavailableArticlePrefix, StringComparison.Ordinal))
             {
                 throw new ConsumerArticleIsNoLongerAvailableException(consumerArticle.Code, SupportEmailAddress);
             }

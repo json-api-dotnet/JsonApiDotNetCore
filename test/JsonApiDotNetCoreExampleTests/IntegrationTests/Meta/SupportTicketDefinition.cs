@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -12,7 +13,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 
         public override IDictionary<string, object> GetMeta(SupportTicket resource)
         {
-            if (resource.Description != null && resource.Description.StartsWith("Critical:"))
+            if (resource.Description != null && resource.Description.StartsWith("Critical:", StringComparison.Ordinal))
             {
                 return new Dictionary<string, object>
                 {

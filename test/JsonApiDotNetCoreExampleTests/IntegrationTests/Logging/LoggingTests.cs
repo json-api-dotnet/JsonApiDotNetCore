@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -74,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             loggerFactory.Logger.Messages.Should().NotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
-                message.Text.StartsWith("Received request at 'http://localhost/auditEntries' with body: <<"));
+                message.Text.StartsWith("Received request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
         }
 
         [Fact]
@@ -96,7 +97,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             loggerFactory.Logger.Messages.Should().NotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace && 
-                message.Text.StartsWith("Sending 200 response for request at 'http://localhost/auditEntries' with body: <<"));
+                message.Text.StartsWith("Sending 200 response for request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
         }
 
         [Fact]

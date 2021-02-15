@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -13,7 +14,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
         public string PlatformName { get; set; }
 
         [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
-        public bool ShowAdvertisements => PlatformName.EndsWith("(using free account)");
+        public bool ShowAdvertisements => PlatformName.EndsWith("(using free account)", StringComparison.Ordinal);
 
         [HasMany]
         public IList<BlogPost> Posts { get; set; }
